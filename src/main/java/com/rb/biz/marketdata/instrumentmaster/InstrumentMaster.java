@@ -15,7 +15,6 @@ import java.util.Optional;
 import static com.rb.biz.types.Symbol.instrumentIdAsSymbol;
 import static com.rb.biz.types.asset.CashId.cashSymbol;
 
-@ImplementedBy(RealInstrumentMaster.class)
 public interface InstrumentMaster {
 
   Optional<InstrumentId> getInstrumentId(Symbol symbol, LocalDate effectiveDate);
