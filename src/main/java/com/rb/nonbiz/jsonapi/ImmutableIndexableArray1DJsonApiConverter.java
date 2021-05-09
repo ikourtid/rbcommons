@@ -1,0 +1,75 @@
+package com.rb.nonbiz.jsonapi;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.inject.Inject;
+import com.rb.nonbiz.collections.ImmutableIndexableArray1D;
+import com.rb.nonbiz.json.JsonValidationInstructions;
+import com.rb.nonbiz.json.JsonValidator;
+import com.rb.nonbiz.json.RBJsonObjectBuilder;
+
+import java.util.ArrayList;
+import java.util.function.Function;
+
+import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
+import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.immutableIndexableArray1D;
+import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
+import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
+import static com.rb.nonbiz.json.RBJsonArrays.listToJsonArray;
+import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
+import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonArrayOrThrow;
+import static com.rb.nonbiz.json.RBJsonObjects.jsonArrayToSimpleArrayIndexMapping;
+
+/**
+ * Converts ImmutableIndexableArray1D back and forth to JSON for our public API.
+ *
+ * This does not implement JsonRoundTripConverter because we need to supply serializers and deserializers.
+ */
+public class ImmutableIndexableArray1DJsonApiConverter {
+
+  private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
+      .setRequiredProperties("keys", "data")
+      .hasNoOptionalProperties()
+      .build();
+
+  @Inject JsonValidator jsonValidator;
+
+  public <K, V> JsonObject toJsonObject(
+      ImmutableIndexableArray1D<K, V> array1D,
+      Function<K, JsonElement> keySerializer,
+      Function<V, JsonElement> valueSerializer) {
+    RBJsonObjectBuilder rbJsonObjectBuilder = rbJsonObjectBuilder();
+    ArrayList<K> keyList   = newArrayListWithExpectedSize(array1D.size());
+    ArrayList<V> valueList = newArrayListWithExpectedSize(array1D.size());
+    array1D.forEachEntry( (key, value) -> {
+      keyList.add(key);
+      valueList.add(value);
+    });
+    return jsonValidator.validate(
+        rbJsonObjectBuilder
+            // we can't use a JsonObject map of key -> data because the order has to be preserved
+            .setArray("keys", listToJsonArray(keyList,   k -> keySerializer.apply(k)))
+            .setArray("data", listToJsonArray(valueList, v -> valueSerializer.apply(v)))
+            .build(),
+        JSON_VALIDATION_INSTRUCTIONS);
+  }
+
+  public <K, V> ImmutableIndexableArray1D<K, V> fromJsonObject(
+      JsonObject jsonObject,
+      Function<JsonElement, K> keyDeserializer,
+      Function<JsonElement, V> valueDeserializer) {
+    jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
+
+    @SuppressWarnings("unchecked")
+    V[] dataArray = (V[]) jsonArrayToList(
+        getJsonArrayOrThrow(jsonObject, "data"),
+        jsonValueElement -> valueDeserializer.apply(jsonValueElement)).toArray();
+
+    return immutableIndexableArray1D(
+        jsonArrayToSimpleArrayIndexMapping(
+            getJsonArrayOrThrow(jsonObject, "keys"),
+            jsonKeyElement -> keyDeserializer.apply(jsonKeyElement)),
+        dataArray);
+  }
+
+}
