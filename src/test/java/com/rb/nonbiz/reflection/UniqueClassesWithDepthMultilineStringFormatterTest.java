@@ -2,7 +2,6 @@ package com.rb.nonbiz.reflection;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.Money;
-import com.rb.nonbiz.math.eigen.EigenDimensionIndex;
 import com.rb.nonbiz.testutils.RBTest;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;

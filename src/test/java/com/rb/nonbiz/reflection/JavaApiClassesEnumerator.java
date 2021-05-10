@@ -10,7 +10,6 @@ import com.rb.biz.investing.strategy.CompleteInvestorInputs;
 import com.rb.biz.investing.strategy.Investor;
 import com.rb.nonbiz.collections.MutableRBSet;
 import com.rb.nonbiz.collections.RBSet;
-import com.rb.nonbiz.math.eigen.FactorLoadings;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import org.junit.Ignore;
 import org.junit.Test;

@@ -1,7 +1,6 @@
 package com.rb.nonbiz.functional;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.rb.nonbiz.math.optimization.highlevel.FunctionDescriptor;
 import com.rb.nonbiz.text.HasHumanReadableLabel;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
@@ -23,7 +22,7 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  *
  * We normally dislike storing function objects, because they are not data that can be compared, and we like having
  * test-only TypeSafeMatchers for comparing objects in test. This is why we typically use limited functional objects
- * such as {@link FunctionDescriptor}. However, the downside of such 'limited' objects is that they only allow for
+ * such as {@code FunctionDescriptor}. However, the downside of such 'limited' objects is that they only allow for
  * one class of function (albeit parametrizable), but not any arbitrary function, e.g. a logarithmic one.
  * Therefore, in order to keep things general, we will store a Function object here.
  */

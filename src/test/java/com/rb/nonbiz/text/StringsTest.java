@@ -9,13 +9,10 @@ import org.junit.Test;
 import java.time.Year;
 import java.util.function.BiConsumer;
 
-import static com.rb.biz.types.collections.ts.YearlyTimeSeriesTest.yearlyTestSingletonTimeSeries;
-import static com.rb.biz.types.collections.ts.YearlyTimeSeriesTest.yearlyTestTimeSeries;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.text.Strings.formatCollectionInOrder;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
-import static com.rb.nonbiz.text.Strings.formatYearlyTimeSeriesWithYearPrefixes;
 import static com.rb.nonbiz.text.Strings.joinWithHarvardComma;
 import static com.rb.nonbiz.text.Strings.toTrimmedStandaloneSentence;
 import static com.rb.nonbiz.types.PreciseValue.formatWithoutCommas;
@@ -78,20 +75,6 @@ public class StringsTest {
     asserter.accept("(_1_…_2_]", Range.openClosed(1, 2));
     asserter.accept("(_1_…_2_)", Range.open(1, 2));
     asserter.accept("[_1_…_1_]", Range.singleton(1));
-  }
-
-  @Test
-  public void testFormatYearlyTimeSeriesWithYearPrefixes() {
-    assertEquals(
-        "2014 = _4",
-        formatYearlyTimeSeriesWithYearPrefixes(
-            yearlyTestSingletonTimeSeries(Year.of(2014), "_4"),
-            " ; "));
-    assertEquals(
-        "2014 = _4 ; 2015 = _5 ; 2016 = _6",
-        formatYearlyTimeSeriesWithYearPrefixes(
-            yearlyTestTimeSeries(Year.of(2014), Year.of(2016), "_4", "_5", "_6"),
-            " ; "));
   }
 
   @Test

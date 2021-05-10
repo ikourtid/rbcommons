@@ -7,7 +7,7 @@ import com.rb.biz.guice.RBClockModifier;
 
 import java.time.LocalDateTime;
 
-import static com.rb.biz.guice.modules.RBPublicTestModule.rbPublicIntegrationTestModule;
+import static com.rb.biz.guice.modules.RBCommonsTestModule.rbPublicIntegrationTestModule;
 
 /**
  * Integration tests (i.e. higher level than unit tests) of verb class FooBarBazer

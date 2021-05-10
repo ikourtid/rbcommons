@@ -1,7 +1,6 @@
 package com.rb.nonbiz.util;
 
 import com.google.common.collect.ImmutableList;
-import com.rb.biz.types.collections.ts.DailyTimeSeries;
 import com.rb.nonbiz.collections.Pair;
 import org.junit.Test;
 
@@ -13,22 +12,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static com.rb.biz.market.MarketDateRange.validatedMarketDateRange;
-import static com.rb.biz.market.MarketDateRangeTest.marketDateRangeMatcher;
-import static com.rb.biz.market.MarketTest.REAL_MARKET;
-import static com.rb.biz.types.collections.ts.DailyTimeSeriesTest.dailyTestTimeSeries;
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBLists.listConcatenation;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY0;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY1;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY2;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_BOOLEAN;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_POSITIVE_INTEGER;
-import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkMarketDateRangesAllSame;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
@@ -154,36 +143,6 @@ public class RBPreconditionsTest {
         ImmutableList.of(closedRange(1.1, 2.2), closedRange(2.19, 4.4)).iterator(), 1e-8));
     assertIllegalArgumentException( () -> RBOrderingPreconditions.checkConsecutiveClosedDoubleRanges(
         ImmutableList.of(closedRange(1.1, 2.2), closedRange(2.21, 4.4)).iterator(), 1e-8));
-  }
-
-  @Test
-  public void testCheckMarketDateRangesAllSame() {
-    DailyTimeSeries<Integer> tsA = dailyTestTimeSeries(DAY0, DAY0, DUMMY_POSITIVE_INTEGER);
-    DailyTimeSeries<Double>  tsB = dailyTestTimeSeries(DAY0, DAY0, DUMMY_DOUBLE);
-    DailyTimeSeries<Boolean> tsC = dailyTestTimeSeries(DAY0, DAY0, DUMMY_BOOLEAN);
-    DailyTimeSeries<String>  bigTimeSeries = dailyTestTimeSeries(DAY0, DAY1, DUMMY_STRING, DUMMY_STRING);
-    assertThat(
-        checkMarketDateRangesAllSame(tsA, tsB),
-        marketDateRangeMatcher(validatedMarketDateRange(DAY0, DAY0, REAL_MARKET)));
-    assertThat(
-        checkMarketDateRangesAllSame(tsA, tsB, tsC),
-        marketDateRangeMatcher(validatedMarketDateRange(DAY0, DAY0, REAL_MARKET)));
-    assertIllegalArgumentException( () -> checkMarketDateRangesAllSame(tsA, bigTimeSeries));
-    assertIllegalArgumentException( () -> checkMarketDateRangesAllSame(bigTimeSeries, tsA));
-
-    assertIllegalArgumentException( () -> checkMarketDateRangesAllSame(bigTimeSeries, tsA, tsB));
-    assertIllegalArgumentException( () -> checkMarketDateRangesAllSame(tsA, bigTimeSeries, tsB));
-    assertIllegalArgumentException( () -> checkMarketDateRangesAllSame(tsA, tsB, bigTimeSeries));
-  }
-
-  @Test
-  public void checkAllSameInDailyTimeSeries() {
-    DailyTimeSeries<Pair<String, Integer>> timeSeries = dailyTestTimeSeries(DAY0, DAY2,
-        pair("DAY0", 111),
-        pair("DAY1", 111),
-        pair("DAY2", 111));
-    assertIllegalArgumentException( () -> RBSimilarityPreconditions.checkAllSame(timeSeries, v -> v.getLeft(), REAL_MARKET));
-    assertEquals(111, RBSimilarityPreconditions.checkAllSame(timeSeries, v -> v.getRight(), REAL_MARKET).intValue());
   }
 
   @Test
