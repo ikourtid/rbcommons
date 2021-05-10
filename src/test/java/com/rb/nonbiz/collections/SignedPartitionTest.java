@@ -30,8 +30,8 @@ import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_1;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
-import static org.junit.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class SignedPartitionTest extends RBTestMatcher<SignedPartition> {
 

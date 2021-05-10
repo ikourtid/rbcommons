@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import static com.rb.nonbiz.math.optimization.highlevel.ConstantTerm.constantTerm;
 import static com.rb.nonbiz.math.optimization.highlevel.ConstantTerm.zeroConstantTerm;
-import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

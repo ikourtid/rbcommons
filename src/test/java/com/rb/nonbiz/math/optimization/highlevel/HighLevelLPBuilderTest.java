@@ -47,7 +47,6 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertNullPointerException;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_LABEL;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_STRING;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class HighLevelLPBuilderTest extends RBTestMatcher<HighLevelLPBuilder> {
 

@@ -28,7 +28,6 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
-import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

@@ -44,10 +44,6 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_MONEY;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_MULTIPLIER;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_SIGNED_MONEY;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.NaN;
@@ -56,9 +52,9 @@ import static java.lang.Double.parseDouble;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class RBRangesTest {

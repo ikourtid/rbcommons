@@ -17,7 +17,6 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class WaterSlideIntegrationTest {

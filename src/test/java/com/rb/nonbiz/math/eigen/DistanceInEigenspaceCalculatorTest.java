@@ -21,7 +21,6 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.math.EigenDistance.eigenDistanceInVarianceSpace;
 import static com.rb.nonbiz.math.EigenDistanceTest.eigenDistanceMatcher;
 import static com.rb.nonbiz.math.EigenDistanceTest.zeroEigenDistance;
-import static com.rb.nonbiz.math.eigen.DecreasingPositiveDoubles.decreasingPositiveDoubles;
 import static com.rb.nonbiz.math.eigen.DecreasingPositiveDoublesTest.decreasingPositiveDoubles;
 import static com.rb.nonbiz.math.eigen.EigenDistanceCalculationInstructions.eigenDistanceCalculationInstructions;
 import static com.rb.nonbiz.math.eigen.FactorLoadings.factorLoadings;

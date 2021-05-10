@@ -7,7 +7,6 @@ import org.junit.Test;
 import static com.rb.nonbiz.math.optimization.highlevel.LinearApproximationVarRangesAndValuesTest.linearApproximationVarRangesAndValuesForQuadratic;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static org.junit.Assert.assertEquals;
 
 public class LinearApproximationEvaluatorTest extends RBTest<LinearApproximationEvaluator> {
 

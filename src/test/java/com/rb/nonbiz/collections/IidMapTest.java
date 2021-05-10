@@ -57,7 +57,6 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIidSetEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.reverseOrder;
 import static java.util.Comparator.comparing;

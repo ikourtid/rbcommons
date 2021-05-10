@@ -19,7 +19,6 @@ import static com.rb.nonbiz.math.optimization.highlevel.X90.x90;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static com.rb.nonbiz.types.UnitFraction.unitFractionInBps;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class LinearlyApproximatedWaterSlideFunctionGeneratorTest

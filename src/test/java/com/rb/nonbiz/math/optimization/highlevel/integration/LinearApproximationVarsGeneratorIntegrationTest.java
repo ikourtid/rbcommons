@@ -39,8 +39,6 @@ import static com.rb.nonbiz.math.optimization.highlevel.RBPublicTestOnlySuperVar
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Note that, in prod, we mostly use the 'water slide function', not the square (x^2). But in the context of this test,

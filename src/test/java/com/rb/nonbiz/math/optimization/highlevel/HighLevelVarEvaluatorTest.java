@@ -10,7 +10,6 @@ import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpressions.
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVariablesBuilder.highLevelVariablesBuilder;
 import static com.rb.nonbiz.math.optimization.highlevel.RBPublicTestOnlySuperVarConstructors.testGeneralSuperVarWithoutAddedConstraintsOrArtificialTerms;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static org.junit.Assert.assertEquals;
 
 public class HighLevelVarEvaluatorTest extends RBIntegrationTest<HighLevelVarEvaluator> {
 

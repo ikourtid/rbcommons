@@ -25,7 +25,6 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static junit.framework.TestCase.assertEquals;
 
 /**
  * This test class is not generic, but the publicly exposed test matcher is.

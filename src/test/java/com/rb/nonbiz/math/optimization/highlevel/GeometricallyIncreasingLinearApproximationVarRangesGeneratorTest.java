@@ -13,7 +13,6 @@ import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.math.optimization.highlevel.GeometricallyIncreasingRangesGenerationInstructions.GeometricallyIncreasingRangesGenerationInstructionsBuilder.geometricallyIncreasingRangesGenerationInstructionsBuilder;
 import static com.rb.nonbiz.math.optimization.highlevel.LinearApproximationVarRanges.linearApproximationVarRanges;
 import static com.rb.nonbiz.math.optimization.highlevel.LinearApproximationVarRangesTest.linearApproximationVarRangesMatcher;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GeometricallyIncreasingLinearApproximationVarRangesGeneratorTest
     extends RBIntegrationTest<GeometricallyIncreasingLinearApproximationVarRangesGenerator> {

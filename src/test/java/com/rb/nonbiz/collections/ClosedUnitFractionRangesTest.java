@@ -2,7 +2,6 @@ package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
-import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 

@@ -13,7 +13,6 @@ import static com.rb.nonbiz.math.optimization.general.LinearConstraintImpl.linea
 import static com.rb.nonbiz.math.optimization.general.LinearConstraintTest.linearConstraintMatcher;
 import static com.rb.nonbiz.math.optimization.general.RawVariable.rawVariable;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static org.junit.Assert.assertEquals;
 
 public class LinearConstraintImplTest extends RBTestMatcher<LinearConstraint> {
 

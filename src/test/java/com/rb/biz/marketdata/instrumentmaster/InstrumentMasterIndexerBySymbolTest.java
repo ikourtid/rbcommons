@@ -20,7 +20,6 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.NonContiguousRangeMap.singletonNonContiguousRangeMapWithEnd;
 import static com.rb.nonbiz.collections.NonContiguousRangeMap.singletonNonContiguousRangeMapWithNoEnd;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class InstrumentMasterIndexerBySymbolTest extends RBTest<InstrumentMasterIndexerBySymbol> {
 

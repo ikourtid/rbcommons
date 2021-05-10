@@ -1,7 +1,5 @@
 package com.rb.nonbiz.testmatchers;
 
-import com.rb.biz.types.collections.ts.DailyTimeSeries;
-import com.rb.biz.types.collections.ts.YearlyTimeSeries;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBMap;
@@ -15,8 +13,6 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.function.Function;
 
-import static com.rb.biz.types.collections.ts.DailyTimeSeriesTest.dailyTimeSeriesMatcher;
-import static com.rb.biz.types.collections.ts.YearlyTimeSeriesTest.yearlyTimeSeriesMatcher;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
 import static com.rb.nonbiz.collections.IidSetTest.iidSetMatcher;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.arrayMatcher;
@@ -177,16 +173,6 @@ public class Match<T, F> {
   public static <T> Match<T, Class<T>> matchClass(
       Function<T, T> objectExtractor) {
     return match(v -> (Class<T>) objectExtractor.apply(v).getClass(), f -> classMatcher(f));
-  }
-
-  public static <T, D> Match<T, DailyTimeSeries<D>> matchDailyTimeSeries(
-      Function<T, DailyTimeSeries<D>> extractor, MatcherGenerator<D> matcherGenerator) {
-    return match(extractor, f -> dailyTimeSeriesMatcher(f, matcherGenerator));
-  }
-
-  public static <T, D> Match<T, YearlyTimeSeries<D>> matchYearlyTimeSeries(
-      Function<T, YearlyTimeSeries<D>> extractor, MatcherGenerator<D> matcherGenerator) {
-    return match(extractor, f -> yearlyTimeSeriesMatcher(f, matcherGenerator));
   }
 
   public boolean matches(T expected, T actual) {

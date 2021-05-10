@@ -62,8 +62,6 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 
 /**

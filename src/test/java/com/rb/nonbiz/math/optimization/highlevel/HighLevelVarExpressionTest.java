@@ -13,7 +13,6 @@ import static com.rb.nonbiz.math.optimization.general.RawVariable.rawVariable;
 import static com.rb.nonbiz.math.optimization.highlevel.ConstantTerm.constantTerm;
 import static com.rb.nonbiz.math.optimization.highlevel.ConstantTerm.zeroConstantTerm;
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpression.constantHighLevelVarExpression;
-import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpression.disjointHighLevelVarExpression;
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpression.highLevelVarExpressionWithoutConstantTerm;
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpression.zeroConstantHighLevelVarExpression;
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpressions.disjointHighLevelVarExpression;
@@ -34,8 +33,6 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_LABEL;
 import static java.util.Collections.singletonList;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 
 public class HighLevelVarExpressionTest extends RBTestMatcher<HighLevelVarExpression> {

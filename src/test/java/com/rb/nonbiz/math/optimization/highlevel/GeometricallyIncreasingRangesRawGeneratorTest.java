@@ -12,7 +12,6 @@ import java.util.function.UnaryOperator;
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.math.optimization.highlevel.GeometricallyIncreasingRangesGenerationInstructions.GeometricallyIncreasingRangesGenerationInstructionsBuilder.geometricallyIncreasingRangesGenerationInstructionsBuilder;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.doubleListMatcher;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GeometricallyIncreasingRangesRawGeneratorTest extends RBTest<GeometricallyIncreasingRangesRawGenerator> {
 

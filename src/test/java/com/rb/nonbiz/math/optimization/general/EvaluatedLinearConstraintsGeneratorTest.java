@@ -15,7 +15,6 @@ import static com.rb.nonbiz.math.optimization.general.EvaluatedLinearConstraints
 import static com.rb.nonbiz.math.optimization.general.LinearConstraintImpl.linearConstraintImpl;
 import static com.rb.nonbiz.math.optimization.general.RawVariable.rawVariable;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class EvaluatedLinearConstraintsGeneratorTest extends RBIntegrationTest<EvaluatedLinearConstraintsGenerator> {
 

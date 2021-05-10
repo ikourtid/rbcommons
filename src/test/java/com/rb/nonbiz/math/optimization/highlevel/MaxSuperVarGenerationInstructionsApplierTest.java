@@ -13,7 +13,6 @@ import static com.rb.nonbiz.math.optimization.highlevel.CreateArtificialTermForM
 import static com.rb.nonbiz.math.optimization.highlevel.DoNotCreateArtificialTermForMax.doNotCreateArtificialTermForMax;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalDoubleEmpty;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
-import static junit.framework.TestCase.assertEquals;
 
 public class MaxSuperVarGenerationInstructionsApplierTest extends RBTest<MaxSuperVarGenerationInstructionsApplier> {
 

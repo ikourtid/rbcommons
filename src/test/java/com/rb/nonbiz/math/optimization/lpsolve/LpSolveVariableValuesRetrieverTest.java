@@ -13,7 +13,6 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class LpSolveVariableValuesRetrieverTest extends RBTest<LpSolveVariableValuesRetriever> {
 

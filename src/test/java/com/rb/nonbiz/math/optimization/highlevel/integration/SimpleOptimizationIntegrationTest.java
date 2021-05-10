@@ -23,7 +23,6 @@ import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpressions.
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_LABEL;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
-import static org.junit.Assert.assertEquals;
 
 public class SimpleOptimizationIntegrationTest extends AbstractHighLevelOptimizationIntegrationTest {
 

@@ -13,10 +13,8 @@ import com.rb.nonbiz.util.RBSimilarityPreconditions;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.rb.nonbiz.json.JsonSparseTimeSeries.JsonSparseTimeSeriesBuilder.jsonSparseTimeSeriesBuilder;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
 import static com.rb.nonbiz.json.RBJsonLocalDateArray.RBJsonLocalDateArrayBuilder.rbJsonLocalDateArrayBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;

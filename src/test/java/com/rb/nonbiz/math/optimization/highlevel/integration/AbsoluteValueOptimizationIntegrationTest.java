@@ -19,7 +19,6 @@ import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpressions.
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpressions.singleVarExpression;
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpressions.sumOfHighLevelVars;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
-import static org.junit.Assert.assertEquals;
 
 public class AbsoluteValueOptimizationIntegrationTest extends AbstractHighLevelOptimizationIntegrationTest {
 

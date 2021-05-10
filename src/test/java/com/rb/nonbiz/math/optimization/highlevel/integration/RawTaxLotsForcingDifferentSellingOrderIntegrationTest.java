@@ -6,7 +6,6 @@ import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.math.optimization.general.AllRawVariablesAndOptimalValues;
 import com.rb.nonbiz.math.optimization.general.LinearOptimizationProgram;
 import com.rb.nonbiz.math.optimization.general.RawVariable;
-import com.rb.nonbiz.math.optimization.highlevel.*;
 import com.rb.nonbiz.math.optimization.highlevel.integration.RawTaxLotsUsingMinAndMaxIntegrationTest.TestResult;
 import org.junit.Test;
 

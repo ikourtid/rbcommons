@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import static com.rb.biz.marketdata.instrumentmaster.AllIndexedInstrumentMasterData.allIndexedInstrumentMasterData;
 import static com.rb.biz.marketdata.instrumentmaster.AllIndexedInstrumentMasterDataTest.allIndexedInstrumentMasterDataMatcher;
 import static com.rb.biz.marketdata.instrumentmaster.AllUnindexedInstrumentMasterDataTest.allUnindexedInstrumentMasterDataMatcher;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class AllIndexedInstrumentMasterDataLoaderTest extends RBTest<AllIndexedInstrumentMasterDataLoader> {
 

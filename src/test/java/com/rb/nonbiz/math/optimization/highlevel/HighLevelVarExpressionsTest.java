@@ -11,7 +11,6 @@ import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpressionTe
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpressions.highLevelVarExpression;
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpressions.highLevelVarExpressionOfOptionals;
 import static com.rb.nonbiz.types.Weighted.weighted;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class HighLevelVarExpressionsTest {
 

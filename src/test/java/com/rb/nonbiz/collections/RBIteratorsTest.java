@@ -45,9 +45,9 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTE
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class RBIteratorsTest {

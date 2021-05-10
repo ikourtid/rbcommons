@@ -17,8 +17,8 @@ import static com.rb.nonbiz.collections.RBMultidimensionalCounters.multidimensio
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static org.junit.Assert.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class RBMultidimensionalCountersTest {

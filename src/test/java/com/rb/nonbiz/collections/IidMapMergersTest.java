@@ -12,12 +12,9 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.google.common.collect.Iterators.singletonIterator;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A2;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A3;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_C;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsAllowingOverlapOnSimilarItemsOnly;
@@ -25,17 +22,12 @@ import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsByTransformedV
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
-import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
-import static com.rb.nonbiz.collections.RBMapMergers.mergeRBMapsByTransformedValue;
-import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
-import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.iidMapPreciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 // note: the methods in IidMapMergers have their tests in IidMaps for now; we should move them here.

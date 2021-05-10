@@ -17,7 +17,6 @@ import static com.rb.nonbiz.math.optimization.highlevel.FlattenedRawVarExpressio
 import static com.rb.nonbiz.math.optimization.highlevel.FlattenedRawVarExpression.flattenedRawVarExpression;
 import static com.rb.nonbiz.math.optimization.highlevel.FlattenedRawVarExpressionTest.flattenedRawVarExpressionMatcher;
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpression.constantHighLevelVarExpression;
-import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpression.disjointHighLevelVarExpression;
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpressions.disjointHighLevelVarExpression;
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpressions.highLevelVarExpression;
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelVarExpressions.singleVarExpression;

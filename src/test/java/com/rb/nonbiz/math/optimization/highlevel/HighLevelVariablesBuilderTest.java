@@ -7,7 +7,6 @@ import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.math.optimization.general.AllRawVariablesInOrderBuilderTest.allRawVariablesInOrderBuilderMatcher;
 import static com.rb.nonbiz.math.optimization.general.RawVariable.rawVariable;
 import static com.rb.nonbiz.math.optimization.general.RawVariableTest.rawVariableMatcher;
@@ -26,7 +25,6 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.rbMapToDoubleRangeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_LABEL;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class HighLevelVariablesBuilderTest extends RBTestMatcher<HighLevelVariablesBuilder> {
 

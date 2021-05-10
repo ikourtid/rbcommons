@@ -4,7 +4,7 @@ import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.math.optimization.general.AllRawVariablesAndOptimalValues;
 import com.rb.nonbiz.math.optimization.general.FeasibleOptimizationResult;
 import com.rb.nonbiz.math.optimization.general.LinearOptimizationProgram;
-import com.rb.nonbiz.math.optimization.highlevel.*;
+import com.rb.nonbiz.math.optimization.highlevel.FunctionDescriptor;
 import org.junit.Test;
 
 import java.util.function.DoubleUnaryOperator;

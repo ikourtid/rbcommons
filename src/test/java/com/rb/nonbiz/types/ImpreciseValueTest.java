@@ -8,10 +8,8 @@ import java.util.List;
 
 import static com.rb.biz.investing.strategy.optbased.rebal.lp.RawObjectiveValue.rawNaiveSubObjectiveValue;
 import static com.rb.biz.investing.strategy.optbased.rebal.lp.RawObjectiveValue.rawObjectiveValue;
-import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.types.ImpreciseValue.asDoubleList;
 import static com.rb.nonbiz.types.ImpreciseValue.signsAreOpposite;
-import static com.rb.nonbiz.types.ImpreciseValue.sumToDouble;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;

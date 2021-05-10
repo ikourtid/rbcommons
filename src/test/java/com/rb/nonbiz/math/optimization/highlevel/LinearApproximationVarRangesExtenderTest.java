@@ -7,7 +7,6 @@ import org.junit.Test;
 import static com.rb.nonbiz.math.optimization.highlevel.LinearApproximationVarRanges.linearApproximationVarRanges;
 import static com.rb.nonbiz.math.optimization.highlevel.LinearApproximationVarRangesTest.linearApproximationVarRangesMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class LinearApproximationVarRangesExtenderTest extends RBTest<LinearApproximationVarRangesExtender> {
 

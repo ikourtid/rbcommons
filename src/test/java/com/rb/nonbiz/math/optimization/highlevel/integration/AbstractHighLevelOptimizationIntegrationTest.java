@@ -10,9 +10,8 @@ import com.rb.nonbiz.text.Strings;
 
 import static com.rb.nonbiz.math.optimization.general.OptimizationResultTest.assumeFeasible;
 import static com.rb.nonbiz.math.optimization.highlevel.HighLevelLPBuilderTest.makeRealHighLevelLPBuilder;
-import static com.rb.nonbiz.testutils.RBIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_LABEL;
-import static org.junit.Assert.assertEquals;
+import static com.rb.nonbiz.testutils.RBIntegrationTest.makeRealObject;
 
 public abstract class AbstractHighLevelOptimizationIntegrationTest {
 

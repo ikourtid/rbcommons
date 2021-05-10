@@ -38,8 +38,6 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
 
 // This class is not generic, but one of the publicly exposed static matchers is
 public class TruncatedEigendecompositionTest extends RBTestMatcher<TruncatedEigendecomposition<InstrumentId>> {

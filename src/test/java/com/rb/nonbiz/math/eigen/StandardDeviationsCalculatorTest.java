@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.doubleArrayMatcher;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class StandardDeviationsCalculatorTest extends RBTest<StandardDeviationsCalculator> {
 

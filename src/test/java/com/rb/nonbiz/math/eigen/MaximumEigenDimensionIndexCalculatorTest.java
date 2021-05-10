@@ -9,7 +9,6 @@ import static com.rb.nonbiz.math.eigen.EigenDimensionIndexTest.eigenDimensionInd
 import static com.rb.nonbiz.math.eigen.EigenExplainabilityRestrictions.emptyEigenExplainabilityRestrictions;
 import static com.rb.nonbiz.math.eigen.EigenExplainabilityRestrictions.restrictNumEigenvectors;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MaximumEigenDimensionIndexCalculatorTest extends RBTest<MaximumEigenDimensionIndexCalculator> {
 

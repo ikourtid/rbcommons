@@ -18,7 +18,6 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.singleton;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class FlattenedRawVarExpressionMergerTest extends RBTest<FlattenedRawVarExpressionMerger> {
 

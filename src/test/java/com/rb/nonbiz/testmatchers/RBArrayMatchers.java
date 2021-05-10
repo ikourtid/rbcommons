@@ -9,8 +9,6 @@ import org.hamcrest.TypeSafeMatcher;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-import static com.rb.nonbiz.text.Strings.formatDoubleArray;
-
 public class RBArrayMatchers {
 
   public static <T> TypeSafeMatcher<T[]> arrayMatcher(T[] expected, MatcherGenerator<T> itemMatcherGenerator) {

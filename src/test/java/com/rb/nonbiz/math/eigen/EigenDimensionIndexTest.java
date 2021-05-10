@@ -8,7 +8,6 @@ import static com.rb.nonbiz.math.eigen.EigenDimensionIndex.eigenDimensionIndex;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static org.junit.Assert.assertEquals;
 
 public class EigenDimensionIndexTest extends RBTestMatcher<EigenDimensionIndex> {
 

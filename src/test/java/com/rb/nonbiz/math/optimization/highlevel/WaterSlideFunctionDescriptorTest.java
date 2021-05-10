@@ -14,7 +14,6 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.PositiveMultiplier.POSITIVE_MULTIPLIER_1;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
-import static org.junit.Assert.assertEquals;
 
 public class WaterSlideFunctionDescriptorTest extends RBTestMatcher<WaterSlideFunctionDescriptor> {
 

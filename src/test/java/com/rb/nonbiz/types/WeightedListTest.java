@@ -29,7 +29,6 @@ import static com.rb.nonbiz.types.WeightedList.nonEmptyWeightedList;
 import static com.rb.nonbiz.types.WeightedList.possiblyEmptyWeightedList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
 
 /**
  * This test class is not generic, but the publicly exposed typesafe matcher is.

@@ -66,8 +66,8 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_PRICE;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class IidMapsTest {
 

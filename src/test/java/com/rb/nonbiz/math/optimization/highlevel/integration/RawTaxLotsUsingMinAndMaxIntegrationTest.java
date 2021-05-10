@@ -7,7 +7,6 @@ import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.math.optimization.general.AllRawVariablesAndOptimalValues;
 import com.rb.nonbiz.math.optimization.general.LinearOptimizationProgram;
 import com.rb.nonbiz.math.optimization.general.RawVariable;
-import com.rb.nonbiz.math.optimization.highlevel.*;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 

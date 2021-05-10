@@ -23,8 +23,8 @@ import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.hasLongMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIidSetEquals;
-import static org.junit.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 /**
  * This test class is not generic, but the publicly visible static matcher is.

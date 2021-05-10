@@ -5,7 +5,6 @@ import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.PairOfSameType;
 import com.rb.nonbiz.math.optimization.general.AllRawVariablesAndOptimalValues;
 import com.rb.nonbiz.math.optimization.general.FeasibleOptimizationResult;
-import com.rb.nonbiz.math.optimization.highlevel.*;
 import com.rb.nonbiz.text.Strings;
 import org.junit.Test;
 

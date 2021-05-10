@@ -13,7 +13,6 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingImpreciseAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static org.junit.Assert.assertEquals;
 
 public class EigenpairTest extends RBTestMatcher<Eigenpair> {
 

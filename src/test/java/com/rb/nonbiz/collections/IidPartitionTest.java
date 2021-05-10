@@ -32,8 +32,8 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_SYMBOL;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
-import static org.junit.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class IidPartitionTest extends RBTestMatcher<IidPartition> {
 

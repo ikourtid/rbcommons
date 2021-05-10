@@ -11,7 +11,6 @@ import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.ClosedRange.singletonClosedRange;
 import static com.rb.nonbiz.math.sequence.GeometricProgression.GeometricProgressionBuilder.geometricProgressionBuilder;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SequenceToTimeSeriesConverterTest extends RBTest<SequenceToTimeSeriesConverter> {
 
