@@ -1,10 +1,10 @@
 package com.rb.nonbiz.reflection;
 
-import com.rb.biz.investing.strategy.Investor;
-import com.rb.biz.types.trading.BuyOrders;
-import com.rb.biz.types.trading.Orders;
-import com.rb.biz.types.trading.SellOrders;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.HardAndSoftRange;
+import com.rb.nonbiz.types.HardAndSoftRangeTest;
+import com.rb.nonbiz.types.UnitFraction;
+import com.rb.nonbiz.types.UnitFractionTest;
 import org.hamcrest.TypeSafeMatcher;
 
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
@@ -24,20 +24,20 @@ public class AllRbTopLevelClassesTest extends RBTestMatcher<AllRbTopLevelClasses
   @Override
   public AllRbTopLevelClasses makeNontrivialObject() {
     return unsafeTestOnlyAllRbTopLevelClasses(rbSetOf(
-        Investor.class,
-        BuyOrders.class,
-        SellOrders.class,
-        Orders.class));
+        HardAndSoftRange.class,
+        HardAndSoftRangeTest.class,
+        UnitFraction.class,
+        UnitFractionTest.class));
   }
 
   @Override
   public AllRbTopLevelClasses makeMatchingNontrivialObject() {
     // Nothing to tweak here
     return unsafeTestOnlyAllRbTopLevelClasses(rbSetOf(
-        Investor.class,
-        BuyOrders.class,
-        SellOrders.class,
-        Orders.class));
+        HardAndSoftRange.class,
+        HardAndSoftRangeTest.class,
+        UnitFraction.class,
+        UnitFractionTest.class));
   }
 
   @Override

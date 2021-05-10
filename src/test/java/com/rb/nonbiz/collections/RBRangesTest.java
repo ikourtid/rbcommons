@@ -5,6 +5,7 @@ import com.google.common.collect.Range;
 import com.rb.biz.types.Money;
 import com.rb.biz.types.SignedMoney;
 import com.rb.nonbiz.functional.TriConsumer;
+import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.PositiveMultiplier;
 import org.junit.Test;
@@ -44,6 +45,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.NaN;
@@ -58,6 +60,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class RBRangesTest {
+
+  private final ZScore DUMMY_Z_SCORE = zScore(DUMMY_DOUBLE);
 
   public static <V extends Comparable<? super V>> List<Range<V>> allRanges(V min, V max) {
     return ImmutableList.of(
@@ -840,19 +844,19 @@ public class RBRangesTest {
 
   @Test
   public void testGetMinMaxOfClosedRanges_throwsOnNonClosedRanges() {
-    for (Range<Money> range : ImmutableList.of(
-        Range.atLeast(DUMMY_MONEY),
-        Range.greaterThan(DUMMY_MONEY),
-        Range.lessThan(DUMMY_MONEY),
-        Range.atMost(DUMMY_MONEY),
-        Range.open(money(1), money(3)),
-        Range.closedOpen(money(1), money(3)),
-        Range.openClosed(money(1), money(3)))) {
+    for (Range<ZScore> range : ImmutableList.of(
+        Range.atLeast(DUMMY_Z_SCORE),
+        Range.greaterThan(DUMMY_Z_SCORE),
+        Range.lessThan(DUMMY_Z_SCORE),
+        Range.atMost(DUMMY_Z_SCORE),
+        Range.open(zScore(1), zScore(3)),
+        Range.closedOpen(zScore(1), zScore(3)),
+        Range.openClosed(zScore(1), zScore(3)))) {
       // After adding class ClosedRange (March 2020) the exceptions are inside the closedRange static constructor now,
       // so we don't really have to check for that, but let's just keep the test anyway.
       assertIllegalArgumentException( () -> getMinMaxOfClosedRanges(singletonIterator(closedRange(range))));
-      assertIllegalArgumentException( () -> getMinMaxOfClosedRanges(ImmutableList.of(closedRange(money(1.5), money(2.5)), closedRange(range)).iterator()));
-      assertIllegalArgumentException( () -> getMinMaxOfClosedRanges(ImmutableList.of(closedRange(money(1.5), money(2.5)), closedRange(range)).iterator()));
+      assertIllegalArgumentException( () -> getMinMaxOfClosedRanges(ImmutableList.of(closedRange(zScore(1.5), zScore(2.5)), closedRange(range)).iterator()));
+      assertIllegalArgumentException( () -> getMinMaxOfClosedRanges(ImmutableList.of(closedRange(zScore(1.5), zScore(2.5)), closedRange(range)).iterator()));
     }
   }
 
@@ -1019,14 +1023,14 @@ public class RBRangesTest {
 
   @Test
   public void testToClosedDoubleRange() {
-    for (Range<SignedMoney> nonClosedRange : ImmutableList.of(
-        Range.atLeast(DUMMY_SIGNED_MONEY),
-        Range.greaterThan(DUMMY_SIGNED_MONEY),
-        Range.lessThan(DUMMY_SIGNED_MONEY),
-        Range.atMost(DUMMY_SIGNED_MONEY),
-        Range.open(signedMoney(-1), signedMoney(3)),
-        Range.closedOpen(signedMoney(-1), signedMoney(3)),
-        Range.openClosed(signedMoney(-1), signedMoney(3)))) {
+    for (Range<ZScore> nonClosedRange : ImmutableList.of(
+        Range.atLeast(DUMMY_Z_SCORE),
+        Range.greaterThan(DUMMY_Z_SCORE),
+        Range.lessThan(DUMMY_Z_SCORE),
+        Range.atMost(DUMMY_Z_SCORE),
+        Range.open(zScore(-1), zScore(3)),
+        Range.closedOpen(zScore(-1), zScore(3)),
+        Range.openClosed(zScore(-1), zScore(3)))) {
       // After the introduction of the class ClosedRange, the exception gets thrown inside the closedRange
       // static constructor, not toClosedDoubleRange, but let's keep this test anyway.
       assertIllegalArgumentException( () -> toClosedDoubleRange(closedRange(nonClosedRange)));
@@ -1040,14 +1044,14 @@ public class RBRangesTest {
 
   @Test
   public void testToClosedDoubleRangeFromImpreciseValue() {
-    for (Range<PositiveMultiplier> nonClosedRange : ImmutableList.of(
-        Range.atLeast(    DUMMY_POSITIVE_MULTIPLIER),
-        Range.greaterThan(DUMMY_POSITIVE_MULTIPLIER),
-        Range.lessThan(   DUMMY_POSITIVE_MULTIPLIER),
-        Range.atMost(     DUMMY_POSITIVE_MULTIPLIER),
-        Range.open(      positiveMultiplier(1.1), positiveMultiplier(3.3)),
-        Range.closedOpen(positiveMultiplier(1.1), positiveMultiplier(3.3)),
-        Range.openClosed(positiveMultiplier(1.1), positiveMultiplier(3.3)))) {
+    for (Range<ZScore> nonClosedRange : ImmutableList.of(
+        Range.atLeast(DUMMY_Z_SCORE),
+        Range.greaterThan(DUMMY_Z_SCORE),
+        Range.lessThan(DUMMY_Z_SCORE),
+        Range.atMost(DUMMY_Z_SCORE),
+        Range.open(zScore(-1), zScore(3)),
+        Range.closedOpen(zScore(-1), zScore(3)),
+        Range.openClosed(zScore(-1), zScore(3)))) {
       // After the introduction of the class ClosedRange, the exception gets thrown inside the closedRange
       // static constructor, not toClosedDoubleRangeFromImpreciseValue, but let's keep this test anyway.
       assertIllegalArgumentException( () -> toClosedDoubleRangeFromImpreciseValue(closedRange(nonClosedRange)));

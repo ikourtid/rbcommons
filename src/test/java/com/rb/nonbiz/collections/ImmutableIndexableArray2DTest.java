@@ -1,9 +1,9 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
-import com.rb.nonbiz.math.optimization.general.ConstraintDirection;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -13,9 +13,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray2D.immutableIndexableArray2D;
 import static com.rb.nonbiz.collections.MutableIndexableArray2DTest.mutableIndexableArray2DMatcher;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
-import static com.rb.nonbiz.math.optimization.general.ConstraintDirection.EQUAL_TO_SCALAR;
-import static com.rb.nonbiz.math.optimization.general.ConstraintDirection.GREATER_THAN_SCALAR;
-import static com.rb.nonbiz.math.optimization.general.ConstraintDirection.LESS_THAN_SCALAR;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.floatAlmostEqualsMatcher;
@@ -44,48 +41,48 @@ public class ImmutableIndexableArray2DTest extends RBTestMatcher<ImmutableIndexa
 
   @Test
   public void testSingleRowIterator() {
-    ImmutableIndexableArray2D<String, Boolean, ConstraintDirection> array = immutableIndexableArray2D(
-        new ConstraintDirection[][] {
+    ImmutableIndexableArray2D<String, Boolean, TestEnumXYZ> array = immutableIndexableArray2D(
+        new TestEnumXYZ[][] {
             //  false              true
-            { EQUAL_TO_SCALAR,     GREATER_THAN_SCALAR }, // a
-            { GREATER_THAN_SCALAR, LESS_THAN_SCALAR    }, // b
-            { LESS_THAN_SCALAR,    EQUAL_TO_SCALAR     }  // c
+            { TestEnumXYZ.X, TestEnumXYZ.Y }, // a
+            { TestEnumXYZ.Y, TestEnumXYZ.Z }, // b
+            { TestEnumXYZ.Z, TestEnumXYZ.X }  // c
         },
         simpleArrayIndexMapping("a", "b", "c"),
         simpleArrayIndexMapping(false, true));
-    Iterator<ConstraintDirection> iter = array.singleRowIterator("b");
-    assertEquals(GREATER_THAN_SCALAR, iter.next());
-    assertEquals(LESS_THAN_SCALAR, iter.next());
+    Iterator<TestEnumXYZ> iter = array.singleRowIterator("b");
+    assertEquals(TestEnumXYZ.Y, iter.next());
+    assertEquals(TestEnumXYZ.Z, iter.next());
     assertFalse(iter.hasNext());
     assertEquals(
         newArrayList(array.singleRowIterator("a")),
-        ImmutableList.of(EQUAL_TO_SCALAR, GREATER_THAN_SCALAR));
+        ImmutableList.of(TestEnumXYZ.X, TestEnumXYZ.Y));
     assertEquals(
         newArrayList(array.singleRowIterator("c")),
-        ImmutableList.of(LESS_THAN_SCALAR, EQUAL_TO_SCALAR));
+        ImmutableList.of(TestEnumXYZ.Z, TestEnumXYZ.X));
   }
 
   @Test
   public void testSingleColumnIterator() {
-    ImmutableIndexableArray2D<String, Boolean, ConstraintDirection> array = immutableIndexableArray2D(
-        new ConstraintDirection[][] {
+    ImmutableIndexableArray2D<String, Boolean, TestEnumXYZ> array = immutableIndexableArray2D(
+        new TestEnumXYZ[][] {
             //  false              true
-            { EQUAL_TO_SCALAR,     GREATER_THAN_SCALAR }, // a
-            { GREATER_THAN_SCALAR, LESS_THAN_SCALAR    }, // b
-            { LESS_THAN_SCALAR,    EQUAL_TO_SCALAR     }  // c
+            { TestEnumXYZ.X, TestEnumXYZ.Y }, // a
+            { TestEnumXYZ.Y, TestEnumXYZ.Z    }, // b
+            { TestEnumXYZ.Z, TestEnumXYZ.X     }  // c
         },
         simpleArrayIndexMapping("a", "b", "c"),
         simpleArrayIndexMapping(false, true));
-    Iterator<ConstraintDirection> iter = array.singleColumnIterator(false);
-    assertEquals(EQUAL_TO_SCALAR, iter.next());
-    assertEquals(GREATER_THAN_SCALAR, iter.next());
-    assertEquals(LESS_THAN_SCALAR, iter.next());
+    Iterator<TestEnumXYZ> iter = array.singleColumnIterator(false);
+    assertEquals(TestEnumXYZ.X, iter.next());
+    assertEquals(TestEnumXYZ.Y, iter.next());
+    assertEquals(TestEnumXYZ.Z, iter.next());
     assertFalse(iter.hasNext());
 
     iter = array.singleColumnIterator(true);
-    assertEquals(GREATER_THAN_SCALAR, iter.next());
-    assertEquals(LESS_THAN_SCALAR, iter.next());
-    assertEquals(EQUAL_TO_SCALAR, iter.next());
+    assertEquals(TestEnumXYZ.Y, iter.next());
+    assertEquals(TestEnumXYZ.Z, iter.next());
+    assertEquals(TestEnumXYZ.X, iter.next());
     assertFalse(iter.hasNext());
   }
 

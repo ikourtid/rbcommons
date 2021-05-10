@@ -18,9 +18,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.rb.biz.market.MarketTest.REAL_MARKET;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
-import static com.rb.biz.types.collections.ts.DailyTimeSeriesTest.dailyTestTimeSeries;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
@@ -210,19 +208,6 @@ public class RBJsonArraysTest {
     asserter.accept(
         emptyJsonArray(),
         emptyRBSet());
-  }
-
-  @Test
-  public void testDailyTimeSeriesToJsonArray() {
-    MatcherAssert.assertThat(
-        dailyTimeSeriesToJsonArray(
-            dailyTestTimeSeries(DAY0, DAY1, "a", "b"),
-            v -> singletonJsonObject(v + "X", v + "Y"),
-            REAL_MARKET),
-        jsonArrayExactMatcher(
-            jsonElementArray(
-                singletonJsonObject("aX", "aY"),
-                singletonJsonObject("bX", "bY"))));
   }
 
   @Test

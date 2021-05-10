@@ -1,8 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
-import com.rb.biz.investing.strategy.optbased.GlobalObjective;
-import com.rb.biz.investing.strategy.optbased.rebal.lp.NormalizedObjectiveValue;
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.text.Strings;
@@ -20,7 +18,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.rb.biz.investing.strategy.optbased.rebal.lp.NormalizedObjectiveValue.normalizedGlobalObjectiveValue;
 import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalDouble;
@@ -31,6 +28,7 @@ import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformPairOfOptionalDoubles;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformPairOfOptionalInts;
 import static com.rb.nonbiz.collections.RBOptionals.*;
+import static com.rb.nonbiz.math.stats.ZScore.zScore;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
@@ -273,14 +271,14 @@ public class RBOptionalsTest {
     assertEquals(OptionalDouble.of(45.6), transformOptionalPreciseValueToOptionalDouble(Optional.of(money(45.6))));
     assertEquals(OptionalDouble.empty(),  transformOptionalPreciseValueToOptionalDouble(Optional.<Money>empty()));
 
-    assertEquals(OptionalDouble.of(78.9), transformOptionalImpreciseValueToOptionalDouble(Optional.of(normalizedGlobalObjectiveValue(78.9))));
-    assertEquals(OptionalDouble.empty(),  transformOptionalImpreciseValueToOptionalDouble(Optional.<NormalizedObjectiveValue<GlobalObjective>>empty()));
+    assertEquals(OptionalDouble.of(78.9), transformOptionalImpreciseValueToOptionalDouble(Optional.of(zScore(78.9))));
+    assertEquals(OptionalDouble.empty(),  transformOptionalImpreciseValueToOptionalDouble(Optional.empty()));
 
     assertEquals(45.6, transformOptionalPreciseValueToDoubleOrZero(Optional.of(money(45.6))), 1e-8);
     assertEquals(0.0,  transformOptionalPreciseValueToDoubleOrZero(Optional.<Money>empty()), 1e-8);
 
-    assertEquals(78.9, transformOptionalImpreciseValueToDoubleOrZero(Optional.of(normalizedGlobalObjectiveValue(78.9))), 1e-8);
-    assertEquals(0.0,  transformOptionalImpreciseValueToDoubleOrZero(Optional.<NormalizedObjectiveValue<GlobalObjective>>empty()), 1e-8);
+    assertEquals(78.9, transformOptionalImpreciseValueToDoubleOrZero(Optional.of(zScore(78.9))), 1e-8);
+    assertEquals(0.0,  transformOptionalImpreciseValueToDoubleOrZero(Optional.empty()), 1e-8);
   }
 
   /**

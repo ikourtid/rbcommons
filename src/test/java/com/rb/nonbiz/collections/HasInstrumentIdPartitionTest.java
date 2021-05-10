@@ -1,11 +1,12 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.biz.marketdata.IndexConstituent;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.biz.types.asset.HasInstrumentId;
+import com.rb.biz.types.trading.PositiveQuantity;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.PositiveMultiplier;
 import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -16,8 +17,6 @@ import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_C;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_E;
-import static com.rb.biz.marketdata.IndexConstituent.indexConstituent;
-import static com.rb.biz.marketdata.IndexConstituentTest.indexConstituentMatcher;
 import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.hardCodedInstrumentMaster;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
@@ -38,6 +37,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DATE;
+import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -252,8 +252,8 @@ public class HasInstrumentIdPartitionTest extends RBTestMatcher<HasInstrumentIdP
   // If the weights don't sum to 1.0, should still get a valid partition.
   @Test
   public void hasInstrumentIdPartitionFromWeights_doubleMap() {
-    IndexConstituent a = indexConstituent(STOCK_A, positiveQuantity(11));
-    IndexConstituent b = indexConstituent(STOCK_B, positiveQuantity(33));
+    PositiveQuantity a = positiveQuantity(1.1);
+    PositiveQuantity b = positiveQuantity(33);
     // can't renormalize an empty map
     assertIllegalArgumentException( () -> hasInstrumentIdPartitionFromWeights(emptyHasInstrumentIdMap()));
 
@@ -306,7 +306,7 @@ public class HasInstrumentIdPartitionTest extends RBTestMatcher<HasInstrumentIdP
   }
 
   private void assertResult(
-      HasInstrumentIdMap<IndexConstituent, Double> beforeTurningIntoPartition,
+      HasInstrumentIdMap<PositiveQuantity, Double> beforeTurningIntoPartition,
       HasInstrumentIdMap<IndexConstituent, UnitFraction> asPartition) {
     assertThat(
         hasInstrumentIdPartitionFromWeights(beforeTurningIntoPartition),

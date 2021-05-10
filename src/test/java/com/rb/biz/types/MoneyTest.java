@@ -8,8 +8,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static com.rb.biz.types.IndexDivisor.indexDivisor;
-import static com.rb.biz.types.IndexLevel.indexLevel;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.Money.sumMoney;
@@ -26,7 +24,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrows;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
-import static com.rb.nonbiz.testutils.RBPublicTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_ONE_HALF;
@@ -220,12 +218,6 @@ public class MoneyTest {
     assertAlmostEquals(money(888.88), money(444.44).divide(0.5), 1e-8);
     assertAlmostEquals(money(444.44), money(444.44).divide(1.0), 1e-8);
     assertAlmostEquals(money(222.22), money(444.44).divide(2.0), 1e-8);
-  }
-
-  @Test
-  public void testDivideByIndexDivisor() {
-    assertAlmostEquals(indexLevel(100), money(1_000).divide(indexDivisor(10)), 1e-8);
-    assertAlmostEquals(indexLevel(2_000), money(1_000).divide(indexDivisor(0.5)), 1e-8);
   }
 
   @Test

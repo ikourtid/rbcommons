@@ -3,8 +3,8 @@ package com.rb.nonbiz.collections;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
-import com.rb.biz.investing.modeling.analysis.eigendistance.ConstellationMultiplier;
 import com.rb.biz.types.Money;
+import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.junit.Test;
@@ -21,7 +21,6 @@ import java.util.function.Function;
 
 import static com.google.common.collect.Iterators.singletonIterator;
 import static com.google.common.collect.Lists.newArrayList;
-import static com.rb.biz.investing.modeling.analysis.eigendistance.ConstellationMultiplier.constellationMultiplier;
 import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
@@ -29,6 +28,7 @@ import static com.rb.nonbiz.collections.RBIterators.*;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
+import static com.rb.nonbiz.math.stats.ZScore.zScore;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.doubleIteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorEqualityMatcher;
@@ -344,15 +344,15 @@ public class RBIteratorsTest {
   @Test
   public void test_transformToDoubleIterator() {
     assertThat(
-        transformToDoubleIterator(Collections.<ConstellationMultiplier>emptyIterator()),
+        transformToDoubleIterator(Collections.<ZScore>emptyIterator()),
         doubleIteratorMatcher(
             emptyIterator(),
             1e-8));
     assertThat(
         transformToDoubleIterator(ImmutableList.of(
-            constellationMultiplier(1.1),
-            constellationMultiplier(2.2),
-            constellationMultiplier(3.3))
+            zScore(1.1),
+            zScore(2.2),
+            zScore(3.3))
             .iterator()),
         doubleIteratorMatcher(
             ImmutableList.of(1.1, 2.2, 3.3).iterator(),

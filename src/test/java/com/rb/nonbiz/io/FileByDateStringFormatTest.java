@@ -1,6 +1,6 @@
 package com.rb.nonbiz.io;
 
-import com.rb.biz.investing.modeling.selection.InstrumentSelectionStatus;
+import com.rb.nonbiz.collections.RBVoid;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -14,7 +14,9 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static org.junit.Assert.assertEquals;
 
 // This test class is not generic, but the publicly exposed static matcher is.
-public class FileByDateStringFormatTest extends RBTestMatcher<FileByDateStringFormat<InstrumentSelectionStatus>> {
+// Note that the class inside the generic is irrelevant for logic purposes; it's really there just for type safety.
+// So we'll just use RBVoid here, without loss of generality. It doesn't affect the logic.
+public class FileByDateStringFormatTest extends RBTestMatcher<FileByDateStringFormat<RBVoid>> {
 
   @Test
   public void mustHaveExactlyOnePercentS() {
@@ -39,23 +41,23 @@ public class FileByDateStringFormatTest extends RBTestMatcher<FileByDateStringFo
   }
 
   @Override
-  public FileByDateStringFormat<InstrumentSelectionStatus> makeTrivialObject() {
+  public FileByDateStringFormat<RBVoid> makeTrivialObject() {
     return fileByDateStringFormat("%s");
   }
 
   @Override
-  public FileByDateStringFormat<InstrumentSelectionStatus> makeNontrivialObject() {
+  public FileByDateStringFormat<RBVoid> makeNontrivialObject() {
     return fileByDateStringFormat("a/b/x.%s.protobuf");
   }
 
   @Override
-  public FileByDateStringFormat<InstrumentSelectionStatus> makeMatchingNontrivialObject() {
+  public FileByDateStringFormat<RBVoid> makeMatchingNontrivialObject() {
     return fileByDateStringFormat("a/b/x.%s.protobuf");
   }
 
   @Override
-  protected boolean willMatch(FileByDateStringFormat<InstrumentSelectionStatus> expected,
-                              FileByDateStringFormat<InstrumentSelectionStatus> actual) {
+  protected boolean willMatch(FileByDateStringFormat<RBVoid> expected,
+                              FileByDateStringFormat<RBVoid> actual) {
     return fileByDateStringFormatMatcher(expected).matches(actual);
   }
 

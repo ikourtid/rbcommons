@@ -1,11 +1,10 @@
 package com.rb.nonbiz.types;
 
-import com.rb.biz.investing.strategy.optbased.NaiveSubObjective;
-import com.rb.biz.investing.strategy.optbased.rebal.lp.NormalizedObjectiveValue;
+import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
 import org.junit.Test;
 
-import static com.rb.biz.investing.strategy.optbased.rebal.lp.NormalizedObjectiveValue.normalizedNaiveSubObjectiveValue;
+import static com.rb.nonbiz.math.stats.ZScore.zScore;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.types.ImpreciseValues.epsilonCompareImpreciseValues;
@@ -17,7 +16,7 @@ public class ImpreciseValuesTest {
   @Test
   public void testEpsilonCompare_epsilonMustBePositiveAndSmall() {
     EpsilonComparisonVisitor<String> visitor = comparisonSignVisitor();
-    NormalizedObjectiveValue<NaiveSubObjective> dummy = normalizedNaiveSubObjectiveValue(DUMMY_DOUBLE);
+    ZScore dummy = zScore(DUMMY_DOUBLE);
     assertIllegalArgumentException( () -> epsilonCompareImpreciseValues(dummy, dummy, -999, visitor));
     assertIllegalArgumentException( () -> epsilonCompareImpreciseValues(dummy, dummy, -1, visitor));
     assertIllegalArgumentException( () -> epsilonCompareImpreciseValues(dummy, dummy, -1e-9, visitor));
@@ -31,9 +30,9 @@ public class ImpreciseValuesTest {
   @Test
   public void testEpsilonCompare_generalCase() {
     EpsilonComparisonVisitor<String> visitor = comparisonSignVisitor();
-    NormalizedObjectiveValue<NaiveSubObjective> one = normalizedNaiveSubObjectiveValue(1);
-    NormalizedObjectiveValue<NaiveSubObjective> ten = normalizedNaiveSubObjectiveValue(10);
-    NormalizedObjectiveValue<NaiveSubObjective> slightlyMoreThan10 = normalizedNaiveSubObjectiveValue(10 + 1e-9);
+    ZScore one = zScore(1);
+    ZScore ten = zScore(10);
+    ZScore slightlyMoreThan10 = zScore(10 + 1e-9);
 
     assertEquals("<",  epsilonCompareImpreciseValues(one,                ten,                1e-8, visitor));
     assertEquals(">",  epsilonCompareImpreciseValues(ten,                one,                1e-8, visitor));

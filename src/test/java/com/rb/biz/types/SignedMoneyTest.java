@@ -9,10 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.rb.biz.investing.tax.NetTaxOwed.ZERO_NET_TAX_OWED;
-import static com.rb.biz.investing.tax.NetTaxOwed.netTaxOwed;
-import static com.rb.biz.investing.tax.TaxRate.ZERO_TAX_RATE;
-import static com.rb.biz.investing.tax.TaxRate.taxRateInPercent;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.Price.price;
@@ -160,27 +156,6 @@ public class SignedMoneyTest {
     assertEquals(ZERO_SIGNED_MONEY,   ZERO_SIGNED_MONEY.multiply(  BigDecimal.valueOf(0.5)));
     assertEquals(signedMoney( 0.5),   signedMoney( 1.0).multiply(  BigDecimal.valueOf(0.5)));
     assertEquals(signedMoney( 0.617), signedMoney( 1.234).multiply(BigDecimal.valueOf(0.5)));
-  }
-
-  @Test
-  public void testMultiplyTaxRate() {
-    assertEquals(ZERO_NET_TAX_OWED, signedMoney(-1.234).multiply(ZERO_TAX_RATE));
-    assertEquals(ZERO_NET_TAX_OWED, signedMoney(-1.0).multiply(  ZERO_TAX_RATE));
-    assertEquals(ZERO_NET_TAX_OWED, ZERO_SIGNED_MONEY.multiply(  ZERO_TAX_RATE));
-    assertEquals(ZERO_NET_TAX_OWED, signedMoney( 1.0).multiply(  ZERO_TAX_RATE));
-    assertEquals(ZERO_NET_TAX_OWED, signedMoney( 1.234).multiply(ZERO_TAX_RATE));
-
-    assertEquals(netTaxOwed(-0.1234), signedMoney(-1.234).multiply(taxRateInPercent(10)));
-    assertEquals(netTaxOwed(-0.1),    signedMoney(-1.0).multiply(  taxRateInPercent(10)));
-    assertEquals(ZERO_NET_TAX_OWED,   ZERO_SIGNED_MONEY.multiply(  taxRateInPercent(10)));
-    assertEquals(netTaxOwed( 0.1),    signedMoney( 1.0).multiply(  taxRateInPercent(10)));
-    assertEquals(netTaxOwed( 0.1234), signedMoney( 1.234).multiply(taxRateInPercent(10)));
-
-    assertEquals(netTaxOwed(-0.617), signedMoney(-1.234).multiply(taxRateInPercent(50)));
-    assertEquals(netTaxOwed(-0.5),   signedMoney(-1.0).multiply(  taxRateInPercent(50)));
-    assertEquals(ZERO_NET_TAX_OWED,  ZERO_SIGNED_MONEY.multiply(  taxRateInPercent(50)));
-    assertEquals(netTaxOwed( 0.5),   signedMoney( 1.0).multiply(  taxRateInPercent(50)));
-    assertEquals(netTaxOwed( 0.617), signedMoney( 1.234).multiply(taxRateInPercent(50)));
   }
 
   @Test

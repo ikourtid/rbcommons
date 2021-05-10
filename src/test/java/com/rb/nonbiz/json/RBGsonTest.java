@@ -6,8 +6,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static com.rb.biz.investing.strategy.optbased.rebal.lp.NormalizedObjectiveValue.normalizedObjectiveValue;
-import static com.rb.biz.marketdata.HistoricalSpread.historicalSpreadAsFraction;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.OnesBasedReturn.FLAT_RETURN;
 import static com.rb.biz.types.OnesBasedReturn.onesBasedGain;
@@ -15,8 +13,7 @@ import static com.rb.biz.types.OnesBasedReturn.onesBasedLoss;
 import static com.rb.biz.types.SignedMoney.ZERO_SIGNED_MONEY;
 import static com.rb.biz.types.SignedMoney.signedMoney;
 import static com.rb.nonbiz.json.RBGson.*;
-import static com.rb.nonbiz.math.eigen.Eigenvalue.eigenvalue;
-import static com.rb.nonbiz.math.eigen.Eigenvalue.possiblyNegativeEigenvalue;
+import static com.rb.nonbiz.math.stats.ZScore.zScore;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.bigDecimalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
@@ -97,15 +94,15 @@ public class RBGsonTest {
 
   @Test
   public void testJsonDoubleFromImpreciseValue() {
-    assertEquals(new JsonPrimitive(-1.23), jsonDouble(possiblyNegativeEigenvalue(-1.23)));
-    assertEquals(new JsonPrimitive( 0.00), jsonDouble(possiblyNegativeEigenvalue( 0.00)));
-    assertEquals(new JsonPrimitive( 1.23), jsonDouble(possiblyNegativeEigenvalue( 1.23)));
+    assertEquals(new JsonPrimitive(-1.23), jsonDouble(zScore(-1.23)));
+    assertEquals(new JsonPrimitive( 0.00), jsonDouble(zScore( 0.00)));
+    assertEquals(new JsonPrimitive( 1.23), jsonDouble(zScore( 1.23)));
 
     // jsonDouble() rounds to 8 digits
-    assertEquals(new JsonPrimitive(-0.123_456_79), jsonDouble(possiblyNegativeEigenvalue(-0.123_456_789)));
-    assertEquals(new JsonPrimitive(-0.123_456_78), jsonDouble(possiblyNegativeEigenvalue(-0.123_456_781)));
-    assertEquals(new JsonPrimitive( 0.123_456_78), jsonDouble(possiblyNegativeEigenvalue( 0.123_456_781)));
-    assertEquals(new JsonPrimitive( 0.123_456_79), jsonDouble(possiblyNegativeEigenvalue( 0.123_456_789)));
+    assertEquals(new JsonPrimitive(-0.123_456_79), jsonDouble(zScore(-0.123_456_789)));
+    assertEquals(new JsonPrimitive(-0.123_456_78), jsonDouble(zScore(-0.123_456_781)));
+    assertEquals(new JsonPrimitive( 0.123_456_78), jsonDouble(zScore( 0.123_456_781)));
+    assertEquals(new JsonPrimitive( 0.123_456_79), jsonDouble(zScore( 0.123_456_789)));
   }
 
   @Test
@@ -219,19 +216,19 @@ public class RBGsonTest {
   public void testJsonPercentageFromImpreciseValue() {
     assertEquals(
         new JsonPrimitive(BigDecimal.valueOf(12.3456)),
-        jsonPercentage(historicalSpreadAsFraction(0.123456)));
+        jsonPercentage(zScore(0.123456)));
     assertEquals(
         new JsonPrimitive(new BigDecimal(100)),
-        jsonPercentage(eigenvalue(1.0)));
+        jsonPercentage(zScore(1.0)));
     assertEquals(
         new JsonPrimitive(BigDecimal.ZERO),
-        jsonPercentage(normalizedObjectiveValue(0.0)));
+        jsonPercentage(zScore(0.0)));
 
     // ImpreciseValues are stored as doubles, so they are rounded to 8 digits BEFORE
     // converting to percentages. So the final JSON value is rounded to 6 digits.
     assertEquals(
         new JsonPrimitive(BigDecimal.valueOf(12.345_679)),
-        jsonPercentage(eigenvalue(0.123_456_789_012_345)));
+        jsonPercentage(zScore(0.123_456_789_012_345)));
   }
 
   @Test
@@ -332,19 +329,19 @@ public class RBGsonTest {
   public void testJsonBpsFromImpreciseValue() {
     assertEquals(
         new JsonPrimitive(BigDecimal.valueOf(1_234.56)),
-        jsonBps(historicalSpreadAsFraction(0.123456)));
+        jsonBps(zScore(0.123456)));
     assertEquals(
         new JsonPrimitive(new BigDecimal(10_000)),
-        jsonBps(eigenvalue(1.0)));
+        jsonBps(zScore(1.0)));
     assertEquals(
         new JsonPrimitive(BigDecimal.ZERO),
-        jsonBps(normalizedObjectiveValue(0.0)));
+        jsonBps(zScore(0.0)));
 
     // ImpreciseValues are stored as doubles, so they are rounded to 8 digits BEFORE
     // converting to BPS. So the final JSON value is rounded to 4 digits.
     assertEquals(
         new JsonPrimitive(BigDecimal.valueOf(1_234.567_9)),
-        jsonBps(eigenvalue(0.123_456_789_012_345)));
+        jsonBps(zScore(0.123_456_789_012_345)));
   }
 
   @Test
