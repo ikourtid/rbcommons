@@ -8,6 +8,7 @@ import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.Money;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
+import com.rb.nonbiz.collections.CaseInsensitiveStringFilter;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
@@ -15,6 +16,7 @@ import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.TestHasUniqueId;
+import com.rb.nonbiz.text.UniqueId;
 import com.rb.nonbiz.types.Pointer;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
@@ -56,6 +58,7 @@ import static com.rb.nonbiz.text.RBSetOfHasUniqueIdTest.rbSetOfHasUniqueIdMatche
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueId;
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueIdMatcher;
 import static com.rb.nonbiz.text.UniqueId.uniqueId;
+import static com.rb.nonbiz.text.UniqueIdTest.uniqueIdMatcher;
 import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
@@ -371,21 +374,23 @@ public class RBJsonObjectsTest {
 
   @Test
   public void testJsonObjectToRBMap_overloadWithoutKey() {
-    BiConsumer<JsonObject, RBMap<InstrumentId, AssetClassName>> asserter = (jsonObject, expectedMap) ->
-        assertThat(
-            jsonObjectToRBMap(
-                jsonObject,
-                key -> instrumentId(Long.parseLong(key)),
-                v -> assetClassName(v.getAsString())),
-            rbMapMatcher(expectedMap, f -> assetClassNameMatcher(f)));
+    // CaseInsensitiveStringFilter is a dummy type; we need to use SOMETHING inside the UniqueId generic placeholder.
+    BiConsumer<JsonObject, RBMap<InstrumentId, UniqueId<CaseInsensitiveStringFilter>>> asserter =
+        (jsonObject, expectedMap) ->
+            assertThat(
+                jsonObjectToRBMap(
+                    jsonObject,
+                    key -> instrumentId(Long.parseLong(key)),
+                    v -> uniqueId(v.getAsString())),
+                rbMapMatcher(expectedMap, f -> uniqueIdMatcher(f)));
 
     asserter.accept(
         jsonObject(
             "1", jsonString("AA"),
             "2", jsonString("BB")),
         rbMapOf(
-            instrumentId(1), assetClassName("AA"),
-            instrumentId(2), assetClassName("BB")));
+            instrumentId(1), uniqueId("AA"),
+            instrumentId(2), uniqueId("BB")));
     asserter.accept(
         emptyJsonObject(),
         emptyRBMap());
@@ -393,21 +398,23 @@ public class RBJsonObjectsTest {
 
   @Test
   public void testJsonObjectToRBMap_overloadWithKey() {
-    BiConsumer<JsonObject, RBMap<InstrumentId, AssetClassName>> asserter = (jsonObject, expectedMap) ->
-        assertThat(
-            jsonObjectToRBMap(
-                jsonObject,
-                key -> instrumentId(Long.parseLong(key)),
-                (key, v) -> assetClassName(key.asLong() + v.getAsString())),
-            rbMapMatcher(expectedMap, f -> assetClassNameMatcher(f)));
+    // CaseInsensitiveStringFilter is a dummy type; we need to use SOMETHING inside the UniqueId generic placeholder.
+    BiConsumer<JsonObject, RBMap<InstrumentId, UniqueId<CaseInsensitiveStringFilter>>> asserter =
+        (jsonObject, expectedMap) ->
+            assertThat(
+                jsonObjectToRBMap(
+                    jsonObject,
+                    key -> instrumentId(Long.parseLong(key)),
+                    (key, v) -> uniqueId(key.asLong() + v.getAsString())),
+                rbMapMatcher(expectedMap, f -> uniqueIdMatcher(f)));
 
     asserter.accept(
         jsonObject(
             "1", jsonString("AA"),
             "2", jsonString("BB")),
         rbMapOf(
-            instrumentId(1), assetClassName("1AA"),
-            instrumentId(2), assetClassName("2BB")));
+            instrumentId(1), uniqueId("1AA"),
+            instrumentId(2), uniqueId("2BB")));
     asserter.accept(
         emptyJsonObject(),
         emptyRBMap());
@@ -415,21 +422,22 @@ public class RBJsonObjectsTest {
 
   @Test
   public void testJsonObjectToIidMap_overloadWithoutInstrumentId() {
-    BiConsumer<JsonObject, IidMap<AssetClassName>> asserter = (jsonObject, expectedMap) ->
-        assertThat(
-            jsonObjectToIidMap(
-                jsonObject,
-                TICKER_MAP,
-                v -> assetClassName(v.getAsString())),
-            iidMapMatcher(expectedMap, f -> assetClassNameMatcher(f)));
+    BiConsumer<JsonObject, IidMap<UniqueId<CaseInsensitiveStringFilter>>> asserter =
+        (jsonObject, expectedMap) ->
+            assertThat(
+                jsonObjectToIidMap(
+                    jsonObject,
+                    TICKER_MAP,
+                    v -> uniqueId(v.getAsString())),
+                iidMapMatcher(expectedMap, f -> uniqueIdMatcher(f)));
 
     asserter.accept(
         jsonObject(
             "S1", jsonString("AA"),
             "S2", jsonString("BB")),
         iidMapOf(
-            instrumentId(1), assetClassName("AA"),
-            instrumentId(2), assetClassName("BB")));
+            instrumentId(1), uniqueId("AA"),
+            instrumentId(2), uniqueId("BB")));
     asserter.accept(
         emptyJsonObject(),
         emptyIidMap());
