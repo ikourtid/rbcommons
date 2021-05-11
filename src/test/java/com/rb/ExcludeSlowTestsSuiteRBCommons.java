@@ -28,7 +28,7 @@ import org.junit.runners.Suite;
     ResearchBacktests.class
 })
 @Suite.SuiteClasses( { AllTests.class })
-public class ExcludeSlowTestsSuiteRBPublic {
+public class ExcludeSlowTestsSuiteRBCommons {
 
 }
 

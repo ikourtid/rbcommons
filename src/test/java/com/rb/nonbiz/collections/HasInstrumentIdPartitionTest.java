@@ -2,11 +2,9 @@ package com.rb.nonbiz.collections;
 
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.biz.types.asset.HasInstrumentId;
-import com.rb.biz.types.trading.PositiveQuantity;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
-import com.rb.nonbiz.types.PositiveMultiplier;
 import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -19,7 +17,6 @@ import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_E;
 import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.hardCodedInstrumentMaster;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
-import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
 import static com.rb.nonbiz.collections.HasInstrumentIdMapTest.hasInstrumentIdMapMatcher;
 import static com.rb.nonbiz.collections.HasInstrumentIdMaps.emptyHasInstrumentIdMap;
 import static com.rb.nonbiz.collections.HasInstrumentIdMaps.hasInstrumentIdMapOf;
@@ -37,7 +34,6 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DATE;
-import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -252,8 +248,8 @@ public class HasInstrumentIdPartitionTest extends RBTestMatcher<HasInstrumentIdP
   // If the weights don't sum to 1.0, should still get a valid partition.
   @Test
   public void hasInstrumentIdPartitionFromWeights_doubleMap() {
-    PositiveQuantity a = positiveQuantity(1.1);
-    PositiveQuantity b = positiveQuantity(33);
+    TestHasInstrumentId a = testHasInstrumentId(STOCK_A, 11);
+    TestHasInstrumentId b = testHasInstrumentId(STOCK_B, 33);
     // can't renormalize an empty map
     assertIllegalArgumentException( () -> hasInstrumentIdPartitionFromWeights(emptyHasInstrumentIdMap()));
 
@@ -288,11 +284,11 @@ public class HasInstrumentIdPartitionTest extends RBTestMatcher<HasInstrumentIdP
 
   @Test
   public void hasInstrumentIdPartitionFromWeights_doubleMap_tinyWeightsIgnored() {
-    IndexConstituent a = indexConstituent(STOCK_A, positiveQuantity(11));
-    IndexConstituent b = indexConstituent(STOCK_B, positiveQuantity(22));
-    IndexConstituent c = indexConstituent(STOCK_C, positiveQuantity(33));
-    IndexConstituent d = indexConstituent(STOCK_D, positiveQuantity(44));
-    IndexConstituent e = indexConstituent(STOCK_E, positiveQuantity(55));
+    TestHasInstrumentId a = testHasInstrumentId(STOCK_A, 11);
+    TestHasInstrumentId b = testHasInstrumentId(STOCK_B, 22);
+    TestHasInstrumentId c = testHasInstrumentId(STOCK_C, 33);
+    TestHasInstrumentId d = testHasInstrumentId(STOCK_D, 44);
+    TestHasInstrumentId e = testHasInstrumentId(STOCK_E, 55);
     assertResult(
         hasInstrumentIdMapOf(
             a, -1.11e-13,
@@ -306,13 +302,13 @@ public class HasInstrumentIdPartitionTest extends RBTestMatcher<HasInstrumentIdP
   }
 
   private void assertResult(
-      HasInstrumentIdMap<PositiveQuantity, Double> beforeTurningIntoPartition,
-      HasInstrumentIdMap<IndexConstituent, UnitFraction> asPartition) {
+      HasInstrumentIdMap<TestHasInstrumentId, Double> beforeTurningIntoPartition,
+      HasInstrumentIdMap<TestHasInstrumentId, UnitFraction> asPartition) {
     assertThat(
         hasInstrumentIdPartitionFromWeights(beforeTurningIntoPartition),
         hasInstrumentIdPartitionMatcher(
             hasInstrumentIdPartition(asPartition),
-            f -> indexConstituentMatcher(f)));
+            f -> testHasInstrumentIdMatcher(f)));
   }
 
   @Override

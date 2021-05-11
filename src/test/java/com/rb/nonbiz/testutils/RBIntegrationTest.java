@@ -7,7 +7,7 @@ import com.rb.biz.guice.RBClockModifier;
 
 import java.time.LocalDateTime;
 
-import static com.rb.biz.guice.modules.RBCommonsTestModule.rbPublicIntegrationTestModule;
+import static com.rb.biz.guice.modules.RBCommonsTestModule.rbCommonsIntegrationTestModule;
 
 /**
  * Integration tests (i.e. higher level than unit tests) of verb class FooBarBazer
@@ -75,7 +75,7 @@ public abstract class RBIntegrationTest<T> extends RBCommonsTestConstants<T> {
   }
 
   public static <T> T makeRealObject(Class<T> toInstantiate, LocalDateTime now) {
-    return makeRealObject(toInstantiate, now, rbPublicIntegrationTestModule());
+    return makeRealObject(toInstantiate, now, rbCommonsIntegrationTestModule());
   }
 
   public static <T> T makeRealObject(Class<T> toInstantiate) {
