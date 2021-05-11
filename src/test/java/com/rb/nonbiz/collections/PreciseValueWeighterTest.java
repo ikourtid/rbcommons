@@ -14,6 +14,7 @@ import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.OnesBasedReturn.FLAT_RETURN;
 import static com.rb.biz.types.OnesBasedReturn.onesBasedReturn;
 import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
+import static com.rb.biz.types.trading.SignedQuantity.signedQuantity;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
@@ -145,9 +146,9 @@ public class PreciseValueWeighterTest extends RBTest<PreciseValueWeighter> {
 
   private void assertProducesWeightedAverageValue(double expected, List<Double> values, List<Double> weights, double epsilon) {
     assertAlmostEquals(
-        positiveQuantity(expected),
-        positiveQuantity(makeTestObject().makeWeightedAverage(
-            values.stream().map(v -> positiveQuantity(v)).collect(Collectors.toList()),
+        signedQuantity(expected),
+        signedQuantity(makeTestObject().makeWeightedAverage(
+            values.stream().map(v -> signedQuantity(v)).collect(Collectors.toList()),
             weights.stream().map(w -> money(w)).collect(Collectors.toList()))),
         epsilon);
   }
@@ -160,9 +161,9 @@ public class PreciseValueWeighterTest extends RBTest<PreciseValueWeighter> {
 
   private void assertProducesUnweightedAverageValue(double expected, List<Double> values, double epsilon) {
     assertAlmostEquals(
-        positiveQuantity(expected),
-        positiveQuantity(makeTestObject().makeUnweightedAverage(
-            values.stream().map(v -> positiveQuantity(v)).collect(Collectors.toList()))),
+        signedQuantity(expected),
+        signedQuantity(makeTestObject().makeUnweightedAverage(
+            values.stream().map(v -> signedQuantity(v)).collect(Collectors.toList()))),
         epsilon);
   }
 

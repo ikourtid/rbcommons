@@ -4,6 +4,7 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.util.List;
 
+import static com.rb.biz.types.asset.HasListTest.hasListMatcher;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static java.util.Collections.emptyList;
@@ -35,7 +36,7 @@ public class TestHasStringList implements HasList<String> {
   }
 
   public static TypeSafeMatcher<TestHasStringList> testHasStringListMatcher(TestHasStringList expected) {
-    return HasListTest.hasListMatcher(expected, f -> typeSafeEqualTo(f));
+    return hasListMatcher(expected, f -> typeSafeEqualTo(f));
   }
 
 }

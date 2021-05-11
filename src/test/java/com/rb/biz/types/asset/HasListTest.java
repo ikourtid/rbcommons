@@ -12,7 +12,6 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class HasListTest extends RBTestMatcher<TestHasStringList> {
 
-
   @Override
   public TestHasStringList makeTrivialObject() {
     return emptyTestHasStringList();
