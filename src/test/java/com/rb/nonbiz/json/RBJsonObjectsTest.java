@@ -6,7 +6,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.Money;
-import com.rb.biz.types.asset.AssetClassName;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.IidMap;
@@ -25,10 +24,6 @@ import java.util.stream.Collectors;
 
 import static com.rb.biz.jsonapi.JsonTickerMapImplTest.jsonTickerMap;
 import static com.rb.biz.types.Money.money;
-import static com.rb.biz.types.accounts.SubAccount.subAccount;
-import static com.rb.biz.types.accounts.SubAccountTest.subAccountMatcher;
-import static com.rb.biz.types.asset.AssetClassName.assetClassName;
-import static com.rb.biz.types.asset.AssetClassNameTest.assetClassNameMatcher;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
@@ -59,6 +54,7 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.text.RBSetOfHasUniqueId.rbSetOfHasUniqueId;
 import static com.rb.nonbiz.text.RBSetOfHasUniqueIdTest.rbSetOfHasUniqueIdMatcher;
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueId;
+import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueIdMatcher;
 import static com.rb.nonbiz.text.UniqueId.uniqueId;
 import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
@@ -309,11 +305,11 @@ public class RBJsonObjectsTest {
             jsonObject(
                 "subAccount1", jsonString("subAccount1"),
                 "subAccount2", jsonString("subAccount2")),
-            jsonElement -> subAccount(uniqueId(jsonElement.getAsString()))),
+            jsonElement -> testHasUniqueId(uniqueId(jsonElement.getAsString()), unitFraction(0.123))),
         rbSetOfHasUniqueIdMatcher(rbSetOfHasUniqueId(rbMapOf(
-            uniqueId("subAccount1"), subAccount(uniqueId("subAccount1")),
-            uniqueId("subAccount2"), subAccount(uniqueId("subAccount2")))),
-            f -> subAccountMatcher(f)));
+            uniqueId("subAccount1"), testHasUniqueId(uniqueId("subAccount1"), unitFraction(0.123)),
+            uniqueId("subAccount2"), testHasUniqueId(uniqueId("subAccount2"), unitFraction(0.123)))),
+            f -> testHasUniqueIdMatcher(f)));
   }
 
   @Test

@@ -1,8 +1,8 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
-import com.rb.nonbiz.math.optimization.general.ConstraintDirection;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -13,9 +13,6 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.ArrayIndexMappingTest.arrayIndexMappingMatcher;
 import static com.rb.nonbiz.collections.MutableDoubleIndexableArray2D.mutableDoubleIndexableArray2D;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
-import static com.rb.nonbiz.math.optimization.general.ConstraintDirection.EQUAL_TO_SCALAR;
-import static com.rb.nonbiz.math.optimization.general.ConstraintDirection.GREATER_THAN_SCALAR;
-import static com.rb.nonbiz.math.optimization.general.ConstraintDirection.LESS_THAN_SCALAR;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.doubleArray2DMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.doubleListMatcher;
@@ -43,9 +40,9 @@ public class MutableDoubleIndexableArray2DTest extends RBTestMatcher<MutableDoub
   @Test
   public void arraySizeMustMatchRowAndColumnMappingSizes() {
     BiFunction<
-        ArrayIndexMapping<String>,
-        ArrayIndexMapping<ConstraintDirection>,
-        MutableDoubleIndexableArray2D<String, ConstraintDirection>> maker = (rowMapping, columnMapping) -> mutableDoubleIndexableArray2D(
+            ArrayIndexMapping<String>,
+            ArrayIndexMapping<TestEnumXYZ>,
+            MutableDoubleIndexableArray2D<String, TestEnumXYZ>> maker = (rowMapping, columnMapping) -> mutableDoubleIndexableArray2D(
         new double[][] {
             { 1.1, 2.2 },
             { 3.3, 4.4 },
@@ -54,12 +51,12 @@ public class MutableDoubleIndexableArray2DTest extends RBTestMatcher<MutableDoub
         rowMapping,
         columnMapping);
     SimpleArrayIndexMapping<String> goodRowMapping = simpleArrayIndexMapping("a", "b", "c");
-    SimpleArrayIndexMapping<ConstraintDirection> goodColumnMapping = simpleArrayIndexMapping(LESS_THAN_SCALAR, EQUAL_TO_SCALAR);
-    MutableDoubleIndexableArray2D<String, ConstraintDirection> doesNotThrow = maker.apply(goodRowMapping, goodColumnMapping);
+    SimpleArrayIndexMapping<TestEnumXYZ> goodColumnMapping = simpleArrayIndexMapping(TestEnumXYZ.X, TestEnumXYZ.Y);
+    MutableDoubleIndexableArray2D<String, TestEnumXYZ> doesNotThrow = maker.apply(goodRowMapping, goodColumnMapping);
     assertIllegalArgumentException( () -> maker.apply(goodRowMapping, simpleArrayIndexMapping()));
-    assertIllegalArgumentException( () -> maker.apply(goodRowMapping, simpleArrayIndexMapping(LESS_THAN_SCALAR)));
+    assertIllegalArgumentException( () -> maker.apply(goodRowMapping, simpleArrayIndexMapping(TestEnumXYZ.X)));
     assertIllegalArgumentException( () -> maker.apply(goodRowMapping,
-        simpleArrayIndexMapping(LESS_THAN_SCALAR, EQUAL_TO_SCALAR, GREATER_THAN_SCALAR)));
+        simpleArrayIndexMapping(TestEnumXYZ.X, TestEnumXYZ.Y, TestEnumXYZ.Z)));
     assertIllegalArgumentException( () -> maker.apply(simpleArrayIndexMapping(), goodColumnMapping));
     assertIllegalArgumentException( () -> maker.apply(simpleArrayIndexMapping("a"), goodColumnMapping));
     assertIllegalArgumentException( () -> maker.apply(simpleArrayIndexMapping("a", "b"), goodColumnMapping));

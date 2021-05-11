@@ -3,6 +3,7 @@ package com.rb.nonbiz.reflection;
 import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.testutils.RBTest;
+import com.rb.nonbiz.types.SignedFraction;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class UniqueClassesWithDepthMultilineStringFormatterTest extends RBTest<C
             uniqueClassesWithDepth(ImmutableList.of(
                 classWithDepth(Money.class, 0),
                 classWithDepth(UnitFraction.class, 2),
-                classWithDepth(EigenDimensionIndex.class, 1))),
+                classWithDepth(SignedFraction.class, 1))),
             ".."));
   }
 

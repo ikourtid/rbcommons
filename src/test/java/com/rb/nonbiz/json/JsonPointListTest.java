@@ -7,10 +7,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static com.rb.biz.market.MarketTest.REAL_MARKET;
-import static com.rb.biz.types.collections.ts.DailyTimeSeriesTest.dailyTestTimeSeries;
 import static com.rb.nonbiz.json.JsonPointList.JsonPointListBuilder.jsonPointListBuilder;
-import static com.rb.nonbiz.json.JsonPointList.jsonPointListFromTimeSeries;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
 import static com.rb.nonbiz.json.RBJsonDoubleArray.rbJsonDoubleArray;
 import static com.rb.nonbiz.json.RBJsonDoubleArrayTest.rbJsonDoubleArrayMatcher;
@@ -42,27 +39,6 @@ public class JsonPointListTest extends RBTestMatcher<JsonPointList> {
         .addPoint(date1, value1)
         .addPoint(date2, value2)
         .build();
-  }
-
-  @Test
-  public void testJsonPointListFromTimeSeries() {
-    assertThat(
-        jsonPointListFromTimeSeries(
-            dailyTestTimeSeries(DAY0, DAY2, "100", "not a number", "300"),
-            v -> {
-              try {
-                return Optional.of(Double.parseDouble(v));
-              } catch (NumberFormatException e) {
-                return Optional.empty();
-              }
-            },
-            REAL_MARKET),
-        jsonPointListMatcher(
-            jsonPointListBuilder()
-                .addPoint(DAY0, 100)
-                // no value for day 1, b/c it's not a number
-                .addPoint(DAY2, 300)
-                .build()));
   }
 
   @Test

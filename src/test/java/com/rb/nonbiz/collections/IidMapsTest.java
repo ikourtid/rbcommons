@@ -2,7 +2,6 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Provider;
-import com.rb.biz.types.InstrumentHistoricalSpread;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidMapVisitors.PairOfIidSetAndIidMapVisitor;
 import com.rb.nonbiz.collections.IidMapVisitors.TwoIidMapsVisitor;
@@ -20,14 +19,13 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.rb.biz.marketdata.FakeInstruments.*;
-import static com.rb.biz.marketdata.HistoricalSpread.historicalSpreadInBps;
-import static com.rb.biz.types.InstrumentHistoricalSpread.instrumentHistoricalSpread;
-import static com.rb.biz.types.InstrumentHistoricalSpreadTest.instrumentHistoricalSpreadMatcher;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.biz.types.asset.InstrumentIds.parseInstrumentId;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromCollection;
+import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromFilteredSet;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromIterator;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromIteratorWithExpectedSize;
+import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromSet;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromStream;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromStreamWithExpectedSize;
 import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsByValue;
@@ -86,21 +84,21 @@ public class IidMapsTest {
   @Test
   public void testIidMapFromSet() {
     assertThat(
-        IidMapConstructors.iidMapFromSet(
+        iidMapFromSet(
             iidSetOf(STOCK_A, STOCK_B),
-            instrumentId -> instrumentHistoricalSpread(instrumentId, historicalSpreadInBps(3))),
+            instrumentId -> testHasInstrumentId(instrumentId, 3)),
         iidMapMatcher(
             iidMapOf(
-                STOCK_A, instrumentHistoricalSpread(STOCK_A, historicalSpreadInBps(3)),
-                STOCK_B, instrumentHistoricalSpread(STOCK_B, historicalSpreadInBps(3))),
-            f -> instrumentHistoricalSpreadMatcher(f)));
+                STOCK_A, testHasInstrumentId(STOCK_A, 3),
+                STOCK_B, testHasInstrumentId(STOCK_B, 3)),
+            f -> testHasInstrumentIdMatcher(f)));
     assertThat(
-        IidMapConstructors.iidMapFromSet(
+        iidMapFromSet(
             emptyIidSet(),
-            instrumentId -> instrumentHistoricalSpread(instrumentId, historicalSpreadInBps(3))),
+            instrumentId -> testHasInstrumentId(instrumentId, 3)),
         iidMapMatcher(
             emptyIidMap(),
-            f -> instrumentHistoricalSpreadMatcher(f)));
+            f -> testHasInstrumentIdMatcher(f)));
   }
 
   @Test
@@ -212,44 +210,44 @@ public class IidMapsTest {
   public void testIidMapFromFilteredSet() {
     // both A and B map to non-empty optionals => result map has both A and B
     assertThat(
-        IidMapConstructors.iidMapFromFilteredSet(
+        iidMapFromFilteredSet(
             iidSetOf(STOCK_A, STOCK_B),
-            instrumentId -> Optional.of(instrumentHistoricalSpread(instrumentId, historicalSpreadInBps(3)))),
+            instrumentId -> Optional.of(testHasInstrumentId(instrumentId, 3))),
         iidMapMatcher(
             iidMapOf(
-                STOCK_A, instrumentHistoricalSpread(STOCK_A, historicalSpreadInBps(3)),
-                STOCK_B, instrumentHistoricalSpread(STOCK_B, historicalSpreadInBps(3))),
-            f -> instrumentHistoricalSpreadMatcher(f)));
+                STOCK_A, testHasInstrumentId(STOCK_A, 3),
+                STOCK_B, testHasInstrumentId(STOCK_B, 3)),
+            f -> testHasInstrumentIdMatcher(f)));
 
     // A maps to non-empty optional, but B to empty => result map has A only
     assertThat(
-        IidMapConstructors.iidMapFromFilteredSet(
+        iidMapFromFilteredSet(
             iidSetOf(STOCK_A, STOCK_B),
             instrumentId -> instrumentId.equals(STOCK_A)
-                ? Optional.of(instrumentHistoricalSpread(instrumentId, historicalSpreadInBps(3)))
+                ? Optional.of(testHasInstrumentId(instrumentId, 3))
                 : Optional.empty()),
         iidMapMatcher(
             singletonIidMap(
-                STOCK_A, instrumentHistoricalSpread(STOCK_A, historicalSpreadInBps(3))),
-            f -> instrumentHistoricalSpreadMatcher(f)));
+                STOCK_A, testHasInstrumentId(STOCK_A, 3)),
+            f -> testHasInstrumentIdMatcher(f)));
 
     // passing in empty map => result is empty
     assertThat(
-        IidMapConstructors.iidMapFromFilteredSet(
+        iidMapFromFilteredSet(
             emptyIidSet(),
-            instrumentId -> Optional.of(instrumentHistoricalSpread(instrumentId, historicalSpreadInBps(3)))),
+            instrumentId -> Optional.of(testHasInstrumentId(instrumentId, 3))),
         iidMapMatcher(
             emptyIidMap(),
-            f -> instrumentHistoricalSpreadMatcher(f)));
+            f -> testHasInstrumentIdMatcher(f)));
 
     // passing in non-empty map, but values all map to Optional.empty() => result map is empty
     assertThat(
-        IidMapConstructors.iidMapFromFilteredSet(
+        iidMapFromFilteredSet(
             iidSetOf(STOCK_A, STOCK_B),
-            instrumentId -> Optional.<InstrumentHistoricalSpread>empty()),
+            instrumentId -> Optional.<TestHasInstrumentId>empty()),
         iidMapMatcher(
             emptyIidMap(),
-            f -> instrumentHistoricalSpreadMatcher(f)));
+            f -> testHasInstrumentIdMatcher(f)));
   }
 
   @Test

@@ -8,6 +8,7 @@ import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.PositiveMultiplier;
+import com.rb.nonbiz.types.SignedFraction;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -46,6 +47,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_SIGNED_MONEY;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.NaN;
@@ -1023,14 +1025,14 @@ public class RBRangesTest {
 
   @Test
   public void testToClosedDoubleRange() {
-    for (Range<ZScore> nonClosedRange : ImmutableList.of(
-        Range.atLeast(DUMMY_Z_SCORE),
-        Range.greaterThan(DUMMY_Z_SCORE),
-        Range.lessThan(DUMMY_Z_SCORE),
-        Range.atMost(DUMMY_Z_SCORE),
-        Range.open(zScore(-1), zScore(3)),
-        Range.closedOpen(zScore(-1), zScore(3)),
-        Range.openClosed(zScore(-1), zScore(3)))) {
+    for (Range<SignedMoney> nonClosedRange : ImmutableList.of(
+        Range.atLeast(DUMMY_SIGNED_MONEY),
+        Range.greaterThan(DUMMY_SIGNED_MONEY),
+        Range.lessThan(DUMMY_SIGNED_MONEY),
+        Range.atMost(DUMMY_SIGNED_MONEY),
+        Range.open(signedMoney(-1), signedMoney(3)),
+        Range.closedOpen(signedMoney(-1), signedMoney(3)),
+        Range.openClosed(signedMoney(-1), signedMoney(3)))) {
       // After the introduction of the class ClosedRange, the exception gets thrown inside the closedRange
       // static constructor, not toClosedDoubleRange, but let's keep this test anyway.
       assertIllegalArgumentException( () -> toClosedDoubleRange(closedRange(nonClosedRange)));

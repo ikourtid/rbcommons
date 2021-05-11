@@ -9,14 +9,15 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.rb.biz.investing.quality.NaiveAllocationAccuracyDiffScore.naiveAllocationAccuracyDiffScore;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.OnesBasedReturn.FLAT_RETURN;
 import static com.rb.biz.types.OnesBasedReturn.onesBasedReturn;
+import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -144,9 +145,9 @@ public class PreciseValueWeighterTest extends RBTest<PreciseValueWeighter> {
 
   private void assertProducesWeightedAverageValue(double expected, List<Double> values, List<Double> weights, double epsilon) {
     assertAlmostEquals(
-        naiveAllocationAccuracyDiffScore(expected),
-        naiveAllocationAccuracyDiffScore(makeTestObject().makeWeightedAverage(
-            values.stream().map(v -> naiveAllocationAccuracyDiffScore(v)).collect(Collectors.toList()),
+        positiveQuantity(expected),
+        positiveQuantity(makeTestObject().makeWeightedAverage(
+            values.stream().map(v -> positiveQuantity(v)).collect(Collectors.toList()),
             weights.stream().map(w -> money(w)).collect(Collectors.toList()))),
         epsilon);
   }
@@ -159,9 +160,9 @@ public class PreciseValueWeighterTest extends RBTest<PreciseValueWeighter> {
 
   private void assertProducesUnweightedAverageValue(double expected, List<Double> values, double epsilon) {
     assertAlmostEquals(
-        naiveAllocationAccuracyDiffScore(expected),
-        naiveAllocationAccuracyDiffScore(makeTestObject().makeUnweightedAverage(
-            values.stream().map(v -> naiveAllocationAccuracyDiffScore(v)).collect(Collectors.toList()))),
+        positiveQuantity(expected),
+        positiveQuantity(makeTestObject().makeUnweightedAverage(
+            values.stream().map(v -> positiveQuantity(v)).collect(Collectors.toList()))),
         epsilon);
   }
 

@@ -2,17 +2,19 @@ package com.rb.nonbiz.types;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.asset.HasList;
+import com.rb.biz.types.asset.TestHasStringList;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.types.WeightedListTest.TestHasStringList;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
 import static com.rb.biz.types.Price.price;
+import static com.rb.biz.types.asset.TestHasStringList.emptyTestHasStringList;
+import static com.rb.biz.types.asset.TestHasStringList.singletonTestHasStringList;
+import static com.rb.biz.types.asset.TestHasStringList.testHasStringListOf;
 import static com.rb.biz.types.asset.HasListTest.hasListMatcher;
 import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -20,6 +22,8 @@ import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.doubleListMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.types.WeightedList.nonEmptyWeightedList;
 import static com.rb.nonbiz.types.WeightedList.possiblyEmptyWeightedList;
 import static java.util.Collections.emptyList;
@@ -32,40 +36,42 @@ public class WeightedListTest extends RBTestMatcher<WeightedList<String, TestHas
   
   @Test
   public void emptyAllowed_doesNotThrowIfEmpty() {
-    WeightedList<RawVariable, AllRawVariablesInOrder> doesNotThrow = possiblyEmptyWeightedList(noVars, emptyList());
+    WeightedList<String, TestHasStringList> doesNotThrow = possiblyEmptyWeightedList(emptyTestHasStringList(), emptyList());
   }
 
   @Test
   public void emptyDisallowed_throwsIfEmpty() {
-    AllRawVariablesInOrder noVars = allRawVariablesInOrderBuilder().buildWithoutPreconditions();
-    assertIllegalArgumentException( () -> nonEmptyWeightedList(noVars, emptyList()));
+    assertIllegalArgumentException( () -> nonEmptyWeightedList(emptyTestHasStringList(), emptyList()));
   }
 
   @Test
   public void moreWeightsThanItems_throws() {
     assertIllegalArgumentException( () -> nonEmptyWeightedList(
-        orderedLotsSingleton(STOCK_A, positiveQuantity(11), price(20), LocalDate.of(1974, 4, 4)),
+        singletonTestHasStringList(DUMMY_STRING),
         ImmutableList.of(1.1, 2.2)));
   }
 
   @Test
   public void fewerWeightsThanItems_throws() {
     assertIllegalArgumentException( () -> nonEmptyWeightedList(
-        orderedLotsSingleton(STOCK_A, positiveQuantity(11), price(20), LocalDate.of(1974, 4, 4)),
+        singletonTestHasStringList(DUMMY_STRING),
         emptyList()));
+    assertIllegalArgumentException( () -> nonEmptyWeightedList(
+        testHasStringListOf(DUMMY_STRING, DUMMY_STRING),
+        singletonList(DUMMY_DOUBLE)));
   }
 
   @Override
   public WeightedList<String, TestHasStringList> makeTrivialObject() {
     return nonEmptyWeightedList(
-        new TestHasStringList(singletonList("")),
+        singletonTestHasStringList(""),
         singletonList(1.0));
   }
 
   @Override
   public WeightedList<String, TestHasStringList> makeNontrivialObject() {
     return nonEmptyWeightedList(
-        new TestHasStringList(ImmutableList.of("a", "b", "c", "d")),
+        testHasStringListOf("a", "b", "c", "d"),
         ImmutableList.of(-1.1, 0.0, 3.3, -7.7));
   }
 
@@ -73,7 +79,7 @@ public class WeightedListTest extends RBTestMatcher<WeightedList<String, TestHas
   public WeightedList<String, TestHasStringList> makeMatchingNontrivialObject() {
     double e = 1e-9; // epsilon
     return nonEmptyWeightedList(
-        new TestHasStringList(ImmutableList.of("a", "b", "c", "d")),
+        testHasStringListOf("a", "b", "c", "d"),
         ImmutableList.of(-1.1 + e, 0.0 + e, 3.3 + e, -7.7 + e));
   }
 
