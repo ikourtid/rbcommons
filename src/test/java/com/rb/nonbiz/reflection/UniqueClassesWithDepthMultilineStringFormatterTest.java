@@ -18,7 +18,7 @@ public class UniqueClassesWithDepthMultilineStringFormatterTest extends RBTest<C
     assertEquals(
         "com.rb.biz.types.Money\n" +
         "....com.rb.nonbiz.types.UnitFraction\n" +
-        "..com.rb.nonbiz.math.eigen.EigenDimensionIndex\n",
+        "..com.rb.nonbiz.types.SignedFraction\n",
         makeTestObject().format(
             uniqueClassesWithDepth(ImmutableList.of(
                 classWithDepth(Money.class, 0),
