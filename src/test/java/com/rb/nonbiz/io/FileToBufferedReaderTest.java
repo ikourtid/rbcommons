@@ -19,7 +19,7 @@ public class FileToBufferedReaderTest extends RBTest<FileToBufferedReader> {
   @Test
   public void testWhenFileExists() throws IOException {
     Optional<BufferedReader> bufferedReader = makeTestObject().getBufferedReader(
-        makeRealObject(RBCommonsConstants.class).getFullFilename("ssd/rb/src/test/java/com/rb/nonbiz/io/test.txt"));
+        makeRealObject(RBCommonsConstants.class).getFullFilename("ssd/rbcommons/src/test/java/com/rb/nonbiz/io/test.txt"));
     assertTrue(bufferedReader.isPresent());
     assertEquals("first line", bufferedReader.get().readLine());
     assertEquals("second line", bufferedReader.get().readLine());

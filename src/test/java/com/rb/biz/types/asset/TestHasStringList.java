@@ -1,12 +1,8 @@
 package com.rb.biz.types.asset;
 
-import org.hamcrest.TypeSafeMatcher;
-
 import java.util.List;
 
-import static com.rb.biz.types.asset.HasListTest.hasListMatcher;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
-import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -33,10 +29,6 @@ public class TestHasStringList implements HasList<String> {
   @Override
   public List<String> getList() {
     return listOfStrings;
-  }
-
-  public static TypeSafeMatcher<TestHasStringList> testHasStringListMatcher(TestHasStringList expected) {
-    return hasListMatcher(expected, f -> typeSafeEqualTo(f));
   }
 
 }

@@ -49,7 +49,7 @@ public class StringFromFileReaderTest extends RBTestPlusIntegration<StringFromFi
 
   private String filenameOfRealFile() {
     return RBIntegrationTest.makeRealObject(RBCommonsConstants.class)
-        .getFullFilename("ssd/rb/src/test/java/com/rb/nonbiz/io/test.txt");
+        .getFullFilename("ssd/rbcommons/src/test/java/com/rb/nonbiz/io/test.txt");
   }
 
   @Override

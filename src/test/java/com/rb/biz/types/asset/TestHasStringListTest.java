@@ -1,16 +1,16 @@
 package com.rb.biz.types.asset;
 
-import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import static com.rb.biz.types.asset.HasListTest.hasListMatcher;
 import static com.rb.biz.types.asset.TestHasStringList.emptyTestHasStringList;
 import static com.rb.biz.types.asset.TestHasStringList.testHasStringListOf;
-import static com.rb.biz.types.asset.TestHasStringListTest.testHasStringListMatcher;
-import static com.rb.nonbiz.testmatchers.Match.matchList;
+import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 
-public class HasListTest extends RBTestMatcher<TestHasStringList> {
+public class TestHasStringListTest extends RBTestMatcher<TestHasStringList> {
 
   @Override
   public TestHasStringList makeTrivialObject() {
@@ -32,10 +32,9 @@ public class HasListTest extends RBTestMatcher<TestHasStringList> {
     return testHasStringListMatcher(expected).matches(actual);
   }
 
-  public static <T, L extends HasList<T>> TypeSafeMatcher<L> hasListMatcher(
-      L expected, MatcherGenerator<T> itemMatcherGenerator) {
+  public static TypeSafeMatcher<TestHasStringList> testHasStringListMatcher(TestHasStringList expected) {
     return makeMatcher(expected,
-        matchList(v -> expected.getList(), itemMatcherGenerator));
+        match(v -> v.getList(), f -> typeSafeEqualTo(f)));
   }
 
 }
