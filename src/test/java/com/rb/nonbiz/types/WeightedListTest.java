@@ -1,29 +1,24 @@
 package com.rb.nonbiz.types;
 
 import com.google.common.collect.ImmutableList;
-import com.rb.biz.types.SingleInstrumentOrderedTaxLots;
-import com.rb.biz.types.SingleInstrumentOrderedTaxLotsTest;
-import com.rb.biz.types.TaxLot;
 import com.rb.biz.types.asset.HasList;
-import com.rb.nonbiz.math.optimization.general.AllRawVariablesInOrder;
-import com.rb.nonbiz.math.optimization.general.RawVariable;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.WeightedListTest.TestHasStringList;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
 import static com.rb.biz.types.Price.price;
-import static com.rb.biz.types.SingleInstrumentOrderedTaxLots.orderedLotsSingleton;
-import static com.rb.biz.types.SingleInstrumentOrderedTaxLotsTest.singleInstrumentOrderedTaxLotsMatcher;
 import static com.rb.biz.types.asset.HasListTest.hasListMatcher;
 import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
-import static com.rb.nonbiz.math.optimization.general.AllRawVariablesInOrder.AllRawVariablesInOrderBuilder.allRawVariablesInOrderBuilder;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.doubleListMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.WeightedList.nonEmptyWeightedList;
 import static com.rb.nonbiz.types.WeightedList.possiblyEmptyWeightedList;
@@ -33,11 +28,10 @@ import static java.util.Collections.singletonList;
 /**
  * This test class is not generic, but the publicly exposed typesafe matcher is.
  */
-public class WeightedListTest extends RBTestMatcher<WeightedList<TaxLot, SingleInstrumentOrderedTaxLots>> {
-
+public class WeightedListTest extends RBTestMatcher<WeightedList<String, TestHasStringList>> {
+  
   @Test
   public void emptyAllowed_doesNotThrowIfEmpty() {
-    AllRawVariablesInOrder noVars = allRawVariablesInOrderBuilder().buildWithoutPreconditions();
     WeightedList<RawVariable, AllRawVariablesInOrder> doesNotThrow = possiblyEmptyWeightedList(noVars, emptyList());
   }
 
@@ -62,31 +56,31 @@ public class WeightedListTest extends RBTestMatcher<WeightedList<TaxLot, SingleI
   }
 
   @Override
-  public WeightedList<TaxLot, SingleInstrumentOrderedTaxLots> makeTrivialObject() {
+  public WeightedList<String, TestHasStringList> makeTrivialObject() {
     return nonEmptyWeightedList(
-        orderedLotsSingleton(STOCK_A, positiveQuantity(11), price(20), LocalDate.of(1974, 4, 4)),
+        new TestHasStringList(singletonList("")),
         singletonList(1.0));
   }
 
   @Override
-  public WeightedList<TaxLot, SingleInstrumentOrderedTaxLots> makeNontrivialObject() {
-    SingleInstrumentOrderedTaxLots lots = new SingleInstrumentOrderedTaxLotsTest().makeNontrivialObject();
-    assertEquals(4, lots.size());
-    return nonEmptyWeightedList(lots, ImmutableList.of(-1.1, 0.0, 3.3, -7.7));
+  public WeightedList<String, TestHasStringList> makeNontrivialObject() {
+    return nonEmptyWeightedList(
+        new TestHasStringList(ImmutableList.of("a", "b", "c", "d")),
+        ImmutableList.of(-1.1, 0.0, 3.3, -7.7));
   }
 
   @Override
-  public WeightedList<TaxLot, SingleInstrumentOrderedTaxLots> makeMatchingNontrivialObject() {
+  public WeightedList<String, TestHasStringList> makeMatchingNontrivialObject() {
     double e = 1e-9; // epsilon
-    SingleInstrumentOrderedTaxLots lots = new SingleInstrumentOrderedTaxLotsTest().makeMatchingNontrivialObject();
-    assertEquals(4, lots.size());
-    return nonEmptyWeightedList(lots, ImmutableList.of(-1.1 + e, 0.0 + e, 3.3 + e, -7.7 + e));
+    return nonEmptyWeightedList(
+        new TestHasStringList(ImmutableList.of("a", "b", "c", "d")),
+        ImmutableList.of(-1.1 + e, 0.0 + e, 3.3 + e, -7.7 + e));
   }
 
   @Override
-  protected boolean willMatch(WeightedList<TaxLot, SingleInstrumentOrderedTaxLots> expected,
-                              WeightedList<TaxLot, SingleInstrumentOrderedTaxLots> actual) {
-    return weightedListMatcher(expected, f -> singleInstrumentOrderedTaxLotsMatcher(f)).matches(actual);
+  protected boolean willMatch(WeightedList<String, TestHasStringList> expected,
+                              WeightedList<String, TestHasStringList> actual) {
+    return weightedListGeneralMatcher(expected, f -> typeSafeEqualTo(f)).matches(actual);
   }
 
   /**
