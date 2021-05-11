@@ -40,9 +40,9 @@ import static com.rb.biz.guice.modules.RBCommonsTestModule.rbCommonsIntegrationT
  * in order to distinguish it from the unit test FooBarBazerTest.java.
  *
  * @see RBTest
- * @see RBTestPlusIntegration
+ * @see RBCommonsIntegrationTest
  */
-public abstract class RBIntegrationTest<T> extends RBCommonsTestConstants<T> {
+public abstract class RBCommonsIntegrationTest<T> extends RBCommonsTestConstants<T> {
 
   private T realObject;
 

@@ -1,8 +1,9 @@
 package com.rb.nonbiz.io;
 
 import com.rb.biz.investing.modeling.RBCommonsConstants;
-import com.rb.nonbiz.testutils.RBIntegrationTest;
-import com.rb.nonbiz.testutils.RBTestPlusIntegration;
+import com.rb.nonbiz.testutils.RBCommonsTestPlusIntegration;
+import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
+import com.rb.nonbiz.testutils.RBCommonsTestPlusIntegration;
 import org.jmock.Expectations;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 
-public class StringFromFileReaderTest extends RBTestPlusIntegration<StringFromFileReader> {
+public class StringFromFileReaderTest extends RBCommonsTestPlusIntegration<StringFromFileReader> {
 
   FileToBufferedReader fileToBufferedReader =
       mockery.mock(FileToBufferedReader.class);
@@ -48,7 +49,7 @@ public class StringFromFileReaderTest extends RBTestPlusIntegration<StringFromFi
   }
 
   private String filenameOfRealFile() {
-    return RBIntegrationTest.makeRealObject(RBCommonsConstants.class)
+    return RBCommonsIntegrationTest.makeRealObject(RBCommonsConstants.class)
         .getFullFilename("ssd/rbcommons/src/test/java/com/rb/nonbiz/io/test.txt");
   }
 

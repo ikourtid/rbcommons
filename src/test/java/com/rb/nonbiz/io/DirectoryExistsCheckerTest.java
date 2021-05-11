@@ -1,7 +1,7 @@
 package com.rb.nonbiz.io;
 
 import com.rb.biz.investing.modeling.RBCommonsConstants;
-import com.rb.nonbiz.testutils.RBIntegrationTest;
+import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import com.rb.nonbiz.testutils.RBTest;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ public class DirectoryExistsCheckerTest extends RBTest<DirectoryExistsChecker> {
 
   @Test
   public void testHomeDir_exists() {
-    String homeDirName = RBIntegrationTest.makeRealObject(RBCommonsConstants.class)
+    String homeDirName = RBCommonsIntegrationTest.makeRealObject(RBCommonsConstants.class)
         .getFullFilename(".");
     assertTrue(makeTestObject().directoryExists(homeDirName));
   }

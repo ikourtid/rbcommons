@@ -1,6 +1,6 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.testutils.RBIntegrationTest;
+import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.ClosedUnitFractionHardAndSoftRanges.closedUnitFractionHardAndSoftRanges;
@@ -13,7 +13,7 @@ import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ClosedUnitFractionHardAndSoftRangesShrinkerTest
-    extends RBIntegrationTest<ClosedUnitFractionHardAndSoftRangesShrinker> {
+    extends RBCommonsIntegrationTest<ClosedUnitFractionHardAndSoftRangesShrinker> {
 
   @Test
   public void generalCase_shrinksEveryNumber() {

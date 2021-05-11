@@ -12,7 +12,7 @@ import static com.rb.nonbiz.collections.PartitionTest.partitionMatcher;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static com.rb.nonbiz.testutils.RBIntegrationTest.makeRealObject;
+import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;

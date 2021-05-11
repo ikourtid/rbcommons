@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.SignedMoney;
 import com.rb.nonbiz.collections.IidMap;
-import com.rb.nonbiz.testutils.RBIntegrationTest;
+import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import org.junit.Test;
 
 import static com.rb.biz.jsonapi.JsonTickerMapImplTest.jsonTickerMap;
@@ -19,7 +19,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PreciseValueIidMapJsonConverterTest extends RBIntegrationTest<PreciseValueIidMapJsonConverter> {
+public class PreciseValueIidMapJsonConverterTest extends RBCommonsIntegrationTest<PreciseValueIidMapJsonConverter> {
 
   private final JsonTickerMap TICKER_MAP = jsonTickerMap(iidMapOf(
       instrumentId(1), "S1",

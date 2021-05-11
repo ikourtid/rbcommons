@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
  * and you're supposed to be conforming to that anyway. Of course, different {@code @Test} methods will each get a copy,
  * because JUnit creates a new instance of the unit test class every time it executes a single {@code @Test} method.
  */
-public abstract class RBTestPlusIntegration<T> extends RBTest<T> {
+public abstract class RBCommonsTestPlusIntegration<T> extends RBTest<T> {
 
   private T realObject;
 
@@ -36,7 +36,7 @@ public abstract class RBTestPlusIntegration<T> extends RBTest<T> {
 
   protected T makeRealObject(LocalDateTime now) {
     if (realObject == null) {
-      realObject = RBIntegrationTest.makeRealObject(getClassBeingTested(), now);
+      realObject = RBCommonsIntegrationTest.makeRealObject(getClassBeingTested(), now);
     }
     return realObject;
   }

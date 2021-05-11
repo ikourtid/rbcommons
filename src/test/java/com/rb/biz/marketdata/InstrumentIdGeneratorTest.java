@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.StringFunctions;
 import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
-import com.rb.nonbiz.testutils.RBIntegrationTest;
+import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import static com.rb.biz.types.Symbol.symbol;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static org.junit.Assert.assertEquals;
 
-public class InstrumentIdGeneratorTest extends RBIntegrationTest<InstrumentIdGenerator> {
+public class InstrumentIdGeneratorTest extends RBCommonsIntegrationTest<InstrumentIdGenerator> {
 
   @Test
   public void testSomeKnownInstruments() {

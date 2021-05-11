@@ -1,6 +1,6 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.testutils.RBTestPlusIntegration;
+import com.rb.nonbiz.testutils.RBCommonsTestPlusIntegration;
 import com.rb.nonbiz.types.UnitFraction;
 import org.jmock.Expectations;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PartitionGradientCalculatorTest extends RBTestPlusIntegration<PartitionGradientCalculator> {
+public class PartitionGradientCalculatorTest extends RBCommonsTestPlusIntegration<PartitionGradientCalculator> {
 
   PartitionExtender partitionExtender =
       mockery.mock(PartitionExtender.class);

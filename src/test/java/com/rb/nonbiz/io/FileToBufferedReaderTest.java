@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
-import static com.rb.nonbiz.testutils.RBIntegrationTest.makeRealObject;
+import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;

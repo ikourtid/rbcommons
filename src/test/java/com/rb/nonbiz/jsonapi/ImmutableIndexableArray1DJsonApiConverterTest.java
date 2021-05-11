@@ -14,7 +14,7 @@ import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
-import static com.rb.nonbiz.testutils.RBIntegrationTest.makeRealObject;
+import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ImmutableIndexableArray1DJsonApiConverterTest

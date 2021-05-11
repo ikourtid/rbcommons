@@ -2,7 +2,7 @@ package com.rb.nonbiz.text.csv;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.rb.nonbiz.testutils.RBIntegrationTest;
+import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import org.junit.Test;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import static com.rb.nonbiz.text.csv.SimpleCsvTest.simpleCsvMatcher;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class SimpleCsvParserTest extends RBIntegrationTest<SimpleCsvParser> {
+public class SimpleCsvParserTest extends RBCommonsIntegrationTest<SimpleCsvParser> {
 
   @Test
   public void noHeaderRow_throws() {
