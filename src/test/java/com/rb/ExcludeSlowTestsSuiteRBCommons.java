@@ -14,8 +14,8 @@ import org.junit.runners.Suite;
 
 
 /**
- * Useful for running all RBPublic tests except for the slow ones,
- * so we can quickly-ish (~20 secs as of Dec 2019) see if we broke any tests.
+ * Useful for running all RBCommons tests except for the slow ones,
+ * so we can quickly-ish (~2 secs as of May 2021) see if we broke any tests.
  */
 @RunWith(Categories.class)
 @Categories.ExcludeCategory( {
