@@ -62,7 +62,6 @@ public abstract class RBCommonsTestConstants<T> {
   public static final double DUMMY_NEGATIVE_DOUBLE = -23.45;
   public static final DoubleMatrix1D DUMMY_DOUBLE_MATRIX_1D = new DenseDoubleMatrix1D(new double[] { DUMMY_DOUBLE, DUMMY_DOUBLE });
   public static final HumanReadableLabel DUMMY_LABEL = label(DUMMY_STRING);
-  public static final HumanReadableLabel DUMMY_SHORT_LABEL = label("abc");
   public static final int DUMMY_POSITIVE_INTEGER = 111;
   public static final Long DUMMY_LONG = 7878L;
   public static final LocalDate DUMMY_DATE = LocalDate.of(1974, 4, 4);
