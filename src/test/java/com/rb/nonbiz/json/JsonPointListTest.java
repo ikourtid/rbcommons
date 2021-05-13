@@ -5,7 +5,6 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static com.rb.nonbiz.json.JsonPointList.JsonPointListBuilder.jsonPointListBuilder;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
@@ -18,8 +17,6 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY0;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY2;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class JsonPointListTest extends RBTestMatcher<JsonPointList> {

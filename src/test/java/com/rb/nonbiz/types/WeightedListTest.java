@@ -8,15 +8,10 @@ import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import java.time.LocalDate;
-
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
-import static com.rb.biz.types.Price.price;
+import static com.rb.biz.types.asset.HasListTest.hasListMatcher;
 import static com.rb.biz.types.asset.TestHasStringList.emptyTestHasStringList;
 import static com.rb.biz.types.asset.TestHasStringList.singletonTestHasStringList;
 import static com.rb.biz.types.asset.TestHasStringList.testHasStringListOf;
-import static com.rb.biz.types.asset.HasListTest.hasListMatcher;
-import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.doubleListMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;

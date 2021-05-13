@@ -13,12 +13,10 @@ import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.OnesBasedReturn.FLAT_RETURN;
 import static com.rb.biz.types.OnesBasedReturn.onesBasedReturn;
-import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
 import static com.rb.biz.types.trading.SignedQuantity.signedQuantity;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
