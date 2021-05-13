@@ -8,7 +8,6 @@ import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.PositiveMultiplier;
-import com.rb.nonbiz.types.SignedFraction;
 import org.junit.Test;
 
 import java.math.BigDecimal;

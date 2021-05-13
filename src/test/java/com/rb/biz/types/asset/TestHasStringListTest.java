@@ -3,7 +3,6 @@ package com.rb.biz.types.asset;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 
-import static com.rb.biz.types.asset.HasListTest.hasListMatcher;
 import static com.rb.biz.types.asset.TestHasStringList.emptyTestHasStringList;
 import static com.rb.biz.types.asset.TestHasStringList.testHasStringListOf;
 import static com.rb.nonbiz.testmatchers.Match.match;

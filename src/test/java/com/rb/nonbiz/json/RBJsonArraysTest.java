@@ -7,7 +7,6 @@ import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.Pair;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.text.Strings;
-import org.hamcrest.MatcherAssert;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -42,8 +41,6 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.nonEmptyOptionalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY0;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY1;
 import static com.rb.nonbiz.types.Correlation.correlation;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
