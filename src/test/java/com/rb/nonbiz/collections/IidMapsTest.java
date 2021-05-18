@@ -5,6 +5,7 @@ import com.google.inject.Provider;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidMapVisitors.PairOfIidSetAndIidMapVisitor;
 import com.rb.nonbiz.collections.IidMapVisitors.TwoIidMapsVisitor;
+import com.rb.nonbiz.functional.QuadriConsumer;
 import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.text.Strings;
 import org.hamcrest.MatcherAssert;
@@ -34,6 +35,7 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
+import static com.rb.nonbiz.collections.IidMapVisitors.visitInstrumentsOfThreeIidMaps;
 import static com.rb.nonbiz.collections.IidMaps.filterForPresentValuesAndTransformValuesCopy;
 import static com.rb.nonbiz.collections.IidMaps.getWhenAtMostOneIidMapIsNonEmpty;
 import static com.rb.nonbiz.collections.IidMaps.invertMapOfDisjointIidSets;
@@ -742,6 +744,34 @@ public class IidMapsTest {
             "L_10_a", "L_11_b",
             "B_12_c_200", "B_13_d_300",
             "R_14_400", "R_15_500"));
+  }
+
+  @Test
+  public void testThreeRBMapsVisitor() {
+    MutableRBSet<String> mutableSet = newMutableRBSet();
+
+    visitInstrumentsOfThreeIidMaps(
+        iidMapOf(
+            instrumentId(10), "<10>",
+            instrumentId(11), "<11>",
+            instrumentId(12), "<12>"),
+        iidMapOf(
+            instrumentId(10), 100L,
+            instrumentId(11), 110L),
+        singletonIidMap(
+            instrumentId(10), 'X'),
+        (instrumentId, maybeString, maybeLong, maybeChar) ->
+            mutableSet.add(Strings.format("%s_%s_%s_%s",
+                instrumentId.asLong(),
+                maybeString.orElse("*"),
+                maybeLong.map(v -> v.toString()).orElse("*"),
+                maybeChar.map(v -> v.toString()).orElse("*"))));
+    assertEquals(
+        newRBSet(mutableSet),
+        rbSetOf(
+            "10_<10>_100_X",
+            "11_<11>_110_*",
+            "12_<12>_*_*"));
   }
 
   @Test
