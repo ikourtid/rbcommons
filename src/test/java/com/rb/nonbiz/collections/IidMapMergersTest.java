@@ -3,12 +3,16 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.Money;
 import com.rb.biz.types.asset.InstrumentId;
+import com.rb.nonbiz.functional.QuadriFunction;
+import com.rb.nonbiz.functional.TriFunction;
+import com.rb.nonbiz.testutils.TestEnumXYZ;
 import com.rb.nonbiz.text.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static com.google.common.collect.Iterators.singletonIterator;
@@ -19,8 +23,11 @@ import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsAllowingOverlapOnSimilarItemsOnly;
 import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsByTransformedValue;
+import static com.rb.nonbiz.collections.IidMapMergers.mergeThreeIidMapsByTransformedEntry;
+import static com.rb.nonbiz.collections.IidMapMergers.mergeThreeIidMapsByTransformedValue;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.iidMapPreciseValueMatcher;
@@ -79,16 +86,16 @@ public class IidMapMergersTest {
 
     rbSetOf(-999.0, -1.0, -1e-7, 1e-7, 1.0, 999.0).forEach(largeEpsilon ->
         assertIllegalArgumentException( () ->
-                mergeIidMapsAllowingOverlapOnSimilarItemsOnly(
-                    ImmutableList.of(
-                        iidMapOf(
-                            STOCK_A1, money(100),
-                            STOCK_A2, money(200)),
-                        iidMapOf(
-                            STOCK_A2, money(200 + largeEpsilon),
-                            STOCK_A3, money(300)))
-                        .iterator(),
-                    (v1, v2) -> v1.almostEquals(v2, 1e-8))));
+            mergeIidMapsAllowingOverlapOnSimilarItemsOnly(
+                ImmutableList.of(
+                    iidMapOf(
+                        STOCK_A1, money(100),
+                        STOCK_A2, money(200)),
+                    iidMapOf(
+                        STOCK_A2, money(200 + largeEpsilon),
+                        STOCK_A3, money(300)))
+                    .iterator(),
+                (v1, v2) -> v1.almostEquals(v2, 1e-8))));
   }
 
   @Test
@@ -142,6 +149,69 @@ public class IidMapMergersTest {
             STOCK_1, "1=A",
             STOCK_2, "2=B:C",
             STOCK_3, "3=D"));
+  }
+
+  @Test
+  public void testMergeThreeIidMapsByTransformedEntry() {
+    // use the following (instead of the usual STOCK_A, etc) in order to have simple numerical values
+    InstrumentId STOCK_1 = instrumentId(1);
+    InstrumentId STOCK_2 = instrumentId(2);
+    InstrumentId STOCK_3 = instrumentId(3);
+
+    QuadriFunction<InstrumentId, Optional<Integer>, Optional<Boolean>, Optional<TestEnumXYZ>, String> merger =
+        (instrumentId, maybeInt, maybeBoolean, maybeTestEnumXYZ) -> Strings.format("%s_%s_%s_%s",
+            instrumentId.asLong(),
+            maybeInt.map(v -> v.toString()).orElse("*"),
+            maybeBoolean.map(v -> v.toString()).orElse("*"),
+            maybeTestEnumXYZ.map(v -> v.toString()).orElse("*"));
+    assertThat(
+        mergeThreeIidMapsByTransformedEntry(
+            merger,
+            iidMapOf(
+                STOCK_1, 11,
+                STOCK_2, 22,
+                STOCK_3, 33),
+            iidMapOf(
+                STOCK_1, true,
+                STOCK_2, false),
+            singletonIidMap(
+                STOCK_1, TestEnumXYZ.X)),
+        iidMapEqualityMatcher(
+            iidMapOf(
+                STOCK_1, "1_11_true_X",
+                STOCK_2, "2_22_false_*",
+                STOCK_3, "3_33_*_*")));
+  }
+
+  @Test
+  public void testMergeThreeIidMapsByTransformedValue() {
+    // use the following (instead of the usual STOCK_A, etc) in order to have simple numerical values
+    InstrumentId STOCK_1 = instrumentId(1);
+    InstrumentId STOCK_2 = instrumentId(2);
+    InstrumentId STOCK_3 = instrumentId(3);
+
+    TriFunction<Optional<Integer>, Optional<Boolean>, Optional<TestEnumXYZ>, String> merger =
+        (maybeInt, maybeBoolean, maybeTestEnumXYZ) -> Strings.format("%s_%s_%s",
+            maybeInt.map(v -> v.toString()).orElse("*"),
+            maybeBoolean.map(v -> v.toString()).orElse("*"),
+            maybeTestEnumXYZ.map(v -> v.toString()).orElse("*"));
+    assertThat(
+        mergeThreeIidMapsByTransformedValue(
+            merger,
+            iidMapOf(
+                STOCK_1, 11,
+                STOCK_2, 22,
+                STOCK_3, 33),
+            iidMapOf(
+                STOCK_1, true,
+                STOCK_2, false),
+            singletonIidMap(
+                STOCK_1, TestEnumXYZ.X)),
+        iidMapEqualityMatcher(
+            iidMapOf(
+                STOCK_1, "11_true_X",
+                STOCK_2, "22_false_*",
+                STOCK_3, "33_*_*")));
   }
 
 }

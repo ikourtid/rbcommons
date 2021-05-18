@@ -168,8 +168,6 @@ public class IidMapMergers {
    * based on whether values exist or not, for each respective map.
    *
    * @see IidMapMergers#mergeIidMapsByTransformedValue
-   *
-   * FIXME SWA HT please add tests
    */
   public static <V, V1, V2, V3> IidMap<V> mergeThreeIidMapsByTransformedEntry(
       QuadriFunction<InstrumentId, Optional<V1>, Optional<V2>, Optional<V3>, V> mergeFunction,
@@ -212,8 +210,6 @@ public class IidMapMergers {
    * Just like mergeIidMapsByTransformedEntry, except that the lambdas you pass in
    * don't take the key in as a parameter. This is a simpler alternative for those cases where
    * your transformations do not rely on the map key.
-   *
-   * FIXME SWA HT please add tests
    */
   public static <V, V1, V2, V3> IidMap<V> mergeThreeIidMapsByTransformedValue(
       TriFunction<Optional<V1>, Optional<V2>, Optional<V3>, V> mergeFunction,
