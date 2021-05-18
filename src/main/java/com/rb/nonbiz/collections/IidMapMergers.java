@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidMapVisitors.TwoIidMapsVisitor;
+import com.rb.nonbiz.functional.QuadriFunction;
 import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
+import static com.rb.nonbiz.collections.IidMapVisitors.visitInstrumentsOfTwoIidMaps;
 import static com.rb.nonbiz.collections.IidSetOperations.unionOfIidSets;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
@@ -136,7 +138,7 @@ public class IidMapMergers {
     // This is just an estimate; it doesn't have to be exact. Of course, if an instrument appears in both maps,
     // this will be an overestimate.
     MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(leftMap.size() + rightMap.size());
-    IidMapVisitors.visitInstrumentsOfTwoIidMaps(
+    visitInstrumentsOfTwoIidMaps(
         leftMap,
         rightMap,
         new TwoIidMapsVisitor<V1, V2>() {
@@ -159,6 +161,35 @@ public class IidMapMergers {
   }
 
   /**
+   * Merges three maps into a single one, but also transforms the values into a possibly different type.
+   *
+   * Unlike mergeIidMapsByTransformedEntry, there are too many cases of keys having values or not (2 ^ 3 - 1)
+   * to handle with separate lambdas. Therefore, we'll handle all of these with a lambda that takes optionals
+   * based on whether values exist or not, for each respective map.
+   *
+   * @see IidMapMergers#mergeIidMapsByTransformedValue
+   *
+   * FIXME SWA HT please add tests
+   */
+  public static <V, V1, V2, V3> IidMap<V> mergeThreeIidMapsByTransformedEntry(
+      QuadriFunction<InstrumentId, Optional<V1>, Optional<V2>, Optional<V3>, V> mergeFunction,
+      IidMap<V1> map1,
+      IidMap<V2> map2,
+      IidMap<V3> map3) {
+    // There's probably a more efficient way to do this, but this is general and simple enough:
+    IidSet allKeys = unionOfIidSets(map1.keySet(), map2.keySet(), map3.keySet());
+    MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(allKeys.size());
+    allKeys.forEach(instrumentId -> mutableMap.putAssumingAbsent(
+        instrumentId,
+        mergeFunction.apply(
+            instrumentId,
+            map1.getOptional(instrumentId),
+            map2.getOptional(instrumentId),
+            map3.getOptional(instrumentId))));
+    return newIidMap(mutableMap);
+  }
+
+  /**
    * Just like mergeIidMapsByTransformedEntry, except that the lambdas you pass in
    * don't take the key in as a parameter. This is a simpler alternative for those cases where
    * your transformations do not rely on the map key.
@@ -175,6 +206,23 @@ public class IidMapMergers {
         (instrumentId, v2) -> onlyRightPresent.apply(v2),
         leftMap,
         rightMap);
+  }
+
+  /**
+   * Just like mergeIidMapsByTransformedEntry, except that the lambdas you pass in
+   * don't take the key in as a parameter. This is a simpler alternative for those cases where
+   * your transformations do not rely on the map key.
+   *
+   * FIXME SWA HT please add tests
+   */
+  public static <V, V1, V2, V3> IidMap<V> mergeThreeIidMapsByTransformedValue(
+      TriFunction<Optional<V1>, Optional<V2>, Optional<V3>, V> mergeFunction,
+      IidMap<V1> map1,
+      IidMap<V2> map2,
+      IidMap<V3> map3) {
+    return mergeThreeIidMapsByTransformedEntry(
+        (ignoredInstrumentId, v1, v2, v3) -> mergeFunction.apply(v1, v2, v3),
+        map1, map2, map3);
   }
 
   /**
@@ -238,7 +286,7 @@ public class IidMapMergers {
       IidMap<V> rightMap) {
     int sizeHint = leftMap.size() + rightMap.size();
     MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(sizeHint);
-    IidMapVisitors.visitInstrumentsOfTwoIidMaps(
+    visitInstrumentsOfTwoIidMaps(
         leftMap,
         rightMap,
         new TwoIidMapsVisitor<V, V>() {
