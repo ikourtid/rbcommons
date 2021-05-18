@@ -39,12 +39,16 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEquals;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_LONG;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.types.Pointer.initializedPointer;
 import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -375,6 +379,45 @@ public class RBOptionalsTest {
   public void testTransformIfNonNull() {
     assertNull(transformIfNonNull(v -> v + "_").apply(null));
     assertEquals("X_", transformIfNonNull(v -> v + "_").apply("X"));
+  }
+
+  @Test
+  public void test_allOptionalsPresent_allOptionalsEmpty() {
+    Optional<String> empty1 = Optional.empty();
+    Optional<Integer> empty2 = Optional.empty();
+    Optional<Boolean> empty3 = Optional.empty();
+    Optional<Long> empty4 = Optional.empty();
+
+    Optional<String> present1 = Optional.of(DUMMY_STRING);
+    Optional<Integer> present2 = Optional.of(DUMMY_POSITIVE_INTEGER);
+    Optional<Boolean> present3 = Optional.of(false);
+    Optional<Long> present4 = Optional.of(DUMMY_LONG);
+
+    assertTrue(allOptionalsPresent(present1, present2, present3, present4));
+    assertFalse(allOptionalsPresent(empty1, present2, present3, present4));
+    assertFalse(allOptionalsPresent(present1, empty2, present3, present4));
+    assertFalse(allOptionalsPresent(present1, present2, empty3, present4));
+    assertFalse(allOptionalsPresent(present1, present2, present3, empty4));
+    assertFalse(allOptionalsPresent(empty1, empty2, empty3, empty4));
+
+    assertTrue(allOptionalsPresent(present1, present2, present3));
+    assertFalse(allOptionalsPresent(empty1, present2, present3));
+    assertFalse(allOptionalsPresent(present1, empty2, present3));
+    assertFalse(allOptionalsPresent(present1, present2, empty3, present4));
+    assertFalse(allOptionalsPresent(empty1, empty2, empty3));
+
+    assertFalse(allOptionalsEmpty(present1, present2, present3, present4));
+    assertFalse(allOptionalsEmpty(empty1, present2, present3, present4));
+    assertFalse(allOptionalsEmpty(present1, empty2, present3, present4));
+    assertFalse(allOptionalsEmpty(present1, present2, empty3, present4));
+    assertFalse(allOptionalsEmpty(present1, present2, present3, empty4));
+    assertTrue(allOptionalsEmpty(empty1, empty2, empty3, empty4));
+
+    assertFalse(allOptionalsEmpty(present1, present2, present3));
+    assertFalse(allOptionalsEmpty(empty1, present2, present3));
+    assertFalse(allOptionalsEmpty(present1, empty2, present3));
+    assertFalse(allOptionalsEmpty(present1, present2, empty3, present4));
+    assertTrue(allOptionalsEmpty(empty1, empty2, empty3));
   }
 
 }

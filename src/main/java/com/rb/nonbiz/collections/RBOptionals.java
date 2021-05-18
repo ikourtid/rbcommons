@@ -58,6 +58,18 @@ public class RBOptionals {
     return v1.equals(v2);
   }
 
+  public static boolean allOptionalsPresent(
+      Optional<?> first, Optional<?> second, Optional<?> third, Optional<?> ... rest) {
+    return first.isPresent() && second.isPresent() && third.isPresent()
+        && Arrays.stream(rest).allMatch(v -> v.isPresent());
+  }
+
+  public static boolean allOptionalsEmpty(
+      Optional<?> first, Optional<?> second, Optional<?> third, Optional<?> ... rest) {
+    return !first.isPresent() && !second.isPresent() && !third.isPresent()
+        && Arrays.stream(rest).noneMatch(v -> v.isPresent());
+  }
+
   /**
    * Gives you a nice, structured way to run different code based the 2 x 2 cases where two optionals
    * are empty or non-empty,
