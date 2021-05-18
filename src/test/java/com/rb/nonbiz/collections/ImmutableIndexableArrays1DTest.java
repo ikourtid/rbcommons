@@ -29,13 +29,9 @@ public class ImmutableIndexableArrays1DTest {
 
   @Test
   public void testMergeImmutableIndexableArrays1DByValue() {
-    ImmutableIndexableArray1D<String, Integer> abc;
-    ImmutableIndexableArray1D<String, Integer> bcd;
-    ImmutableIndexableArray1D<String, Integer> cde;
-
-    abc = testImmutableIndexableArray1D("a", 100, "b", 101, "c", 102);
-    bcd = testImmutableIndexableArray1D("b", 103, "c", 104, "d", 105);
-    cde = testImmutableIndexableArray1D("c", 106, "d", 107, "e", 108);
+    ImmutableIndexableArray1D<String, Integer> abc = testImmutableIndexableArray1D("a", 100, "b", 101, "c", 102);
+    ImmutableIndexableArray1D<String, Integer> bcd = testImmutableIndexableArray1D("b", 103, "c", 104, "d", 105);
+    ImmutableIndexableArray1D<String, Integer> cde = testImmutableIndexableArray1D("c", 106, "d", 107, "e", 108);
 
     rbSetOf(
         mergeImmutableIndexableArrays1DByValue(size -> new Integer[size], Integer::sum, abc, bcd, cde),
