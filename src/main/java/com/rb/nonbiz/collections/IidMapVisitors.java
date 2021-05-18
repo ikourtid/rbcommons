@@ -3,11 +3,14 @@ package com.rb.nonbiz.collections;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.RBMapVisitors.PairOfRBSetAndRBMapVisitor;
 import com.rb.nonbiz.collections.RBMapVisitors.TwoRBMapsVisitor;
+import com.rb.nonbiz.functional.QuadriConsumer;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.text.Strings;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
+
+import static com.rb.nonbiz.collections.IidSetOperations.unionOfIidSets;
 
 public class IidMapVisitors {
 
@@ -69,6 +72,30 @@ public class IidMapVisitors {
         visitor.visitInstrumentInRightMapOnly(rightKey, rightValue);
       }
     });
+  }
+
+  /**
+   * When you have 3 IidMaps, this lets you perform 7 = 2 ^ 3 - 1 different actions for items based on whether items exist
+   * in the {1st, 2nd, 3rd} map, respectively. It's not possible for an item to exist in NO map, by definition,
+   * since we're looking at the set union of all InstrumentId keys from all 3 maps. Hence the minus 1 in the formula above.
+   *
+   * It lets you specify a bit more cleanly what to do in those 3 different cases.
+   *
+   * @see RBMapVisitors#visitItemsOfTwoRBMaps
+   */
+  public static <V1, V2, V3> void visitInstrumentsOfThreeIidMaps(
+      IidMap<V1> map1,
+      IidMap<V2> map2,
+      IidMap<V3> map3,
+      QuadriConsumer<InstrumentId, Optional<V1>, Optional<V2>, Optional<V3>> quadriConsumer) {
+    // There's probably a more efficient way to do this, but this is general and simple enough:
+    IidSet allKeys = unionOfIidSets(map1.keySet(), map2.keySet(), map3.keySet());
+
+    allKeys.forEach(instrumentId -> quadriConsumer.accept(
+        instrumentId,
+        map1.getOptional(instrumentId),
+        map2.getOptional(instrumentId),
+        map3.getOptional(instrumentId)));
   }
 
   /**
