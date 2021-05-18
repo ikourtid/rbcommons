@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
 import java.util.function.BiConsumer;
@@ -15,10 +16,13 @@ import static com.rb.nonbiz.collections.ImmutableIndexableArrays1D.immutableInde
 import static com.rb.nonbiz.collections.ImmutableIndexableArrays1D.mergeImmutableIndexableArrays1DByValue;
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairTest.pairEqualityMatcher;
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ImmutableIndexableArrays1DTest {
@@ -33,17 +37,48 @@ public class ImmutableIndexableArrays1DTest {
     bcd = testImmutableIndexableArray1D("b", 103, "c", 104, "d", 105);
     cde = testImmutableIndexableArray1D("c", 106, "d", 107, "e", 108);
 
-    assertThat(
+    rbSetOf(
         mergeImmutableIndexableArrays1DByValue(size -> new Integer[size], Integer::sum, abc, bcd, cde),
+        mergeImmutableIndexableArrays1DByValue(size -> new Integer[size], Integer::sum, ImmutableList.of(abc, bcd, cde)))
+        .forEach(actual -> assertThat(
+            "Testing case of 3 lists",
+            actual,
+            immutableIndexableArray1DMatcher(
+                immutableIndexableArray1D(simpleArrayIndexMapping("a", "b", "c", "d", "e"), new Integer[] {
+                    100,
+                    intExplained(204, 101 + 103),
+                    intExplained(312, 102 + 104 + 106),
+                    intExplained(212, 105 + 107),
+                    108 }),
+                k -> typeSafeEqualTo(k),
+                v -> typeSafeEqualTo(v))));
+
+    rbSetOf(
+        mergeImmutableIndexableArrays1DByValue(size -> new Integer[size], Integer::sum, abc, bcd),
+        mergeImmutableIndexableArrays1DByValue(size -> new Integer[size], Integer::sum, ImmutableList.of(abc, bcd)))
+        .forEach(actual -> assertThat(
+            "Testing case of 2 lists",
+            actual,
+            immutableIndexableArray1DMatcher(
+                immutableIndexableArray1D(simpleArrayIndexMapping("a", "b", "c", "d"), new Integer[] {
+                    100,
+                    intExplained(204, 101 + 103),
+                    intExplained(206, 102 + 104),
+                    105 }),
+                k -> typeSafeEqualTo(k),
+                v -> typeSafeEqualTo(v))));
+
+    // The case of 1 item in the list can only be handled by the overload that takes in a list, not the varargs one.
+    assertThat(
+        "'merging' a single list results in that same list",
+        mergeImmutableIndexableArrays1DByValue(size -> new Integer[size], Integer::sum, singletonList(abc)),
         immutableIndexableArray1DMatcher(
-            immutableIndexableArray1D(simpleArrayIndexMapping("a", "b", "c", "d", "e"), new Integer[] {
-                100,
-                intExplained(204, 101 + 103),
-                intExplained(312, 102 + 104 + 106),
-                intExplained(212, 105 + 107),
-                108 }),
+            abc,
             k -> typeSafeEqualTo(k),
             v -> typeSafeEqualTo(v)));
+
+    assertIllegalArgumentException( () ->
+        mergeImmutableIndexableArrays1DByValue(size -> new Integer[size], Integer::sum, emptyList()));
   }
 
   @Test

@@ -1,6 +1,8 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.Iterables;
 import com.rb.nonbiz.types.LongCounter;
+import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +11,7 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.emptyImmutableIndexableArray1D;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.immutableIndexableArray1D;
@@ -38,13 +41,32 @@ public class ImmutableIndexableArrays1D {
       BinaryOperator<V> mergeFunction,
       ImmutableIndexableArray1D<K, V> first,
       ImmutableIndexableArray1D<K, V> second,
-      ImmutableIndexableArray1D<K, V>...rest) {
-    int sizeHint = concatenateFirstSecondAndRest(first, second, rest).mapToInt(v -> v.size()).sum();
+      ImmutableIndexableArray1D<K, V> ... rest) {
+    return mergeImmutableIndexableArrays1DByValue(
+        arrayInstantiator,
+        mergeFunction,
+        RBLists.concatenateFirstSecondAndRest(first, second, rest));
+  }
+
+  public static <K, V> ImmutableIndexableArray1D<K, V> mergeImmutableIndexableArrays1DByValue(
+      IntFunction<V[]> arrayInstantiator, // we need this unfortunately, because arrays don't play well with generics
+      BinaryOperator<V> mergeFunction,
+      List<ImmutableIndexableArray1D<K, V>> arraysToMerge) {
+    int numArraysToMerge = arraysToMerge.size();
+    RBPreconditions.checkArgument(
+        numArraysToMerge > 0,
+        "We can't merge 0 arrays");
+    // Special case, for better performance
+    if (numArraysToMerge == 1) {
+      return getOnlyElement(arraysToMerge);
+    }
+
+    int sizeHint = arraysToMerge.stream().mapToInt(v -> v.size()).sum();
     MutableRBMap<K, Integer> keysEncountered = newMutableRBMapWithExpectedSize(sizeHint);
     LongCounter currentPosition = longCounter();
     List<K> keysInOrder = newArrayListWithExpectedSize(sizeHint);
     List<V> valuesInOrder = newArrayListWithExpectedSize(sizeHint);
-    concatenateFirstSecondAndRest(first, second, rest)
+    arraysToMerge
         .forEach(array -> array.forEachEntry( (key, value) -> {
           Optional<Integer> keyPosition = keysEncountered.getOptional(key);
           if (!keyPosition.isPresent()) {
