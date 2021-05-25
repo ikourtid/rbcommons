@@ -2,6 +2,7 @@ package com.rb.nonbiz.testutils;
 
 import com.google.common.io.CharStreams;
 import org.jmock.Mockery;
+import org.jmock.Sequence;
 import org.junit.After;
 
 import java.io.IOException;
@@ -33,6 +34,13 @@ public abstract class RBTest<T> extends RBCommonsTestConstants<T> {
    * The latter is useful because very few of our classes implement an interface.
    */
   protected Mockery mockery = imposterizingMockery();
+
+  /**
+   * This is for those rare cases where want to enforce that calls are made in a particular sequence.
+   */
+  protected Sequence makeSequence(String name) {
+    return mockery.sequence(name);
+  }
 
   protected String getFileAsString(String filename) throws IOException {
     return CharStreams.toString(new InputStreamReader(getClass().getResourceAsStream(filename)));
