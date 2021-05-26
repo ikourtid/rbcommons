@@ -301,10 +301,12 @@ public class RBMap<K, V> {
   /**
    * Transforms a map's values while keeping the same keys, but the transformations happen in a random order.
    * This only matters if the transformer function has any side effects;
-   *
    */
   public <V1> RBMap<K, V1> randomlyOrderedTransformValuesCopy(Function<V, V1> valueTransformer, Random random) {
     List<Entry<K, V>> entriesList = newArrayList(entrySet());
+
+    // The performance isn't great here, because we need to have a list (not arrays or iterators), but I guess we have
+    // to. Collections.shuffle implements some Knuth algorithm so it has to be good.
     Collections.shuffle(entriesList);
     MutableRBMap<K, V1> mutableMap = newMutableRBMapWithExpectedSize(size());
     entriesList.forEach(entry ->
