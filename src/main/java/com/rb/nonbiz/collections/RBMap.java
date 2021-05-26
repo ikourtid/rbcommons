@@ -307,7 +307,7 @@ public class RBMap<K, V> {
 
     // The performance isn't great here, because we need to have a list (not arrays or iterators), but I guess we have
     // to. Collections.shuffle implements some Knuth algorithm so it has to be good.
-    Collections.shuffle(entriesList);
+    Collections.shuffle(entriesList, random);
     MutableRBMap<K, V1> mutableMap = newMutableRBMapWithExpectedSize(size());
     entriesList.forEach(entry ->
         mutableMap.putAssumingAbsent(entry.getKey(), valueTransformer.apply(entry.getValue())));
