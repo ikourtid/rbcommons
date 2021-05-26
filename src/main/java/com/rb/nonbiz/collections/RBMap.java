@@ -10,8 +10,11 @@ import com.rb.nonbiz.util.RBSimilarityPreconditions;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -21,6 +24,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
@@ -291,6 +295,20 @@ public class RBMap<K, V> {
         comparing(entry -> entry.getKey(), keyComparator),
         (key, originalValue) ->
             mutableMap.putAssumingAbsent(key, valueTransformer.apply(originalValue)));
+    return newRBMap(mutableMap);
+  }
+
+  /**
+   * Transforms a map's values while keeping the same keys, but the transformations happen in a random order.
+   * This only matters if the transformer function has any side effects;
+   *
+   */
+  public <V1> RBMap<K, V1> randomlyOrderedTransformValuesCopy(Function<V, V1> valueTransformer, Random random) {
+    List<Entry<K, V>> entriesList = newArrayList(entrySet());
+    Collections.shuffle(entriesList);
+    MutableRBMap<K, V1> mutableMap = newMutableRBMapWithExpectedSize(size());
+    entriesList.forEach(entry ->
+        mutableMap.putAssumingAbsent(entry.getKey(), valueTransformer.apply(entry.getValue())));
     return newRBMap(mutableMap);
   }
 
