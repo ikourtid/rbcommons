@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
+import com.rb.nonbiz.testmatchers.RBCollectionMatchers;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.LongCounter;
 import com.rb.nonbiz.types.Pointer;
@@ -17,8 +18,11 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
+import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
@@ -428,31 +432,50 @@ public class RBMapTest {
         "d", 14,
         "e", 15);
 
-    MutableRBSet<Long> valueOrderingsEncountered = newMutableRBSetWithExpectedSize(100);
+    MutableRBSet<Long> uniqueValueOrderingsEncountered = newMutableRBSetWithExpectedSize(100);
+    long currentTimeMillis = System.currentTimeMillis();
 
     // It's hard to test something that has randomness in it. But here's a reasonable way.
     // With a map of size 5, there are 5 factorial = 120 permutations.
     // If we do e.g. 100 transformations in random order, we would expect to have at least e.g. 20 unique permutations
     // show up.
-    for (int i = 0; i < 100; i++) {
-      Pointer<Long> longPointer = initializedPointer(0L);
-      assertEquals(
-          transformed,
-          original.randomlyOrderedTransformValuesCopy(
-              value -> {
-                longPointer.set(100 * longPointer.getOrThrow() + value); // intentional side effect
-                return value + 10;
-              },
-              new Random(System.currentTimeMillis())));
-      // For example, if the order of keys happens to be abcde, then this will be 1112131415.
-      valueOrderingsEncountered.add(longPointer.getOrThrow());
-    }
+    Supplier<List<Integer>> run100 = () -> {
+      List<Integer> valueOrderingsEncountered = newArrayListWithExpectedSize(100);
+      Random random = new Random(currentTimeMillis);
+      for (int i = 0; i < 100; i++) {
+        Pointer<Long> longPointer = initializedPointer(0L);
+        assertEquals(
+            transformed,
+            original.randomlyOrderedTransformValuesCopy(
+                value -> {
+                  longPointer.set(100 * longPointer.getOrThrow() + value); // intentional side effect
+                  valueOrderingsEncountered.add(value);
+                  return value + 10;
+                },
+                random));
+        // For example, if the order of keys happens to be abcde, then this will be 1112131415.
+        uniqueValueOrderingsEncountered.add(longPointer.getOrThrow());
+      }
+      return valueOrderingsEncountered;
+    };
+
+    List<Integer> valuesFromRun1 = run100.get(); // run and save result
 
     // I ran this several times and I saw values around 70, and no value below 60.
     // But let's use 40 to be safe. This is saying that we'll see at least 40 unique permutations out of the 120.
     assertThat(
-        valueOrderingsEncountered.size(),
+        uniqueValueOrderingsEncountered.size(),
         greaterThan(40));
+
+    List<Integer> valuesFromRun2 = run100.get(); // run and save result
+
+    // We had a bug where the random number generator wasn't getting used. If so, the probability that the two
+    // lists below are the same is minuscule. So this test is guaranteed to pass if we are indeed using the RNG,
+    // and has a teeny chance of passing if not.
+    assertEquals(
+        "Since we ran with a random number generated with the same seed, the results should be the same",
+        valuesFromRun1,
+        valuesFromRun2);
   }
 
   @Test
