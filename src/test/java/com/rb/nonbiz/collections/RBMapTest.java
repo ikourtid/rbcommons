@@ -5,12 +5,14 @@ import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.LongCounter;
+import com.rb.nonbiz.types.Pointer;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.junit.Test;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -18,6 +20,8 @@ import java.util.function.Predicate;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
+import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
+import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
 import static com.rb.nonbiz.collections.RBMapMergers.mergeRBMapsDisallowingOverlap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
@@ -34,7 +38,9 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrows;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
 import static com.rb.nonbiz.types.LongCounter.longCounter;
+import static com.rb.nonbiz.types.Pointer.initializedPointer;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -405,6 +411,48 @@ public class RBMapTest {
           orderedValues,
           orderedListMatcher(ImmutableList.of(5, 4, 3, 2, 1), s -> typeSafeEqualTo(s)));
     }
+  }
+
+  @Test
+  public void testRandomlyOrderedTransformValuesCopy_iteratesWithDeterministicOrder() {
+    RBMap<String, Integer> original = rbMapOf(
+        "a", 1,
+        "b", 2,
+        "c", 3,
+        "d", 4,
+        "e", 5);
+    RBMap<String, Integer> transformed = rbMapOf(
+        "a", 11,
+        "b", 12,
+        "c", 13,
+        "d", 14,
+        "e", 15);
+
+    MutableRBSet<Long> valueOrderingsEncountered = newMutableRBSetWithExpectedSize(100);
+
+    // It's hard to test something that has randomness in it. But here's a reasonable way.
+    // With a map of size 5, there are 5 factorial = 120 permutations.
+    // If we do e.g. 100 transformations in random order, we would expect to have at least e.g. 20 unique permutations
+    // show up.
+    for (int i = 0; i < 100; i++) {
+      Pointer<Long> longPointer = initializedPointer(0L);
+      assertEquals(
+          transformed,
+          original.randomlyOrderedTransformValuesCopy(
+              value -> {
+                longPointer.set(100 * longPointer.getOrThrow() + value); // intentional side effect
+                return value + 10;
+              },
+              new Random(System.currentTimeMillis())));
+      // For example, if the order of keys happens to be abcde, then this will be 1112131415.
+      valueOrderingsEncountered.add(longPointer.getOrThrow());
+    }
+
+    // I ran this several times and I saw values around 70, and no value below 60.
+    // But let's use 40 to be safe. This is saying that we'll see at least 40 unique permutations out of the 120.
+    assertThat(
+        valueOrderingsEncountered.size(),
+        greaterThan(40));
   }
 
   @Test
