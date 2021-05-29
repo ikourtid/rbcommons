@@ -2,6 +2,7 @@ package com.rb.nonbiz.util;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.collections.ClosedRange;
+import com.rb.nonbiz.collections.RBStreams;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.PreciseValue;
 
@@ -12,6 +13,7 @@ import java.util.Iterator;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.RBRanges.getMinMaxClosedRange;
 import static java.util.function.Function.identity;
@@ -23,6 +25,22 @@ public class RBSimilarityPreconditions {
    */
   public static <T, V> V checkAllSame(Collection<T> items, Function<T, V> valueExtractor) {
     return checkAllSame(items, valueExtractor, "");
+  }
+
+  /**
+   * Throws if the items in the collection, after being transformed by a function, are not all the same.
+   * This is useful for cases where there are multiple items, some being in a collection, and some 'loose'.
+   */
+  @SafeVarargs
+  public static <T, V> V checkAllSame(
+      Function<T, V> valueExtractor, Collection<T> itemCollection, T additionalItem1, T ... additionalItems) {
+    return checkAllSame(
+        Stream.concat(
+            itemCollection.stream(),
+            RBStreams.concatenateFirstAndRest(additionalItem1, additionalItems))
+        .iterator(),
+        valueExtractor,
+        "");
   }
 
   /**
