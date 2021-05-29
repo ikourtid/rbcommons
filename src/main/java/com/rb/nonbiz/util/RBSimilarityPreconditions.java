@@ -32,7 +32,7 @@ public class RBSimilarityPreconditions {
    * This is useful for cases where there are multiple items, some being in a collection, and some 'loose'.
    */
   @SafeVarargs
-  public static <T, V> V checkAllSameX(
+  public static <T, V> V checkAllSame(
       Function<T, V> valueExtractor, Collection<T> itemCollection, T additionalItem1, T ... additionalItems) {
     return checkAllSame(
         Stream.concat(
