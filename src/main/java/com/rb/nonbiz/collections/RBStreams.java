@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.DoubleStream;
@@ -387,6 +388,26 @@ public class RBStreams {
         format,
         args);
     return onlyValue;
+  }
+
+  /**
+   * If the stream has 1 item, returns it as non-empty optional.
+   * If it has 0 items, returns empty optional.
+   * Otherwise throws (with the supplied message) if there are 2 or more elements.
+   */
+  public static <T> Optional<T> getOptionalOnlyElement(
+      Stream<T> stream, String format, Object ... args) {
+    Iterator<T> iter = stream.iterator();
+
+    if (!iter.hasNext()) {
+      return Optional.empty();
+    }
+    T onlyValue = iter.next();
+    RBPreconditions.checkArgument(
+        !iter.hasNext(),
+        format,
+        args);
+    return Optional.of(onlyValue);
   }
 
 }
