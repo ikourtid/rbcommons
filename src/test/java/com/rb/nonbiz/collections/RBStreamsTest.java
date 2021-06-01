@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -28,6 +29,9 @@ import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_BOOLEAN;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_POSITIVE_INTEGER;
 import static java.util.Collections.emptyList;
@@ -408,6 +412,15 @@ public class RBStreamsTest {
     Function<Stream<String>, String> maker = stream -> getOnlyElementOrDefault(stream, "x", "Can't be empty");
     assertEquals("x", maker.apply(Stream.empty()));
     assertEquals("a", maker.apply(Stream.of("a")));
+    assertIllegalArgumentException( () -> maker.apply(Stream.of("a", "b")));
+    assertIllegalArgumentException( () -> maker.apply(Stream.of("a", "b", "c")));
+  }
+
+  @Test
+  public void testGetOptionalOnlyElement() {
+    Function<Stream<String>, Optional<String>> maker = stream -> getOptionalOnlyElement(stream, DUMMY_STRING);
+    assertOptionalEmpty(maker.apply(Stream.empty()));
+    assertOptionalEquals("a", maker.apply(Stream.of("a")));
     assertIllegalArgumentException( () -> maker.apply(Stream.of("a", "b")));
     assertIllegalArgumentException( () -> maker.apply(Stream.of("a", "b", "c")));
   }

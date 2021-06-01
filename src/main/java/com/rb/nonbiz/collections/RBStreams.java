@@ -394,8 +394,6 @@ public class RBStreams {
    * If the stream has 1 item, returns it as non-empty optional.
    * If it has 0 items, returns empty optional.
    * Otherwise throws (with the supplied message) if there are 2 or more elements.
-   *
-   * FIXME IAK HH test this
    */
   public static <T> Optional<T> getOptionalOnlyElement(
       Stream<T> stream, String format, Object ... args) {
