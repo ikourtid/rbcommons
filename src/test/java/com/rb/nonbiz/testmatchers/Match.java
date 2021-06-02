@@ -112,6 +112,11 @@ public class Match<T, F> {
     return match(fieldExtractor, f -> optionalMatcher(f, f2 -> preciseValueMatcher(f2, epsilon)));
   }
 
+  public static <T, F extends Enum<? super F>> Match<T, Optional<F>> matchOptionalEnum(
+      Function<T, Optional<F>> fieldExtractor) {
+    return matchOptional(fieldExtractor, f -> enumMatcher(f));
+  }
+
   public static <T, V extends ImpreciseValue<V>> Match<T, Optional<V>> matchOptionalImpreciseValue(
       Function<T, Optional<V>> fieldExtractor, double epsilon) {
     return match(fieldExtractor, f -> optionalMatcher(f, f2 -> impreciseValueMatcher(f2, epsilon)));
