@@ -25,6 +25,7 @@ import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.collections.RBIterators.*;
+import static com.rb.nonbiz.collections.RBIterators.getOnlyElementOrThrow;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
@@ -42,6 +43,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertThrowsAnyException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_BOOLEAN;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -532,6 +534,13 @@ public class RBIteratorsTest {
     asserter.accept(ImmutableList.of(70, 80), "<_70_80");
     asserter.accept(singletonList(70), "<_70");
     asserter.accept(emptyList(), "<");
+  }
+
+  @Test
+  public void test_getOnlyElementOrThrow() {
+    assertEquals("a", getOnlyElementOrThrow(singletonIterator("a"), DUMMY_STRING));
+    assertIllegalArgumentException( () -> getOnlyElementOrThrow(emptyIterator(), DUMMY_STRING));
+    assertIllegalArgumentException( () -> getOnlyElementOrThrow(ImmutableList.of("a", "b").iterator(), DUMMY_STRING));
   }
 
   private int getOnlyIndexWithB(String...values) {
