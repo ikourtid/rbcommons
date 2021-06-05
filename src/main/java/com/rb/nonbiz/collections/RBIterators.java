@@ -373,6 +373,17 @@ public class RBIterators {
   }
 
   /**
+   * If the iterator only has one item, return that item. If 0 or 2+ items, throw.
+   * Similar to Iterators#getOnlyElement except that it lets you specify an error message.
+   */
+  public static <T> T getOnlyElementOrThrow(Iterator<T> iter, String format, Object ... args) {
+    RBPreconditions.checkArgument(iter.hasNext(), format, args);
+    T onlyItem = iter.next();
+    RBPreconditions.checkArgument(!iter.hasNext(), format, args);
+    return onlyItem;
+  }
+
+  /**
    * This is for scenarios where an iterator runs multiple times, and the data from iteration n feeds into
    * iteration n + 1.
    * The supplied function is also told whether this is the last item in the iterator and which iteration # we're at,
