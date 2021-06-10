@@ -43,6 +43,19 @@ public class PointerTest extends RBTestMatcher<Pointer<Double>> {
   }
 
   @Test
+  public void testSetAssumingInitialized() {
+    Pointer<String> pointer = uninitializedPointer();
+    assertIllegalArgumentException( () -> pointer.setAssumingInitialized("a"));
+    assertFalse(pointer.isInitialized());
+    pointer.setAssumingUninitialized("a");
+    assertEquals("a", pointer.getOrThrow());
+    pointer.setAssumingUninitialized("b");
+    assertEquals("b", pointer.getOrThrow());
+    pointer.setAssumingUninitialized("c");
+    assertEquals("c", pointer.getOrThrow());
+  }
+
+  @Test
   public void testInitializeOrModifyExisting() {
     Pointer<Double> pointer = uninitializedPointer();
     assertFalse(pointer.isInitialized());

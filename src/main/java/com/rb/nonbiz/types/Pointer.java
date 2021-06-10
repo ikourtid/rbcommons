@@ -43,6 +43,14 @@ public class Pointer<T> {
     this.object = value;
   }
 
+  public void setAssumingInitialized(T value) {
+    RBPreconditions.checkArgument(
+        this.object != null,
+        "In setAssumingInitialized: attempt to give value of %s to uninitialized pointer",
+        value);
+    this.object = value;
+  }
+
   public Pointer<T> modifyExisting(T value, BinaryOperator<T> operator) {
     RBPreconditions.checkArgument(object != null);
     this.object = operator.apply(object, value);
