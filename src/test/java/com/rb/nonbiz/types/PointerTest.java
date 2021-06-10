@@ -49,9 +49,9 @@ public class PointerTest extends RBTestMatcher<Pointer<Double>> {
     assertFalse(pointer.isInitialized());
     pointer.setAssumingUninitialized("a");
     assertEquals("a", pointer.getOrThrow());
-    pointer.setAssumingUninitialized("b");
+    pointer.setAssumingInitialized("b");
     assertEquals("b", pointer.getOrThrow());
-    pointer.setAssumingUninitialized("c");
+    pointer.setAssumingInitialized("c");
     assertEquals("c", pointer.getOrThrow());
   }
 
