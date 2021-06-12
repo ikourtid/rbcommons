@@ -34,11 +34,21 @@ public class RBSimilarityPreconditions {
   @SafeVarargs
   public static <T, V> V checkAllSame(
       Function<T, V> valueExtractor, Collection<T> itemCollection, T additionalItem1, T ... additionalItems) {
+    return checkAllSame(valueExtractor, itemCollection.stream(), additionalItem1, additionalItems);
+  }
+
+  /**
+   * Throws if the items in the collection, after being transformed by a function, are not all the same.
+   * This is useful for cases where there are multiple items, some being in a collection, and some 'loose'.
+   */
+  @SafeVarargs
+  public static <T, V> V checkAllSame(
+      Function<T, V> valueExtractor, Stream<T> itemStream, T additionalItem1, T ... additionalItems) {
     return checkAllSame(
         Stream.concat(
-            itemCollection.stream(),
+            itemStream,
             RBStreams.concatenateFirstAndRest(additionalItem1, additionalItems))
-        .iterator(),
+            .iterator(),
         valueExtractor,
         "");
   }
