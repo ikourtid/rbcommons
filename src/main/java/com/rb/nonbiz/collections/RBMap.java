@@ -223,9 +223,7 @@ public class RBMap<K, V> {
   /**
    * Creates a new map whose keys are the same, and whose values are a transformation
    * of the keys AND values of the original map - i.e. you do care about they key when doing the transformation.
-   * ADDITIONALLY, it may filter keys so that the final map may be smaller than the original.
-   *
-   * FIXME IAK RESTRICTIONS add tests
+   * Additionally, it may filter keys so that the final map may be smaller than the original.
    */
   public <V1> RBMap<K, V1> filterKeysAndTransformEntriesCopy(BiFunction<K, V, V1> valueTransformer, Predicate<K> mustKeepKey) {
     MutableRBMap<K, V1> mutableMap = newMutableRBMapWithExpectedSize(size());
