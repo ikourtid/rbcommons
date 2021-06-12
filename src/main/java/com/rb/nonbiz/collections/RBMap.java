@@ -217,12 +217,23 @@ public class RBMap<K, V> {
    * ADDITIONALLY, it may filter keys so that the final map may be smaller than the original.
    */
   public <V1> RBMap<K, V1> filterKeysAndTransformValuesCopy(Function<V, V1> valueTransformer, Predicate<K> mustKeepKey) {
+    return filterKeysAndTransformEntriesCopy( (ignoredKey, value) -> valueTransformer.apply(value), mustKeepKey);
+  }
+
+  /**
+   * Creates a new map whose keys are the same, and whose values are a transformation
+   * of the keys AND values of the original map - i.e. you do care about they key when doing the transformation.
+   * ADDITIONALLY, it may filter keys so that the final map may be smaller than the original.
+   *
+   * FIXME IAK RESTRICTIONS add tests
+   */
+  public <V1> RBMap<K, V1> filterKeysAndTransformEntriesCopy(BiFunction<K, V, V1> valueTransformer, Predicate<K> mustKeepKey) {
     MutableRBMap<K, V1> mutableMap = newMutableRBMapWithExpectedSize(size());
     forEachEntry( (key, originalValue) -> {
       if (!mustKeepKey.test(key)) {
         return;
       }
-      V1 transformedValue = valueTransformer.apply(originalValue);
+      V1 transformedValue = valueTransformer.apply(key, originalValue);
       mutableMap.putAssumingAbsent(key, transformedValue);
     });
     return newRBMap(mutableMap);
