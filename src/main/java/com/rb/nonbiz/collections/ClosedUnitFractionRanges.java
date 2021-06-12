@@ -62,6 +62,10 @@ public class ClosedUnitFractionRanges<K> {
     return rangesMap;
   }
 
+  public boolean isEmpty() {
+    return rangesMap.isEmpty();
+  }
+
   @Override
   public String toString() {
     return rangesMap.toString();
