@@ -15,6 +15,18 @@ import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpect
 
 public class IidMapConstructors {
 
+  /**
+   * When the key is an InstrumentId, we should always be using an IidMap.
+   * However, there are cases where we need to use an RBMap keyed by InstrumentId.
+   * One example is generic map classes that can be keyed by anything.
+   * This method lets you convert an RBMap keyed by InstrumentId into an IidMap.
+   */
+  public static <V> IidMap<V> iidMapFromRBMap(RBMap<InstrumentId, V> asRbMap) {
+    MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(asRbMap.size());
+    asRbMap.forEachEntry( (instrumentId, v) -> mutableMap.put(instrumentId, v));
+    return newIidMap(mutableMap);
+  }
+
   public static <V> IidMap<V> iidMapFromSet(
       IidSet instrumentIds,
       Function<InstrumentId, V> transformer) {

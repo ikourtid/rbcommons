@@ -5,7 +5,6 @@ import com.google.inject.Provider;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidMapVisitors.PairOfIidSetAndIidMapVisitor;
 import com.rb.nonbiz.collections.IidMapVisitors.TwoIidMapsVisitor;
-import com.rb.nonbiz.functional.QuadriConsumer;
 import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.text.Strings;
 import org.hamcrest.MatcherAssert;
@@ -26,6 +25,7 @@ import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromCollection;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromFilteredSet;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromIterator;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromIteratorWithExpectedSize;
+import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromRBMap;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromSet;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromStream;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromStreamWithExpectedSize;
@@ -81,6 +81,23 @@ public class IidMapsTest {
         STOCK_A, DUMMY_PRICE,
         STOCK_B, DUMMY_PRICE,
         STOCK_A, DUMMY_PRICE));
+  }
+
+  @Test
+  public void testIidMapFromRBMap() {
+    BiConsumer<RBMap<InstrumentId, String>, IidMap<String>> asserter = (rbMap, iidMap) ->
+        assertThat(
+            iidMapFromRBMap(rbMap),
+            iidMapEqualityMatcher(iidMap));
+
+    asserter.accept(emptyRBMap(), emptyIidMap());
+    asserter.accept(
+        rbMapOf(
+            STOCK_A, "_a",
+            STOCK_B, "_b"),
+        iidMapOf(
+            STOCK_A, "_a",
+            STOCK_B, "_b"));
   }
 
   @Test
