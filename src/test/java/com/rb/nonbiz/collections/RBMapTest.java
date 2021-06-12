@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
+import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.testmatchers.RBCollectionMatchers;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.LongCounter;
@@ -251,6 +252,31 @@ public class RBMapTest {
         emptyRBMap(),
         rbMapOf("a",  1, "b",  2)
             .filterKeysAndTransformValuesCopy(intValue -> intValue + 10, k -> k.equals("xyz")));
+  }
+
+  @Test
+  public void testFilterKeysAndTransformEntriesCopy() {
+    TriConsumer<RBMap<Integer, Integer>, Predicate<Integer>, RBMap<Integer, String>> asserter =
+        (inputMap, mustKeepKey, outputMap) ->
+            assertEquals(
+                outputMap,
+                inputMap.filterKeysAndTransformEntriesCopy( (intKey, intValue) -> intKey + "_" + intValue, mustKeepKey));
+    asserter.accept(emptyRBMap(), key -> true, emptyRBMap());
+    asserter.accept(
+        rbMapOf(
+            10, 700,
+            11, 701),
+        key -> true,
+        rbMapOf(
+            10, "10_700",
+            11, "11_701"));
+    asserter.accept(
+        rbMapOf(
+            10, 700,
+            11, 701),
+        key -> key == 10,
+        singletonRBMap(
+            10, "10_700"));
   }
 
   // filter values, then transform on the filtered values
