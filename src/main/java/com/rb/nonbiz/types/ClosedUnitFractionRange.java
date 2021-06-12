@@ -1,9 +1,11 @@
 package com.rb.nonbiz.types;
 
 import com.google.common.collect.Range;
+import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.RBRanges;
 import com.rb.nonbiz.text.Strings;
 
+import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 
@@ -18,11 +20,11 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 public class ClosedUnitFractionRange {
 
   private static final ClosedUnitFractionRange UNRESTRICTED_RANGE =
-      new ClosedUnitFractionRange(Range.closed(UNIT_FRACTION_0, UNIT_FRACTION_1));
+      new ClosedUnitFractionRange(closedRange(UNIT_FRACTION_0, UNIT_FRACTION_1));
 
-  private final Range<UnitFraction> rawRange;
+  private final ClosedRange<UnitFraction> rawRange;
 
-  private ClosedUnitFractionRange(Range<UnitFraction> rawRange) {
+  private ClosedUnitFractionRange(ClosedRange<UnitFraction> rawRange) {
     this.rawRange = rawRange;
   }
 
@@ -32,7 +34,11 @@ public class ClosedUnitFractionRange {
   }
 
   public static ClosedUnitFractionRange closedUnitFractionRange(UnitFraction lowerEndpoint, UnitFraction upperEndpoint) {
-    return new ClosedUnitFractionRange(Range.closed(lowerEndpoint, upperEndpoint));
+    return new ClosedUnitFractionRange(closedRange(lowerEndpoint, upperEndpoint));
+  }
+
+  public static ClosedUnitFractionRange closedUnitFractionRange(ClosedRange<UnitFraction> closedRange) {
+    return new ClosedUnitFractionRange(closedRange);
   }
 
   public static ClosedUnitFractionRange closedUnitFractionRange(Range<UnitFraction> rawRange) {
@@ -79,7 +85,7 @@ public class ClosedUnitFractionRange {
     return rawRange.upperEndpoint();
   }
 
-  public Range<UnitFraction> asUnitFractionRange() {
+  public ClosedRange<UnitFraction> asClosedRangeOfUnitFraction() {
     return rawRange;
   }
 
@@ -182,7 +188,7 @@ public class ClosedUnitFractionRange {
   }
 
   public UnitFraction getNearestValueInRange(UnitFraction startingValue) {
-    return RBRanges.getNearestValueInRange(rawRange, startingValue);
+    return RBRanges.getNearestValueInRange(rawRange.asRange(), startingValue);
   }
 
   /**

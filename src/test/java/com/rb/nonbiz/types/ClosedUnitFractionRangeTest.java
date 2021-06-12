@@ -1,6 +1,7 @@
 package com.rb.nonbiz.types;
 
 import com.google.common.collect.Range;
+import com.rb.nonbiz.collections.ClosedRangeTest;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -9,10 +10,12 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static com.rb.nonbiz.collections.ClosedRangeTest.closedRangeMatcher;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRange.closedUnitFractionHardAndPossiblySameSoftRange;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
@@ -383,7 +386,7 @@ public class ClosedUnitFractionRangeTest extends RBTestMatcher<ClosedUnitFractio
 
   public static TypeSafeMatcher<ClosedUnitFractionRange> closedUnitFractionRangeMatcher(ClosedUnitFractionRange expected) {
     return makeMatcher(expected,
-        match(v -> v.asUnitFractionRange(), f -> preciseValueRangeMatcher(f, 1e-8)));
+        match(v -> v.asClosedRangeOfUnitFraction(), f -> closedRangeMatcher(f, f2 -> preciseValueMatcher(f2, 1e-8))));
   }
 
 }
