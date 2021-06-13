@@ -6,8 +6,11 @@ import com.rb.biz.types.Money;
 import com.rb.biz.types.SignedMoney;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.math.stats.ZScore;
+import com.rb.nonbiz.testmatchers.RBRangeMatchers;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import com.rb.nonbiz.types.PositiveMultiplier;
+import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -39,6 +42,7 @@ import static com.rb.nonbiz.math.stats.ZScore.Z_SCORE_0;
 import static com.rb.nonbiz.math.stats.ZScore.zScore;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.doubleRangeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueClosedRangeMatcher;
+import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.rangeEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -48,6 +52,9 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_SIGNED_MONEY;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
+import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
+import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
+import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.NaN;
 import static java.lang.Double.POSITIVE_INFINITY;
@@ -1688,6 +1695,42 @@ public class RBRangesTest {
         Range.open(  money(1), money(10)),
         Range.closed(money(1), money(10)),
         1e-8));
+  }
+
+  @Test
+  public void testToRangeWithoutTrivialEndpoints() {
+    BiConsumer<ClosedRange<UnitFraction>, Range<UnitFraction>> asserter = (inputRange, expectedResult) ->
+        assertThat(
+            toRangeWithoutTrivialEndpoints(inputRange, closedRange(UNIT_FRACTION_0, UNIT_FRACTION_1)),
+            // There are no epsilons here; toRangeWithoutTrivialEndpoints uses compareTo for exact comparison.
+            preciseValueRangeMatcher(expectedResult, 1e-12));
+
+    asserter.accept(closedRange(UNIT_FRACTION_0, UNIT_FRACTION_1), Range.all());
+    asserter.accept(
+        closedRange(UNIT_FRACTION_0, unitFraction(1 - 1e-9)),
+        Range.atMost(unitFraction(1 - 1e-9)));
+    asserter.accept(
+        closedRange(unitFraction(1e-9), unitFraction(1 - 1e-9)),
+        Range.closed(unitFraction(1e-9), unitFraction(1 - 1e-9)));
+    asserter.accept(
+        closedRange(unitFraction(1e-9), UNIT_FRACTION_1),
+        Range.atLeast(unitFraction(1e-9)));
+
+    asserter.accept(
+        closedRange(UNIT_FRACTION_0, unitFraction(0.8)),
+        Range.atMost(unitFraction(0.8)));
+    asserter.accept(
+        closedRange(unitFraction(0.3), unitFraction(0.8)),
+        Range.closed(unitFraction(0.3), unitFraction(0.8)));
+    asserter.accept(
+        closedRange(unitFraction(0.3), UNIT_FRACTION_1),
+        Range.atLeast(unitFraction(0.3)));
+
+    asserter.accept(singletonClosedRange(UNIT_FRACTION_0), Range.all());
+    asserter.accept(singletonClosedRange(unitFraction(1e-9)), Range.singleton(unitFraction(1e-9)));
+    asserter.accept(singletonClosedRange(unitFraction(0.3)), Range.singleton(unitFraction(0.3)));
+    asserter.accept(singletonClosedRange(unitFraction(1 - 1e-9)), Range.singleton(unitFraction(1 - 1e-9)));
+    asserter.accept(singletonClosedRange(UNIT_FRACTION_1), Range.all());
   }
 
 }

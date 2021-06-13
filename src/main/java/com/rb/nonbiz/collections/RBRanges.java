@@ -3,10 +3,12 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBPreconditions;
+import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -897,6 +899,51 @@ public class RBRanges {
           "Although an explicit upper bound of infinity is reasonable, you should use specialized constructors such as Range.atLeast %s",
           range);
     }
+  }
+
+  /**
+   * Converts a ClosedRange into a range that's possibly open on one or both sides,
+   * if the semantics of that
+   *
+   * This is useful e.g. with {@link ClosedUnitFractionRange}, where a lower bound of UNIT_FRACTION_0 is equivalent
+   * to having no lower bound, and an upper bound of UNIT_FRACTION_1 is equivalent to having no upper bound.
+   * This method lets us convert e.g. a ClosedRange of [ unitFraction(0.3), UNIT_FRACTION_1 ] to a
+   * Range of [ unitFraction(0.3), +inf)
+   */
+  public static <P extends Comparable<? super P>> Range<P> toRangeWithoutTrivialEndpoints(
+      ClosedRange<P> inputRange,
+      ClosedRange<P> widestPossibleRange) {
+    P trivialLowerEndpoint = widestPossibleRange.lowerEndpoint();
+    P trivialUpperEndpoint = widestPossibleRange.upperEndpoint();
+
+    P lower = inputRange.lowerEndpoint();
+    P upper = inputRange.upperEndpoint();
+
+    int lowerComparisonResult = lower.compareTo(trivialLowerEndpoint);
+    int upperComparisonResult = upper.compareTo(trivialUpperEndpoint);
+
+    RBPreconditions.checkArgument(
+        lowerComparisonResult >= 0,
+        "The lower bound in the supplied range %s is less than the lower bound of the widest possible range %",
+        inputRange, widestPossibleRange);
+    RBPreconditions.checkArgument(
+        upperComparisonResult <= 0,
+        "The upper bound in the supplied range %s is more than the upper bound of the widest possible range %s",
+        inputRange, widestPossibleRange);
+
+    boolean lowerIsTrivial = lower.compareTo(trivialLowerEndpoint) == 0;
+    boolean upperIsTrivial = upper.compareTo(trivialUpperEndpoint) == 0;
+
+    // First, handle singleton range case
+    if (lower.compareTo(upper) == 0) {
+      return lowerIsTrivial || upperIsTrivial ? Range.all() : Range.singleton(lower);
+    }
+
+    return constructRange(
+        lowerIsTrivial ? Optional.empty() : Optional.of(lower),
+        CLOSED,
+        upperIsTrivial ? Optional.empty() : Optional.of(upper),
+        CLOSED);
   }
 
 }
