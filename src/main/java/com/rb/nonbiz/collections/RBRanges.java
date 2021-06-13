@@ -931,19 +931,14 @@ public class RBRanges {
         "The upper bound in the supplied range %s is more than the upper bound of the widest possible range %s",
         inputRange, widestPossibleRange);
 
-    boolean lowerIsTrivial = lower.compareTo(trivialLowerEndpoint) == 0;
-    boolean upperIsTrivial = upper.compareTo(trivialUpperEndpoint) == 0;
-
     // First, handle singleton range case
     if (lower.compareTo(upper) == 0) {
-      return lowerIsTrivial || upperIsTrivial ? Range.all() : Range.singleton(lower);
+      return Range.singleton(lower);
     }
 
     return constructRange(
-        lowerIsTrivial ? Optional.empty() : Optional.of(lower),
-        CLOSED,
-        upperIsTrivial ? Optional.empty() : Optional.of(upper),
-        CLOSED);
+        lower.compareTo(trivialLowerEndpoint) == 0 ? Optional.empty() : Optional.of(lower), CLOSED,
+        upper.compareTo(trivialUpperEndpoint) == 0 ? Optional.empty() : Optional.of(upper), CLOSED);
   }
 
 }

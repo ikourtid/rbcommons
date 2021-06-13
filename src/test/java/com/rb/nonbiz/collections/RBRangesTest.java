@@ -1726,11 +1726,11 @@ public class RBRangesTest {
         closedRange(unitFraction(0.3), UNIT_FRACTION_1),
         Range.atLeast(unitFraction(0.3)));
 
-    asserter.accept(singletonClosedRange(UNIT_FRACTION_0), Range.all());
+    asserter.accept(singletonClosedRange(UNIT_FRACTION_0), Range.singleton(unitFraction(0)));
     asserter.accept(singletonClosedRange(unitFraction(1e-9)), Range.singleton(unitFraction(1e-9)));
     asserter.accept(singletonClosedRange(unitFraction(0.3)), Range.singleton(unitFraction(0.3)));
     asserter.accept(singletonClosedRange(unitFraction(1 - 1e-9)), Range.singleton(unitFraction(1 - 1e-9)));
-    asserter.accept(singletonClosedRange(UNIT_FRACTION_1), Range.all());
+    asserter.accept(singletonClosedRange(UNIT_FRACTION_1), Range.singleton(unitFraction(1)));
   }
 
 }
