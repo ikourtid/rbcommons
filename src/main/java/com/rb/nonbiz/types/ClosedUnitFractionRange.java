@@ -19,7 +19,7 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
  */
 public class ClosedUnitFractionRange {
 
-  private static final ClosedUnitFractionRange UNRESTRICTED_RANGE =
+  public static final ClosedUnitFractionRange WIDEST_POSSIBLE_CLOSED_UNIT_FRACTION_RANGE =
       new ClosedUnitFractionRange(closedRange(UNIT_FRACTION_0, UNIT_FRACTION_1));
 
   private final ClosedRange<UnitFraction> rawRange;
@@ -54,7 +54,7 @@ public class ClosedUnitFractionRange {
   }
 
   public static ClosedUnitFractionRange unrestrictedClosedUnitFractionRange() {
-    return UNRESTRICTED_RANGE;
+    return WIDEST_POSSIBLE_CLOSED_UNIT_FRACTION_RANGE;
   }
 
   public static ClosedUnitFractionRange unitFractionAtLeast(UnitFraction lowerEndpoint) {
