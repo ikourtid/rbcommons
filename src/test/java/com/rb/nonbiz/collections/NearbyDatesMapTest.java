@@ -82,7 +82,7 @@ public class NearbyDatesMapTest extends RBTestMatcher<NearbyDatesMap<Double>> {
     return nearbyDatesMapMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
   }
 
-  public static <V extends Comparable<? super V>> TypeSafeMatcher<NearbyDatesMap<V>> nearbyDatesMapMatcher(
+  public static <V> TypeSafeMatcher<NearbyDatesMap<V>> nearbyDatesMapMatcher(
       NearbyDatesMap<V> expected, MatcherGenerator<V> matcherGenerator) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getMaxCalendarRangeAllowed()),
