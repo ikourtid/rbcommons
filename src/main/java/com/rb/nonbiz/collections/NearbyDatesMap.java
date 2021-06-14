@@ -1,5 +1,7 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
+import com.rb.nonbiz.text.PrintsInstruments;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -7,6 +9,8 @@ import java.time.LocalDate;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBRanges.getMinMaxClosedRange;
+import static com.rb.nonbiz.collections.RBRanges.rangeIsUnrestricted;
+import static com.rb.nonbiz.text.Strings.formatMapWhereValuesPrintInstruments;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
@@ -46,7 +50,7 @@ public class NearbyDatesMap<V> {
     return new NearbyDatesMap<V>(rawDateMap, maxCalendarRangeAllowed);
   }
 
-  public static <V extends Comparable<? super V>> NearbyDatesMap<V> emptyNearbyDatesMap(int maxCalendarRangeAllowed) {
+  public static <V> NearbyDatesMap<V> emptyNearbyDatesMap(int maxCalendarRangeAllowed) {
     return nearbyDatesMap(emptyRBMap(), maxCalendarRangeAllowed);
   }
 
@@ -58,9 +62,26 @@ public class NearbyDatesMap<V> {
     return maxCalendarRangeAllowed;
   }
 
+  public boolean isEmpty() {
+    return rawDateMap.isEmpty();
+  }
+
+  public boolean containsDate(LocalDate date) {
+    return rawDateMap.containsKey(date);
+  }
+
   @Override
   public String toString() {
     return Strings.format("[NDM maxCalendarRangeAllowed= %s ; %s NDM]", maxCalendarRangeAllowed, rawDateMap);
+  }
+
+  // Since the generic type V is not guaranteed to implement PrintsInstruments, which will let us selectively
+  // do this for those cases.
+  public static <V extends PrintsInstruments> String toString(
+      NearbyDatesMap<V> nearbyDatesMap, InstrumentMaster instrumentMaster, LocalDate date) {
+    return Strings.format("[NDM maxCalendarRangeAllowed= %s ; %s NDM]",
+        nearbyDatesMap.getMaxCalendarRangeAllowed(),
+        formatMapWhereValuesPrintInstruments(nearbyDatesMap.getRawDateMap(), instrumentMaster, date));
   }
 
 }
