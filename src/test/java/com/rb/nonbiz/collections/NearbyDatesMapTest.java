@@ -30,7 +30,6 @@ public class NearbyDatesMapTest extends RBTestMatcher<NearbyDatesMap<Double>> {
     assertIllegalArgumentException( () -> maker.apply(-999));
     assertIllegalArgumentException( () -> maker.apply(-1));
     assertIllegalArgumentException( () -> maker.apply(0));
-    assertIllegalArgumentException( () -> maker.apply(1));
     NearbyDatesMap<Double> doesNotThrow;
     doesNotThrow = maker.apply(1);
     doesNotThrow = maker.apply(2);
