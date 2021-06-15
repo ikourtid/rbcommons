@@ -903,12 +903,16 @@ public class RBRanges {
 
   /**
    * Converts a ClosedRange into a range that's possibly open on one or both sides,
-   * if the semantics of that
+   * if the semantics of that ClosedRange are such that there's always some trivial bounds on each side.
    *
    * This is useful e.g. with {@link ClosedUnitFractionRange}, where a lower bound of UNIT_FRACTION_0 is equivalent
-   * to having no lower bound, and an upper bound of UNIT_FRACTION_1 is equivalent to having no upper bound.
+   * to having no lower bound (since UnitFraction can't be below 0),
+   * and an upper bound of UNIT_FRACTION_1 is equivalent to having no upper bound.
    * This method lets us convert e.g. a ClosedRange of [ unitFraction(0.3), UNIT_FRACTION_1 ] to a
-   * Range of [ unitFraction(0.3), +inf)
+   * Range of [ unitFraction(0.3), +inf).
+   *
+   * This does not do any epsilon checks; e.g. [ unitFraction(0.3), unitFraction(1 - epsilon)] won't get converted to
+   * Range of [ unitFraction(0.3), +inf).
    */
   public static <P extends Comparable<? super P>> Range<P> toRangeWithoutTrivialEndpoints(
       ClosedRange<P> inputRange,
