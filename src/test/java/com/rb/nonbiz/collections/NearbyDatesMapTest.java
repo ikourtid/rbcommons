@@ -24,9 +24,9 @@ public class NearbyDatesMapTest extends RBTestMatcher<NearbyDatesMap<Double>> {
 
   @Test
   public void trivialDateRange_throws() {
-    IntFunction<NearbyDatesMap<Double>> maker = maxCalendarRangeAllowed -> nearbyDatesMap(
+    IntFunction<NearbyDatesMap<Double>> maker = maxCalendarDaysRangeAllowed -> nearbyDatesMap(
         singletonRBMap(DUMMY_DATE, DUMMY_DOUBLE),
-        maxCalendarRangeAllowed);
+        maxCalendarDaysRangeAllowed);
     assertIllegalArgumentException( () -> maker.apply(-999));
     assertIllegalArgumentException( () -> maker.apply(-1));
     assertIllegalArgumentException( () -> maker.apply(0));
@@ -38,11 +38,11 @@ public class NearbyDatesMapTest extends RBTestMatcher<NearbyDatesMap<Double>> {
 
   @Test
   public void violatesDateRange_throws() {
-    IntFunction<NearbyDatesMap<Double>> maker = maxCalendarRangeAllowed -> nearbyDatesMap(
+    IntFunction<NearbyDatesMap<Double>> maker = maxCalendarDaysRangeAllowed -> nearbyDatesMap(
         rbMapOf(
             LocalDate.of(1974, 4, 4), 0.44,
             LocalDate.of(1974, 4, 7), 0.77),
-        maxCalendarRangeAllowed);
+        maxCalendarDaysRangeAllowed);
     assertIllegalArgumentException( () -> maker.apply(-999));
     assertIllegalArgumentException( () -> maker.apply(-1));
     assertIllegalArgumentException( () -> maker.apply(0));
@@ -85,7 +85,7 @@ public class NearbyDatesMapTest extends RBTestMatcher<NearbyDatesMap<Double>> {
   public static <V> TypeSafeMatcher<NearbyDatesMap<V>> nearbyDatesMapMatcher(
       NearbyDatesMap<V> expected, MatcherGenerator<V> matcherGenerator) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getMaxCalendarRangeAllowed()),
+        matchUsingEquals(v -> v.getMaxCalendarDaysRangeAllowed()),
         matchRBMap(v -> v.getRawDateMap(), matcherGenerator));
   }
 
