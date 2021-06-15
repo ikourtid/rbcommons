@@ -9,7 +9,6 @@ import java.time.LocalDate;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBRanges.getMinMaxClosedRange;
-import static com.rb.nonbiz.collections.RBRanges.rangeIsUnrestricted;
 import static com.rb.nonbiz.text.Strings.formatMapWhereValuesPrintInstruments;
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -23,31 +22,31 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class NearbyDatesMap<V> {
 
   private final RBMap<LocalDate, V> rawDateMap;
-  private final int maxCalendarRangeAllowed;
+  private final int maxCalendarDaysRangeAllowed;
 
-  private NearbyDatesMap(RBMap<LocalDate, V> rawDateMap, int maxCalendarRangeAllowed) {
+  private NearbyDatesMap(RBMap<LocalDate, V> rawDateMap, int maxCalendarDaysRangeAllowed) {
     this.rawDateMap = rawDateMap;
-    this.maxCalendarRangeAllowed = maxCalendarRangeAllowed;
+    this.maxCalendarDaysRangeAllowed = maxCalendarDaysRangeAllowed;
   }
 
-  public static <V> NearbyDatesMap<V> nearbyDatesMap(RBMap<LocalDate, V> rawDateMap, int maxCalendarRangeAllowed) {
+  public static <V> NearbyDatesMap<V> nearbyDatesMap(RBMap<LocalDate, V> rawDateMap, int maxCalendarDaysRangeAllowed) {
     RBPreconditions.checkArgument(
-        maxCalendarRangeAllowed >= 0,
-        "maxCalendarRangeAllowed can't be negative: %s %s",
-        rawDateMap, maxCalendarRangeAllowed);
+        maxCalendarDaysRangeAllowed >= 0,
+        "maxCalendarDaysRangeAllowed can't be negative: %s %s",
+        rawDateMap, maxCalendarDaysRangeAllowed);
     RBPreconditions.checkArgument(
-        maxCalendarRangeAllowed > 0,
+        maxCalendarDaysRangeAllowed > 0,
         "If the min and max date must be the same, there's no point in using a map: %s %s",
-        rawDateMap, maxCalendarRangeAllowed);
+        rawDateMap, maxCalendarDaysRangeAllowed);
     if (!rawDateMap.isEmpty()) {
       ClosedRange<LocalDate> dateRangeInclusive = getMinMaxClosedRange(rawDateMap.keySet());
       long calendarRangeInDays = DAYS.between(dateRangeInclusive.lowerEndpoint(), dateRangeInclusive.upperEndpoint());
       RBPreconditions.checkArgument(
-          calendarRangeInDays <= maxCalendarRangeAllowed,
+          calendarRangeInDays <= maxCalendarDaysRangeAllowed,
           "The dates in the map must be within %s of each other, but date range %s has %s calendar days. Map was %s",
-          maxCalendarRangeAllowed, dateRangeInclusive, calendarRangeInDays, rawDateMap);
+          maxCalendarDaysRangeAllowed, dateRangeInclusive, calendarRangeInDays, rawDateMap);
     }
-    return new NearbyDatesMap<V>(rawDateMap, maxCalendarRangeAllowed);
+    return new NearbyDatesMap<V>(rawDateMap, maxCalendarDaysRangeAllowed);
   }
 
   public static <V> NearbyDatesMap<V> emptyNearbyDatesMap(int maxCalendarRangeAllowed) {
@@ -58,8 +57,8 @@ public class NearbyDatesMap<V> {
     return rawDateMap;
   }
 
-  public int getMaxCalendarRangeAllowed() {
-    return maxCalendarRangeAllowed;
+  public int getMaxCalendarDaysRangeAllowed() {
+    return maxCalendarDaysRangeAllowed;
   }
 
   public boolean isEmpty() {
@@ -72,15 +71,15 @@ public class NearbyDatesMap<V> {
 
   @Override
   public String toString() {
-    return Strings.format("[NDM maxCalendarRangeAllowed= %s ; %s NDM]", maxCalendarRangeAllowed, rawDateMap);
+    return Strings.format("[NDM maxCalendarDaysRangeAllowed= %s ; %s NDM]", maxCalendarDaysRangeAllowed, rawDateMap);
   }
 
   // Since the generic type V is not guaranteed to implement PrintsInstruments, which will let us selectively
   // do this for those cases.
   public static <V extends PrintsInstruments> String toString(
       NearbyDatesMap<V> nearbyDatesMap, InstrumentMaster instrumentMaster, LocalDate date) {
-    return Strings.format("[NDM maxCalendarRangeAllowed= %s ; %s NDM]",
-        nearbyDatesMap.getMaxCalendarRangeAllowed(),
+    return Strings.format("[NDM maxCalendarDaysRangeAllowed= %s ; %s NDM]",
+        nearbyDatesMap.getMaxCalendarDaysRangeAllowed(),
         formatMapWhereValuesPrintInstruments(nearbyDatesMap.getRawDateMap(), instrumentMaster, date));
   }
 
