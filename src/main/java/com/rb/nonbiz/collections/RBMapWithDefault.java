@@ -12,6 +12,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
  *
  * @see RBMap
  * @see RBCategoryMap
+ * @see RBMapWithOptionalDefault
  */
 public class RBMapWithDefault<K, V> {
 
@@ -51,7 +52,7 @@ public class RBMapWithDefault<K, V> {
 
   @Override
   public String toString() {
-    return Strings.format("[RBMWD default= %s ; %s RBMWD]", defaultValue, rawRBMap);
+    return Strings.format("[RBWD default= %s ; %s RBWD]", defaultValue, rawRBMap);
   }
 
 }
