@@ -67,15 +67,15 @@ public class RBMapWithOptionalDefaultTest extends RBTestMatcher<RBMapWithOptiona
   @Override
   protected boolean willMatch(RBMapWithOptionalDefault<String, Double> expected,
                               RBMapWithOptionalDefault<String, Double> actual) {
-    return rBMapWithOptionalDefaultMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return rbMapWithOptionalDefaultMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
   }
 
-  public static <K, V> TypeSafeMatcher<RBMapWithOptionalDefault<K, V>> rBMapWithOptionalDefaultEqualityMatcher(
+  public static <K, V> TypeSafeMatcher<RBMapWithOptionalDefault<K, V>> rbMapWithOptionalDefaultEqualityMatcher(
       RBMapWithOptionalDefault<K, V> expected) {
-    return rBMapWithOptionalDefaultMatcher(expected, f -> typeSafeEqualTo(f));
+    return rbMapWithOptionalDefaultMatcher(expected, f -> typeSafeEqualTo(f));
   }
 
-  public static <K, V> TypeSafeMatcher<RBMapWithOptionalDefault<K, V>> rBMapWithOptionalDefaultMatcher(
+  public static <K, V> TypeSafeMatcher<RBMapWithOptionalDefault<K, V>> rbMapWithOptionalDefaultMatcher(
       RBMapWithOptionalDefault<K, V> expected, MatcherGenerator<V> matcherGenerator) {
     return makeMatcher(expected,
         matchOptional(v -> v.getOptionalDefaultValue(), matcherGenerator),
