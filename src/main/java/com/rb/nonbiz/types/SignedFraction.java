@@ -51,6 +51,10 @@ public class SignedFraction extends PreciseValue<SignedFraction> {
     return signedFraction(BigDecimal.valueOf(value), value);
   }
 
+  public static SignedFraction signedFractionInPct(double value) {
+    return signedFraction(value / 100);
+  }
+
   public static SignedFraction signedFraction(long numerator, long denominator) {
     RBPreconditions.checkArgument(denominator > 0);
     return new SignedFraction(new BigDecimal(numerator).divide(new BigDecimal(denominator), DEFAULT_MATH_CONTEXT));
