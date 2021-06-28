@@ -33,10 +33,13 @@ public class JsonSerializedEnumStringMapImpl<E extends Enum<E>> implements JsonS
         rawBiMap.size(),
         "We must have the same # of enum constants for enum %s as in the bimap passed in: %s %s",
         enumClass, enumConstants, rawBiMap);
+
+    // If an enum has only one constant, then why serialize it? More importantly, why even have it in the first place?
+    // Same with an empty enum.
     RBPreconditions.checkArgument(
-        sharedSize > 0,
-        "Trying to serialize enum %s with 0 values; you probably don't mean to do this",
-        enumClass);
+        sharedSize >= 2,
+        "Trying to serialize enum %s with %s values; you probably don't mean to do this",
+        sharedSize, enumClass);
     RBSimilarityPreconditions.checkBothSame(
         newRBSet(enumConstants),
         newRBSet(rawBiMap.keySet()),
@@ -54,6 +57,19 @@ public class JsonSerializedEnumStringMapImpl<E extends Enum<E>> implements JsonS
         HashBiMap.create(ImmutableMap.of(
             enumValue1, serializationString1,
             enumValue2, serializationString2)));
+  }
+
+  public static <E extends Enum<E>> JsonSerializedEnumStringMap<E> jsonSerializedEnumStringMap(
+      Class<E> enumClass,
+      E enumValue1, String serializationString1,
+      E enumValue2, String serializationString2,
+      E enumValue3, String serializationString3) {
+    return jsonSerializedEnumStringMapImpl(
+        enumClass,
+        HashBiMap.create(ImmutableMap.of(
+            enumValue1, serializationString1,
+            enumValue2, serializationString2,
+            enumValue3, serializationString3)));
   }
 
   @Override

@@ -13,6 +13,8 @@ import static com.rb.biz.jsonapi.JsonSerializedEnumStringMapImpl.jsonSerializedE
 import static com.rb.biz.jsonapi.JsonSerializedEnumStringMapImpl.jsonSerializedEnumStringMapImpl;
 import static com.rb.biz.jsonapi.JsonSerializedEnumStringMapImplTest.SerializationTestEnum.VALUE1;
 import static com.rb.biz.jsonapi.JsonSerializedEnumStringMapImplTest.SerializationTestEnum.VALUE2;
+import static com.rb.biz.jsonapi.JsonSerializedEnumStringMapImplTest.SerializationTestEnum.VALUE3;
+import static com.rb.biz.jsonapi.JsonSerializedEnumStringMapImplTest.SingletonSerializationTestEnum.SINGLE_VALUE;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 
@@ -22,18 +24,37 @@ public class JsonSerializedEnumStringMapImplTest
   protected enum SerializationTestEnum {
 
     VALUE1,
-    VALUE2
+    VALUE2,
+    VALUE3
 
   }
 
 
   protected enum EmptySerializationTestEnum {}
 
+  protected enum SingletonSerializationTestEnum {
+
+    SINGLE_VALUE
+
+  }
+
+
   @Test
-  public void emptyEnumMap_throws() {
+  public void emptyOrSingletonEnumMap_throws() {
     assertIllegalArgumentException( () -> jsonSerializedEnumStringMapImpl(
         EmptySerializationTestEnum.class,
         HashBiMap.create(ImmutableMap.of())));
+    assertIllegalArgumentException( () -> jsonSerializedEnumStringMapImpl(
+        SingletonSerializationTestEnum.class,
+        HashBiMap.create(ImmutableMap.of(SINGLE_VALUE, "dummy"))));
+  }
+
+  @Test
+  public void notAllEnumConstantsHaveValues_throws() {
+    assertIllegalArgumentException( () -> jsonSerializedEnumStringMap(
+        SerializationTestEnum.class,
+        VALUE1, "v1",
+        VALUE3, "v3"));
   }
 
   @Override
@@ -41,7 +62,8 @@ public class JsonSerializedEnumStringMapImplTest
     return jsonSerializedEnumStringMap(
         SerializationTestEnum.class,
         VALUE1, "v1",
-        VALUE2, "v2");
+        VALUE2, "v2",
+        VALUE3, "v3");
   }
 
   @Override
@@ -49,7 +71,8 @@ public class JsonSerializedEnumStringMapImplTest
     return jsonSerializedEnumStringMap(
         SerializationTestEnum.class,
         VALUE1, "val1",
-        VALUE2, "val2");
+        VALUE2, "val2",
+        VALUE3, "val3");
   }
 
   @Override
@@ -57,7 +80,8 @@ public class JsonSerializedEnumStringMapImplTest
     return jsonSerializedEnumStringMap(
         SerializationTestEnum.class,
         VALUE1, "val1",
-        VALUE2, "val2");
+        VALUE2, "val2",
+        VALUE3, "val3");
   }
 
   @Override
