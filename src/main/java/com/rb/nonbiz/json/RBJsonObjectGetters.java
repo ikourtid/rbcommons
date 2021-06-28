@@ -231,7 +231,10 @@ public class RBJsonObjectGetters {
         : OptionalInt.of(checkedCast(getDoubleAsLongAssumingIsRound(optionalDouble.getAsDouble(), 1e-12)));
   }
 
-  // FIXME IAK DRIFT test
+  /**
+   * From 'jsonObject', get the string value of 'property' and find the matching enum value per the
+   * JsonSerializedEnumStringMap passed in, or use the supplied default if the property is missing in the json object.
+   */
   public static <E extends Enum<E>> E getEnumFromJsonOrDefault(
       JsonObject jsonObject,
       String property,
