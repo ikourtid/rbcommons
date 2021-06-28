@@ -3,10 +3,14 @@ package com.rb.nonbiz.types;
 import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
 import org.junit.Test;
 
+import java.util.function.BiConsumer;
+import java.util.function.DoubleConsumer;
+
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.types.RBDoubles.average;
 import static com.rb.nonbiz.types.RBDoubles.epsilonCompareDoubles;
+import static com.rb.nonbiz.types.RBDoubles.getDoubleAsLongAssumingIsRound;
 import static org.junit.Assert.assertEquals;
 
 public class RBDoublesTest {
@@ -61,6 +65,51 @@ public class RBDoublesTest {
     assertEquals(5.5, average(4.4, 6.6), 1e-8);
     assertEquals(-5.5, average(-4.4, -6.6), 1e-8);
     assertEquals(4, average(-0.5, 8.5), 1e-8);
+  }
+
+  @Test
+  public void testDoubleIsRound() {
+    double e = 1e-8; // epsilon
+    BiConsumer<Double, Integer> assertResult = (doubleValue, expectedLong) ->
+        assertEquals((long) expectedLong, getDoubleAsLongAssumingIsRound(doubleValue, e));
+    DoubleConsumer assertIllegal = doubleValue ->
+        assertIllegalArgumentException( () -> getDoubleAsLongAssumingIsRound(doubleValue, e));
+
+    assertIllegal.accept(-7.9);
+    assertIllegal.accept(-7.5);
+    assertIllegal.accept(-7.1);
+    assertIllegal.accept(-7 - 1e-7);
+    assertResult .accept(-7 - 1e-9, -7);
+    assertResult .accept(-7.0,      -7);
+    assertResult .accept(-7 + 1e-9, -7);
+    assertIllegal.accept(-7 + 1e-7);
+    assertIllegal.accept(-6.9);
+    assertIllegal.accept(-6.5);
+    assertIllegal.accept(-6.1);
+
+    assertIllegal.accept(-0.9);
+    assertIllegal.accept(-0.5);
+    assertIllegal.accept(-0.1);
+    assertIllegal.accept(-1e-7);
+    assertResult .accept(-1e-9, 0);
+    assertResult .accept(0.0,   0);
+    assertResult .accept(1e-9,  0);
+    assertIllegal.accept(1e-7);
+    assertIllegal.accept(0.1);
+    assertIllegal.accept(0.5);
+    assertIllegal.accept(0.9);
+
+    assertIllegal.accept(6.1);
+    assertIllegal.accept(6.5);
+    assertIllegal.accept(6.9);
+    assertIllegal.accept(7 - 1e-7);
+    assertResult .accept(7 - 1e-9, 7);
+    assertResult .accept(7.0,      7);
+    assertResult .accept(7 + 1e-9, 7);
+    assertIllegal.accept(7 + 1e-7);
+    assertIllegal.accept(7.1);
+    assertIllegal.accept(7.5);
+    assertIllegal.accept(7.9);
   }
 
 }

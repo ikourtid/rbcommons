@@ -4,8 +4,6 @@ import com.google.common.primitives.Ints;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.rb.nonbiz.collections.RBOptionalTransformers;
-import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.types.RBDoubles;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -19,14 +17,14 @@ import java.util.function.DoubleFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static com.google.common.primitives.Ints.checkedCast;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional2;
 import static com.rb.nonbiz.collections.RBOptionals.toSpecializedOptionalDouble;
-import static com.rb.nonbiz.collections.RBOptionals.toSpecializedOptionalInt;
 import static com.rb.nonbiz.date.RBDates.dateFromYyyyMmDd;
-import static com.rb.nonbiz.date.RBDates.doubleIsRound;
 import static com.rb.nonbiz.json.RBGson.PERCENTAGE_TO_FRACTION;
 import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
+import static com.rb.nonbiz.types.RBDoubles.getDoubleAsLongAssumingIsRound;
 
 public class RBJsonObjectGetters {
 
@@ -226,15 +224,9 @@ public class RBJsonObjectGetters {
       JsonObject jsonObject,
       String property) {
     OptionalDouble optionalDouble = getOptionalJsonDouble(jsonObject, property);
-    if (!optionalDouble.isPresent()) {
-      return OptionalInt.empty();
-    }
-    double asDouble = optionalDouble.getAsDouble();
-    RBPreconditions.checkArgument(
-        doubleIsRound(asDouble, 1e-12),
-        "This should be a (round) int but is a double: %s",
-        asDouble);
-    return OptionalInt.of(Ints.checkedCast(Math.round(asDouble)));
+    return !optionalDouble.isPresent()
+        ? OptionalInt.empty()
+        : OptionalInt.of(checkedCast(getDoubleAsLongAssumingIsRound(optionalDouble.getAsDouble(), 1e-12)));
   }
 
   /**
