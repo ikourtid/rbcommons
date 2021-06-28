@@ -29,8 +29,12 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObj
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalDoubleAlmostEquals;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalDoubleEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEmpty;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEquals;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_PRICE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static junit.framework.TestCase.assertEquals;
@@ -108,6 +112,40 @@ public class RBJsonObjectGettersTest {
     assertOptionalEmpty(getOptionalJsonString(jsonObject, "foo"));
     assertIllegalArgumentException( () -> getOptionalJsonString(jsonObject, "x")); // not a string
     assertOptionalEquals("abc", getOptionalJsonString(jsonObject, "y"));
+  }
+
+  @Test
+  public void test_getOptionalJsonDouble() {
+    JsonObject jsonObject = jsonObject(
+        "y", jsonString("abc"),
+        "z", JsonNull.INSTANCE,
+        "w1", jsonDouble(1.1),
+        "w2", jsonDouble(22));
+    assertOptionalDoubleEmpty(getOptionalJsonDouble(jsonObject, ""));
+    assertOptionalDoubleEmpty(getOptionalJsonDouble(jsonObject, "z"));
+    assertOptionalDoubleEmpty(getOptionalJsonDouble(jsonObject, "foo"));
+    assertIllegalArgumentException( () -> getOptionalJsonDouble(jsonObject, "y")); // not a double; it's a string
+    assertOptionalDoubleAlmostEquals(1.1, getOptionalJsonDouble(jsonObject, "w1"), 1e-8);
+    assertOptionalDoubleAlmostEquals(22,  getOptionalJsonDouble(jsonObject, "w2"), 1e-8); // not a double, but it's OK
+  }
+
+  @Test
+  public void test_getOptionalJsonInt() {
+    JsonObject jsonObject = jsonObject(
+        "x", jsonDouble(1.23),
+        "y", jsonString("abc"),
+        "z", JsonNull.INSTANCE,
+        "w1", jsonDouble(11),
+        "w2", jsonDouble(22 - 1e-13),
+        "w3", jsonDouble(33 + 1e-13));
+    assertOptionalIntEmpty(getOptionalJsonInt(jsonObject, ""));
+    assertOptionalIntEmpty(getOptionalJsonInt(jsonObject, "z"));
+    assertOptionalIntEmpty(getOptionalJsonInt(jsonObject, "foo"));
+    assertIllegalArgumentException( () -> getOptionalJsonInt(jsonObject, "x")); // not an int; it's a non-round number
+    assertIllegalArgumentException( () -> getOptionalJsonInt(jsonObject, "y")); // not an int; it's a string
+    assertOptionalIntEquals(11, getOptionalJsonInt(jsonObject, "w1"));
+    assertOptionalIntEquals(22, getOptionalJsonInt(jsonObject, "w2"));
+    assertOptionalIntEquals(33, getOptionalJsonInt(jsonObject, "w3"));
   }
 
   @Test

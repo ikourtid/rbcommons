@@ -60,6 +60,10 @@ public class RBMapWithOptionalDefault<K, V> {
     return rawRBMap;
   }
 
+  public boolean hasNoDefaultValueOrOverrides() {
+    return !optionalDefaultValue.isPresent() && rawRBMap.isEmpty();
+  }
+
   /**
    * If the key is present in the map, it returns the value as a present optional.
    * Otherwise, it returns the default value, which again is an optional.

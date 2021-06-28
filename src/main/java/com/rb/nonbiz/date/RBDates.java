@@ -181,4 +181,13 @@ public class RBDates {
     return year2.getValue() == year1.getValue() + 1;
   }
 
+  // FIXME IAK DRIFT test this
+  public static boolean doubleIsRound(double value, double epsilon) {
+    RBPreconditions.checkArgument(
+        epsilon >= 0,
+        "epsilon to check % cannot be negative: %s",
+        value, epsilon);
+    return Math.abs(value - (int) value) <= epsilon;
+  }
+
 }

@@ -6,10 +6,12 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBMapWithOptionalDefault.emptyRBMapWithOptionalDefaultMissing;
 import static com.rb.nonbiz.collections.RBMapWithOptionalDefault.emptyRBMapWithOptionalDefaultPresent;
 import static com.rb.nonbiz.collections.RBMapWithOptionalDefault.rbMapWithOptionalDefaultMissing;
 import static com.rb.nonbiz.collections.RBMapWithOptionalDefault.rbMapWithOptionalDefaultPresent;
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -17,6 +19,9 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatch
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class RBMapWithOptionalDefaultTest extends RBTestMatcher<RBMapWithOptionalDefault<String, Double>> {
@@ -42,6 +47,14 @@ public class RBMapWithOptionalDefaultTest extends RBTestMatcher<RBMapWithOptiona
 
     assertOptionalEmpty(emptyRBMapWithOptionalDefaultMissing().getOrDefault("any key"));
     assertOptionalEmpty(emptyRBMapWithOptionalDefaultMissing().getOrDefault(""));
+  }
+
+  @Test
+  public void testHasNoDefaultValueOrOverrides() {
+    assertTrue(emptyRBMapWithOptionalDefaultMissing().hasNoDefaultValueOrOverrides());
+    assertFalse(rbMapWithOptionalDefaultPresent(123, singletonRBMap(DUMMY_STRING, 456)).hasNoDefaultValueOrOverrides());
+    assertFalse(rbMapWithOptionalDefaultMissing(singletonRBMap(DUMMY_STRING, 456))     .hasNoDefaultValueOrOverrides());
+    assertFalse(emptyRBMapWithOptionalDefaultPresent(123)                              .hasNoDefaultValueOrOverrides());
   }
 
   @Override
