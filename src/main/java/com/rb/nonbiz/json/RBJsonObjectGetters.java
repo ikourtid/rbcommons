@@ -4,6 +4,7 @@ import com.google.common.primitives.Ints;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.rb.biz.jsonapi.JsonSerializedEnumStringMap;
 import com.rb.nonbiz.types.RBDoubles;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -18,6 +19,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.google.common.primitives.Ints.checkedCast;
+import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional2;
 import static com.rb.nonbiz.collections.RBOptionals.toSpecializedOptionalDouble;
 import static com.rb.nonbiz.date.RBDates.dateFromYyyyMmDd;
@@ -227,6 +229,21 @@ public class RBJsonObjectGetters {
     return !optionalDouble.isPresent()
         ? OptionalInt.empty()
         : OptionalInt.of(checkedCast(getDoubleAsLongAssumingIsRound(optionalDouble.getAsDouble(), 1e-12)));
+  }
+
+  /**
+   * From 'jsonObject', get the string value of 'property' and find the matching enum value per the
+   * JsonSerializedEnumStringMap passed in, or use the supplied default if the property is missing in the json object.
+   */
+  public static <E extends Enum<E>> E getEnumFromJsonOrDefault(
+      JsonObject jsonObject,
+      String property,
+      JsonSerializedEnumStringMap<E> jsonSerializedEnumStringMap,
+      E valueToUseIfUnspecified) {
+    return transformOptional(
+        getOptionalJsonString(jsonObject, property),
+        enumValueAsString -> jsonSerializedEnumStringMap.getEnumValueOrThrow(enumValueAsString))
+        .orElse(valueToUseIfUnspecified);
   }
 
   /**
