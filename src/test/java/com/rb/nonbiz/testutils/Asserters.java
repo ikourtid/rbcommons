@@ -5,9 +5,12 @@ import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.testmatchers.RBOptionalMatchers;
+import com.rb.nonbiz.testmatchers.RBValueMatchers;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
+import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.lang3.ArrayUtils;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -24,6 +27,7 @@ import static com.rb.nonbiz.collections.IidSetSimpleConstructors.singletonIidSet
 import static com.rb.nonbiz.collections.IidSetTest.iidSetMatcher;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRestDoubles;
+import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.nonEmptyOptionalDoubleMatcher;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -178,6 +182,11 @@ public class Asserters {
 
   public static void assertOptionalDoubleEmpty(OptionalDouble actual) {
     assertFalse(actual.isPresent());
+  }
+
+  public static void assertOptionalDoubleAlmostEquals(double expected, OptionalDouble actual, double epsilon) {
+    RBPreconditions.checkArgument(epsilon >= 0);
+    assertThat(actual, nonEmptyOptionalDoubleMatcher(expected, epsilon));
   }
 
   public static void assertOptionalIntEmpty(OptionalInt actual) {

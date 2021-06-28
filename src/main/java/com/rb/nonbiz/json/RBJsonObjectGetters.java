@@ -1,23 +1,30 @@
 package com.rb.nonbiz.json;
 
+import com.google.common.primitives.Ints;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.rb.nonbiz.types.RBDoubles;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 import java.util.function.DoubleFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static com.google.common.primitives.Ints.checkedCast;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional2;
+import static com.rb.nonbiz.collections.RBOptionals.toSpecializedOptionalDouble;
 import static com.rb.nonbiz.date.RBDates.dateFromYyyyMmDd;
 import static com.rb.nonbiz.json.RBGson.PERCENTAGE_TO_FRACTION;
 import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
+import static com.rb.nonbiz.types.RBDoubles.getDoubleAsLongAssumingIsRound;
 
 public class RBJsonObjectGetters {
 
@@ -180,6 +187,46 @@ public class RBJsonObjectGetters {
           String asString = jsonElement.getAsString();
           return Optional.of(asString);
         });
+  }
+
+  /**
+   * From 'jsonObject', get the value of 'property' and check that it is an int.
+   * If missing, or present but with a value of JsonNull, return empty optional.
+   * If present, but not a number, throw an exception.
+   * Otherwise, return it as a non-empty {@link OptionalInt}.
+   */
+  public static OptionalDouble getOptionalJsonDouble(
+      JsonObject jsonObject,
+      String property) {
+    Optional<Double> number = transformOptional2(
+        getOptionalJsonElement(jsonObject, property),
+        jsonElement -> {
+          if (jsonElement.isJsonNull()) {
+            return Optional.empty();
+          }
+          ;
+          RBPreconditions.checkArgument(
+              jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isNumber(),
+              "JSON object property ( %s ) is not a number: %s",
+              property, jsonElement);
+          return Optional.of(jsonElement.getAsNumber().doubleValue());
+        });
+    return toSpecializedOptionalDouble(number);
+  }
+
+  /**
+   * From 'jsonObject', get the value of 'property' and check that it is an int.
+   * If missing, or present but with a value of JsonNull, return empty optional.
+   * If present, but not an int (i.e. either a non-number, or a non-round double), throw an exception.
+   * Otherwise, return it as a non-empty {@link OptionalInt}.
+   */
+  public static OptionalInt getOptionalJsonInt(
+      JsonObject jsonObject,
+      String property) {
+    OptionalDouble optionalDouble = getOptionalJsonDouble(jsonObject, property);
+    return !optionalDouble.isPresent()
+        ? OptionalInt.empty()
+        : OptionalInt.of(checkedCast(getDoubleAsLongAssumingIsRound(optionalDouble.getAsDouble(), 1e-12)));
   }
 
   /**

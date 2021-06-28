@@ -51,4 +51,17 @@ public class RBDoubles {
     return Math.round(100 * value) / 100.0;
   }
 
+  public static long getDoubleAsLongAssumingIsRound(double value, double epsilon) {
+    RBPreconditions.checkArgument(
+        epsilon >= 0,
+        "epsilon to check % cannot be negative: %s",
+        value, epsilon);
+    long nearestRound = Math.round(value);
+    RBPreconditions.checkArgument(
+        Math.abs(value - nearestRound) <= epsilon,
+        "The closest long to value %s is %s which is not within an epsilon of %s",
+        value, nearestRound, epsilon);
+    return nearestRound;
+  }
+
 }
