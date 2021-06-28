@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
+import static com.rb.biz.jsonapi.JsonSerializedEnumStringMapImpl.jsonSerializedEnumStringMap;
 import static com.rb.biz.jsonapi.JsonSerializedEnumStringMapImpl.jsonSerializedEnumStringMapImpl;
 import static com.rb.biz.jsonapi.JsonSerializedEnumStringMapImplTest.SerializationTestEnum.VALUE1;
 import static com.rb.biz.jsonapi.JsonSerializedEnumStringMapImplTest.SerializationTestEnum.VALUE2;
@@ -25,18 +26,8 @@ public class JsonSerializedEnumStringMapImplTest
 
   }
 
-  protected enum EmptySerializationTestEnum {}
 
-  public static <E extends Enum<E>> JsonSerializedEnumStringMap<E> jsonSerializedEnumStringMap(
-      Class<E> enumClass,
-      E enumValue1, String serializationString1,
-      E enumValue2, String serializationString2) {
-    return jsonSerializedEnumStringMapImpl(
-        enumClass,
-        HashBiMap.create(ImmutableMap.of(
-            enumValue1, serializationString1,
-            enumValue2, serializationString2)));
-  }
+  protected enum EmptySerializationTestEnum {}
 
   @Test
   public void emptyEnumMap_throws() {

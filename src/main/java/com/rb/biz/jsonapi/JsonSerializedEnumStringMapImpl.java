@@ -1,6 +1,8 @@
 package com.rb.biz.jsonapi;
 
 import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableMap;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
@@ -41,6 +43,17 @@ public class JsonSerializedEnumStringMapImpl<E extends Enum<E>> implements JsonS
         "For enum %s, we must have mappings for all constants",
         enumClass);
     return new JsonSerializedEnumStringMapImpl<>(enumClass, rawBiMap);
+  }
+
+  public static <E extends Enum<E>> JsonSerializedEnumStringMap<E> jsonSerializedEnumStringMap(
+      Class<E> enumClass,
+      E enumValue1, String serializationString1,
+      E enumValue2, String serializationString2) {
+    return jsonSerializedEnumStringMapImpl(
+        enumClass,
+        HashBiMap.create(ImmutableMap.of(
+            enumValue1, serializationString1,
+            enumValue2, serializationString2)));
   }
 
   @Override
