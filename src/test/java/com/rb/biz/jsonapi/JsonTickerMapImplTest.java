@@ -27,11 +27,6 @@ import static org.junit.Assert.assertEquals;
 
 public class JsonTickerMapImplTest extends RBTestMatcher<JsonTickerMapImpl> {
 
-  public static final JsonTickerMap TEST_JSON_TICKER_MAP = jsonTickerMap(iidMapOf(
-      instrumentId(71), "eq1",
-      instrumentId(81), "fi1",
-      instrumentId(82), "fi2"));
-
   // This is a test-only shorthand.
   public static JsonTickerMapImpl jsonTickerMap(IidMap<String> rawMap) {
     return JsonTickerMapImpl.jsonTickerMap(iidBiMap(rawMap.transformValuesCopy(v -> jsonTicker(v))));
@@ -44,31 +39,36 @@ public class JsonTickerMapImplTest extends RBTestMatcher<JsonTickerMapImpl> {
 
   @Test
   public void testGetters() {
-    InstrumentId INSTRUMENT_ID_71 = instrumentId(71);
-    InstrumentId MISSING_INSTRUMENT_ID = instrumentId(999);
+    InstrumentId instrumentId71 = instrumentId(71);
+    InstrumentId missingInstrumentId = instrumentId(999);
 
-    JsonTicker JSON_TICKER_EQ1 = jsonTicker("eq1");
-    JsonTicker MISSING_JSON_TICKER = jsonTicker("missing");
+    JsonTicker jsonTickerEq1 = jsonTicker("eq1");
+    JsonTicker missingJsonTicker = jsonTicker("missing");
+
+    JsonTickerMap jsonTickerMap = jsonTickerMap(iidMapOf(
+        instrumentId(71), "eq1",
+        instrumentId(81), "fi1",
+        instrumentId(82), "fi2"));
 
     assertThat(
-        TEST_JSON_TICKER_MAP.getJsonTickerOrThrow(INSTRUMENT_ID_71),
-        jsonTickerMatcher(JSON_TICKER_EQ1));
-    assertIllegalArgumentException( () -> TEST_JSON_TICKER_MAP.getJsonTickerOrThrow(MISSING_INSTRUMENT_ID));
+        jsonTickerMap.getJsonTickerOrThrow(instrumentId71),
+        jsonTickerMatcher(jsonTickerEq1));
+    assertIllegalArgumentException( () -> jsonTickerMap.getJsonTickerOrThrow(missingInstrumentId));
 
     assertOptionalNonEmpty(
-        TEST_JSON_TICKER_MAP.getOptionalJsonTicker(INSTRUMENT_ID_71),
-        jsonTickerMatcher(JSON_TICKER_EQ1));
-    assertOptionalEmpty(TEST_JSON_TICKER_MAP.getOptionalJsonTicker(MISSING_INSTRUMENT_ID));
+        jsonTickerMap.getOptionalJsonTicker(instrumentId71),
+        jsonTickerMatcher(jsonTickerEq1));
+    assertOptionalEmpty(jsonTickerMap.getOptionalJsonTicker(missingInstrumentId));
 
     assertEquals(
-        TEST_JSON_TICKER_MAP.getInstrumentIdOrThrow(JSON_TICKER_EQ1),
-        INSTRUMENT_ID_71);
-    assertIllegalArgumentException( () -> TEST_JSON_TICKER_MAP.getInstrumentIdOrThrow(MISSING_JSON_TICKER));
+        jsonTickerMap.getInstrumentIdOrThrow(jsonTickerEq1),
+        instrumentId71);
+    assertIllegalArgumentException( () -> jsonTickerMap.getInstrumentIdOrThrow(missingJsonTicker));
 
     assertOptionalEquals(
-        INSTRUMENT_ID_71,
-        TEST_JSON_TICKER_MAP.getOptionalInstrumentId(JSON_TICKER_EQ1));
-    assertOptionalEmpty(TEST_JSON_TICKER_MAP.getOptionalInstrumentId(MISSING_JSON_TICKER));
+        instrumentId71,
+        jsonTickerMap.getOptionalInstrumentId(jsonTickerEq1));
+    assertOptionalEmpty(jsonTickerMap.getOptionalInstrumentId(missingJsonTicker));
   }
 
   @Override
