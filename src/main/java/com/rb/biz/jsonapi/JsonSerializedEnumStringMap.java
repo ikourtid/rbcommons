@@ -7,7 +7,7 @@ import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 /**
  * This is an enum {@code <-->} serializable string bidirectional map.
  *
- * This is uses for cases where we want to serialize a string that's "prettier" / cleaner / shorter
+ * This is used for cases where we want to serialize a string that's "prettier" / cleaner / shorter
  * than the native Java enum string. For example, if we have {@code enum OrderSide} with BUY_SIDE and SELL_SIDE,
  * this will allow us to convert to "b" and "s", or "buy" and "sell" (lowercase).
  * 
