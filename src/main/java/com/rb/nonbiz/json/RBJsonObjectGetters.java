@@ -192,10 +192,10 @@ public class RBJsonObjectGetters {
   }
 
   /**
-   * From 'jsonObject', get the value of 'property' and check that it is an int.
+   * From 'jsonObject', get the value of 'property' and check that it is a number.
    * If missing, or present but with a value of JsonNull, return empty optional.
    * If present, but not a number, throw an exception.
-   * Otherwise, return it as a non-empty {@link OptionalInt}.
+   * Otherwise, return it as a non-empty {@link OptionalDouble}.
    */
   public static OptionalDouble getOptionalJsonDouble(
       JsonObject jsonObject,
@@ -206,7 +206,6 @@ public class RBJsonObjectGetters {
           if (jsonElement.isJsonNull()) {
             return Optional.empty();
           }
-          ;
           RBPreconditions.checkArgument(
               jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isNumber(),
               "JSON object property ( %s ) is not a number: %s",
