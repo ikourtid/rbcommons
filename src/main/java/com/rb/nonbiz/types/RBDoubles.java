@@ -39,6 +39,29 @@ public class RBDoubles {
         : visitor.visitLeftIsGreater(rightMinusLeft);
   }
 
+  /**
+   * We need this variant of epsilonCompareDoubles usually for cases where the epsilon is read from a class (i.e.
+   * not hardcoded into the code), in which case we may want to allow using an epsilon of 0.
+   */
+  public static <T> T epsilonCompareDoublesAllowingEpsilonOfZero(
+      double left, double right, double epsilon, EpsilonComparisonVisitor<T> visitor) {
+    RBPreconditions.checkArgument(
+        epsilon >= 0,
+        "epsilon must be non-negative; was %s",
+        epsilon);
+    RBPreconditions.checkArgument(
+        epsilon < 1e4,
+        "even though it could be reasonable, we disallow a huge (> 1e4) epsilon for safety, since it's probably a typo; was %s",
+        epsilon);
+    double rightMinusLeft = right - left;
+    if (Math.abs(rightMinusLeft) <= epsilon) {
+      return visitor.visitAlmostEqual();
+    }
+    return rightMinusLeft > 0
+        ? visitor.visitRightIsGreater(rightMinusLeft)
+        : visitor.visitLeftIsGreater(rightMinusLeft);
+  }
+
   public static double average(double v1, double v2) {
     return 0.5 * (v1 + v2);
   }
