@@ -83,6 +83,16 @@ public class RBLists {
    * This is for a common case for specialized static constructors (which usually live in test) that want to force you to
    * supply at least one item. But it can be used anywhere.
    */
+  public static List<Double> concatenateFirstSecondAndRestDoubles(double first, double second, double...rest) {
+    return RBStreams.concatenateFirstSecondAndRestDoubles(first, second, rest)
+        .boxed()
+        .collect(Collectors.toList());
+  }
+
+  /**
+   * This is for a common case for specialized static constructors (which usually live in test) that want to force you to
+   * supply at least one item. But it can be used anywhere.
+   */
   @SafeVarargs
   public static <K> List<K> concatenateFirstSecondAndRest(K first, K second, K...rest) {
     return RBStreams.concatenateFirstSecondAndRest(first, second, rest)
