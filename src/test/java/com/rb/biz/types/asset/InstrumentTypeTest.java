@@ -3,6 +3,7 @@ package com.rb.biz.types.asset;
 import com.rb.biz.types.asset.InstrumentType.EtfInstrumentType;
 import com.rb.biz.types.asset.InstrumentType.MutualFundInstrumentType;
 import com.rb.biz.types.asset.InstrumentType.StockInstrumentType;
+import com.rb.biz.types.asset.InstrumentType.StructuredProductInstrumentType;
 import com.rb.biz.types.asset.InstrumentType.Visitor;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testmatchers.RBVisitorMatchers.VisitorMatchInfo;
@@ -53,6 +54,11 @@ public class InstrumentTypeTest extends RBTestMatcher<InstrumentType> {
     return alwaysMatchingMatcher();
   }
 
+  public static TypeSafeMatcher<StructuredProductInstrumentType> structuredProductInstrumentTypeMatcher(
+      StructuredProductInstrumentType structuredProductInstrumentTypeIgnored) {
+    return alwaysMatchingMatcher();
+  }
+
   public static TypeSafeMatcher<InstrumentType> instrumentTypeMatcher(InstrumentType expected) {
     return generalVisitorMatcher(expected, v -> v.visit(new Visitor<VisitorMatchInfo<InstrumentType>>() {
       @Override
@@ -71,6 +77,12 @@ public class InstrumentTypeTest extends RBTestMatcher<InstrumentType> {
       public VisitorMatchInfo<InstrumentType> visitMutualFund(MutualFundInstrumentType mutualFundInstrumentType) {
         return visitorMatchInfo(3, mutualFundInstrumentType,
             (MatcherGenerator<MutualFundInstrumentType>) f -> mutualFundInstrumentTypeMatcher(f));
+      }
+      
+      @Override
+      public VisitorMatchInfo<InstrumentType> visitStructuredProduct(StructuredProductInstrumentType structuredProductInstrumentType) {
+        return visitorMatchInfo(4, structuredProductInstrumentType,
+            (MatcherGenerator<StructuredProductInstrumentType>) f -> structuredProductInstrumentTypeMatcher(f));
       }
     }));
   }
