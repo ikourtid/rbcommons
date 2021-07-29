@@ -88,5 +88,9 @@ public class FakeInstruments {
   public static InstrumentId STRUCTURED_PRODUCT_2 = instrumentIdGenerator.generate(symbol("SP_2"));
   public static InstrumentId STRUCTURED_PRODUCT_3 = instrumentIdGenerator.generate(symbol("SP_3"));
   public static InstrumentId STRUCTURED_PRODUCT_4 = instrumentIdGenerator.generate(symbol("SP_4"));
+  public static InstrumentId STRUCTURED_PRODUCT_5 = instrumentIdGenerator.generate(symbol("SP_5"));
+  public static InstrumentId STRUCTURED_PRODUCT_6 = instrumentIdGenerator.generate(symbol("SP_6"));
+  public static InstrumentId STRUCTURED_PRODUCT_7 = instrumentIdGenerator.generate(symbol("SP_7"));
+  public static InstrumentId STRUCTURED_PRODUCT_8 = instrumentIdGenerator.generate(symbol("SP_8"));
 
 }

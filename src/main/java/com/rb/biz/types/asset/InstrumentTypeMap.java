@@ -84,7 +84,7 @@ public class InstrumentTypeMap<T> {
     boolean inEtfs               = predicate.test(valueForEtfs);
     boolean inStocks             = predicate.test(valueForStocks);
     boolean inMutualFunds        = predicate.test(valueForMutualFunds);
-    boolean inStructuredProducts = predicate.test(valueForMutualFunds);
+    boolean inStructuredProducts = predicate.test(valueForStructuredProducts);
     RBPreconditions.checkArgument(
         Stream.of(inEtfs, inStocks, inMutualFunds, inStructuredProducts)
             .filter(v -> v)
