@@ -84,4 +84,9 @@ public class FakeInstruments {
   public static InstrumentId MUTUAL_FUND_3 = instrumentIdGenerator.generate(symbol("MF_3"));
   public static InstrumentId MUTUAL_FUND_4 = instrumentIdGenerator.generate(symbol("MF_4"));
 
+  public static InstrumentId STRUCTURED_PRODUCT_1 = instrumentIdGenerator.generate(symbol("SP_1"));
+  public static InstrumentId STRUCTURED_PRODUCT_2 = instrumentIdGenerator.generate(symbol("SP_2"));
+  public static InstrumentId STRUCTURED_PRODUCT_3 = instrumentIdGenerator.generate(symbol("SP_3"));
+  public static InstrumentId STRUCTURED_PRODUCT_4 = instrumentIdGenerator.generate(symbol("SP_4"));
+
 }
