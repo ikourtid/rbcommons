@@ -125,7 +125,7 @@ public abstract class InstrumentType implements HasHumanReadableLabel {
 
     @Override
     public HumanReadableLabel getHumanReadableLabel() {
-      return label("mutual_fund");
+      return label("structured_product");
     }
 
   }

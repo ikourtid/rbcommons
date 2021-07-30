@@ -15,6 +15,7 @@ import static com.rb.biz.marketdata.FakeInstruments.STRUCTURED_PRODUCT_1;
 import static com.rb.biz.types.asset.InstrumentType.EtfInstrumentType.etfInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.MutualFundInstrumentType.mutualFundInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.StockInstrumentType.stockInstrumentType;
+import static com.rb.biz.types.asset.InstrumentType.StructuredProductInstrumentType.structuredProductInstrumentType;
 import static com.rb.biz.types.asset.InstrumentTypeMap.instrumentTypeMapWithSharedDefaults;
 import static com.rb.biz.types.asset.InstrumentTypeTest.instrumentTypeMatcher;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.singletonIidSet;
@@ -47,7 +48,7 @@ public class InstrumentTypeMapTest extends RBTestMatcher<InstrumentTypeMap<Doubl
         instrumentTypeMatcher(mutualFundInstrumentType()));
     assertThat(
         map.getInstrumentTypeWhenUnique(v -> v.contains(STRUCTURED_PRODUCT_1)),
-        instrumentTypeMatcher(mutualFundInstrumentType()));
+        instrumentTypeMatcher(structuredProductInstrumentType()));
     // These throw because the predicate is true on all 3 InstrumentTypes, 2, and 0, respectively.
     assertIllegalArgumentException( () -> map.getInstrumentTypeWhenUnique(v -> true));
     assertIllegalArgumentException( () -> map.getInstrumentTypeWhenUnique(v -> v.contains(ETF_1) || v.contains(STOCK_A1)));
