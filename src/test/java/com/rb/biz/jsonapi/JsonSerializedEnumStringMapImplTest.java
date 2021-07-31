@@ -59,6 +59,9 @@ public class JsonSerializedEnumStringMapImplTest
 
   @Override
   public JsonSerializedEnumStringMap<SerializationTestEnum> makeTrivialObject() {
+    // Usually the makeTrivialObject has fewer entries than makeNontrivialObject and makeMatchingNontrivialObject.
+    // However, this file tests the case of SerializationTestEnum, which has 3 values. Due to the preconditions
+    // in JsonSerializedEnumStringMap, we need to have string values for all enum values.
     return jsonSerializedEnumStringMap(
         SerializationTestEnum.class,
         VALUE1, "v1",
