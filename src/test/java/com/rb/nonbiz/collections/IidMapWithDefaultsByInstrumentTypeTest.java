@@ -12,10 +12,12 @@ import static com.rb.biz.marketdata.FakeInstruments.MUTUAL_FUND_1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A2;
+import static com.rb.biz.marketdata.FakeInstruments.STRUCTURED_PRODUCT_1;
 import static com.rb.biz.types.Price.price;
 import static com.rb.biz.types.asset.InstrumentType.EtfInstrumentType.etfInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.MutualFundInstrumentType.mutualFundInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.StockInstrumentType.stockInstrumentType;
+import static com.rb.biz.types.asset.InstrumentType.StructuredProductInstrumentType.structuredProductInstrumentType;
 import static com.rb.biz.types.asset.InstrumentTypeMap.instrumentTypeMapWithSharedDefaults;
 import static com.rb.biz.types.asset.InstrumentTypeMapTest.instrumentTypeMapMatcher;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
@@ -44,9 +46,10 @@ public class IidMapWithDefaultsByInstrumentTypeTest extends RBTestMatcher<IidMap
   public void testDefaultsOnly() {
     IidMapWithDefaultsByInstrumentType<Price> minPriceByTypeMap = iidMapWithOnlyDefaultsByInstrumentType(
         InstrumentTypeMapBuilder.<Price>instrumentTypeMapBuilder()
-            .setValueForStocks(     price(1.0))
-            .setValueForEtfs(       price(2.0))
-            .setValueForMutualFunds(price(3.0))
+            .setValueForStocks(            price(1.0))
+            .setValueForEtfs(              price(2.0))
+            .setValueForMutualFunds(       price(3.0))
+            .setValueForStructuredProducts(price(4.0))
             .build());
 
     // note: getMapSize() only counts the instrument-specific entries, not the defaults
@@ -54,9 +57,10 @@ public class IidMapWithDefaultsByInstrumentTypeTest extends RBTestMatcher<IidMap
 
     // none of the following instruments has a specific entry in 'minPriceByTypeMap', so they get the
     // instrument type-specific default
-    assertEquals(price(1.0), minPriceByTypeMap.getOrDefault(STOCK_A,       stockInstrumentType()));
-    assertEquals(price(2.0), minPriceByTypeMap.getOrDefault(ETF_1,         etfInstrumentType()));
-    assertEquals(price(3.0), minPriceByTypeMap.getOrDefault(MUTUAL_FUND_1, mutualFundInstrumentType()));
+    assertEquals(price(1.0), minPriceByTypeMap.getOrDefault(STOCK_A,              stockInstrumentType()));
+    assertEquals(price(2.0), minPriceByTypeMap.getOrDefault(ETF_1,                etfInstrumentType()));
+    assertEquals(price(3.0), minPriceByTypeMap.getOrDefault(MUTUAL_FUND_1,        mutualFundInstrumentType()));
+    assertEquals(price(4.0), minPriceByTypeMap.getOrDefault(STRUCTURED_PRODUCT_1, structuredProductInstrumentType()));
   }
 
   @Test
@@ -64,19 +68,20 @@ public class IidMapWithDefaultsByInstrumentTypeTest extends RBTestMatcher<IidMap
     IidMapWithDefaultsByInstrumentType<Price> priceMap =
         iidMapWithDefaultsByInstrumentType(
             InstrumentTypeMapBuilder.<Price>instrumentTypeMapBuilder()
-                .setValueForStocks(     price(1.0))
-                .setValueForEtfs(       price(2.0))
-                .setValueForMutualFunds(price(3.0))
+                .setValueForStocks(            price(1.0))
+                .setValueForEtfs(              price(2.0))
+                .setValueForMutualFunds(       price(3.0))
+                .setValueForStructuredProducts(price(4.0))
                 .build(),
             iidMapOf(
-                STOCK_A, price(4.0),
-                ETF_1,   price(5.0)));
+                STOCK_A, price(5.0),
+                ETF_1,   price(6.0)));
 
     // note: getMapSize() only counts the instrument-specific entries, not the defaults
     assertEquals(2, priceMap.getMapSize());
 
-    assertFalse(priceMap.allMatch(price -> price.isLessThan(price(4.0))));
-    assertTrue( priceMap.allMatch(price -> price.isLessThan(price(6.0))));
+    assertFalse(priceMap.allMatch(price -> price.isLessThan(price(5.0))));
+    assertTrue( priceMap.allMatch(price -> price.isLessThan(price(7.0))));
 
     assertTrue( priceMap.allMatch(price -> price.isExactlyRound()));
   }
@@ -93,10 +98,11 @@ public class IidMapWithDefaultsByInstrumentTypeTest extends RBTestMatcher<IidMap
             .setValueForEtfs(1.1)
             .setValueForStocks(-3.3)
             .setValueForMutualFunds(7.7)
+            .setValueForStructuredProducts(15.15)
             .build(),
         iidMapOf(
-            STOCK_A1, 15.15,
-            STOCK_A2, 31.31));
+            STOCK_A1, 31.31,
+            STOCK_A2, 63.63));
   }
 
   @Override
@@ -107,10 +113,11 @@ public class IidMapWithDefaultsByInstrumentTypeTest extends RBTestMatcher<IidMap
             .setValueForEtfs(1.1 + e)
             .setValueForStocks(-3.3 + e)
             .setValueForMutualFunds(7.7 + e)
+            .setValueForStructuredProducts(15.15 + e)
             .build(),
         iidMapOf(
-            STOCK_A1, 15.15 + e,
-            STOCK_A2, 31.31 + e));
+            STOCK_A1, 31.31 + e,
+            STOCK_A2, 63.63 + e));
   }
 
   @Override

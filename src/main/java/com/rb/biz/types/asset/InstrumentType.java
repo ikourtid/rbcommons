@@ -18,6 +18,7 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  *   <li> {@link EtfInstrumentType EtfInstrumentType}
  *   <li> {@link StockInstrumentType StockInstrumentType}
  *   <li> {@link MutualFundInstrumentType MutualFundInstrumentType}
+ *   <li> {@link StructuredProductInstrumentType StructuredProductInstrumentType}</li>
  * </ul>
  */
 public abstract class InstrumentType implements HasHumanReadableLabel {
@@ -27,6 +28,7 @@ public abstract class InstrumentType implements HasHumanReadableLabel {
     T visitEtf(EtfInstrumentType etfInstrumentType);
     T visitStock(StockInstrumentType stockInstrumentType);
     T visitMutualFund(MutualFundInstrumentType mutualFundInstrumentType);
+    T visitStructuredProduct(StructuredProductInstrumentType structuredProductInstrumentType);
 
   }
 
@@ -100,6 +102,30 @@ public abstract class InstrumentType implements HasHumanReadableLabel {
     @Override
     public HumanReadableLabel getHumanReadableLabel() {
       return label("mutual_fund");
+    }
+
+  }
+
+
+  /**
+   * A structured product.
+   *
+   * @see InstrumentType
+   */
+  public static class StructuredProductInstrumentType extends InstrumentType {
+
+    public static StructuredProductInstrumentType structuredProductInstrumentType() {
+      return new StructuredProductInstrumentType();
+    }
+
+    @Override
+    public <T> T visit(Visitor<T> visitor) {
+      return visitor.visitStructuredProduct(this);
+    }
+
+    @Override
+    public HumanReadableLabel getHumanReadableLabel() {
+      return label("structured_product");
     }
 
   }
