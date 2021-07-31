@@ -11,9 +11,11 @@ import static com.rb.biz.marketdata.FakeInstruments.ETF_1;
 import static com.rb.biz.marketdata.FakeInstruments.MUTUAL_FUND_1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
+import static com.rb.biz.marketdata.FakeInstruments.STRUCTURED_PRODUCT_1;
 import static com.rb.biz.types.asset.InstrumentType.EtfInstrumentType.etfInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.MutualFundInstrumentType.mutualFundInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.StockInstrumentType.stockInstrumentType;
+import static com.rb.biz.types.asset.InstrumentType.StructuredProductInstrumentType.structuredProductInstrumentType;
 import static com.rb.biz.types.asset.InstrumentTypeMap.instrumentTypeMapWithSharedDefaults;
 import static com.rb.biz.types.asset.InstrumentTypeTest.instrumentTypeMatcher;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.singletonIidSet;
@@ -33,6 +35,7 @@ public class InstrumentTypeMapTest extends RBTestMatcher<InstrumentTypeMap<Doubl
         .setValueForEtfs(singletonIidSet(ETF_1))
         .setValueForStocks(singletonIidSet(STOCK_A1))
         .setValueForMutualFunds(singletonIidSet(MUTUAL_FUND_1))
+        .setValueForStructuredProducts(singletonIidSet(STRUCTURED_PRODUCT_1))
         .build();
     assertThat(
         map.getInstrumentTypeWhenUnique(v -> v.contains(ETF_1)),
@@ -43,6 +46,9 @@ public class InstrumentTypeMapTest extends RBTestMatcher<InstrumentTypeMap<Doubl
     assertThat(
         map.getInstrumentTypeWhenUnique(v -> v.contains(MUTUAL_FUND_1)),
         instrumentTypeMatcher(mutualFundInstrumentType()));
+    assertThat(
+        map.getInstrumentTypeWhenUnique(v -> v.contains(STRUCTURED_PRODUCT_1)),
+        instrumentTypeMatcher(structuredProductInstrumentType()));
     // These throw because the predicate is true on all 3 InstrumentTypes, 2, and 0, respectively.
     assertIllegalArgumentException( () -> map.getInstrumentTypeWhenUnique(v -> true));
     assertIllegalArgumentException( () -> map.getInstrumentTypeWhenUnique(v -> v.contains(ETF_1) || v.contains(STOCK_A1)));
@@ -60,6 +66,7 @@ public class InstrumentTypeMapTest extends RBTestMatcher<InstrumentTypeMap<Doubl
         .setValueForEtfs(1.1)
         .setValueForStocks(3.3)
         .setValueForMutualFunds(-7.7)
+        .setValueForStructuredProducts(15.15)
         .build();
   }
 
@@ -70,6 +77,7 @@ public class InstrumentTypeMapTest extends RBTestMatcher<InstrumentTypeMap<Doubl
         .setValueForEtfs(1.1 + e)
         .setValueForStocks(3.3 + e)
         .setValueForMutualFunds(-7.7 + e)
+        .setValueForStructuredProducts(15.15 + e)
         .build();
   }
 
@@ -86,9 +94,10 @@ public class InstrumentTypeMapTest extends RBTestMatcher<InstrumentTypeMap<Doubl
   public static <T> TypeSafeMatcher<InstrumentTypeMap<T>> instrumentTypeMapMatcher(
       InstrumentTypeMap<T> expected, MatcherGenerator<T> matcherGenerator) {
     return makeMatcher(expected,
-        match(v -> v.getValueForEtfs(),        matcherGenerator),
-        match(v -> v.getValueForStocks(),      matcherGenerator),
-        match(v -> v.getValueForMutualFunds(), matcherGenerator));
+        match(v -> v.getValueForEtfs(),               matcherGenerator),
+        match(v -> v.getValueForStocks(),             matcherGenerator),
+        match(v -> v.getValueForMutualFunds(),        matcherGenerator),
+        match(v -> v.getValueForStructuredProducts(), matcherGenerator));
   }
 
 }
