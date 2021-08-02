@@ -143,12 +143,16 @@ public class RBJsonObjectGettersTest {
         "z", JsonNull.INSTANCE,
         "w1", jsonDouble(11),
         "w2", jsonDouble(22 - 1e-13),
-        "w3", jsonDouble(33 + 1e-13));
+        "w3", jsonDouble(33 + 1e-13),
+        "w4", jsonDouble(33.0001),
+        "w5", jsonDouble(43.9999));
     assertOptionalIntEmpty(getOptionalJsonInt(jsonObject, ""));
     assertOptionalIntEmpty(getOptionalJsonInt(jsonObject, "z"));
     assertOptionalIntEmpty(getOptionalJsonInt(jsonObject, "foo"));
     assertIllegalArgumentException( () -> getOptionalJsonInt(jsonObject, "x")); // not an int; it's a non-round number
     assertIllegalArgumentException( () -> getOptionalJsonInt(jsonObject, "y")); // not an int; it's a string
+    assertIllegalArgumentException( () -> getOptionalJsonInt(jsonObject, "w4")); // not an int; it's a non-round number
+    assertIllegalArgumentException( () -> getOptionalJsonInt(jsonObject, "w5")); // not an int; it's a non-round number
     assertOptionalIntEquals(11, getOptionalJsonInt(jsonObject, "w1"));
     assertOptionalIntEquals(22, getOptionalJsonInt(jsonObject, "w2"));
     assertOptionalIntEquals(33, getOptionalJsonInt(jsonObject, "w3"));
