@@ -561,6 +561,7 @@ public class RBRangesTest {
     for (Range<Integer> validRange : rbSetOf(
         Range.atLeast(1),
         Range.atMost(1),
+        Range.singleton(1),
         Range.closed(1, 2))) {
       assertTrue(rangeHasAtLeastOneClosedBound(validRange));
     }
