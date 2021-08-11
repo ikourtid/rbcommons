@@ -2,6 +2,7 @@ package com.rb.nonbiz.testmatchers;
 
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -11,6 +12,7 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeSame;
 import static junit.framework.TestCase.assertTrue;
@@ -128,6 +130,12 @@ public class RBOptionalMatchers {
       Optional<T> expected, double epsilon) {
     assertValidEpsilon(epsilon);
     return optionalMatcher(expected, v -> preciseValueMatcher(v, epsilon));
+  }
+
+  public static <T extends ImpreciseValue<? super T>> TypeSafeMatcher<Optional<T>> optionalImpreciseValueMatcher(
+      Optional<T> expected, double epsilon) {
+    assertValidEpsilon(epsilon);
+    return optionalMatcher(expected, v -> impreciseValueMatcher(v, epsilon));
   }
 
   public static <T extends PreciseValue<T>> TypeSafeMatcher<Optional<T>> nonEmptyOptionalPreciseValueMatcher(T expected, double epsilon) {
