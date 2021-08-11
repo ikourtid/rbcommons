@@ -6,9 +6,7 @@ import com.rb.biz.types.Money;
 import com.rb.biz.types.SignedMoney;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.math.stats.ZScore;
-import com.rb.nonbiz.testmatchers.RBRangeMatchers;
 import com.rb.nonbiz.text.Strings;
-import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import com.rb.nonbiz.types.PositiveMultiplier;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
@@ -546,6 +544,25 @@ public class RBRangesTest {
         Range.open(1, 2),
         Range.closed(1, 2))) {
       assertTrue(rangeIsBounded(validRange));
+    }
+  }
+
+  @Test
+  public void testRangeHasAtLeastOneClosedBound() {
+    for (Range<Integer> invalidRange : rbSetOf(
+        Range.greaterThan(1),
+        Range.lessThan(1),
+        Range.closedOpen(1, 2),
+        Range.openClosed(1, 2),
+        Range.open(1, 2),
+        Range.<Integer>all())) {
+      assertFalse(rangeHasAtLeastOneClosedBound(invalidRange));
+    }
+    for (Range<Integer> validRange : rbSetOf(
+        Range.atLeast(1),
+        Range.atMost(1),
+        Range.closed(1, 2))) {
+      assertTrue(rangeHasAtLeastOneClosedBound(validRange));
     }
   }
 

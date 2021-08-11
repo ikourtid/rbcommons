@@ -135,6 +135,20 @@ public class RBRanges {
         && range.hasUpperBound() && range.upperBoundType() == CLOSED;
   }
 
+  /**
+   * Returns true if and only if  the range has at least one bound (i.e. is not unrestricted),
+   * and the bound(s) is / are closed.
+   * The name is not 100% accurate because it sounds like it would include cases where one bound is closed
+   * and the other is open. However, that's hard to express in a single word.
+   */
+  public static <C extends Comparable<? super C>> boolean rangeHasAtLeastOneClosedBound(Range<C> range) {
+    if (rangeIsUnrestricted(range)) {
+      return false;
+    }
+    return (!range.hasLowerBound() || range.lowerBoundType() == CLOSED)
+        && (!range.hasUpperBound() || range.upperBoundType() == CLOSED);
+  }
+
   public static <C extends Comparable<? super C>> boolean rangeIsBounded(Range<C> range) {
     return range.hasLowerBound() && range.hasUpperBound();
   }
