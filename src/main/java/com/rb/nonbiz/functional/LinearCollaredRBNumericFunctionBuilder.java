@@ -76,7 +76,7 @@ public class LinearCollaredRBNumericFunctionBuilder<X extends Number, Y extends 
   }
 
   private String generateAutoLabel() {
-    return Strings.format("Linear between (X, Y) points ( %s , %s ) and ( %s, %s ); flat below minX and above maxY",
+    return Strings.format("Linear between (X, Y) points ( %s , %s ) and ( %s, %s ); flat below minX and above maxX",
         minX, maxX, minY, maxY);
   }
 
