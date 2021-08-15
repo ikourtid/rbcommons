@@ -70,4 +70,9 @@ public class RBSubsetPreconditions {
     checkIsSubset(expectedSubset, newRBSet(expectedSuperset), format, args);
   }
 
+  public static <T> void checkIsSubset(
+      Set<T> expectedSubset, RBSet<T> expectedSuperset, String format, Object...args) {
+    checkIsSubset(newRBSet(expectedSubset), expectedSuperset, format, args);
+  }
+
 }
