@@ -101,7 +101,12 @@ public class Strings {
   }
 
   public static <K, V> String formatMapInKeyOrder(RBMap<K, V> map, Comparator<K> keyComparator, String separator) {
-    return formatSortedMapHelper(map, separator, (e1, e2) -> keyComparator.compare(e1.getKey(), e2.getKey()));
+    return formatMapInKeyOrder(map, keyComparator, separator, v -> v.toString());
+  }
+
+  public static <K, V> String formatMapInKeyOrder(
+      RBMap<K, V> map, Comparator<K> keyComparator, String separator, Function<V, String> valueTransformer) {
+    return formatSortedMapHelper(map, separator, (e1, e2) -> keyComparator.compare(e1.getKey(), e2.getKey()), valueTransformer);
   }
 
   public static <K, V> String formatMapInValueOrder(RBMap<K, V> map, Comparator<V> valueComparator, String separator) {
