@@ -87,8 +87,8 @@ public class InstrumentTypeMap<T> {
     boolean inStructuredProducts = predicate.test(valueForStructuredProducts);
     RBPreconditions.checkArgument(
         Stream.of(inEtfs, inStocks, inMutualFunds, inStructuredProducts)
-            .filter(v -> v)
-            .count() == 1,
+            .filter(v -> v) // only keep the 'true' boolean values...
+            .count() == 1,  // ... so that we can count them.
         "Predicate passed in must be true for exactly one category of {ETFs, stocks, mutual funds, structured products}; %s",
         this.toString());
     // This style of relying on a default is not great, but here we already checked that one of 4 booleans is true,
