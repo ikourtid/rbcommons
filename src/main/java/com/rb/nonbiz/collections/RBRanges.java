@@ -136,7 +136,7 @@ public class RBRanges {
   }
 
   /**
-   * Returns true if and only if  the range has at least one bound (i.e. is not unrestricted),
+   * Returns true if and only if the range has at least one bound (i.e. is not unrestricted),
    * and the bound(s) is / are closed.
    * The name is not 100% accurate because it sounds like it would include cases where one bound is closed
    * and the other is open. However, that's hard to express in a single word.
