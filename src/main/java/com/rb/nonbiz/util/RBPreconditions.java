@@ -95,14 +95,14 @@ public class RBPreconditions {
   }
 
   public static void checkAllOptionalsArePresentOrAllAreEmpty(Optional<?> opt1, Optional<?> opt2, Optional<?>...rest) {
-    boolean expectRestArePresent = opt1.isPresent();
+    boolean firstIsPresent = opt1.isPresent();
     RBPreconditions.checkArgument(
-        opt2.isPresent() == expectRestArePresent,
+        opt2.isPresent() == firstIsPresent,
         "All optionals must either be present or absent: %s %s %s",
         opt1, opt2, rest);
     for (Optional<?> opt : rest) {
       RBPreconditions.checkArgument(
-          opt.isPresent() == expectRestArePresent,
+          opt.isPresent() == firstIsPresent,
           "All optionals must either be present or absent: %s %s %s",
           opt1, opt2, rest);
     }
