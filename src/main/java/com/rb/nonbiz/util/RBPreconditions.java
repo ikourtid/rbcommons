@@ -94,6 +94,20 @@ public class RBPreconditions {
     RBPreconditions.checkArgument(numPresent >= 1);
   }
 
+  public static void checkAllOptionalsArePresentOrAllAreEmpty(Optional<?> opt1, Optional<?> opt2, Optional<?>...rest) {
+    boolean expectRestArePresent = opt1.isPresent();
+    RBPreconditions.checkArgument(
+        opt2.isPresent() == expectRestArePresent,
+        "All optionals must either be present or absent: %s %s %s",
+        opt1, opt2, rest);
+    for (Optional<?> opt : rest) {
+      RBPreconditions.checkArgument(
+          opt.isPresent() == expectRestArePresent,
+          "All optionals must either be present or absent: %s %s %s",
+          opt1, opt2, rest);
+    }
+  }
+
   public static <T> void checkIsNonEmpty(
       Collection<T> collection, String format, Object...args) {
     checkArgument(!collection.isEmpty(), format, args);
