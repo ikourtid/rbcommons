@@ -101,7 +101,7 @@ public class LinearCollaredRBNumericFunctionBuilder<X extends Number, Y extends 
         label, minX, maxX);
     RBPreconditions.checkArgument(
         Math.abs(minY.doubleValue() - maxY.doubleValue()) > 1e-8,
-        "%s : The multipiers for the min and max value cannot be the same: %s and %s ; range of numeric values was %s to %s",
+        "%s : The multipliers for the min and max value cannot be the same: %s and %s ; range of numeric values was %s to %s",
         label, minY, maxY, minX, maxX);
   }
 
