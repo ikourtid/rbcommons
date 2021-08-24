@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.Partition.partition;
+import static com.rb.nonbiz.collections.Partition.singletonPartition;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.bigDecimalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
@@ -60,6 +61,22 @@ public class PartitionAverageAbsoluteDifferenceCalculatorTest
             "d", unitFraction(0.4))),
         doubleExplained(0.02,
             1 / 4.0 * ( (0.10 - 0.1) + (0.21 - 0.2) + (0.33 - 0.3) + (0.4 - 0.36))));
+  }
+
+  @Test
+  public void singletonPartition_sameKeys_returns0() {
+    assertResult(
+        singletonPartition("x"),
+        singletonPartition("x"),
+        0);
+  }
+
+  @Test
+  public void singletonPartition_differentKeys_returns1() {
+    assertResult(
+        singletonPartition("x"),
+        singletonPartition("y"),
+        doubleExplained(1, 1 / 2.0 * ((1.0 - 0.0) + (1.0 - 0.0))));
   }
 
   private void assertResult(Partition<String> partition1, Partition<String> partition2, double expectedResult) {
