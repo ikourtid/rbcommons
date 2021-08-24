@@ -13,11 +13,11 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PartitionAverageAbsoluteDifferenceCalculatorTest
-    extends RBTest<PartitionAverageAbsoluteDifferenceCalculator> {
+public class PartitionSumOfAbsoluteDifferencesCalculatorTest
+    extends RBTest<PartitionSumOfAbsoluteDifferencesCalculator> {
 
   @Test
-  public void generalCase_partitionsHaveSomeOverlap_returnsAverage() {
+  public void generalCase_partitionsHaveSomeOverlap_returnsSum() {
     assertResult(
         partition(rbMapOf(
             "a1", unitFraction(0.10),
@@ -28,12 +28,11 @@ public class PartitionAverageAbsoluteDifferenceCalculatorTest
             "a2", unitFraction(0.09),
             "b", unitFraction(0.25),
             "c", unitFraction(0.66))),
-        doubleExplained(0.184,
-            1 / 5.0 * (0.10 + (0.25 - 0.21) + (0.66 - 0.33) + 0.36 + 0.09)));
+        doubleExplained(0.92, 0.10 + (0.25 - 0.21) + (0.66 - 0.33) + 0.36 + 0.09));
   }
 
   @Test
-  public void partitionsAreDisjoint_returnsAverage() {
+  public void partitionsAreDisjoint_returns2() {
     assertResult(
         partition(rbMapOf(
             "a1", unitFraction(0.40),
@@ -42,8 +41,7 @@ public class PartitionAverageAbsoluteDifferenceCalculatorTest
             "a2", unitFraction(0.09),
             "b2", unitFraction(0.25),
             "c2", unitFraction(0.66))),
-        doubleExplained(0.4,
-            1 / 5.0 * (0.40 + 0.60 + 0.09 + 0.25 + 0.66)));
+        doubleExplained(2, 0.40 + 0.60 + 0.09 + 0.25 + 0.66));
   }
 
   @Test
@@ -59,8 +57,7 @@ public class PartitionAverageAbsoluteDifferenceCalculatorTest
             "b", unitFraction(0.2),
             "c", unitFraction(0.3),
             "d", unitFraction(0.4))),
-        doubleExplained(0.02,
-            1 / 4.0 * ( (0.10 - 0.1) + (0.21 - 0.2) + (0.33 - 0.3) + (0.4 - 0.36))));
+        doubleExplained(0.08, (0.10 - 0.1) + (0.21 - 0.2) + (0.33 - 0.3) + (0.4 - 0.36)));
   }
 
   @Test
@@ -72,11 +69,11 @@ public class PartitionAverageAbsoluteDifferenceCalculatorTest
   }
 
   @Test
-  public void singletonPartition_differentKeys_returns1() {
+  public void singletonPartition_differentKeys_returns2() {
     assertResult(
         singletonPartition("x"),
         singletonPartition("y"),
-        doubleExplained(1, 1 / 2.0 * ((1.0 - 0.0) + (1.0 - 0.0))));
+        doubleExplained(2, (1.0 - 0.0) + (1.0 - 0.0)));
   }
 
   private void assertResult(Partition<String> partition1, Partition<String> partition2, double expectedResult) {
@@ -102,8 +99,8 @@ public class PartitionAverageAbsoluteDifferenceCalculatorTest
   }
 
   @Override
-  protected PartitionAverageAbsoluteDifferenceCalculator makeTestObject() {
-    return new PartitionAverageAbsoluteDifferenceCalculator();
+  protected PartitionSumOfAbsoluteDifferencesCalculator makeTestObject() {
+    return new PartitionSumOfAbsoluteDifferencesCalculator();
   }
 
 }
