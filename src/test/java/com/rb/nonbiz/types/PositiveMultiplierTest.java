@@ -3,6 +3,7 @@ package com.rb.nonbiz.types;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.junit.Test;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
@@ -39,6 +40,27 @@ public class PositiveMultiplierTest extends RBTestMatcher<PositiveMultiplier> {
         positiveMultiplier(doubleExplained(1.2, 1.5 * 0.8)),
         positiveMultiplier(1.5).multiply(positiveMultiplier(0.8)),
         1e-8);
+  }
+
+  @Test
+  public void testInverse() {
+    Consumer<Double> asserter = multiplier -> {
+      assertAlmostEquals(
+          positiveMultiplier(1.0 / multiplier),
+          positiveMultiplier(multiplier).inverse(),
+          1e-8);
+      // the inverse of the inverse should be the original
+      assertAlmostEquals(
+          positiveMultiplier(multiplier),
+          positiveMultiplier(multiplier).inverse().inverse(),
+          1e-8);
+    };
+
+    asserter.accept(0.123);
+    asserter.accept(0.5);
+    asserter.accept(1.0);
+    asserter.accept(2.0);
+    asserter.accept(123.0);
   }
 
   @Override

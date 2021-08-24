@@ -25,4 +25,8 @@ public class PositiveMultiplier extends ImpreciseValue<PositiveMultiplier> {
     return positiveMultiplier(this.doubleValue() * other.doubleValue());
   }
 
+  public PositiveMultiplier inverse() {
+    return positiveMultiplier(1.0 / this.doubleValue());
+  }
+
 }
