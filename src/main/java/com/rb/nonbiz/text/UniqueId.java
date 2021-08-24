@@ -59,7 +59,7 @@ public class UniqueId<T> implements Comparable<UniqueId<T>> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    UniqueId that = (UniqueId) o;
+    UniqueId<?> that = (UniqueId<?>) o;
 
     return stringId.equals(that.stringId);
   }
