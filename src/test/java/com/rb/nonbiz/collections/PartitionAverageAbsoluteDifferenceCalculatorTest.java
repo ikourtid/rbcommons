@@ -13,7 +13,7 @@ import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PartitionAverageAbsoluteDifferenceCalculatorTest
-    extends RBTest<PartitionAverageAbsoluteDifferenceCalculator>  {
+    extends RBTest<PartitionAverageAbsoluteDifferenceCalculator> {
 
   @Test
   public void generalCase_partitionsHaveSomeOverlap_returnsAverage() {
