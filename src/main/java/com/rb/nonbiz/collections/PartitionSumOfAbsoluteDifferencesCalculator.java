@@ -1,10 +1,12 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.Sets;
+import com.rb.biz.types.asset.HasInstrumentId;
 import com.rb.nonbiz.types.UnitFraction;
 
 import java.math.BigDecimal;
 
+import static com.rb.nonbiz.collections.IidSetOperations.unionOfIidSets;
 import static com.rb.nonbiz.collections.RBStreams.sumBigDecimals;
 
 /**
@@ -22,9 +24,25 @@ public class PartitionSumOfAbsoluteDifferencesCalculator {
     return sumBigDecimals(
         Sets.union(partition1.keySet(), partition2.keySet())
             .stream()
-            .map( key -> {
+            .map(key -> {
               UnitFraction unitFraction1 = partition1.getOrZero(key);
               UnitFraction unitFraction2 = partition2.getOrZero(key);
+              return unitFraction1.asBigDecimal().subtract(unitFraction2.asBigDecimal()).abs();
+            }));
+  }
+
+  /**
+   * This is for the other flavor of partitions that we use in the code.
+   */
+  public <T extends HasInstrumentId> BigDecimal calculate(
+      HasInstrumentIdPartition<T> partition1,
+      HasInstrumentIdPartition<T> partition2) {
+    return sumBigDecimals(
+        unionOfIidSets(partition1.getKeysAsIidSet(), partition2.getKeysAsIidSet())
+            .stream()
+            .map(instrumentId -> {
+              UnitFraction unitFraction1 = partition1.getFractionOrZero(instrumentId);
+              UnitFraction unitFraction2 = partition2.getFractionOrZero(instrumentId);
               return unitFraction1.asBigDecimal().subtract(unitFraction2.asBigDecimal()).abs();
             }));
   }
