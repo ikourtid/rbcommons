@@ -31,7 +31,9 @@ public class PartitionSumOfAbsoluteDifferencesCalculator {
             }));
   }
 
-  // FIXME IAK ESGSTATS test this
+  /**
+   * This is for the other flavor of partitions that we use in the code.
+   */
   public <T extends HasInstrumentId> BigDecimal calculate(
       HasInstrumentIdPartition<T> partition1,
       HasInstrumentIdPartition<T> partition2) {
