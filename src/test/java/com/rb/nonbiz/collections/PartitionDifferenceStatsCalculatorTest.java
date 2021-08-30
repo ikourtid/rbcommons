@@ -18,8 +18,8 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PartitionSumOfAbsoluteDifferencesCalculatorTest
-    extends RBTest<PartitionSumOfAbsoluteDifferencesCalculator> {
+public class PartitionDifferenceStatsCalculatorTest
+    extends RBTest<PartitionDifferenceStatsCalculator> {
 
   @Test
   public void generalCase_partitionsHaveSomeOverlap_returnsSum() {
@@ -169,8 +169,8 @@ public class PartitionSumOfAbsoluteDifferencesCalculatorTest
   }
 
   @Override
-  protected PartitionSumOfAbsoluteDifferencesCalculator makeTestObject() {
-    return new PartitionSumOfAbsoluteDifferencesCalculator();
+  protected PartitionDifferenceStatsCalculator makeTestObject() {
+    return new PartitionDifferenceStatsCalculator();
   }
 
 }
