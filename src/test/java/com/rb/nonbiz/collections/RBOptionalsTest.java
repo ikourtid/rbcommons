@@ -57,20 +57,20 @@ public class RBOptionalsTest {
 
   @Test
   public void testGetOrThrow() {
-    assertIllegalArgumentException( () -> getOrThrow(Optional.empty(), "Optional is empty"));
-    assertEquals("ABC", getOrThrow(Optional.of("ABC"), "Optional is empty"));
+    assertIllegalArgumentException( () -> getOrThrow(Optional.empty(), DUMMY_STRING));
+    assertEquals("ABC", getOrThrow(Optional.of("ABC"), DUMMY_STRING));
   }
 
   @Test
   public void testGetIntOrThrow() {
-    assertIllegalArgumentException( () -> getIntOrThrow(OptionalInt.empty(), "Optional is empty"));
-    assertEquals(123, getIntOrThrow(OptionalInt.of(123), "Optional is empty"));
+    assertIllegalArgumentException( () -> getIntOrThrow(OptionalInt.empty(), DUMMY_STRING));
+    assertEquals(123, getIntOrThrow(OptionalInt.of(123), DUMMY_STRING));
   }
 
   @Test
   public void testGetDoubleOrThrow() {
-    assertIllegalArgumentException( () -> getDoubleOrThrow(OptionalDouble.empty(), "Optional is empty"));
-    assertEquals(1.23, getDoubleOrThrow(OptionalDouble.of(1.23), "Optional is empty"), 1e-8);
+    assertIllegalArgumentException( () -> getDoubleOrThrow(OptionalDouble.empty(), DUMMY_STRING));
+    assertEquals(1.23, getDoubleOrThrow(OptionalDouble.of(1.23), DUMMY_STRING), 1e-8);
   }
 
   @Test
