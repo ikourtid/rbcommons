@@ -48,7 +48,6 @@ import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertTrue;
-import static junit.framework.TestCase.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -66,6 +65,12 @@ public class RBOptionalsTest {
   public void testGetIntOrThrow() {
     assertIllegalArgumentException( () -> getIntOrThrow(OptionalInt.empty(), "Optional is empty"));
     assertEquals(123, getIntOrThrow(OptionalInt.of(123), "Optional is empty"));
+  }
+
+  @Test
+  public void testGetDoubleOrThrow() {
+    assertIllegalArgumentException( () -> getDoubleOrThrow(OptionalDouble.empty(), "Optional is empty"));
+    assertEquals(1.23, getDoubleOrThrow(OptionalDouble.of(1.23), "Optional is empty"), 1e-8);
   }
 
   @Test

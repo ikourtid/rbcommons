@@ -42,6 +42,13 @@ public class RBOptionals {
     throw new IllegalArgumentException(Strings.format(template, args));
   }
 
+  public static double getDoubleOrThrow(OptionalDouble optional, String template, Object... args) {
+    if (optional.isPresent()) {
+      return optional.getAsDouble();
+    }
+    throw new IllegalArgumentException(Strings.format(template, args));
+  }
+
   /**
    * If you are implementing an equals override for an object, chances are you'll need this overload vs the above.
    * The two types A and B may be the same - or not.
