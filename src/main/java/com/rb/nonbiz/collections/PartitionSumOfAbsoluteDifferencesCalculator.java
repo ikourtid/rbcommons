@@ -10,7 +10,7 @@ import static com.rb.nonbiz.collections.IidSetOperations.unionOfIidSets;
 import static com.rb.nonbiz.collections.RBStreams.sumBigDecimals;
 
 /**
- * Returns the average difference in partition fraction over each key in the two partitions.
+ * Returns the average absolute difference in partition fraction over each key in the two partitions.
  *
  * If a key appears in one partition but not another, we will treat that other partition like it has a 0% holding
  * in that key. This is not some limiting assumption; partitions never include entries for keys that have a 0%
