@@ -18,7 +18,7 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PartitionDifferenceStatsCalculatorTest extends RBTest<PartitionDifferenceStatsCalculator> {
+public class PartitionPairDifferenceStatsCalculatorTest extends RBTest<PartitionDifferenceStatsCalculator> {
 
   @Test
   public void generalCase_partitionsHaveSomeOverlap_returnsSum() {
