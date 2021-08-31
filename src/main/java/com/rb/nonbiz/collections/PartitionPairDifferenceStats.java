@@ -1,10 +1,14 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.Range;
+import com.rb.nonbiz.math.stats.RBStatisticalSummary;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+
+import java.util.function.BiConsumer;
 
 /**
  * This is useful for storing information about how two partitions are different.
@@ -22,6 +26,14 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
  * then there will be 0 items in statsForUnderweight, which is an invalid {@link SummaryStatistics}; there has to be
  * at least one item. Therefore, we will adopt the expedient semantics that a 0 difference (exactly on target)
  * counts as both overweight and underweight.
+ *
+ * We won't use a {@link RBStatisticalSummary} here, because we can't find a proper generic to use. If we use
+ * {@code RBStatisticalSummary<Partition<AssetClass>>} then it's not really clear; the stats are for the difference
+ * between two partitions. Then, if we use {@code RBStatisticalSummary<UnitFraction>}, then there can't be a sum
+ * defined, because the sum of UnitFractions can easily exceed 1 (e.g. {@code statsForAbsoluteValueDifferences.getSum()}).
+ *
+ * This means we'll have to know to interpret these correctly, i.e. that they are in the UnitFraction range of 0 to 1
+ * for overweight, and -1 to 0 for underweight.
  */
 public class PartitionPairDifferenceStats {
 
@@ -98,24 +110,33 @@ public class PartitionPairDifferenceStats {
           statsForOverweight.getN() + statsForUnderweight.getN() >= statsForAbsoluteValueDifferences.getN(),
           "Too many absolute value differences: %s %s %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
+
+      BiConsumer<StatisticalSummary, Range<Double>> allInRange = (statisticalSummary, allowableRange) ->
+          RBPreconditions.checkArgument(
+              allowableRange.contains(statisticalSummary.getMin())
+                  && allowableRange.contains(statisticalSummary.getMax())
+                  && allowableRange.contains(statisticalSummary.getMean())
+                  && allowableRange.contains(statisticalSummary.getSum()),
+              "Partition pair statistics must be [0, 1] for overweight, [-1, 0] for underweight, and [0, 2] for sum of abs: %s %s %s",
+              statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
+
+      allInRange.accept(statsForOverweight,  Range.closed( 0.0, 1.0));
+      allInRange.accept(statsForUnderweight, Range.closed(-1.0, 0.0));
+
+      Range<Double> rangeForAbsDiffs = Range.closed(0.0, 1.0);
+      // 2 sum of abs diffs is valid in some extreme cases, like partition X is 100% A and partition Y is 100% B.
       RBPreconditions.checkArgument(
-          statsForAbsoluteValueDifferences.getMean() >= 0
-              && statsForAbsoluteValueDifferences.getMin() >= 0
-              && statsForAbsoluteValueDifferences.getSum() >= 0,
-          "Absolute differences must have a non-negative mean, min, and sum: %s",
-          statsForAbsoluteValueDifferences);
+          rangeForAbsDiffs.contains(statsForAbsoluteValueDifferences.getMin())
+              && rangeForAbsDiffs.contains(statsForAbsoluteValueDifferences.getMax())
+              && rangeForAbsDiffs.contains(statsForAbsoluteValueDifferences.getMean())
+              && Range.closed(0.0, 2.0).contains(statsForAbsoluteValueDifferences.getSum()),
+          "Partition pair statistics must be [0, 1] for overweight, [-1, 0] for underweight, and [0, 2] for sum of abs: %s %s %s",
+          statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
+
       RBPreconditions.checkArgument(
-          statsForOverweight.getMean() >= 0
-              && statsForOverweight.getMin() >= 0
-              && statsForOverweight.getSum() >= 0,
-          "Overweight differences must have a non-negative mean, min, and sum: %s",
-          statsForOverweight);
-      RBPreconditions.checkArgument(
-          statsForUnderweight.getMean() <= 0
-              && statsForUnderweight.getMax() <= 0
-              && statsForUnderweight.getSum() <= 0,
-          "Underweight differences must have a non-positive mean, max, and sum: %s",
-          statsForUnderweight);
+          Math.abs(statsForOverweight.getSum() + statsForUnderweight.getSum()) < 1e-8,
+          "The total % percentage of 'overweightness' and 'underweightness' must sum up to 0: %s %s %s",
+          statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
     }
 
     @Override

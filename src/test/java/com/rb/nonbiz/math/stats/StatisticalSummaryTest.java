@@ -22,7 +22,7 @@ public class StatisticalSummaryTest extends RBTestMatcher<StatisticalSummary> {
     }
     return summaryStatistics;
   }
-  
+
   @Override
   public StatisticalSummary makeTrivialObject() {
     return makeTestStatisticalSummary(0);
