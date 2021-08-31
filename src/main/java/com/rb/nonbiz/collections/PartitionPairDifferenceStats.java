@@ -10,6 +10,7 @@ import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import static com.rb.nonbiz.collections.RBVoid.rbVoid;
+import static com.rb.nonbiz.math.stats.RBStats.formatStatisticalSummary;
 import static com.rb.nonbiz.types.PreciseValues.epsilonComparePreciseValuesAsDoubles;
 
 /**
@@ -73,8 +74,11 @@ public class PartitionPairDifferenceStats {
 
   @Override
   public String toString() {
-    return Strings.format("[PPDS %s %s %s %s PPDS]",
-        statsForOverweight, statsForUnderweight, statsForSignedDifferences, statsForAbsoluteValueDifferences);
+    return Strings.format("[PPDS overweight= %s ; underweight= %s ; signedDiffs= %s ; |diffs|= %s PPDS]",
+        formatStatisticalSummary(statsForOverweight),
+        formatStatisticalSummary(statsForUnderweight),
+        formatStatisticalSummary(statsForSignedDifferences),
+        formatStatisticalSummary(statsForAbsoluteValueDifferences));
   }
 
 
