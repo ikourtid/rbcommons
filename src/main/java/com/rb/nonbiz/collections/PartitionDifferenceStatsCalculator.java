@@ -11,6 +11,7 @@ import static com.rb.nonbiz.collections.RBStreams.sumBigDecimals;
 
 /**
  * Returns the average absolute difference in partition fraction over each key in the two partitions.
+ * FIXME IAK ESGSTATS
  *
  * If a key appears in one partition but not another, we will treat that other partition like it has a 0% holding
  * in that key. This is not some limiting assumption; partitions never include entries for keys that have a 0%
@@ -18,7 +19,7 @@ import static com.rb.nonbiz.collections.RBStreams.sumBigDecimals;
  *
  * See comments in NaiveAllocationAccuracyDiffScoreRawCalculator about why the range of this is between 0 and 2.
  */
-public class PartitionSumOfAbsoluteDifferencesCalculator {
+public class PartitionDifferenceStatsCalculator {
 
   public <T> BigDecimal calculate(Partition<T> partition1, Partition<T> partition2) {
     return sumBigDecimals(
