@@ -19,7 +19,7 @@ import static com.rb.nonbiz.collections.RBStreams.sumBigDecimals;
  *
  * See comments in NaiveAllocationAccuracyDiffScoreRawCalculator about why the range of this is between 0 and 2.
  */
-public class PartitionDifferenceStatsCalculator {
+public class PartitionPairDifferenceStatsCalculator {
 
   public <T> BigDecimal calculate(Partition<T> partition1, Partition<T> partition2) {
     return sumBigDecimals(
