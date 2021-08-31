@@ -118,9 +118,9 @@ public class PartitionPairDifferenceStats {
             }
 
             @Override
-            public RBVoid visitLeftIsGreater(double underweightnessAsPositive) {
-              statsForOverweight.addValue(-1 * underweightnessAsPositive);
-              statsForAbsoluteValueDifferences.addValue(underweightnessAsPositive);
+            public RBVoid visitLeftIsGreater(double underweightnessAsNegative) {
+              statsForUnderweight.addValue(underweightnessAsNegative);
+              statsForAbsoluteValueDifferences.addValue(-1 * underweightnessAsNegative);
               return rbVoid();
             }
           }
@@ -142,21 +142,21 @@ public class PartitionPairDifferenceStats {
       // but the sum is worth checking.
       RBPreconditions.checkArgument(
           statsForOverweight.getSum() <= 1,
-          "Sum of overweightness can't be >1: %s %s %s",
+          "Sum of overweightness can't be >1: += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
       RBPreconditions.checkArgument(
           statsForUnderweight.getSum() <= 1,
-          "Sum of underweightness can't be >1: %s %s %s",
+          "Sum of underweightness can't be >1: += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
       RBPreconditions.checkArgument(
           statsForAbsoluteValueDifferences.getSum() <= 2,
-          "Sum of abs differences must be <= 2: %s %s %s",
+          "Sum of abs differences must be <= 2: += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
       RBPreconditions.checkArgument(
           Math.abs(statsForOverweight.getSum() + statsForUnderweight.getSum()) < 1e-8,
-          "The total % percentage of 'overweightness' and 'underweightness' must sum up to 0: %s %s %s",
+          "The total % percentage of 'overweightness' and 'underweightness' must sum up to 0: += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
     }
 

@@ -26,20 +26,20 @@ public class PartitionPairDifferenceStatsTest extends RBTestMatcher<PartitionPai
         .addDifference(unitFractionInPct(10), unitFractionInPct(15 + seed)) // this key in partition B is 5% overweight
         .addDifference(unitFractionInPct(10), unitFractionInPct(16 + seed)) // +6%
         .addDifference(unitFractionInPct(50), unitFractionInPct(50)) // same
-        .addDifference(unitFractionInPct(10), unitFractionInPct(9 + seed)) // -1%
-        .addDifference(unitFractionInPct(10), unitFractionInPct(7 + seed)) // -3%
+        .addDifference(unitFractionInPct(10), unitFractionInPct(9 - seed)) // -1%
+        .addDifference(unitFractionInPct(10), unitFractionInPct(7 - seed)) // -3%
         // This does not take in a seed, because we need 2 items to be overweight by 'seed' and 2 to be underweight,
         // otherwise a precondition will throw.
         .addDifference(unitFractionInPct(10), unitFractionInPct(3)) // - 7%
         .build();
   }
 
-  public static PartitionPairDifferenceStats singletonPartitionPairDifferenceStats(double onlyValue) {
+  public static PartitionPairDifferenceStats singletonPartitionPairDifferenceStats(double netOverweightness) {
     // This looks a bit weird because the way we call addDifference is by specifying the unit fraction in the two
     // partitions, not the actual difference.
-    return onlyValue > 0
-        ? partitionPairDifferenceStatsBuilder().addDifference(UNIT_FRACTION_0, unitFraction(onlyValue)).build()
-        : partitionPairDifferenceStatsBuilder().addDifference(unitFraction(1 - onlyValue), UNIT_FRACTION_1).build();
+    return netOverweightness > 0
+        ? partitionPairDifferenceStatsBuilder().addDifference(UNIT_FRACTION_0, unitFraction(netOverweightness)).build()
+        : partitionPairDifferenceStatsBuilder().addDifference(unitFraction(-1 * netOverweightness), UNIT_FRACTION_0).build();
   }
 
   public static PartitionPairDifferenceStats testPartitionPairDifferenceStats(
@@ -50,9 +50,9 @@ public class PartitionPairDifferenceStatsTest extends RBTestMatcher<PartitionPai
           // This looks a bit weird because the way we call addDifference is by specifying the unit fraction in the two
           // partitions, not the actual difference.
           if (netOverweightness > 0) {
-            partitionPairDifferenceStatsBuilder().addDifference(UNIT_FRACTION_0, unitFraction(netOverweightness));
+            builder.addDifference(UNIT_FRACTION_0, unitFraction(netOverweightness));
           } else {
-            partitionPairDifferenceStatsBuilder().addDifference(unitFraction(1 - netOverweightness), UNIT_FRACTION_1);
+            builder.addDifference(unitFraction(-1 * netOverweightness), UNIT_FRACTION_0);
           }
         });
     return builder.build();
