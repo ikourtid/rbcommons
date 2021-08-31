@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.nonbiz.collections.PartitionPairDifferenceStats.PartitionPairDifferenceStatsBuilder;
 import com.rb.nonbiz.testutils.RBTest;
 import org.junit.Test;
 
@@ -11,6 +12,10 @@ import static com.rb.nonbiz.collections.HasInstrumentIdPartition.hasInstrumentId
 import static com.rb.nonbiz.collections.HasInstrumentIdPartition.singletonHasInstrumentIdPartition;
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.Partition.singletonPartition;
+import static com.rb.nonbiz.collections.PartitionPairDifferenceStats.PartitionPairDifferenceStatsBuilder.partitionPairDifferenceStatsBuilder;
+import static com.rb.nonbiz.collections.PartitionPairDifferenceStatsTest.partitionPairDifferenceStatsMatcher;
+import static com.rb.nonbiz.collections.PartitionPairDifferenceStatsTest.partitionPairDifferenceStatsWhenNoDifferences;
+import static com.rb.nonbiz.collections.PartitionPairDifferenceStatsTest.singletonPartitionPairDifferenceStats;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.TestHasInstrumentId.testHasInstrumentId;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.bigDecimalMatcher;
@@ -101,7 +106,7 @@ public class PartitionPairDifferenceStatsCalculatorTest extends RBTest<Partition
     assertResult(
         singletonPartition("x"),
         singletonPartition("x"),
-        0);
+        singletonPartitionPairDifferenceStats(0));
     assertResult(
         singletonHasInstrumentIdPartition(testHasInstrumentId(STOCK_A, DUMMY_DOUBLE)),
         singletonHasInstrumentIdPartition(testHasInstrumentId(STOCK_A, DUMMY_DOUBLE)),
@@ -113,58 +118,56 @@ public class PartitionPairDifferenceStatsCalculatorTest extends RBTest<Partition
     assertResult(
         singletonPartition("x"),
         singletonPartition("y"),
-        doubleExplained(2, (1.0 - 0.0) + (1.0 - 0.0)));
+        partitionPairDifferenceStatsBuilder()
+    .build());
     assertResult(
         singletonHasInstrumentIdPartition(testHasInstrumentId(STOCK_A, DUMMY_DOUBLE)),
         singletonHasInstrumentIdPartition(testHasInstrumentId(STOCK_B, DUMMY_DOUBLE)),
         2);
   }
 
-  private void assertResult(Partition<String> partition1, Partition<String> partition2, double expectedResult) {
+  private void assertResult(
+      Partition<String> partition1,
+      Partition<String> partition2,
+      PartitionPairDifferenceStats expectedResult) {
     assertThat(
         makeTestObject().calculate(partition1, partition2),
-        bigDecimalMatcher(
-            BigDecimal.valueOf(expectedResult),
-            1e-8));
-    assertThat(
-        makeTestObject().calculate(partition2, partition1),
-        bigDecimalMatcher(
-            BigDecimal.valueOf(expectedResult),
-            1e-8));
+        partitionPairDifferenceStatsMatcher(expectedResult));
+    // The following does not hold because the overweight & underweight items would be flipped.
+    //    assertThat(
+    //        makeTestObject().calculate(partition2, partition1),
+    //        partitionPairDifferenceStatsMatcher(expectedResult));
 
     // Although this isn't the job of this method, let's also assert that the difference of any partition and itself
     // also produces zero.
     assertThat(
         makeTestObject().calculate(partition1, partition1),
-        bigDecimalMatcher(BigDecimal.ZERO, 1e-8));
+        partitionPairDifferenceStatsMatcher(partitionPairDifferenceStatsWhenNoDifferences(partition1.size())));
     assertThat(
         makeTestObject().calculate(partition2, partition2),
-        bigDecimalMatcher(BigDecimal.ZERO, 1e-8));
+        partitionPairDifferenceStatsMatcher(partitionPairDifferenceStatsWhenNoDifferences(partition2.size())));
   }
 
   private void assertResult(
       HasInstrumentIdPartition<TestHasInstrumentId> partition1,
       HasInstrumentIdPartition<TestHasInstrumentId> partition2,
-      double expectedResult) {
+      PartitionPairDifferenceStats expectedResult) {
     assertThat(
         makeTestObject().calculate(partition1, partition2),
-        bigDecimalMatcher(
-            BigDecimal.valueOf(expectedResult),
-            1e-8));
-    assertThat(
-        makeTestObject().calculate(partition2, partition1),
-        bigDecimalMatcher(
-            BigDecimal.valueOf(expectedResult),
-            1e-8));
+        partitionPairDifferenceStatsMatcher(expectedResult));
+    // The following does not hold because the overweight & underweight items would be flipped.
+    //    assertThat(
+    //        makeTestObject().calculate(partition2, partition1),
+    //        partitionPairDifferenceStatsMatcher(expectedResult));
 
     // Although this isn't the job of this method, let's also assert that the difference of any partition and itself
     // also produces zero.
     assertThat(
         makeTestObject().calculate(partition1, partition1),
-        bigDecimalMatcher(BigDecimal.ZERO, 1e-8));
+        partitionPairDifferenceStatsMatcher(partitionPairDifferenceStatsWhenNoDifferences(partition1.size())));
     assertThat(
         makeTestObject().calculate(partition2, partition2),
-        bigDecimalMatcher(BigDecimal.ZERO, 1e-8));
+        partitionPairDifferenceStatsMatcher(partitionPairDifferenceStatsWhenNoDifferences(partition2.size())));
   }
 
   @Override
