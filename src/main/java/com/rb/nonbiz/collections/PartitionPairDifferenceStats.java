@@ -3,12 +3,22 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.Range;
 import com.rb.nonbiz.math.stats.RBStatisticalSummary;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.PreciseValues;
+import com.rb.nonbiz.types.PreciseValues.BigDecimalsEpsilonComparisonVisitor;
+import com.rb.nonbiz.types.RBDoubles;
+import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
+import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
+import java.math.BigDecimal;
 import java.util.function.BiConsumer;
+
+import static com.rb.nonbiz.collections.RBVoid.rbVoid;
+import static com.rb.nonbiz.types.PreciseValues.epsilonComparePreciseValues;
+import static com.rb.nonbiz.types.PreciseValues.epsilonComparePreciseValuesAsDoubles;
 
 /**
  * This is useful for storing information about how two partitions are different.
@@ -71,66 +81,77 @@ public class PartitionPairDifferenceStats {
 
   public static class PartitionPairDifferenceStatsBuilder implements RBBuilder<PartitionPairDifferenceStats> {
 
-    private StatisticalSummary statsForOverweight;
-    private StatisticalSummary statsForUnderweight;
-    private StatisticalSummary statsForAbsoluteValueDifferences;
+    private final SummaryStatistics statsForOverweight;
+    private final SummaryStatistics statsForUnderweight;
+    private final SummaryStatistics statsForAbsoluteValueDifferences;
 
-    private PartitionPairDifferenceStatsBuilder() {}
+    private PartitionPairDifferenceStatsBuilder() {
+      this.statsForOverweight = new SummaryStatistics();
+      this.statsForUnderweight = new SummaryStatistics();
+      this.statsForAbsoluteValueDifferences = new SummaryStatistics();
+    }
 
     public static PartitionPairDifferenceStatsBuilder partitionPairDifferenceStatsBuilder() {
       return new PartitionPairDifferenceStatsBuilder();
     }
 
-    public PartitionPairDifferenceStatsBuilder setStatsForOverweight(StatisticalSummary statsForOverweight) {
-      this.statsForOverweight = checkNotAlreadySet(this.statsForOverweight, statsForOverweight);
-      return this;
-    }
+    public PartitionPairDifferenceStatsBuilder addDifference(UnitFraction inPartitionA, UnitFraction inPartitionB) {
+      epsilonComparePreciseValuesAsDoubles(
+          inPartitionA,
+          inPartitionB,
+          1e-8,
+          new EpsilonComparisonVisitor<RBVoid>() {
+            @Override
+            public RBVoid visitRightIsGreater(double overweightness) {
+              statsForOverweight.addValue(overweightness);
+              statsForAbsoluteValueDifferences.addValue(overweightness);
+              return rbVoid();
+            }
 
-    public PartitionPairDifferenceStatsBuilder setStatsForUnderweight(StatisticalSummary statsForUnderweight) {
-      this.statsForUnderweight = checkNotAlreadySet(this.statsForUnderweight, statsForUnderweight);
-      return this;
-    }
+            @Override
+            public RBVoid visitAlmostEqual() {
+              // See class comments on why it is expedient to have a 0 difference count as BOTH over- and underweight.
+              statsForOverweight.addValue(0);
+              statsForUnderweight.addValue(0);
+              statsForAbsoluteValueDifferences.addValue(0);
+              return rbVoid();
+            }
 
-    public PartitionPairDifferenceStatsBuilder setStatsForAbsoluteValueDifferences(
-        StatisticalSummary statsForAbsoluteValueDifferences) {
-      this.statsForAbsoluteValueDifferences = checkNotAlreadySet(this.statsForAbsoluteValueDifferences,
-          statsForAbsoluteValueDifferences);
+            @Override
+            public RBVoid visitLeftIsGreater(double underweightnessAsPositive) {
+              statsForOverweight.addValue(-1 * underweightnessAsPositive);
+              statsForAbsoluteValueDifferences.addValue(underweightnessAsPositive);
+              return rbVoid();
+            }
+          }
+      );
       return this;
     }
 
     @Override
     public void sanityCheckContents() {
-      RBPreconditions.checkNotNull(statsForOverweight);
-      RBPreconditions.checkNotNull(statsForUnderweight);
-      RBPreconditions.checkNotNull(statsForAbsoluteValueDifferences);
-
       // Any partition item that's exactly on target will count as both overweight and underweight, which is
-      // expedient, as per class comment.
+      // expedient, as per class comment. In case we only specify 1 underweight item but no overweight ones,
+      // this will get called by the last check (sum of overweightness = sum of underweightness).
+      // So this is a comprehensive check.
       RBPreconditions.checkArgument(
-          statsForOverweight.getN() + statsForUnderweight.getN() >= statsForAbsoluteValueDifferences.getN(),
-          "Too many absolute value differences: %s %s %s",
+          statsForAbsoluteValueDifferences.getN() >= 1,
+          "You must add at least one item to this builder");
+
+      // We don't need to check min/mean/max, because of the way we control the addition via addDifference,
+      // but the sum is worth checking.
+      RBPreconditions.checkArgument(
+          statsForOverweight.getSum() <= 1,
+          "Sum of overweightness can't be >1: %s %s %s",
+          statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
+      RBPreconditions.checkArgument(
+          statsForUnderweight.getSum() <= 1,
+          "Sum of underweightness can't be >1: %s %s %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
-      BiConsumer<StatisticalSummary, Range<Double>> allInRange = (statisticalSummary, allowableRange) ->
-          RBPreconditions.checkArgument(
-              allowableRange.contains(statisticalSummary.getMin())
-                  && allowableRange.contains(statisticalSummary.getMax())
-                  && allowableRange.contains(statisticalSummary.getMean())
-                  && allowableRange.contains(statisticalSummary.getSum()),
-              "Partition pair statistics must be [0, 1] for overweight, [-1, 0] for underweight, and [0, 2] for sum of abs: %s %s %s",
-              statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
-
-      allInRange.accept(statsForOverweight,  Range.closed( 0.0, 1.0));
-      allInRange.accept(statsForUnderweight, Range.closed(-1.0, 0.0));
-
-      Range<Double> rangeForAbsDiffs = Range.closed(0.0, 1.0);
-      // 2 sum of abs diffs is valid in some extreme cases, like partition X is 100% A and partition Y is 100% B.
       RBPreconditions.checkArgument(
-          rangeForAbsDiffs.contains(statsForAbsoluteValueDifferences.getMin())
-              && rangeForAbsDiffs.contains(statsForAbsoluteValueDifferences.getMax())
-              && rangeForAbsDiffs.contains(statsForAbsoluteValueDifferences.getMean())
-              && Range.closed(0.0, 2.0).contains(statsForAbsoluteValueDifferences.getSum()),
-          "Partition pair statistics must be [0, 1] for overweight, [-1, 0] for underweight, and [0, 2] for sum of abs: %s %s %s",
+          statsForAbsoluteValueDifferences.getSum() <= 2,
+          "Sum of abs differences must be <= 2: %s %s %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
       RBPreconditions.checkArgument(

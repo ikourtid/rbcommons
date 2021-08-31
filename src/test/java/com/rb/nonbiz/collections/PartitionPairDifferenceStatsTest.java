@@ -11,18 +11,23 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
+import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
+import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
 import static org.junit.Assert.fail;
 
 public class PartitionPairDifferenceStatsTest extends RBTestMatcher<PartitionPairDifferenceStats> {
 
   public static PartitionPairDifferenceStats testPartitionPairDifferenceStatsWithSeed(double seed) {
+    // This simulates diffing two partitions with 6 keys; the overweight and underweight % sum up to the same amount.
     return partitionPairDifferenceStatsBuilder()
-        .setStatsForOverweight(
-            makeTestStatisticalSummary(0.05 + seed, 0.06 + seed, 0))
-        .setStatsForUnderweight(
-            makeTestStatisticalSummary(-0.01 + seed, -0.03 + seed, -0.07 + seed, 0))
-        .setStatsForAbsoluteValueDifferences(
-            makeTestStatisticalSummary(0.05 + seed, 0.06 + seed, 0, 0.01 + seed, 0.03 + seed, 0.07 + seed))
+        .addDifference(unitFractionInPct(10), unitFractionInPct(15 + seed)) // this key in partition B is 5% overweight
+        .addDifference(unitFractionInPct(10), unitFractionInPct(16 + seed)) // +6%
+        .addDifference(unitFractionInPct(50), unitFractionInPct(50)) // same
+        .addDifference(unitFractionInPct(10), unitFractionInPct(9 + seed)) // -1%
+        .addDifference(unitFractionInPct(10), unitFractionInPct(7 + seed)) // -3%
+        // This does not take in a seed, because we need 2 items to be overweight by 'seed' and 2 to be underweight,
+        // otherwise a precondition will throw.
+        .addDifference(unitFractionInPct(10), unitFractionInPct(3)) // - 7%
         .build();
   }
 
@@ -34,9 +39,7 @@ public class PartitionPairDifferenceStatsTest extends RBTestMatcher<PartitionPai
   @Override
   public PartitionPairDifferenceStats makeTrivialObject() {
     return partitionPairDifferenceStatsBuilder()
-        .setStatsForOverweight(makeTestStatisticalSummary(0))
-        .setStatsForUnderweight(makeTestStatisticalSummary(0))
-        .setStatsForAbsoluteValueDifferences(makeTestStatisticalSummary(0))
+        .addDifference(UNIT_FRACTION_1, UNIT_FRACTION_1)
         .build();
   }
 
