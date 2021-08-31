@@ -98,6 +98,7 @@ public class PartitionPairDifferenceStatsTest extends RBTestMatcher<PartitionPai
     return makeMatcher(expected,
         match(v -> v.getStatsForOverweight(),               f -> statisticalSummaryMatcher(f, 1e-8)),
         match(v -> v.getStatsForUnderweight(),              f -> statisticalSummaryMatcher(f, 1e-8)),
+        match(v -> v.getStatsForSignedDifferences(),        f -> statisticalSummaryMatcher(f, 1e-8)),
         match(v -> v.getStatsForAbsoluteValueDifferences(), f -> statisticalSummaryMatcher(f, 1e-8)));
   }
 

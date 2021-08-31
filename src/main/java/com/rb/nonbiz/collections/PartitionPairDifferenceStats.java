@@ -1,11 +1,7 @@
 package com.rb.nonbiz.collections;
 
-import com.google.common.collect.Range;
 import com.rb.nonbiz.math.stats.RBStatisticalSummary;
 import com.rb.nonbiz.text.Strings;
-import com.rb.nonbiz.types.PreciseValues;
-import com.rb.nonbiz.types.PreciseValues.BigDecimalsEpsilonComparisonVisitor;
-import com.rb.nonbiz.types.RBDoubles;
 import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
 import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBBuilder;
@@ -13,11 +9,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
-import java.math.BigDecimal;
-import java.util.function.BiConsumer;
-
 import static com.rb.nonbiz.collections.RBVoid.rbVoid;
-import static com.rb.nonbiz.types.PreciseValues.epsilonComparePreciseValues;
 import static com.rb.nonbiz.types.PreciseValues.epsilonComparePreciseValuesAsDoubles;
 
 /**
@@ -49,14 +41,17 @@ public class PartitionPairDifferenceStats {
 
   private final StatisticalSummary statsForOverweight;
   private final StatisticalSummary statsForUnderweight;
+  private final StatisticalSummary statsForSignedDifferences;
   private final StatisticalSummary statsForAbsoluteValueDifferences;
 
   private PartitionPairDifferenceStats(
       StatisticalSummary statsForOverweight,
       StatisticalSummary statsForUnderweight,
+      StatisticalSummary statsForSignedDifferences,
       StatisticalSummary statsForAbsoluteValueDifferences) {
     this.statsForOverweight = statsForOverweight;
     this.statsForUnderweight = statsForUnderweight;
+    this.statsForSignedDifferences = statsForSignedDifferences;
     this.statsForAbsoluteValueDifferences = statsForAbsoluteValueDifferences;
   }
 
@@ -68,14 +63,18 @@ public class PartitionPairDifferenceStats {
     return statsForUnderweight;
   }
 
+  public StatisticalSummary getStatsForSignedDifferences() {
+    return statsForSignedDifferences;
+  }
+
   public StatisticalSummary getStatsForAbsoluteValueDifferences() {
     return statsForAbsoluteValueDifferences;
   }
 
   @Override
   public String toString() {
-    return Strings.format("[PPDS %s %s %s PPDS]",
-        statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
+    return Strings.format("[PPDS %s %s %s %s PPDS]",
+        statsForOverweight, statsForUnderweight, statsForSignedDifferences, statsForAbsoluteValueDifferences);
   }
 
 
@@ -83,11 +82,13 @@ public class PartitionPairDifferenceStats {
 
     private final SummaryStatistics statsForOverweight;
     private final SummaryStatistics statsForUnderweight;
+    private final SummaryStatistics statsForSignedDifferences;
     private final SummaryStatistics statsForAbsoluteValueDifferences;
 
     private PartitionPairDifferenceStatsBuilder() {
       this.statsForOverweight = new SummaryStatistics();
       this.statsForUnderweight = new SummaryStatistics();
+      this.statsForSignedDifferences = new SummaryStatistics();
       this.statsForAbsoluteValueDifferences = new SummaryStatistics();
     }
 
@@ -104,6 +105,7 @@ public class PartitionPairDifferenceStats {
             @Override
             public RBVoid visitRightIsGreater(double overweightness) {
               statsForOverweight.addValue(overweightness);
+              statsForSignedDifferences.addValue(overweightness);
               statsForAbsoluteValueDifferences.addValue(overweightness);
               return rbVoid();
             }
@@ -113,6 +115,7 @@ public class PartitionPairDifferenceStats {
               // See class comments on why it is expedient to have a 0 difference count as BOTH over- and underweight.
               statsForOverweight.addValue(0);
               statsForUnderweight.addValue(0);
+              statsForSignedDifferences.addValue(0);
               statsForAbsoluteValueDifferences.addValue(0);
               return rbVoid();
             }
@@ -120,6 +123,7 @@ public class PartitionPairDifferenceStats {
             @Override
             public RBVoid visitLeftIsGreater(double underweightnessAsNegative) {
               statsForUnderweight.addValue(underweightnessAsNegative);
+              statsForSignedDifferences.addValue(underweightnessAsNegative);
               statsForAbsoluteValueDifferences.addValue(-1 * underweightnessAsNegative);
               return rbVoid();
             }
@@ -150,6 +154,11 @@ public class PartitionPairDifferenceStats {
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
       RBPreconditions.checkArgument(
+          Math.abs(statsForSignedDifferences.getMean()) < 1e-8,
+      "The average signed difference must be 0, since sum(overweightness) = sum(underweightness). += %s ; -= %s ; |abs|= %s",
+          statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
+
+      RBPreconditions.checkArgument(
           statsForAbsoluteValueDifferences.getSum() <= 2,
           "Sum of abs differences must be <= 2: += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
@@ -162,7 +171,8 @@ public class PartitionPairDifferenceStats {
 
     @Override
     public PartitionPairDifferenceStats buildWithoutPreconditions() {
-      return new PartitionPairDifferenceStats(statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
+      return new PartitionPairDifferenceStats(
+          statsForOverweight, statsForUnderweight, statsForSignedDifferences, statsForAbsoluteValueDifferences);
     }
 
   }
