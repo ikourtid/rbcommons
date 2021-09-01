@@ -13,7 +13,9 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
@@ -204,6 +206,27 @@ public class RBCollectionMatchers {
         // the same in the underlying TreeSet, but we can at least confirm that the comparators sort the same way
         // in both cases.
         match(v -> v.iterator(), f -> iteratorMatcher(f, matcherGenerator)));
+  }
+
+  public static <E extends Enum<E>, V> TypeSafeMatcher<EnumMap<E, V>> enumMapMatcher(
+      EnumMap<E, V> expected, MatcherGenerator<V> valueMatcherGenerator) {
+    return makeMatcher(expected, actual -> {
+      if (!expected.keySet().equals(actual.keySet())) {
+        return false;
+      }
+      for (Entry<E, V> entryInExpected : expected.entrySet()) {
+        E enumKey = entryInExpected.getKey();
+        V valueInExpected = entryInExpected.getValue();
+        if (!valueMatcherGenerator.apply(valueInExpected).matches(actual.get(enumKey))) {
+          return false;
+        }
+      }
+      return true; // no mismatch found for any of the enum keys.
+    });
+  }
+
+  public static <E extends Enum<E>, V> TypeSafeMatcher<EnumMap<E, V>> enumMapEqualityMatcher(EnumMap<E, V> expected) {
+    return enumMapMatcher(expected, f -> typeSafeEqualTo(f));
   }
 
 }
