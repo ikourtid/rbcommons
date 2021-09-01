@@ -1,7 +1,5 @@
 package com.rb.nonbiz.math.stats;
 
-import com.google.common.collect.Maps;
-import com.rb.nonbiz.util.RBEnumMaps;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
@@ -47,7 +45,7 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
      * E.g. passing in STATISTICAL_SUMMARY_MIN, STATISTICAL_SUMMARY_MEAN gives you the min of averages.
      */
     public double get(StatisticalSummaryAspect field1, StatisticalSummaryAspect ofField2) {
-      return getStatisticalSummaryField(getStatisticalSummary(field1), ofField2);
+      return getStatisticalSummaryField(getStatisticalSummary(ofField2), field1);
     }
 
   }

@@ -15,10 +15,12 @@ import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.STATISTICAL_SUMM
 import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.STATISTICAL_SUMMARY_STANDARD_DEVIATION;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.STATISTICAL_SUMMARY_SUM;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.STATISTICAL_SUMMARY_VARIANCE;
+import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.getStatisticalSummaryField;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.makeTestStatisticalSummary;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.statisticalSummaryMatcher;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class StatisticalSummaryOfStatisticalSummariesCalculatorTest
     extends RBTest<StatisticalSummaryOfStatisticalSummariesCalculator> {
@@ -52,7 +54,7 @@ public class StatisticalSummaryOfStatisticalSummariesCalculatorTest
     asserter.accept(STATISTICAL_SUMMARY_STANDARD_DEVIATION, makeTestStatisticalSummary(
         doubleExplained(2.64575131, Math.sqrt(7)),
         doubleExplained(3.16227766, Math.sqrt(10)),
-        doubleExplained(1,          Math.sqrt(1))));
+        doubleExplained(1.41421356, Math.sqrt(2))));
 
     asserter.accept(STATISTICAL_SUMMARY_MAX, makeTestStatisticalSummary(15, 27, 32));
     asserter.accept(STATISTICAL_SUMMARY_MIN, makeTestStatisticalSummary(10, 20, 30));
@@ -62,10 +64,20 @@ public class StatisticalSummaryOfStatisticalSummariesCalculatorTest
         doubleExplained(92, 20 + 21 + 24 + 27),
         doubleExplained(62, 30 + 32)));
 
+    // Let's also test a few flavors of getStatisticalSummaryField and StatisticalSummaryOfStatisticalSummaries#get,
+    // since it's convenient to do so here
+    StatisticalSummary statsForMeans = result.getStatisticalSummary(STATISTICAL_SUMMARY_MEAN); // i.e. 12, 23, 31
+    assertEquals(12, getStatisticalSummaryField(statsForMeans, STATISTICAL_SUMMARY_MIN), 1e-8);
+    assertEquals(12, result.get(STATISTICAL_SUMMARY_MIN, STATISTICAL_SUMMARY_MEAN), 1e-8); // reads as 'min of means'
 
-    // The variance and standard deviation are a bit harder to show,
-    //  STATISTICAL_SUMMARY_VARIANCE,
-    //  STATISTICAL_SUMMARY_STANDARD_DEVIATION,
+    assertEquals(31, getStatisticalSummaryField(statsForMeans, STATISTICAL_SUMMARY_MAX), 1e-8);
+    assertEquals(31, result.get(STATISTICAL_SUMMARY_MAX, STATISTICAL_SUMMARY_MEAN), 1e-8); // reads as 'max of means'
+
+    assertEquals(
+        doubleExplained(22, 1 / 3.0 * (12 + 23 + 31)), // mean of means
+        getStatisticalSummaryField(statsForMeans, STATISTICAL_SUMMARY_MEAN),
+        1e-8);
+    assertEquals(22, result.get(STATISTICAL_SUMMARY_MEAN, STATISTICAL_SUMMARY_MEAN), 1e-8);
   }
 
   @Override

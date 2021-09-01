@@ -15,7 +15,6 @@ public enum StatisticalSummaryAspect {
   STATISTICAL_SUMMARY_N,
   STATISTICAL_SUMMARY_SUM;
 
-  // FIXME IAK ESGSTATS test this
   public static double getStatisticalSummaryField(
       StatisticalSummary statisticalSummary,
       StatisticalSummaryAspect statisticalSummaryAspect) {
