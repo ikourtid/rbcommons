@@ -1,11 +1,13 @@
 package com.rb.nonbiz.math.stats;
 
 import com.google.common.collect.ImmutableList;
+import com.google.inject.multibindings.MapKey;
 import com.rb.nonbiz.math.stats.StatisticalSummaryOfStatisticalSummariesCalculator.StatisticalSummaryOfStatisticalSummaries;
 import com.rb.nonbiz.testutils.RBTest;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.function.BiConsumer;
 
 import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.STATISTICAL_SUMMARY_MAX;
@@ -18,7 +20,9 @@ import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.STATISTICAL_SUMM
 import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.getStatisticalSummaryField;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.makeTestStatisticalSummary;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.statisticalSummaryMatcher;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static java.util.Collections.emptyIterator;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -78,6 +82,11 @@ public class StatisticalSummaryOfStatisticalSummariesCalculatorTest
         getStatisticalSummaryField(statsForMeans, STATISTICAL_SUMMARY_MEAN),
         1e-8);
     assertEquals(22, result.get(STATISTICAL_SUMMARY_MEAN, STATISTICAL_SUMMARY_MEAN), 1e-8);
+  }
+
+  @Test
+  public void emptyIterator_throws() {
+    assertIllegalArgumentException( () -> makeTestObject().calculate(emptyIterator()));
   }
 
   @Override

@@ -1,5 +1,6 @@
 package com.rb.nonbiz.math.stats;
 
+import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
@@ -10,7 +11,6 @@ import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.getStatisticalSu
 import static com.rb.nonbiz.util.RBEnumMaps.transformEnumMap;
 
 public class StatisticalSummaryOfStatisticalSummariesCalculator {
-
 
   /**
    * This is useful if we have a collection of StatisticalSummary (e.g. one per day in a backtest)
@@ -50,7 +50,11 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
 
   }
 
+
   public StatisticalSummaryOfStatisticalSummaries calculate(Iterator<StatisticalSummary> iterator) {
+    RBPreconditions.checkArgument(
+        iterator.hasNext(),
+        "You cannot call StatisticalSummaryOfStatisticalSummaries#calculate on an empty iterator");
     EnumMap<StatisticalSummaryAspect, SummaryStatistics> byStatisticalSummaryAspect =
         new EnumMap<>(StatisticalSummaryAspect.class);
     for (StatisticalSummaryAspect statisticalSummaryAspect : StatisticalSummaryAspect.values()) {
