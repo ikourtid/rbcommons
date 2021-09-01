@@ -4,6 +4,9 @@ import com.rb.nonbiz.math.stats.StatisticalSummaryOfStatisticalSummariesCalculat
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Test;
+
+import java.util.function.BiConsumer;
 
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.makeTestStatisticalSummary;
@@ -12,9 +15,11 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
 
 public class StatisticalSummaryOfStatisticalSummariesTest extends RBTestMatcher<StatisticalSummaryOfStatisticalSummaries> {
 
@@ -45,6 +50,21 @@ public class StatisticalSummaryOfStatisticalSummariesTest extends RBTestMatcher<
     // preconditions. Anyway, this is test-only, so it's OK.
     return makeRealObject(StatisticalSummaryOfStatisticalSummariesCalculator.class)
         .calculate(singletonList(onlyItem).iterator());
+  }
+
+  @Test
+  public void testNumStatisticalSummaries() {
+    BiConsumer<Integer, StatisticalSummaryOfStatisticalSummaries> asserter =
+        (expectedSize, statisticalSummaryOfStatisticalSummaries) ->
+            assertEquals(
+                expectedSize.intValue(),
+                statisticalSummaryOfStatisticalSummaries.getNumStatisticalSummaries());
+
+    StatisticalSummary singleStatisticalSummary = makeTestStatisticalSummary(DUMMY_DOUBLE);
+    asserter.accept(1, singletonStatisticalSummaryOfStatisticalSummaries(singleStatisticalSummary));
+    asserter.accept(2, testStatisticalSummaryOfStatisticalSummaries(singleStatisticalSummary, singleStatisticalSummary));
+    asserter.accept(3, testStatisticalSummaryOfStatisticalSummaries(
+        singleStatisticalSummary, singleStatisticalSummary, singleStatisticalSummary));
   }
 
   @Override
