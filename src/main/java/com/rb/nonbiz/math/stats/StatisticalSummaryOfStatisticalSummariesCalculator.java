@@ -24,10 +24,13 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
   public static class StatisticalSummaryOfStatisticalSummaries {
 
     private final EnumMap<StatisticalSummaryAspect, StatisticalSummary> byStatisticalSummaryAspect;
+    private final int numStatisticalSummaries;
 
     private StatisticalSummaryOfStatisticalSummaries(
-        EnumMap<StatisticalSummaryAspect, StatisticalSummary> byStatisticalSummaryAspect) {
+        EnumMap<StatisticalSummaryAspect, StatisticalSummary> byStatisticalSummaryAspect,
+        int numStatisticalSummaries) {
       this.byStatisticalSummaryAspect = byStatisticalSummaryAspect;
+      this.numStatisticalSummaries = numStatisticalSummaries;
     }
 
     /**
@@ -35,6 +38,15 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
      */
     public EnumMap<StatisticalSummaryAspect, StatisticalSummary> getRawEnumMap() {
       return byStatisticalSummaryAspect;
+    }
+
+    /**
+     * The number of {@link StatisticalSummary} objects (1 or more) that were used in constructing this.
+     *
+     * We could have called this size() but that's a bit more ambiguous.
+     */
+    public int getNumStatisticalSummaries() {
+      return numStatisticalSummaries;
     }
 
     public StatisticalSummary getStatisticalSummary(StatisticalSummaryAspect statisticalSummaryAspect) {
@@ -60,7 +72,10 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
     for (StatisticalSummaryAspect statisticalSummaryAspect : StatisticalSummaryAspect.values()) {
       byStatisticalSummaryAspect.put(statisticalSummaryAspect, new SummaryStatistics());
     }
-    iterator.forEachRemaining(inputStatisticalSummary -> {
+    int numStatisticalSummaries = 0;
+    while (iterator.hasNext()) {
+      StatisticalSummary inputStatisticalSummary = iterator.next();
+      numStatisticalSummaries++;
       // The naming is supposed to reflect e.g. 'min of averages'.
       for (StatisticalSummaryAspect ofStatisticalSummaryAspect : StatisticalSummaryAspect.values()) {
         // This is e.g. for all the mins
@@ -68,11 +83,13 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
         double inputValueForThisItem = getStatisticalSummaryField(inputStatisticalSummary, ofStatisticalSummaryAspect);
         statisticalSummaryForAspect.addValue(inputValueForThisItem);
       }
-    });
+    }
     // Unfortunately we have to 'transform' the values here, even though it's just a cast from SummaryStatistics
     // to its interface, StatisticalSummary.
-    return new StatisticalSummaryOfStatisticalSummaries(transformEnumMap(
-        byStatisticalSummaryAspect, summaryStatistics -> (StatisticalSummary) summaryStatistics));
+    return new StatisticalSummaryOfStatisticalSummaries(
+        transformEnumMap(
+            byStatisticalSummaryAspect, summaryStatistics -> (StatisticalSummary) summaryStatistics),
+        numStatisticalSummaries);
   }
 
 }

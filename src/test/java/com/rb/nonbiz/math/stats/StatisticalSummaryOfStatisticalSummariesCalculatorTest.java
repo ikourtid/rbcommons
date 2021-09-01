@@ -82,6 +82,8 @@ public class StatisticalSummaryOfStatisticalSummariesCalculatorTest
         getStatisticalSummaryField(statsForMeans, STATISTICAL_SUMMARY_MEAN),
         1e-8);
     assertEquals(22, result.get(STATISTICAL_SUMMARY_MEAN, STATISTICAL_SUMMARY_MEAN), 1e-8);
+
+    assertEquals(3, result.getNumStatisticalSummaries());
   }
 
   @Test
