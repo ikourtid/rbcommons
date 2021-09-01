@@ -33,7 +33,7 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
     /**
      * Avoid using this when you can use the clearer getters below.
      */
-    public EnumMap<StatisticalSummaryAspect, StatisticalSummary> getByStatisticalSummaryAspect() {
+    public EnumMap<StatisticalSummaryAspect, StatisticalSummary> getRawEnumMap() {
       return byStatisticalSummaryAspect;
     }
 
