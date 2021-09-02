@@ -128,6 +128,13 @@ public class RBStats {
     return formatStatisticalSummary(statisticalSummary, numberFormat);
   }
 
+  public static String formatStatisticalSummary(StatisticalSummary statisticalSummary, int nDigits) {
+    NumberFormat numberFormat = new DecimalFormat();
+    numberFormat.setMinimumFractionDigits(nDigits);
+    numberFormat.setMaximumFractionDigits(nDigits);
+    return formatStatisticalSummary(statisticalSummary, numberFormat);
+  }
+
   public static String formatStatisticalSummary(
       StatisticalSummary statisticalSummary, NumberFormat numberFormat) {
     double stdDev = statisticalSummary.getStandardDeviation();

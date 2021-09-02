@@ -68,6 +68,19 @@ public class RBStatsTest {
           "[ 3.00 2.85 4.00 5.15 5.00 ] 1.00 3",
           formatStatisticalSummary(stats, format));
     }
+    // test other method signatures
+    assertEquals(
+        "[ 3.0000 2.8453 4.0000 5.1547 5.0000 ] 1.0000 3",
+        formatStatisticalSummary(stats));  // default format - 4 digits
+    assertEquals(
+        "[ 3.000 2.845 4.000 5.155 5.000 ] 1.000 3",
+        formatStatisticalSummary(stats, 3));
+    assertEquals(
+        "[ 3.0000 2.8453 4.0000 5.1547 5.0000 ] 1.0000 3",
+        formatStatisticalSummary(stats, 4));
+    assertEquals(
+        "[ 3.000000 2.845299 4.000000 5.154701 5.000000 ] 1.000000 3",
+        formatStatisticalSummary(stats, 6));
   }
 
   @Test
@@ -121,7 +134,7 @@ public class RBStatsTest {
     stats.addValue(5.0);
     double stdDev = doubleExplained(1.58113883008419, stats.getStandardDeviation());
     assertAlmostEquals(zScore(-2), getZScore(doubleExplained(3.0, stats.getMean())
-                                               - 2 * stdDev, stats), 1e-8);
+        - 2 * stdDev, stats), 1e-8);
     assertAlmostEquals(zScore(-1), getZScore(3 - 1 * stdDev, stats), 1e-8);
     assertAlmostEquals(Z_SCORE_0,  getZScore(3,              stats), 1e-8);
     assertAlmostEquals(zScore(1),  getZScore(3 + 1 * stdDev, stats), 1e-8);
