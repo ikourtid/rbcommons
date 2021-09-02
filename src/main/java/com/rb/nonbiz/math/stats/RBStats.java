@@ -128,19 +128,30 @@ public class RBStats {
     return formatStatisticalSummary(statisticalSummary, numberFormat);
   }
 
+  public static String formatStatisticalSummary(StatisticalSummary statisticalSummary, int nDigits) {
+    NumberFormat numberFormat = new DecimalFormat();
+    numberFormat.setMinimumFractionDigits(nDigits);
+    numberFormat.setMaximumFractionDigits(nDigits);
+    return formatStatisticalSummary(statisticalSummary, numberFormat);
+  }
+
   public static String formatStatisticalSummary(
       StatisticalSummary statisticalSummary, NumberFormat numberFormat) {
     double stdDev = statisticalSummary.getStandardDeviation();
     double standardError = stdDev / FastMath.sqrt(statisticalSummary.getN());
 
-    return Strings.format("[ %s %s %s %s %s ] %s %s",
-        numberFormat.format(noNegativeZero(statisticalSummary.getMin())),
-        numberFormat.format(noNegativeZero(statisticalSummary.getMean() - 2 * standardError)),
-        numberFormat.format(noNegativeZero(statisticalSummary.getMean())),
-        numberFormat.format(noNegativeZero(statisticalSummary.getMean() + 2 * standardError)),
-        numberFormat.format(noNegativeZero(statisticalSummary.getMax())),
-        numberFormat.format(noNegativeZero(stdDev)),
-        statisticalSummary.getN());
+    System.out.format("max digits %s\n", numberFormat.getMaximumFractionDigits());
+    System.out.format("stats.std %s\n", statisticalSummary.getStandardDeviation());
+    System.out.format("std %s\n", numberFormat.format(noNegativeZero(statisticalSummary.getStandardDeviation())));
+    return
+        Strings.format("[ %s %s %s %s %s ] %s %s",
+            numberFormat.format(noNegativeZero(statisticalSummary.getMin())),
+            numberFormat.format(noNegativeZero(statisticalSummary.getMean() - 2 * standardError)),
+            numberFormat.format(noNegativeZero(statisticalSummary.getMean())),
+            numberFormat.format(noNegativeZero(statisticalSummary.getMean() + 2 * standardError)),
+            numberFormat.format(noNegativeZero(statisticalSummary.getMax())),
+            numberFormat.format(noNegativeZero(stdDev)),
+            statisticalSummary.getN());
   }
 
   public static <V extends Comparable<? super V>> String formatRBStatisticalSummary(
