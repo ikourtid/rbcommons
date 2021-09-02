@@ -140,9 +140,6 @@ public class RBStats {
     double stdDev = statisticalSummary.getStandardDeviation();
     double standardError = stdDev / FastMath.sqrt(statisticalSummary.getN());
 
-    System.out.format("max digits %s\n", numberFormat.getMaximumFractionDigits());
-    System.out.format("stats.std %s\n", statisticalSummary.getStandardDeviation());
-    System.out.format("std %s\n", numberFormat.format(noNegativeZero(statisticalSummary.getStandardDeviation())));
     return
         Strings.format("[ %s %s %s %s %s ] %s %s",
             numberFormat.format(noNegativeZero(statisticalSummary.getMin())),
