@@ -7,13 +7,29 @@ import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
  */
 public enum StatisticalSummaryAspect {
 
-  STATISTICAL_SUMMARY_MEAN,
-  STATISTICAL_SUMMARY_VARIANCE,
-  STATISTICAL_SUMMARY_STANDARD_DEVIATION,
-  STATISTICAL_SUMMARY_MAX,
-  STATISTICAL_SUMMARY_MIN,
-  STATISTICAL_SUMMARY_N,
-  STATISTICAL_SUMMARY_SUM;
+  STATISTICAL_SUMMARY_MEAN("mean", "means"),
+  STATISTICAL_SUMMARY_VARIANCE("variance", "variances"),
+  STATISTICAL_SUMMARY_STANDARD_DEVIATION("stdev", "stdevs"),
+  STATISTICAL_SUMMARY_MAX("max", "maxes"),
+  STATISTICAL_SUMMARY_MIN("min", "mins"),
+  STATISTICAL_SUMMARY_N("count", "counts"),
+  STATISTICAL_SUMMARY_SUM("sum", "sums");
+
+  private final String singular;
+  private final String plural;
+
+  StatisticalSummaryAspect(String singular, String plural) {
+    this.singular = singular;
+    this.plural = plural;
+  }
+
+  public String getSingular() {
+    return singular;
+  }
+
+  public String getPlural() {
+    return plural;
+  }
 
   public static double getStatisticalSummaryField(
       StatisticalSummary statisticalSummary,
