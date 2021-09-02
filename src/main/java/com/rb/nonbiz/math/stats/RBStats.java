@@ -140,15 +140,14 @@ public class RBStats {
     double stdDev = statisticalSummary.getStandardDeviation();
     double standardError = stdDev / FastMath.sqrt(statisticalSummary.getN());
 
-    return
-        Strings.format("[ %s %s %s %s %s ] %s %s",
-            numberFormat.format(noNegativeZero(statisticalSummary.getMin())),
-            numberFormat.format(noNegativeZero(statisticalSummary.getMean() - 2 * standardError)),
-            numberFormat.format(noNegativeZero(statisticalSummary.getMean())),
-            numberFormat.format(noNegativeZero(statisticalSummary.getMean() + 2 * standardError)),
-            numberFormat.format(noNegativeZero(statisticalSummary.getMax())),
-            numberFormat.format(noNegativeZero(stdDev)),
-            statisticalSummary.getN());
+    return Strings.format("[ %s %s %s %s %s ] %s %s",
+        numberFormat.format(noNegativeZero(statisticalSummary.getMin())),
+        numberFormat.format(noNegativeZero(statisticalSummary.getMean() - 2 * standardError)),
+        numberFormat.format(noNegativeZero(statisticalSummary.getMean())),
+        numberFormat.format(noNegativeZero(statisticalSummary.getMean() + 2 * standardError)),
+        numberFormat.format(noNegativeZero(statisticalSummary.getMax())),
+        numberFormat.format(noNegativeZero(stdDev)),
+        statisticalSummary.getN());
   }
 
   public static <V extends Comparable<? super V>> String formatRBStatisticalSummary(
