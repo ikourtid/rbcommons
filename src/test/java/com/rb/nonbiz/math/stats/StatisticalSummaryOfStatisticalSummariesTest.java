@@ -24,6 +24,9 @@ import static org.junit.Assert.assertEquals;
 public class StatisticalSummaryOfStatisticalSummariesTest extends RBTestMatcher<StatisticalSummaryOfStatisticalSummaries> {
 
   public static StatisticalSummaryOfStatisticalSummaries testStatisticalSummaryOfStatisticalSummariesWithSeed(double seed) {
+    // We do not use a seed on the last item, because shifting every number by the same seed would produce
+    // the same standard deviation and variance across all objects constructed by this method, which goes contrary
+    // to what we intend when we use a double seed.
     return testStatisticalSummaryOfStatisticalSummaries(
         makeTestStatisticalSummary(10 + seed, 11 + seed, 15),
         makeTestStatisticalSummary(20 + seed, 21 + seed, 24 + seed, 27),

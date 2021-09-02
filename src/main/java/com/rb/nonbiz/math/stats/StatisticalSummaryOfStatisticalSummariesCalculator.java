@@ -10,6 +10,9 @@ import java.util.Iterator;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.getStatisticalSummaryField;
 import static com.rb.nonbiz.util.RBEnumMaps.transformEnumMap;
 
+/**
+ * @see StatisticalSummaryOfStatisticalSummaries
+ */
 public class StatisticalSummaryOfStatisticalSummariesCalculator {
 
   /**
