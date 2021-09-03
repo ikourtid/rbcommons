@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.Range;
 import com.rb.nonbiz.math.stats.RBStatisticalSummary;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
@@ -153,11 +154,11 @@ public class PartitionPairDifferenceStats {
       // We don't need to check min/mean/max, because of the way we control the addition via addDifference,
       // but the sum is worth checking.
       RBPreconditions.checkArgument(
-          statsForOverweight.getSum() <= 1,
-          "Sum of overweightness can't be >1: += %s ; -= %s ; |abs|= %s",
+          0 <= statsForOverweight.getSum() && statsForOverweight.getSum() <= 1,
+          "Sum of overweightness must be in [0, 1]: += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
       RBPreconditions.checkArgument(
-          statsForUnderweight.getSum() <= 1,
+          -1 <= statsForUnderweight.getSum() && statsForUnderweight.getSum() <= 0,
           "Sum of underweightness can't be >1: += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
@@ -167,7 +168,7 @@ public class PartitionPairDifferenceStats {
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
       RBPreconditions.checkArgument(
-          statsForAbsoluteValueDifferences.getSum() <= 2,
+          0 <= statsForAbsoluteValueDifferences.getSum() && statsForAbsoluteValueDifferences.getSum() <= 2,
           "Sum of abs differences must be <= 2: += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 

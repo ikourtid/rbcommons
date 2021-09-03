@@ -25,7 +25,8 @@ public class RBEnumMapsTest {
     return new EnumMap<E, V>(rbMap.asMap());
   }
 
-  // It's weird that EnumMap does not allow for an empty map, but does allow for missing enums. Well,
+  // It's weird that EnumMap does not allow for an empty map, but does allow for missing enums. Well, our test
+  // will just expect those semantics, even if they're slightly unexpected.
   @Test
   public void enumMap_doesNotNeedAllKeys_butCannotBeEmpty() {
     assertEquals(
