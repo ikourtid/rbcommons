@@ -104,7 +104,11 @@ public class PartitionPairDifferenceStats {
       epsilonComparePreciseValuesAsDoubles(
           inPartitionA,
           inPartitionB,
-          1e-8,
+          // Don't use our usual 1e-8 here because many ignored entries just below 1e-8 would cause the
+          // sums to be incorrect to within 1e-8, which we will check later.
+          // Use an epsilon much less than 1e-8 in case we are using a large index (e.g. Russell 2000, Wilshire 5000)
+          // and many stocks have tiny tilts.
+          1e-12,
           new EpsilonComparisonVisitor<RBVoid>() {
             @Override
             public RBVoid visitRightIsGreater(double overweightness) {
@@ -159,7 +163,7 @@ public class PartitionPairDifferenceStats {
 
       RBPreconditions.checkArgument(
           Math.abs(statsForSignedDifferences.getMean()) < 1e-8,
-      "The average signed difference must be 0, since sum(overweightness) = sum(underweightness). += %s ; -= %s ; |abs|= %s",
+          "The average signed difference must be 0, since sum(overweightness) = sum(underweightness). += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
       RBPreconditions.checkArgument(
