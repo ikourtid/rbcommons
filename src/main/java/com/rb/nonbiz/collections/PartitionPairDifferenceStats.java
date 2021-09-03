@@ -25,7 +25,7 @@ import static com.rb.nonbiz.types.PreciseValues.epsilonComparePreciseValuesAsDou
  * One nice thing about this is that we don't have to worry about one of the 3 fields not existing:
  * if any partition item is overweight, then at least one has to be underweight, and vice versa. That is, partition X
  * cannot have every single item overweight vs. partition Y.
- * However, every item is on target, even if we decide to categorize "exactly on target" as overweight (pick one),
+ * However, if every item is on target, even if we decide to categorize "exactly on target" as overweight (pick one),
  * then there will be 0 items in statsForUnderweight, which is an invalid {@link SummaryStatistics}; there has to be
  * at least one item. Therefore, we will adopt the expedient semantics that a 0 difference (exactly on target)
  * counts as both overweight and underweight.
@@ -75,10 +75,10 @@ public class PartitionPairDifferenceStats {
   @Override
   public String toString() {
     return Strings.format("[PPDS overweight= %s ; underweight= %s ; signedDiffs= %s ; |diffs|= %s PPDS]",
-        formatStatisticalSummary(statsForOverweight),
-        formatStatisticalSummary(statsForUnderweight),
-        formatStatisticalSummary(statsForSignedDifferences),
-        formatStatisticalSummary(statsForAbsoluteValueDifferences));
+        formatStatisticalSummary(statsForOverweight, 6),
+        formatStatisticalSummary(statsForUnderweight, 6),
+        formatStatisticalSummary(statsForSignedDifferences, 6),
+        formatStatisticalSummary(statsForAbsoluteValueDifferences, 6));
   }
 
 
@@ -104,7 +104,11 @@ public class PartitionPairDifferenceStats {
       epsilonComparePreciseValuesAsDoubles(
           inPartitionA,
           inPartitionB,
-          1e-8,
+          // Don't use our usual 1e-8 here because many ignored entries just below 1e-8 would cause the
+          // sums to be incorrect to within 1e-8, which we will check later.
+          // Use an epsilon much less than 1e-8 in case we are using a large index (e.g. Russell 2000, Wilshire 5000)
+          // and many stocks have tiny tilts.
+          1e-12,
           new EpsilonComparisonVisitor<RBVoid>() {
             @Override
             public RBVoid visitRightIsGreater(double overweightness) {
@@ -159,7 +163,7 @@ public class PartitionPairDifferenceStats {
 
       RBPreconditions.checkArgument(
           Math.abs(statsForSignedDifferences.getMean()) < 1e-8,
-      "The average signed difference must be 0, since sum(overweightness) = sum(underweightness). += %s ; -= %s ; |abs|= %s",
+          "The average signed difference must be 0, since sum(overweightness) = sum(underweightness). += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
       RBPreconditions.checkArgument(
