@@ -1,6 +1,5 @@
 package com.rb.nonbiz.collections;
 
-import com.google.common.collect.Range;
 import com.rb.nonbiz.math.stats.RBStatisticalSummary;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
@@ -167,6 +166,8 @@ public class PartitionPairDifferenceStats {
           "The average signed difference must be 0, since sum(overweightness) = sum(underweightness). += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
+      // 2 is for the most extreme case e.g. between a partition that's 100% X and one that's 100% Y; in that case,
+      // X is 100% underweight in the second partition, and Y is 100% overweight, which sums to 200% = 2.
       RBPreconditions.checkArgument(
           0 <= statsForAbsoluteValueDifferences.getSum() && statsForAbsoluteValueDifferences.getSum() <= 2,
           "Sum of abs differences must be <= 2: += %s ; -= %s ; |abs|= %s",
