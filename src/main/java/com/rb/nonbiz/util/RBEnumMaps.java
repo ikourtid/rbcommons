@@ -19,7 +19,7 @@ public class RBEnumMaps {
   }
 
   /**
-   * Transforms an EnumMap's map values, without looking at the enum value itself.
+   * Transforms an EnumMap's map values, but the transformation can also look at the enum value as well.
    */
   public static <E extends Enum<E>, V1, V2> EnumMap<E, V2> transformEnumMap(
       EnumMap<E, V1> original, BiFunction<E, V1, V2> transformer) {

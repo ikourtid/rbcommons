@@ -153,11 +153,11 @@ public class PartitionPairDifferenceStats {
       // We don't need to check min/mean/max, because of the way we control the addition via addDifference,
       // but the sum is worth checking.
       RBPreconditions.checkArgument(
-          statsForOverweight.getSum() <= 1,
-          "Sum of overweightness can't be >1: += %s ; -= %s ; |abs|= %s",
+          0 <= statsForOverweight.getSum() && statsForOverweight.getSum() <= 1,
+          "Sum of overweightness must be in [0, 1]: += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
       RBPreconditions.checkArgument(
-          statsForUnderweight.getSum() <= 1,
+          -1 <= statsForUnderweight.getSum() && statsForUnderweight.getSum() <= 0,
           "Sum of underweightness can't be >1: += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
@@ -166,8 +166,10 @@ public class PartitionPairDifferenceStats {
           "The average signed difference must be 0, since sum(overweightness) = sum(underweightness). += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
+      // 2 is for the most extreme case e.g. between a partition that's 100% X and one that's 100% Y; in that case,
+      // X is 100% underweight in the second partition, and Y is 100% overweight, which sums to 200% = 2.
       RBPreconditions.checkArgument(
-          statsForAbsoluteValueDifferences.getSum() <= 2,
+          0 <= statsForAbsoluteValueDifferences.getSum() && statsForAbsoluteValueDifferences.getSum() <= 2,
           "Sum of abs differences must be <= 2: += %s ; -= %s ; |abs|= %s",
           statsForOverweight, statsForUnderweight, statsForAbsoluteValueDifferences);
 
