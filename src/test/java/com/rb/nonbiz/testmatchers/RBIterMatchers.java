@@ -5,6 +5,7 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Iterator;
 
+import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
@@ -37,6 +38,17 @@ public class RBIterMatchers {
    */
   public static <T> TypeSafeMatcher<Iterator<T>> iteratorEqualityMatcher(Iterator<T> expected) {
     return iteratorMatcher(expected, f -> typeSafeEqualTo(f));
+  }
+
+  public static <T> TypeSafeMatcher<Iterable<T>> iterableMatcher(
+      Iterable<T> expected, MatcherGenerator<T> matcherGenerator) {
+    return makeMatcher(expected,
+        match(v -> v.iterator(), f -> iteratorMatcher(f, matcherGenerator)));
+  }
+
+  public static <T> TypeSafeMatcher<Iterable<T>> iterableEqualityMatcher(
+      Iterable<T> expected, MatcherGenerator<T> matcherGenerator) {
+    return iterableMatcher(expected,  matcherGenerator);
   }
 
   /**
