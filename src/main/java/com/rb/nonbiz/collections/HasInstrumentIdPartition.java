@@ -6,6 +6,7 @@ import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.biz.types.asset.HasInstrumentId;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.text.PrintsInstruments;
+import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -23,6 +24,7 @@ import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpect
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
+import static com.rb.nonbiz.text.RBLog.rbLog;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -41,6 +43,8 @@ import static java.util.Comparator.reverseOrder;
  * @see HasInstrumentIdMap
  */
 public class HasInstrumentIdPartition<T extends HasInstrumentId> implements PrintsInstruments {
+
+  private final static RBLog log = rbLog(HasInstrumentIdPartition.class);
 
   private final HasInstrumentIdMap<T, UnitFraction> rawMap;
 
@@ -81,6 +85,8 @@ public class HasInstrumentIdPartition<T extends HasInstrumentId> implements Prin
     if (sum <= e) {
       throw new IllegalArgumentException(Strings.format("Sum of weights must be >0 (actually, 1e-12). Input was %s", weightsMap));
     }
+
+    log.debug( () -> String.format("sum of weights %.4f %% normalization %.4f %%", 100 * sum, 100 / sum));
     MutableIidMap<Pair<T, UnitFraction>> mutableMap = newMutableIidMapWithExpectedSize(weightsMap.size());
     weightsMap.forEachEntry( (hasInstrumentId, weight) -> {
       if (Math.abs(weight) < e) {
