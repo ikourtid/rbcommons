@@ -2,14 +2,18 @@ package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.collections.PartitionPairDifferenceStats.PartitionPairDifferenceStatsBuilder;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
+
+import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.PartitionPairDifferenceStats.PartitionPairDifferenceStatsBuilder.partitionPairDifferenceStatsBuilder;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRestDoubles;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.statisticalSummaryMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
@@ -67,8 +71,54 @@ public class PartitionPairDifferenceStatsTest extends RBTestMatcher<PartitionPai
   }
 
   @Test
-  public void reminder() {
-    fail("FIXME IAK ESGSTATS test preconditions");
+  public void noItems_throws() {
+    assertIllegalArgumentException( () -> partitionPairDifferenceStatsBuilder()
+        .build());
+    PartitionPairDifferenceStats doesNotThrow;
+    doesNotThrow = partitionPairDifferenceStatsBuilder().addDifference(UNIT_FRACTION_0,     UNIT_FRACTION_0).build();
+    doesNotThrow = partitionPairDifferenceStatsBuilder().addDifference(unitFraction(0.123), unitFraction(0.123)).build();
+    doesNotThrow = partitionPairDifferenceStatsBuilder().addDifference(UNIT_FRACTION_1,     UNIT_FRACTION_1).build();
+  }
+
+  @Test
+  public void tooMuchTotalOverweightnessAndUnderweightness_throws() {
+    // There's no way to check each one individually, because if they're not the same, there's another precondition
+    // that will trigger here.
+    assertIllegalArgumentException( () -> partitionPairDifferenceStatsBuilder()
+        .addDifference(unitFraction(0.1), unitFraction(0.9)) // we have one item with a 80% higher weight in the 2nd partition
+        .addDifference(unitFraction(0.2), unitFraction(0.7)) // .. and 50%
+
+        .addDifference(unitFraction(0.9), unitFraction(0.1)) // now doing the opposite, so that we'll hit the right precondition
+        .addDifference(unitFraction(0.7), unitFraction(0.2))
+        .build());
+
+    PartitionPairDifferenceStats doesNotThrow = partitionPairDifferenceStatsBuilder()
+        .addDifference(unitFraction(0.1), unitFraction(0.9))  // 80% overweight
+        .addDifference(unitFraction(0.2), unitFraction(0.19)) // 19% overweight; less than 100%
+
+        .addDifference(unitFraction(0.9), unitFraction(0.1))
+        .addDifference(unitFraction(0.19), unitFraction(0.2))
+        .build();
+  }
+
+  @Test
+  public void totalOverweightnessMustBeSameAsUnderweightness() {
+    // Note that the only thing that matters is the difference between the two args in addDifference;
+    // the code does not assert that all the first args ever passed in will sum to 100% (same with 2nd args).
+    Function<UnitFraction, PartitionPairDifferenceStats> maker = fraction -> partitionPairDifferenceStatsBuilder()
+        .addDifference(unitFraction(0.1), fraction)          // 60% higher weight in 2nd partition when using unitFraction(0.7)
+        .addDifference(unitFraction(0.2), unitFraction(0.3)) // 10% higher weight
+        .addDifference(UNIT_FRACTION_1,   unitFraction(0.3))   // 70% underweight = 60 + 10.
+        .build();
+
+    PartitionPairDifferenceStats doesNotThrow;
+    assertIllegalArgumentException( () -> maker.apply(unitFraction(0.69)));
+    assertIllegalArgumentException( () -> maker.apply(unitFraction(0.7 - 1e-7)));
+    doesNotThrow = maker.apply(unitFraction(0.7 - 1e-9));
+    doesNotThrow = maker.apply(unitFraction(0.7));
+    doesNotThrow = maker.apply(unitFraction(0.7 + 1e-9));
+    assertIllegalArgumentException( () -> maker.apply(unitFraction(0.7 + 1e-7)));
+    assertIllegalArgumentException( () -> maker.apply(unitFraction(0.71)));
   }
 
   @Override
