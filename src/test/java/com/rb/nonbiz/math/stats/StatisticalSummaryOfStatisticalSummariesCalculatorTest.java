@@ -1,13 +1,11 @@
 package com.rb.nonbiz.math.stats;
 
 import com.google.common.collect.ImmutableList;
-import com.google.inject.multibindings.MapKey;
 import com.rb.nonbiz.math.stats.StatisticalSummaryOfStatisticalSummariesCalculator.StatisticalSummaryOfStatisticalSummaries;
 import com.rb.nonbiz.testutils.RBTest;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.function.BiConsumer;
 
 import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.STATISTICAL_SUMMARY_MAX;

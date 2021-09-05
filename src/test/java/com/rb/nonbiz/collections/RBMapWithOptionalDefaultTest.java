@@ -11,7 +11,6 @@ import static com.rb.nonbiz.collections.RBMapWithOptionalDefault.emptyRBMapWithO
 import static com.rb.nonbiz.collections.RBMapWithOptionalDefault.emptyRBMapWithOptionalDefaultPresent;
 import static com.rb.nonbiz.collections.RBMapWithOptionalDefault.rbMapWithOptionalDefaultMissing;
 import static com.rb.nonbiz.collections.RBMapWithOptionalDefault.rbMapWithOptionalDefaultPresent;
-import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
