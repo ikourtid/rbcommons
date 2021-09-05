@@ -1,7 +1,6 @@
 package com.rb.nonbiz.types;
 
 import com.google.common.collect.Range;
-import com.rb.nonbiz.collections.ClosedRangeTest;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -14,7 +13,6 @@ import static com.rb.nonbiz.collections.ClosedRangeTest.closedRangeMatcher;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
-import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRange.closedUnitFractionHardAndPossiblySameSoftRange;

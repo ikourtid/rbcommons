@@ -1,6 +1,5 @@
 package com.rb.nonbiz.collections;
 
-import com.google.common.collect.Iterables;
 import com.rb.nonbiz.types.LongCounter;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -16,7 +15,6 @@ import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.emptyImmutableIndexableArray1D;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.immutableIndexableArray1D;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
-import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.types.LongCounter.longCounter;
 

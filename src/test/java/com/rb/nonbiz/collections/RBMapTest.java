@@ -4,7 +4,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.functional.TriConsumer;
-import com.rb.nonbiz.testmatchers.RBCollectionMatchers;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.LongCounter;
 import com.rb.nonbiz.types.Pointer;
@@ -22,10 +21,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
-import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
 import static com.rb.nonbiz.collections.RBMapMergers.mergeRBMapsDisallowingOverlap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
