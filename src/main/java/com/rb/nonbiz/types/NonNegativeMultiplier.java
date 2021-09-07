@@ -2,6 +2,8 @@ package com.rb.nonbiz.types;
 
 import com.rb.nonbiz.util.RBPreconditions;
 
+import java.util.Collection;
+
 /**
  * A simple class to hold a non-negative number meant to be used as a multiplier
  * of some other numeric quantity.
@@ -25,6 +27,11 @@ public class NonNegativeMultiplier extends ImpreciseValue<NonNegativeMultiplier>
 
   public NonNegativeMultiplier multiply(NonNegativeMultiplier other) {
     return nonNegativeMultiplier(this.doubleValue() * other.doubleValue());
+  }
+
+  // FIXME IAK WGT test this
+  public static NonNegativeMultiplier sum(Collection<NonNegativeMultiplier> collection) {
+    return nonNegativeMultiplier(collection.stream().mapToDouble(v -> v.doubleValue()).sum());
   }
 
 }
