@@ -1,7 +1,5 @@
 package com.rb.nonbiz.types;
 
-import com.rb.nonbiz.text.Strings;
-
 /**
  * <p> An item with a {@link UnitFraction} weight. </p>
  *
@@ -10,31 +8,14 @@ import com.rb.nonbiz.text.Strings;
  * @see Weighted
  * @see UnitFraction
  */
-public class WeightedByUnitFraction<T> {
-
-  private final T item;
-  private final UnitFraction weight;
+public class WeightedByUnitFraction<T> extends WeightedBy<T, UnitFraction> {
 
   private WeightedByUnitFraction(T item, UnitFraction weight) {
-    this.item = item;
-    this.weight = weight;
+    super(item, weight);
   }
 
   public static <T> WeightedByUnitFraction<T> weightedByUnitFraction(T item, UnitFraction weight) {
     return new WeightedByUnitFraction<T>(item, weight);
-  }
-
-  public T getItem() {
-    return item;
-  }
-
-  public UnitFraction getWeight() {
-    return weight;
-  }
-
-  @Override
-  public String toString() {
-    return Strings.format("[WBUF %s %s WBUF]", weight, item);
   }
 
 }

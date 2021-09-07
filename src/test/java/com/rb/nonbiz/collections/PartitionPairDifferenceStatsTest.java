@@ -20,7 +20,6 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
-import static org.junit.Assert.fail;
 
 public class PartitionPairDifferenceStatsTest extends RBTestMatcher<PartitionPairDifferenceStats> {
 
