@@ -15,31 +15,31 @@ import static com.rb.nonbiz.types.WeightedBy.weightedBy;
 /**
  * This test class is not generic, but the publicly exposed static matcher is.
  */
-public class WeightedByTest extends RBTestMatcher<WeightedBy<String, SignedFraction>> {
+public class WeightedByTest extends RBTestMatcher<WeightedBy<SignedFraction, String>> {
 
   @Override
-  public WeightedBy<String, SignedFraction> makeTrivialObject() {
+  public WeightedBy<SignedFraction, String> makeTrivialObject() {
     return weightedBy("", SIGNED_FRACTION_1);
   }
 
   @Override
-  public WeightedBy<String, SignedFraction> makeNontrivialObject() {
+  public WeightedBy<SignedFraction, String> makeNontrivialObject() {
     return weightedBy("abc", signedFraction(-0.1234));
   }
 
   @Override
-  public WeightedBy<String, SignedFraction> makeMatchingNontrivialObject() {
+  public WeightedBy<SignedFraction, String> makeMatchingNontrivialObject() {
     double e = 1e-9; // epsilon
     return weightedBy("abc", signedFraction(-0.1234 + e));
   }
 
   @Override
-  protected boolean willMatch(WeightedBy<String, SignedFraction> expected, WeightedBy<String, SignedFraction> actual) {
+  protected boolean willMatch(WeightedBy<SignedFraction, String> expected, WeightedBy<SignedFraction, String> actual) {
     return weightedByMatcher(expected, v -> typeSafeEqualTo(v)).matches(actual);
   }
 
-  public static <T, W extends RBNumeric<W>> TypeSafeMatcher<WeightedBy<T, W>> weightedByMatcher(
-      WeightedBy<T, W> expected, MatcherGenerator<T> itemMatcherGenerator) {
+  public static <W extends RBNumeric<W>, T> TypeSafeMatcher<WeightedBy<W, T>> weightedByMatcher(
+      WeightedBy<W, T> expected, MatcherGenerator<T> itemMatcherGenerator) {
     return makeMatcher(expected,
         match(v -> v.getItem(), itemMatcherGenerator),
         match(v -> v.getWeight(), f -> rbNumericValueMatcher(f, 1e-8)));
