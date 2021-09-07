@@ -15,7 +15,7 @@ public class WeightedBy<T, W extends RBNumeric<W>> {
   private final T item;
   private final W weight;
 
-  private WeightedBy(T item, W weight) {
+  protected WeightedBy(T item, W weight) {
     this.item = item;
     this.weight = weight;
   }
