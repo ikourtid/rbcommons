@@ -8,7 +8,7 @@ package com.rb.nonbiz.types;
  * @see Weighted
  * @see SignedFraction
  */
-public class WeightedBySignedFraction<T> extends WeightedBy<T, SignedFraction> {
+public class WeightedBySignedFraction<T> extends WeightedBy<SignedFraction, T> {
 
   private WeightedBySignedFraction(T item, SignedFraction weight) {
     super(item, weight);

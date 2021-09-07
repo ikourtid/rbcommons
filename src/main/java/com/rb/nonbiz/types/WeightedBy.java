@@ -9,7 +9,7 @@ import com.rb.nonbiz.text.Strings;
  *
  * @see Weighted
  */
-public class WeightedBy<T, W extends RBNumeric<W>> {
+public class WeightedBy<W extends RBNumeric<W>, T> {
 
   private final T item;
   private final W weight;
@@ -19,7 +19,7 @@ public class WeightedBy<T, W extends RBNumeric<W>> {
     this.weight = weight;
   }
 
-  public static <T, W extends RBNumeric<W>> WeightedBy<T, W> weightedBy(T item, W weight) {
+  public static <W extends RBNumeric<W>, T> WeightedBy<W, T> weightedBy(T item, W weight) {
     return new WeightedBy<>(item, weight);
   }
 
