@@ -3,12 +3,11 @@ package com.rb.nonbiz.types;
 import com.rb.nonbiz.text.Strings;
 
 /**
- * <p> An item with a {@link SignedFraction} weight. </p>
+ * <p> An item with an {@link RBNumeric} weight. </p>
  *
  * <p> This is useful for describing a term in a linear combination of items. </p>
  *
  * @see Weighted
- * @see SignedFraction
  */
 public class WeightedBy<T, W extends RBNumeric<W>> {
 
@@ -34,7 +33,7 @@ public class WeightedBy<T, W extends RBNumeric<W>> {
 
   @Override
   public String toString() {
-    return Strings.format("[WBSF %s %s WBSF]", weight, item);
+    return Strings.format("[WB %s %s WB]", weight, item);
   }
 
 }
