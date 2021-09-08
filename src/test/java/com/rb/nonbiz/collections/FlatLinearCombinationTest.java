@@ -3,6 +3,8 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.RBNumeric;
+import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -16,41 +18,42 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static com.rb.nonbiz.types.WeightedBy.weightedBy;
+import static com.rb.nonbiz.types.WeightedByTest.weightedByMatcher;
 import static com.rb.nonbiz.types.WeightedByUnitFraction.weightedByUnitFraction;
-import static com.rb.nonbiz.types.WeightedByUnitFractionTest.weightedByUnitFractionMatcher;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * This test class is not generic, but the publicly exposed matcher is.
  */
-public class FlatLinearCombinationTest extends RBTestMatcher<FlatLinearCombination<String>> {
+public class FlatLinearCombinationTest extends RBTestMatcher<FlatLinearCombination<UnitFraction, String>> {
 
   @Test
   public void happyPath() {
-    FlatLinearCombination<String> flatLinearCombination = flatLinearCombination(
+    FlatLinearCombination<UnitFraction, String> flatLinearCombination = flatLinearCombination(
         "a", unitFraction(0.4),
         "b", unitFraction(0.6));
     assertThat(
         flatLinearCombination.iterator(),
         iteratorMatcher(
             ImmutableList.of(
-                weightedByUnitFraction("a", unitFraction(0.4)),
-                weightedByUnitFraction("b", unitFraction(0.6)))
+                weightedBy("a", unitFraction(0.4)),
+                weightedBy("b", unitFraction(0.6)))
             .iterator(),
-            f -> weightedByUnitFractionMatcher(f, f2 -> typeSafeEqualTo(f2))));
+            f -> weightedByMatcher(f, f2 -> typeSafeEqualTo(f2))));
   }
 
   @Test
   public void fractionsSumToLessThan1_doesNotThrow() {
-    FlatLinearCombination<String> doesNotThrow = flatLinearCombination(
+    FlatLinearCombination<UnitFraction, String> doesNotThrow = flatLinearCombination(
         "a", unitFraction(0.4),
         "b", unitFraction(0.59));
   }
 
   @Test
   public void fractionsSumToMoreThan1_doesNotThrow() {
-    FlatLinearCombination<String> doesNotThrow;
+    FlatLinearCombination<UnitFraction, String> doesNotThrow;
     doesNotThrow = flatLinearCombination(
         "a", unitFraction(0.4),
         "b", unitFraction(0.61));
@@ -73,19 +76,19 @@ public class FlatLinearCombinationTest extends RBTestMatcher<FlatLinearCombinati
   }
 
   @Override
-  public FlatLinearCombination<String> makeTrivialObject() {
-    return singletonFlatLinearCombination("a");
+  public FlatLinearCombination<UnitFraction, String> makeTrivialObject() {
+    return singletonFlatLinearCombination("a", UNIT_FRACTION_1);
   }
 
   @Override
-  public FlatLinearCombination<String> makeNontrivialObject() {
+  public FlatLinearCombination<UnitFraction, String> makeNontrivialObject() {
     return flatLinearCombination(ImmutableList.of(
         weightedByUnitFraction("a", unitFraction(0.4)),
         weightedByUnitFraction("b", unitFraction(0.6))));
   }
 
   @Override
-  public FlatLinearCombination<String> makeMatchingNontrivialObject() {
+  public FlatLinearCombination<UnitFraction, String> makeMatchingNontrivialObject() {
     double e = 1e-9; // epsilon
     return flatLinearCombination(ImmutableList.of(
         weightedByUnitFraction("a", unitFraction(0.4 + e)),
@@ -93,14 +96,15 @@ public class FlatLinearCombinationTest extends RBTestMatcher<FlatLinearCombinati
   }
 
   @Override
-  protected boolean willMatch(FlatLinearCombination<String> expected, FlatLinearCombination<String> actual) {
+  protected boolean willMatch(FlatLinearCombination<UnitFraction, String> expected,
+                              FlatLinearCombination<UnitFraction, String> actual) {
     return flatLinearCombinationMatcher(expected, f -> typeSafeEqualTo(f)).matches(actual);
   }
 
-  public static <T> TypeSafeMatcher<FlatLinearCombination<T>> flatLinearCombinationMatcher(
-      FlatLinearCombination<T> expected, MatcherGenerator<T> itemMatcherGenerator) {
+  public static <W extends RBNumeric<W>, T> TypeSafeMatcher<FlatLinearCombination<W, T>> flatLinearCombinationMatcher(
+      FlatLinearCombination<W, T> expected, MatcherGenerator<T> itemMatcherGenerator) {
     return makeMatcher(expected,
-        matchList(v -> v.getWeightedItems(), f -> weightedByUnitFractionMatcher(f, itemMatcherGenerator)));
+        matchList(v -> v.getWeightedItems(), f -> weightedByMatcher(f, itemMatcherGenerator)));
   }
 
 }

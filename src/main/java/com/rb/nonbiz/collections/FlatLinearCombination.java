@@ -5,7 +5,9 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.types.UnitFraction;
+import com.rb.nonbiz.types.WeightedBy;
 import com.rb.nonbiz.types.WeightedByUnitFraction;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -13,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
+import static com.rb.nonbiz.types.WeightedBy.weightedBy;
 import static com.rb.nonbiz.types.WeightedByUnitFraction.weightedByUnitFraction;
 import static java.util.Collections.singletonList;
 
@@ -34,53 +37,55 @@ import static java.util.Collections.singletonList;
  * @see SignedPartition
  * @see FlatSignedLinearCombination
  */
-public class FlatLinearCombination<T> implements Iterable<WeightedByUnitFraction<T>> {
+public class FlatLinearCombination<W extends RBNumeric<W>, T> implements Iterable<WeightedBy<W, T>> {
 
-  private final List<WeightedByUnitFraction<T>> weightedItems;
+  private final List<WeightedBy<W, T>> weightedItems;
 
-  private FlatLinearCombination(List<WeightedByUnitFraction<T>> weightedItems) {
+  private FlatLinearCombination(List<WeightedBy<W, T>> weightedItems) {
     this.weightedItems = weightedItems;
   }
 
-  public static <T> FlatLinearCombination<T> flatLinearCombination(List<WeightedByUnitFraction<T>> weightedItems) {
+  public static <W extends RBNumeric<W>, T> FlatLinearCombination<W, T> flatLinearCombination(
+      List<WeightedBy<W, T>> weightedItems) {
     RBPreconditions.checkArgument(!weightedItems.isEmpty());
     weightedItems
         .forEach(weightedItem -> RBPreconditions.checkArgument(
-            !weightedItem.getWeight().isAlmostZero(1e-8),
-            "Fractions in a FlatLinearCombination must be non-0. If you don't want something, just don't put it in. %s",
+            Math.abs(weightedItem.getWeight().doubleValue()) > 1e-8,
+            "Weights in a FlatLinearCombination must be non-0. If you don't want something, just don't put it in. %s",
             weightedItem));
     return new FlatLinearCombination<>(weightedItems);
   }
 
-  public static <T> FlatLinearCombination<T> singletonFlatLinearCombination(T singleItem) {
-    return new FlatLinearCombination<>(singletonList(weightedByUnitFraction(singleItem, UNIT_FRACTION_1)));
+  public static <W extends RBNumeric<W>, T> FlatLinearCombination<W, T> singletonFlatLinearCombination(
+      T singleItem, W unitWeight) {
+    return new FlatLinearCombination<>(singletonList(weightedBy(singleItem, unitWeight)));
   }
 
-  public static <T> FlatLinearCombination<T> flatLinearCombination(
-      T t1, UnitFraction f1,
-      T t2, UnitFraction f2) {
+  public static <W extends RBNumeric<W>, T> FlatLinearCombination<W, T> flatLinearCombination(
+      T t1, W w1,
+      T t2, W w2) {
     return flatLinearCombination(ImmutableList.of(
-        weightedByUnitFraction(t1, f1),
-        weightedByUnitFraction(t2, f2)));
+        weightedBy(t1, w1),
+        weightedBy(t2, w2)));
   }
 
-  public static <T> FlatLinearCombination<T> flatLinearCombination(
-      T t1, UnitFraction f1,
-      T t2, UnitFraction f2,
-      T t3, UnitFraction f3) {
+  public static <W extends RBNumeric<W>, T> FlatLinearCombination<W, T> flatLinearCombination(
+      T t1, W w1,
+      T t2, W w2,
+      T t3, W w3) {
     return flatLinearCombination(ImmutableList.of(
-        weightedByUnitFraction(t1, f1),
-        weightedByUnitFraction(t2, f2),
-        weightedByUnitFraction(t3, f3)));
+        weightedBy(t1, w1),
+        weightedBy(t2, w2),
+        weightedBy(t3, w3)));
   }
 
   @Override
-  public Iterator<WeightedByUnitFraction<T>> iterator() {
+  public Iterator<WeightedBy<W, T>> iterator() {
     return weightedItems.iterator();
   }
 
   @VisibleForTesting // this is here for the test matcher; keep it hidden unless we have to expose it
-  List<WeightedByUnitFraction<T>> getWeightedItems() {
+  List<WeightedBy<W, T>> getWeightedItems() {
     return weightedItems;
   }
 

@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.rb.nonbiz.types.PreciseValue;
+import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -74,6 +75,11 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
 
   public RBJsonObjectBuilder setDoublePercentage(String property, UnitFraction unitFraction) {
     jsonObject.add(checkPropertyNotAlreadySet(property), jsonDouble(unitFraction.doubleValue() * 100));
+    return this;
+  }
+
+  public <N extends RBNumeric<N>> RBJsonObjectBuilder setDoublePercentage(String property, N rbNumeric) {
+    jsonObject.add(checkPropertyNotAlreadySet(property), jsonDouble(rbNumeric.doubleValue() * 100));
     return this;
   }
 

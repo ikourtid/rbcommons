@@ -270,6 +270,11 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
     return unitFraction(asBigDecimal().multiply(other.asBigDecimal()));
   }
 
+  public UnitFraction multiply(NonNegativeMultiplier other) {
+    // FIXME IAK WGT - this should go away if we use NonNegativeMultiplier everywhere
+    return unitFraction(asBigDecimal().multiply(BigDecimal.valueOf(other.doubleValue())));
+  }
+
   public UnitFraction divide(UnitFraction other) {
     return divide(other.asBigDecimal());
   }
