@@ -62,21 +62,21 @@ public class FlatLinearCombination<W extends RBNumeric<W>, T> implements Iterabl
   }
 
   public static <W extends RBNumeric<W>, T> FlatLinearCombination<W, T> flatLinearCombination(
-      T t1, W f1,
-      T t2, W f2) {
+      T t1, W w1,
+      T t2, W w2) {
     return flatLinearCombination(ImmutableList.of(
-        weightedBy(t1, f1),
-        weightedBy(t2, f2)));
+        weightedBy(t1, w1),
+        weightedBy(t2, w2)));
   }
 
   public static <W extends RBNumeric<W>, T> FlatLinearCombination<W, T> flatLinearCombination(
-      T t1, W f1,
-      T t2, W f2,
-      T t3, W f3) {
+      T t1, W w1,
+      T t2, W w2,
+      T t3, W w3) {
     return flatLinearCombination(ImmutableList.of(
-        weightedBy(t1, f1),
-        weightedBy(t2, f2),
-        weightedBy(t3, f3)));
+        weightedBy(t1, w1),
+        weightedBy(t2, w2),
+        weightedBy(t3, w3)));
   }
 
   @Override
