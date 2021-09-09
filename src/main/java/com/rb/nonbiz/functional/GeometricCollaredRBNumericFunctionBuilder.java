@@ -140,7 +140,7 @@ public class GeometricCollaredRBNumericFunctionBuilder<X extends Number, Y exten
         x ->
             x <= minX.doubleValue() ? minY.doubleValue() :
             x >= maxX.doubleValue() ? maxY.doubleValue() :
-                 minY.doubleValue() * Math.pow(valuesProduct, (x - maxX.doubleValue()) / dxTotal),
+                 minY.doubleValue() * Math.pow(valuesRatio, (x - maxX.doubleValue()) / dxTotal),
         instantiator);
   }
 
