@@ -26,7 +26,7 @@ import static com.rb.nonbiz.text.Strings.formatMap;
  * A sample use case for this is ESG string-valued attributes, where an empty string means a special 'missing' value.
  */
 public class RBStringToNumericFunctionThatHandlesMissingValues<Y extends RBNumeric<? super Y>>
-    implements Function<AllowsMissingValues<String>, Y>, HasHumanReadableLabel {
+    implements Function<AllowsMissingValues<String>, Optional<Y>>, HasHumanReadableLabel {
 
   private final HumanReadableLabel label;
   private final DoubleFunction<Y> instantiator;
@@ -48,23 +48,21 @@ public class RBStringToNumericFunctionThatHandlesMissingValues<Y extends RBNumer
   }
 
   @Override
-  public Y apply(AllowsMissingValues<String> x) {
-    return x.visit(new Visitor<Y, String>() {
+  public Optional<Y> apply(AllowsMissingValues<String> x) {
+    return x.visit(new Visitor<Optional<Y>, String>() {
       @Override
-      public Y visitPresentValue(String presentValue) {
-        return transformOptional(
+      public Optional<Y> visitPresentValue(String presentValue) {
+        return Optional.of(transformOptional(
             stringToValueMap.getOptional(presentValue),
             v -> instantiator.apply(v.doubleValue()))
             .orElseGet( () -> getOrThrow(valueForUnknownString,
                 "%s : intentionally throwing on unknown string %s",
-                label, presentValue));
+                label, presentValue)));
       }
 
       @Override
-      public Y visitMissingValue() {
-        return getOrThrow(valueForMissingString,
-            "%s : intentionally throwing on missing string EsgAttributeValue",
-            label);
+      public Optional<Y> visitMissingValue() {
+        return valueForMissingString;
       }
     });
   }

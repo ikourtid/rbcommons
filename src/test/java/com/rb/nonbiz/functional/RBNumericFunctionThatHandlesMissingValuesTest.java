@@ -14,15 +14,14 @@ import static com.rb.nonbiz.functional.RBNumericFunction.rbDoubleIdentityNumeric
 import static com.rb.nonbiz.functional.RBNumericFunction.rbDoubleNumericFunction;
 import static com.rb.nonbiz.functional.RBNumericFunction.rbNumericFunction;
 import static com.rb.nonbiz.functional.RBNumericFunctionTest.rbNumericFunctionUsingSamplingMatcher;
-import static com.rb.nonbiz.functional.RBNumericFunctionThatHandlesMissingValues.rbDoubleNumericFunctionThatThrowsOnMissingValues;
-import static com.rb.nonbiz.functional.RBNumericFunctionThatHandlesMissingValues.rbNumericFunctionThatAllowsMissingValues;
-import static com.rb.nonbiz.functional.RBNumericFunctionThatHandlesMissingValues.rbNumericFunctionThatThrowsOnMissingValues;
+import static com.rb.nonbiz.functional.RBNumericFunctionThatHandlesMissingValues.rbDoubleFunctionThatReturnsEmptyOnMissingValues;
+import static com.rb.nonbiz.functional.RBNumericFunctionThatHandlesMissingValues.rbDoubleFunctionThatReturnsSpecifiedDefaultOnMissingValues;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.rbNumericMatcher;
-import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
-import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalAlmostEquals;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
@@ -30,29 +29,29 @@ public class RBNumericFunctionThatHandlesMissingValuesTest
     extends RBTestMatcher<RBNumericFunctionThatHandlesMissingValues<Double, Money>> {
 
   @Test
-  public void testFunctionThatThrowsOnMissing() {
-    RBNumericFunctionThatHandlesMissingValues<Double, Money> function = rbDoubleNumericFunctionThatThrowsOnMissingValues(
+  public void testFunctionThatReturnsEmptyOptionalOnMissingValues() {
+    RBNumericFunctionThatHandlesMissingValues<Double, Money> function = rbDoubleFunctionThatReturnsEmptyOnMissingValues(
         // Not sure why, but we have to cast here
         (RBNumericFunction<Double, Money>) rbDoubleNumericFunction(label("x+10"), v -> v + 10, v -> money(v)));
 
-    assertAlmostEquals(
+    assertOptionalAlmostEquals(
         money(doubleExplained(87, 10 + 77)),
         function.apply(new TestAllowsMissingValues(OptionalDouble.of(77))),
         1e-8);
-    assertIllegalArgumentException( () -> function.apply(new TestAllowsMissingValues(OptionalDouble.empty())));
+    assertOptionalEmpty(function.apply(new TestAllowsMissingValues(OptionalDouble.empty())));
   }
 
   @Test
   public void testFunctionThatAllowsMissing() {
-    RBNumericFunctionThatHandlesMissingValues<Double, Money> function = rbNumericFunctionThatAllowsMissingValues(
+    RBNumericFunctionThatHandlesMissingValues<Double, Money> function = rbDoubleFunctionThatReturnsSpecifiedDefaultOnMissingValues(
         rbNumericFunction(label("x+10"), v -> v + 10, v -> money(v)),
         money(123));
 
-    assertAlmostEquals(
+    assertOptionalAlmostEquals(
         money(doubleExplained(87, 10 + 77)),
         function.apply(new TestAllowsMissingValues(OptionalDouble.of(77))),
         1e-8);
-    assertAlmostEquals(
+    assertOptionalAlmostEquals(
         money(123),
         function.apply(new TestAllowsMissingValues(OptionalDouble.empty())),
         1e-8);
@@ -60,14 +59,14 @@ public class RBNumericFunctionThatHandlesMissingValuesTest
 
   @Override
   public RBNumericFunctionThatHandlesMissingValues<Double, Money> makeTrivialObject() {
-    return rbNumericFunctionThatThrowsOnMissingValues(
+    return rbDoubleFunctionThatReturnsEmptyOnMissingValues(
         // Not sure why, but we have to cast here
         (RBNumericFunction<Double, Money>) rbDoubleIdentityNumericFunction(v -> money(v)));
   }
 
   @Override
   public RBNumericFunctionThatHandlesMissingValues<Double, Money> makeNontrivialObject() {
-    return rbNumericFunctionThatAllowsMissingValues(
+    return rbDoubleFunctionThatReturnsSpecifiedDefaultOnMissingValues(
         rbNumericFunction(label("x+10"), v -> v + 10, v -> money(v)),
         money(999));
   }
@@ -75,7 +74,7 @@ public class RBNumericFunctionThatHandlesMissingValuesTest
   @Override
   public RBNumericFunctionThatHandlesMissingValues<Double, Money> makeMatchingNontrivialObject() {
     double e = 1e-9; // epsilon
-    return rbNumericFunctionThatAllowsMissingValues(
+    return rbDoubleFunctionThatReturnsSpecifiedDefaultOnMissingValues(
         rbNumericFunction(label("x+10"), v -> v + 10 + e, v -> money(v)),
         money(999 + e));
   }
