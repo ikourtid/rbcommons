@@ -34,7 +34,7 @@ public class RBStringToNumericFunctionThatHandlesMissingValuesTest
         .setLabel(DUMMY_LABEL)
         .setStringToValueMap(emptyRBMap())
         .throwOnUnknownString()
-        .throwOnMissingString()
+        .returnEmptyOnMissingString()
         .build();
   }
 
@@ -47,7 +47,7 @@ public class RBStringToNumericFunctionThatHandlesMissingValuesTest
                 "_100", money(100),
                 "_200", money(200)))
         .throwOnUnknownString()
-        .throwOnMissingString()
+        .returnEmptyOnMissingString()
         .build();
     assertOptionalEquals(money(100), function.apply(testAllowsMissingValues(Optional.of("_100"))));
     assertOptionalEquals(money(200), function.apply(testAllowsMissingValues(Optional.of("_200"))));
