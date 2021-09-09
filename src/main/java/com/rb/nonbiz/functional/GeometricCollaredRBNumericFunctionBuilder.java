@@ -106,12 +106,16 @@ public class GeometricCollaredRBNumericFunctionBuilder<X extends Number, Y exten
         maxX.doubleValue() - minX.doubleValue() > 1e-8,
         "%s : max must be sufficiently bigger than min in the collar, but min= %s and max= %s",
         label, minX, maxX);
+
     RBPreconditions.checkArgument(
         Math.abs(minY.doubleValue() - maxY.doubleValue()) > 1e-8,
         "%s : The multipliers for the min and max value cannot be the same: %s and %s ; range of numeric values was %s to %s",
         label, minY, maxY, minX, maxX);
 
-    // FIXME IAK INTERPOLATION we may need more preconditions, depending on what the calculation below will do.
+    RBPreconditions.checkArgument(
+        Math.abs(minY.doubleValue()) > 1e-8,
+        "minY can't be 0 (or close to 0), as it goes into a denominator somewhere in the formula: %s %s %s %s %s",
+        label, minY, maxY, minX, maxX);
   }
 
   @Override
@@ -140,7 +144,7 @@ public class GeometricCollaredRBNumericFunctionBuilder<X extends Number, Y exten
         x ->
             x <= minX.doubleValue() ? minY.doubleValue() :
             x >= maxX.doubleValue() ? maxY.doubleValue() :
-                 minY.doubleValue() * Math.pow(valuesRatio, (x - maxX.doubleValue()) / dxTotal),
+                 minY.doubleValue() * Math.pow(valuesRatio, (x - minX.doubleValue()) / dxTotal),
         instantiator);
   }
 
