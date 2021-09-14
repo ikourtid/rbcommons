@@ -210,7 +210,7 @@ public class RBJsonArrays {
     return jsonArrayToList(jsonArray, itemDeserializer)
         .stream()
         .mapToDouble(d -> d) // a DoubleStream, e.g. a stream of primitive doubles
-        .toArray();          // a raw array of double[]
+        .toArray();          // a raw array of type double[]
   }
 
   public static <T> RBSet<T> jsonArrayToRBSet(JsonArray jsonArray, Function<JsonElement, T> itemDeserializer) {
