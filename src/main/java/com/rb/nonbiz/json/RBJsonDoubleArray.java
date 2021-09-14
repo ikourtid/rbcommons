@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -50,6 +51,10 @@ public class RBJsonDoubleArray {
       rawDoublesList.add(item);
     }
     return new RBJsonDoubleArray(rawDoublesList);
+  }
+
+  public static RBJsonDoubleArray rbJsonDoubleArray(double[] items) {
+    return rbJsonDoubleArray(Arrays.stream(items));
   }
 
   public static RBJsonDoubleArray rbJsonDoubleArray(DoubleStream items) {
