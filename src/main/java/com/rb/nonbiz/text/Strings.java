@@ -168,6 +168,15 @@ public class Strings {
         value -> value.toString(instrumentMaster, date));
   }
 
+  public static <K extends PrintsInstruments, V>
+  String formatIndexableArray1DWhereKeysPrintInstruments(
+      ImmutableIndexableArray1D<K, V> indexableArray1D, InstrumentMaster instrumentMaster, LocalDate date) {
+    return formatIndexableArray1DHelper(
+        indexableArray1D,
+        key -> key.toString(instrumentMaster, date),
+        value -> value.toString());
+  }
+
   private static <K, V> String formatIndexableArray1DHelper(
       ImmutableIndexableArray1D<K, V> indexableArray1D,
       Function<K, String> keyTransformer,
