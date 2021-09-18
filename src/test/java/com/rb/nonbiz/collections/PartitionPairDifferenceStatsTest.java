@@ -93,7 +93,7 @@ public class PartitionPairDifferenceStatsTest extends RBTestMatcher<PartitionPai
 
     PartitionPairDifferenceStats doesNotThrow = partitionPairDifferenceStatsBuilder()
         .addDifference(unitFraction(0.1), unitFraction(0.9))  // 80% overweight
-        .addDifference(unitFraction(0.2), unitFraction(0.19)) // 19% overweight; less than 100%
+        .addDifference(unitFraction(0.2), unitFraction(0.19)) // 1% overweight
 
         .addDifference(unitFraction(0.9), unitFraction(0.1))
         .addDifference(unitFraction(0.19), unitFraction(0.2))
