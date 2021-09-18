@@ -1,5 +1,7 @@
 package com.rb.nonbiz.types;
 
+import com.rb.nonbiz.text.Strings;
+
 /**
  * <p> An item with a {@link SignedFraction} weight. </p>
  *
@@ -16,6 +18,11 @@ public class WeightedBySignedFraction<T> extends WeightedBy<SignedFraction, T> {
 
   public static <T> WeightedBySignedFraction<T> weightedBySignedFraction(T item, SignedFraction weight) {
     return new WeightedBySignedFraction<T>(item, weight);
+  }
+
+  @Override
+  public String toString() {
+    return Strings.format("[WBSF %s %s WBSF]", getWeight(), getItem());
   }
 
 }
