@@ -13,15 +13,22 @@ import static com.rb.biz.types.OnesBasedReturn.onesBasedLoss;
 import static com.rb.biz.types.SignedMoney.ZERO_SIGNED_MONEY;
 import static com.rb.biz.types.SignedMoney.signedMoney;
 import static com.rb.nonbiz.json.RBGson.*;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.math.stats.ZScore.zScore;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.bigDecimalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
 
 public class RBGsonTest {
 
@@ -432,6 +439,16 @@ public class RBGsonTest {
     assertEquals(
         onesBasedGain(1.07),
         onesBasedReturnFromJsonZeroBasedReturnPercentage(jsonDouble(7)));
+  }
+
+  @Test
+  public void testIsEmpty() {
+    assertTrue(isEmpty(emptyJsonObject()));
+    assertFalse(isEmpty(singletonJsonObject(DUMMY_STRING, jsonDouble(DUMMY_DOUBLE))));
+    assertFalse(isEmpty(singletonJsonObject(DUMMY_STRING, emptyJsonObject())));
+    assertFalse(isEmpty(jsonObject(
+        "dummy1", jsonDouble(DUMMY_DOUBLE),
+        "dummy2", jsonString(DUMMY_STRING))));
   }
 
 }

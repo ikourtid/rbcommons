@@ -219,6 +219,7 @@ public class RBGson {
         .add(BigDecimal.ONE, DEFAULT_MATH_CONTEXT));
   }
 
+  // We could call this jsonObjectIsEmpty, but usually it will
   public static boolean isEmpty(JsonObject jsonObject) {
     return jsonObject.size() == 0;
   }
