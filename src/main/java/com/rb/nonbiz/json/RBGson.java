@@ -2,6 +2,7 @@ package com.rb.nonbiz.json;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.rb.biz.types.OnesBasedReturn;
@@ -216,6 +217,11 @@ public class RBGson {
     return onesBasedReturn(zeroBasedReturn
         .multiply(PERCENTAGE_TO_FRACTION, DEFAULT_MATH_CONTEXT)
         .add(BigDecimal.ONE, DEFAULT_MATH_CONTEXT));
+  }
+
+  // We could call this jsonObjectIsEmpty (longer), but usually it will be obvious from the variable name.
+  public static boolean isEmpty(JsonObject jsonObject) {
+    return jsonObject.size() == 0;
   }
 
 }
