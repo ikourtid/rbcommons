@@ -238,9 +238,11 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setDoubleIfNotAlmostZero("zeroDouble",    1e-9, 1e-8)  // almost zero; 1e-9 < 1e-8
         .setDoublePercentageIfNotAlmostZero("nonZeroDoublePct", 0.0567, 1e-8)
         .setDoublePercentageIfNotAlmostZero("zeroDoublePct", 1e-9, 1e-8)
-        .setBooleanIfTrue("trueBoolean",  true)
-        .setBooleanIfTrue("falseBoolean", false)
-        .setBoolean("falseBoolean2", false)
+        .setBooleanIfTrue( "trueBoolean1",  true)
+        .setBooleanIfTrue( "falseBoolean1", false)
+        .setBooleanIfFalse("trueBoolean2",  true)
+        .setBooleanIfFalse("falseBoolean2", false)
+        .setBoolean(       "falseBoolean3", false)
         .setIfOptionalPresent("optionalPresent", Optional.of(123), v -> jsonInteger(v))
         .setIfOptionalPresent("optionalEmpty",   Optional.empty(), v -> emptyJsonObject())
         .setIfOptionalIntPresent("optionalIntPresent", OptionalInt.of(456))
@@ -276,9 +278,15 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
 
     assertEquals(
         jsonBoolean(true),
-        builder.getJsonObject().getAsJsonPrimitive("trueBoolean"));
+        builder.getJsonObject().getAsJsonPrimitive("trueBoolean1"));
     // using setBooleanIfTrue for a 'false' does not add a JsonElement
-    assertFalse(builder.getJsonObject().has("falseBoolean"));
+    assertFalse(builder.getJsonObject().has("falseBoolean1"));
+
+    assertEquals(
+        jsonBoolean(false),
+        builder.getJsonObject().getAsJsonPrimitive("falseBoolean2"));
+    // using setBooleanIfFalse for a 'true' does not add a JsonElement
+    assertFalse(builder.getJsonObject().has("trueBoolean2"));
 
     assertEquals(
         jsonInteger(123),
@@ -333,8 +341,9 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         jsonObjectEpsilonMatcher(rbJsonObjectBuilder()
             .set("nonZeroDouble",      jsonDouble(3.14))
             .set("nonZeroDoublePct",   jsonDouble(5.67))
-            .set("trueBoolean",        jsonBoolean(true))
+            .set("trueBoolean1",       jsonBoolean(true))
             .set("falseBoolean2",      jsonBoolean(false))
+            .set("falseBoolean3",      jsonBoolean(false))
             .set("optionalPresent",    jsonInteger(123))
             .set("optionalIntPresent", jsonInteger(456))
             .set("ifEvenPredicate456", jsonInteger(456))

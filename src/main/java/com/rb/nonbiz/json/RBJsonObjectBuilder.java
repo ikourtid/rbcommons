@@ -230,6 +230,18 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
   }
 
   /**
+   * Adds { property : jsonBoolean(value) } to jsonObject if value is false.
+   * Throws if 'property' already exists in jsonObject.
+   */
+  public RBJsonObjectBuilder setBooleanIfFalse(String property, boolean value) {
+    checkPropertyNotAlreadySet(property);
+    if (!value) {
+      setBoolean(property, value);
+    }
+    return this;
+  }
+
+  /**
    * Adds { property : jsonDouble(value) } to jsonObject if value is not zero (to within epsilon).
    * Throws if 'property' already exists in jsonObject.
    */
