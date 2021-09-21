@@ -49,9 +49,8 @@ public class CaseInsensitiveStringFilter {
     return capitalizedStrings.contains(string.toUpperCase());
   }
 
-  // Do not use this; it is here for the test matcher.
-  @VisibleForTesting
-  RBSet<String> getCapitalizedStrings() {
+  // Do not use this; it is here for the test matcher and for the JSON converter
+  public RBSet<String> getCapitalizedStrings() {
     return capitalizedStrings;
   }
 
