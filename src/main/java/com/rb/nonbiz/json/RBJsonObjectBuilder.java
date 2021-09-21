@@ -192,6 +192,19 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
   }
 
   /**
+   * Adds { property : jsonElement } to jsonObject if onlyIncludeIf is true.
+   * Throws if 'property' already exists in jsonObject.
+   */
+  public RBJsonObjectBuilder setIf(
+      String property,  boolean onlyIncludeIf, JsonElement jsonElement) {
+    checkPropertyNotAlreadySet(property);
+    if (onlyIncludeIf) {
+      jsonObject.add(property, jsonElement);
+    }
+    return this;
+  }
+
+  /**
    * Adds { property : jsonElement } to jsonObject if T passes the predicate.
    * Throws if 'property' already exists in jsonObject.
    */

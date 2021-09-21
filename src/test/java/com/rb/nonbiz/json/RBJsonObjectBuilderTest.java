@@ -247,6 +247,8 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setIfOptionalPresent("optionalEmpty",   Optional.empty(), v -> emptyJsonObject())
         .setIfOptionalIntPresent("optionalIntPresent", OptionalInt.of(456))
         .setIfOptionalIntPresent("optionalIntEmpty",   OptionalInt.empty())
+        .setIf("ifTrue123", true,  jsonInteger(123))
+        .setIf("ifTrue234", false, jsonInteger(234))
         .setIf("ifEvenPredicate456", 456, v -> v % 2 == 0, v -> jsonInteger(v))  // version with predicate
         .setIf("ifEvenPredicate567", 567, v -> v % 2 == 0, v -> jsonInteger(v))
         .setIf("ifEvenBoolean456",   456, true,            v -> jsonInteger(v))  // can also pass in a Boolean instead of a predicate
@@ -301,6 +303,11 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
     assertFalse(builder.getJsonObject().has("optionalIntEmpty"));
 
     assertEquals(
+        jsonInteger(123),
+        builder.getJsonObject().getAsJsonPrimitive("ifTrue123"));
+    assertFalse(builder.getJsonObject().has("ifTrue234"));
+
+    assertEquals(
         jsonInteger(456),
         builder.getJsonObject().getAsJsonPrimitive("ifEvenPredicate456"));
     // using setIf() for a value with predicate false does not add a JsonElement
@@ -346,6 +353,7 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
             .set("falseBoolean3",      jsonBoolean(false))
             .set("optionalPresent",    jsonInteger(123))
             .set("optionalIntPresent", jsonInteger(456))
+            .set("ifTrue123",          jsonInteger(123))
             .set("ifEvenPredicate456", jsonInteger(456))
             .set("ifEvenBoolean456",   jsonInteger(456))
             .set("nonZeroSignedMoney", jsonDouble(1.23))
