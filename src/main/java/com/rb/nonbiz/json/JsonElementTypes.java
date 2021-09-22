@@ -17,6 +17,9 @@ import static com.rb.nonbiz.json.JsonElementType.JSON_STRING;
 public class JsonElementTypes {
 
   public static JsonElementType getJsonElementType(JsonElement jsonElement) {
+    if (jsonElement.isJsonNull()) {
+      return JSON_NULL;
+    }
     if (jsonElement.isJsonPrimitive()) {
       JsonPrimitive jsonPrimitive = jsonElement.getAsJsonPrimitive();
       if (jsonPrimitive.isBoolean()) {
@@ -27,9 +30,6 @@ public class JsonElementTypes {
       }
       if (jsonPrimitive.isString()) {
         return JSON_STRING;
-      }
-      if (jsonPrimitive.isJsonNull()) {
-        return JSON_NULL;
       }
       throw new IllegalArgumentException(Strings.format("Unknown JsonElement primitive type: %s", jsonElement));
     }
