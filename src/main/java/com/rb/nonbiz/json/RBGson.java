@@ -1,6 +1,7 @@
 package com.rb.nonbiz.json;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -222,6 +223,18 @@ public class RBGson {
   // We could call this jsonObjectIsEmpty (longer), but usually it will be obvious from the variable name.
   public static boolean isEmpty(JsonObject jsonObject) {
     return jsonObject.size() == 0;
+  }
+
+  // FIXME IAK GS test
+  // We could call this jsonArrayIsEmpty (longer), but usually it will be obvious from the variable name.
+  public static boolean isEmpty(JsonArray jsonArray) {
+    return jsonArray.size() == 0;
+  }
+
+  // FIXME IAK GS test
+  // We could call this jsonArrayIsSingleton (longer), but usually it will be obvious from the variable name.
+  public static boolean isSingleton(JsonArray jsonArray) {
+    return jsonArray.size() == 1;
   }
 
 }
