@@ -120,6 +120,13 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
     return this;
   }
 
+  // FIXME IAK GS comment
+  public RBJsonObjectBuilder setJsonSubArrayIfNonEmpty(String property, Optional<JsonArray> jsonSubArray) {
+    checkPropertyNotAlreadySet(property);
+    jsonSubArray.ifPresent(v -> jsonObject.add(property, v));
+    return this;
+  }
+
   public RBJsonObjectBuilder setAllAssumingNoOverlap(JsonObject source) {
     source.entrySet().forEach(entry -> {
       String property = entry.getKey();

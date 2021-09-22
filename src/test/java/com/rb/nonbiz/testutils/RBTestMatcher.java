@@ -4,6 +4,7 @@ import com.rb.nonbiz.text.HasHumanReadableLabel;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.PrintsInstruments;
 import com.rb.nonbiz.text.PrintsMultilineString;
+import com.rb.nonbiz.text.Strings;
 import org.junit.Test;
 
 import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_INSTRUMENT_MASTER;
@@ -173,6 +174,16 @@ public abstract class RBTestMatcher<T> {
     // We create separate objects because if the matcher erroneously does simple pointer equality,
     // the test will pass in cases when it shouldn't.
     assertTrue(
+        "makeNontrivialObject() should match itself",
+        willMatch(
+            makeNontrivialObject(),
+            makeNontrivialObject()));
+    assertTrue(
+        "makeMatchingNontrivialObject() should match itself",
+        willMatch(
+            makeMatchingNontrivialObject(),
+            makeMatchingNontrivialObject()));
+    assertTrue(
         "makeNontrivialObject() should match makeMatchingNontrivialObject()",
         willMatch(
             makeNontrivialObject(),
@@ -181,16 +192,6 @@ public abstract class RBTestMatcher<T> {
         "makeMatchingNontrivialObject() should match makeNontrivialObject()",
         willMatch(
             makeMatchingNontrivialObject(),
-            makeNontrivialObject()));
-    assertTrue(
-        "makeMatchingNontrivialObject() should match itself",
-        willMatch(
-            makeMatchingNontrivialObject(),
-            makeMatchingNontrivialObject()));
-    assertTrue(
-        "makeNontrivialObject() should match itself",
-        willMatch(
-            makeNontrivialObject(),
             makeNontrivialObject()));
 
     // Most data classes do not support hashCode/equals. In those cases, the following will be pointer comparisons
