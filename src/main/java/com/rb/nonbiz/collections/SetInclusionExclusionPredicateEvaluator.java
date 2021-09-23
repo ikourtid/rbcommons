@@ -141,7 +141,7 @@ public class SetInclusionExclusionPredicateEvaluator {
     }
 
     /** You should access this data class via a SetInclusionExclusionApplier; this is here for the test matcher. */
-    RBSet<T> getAlwaysInclude() {
+    public RBSet<T> getAlwaysInclude() {
       return alwaysInclude;
     }
 

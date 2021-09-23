@@ -29,6 +29,10 @@ public class IidSetSimpleConstructors {
     return newIidSetHelper(IN_INCREASING_INSTRUMENT_ID, DISALLOW_DUPLICATES, sortedInstruments);
   }
 
+  public static IidSet newIidSet(RBSet<InstrumentId> instrumentIds) {
+    return newIidSet(instrumentIds.asSet());
+  }
+
   public static IidSet newIidSet(Collection<InstrumentId> instrumentIds) {
     return newIidSetHelper(NOT_IN_INCREASING_INSTRUMENT_ID, DISALLOW_DUPLICATES, instrumentIds);
   }
