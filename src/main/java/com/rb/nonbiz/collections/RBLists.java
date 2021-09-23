@@ -192,9 +192,9 @@ public class RBLists {
    * another list of items of type Y. Then, we will concatenate everything into a single {@code List<Y>}.
    * This can be done with a bunch of inline streams and flatMap operations, but calling this method is easier to read.
    */
-  public static <X, Y> List<Y> listConcatenationFromEach(Collection<X> items, Function<X, List<Y>> transformer) {
+  public static <X, Y> List<Y> listConcatenationFromEach(Collection<X> items, Function<X, Stream<Y>> transformer) {
     return items.stream()
-        .flatMap(x -> transformer.apply(x).stream())
+        .flatMap(x -> transformer.apply(x))
         .collect(Collectors.toList());
   }
 
