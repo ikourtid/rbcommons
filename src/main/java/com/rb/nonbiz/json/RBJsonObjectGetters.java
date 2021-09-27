@@ -104,6 +104,20 @@ public class RBJsonObjectGetters {
 
   /**
    * From 'jsonObject', get the value of 'property' and check that it is a number.
+   * Convert from a percentage by dividing by 100 and return as a double.
+   * If it is missing, return a default.
+   */
+  public static double getJsonDoubleFromPercentageOrDefault(
+      JsonObject jsonObject,
+      String property,
+      double defaultValue) {
+    return jsonObject.has(property)
+        ? getJsonNumberElementOrThrow(jsonObject, property).getAsDouble() * 0.01
+        : defaultValue;
+  }
+
+  /**
+   * From 'jsonObject', get the value of 'property' and check that it is a number.
    * If missing or is not a number, throw an exception.
    * Convert from a percentage by dividing by 100 and return as a BigDecimal.
    */
