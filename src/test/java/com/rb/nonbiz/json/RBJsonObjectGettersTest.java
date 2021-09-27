@@ -204,6 +204,12 @@ public class RBJsonObjectGettersTest {
     assertEquals(
         BigDecimal.valueOf(0.0123),
         getJsonBigDecimalFromPercentageOrThrow(jsonObject, "x"));
+    assertEquals(
+        0.0123,
+        getJsonDoubleFromPercentageOrDefault(jsonObject, "x", 7.89));
+    assertEquals(
+        7.89,
+        getJsonDoubleFromPercentageOrDefault(jsonObject, "MISSING_KEY", 7.89));
 
     // "nLong" : 123_456_789_000L can be converted to long, BigDecimal, or double
     assertEquals(
