@@ -245,6 +245,10 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setBoolean(       "falseBoolean3", false)
         .setIfOptionalPresent("optionalPresent", Optional.of(123), v -> jsonInteger(v))
         .setIfOptionalPresent("optionalEmpty",   Optional.empty(), v -> emptyJsonObject())
+        // the following 3 keys are set if the Optional<Integer> is present AND is odd
+        .setIfOptionalPresent("optionalPresent2", Optional.of(789),          v -> v % 2 == 1, v -> jsonInteger(v))
+        .setIfOptionalPresent("optionalPresent3", Optional.of(890),          v -> v % 2 == 1, v -> jsonInteger(v))
+        .setIfOptionalPresent("optionalEmpty2",   Optional.<Integer>empty(), v -> v % 2 == 1, v -> jsonInteger(v))
         .setIfOptionalIntPresent("optionalIntPresent", OptionalInt.of(456))
         .setIfOptionalIntPresent("optionalIntEmpty",   OptionalInt.empty())
         .setIf("ifTrue123", true,  jsonInteger(123))
@@ -295,6 +299,15 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         builder.getJsonObject().getAsJsonPrimitive("optionalPresent"));
     // using setIfOptionalPresent for Optional.empty() does not add a JsonElement
     assertFalse(builder.getJsonObject().has("optionalEmpty"));
+
+    assertEquals(
+        jsonInteger(789),
+        builder.getJsonObject().getAsJsonPrimitive("optionalPresent2"));
+    // using setIfOptionalPresent for Optional.empty() does not add a JsonElement
+    assertFalse(builder.getJsonObject().has("optionalEmpty2"));
+
+    // optionalPresent3 is present, but is even so it's not incuded
+    assertFalse(builder.getJsonObject().has("optionalPresent3"));
 
     assertEquals(
         jsonInteger(456),
@@ -352,6 +365,7 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
             .set("falseBoolean2",      jsonBoolean(false))
             .set("falseBoolean3",      jsonBoolean(false))
             .set("optionalPresent",    jsonInteger(123))
+            .set("optionalPresent2",   jsonInteger(789))
             .set("optionalIntPresent", jsonInteger(456))
             .set("ifTrue123",          jsonInteger(123))
             .set("ifEvenPredicate456", jsonInteger(456))
@@ -434,6 +448,8 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setLocalDate("date", LocalDate.of(2010, 4, 4))
         .setBooleanIfTrue("trueBoolean", true)
         .setIfOptionalPresent("optionalPresent", Optional.of(123), v -> jsonInteger(v))
+        .setIfOptionalPresent("optionalPresent2", Optional.of("Optional2"),
+            v -> v.length() > 2, v -> jsonString(v))
         .setDoubleIfNotAlmostZero("nonZeroDouble", 7.89, 1e-8)
         .setPreciseValueIfNotAlmostZero("nonZero", signedMoney(456.78), 1e-8)
         .setArrayIfNonEmpty("array", jsonStringArray("abc", "def"))
@@ -457,6 +473,8 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setLocalDate("date", LocalDate.of(2010, 4, 4))
         .setBooleanIfTrue("trueBoolean", true)
         .setIfOptionalPresent("optionalPresent", Optional.of(123), v -> jsonInteger(v))
+        .setIfOptionalPresent("optionalPresent2", Optional.of("Optional2"),
+            v -> v.length() > 2, v -> jsonString(v))
         .setDoubleIfNotAlmostZero("nonZeroDouble", 7.89 + e, 1e-8)
         .setPreciseValueIfNotAlmostZero("nonZero", signedMoney(456.78 + e), 1e-8)
         .setArrayIfNonEmpty("array", jsonStringArray("abc", "def"))

@@ -16,6 +16,7 @@ import java.util.OptionalInt;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import static com.rb.nonbiz.collections.RBVoid.rbVoid;
 import static com.rb.nonbiz.json.RBGson.jsonBigDecimal;
 import static com.rb.nonbiz.json.RBGson.jsonBoolean;
 import static com.rb.nonbiz.json.RBGson.jsonDate;
@@ -184,6 +185,22 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
     checkPropertyNotAlreadySet(property);
     maybeValue.ifPresent(v ->
         jsonObject.add(property, valueSerializer.apply(v)));
+    return this;
+  }
+
+  /**
+   * Adds { property : jsonElement } to jsonObject if {@code Optional<T>} is present
+   * and passes a predicate.
+   * Throws if 'property' already exists in jsonObject.
+   */
+  public <T> RBJsonObjectBuilder setIfOptionalPresent(
+      String property, Optional<T> maybeValue, Predicate<T> onlyIncludeIf, Function<T, JsonElement> valueSerializer) {
+    checkPropertyNotAlreadySet(property);
+    maybeValue.ifPresent(v -> {
+      if (onlyIncludeIf.test(v)) {
+        jsonObject.add(property, valueSerializer.apply(v));
+      }
+    });
     return this;
   }
 
