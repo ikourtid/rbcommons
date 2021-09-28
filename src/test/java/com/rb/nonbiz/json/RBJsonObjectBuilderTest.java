@@ -245,7 +245,9 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setBoolean(       "falseBoolean3", false)
         .setIfOptionalPresent("optionalPresent", Optional.of(123), v -> jsonInteger(v))
         .setIfOptionalPresent("optionalEmpty",   Optional.empty(), v -> emptyJsonObject())
+        // the following 3 keys are set if the Optional<Integer> is present AND is odd
         .setIfOptionalPresent("optionalPresent2", Optional.of(789),          v -> v % 2 == 1, v -> jsonInteger(v))
+        .setIfOptionalPresent("optionalPresent3", Optional.of(890),          v -> v % 2 == 1, v -> jsonInteger(v))
         .setIfOptionalPresent("optionalEmpty2",   Optional.<Integer>empty(), v -> v % 2 == 1, v -> jsonInteger(v))
         .setIfOptionalIntPresent("optionalIntPresent", OptionalInt.of(456))
         .setIfOptionalIntPresent("optionalIntEmpty",   OptionalInt.empty())
@@ -303,6 +305,9 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         builder.getJsonObject().getAsJsonPrimitive("optionalPresent2"));
     // using setIfOptionalPresent for Optional.empty() does not add a JsonElement
     assertFalse(builder.getJsonObject().has("optionalEmpty2"));
+
+    // optionalPresent3 is present, but is even so it's not incuded
+    assertFalse(builder.getJsonObject().has("optionalPresent3"));
 
     assertEquals(
         jsonInteger(456),
