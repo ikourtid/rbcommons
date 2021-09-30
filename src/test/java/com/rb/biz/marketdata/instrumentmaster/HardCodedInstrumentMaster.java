@@ -18,8 +18,8 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap
  * This is useful in test when we want to create an {@link InstrumentMaster} with some mappings hardcoded,
  * e.g. STOCK_A1 {@code <->} "A1", etc.
  *
- * <p> This InstrumentMaster is used in tests, usually for a small number of stocks. It's not general enough
- * for production because ticker / symbol is not necessarily a bi-map. For example, a ticker change would cause one
+ * <p> HardeCodedInstrumentMaster is used in tests, usually for a small number of stocks. It's not general enough
+ * for production use because ticker / symbol is not necessarily a bi-map. For example, a ticker change would cause one
  * InstrumentId to map to two (or more) symbols, depending on the date. </p>
  */
 public class HardCodedInstrumentMaster implements InstrumentMaster {
