@@ -13,7 +13,6 @@ import static com.rb.nonbiz.collections.IidBiMap.iidBiMap;
 import static com.rb.nonbiz.collections.IidBiMaps.emptyIidBiMap;
 import static com.rb.nonbiz.collections.IidBiMaps.iidBiMapOf;
 import static com.rb.nonbiz.collections.IidBiMaps.singletonIidBiMap;
-import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 
 /**
  * This is useful in test when we want to create an {@link InstrumentMaster} with some mappings hardcoded,
