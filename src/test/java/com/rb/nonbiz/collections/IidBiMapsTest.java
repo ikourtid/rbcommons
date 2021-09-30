@@ -75,6 +75,16 @@ public class IidBiMapsTest extends TestCase {
     assertIllegalArgumentException( () -> iidBiMap3.getItemFromInstrumentId().getOrThrow(STOCK_F));
     assertIllegalArgumentException( () -> iidBiMap4.getItemFromInstrumentId().getOrThrow(STOCK_F));
     assertIllegalArgumentException( () -> iidBiMap5.getItemFromInstrumentId().getOrThrow(STOCK_F));
+
+    assertEquals(STOCK_A, iidBiMap2.getInstrumentIdFromItem().getOrThrow("AAA"));
+    assertEquals(STOCK_A, iidBiMap3.getInstrumentIdFromItem().getOrThrow("AAA"));
+    assertEquals(STOCK_A, iidBiMap4.getInstrumentIdFromItem().getOrThrow("AAA"));
+    assertEquals(STOCK_A, iidBiMap5.getInstrumentIdFromItem().getOrThrow("AAA"));
+
+    assertIllegalArgumentException( () -> iidBiMap2.getInstrumentIdFromItem().getOrThrow("ZZZ"));
+    assertIllegalArgumentException( () -> iidBiMap3.getInstrumentIdFromItem().getOrThrow("ZZZ"));
+    assertIllegalArgumentException( () -> iidBiMap4.getInstrumentIdFromItem().getOrThrow("ZZZ"));
+    assertIllegalArgumentException( () -> iidBiMap5.getInstrumentIdFromItem().getOrThrow("ZZZ"));
   }
 
 }
