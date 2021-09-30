@@ -2,14 +2,15 @@ package com.rb.biz.marketdata.instrumentmaster;
 
 import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
+import com.rb.nonbiz.collections.IidBiMap;
 import com.rb.nonbiz.collections.IidMap;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 import static com.rb.biz.types.Symbol.symbol;
-import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
+import static com.rb.nonbiz.collections.IidBiMap.iidBiMap;
+import static com.rb.nonbiz.collections.IidBiMaps.emptyIidBiMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap;
 
@@ -22,18 +23,18 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap
  */
 public class HardCodedInstrumentMaster implements InstrumentMaster {
 
-  private final IidMap<Symbol> hardCodedSymbolMap;
+  private final IidBiMap<Symbol> hardCodedSymbolBiMap;
 
   public HardCodedInstrumentMaster() {
-    this.hardCodedSymbolMap = emptyIidMap();
+    this.hardCodedSymbolBiMap = emptyIidBiMap();
   }
 
-  private HardCodedInstrumentMaster(IidMap<Symbol> hardCodedSymbolMap) {
-    this.hardCodedSymbolMap = hardCodedSymbolMap;
+  private HardCodedInstrumentMaster(IidBiMap<Symbol> hardCodedSymbolBiMap) {
+    this.hardCodedSymbolBiMap = hardCodedSymbolBiMap;
   }
 
   public static HardCodedInstrumentMaster hardCodedInstrumentMaster(IidMap<Symbol> hardCodedSymbolMap) {
-    return new HardCodedInstrumentMaster(hardCodedSymbolMap);
+    return new HardCodedInstrumentMaster(iidBiMap(hardCodedSymbolMap));
   }
 
   public static HardCodedInstrumentMaster singletonHardCodedInstrumentMaster(InstrumentId instrumentId, String symbol) {
@@ -72,17 +73,17 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
 
   @Override
   public Optional<InstrumentId> getInstrumentId(Symbol symbol, LocalDate effectiveDate) {
-    throw new NotImplementedException("not implemented in test");
+    return Optional.of(hardCodedSymbolBiMap.getInstrumentIdFromItem().getOrThrow(symbol));
   }
 
   @Override
   public Optional<Symbol> getSymbol(InstrumentId instrumentId, LocalDate ignoredEffectiveDate) {
-    return Optional.of(hardCodedSymbolMap.getOrThrow(instrumentId));
+    return Optional.of(hardCodedSymbolBiMap.getItemFromInstrumentId().getOrThrow(instrumentId));
   }
 
   @Override
   public Optional<Symbol> getLatestValidSymbol(InstrumentId instrumentId, LocalDate ignoredEffectiveDate) {
-    return Optional.of(hardCodedSymbolMap.getOrThrow(instrumentId));
+    return Optional.of(hardCodedSymbolBiMap.getItemFromInstrumentId().getOrThrow(instrumentId));
   }
 
 }
