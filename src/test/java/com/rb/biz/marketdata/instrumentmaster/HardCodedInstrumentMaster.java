@@ -74,14 +74,17 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
 
   @Override
   public Optional<InstrumentId> getInstrumentId(Symbol symbol, LocalDate effectiveDate) {
-    return Optional.of(hardCodedSymbolBiMap.getInstrumentIdFromItem().getOrThrow(symbol));
+    RBMap<Symbol, InstrumentId> instrumentIdFromSymbol = hardCodedSymbolBiMap.getInstrumentIdFromItem();
+    return instrumentIdFromSymbol.containsKey(symbol)
+        ? Optional.of(instrumentIdFromSymbol.getOrThrow(symbol))
+        : Optional.empty();
   }
 
   @Override
   public Optional<Symbol> getSymbol(InstrumentId instrumentId, LocalDate ignoredEffectiveDate) {
-    IidMap<Symbol> itemFromInstrumentId = hardCodedSymbolBiMap.getItemFromInstrumentId();
-    return itemFromInstrumentId.containsKey(instrumentId)
-        ? Optional.of(hardCodedSymbolBiMap.getItemFromInstrumentId().getOrThrow(instrumentId))
+    IidMap<Symbol> symbolFromInstrumentId = hardCodedSymbolBiMap.getItemFromInstrumentId();
+    return symbolFromInstrumentId.containsKey(instrumentId)
+        ? Optional.of(symbolFromInstrumentId.getOrThrow(instrumentId))
         : Optional.empty();
   }
 
