@@ -4,7 +4,6 @@ import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidBiMap;
 import com.rb.nonbiz.collections.IidMap;
-import com.rb.nonbiz.collections.RBMap;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -16,11 +15,12 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap;
 
 /**
- * This is useful in test when we want to create an InstrumentMaster with some mappings hardcoded,
- * e.g. STOCK_A1 {@code ->} "A1", etc.
- * It only works for cases where we don't want to do the reverse lookup of symbol {@code ->} instrument ID
- * (which we rarely want to do in tests), and where we are OK having the same symbol for a given instrument
- * on any date (i.e. no ticker changes supported, which we also don't really have a reason to do in a test).
+ * This is useful in test when we want to create an {@link InstrumentMaster} with some mappings hardcoded,
+ * e.g. STOCK_A1 {@code <->} "A1", etc.
+ *
+ * <p> This InstrumentMaster is used in tests, usually for a small number of stocks. It's not general enough
+ * for production because ticker / symbol is not necessarily a bi-map. For example, a ticker change would cause one
+ * InstrumentId to map to two (or more) symbols, depending on the date. </p>
  */
 public class HardCodedInstrumentMaster implements InstrumentMaster {
 
@@ -73,19 +73,15 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
   }
 
   @Override
-  public Optional<InstrumentId> getInstrumentId(Symbol symbol, LocalDate effectiveDate) {
-    RBMap<Symbol, InstrumentId> instrumentIdFromSymbol = hardCodedSymbolBiMap.getInstrumentIdFromItem();
-    return instrumentIdFromSymbol.containsKey(symbol)
-        ? Optional.of(instrumentIdFromSymbol.getOrThrow(symbol))
-        : Optional.empty();
+  public Optional<InstrumentId> getInstrumentId(Symbol symbol, LocalDate ignoredDate) {
+    // use getOrThrow() to fail fast; this is test, not prod
+    return Optional.of(hardCodedSymbolBiMap.getInstrumentIdFromItem().getOrThrow(symbol));
   }
 
   @Override
   public Optional<Symbol> getSymbol(InstrumentId instrumentId, LocalDate ignoredEffectiveDate) {
-    IidMap<Symbol> symbolFromInstrumentId = hardCodedSymbolBiMap.getItemFromInstrumentId();
-    return symbolFromInstrumentId.containsKey(instrumentId)
-        ? Optional.of(symbolFromInstrumentId.getOrThrow(instrumentId))
-        : Optional.empty();
+    // use getOrThrow() to fail fast; this is test, not prod
+    return Optional.of(hardCodedSymbolBiMap.getItemFromInstrumentId().getOrThrow(instrumentId));
   }
 
   @Override
