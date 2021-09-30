@@ -4,6 +4,7 @@ import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidBiMap;
 import com.rb.nonbiz.collections.IidMap;
+import com.rb.nonbiz.collections.RBMap;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -78,12 +79,15 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
 
   @Override
   public Optional<Symbol> getSymbol(InstrumentId instrumentId, LocalDate ignoredEffectiveDate) {
-    return Optional.of(hardCodedSymbolBiMap.getItemFromInstrumentId().getOrThrow(instrumentId));
+    IidMap<Symbol> itemFromInstrumentId = hardCodedSymbolBiMap.getItemFromInstrumentId();
+    return itemFromInstrumentId.containsKey(instrumentId)
+        ? Optional.of(hardCodedSymbolBiMap.getItemFromInstrumentId().getOrThrow(instrumentId))
+        : Optional.empty();
   }
 
   @Override
   public Optional<Symbol> getLatestValidSymbol(InstrumentId instrumentId, LocalDate ignoredEffectiveDate) {
-    return Optional.of(hardCodedSymbolBiMap.getItemFromInstrumentId().getOrThrow(instrumentId));
+    return getSymbol(instrumentId, ignoredEffectiveDate);
   }
 
 }
