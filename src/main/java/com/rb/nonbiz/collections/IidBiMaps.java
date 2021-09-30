@@ -48,4 +48,18 @@ public class IidBiMaps {
     return iidBiMap(newIidMap(map));
   }
 
+  public static <V> IidBiMap<V> iidBiMapOf(InstrumentId k1, V v1,
+                                           InstrumentId k2, V v2,
+                                           InstrumentId k3, V v3,
+                                           InstrumentId k4, V v4,
+                                           InstrumentId k5, V v5) {
+    MutableIidMap<V> map = newMutableIidMapWithExpectedSize(5);
+    map.putAssumingAbsent(k1, v1);
+    map.putAssumingAbsent(k2, v2);
+    map.putAssumingAbsent(k3, v3);
+    map.putAssumingAbsent(k4, v4);
+    map.putAssumingAbsent(k5, v5);
+    return iidBiMap(newIidMap(map));
+  }
+
 }

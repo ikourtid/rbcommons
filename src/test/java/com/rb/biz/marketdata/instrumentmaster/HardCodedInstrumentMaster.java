@@ -11,6 +11,7 @@ import java.util.Optional;
 import static com.rb.biz.types.Symbol.symbol;
 import static com.rb.nonbiz.collections.IidBiMap.iidBiMap;
 import static com.rb.nonbiz.collections.IidBiMaps.emptyIidBiMap;
+import static com.rb.nonbiz.collections.IidBiMaps.iidBiMapOf;
 import static com.rb.nonbiz.collections.IidBiMaps.singletonIidBiMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 
@@ -49,7 +50,7 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
   public static HardCodedInstrumentMaster hardCodedInstrumentMaster(
       InstrumentId instrumentId1, String symbol1,
       InstrumentId instrumentId2, String symbol2) {
-    return hardCodedInstrumentMaster(iidMapOf(
+    return hardCodedInstrumentMaster(iidBiMapOf(
         instrumentId1, symbol(symbol1),
         instrumentId2, symbol(symbol2)));
   }
@@ -58,7 +59,7 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
       InstrumentId instrumentId1, String symbol1,
       InstrumentId instrumentId2, String symbol2,
       InstrumentId instrumentId3, String symbol3) {
-    return hardCodedInstrumentMaster(iidMapOf(
+    return hardCodedInstrumentMaster(iidBiMapOf(
         instrumentId1, symbol(symbol1),
         instrumentId2, symbol(symbol2),
         instrumentId3, symbol(symbol3)));
@@ -69,11 +70,25 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
       InstrumentId instrumentId2, String symbol2,
       InstrumentId instrumentId3, String symbol3,
       InstrumentId instrumentId4, String symbol4) {
-    return hardCodedInstrumentMaster(iidMapOf(
+    return hardCodedInstrumentMaster(iidBiMapOf(
         instrumentId1, symbol(symbol1),
         instrumentId2, symbol(symbol2),
         instrumentId3, symbol(symbol3),
         instrumentId4, symbol(symbol4)));
+  }
+
+  public static HardCodedInstrumentMaster hardCodedInstrumentMaster(
+      InstrumentId instrumentId1, String symbol1,
+      InstrumentId instrumentId2, String symbol2,
+      InstrumentId instrumentId3, String symbol3,
+      InstrumentId instrumentId4, String symbol4,
+      InstrumentId instrumentId5, String symbol5) {
+    return hardCodedInstrumentMaster(iidBiMapOf(
+        instrumentId1, symbol(symbol1),
+        instrumentId2, symbol(symbol2),
+        instrumentId3, symbol(symbol3),
+        instrumentId4, symbol(symbol4),
+        instrumentId5, symbol(symbol5)));
   }
 
   @Override

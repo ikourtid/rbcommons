@@ -8,6 +8,7 @@ import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_C;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_E;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_F;
 import static com.rb.nonbiz.collections.IidBiMaps.emptyIidBiMap;
 import static com.rb.nonbiz.collections.IidBiMaps.iidBiMapOf;
 import static com.rb.nonbiz.collections.IidBiMaps.singletonIidBiMap;
@@ -48,22 +49,32 @@ public class IidBiMapsTest extends TestCase {
         STOCK_B, "BBB",
         STOCK_C, "CCC",
         STOCK_D, "DDD");
+    IidBiMap<String> iidBiMap5 = iidBiMapOf(
+        STOCK_A, "AAA",
+        STOCK_B, "BBB",
+        STOCK_C, "CCC",
+        STOCK_D, "DDD",
+        STOCK_E, "EEE");
 
     assertEquals(2, iidBiMap2.size());
     assertEquals(3, iidBiMap3.size());
     assertEquals(4, iidBiMap4.size());
+    assertEquals(5, iidBiMap5.size());
 
     assertEquals("AAA",     iidBiMap2.getItemFromInstrumentId().getOrThrow(STOCK_A));
     assertEquals("AAA",     iidBiMap3.getItemFromInstrumentId().getOrThrow(STOCK_A));
     assertEquals("AAA",     iidBiMap4.getItemFromInstrumentId().getOrThrow(STOCK_A));
+    assertEquals("AAA",     iidBiMap5.getItemFromInstrumentId().getOrThrow(STOCK_A));
 
-    assertEquals("MISSING", iidBiMap2.getItemFromInstrumentId().getOrDefault(STOCK_E, "MISSING"));
-    assertEquals("MISSING", iidBiMap3.getItemFromInstrumentId().getOrDefault(STOCK_E, "MISSING"));
-    assertEquals("MISSING", iidBiMap4.getItemFromInstrumentId().getOrDefault(STOCK_E, "MISSING"));
+    assertEquals("MISSING", iidBiMap2.getItemFromInstrumentId().getOrDefault(STOCK_F, "MISSING"));
+    assertEquals("MISSING", iidBiMap3.getItemFromInstrumentId().getOrDefault(STOCK_F, "MISSING"));
+    assertEquals("MISSING", iidBiMap4.getItemFromInstrumentId().getOrDefault(STOCK_F, "MISSING"));
+    assertEquals("MISSING", iidBiMap5.getItemFromInstrumentId().getOrDefault(STOCK_F, "MISSING"));
 
-    assertIllegalArgumentException( () -> iidBiMap2.getItemFromInstrumentId().getOrThrow(STOCK_E));
-    assertIllegalArgumentException( () -> iidBiMap3.getItemFromInstrumentId().getOrThrow(STOCK_E));
-    assertIllegalArgumentException( () -> iidBiMap4.getItemFromInstrumentId().getOrThrow(STOCK_E));
+    assertIllegalArgumentException( () -> iidBiMap2.getItemFromInstrumentId().getOrThrow(STOCK_F));
+    assertIllegalArgumentException( () -> iidBiMap3.getItemFromInstrumentId().getOrThrow(STOCK_F));
+    assertIllegalArgumentException( () -> iidBiMap4.getItemFromInstrumentId().getOrThrow(STOCK_F));
+    assertIllegalArgumentException( () -> iidBiMap5.getItemFromInstrumentId().getOrThrow(STOCK_F));
   }
 
 }
