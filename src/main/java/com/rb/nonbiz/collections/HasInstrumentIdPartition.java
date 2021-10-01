@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
+import com.rb.biz.types.asset.AssetId;
 import com.rb.biz.types.asset.HasInstrumentId;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.text.PrintsInstruments;
@@ -19,9 +20,14 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_INSTRUMENT_MASTER;
 import static com.rb.nonbiz.collections.HasInstrumentIdMaps.newHasInstrumentIdMap;
 import static com.rb.nonbiz.collections.HasInstrumentIdMaps.singletonHasInstrumentIdMap;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.newIidSet;
+import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
+import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.Pair.pair;
+import static com.rb.nonbiz.collections.Partition.partition;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 import static com.rb.nonbiz.text.RBLog.rbLog;
@@ -147,6 +153,24 @@ public class HasInstrumentIdPartition<T extends HasInstrumentId> implements Prin
 
   public int size() {
     return rawMap.size();
+  }
+
+  /**
+   * Converts to a {@link Partition} by only keeping the {@link InstrumentId} portion of the {@link HasInstrumentId} key.
+   * Of course, the resulting Partition will not have enough information in it to let us convert back to this
+   * {@link HasInstrumentIdPartition}.
+   */
+  public Partition<InstrumentId> toInstrumentIdPartition() {
+    return partition(rawMap.toIidMap().toRBMap());
+  }
+
+  /**
+   * Converts to a {@link Partition} by only keeping the {@link InstrumentId} portion of the {@link HasInstrumentId} key.
+   * Of course, the resulting Partition will not have enough information in it to let us convert back to this
+   * {@link HasInstrumentIdPartition}.
+   */
+  public Partition<AssetId> toAssetIdPartition() {
+    return partition(rawMap.toIidMap().toRBMap().transformKeysCopy(instrumentId -> (AssetId) instrumentId));
   }
 
   @Override
