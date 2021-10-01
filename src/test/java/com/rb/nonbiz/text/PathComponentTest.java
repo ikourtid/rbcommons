@@ -26,15 +26,20 @@ public class PathComponentTest extends RBTestMatcher<PathComponent> {
 
     // can't be empty
     assertIllegalArgumentException( () -> pathComponent(""));
+
     // can't have slashes; this is not the full path
     assertIllegalArgumentException( () -> pathComponent("abc/def"));
+
     // can't have spaces
     assertIllegalArgumentException( () -> pathComponent("abc def"));
+
     // can't contain unusual characters
+    assertIllegalArgumentException( () -> pathComponent("abc-def"));
     assertIllegalArgumentException( () -> pathComponent("abc:def"));
     assertIllegalArgumentException( () -> pathComponent("abc&def"));
     assertIllegalArgumentException( () -> pathComponent("abc|def"));
     assertIllegalArgumentException( () -> pathComponent("abc^def"));
+    assertIllegalArgumentException( () -> pathComponent("abc%def"));
   }
 
   @Test
