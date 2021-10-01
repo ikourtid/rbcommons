@@ -16,27 +16,32 @@ import java.util.regex.Pattern;
  */
 public class PathComponent {
 
-  private final String pathComponent;
+  private final String rawString;
 
-  private PathComponent(String pathComponent) {
-    this.pathComponent = pathComponent;
+  private PathComponent(String rawString) {
+    this.rawString = rawString;
   }
 
-  public static PathComponent pathComponent(String pathComponent) {
+  public static PathComponent pathComponent(String rawString) {
     // Note: ^ and $ below denote the beginning and end of the string to be matched.
     // The folowing pattern says that the string must be made up entirely of
-    // lower case letters, upper case letter, digits, and underscores or periods.
+    // lower case letters, upper case letter, digits, underscores or periods.
     Pattern validDirectoryName = Pattern.compile("^([a-zA-Z0-9_\\.])+$");
     RBPreconditions.checkArgument(
-        !pathComponent.isEmpty() && pathComponent.length() < 256 &&
-        validDirectoryName.matcher(pathComponent).matches(),
-        "pathComponent invalid: %s",
-        pathComponent);
-    return new PathComponent(pathComponent);
+        !rawString.isEmpty() && rawString.length() < 256 &&
+            validDirectoryName.matcher(rawString).matches(),
+        "PathComponent is invalid: %s",
+        rawString);
+    return new PathComponent(rawString);
   }
 
   public String asString() {
-    return pathComponent;
+    return rawString;
+  }
+
+  @Override
+  public String toString() {
+    return Strings.format("[PC %s PC]", rawString);
   }
 
 }

@@ -23,6 +23,10 @@ public class PathComponentTest extends RBTestMatcher<PathComponent> {
     doesNotThrow = pathComponent("abc123");
     doesNotThrow = pathComponent(".abc.def");
     doesNotThrow = pathComponent("abc_123");
+    // can start with a non-letter
+    doesNotThrow = pathComponent("123_abc");
+    doesNotThrow = pathComponent("_abc_123");
+    doesNotThrow = pathComponent(".abc_123");
 
     // can't be empty
     assertIllegalArgumentException( () -> pathComponent(""));
