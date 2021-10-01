@@ -2,8 +2,11 @@ package com.rb.nonbiz.collections;
 
 
 import com.google.common.collect.Iterators;
+import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
+import com.rb.nonbiz.text.PrintsInstruments;
 import com.rb.nonbiz.text.Strings;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -283,6 +286,14 @@ public class RBOptionals {
    */
   public static <T> String toStringOrEmpty(Optional<T> optional) {
     return optional.map(v -> v.toString()).orElse("");
+  }
+
+  /**
+   * If present, return .toString() value. Otherwise return the empty string.
+   */
+  public static <T extends PrintsInstruments> String toStringOrEmpty(
+      Optional<T> optional, InstrumentMaster instrumentMaster, LocalDate date) {
+    return optional.map(v -> v.toString(instrumentMaster, date)).orElse("");
   }
 
   /**
