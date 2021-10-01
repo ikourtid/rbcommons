@@ -354,7 +354,7 @@ public class Strings {
 
   public static String formatDeviationsOfAssetId(
       Deviations<AssetId> deviations, InstrumentMaster instrumentMaster, LocalDate date, boolean printInstrumentIds) {
-    return deviations.toString(4, assetId -> assetId.visit(new AssetIdVisitor<String>() {
+    return deviations.toStringInIncreasingAbsDeviation(4, assetId -> assetId.visit(new AssetIdVisitor<String>() {
       @Override
       public String visitInstrumentId(InstrumentId instrumentId) {
         return displaySymbol(instrumentId, instrumentMaster, date, printInstrumentIds);
