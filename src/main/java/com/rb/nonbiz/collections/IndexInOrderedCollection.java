@@ -52,7 +52,8 @@ public class IndexInOrderedCollection<T> {
 
   @Override
   public String toString() {
-    return Strings.format("[IIOC %s ; size= %s IIOC]");
+    return Strings.format("[IIOC index %s ; size= %s IIOC]",
+        indexFromStart, collectionSize);
   }
 
   
