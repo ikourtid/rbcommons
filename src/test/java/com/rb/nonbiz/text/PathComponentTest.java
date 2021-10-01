@@ -1,12 +1,12 @@
 package com.rb.nonbiz.text;
 
-import com.rb.nonbiz.testmatchers.Match;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import java.util.function.Function;
 
+import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.text.PathComponent.pathComponent;
@@ -73,7 +73,7 @@ public class PathComponentTest extends RBTestMatcher<PathComponent> {
 
   public static TypeSafeMatcher<PathComponent> pathComponentMatcher(PathComponent expected) {
     return makeMatcher(expected,
-        Match.matchUsingEquals(v -> v.asString()));
+        matchUsingEquals(v -> v.asString()));
   }
 
 }
