@@ -155,10 +155,20 @@ public class HasInstrumentIdPartition<T extends HasInstrumentId> implements Prin
     return rawMap.size();
   }
 
+  /**
+   * Converts to a {@link Partition} by only keeping the {@link InstrumentId} portion of the {@link HasInstrumentId} key.
+   * Of course, the resulting Partition will not have enough information in it to let us convert back to this
+   * {@link HasInstrumentIdPartition}.
+   */
   public Partition<InstrumentId> toInstrumentIdPartition() {
     return partition(rawMap.toIidMap().toRBMap());
   }
 
+  /**
+   * Converts to a {@link Partition} by only keeping the {@link InstrumentId} portion of the {@link HasInstrumentId} key.
+   * Of course, the resulting Partition will not have enough information in it to let us convert back to this
+   * {@link HasInstrumentIdPartition}.
+   */
   public Partition<AssetId> toAssetIdPartition() {
     return partition(rawMap.toIidMap().toRBMap().transformKeysCopy(instrumentId -> (AssetId) instrumentId));
   }

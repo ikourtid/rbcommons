@@ -110,6 +110,11 @@ public class HasInstrumentIdMap<T extends HasInstrumentId, V> extends HasLongMap
     return newHasInstrumentIdMap(mutableMap);
   }
 
+  /**
+   * Converts to an {@link IidMap} by only keeping the {@link InstrumentId} portion of the {@link HasInstrumentId} key.
+   * Of course, the resulting IidMap will not have enough information in it to let us convert back to this
+   * {@link HasInstrumentIdPartition}.
+   */
   public IidMap<V> toIidMap() {
     MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(size());
     forEachEntry( (key, value) -> mutableMap.putAssumingAbsent(key.getInstrumentId(), value));
