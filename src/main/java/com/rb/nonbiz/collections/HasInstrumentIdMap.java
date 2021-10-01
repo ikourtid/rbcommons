@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.HasInstrumentIdMaps.newHasInstrumentIdMap;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.collections.Pair.pair;
 
@@ -107,6 +108,12 @@ public class HasInstrumentIdMap<T extends HasInstrumentId, V> extends HasLongMap
       mutableMap.putAssumingAbsent(instrumentId, pair(pair.getLeft(), transformer.apply(pair.getLeft(), pair.getRight())));
     });
     return newHasInstrumentIdMap(mutableMap);
+  }
+
+  public IidMap<V> toIidMap() {
+    MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(size());
+    forEachEntry( (key, value) -> mutableMap.putAssumingAbsent(key.getInstrumentId(), value));
+    return newIidMap(mutableMap);
   }
 
 }
