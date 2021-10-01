@@ -7,9 +7,12 @@ import com.rb.nonbiz.types.SignedFraction;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.nonbiz.collections.NonZeroDeviations.nonZeroDeviations;
@@ -17,6 +20,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBStreams.sumBigDecimals;
 import static java.math.BigDecimal.ROUND_HALF_EVEN;
 import static java.util.Comparator.comparing;
+import static java.util.Map.Entry.comparingByKey;
 
 /**
  * A collection of items with weights that sum to 0.
@@ -85,17 +89,28 @@ public class Deviations<K> {
 
   @Override
   public String toString() {
-    return toString(4, key -> key.toString());
+    return toStringInIncreasingAbsDeviation(4, key -> key.toString());
   }
 
   public String toString(int precision) {
-    return toString(precision, key -> key.toString());
+    return toStringInIncreasingAbsDeviation(precision, key -> key.toString());
   }
 
-  public String toString(int precision, Function<K, ? extends Object> keyToObject) {
-    List<String> components = signedFractions.entrySet()
+  public String toStringInKeyOrder(int precision, Function<K, ?> keyToObject, Comparator<K> comparator) {
+    return toStringHelper(precision, keyToObject, signedFractions.entrySet()
         .stream()
-        .sorted(comparing(v -> v.getValue().asBigDecimal().abs()))
+        .sorted(comparingByKey(comparator)));
+  }
+
+  public String toStringInIncreasingAbsDeviation(int precision, Function<K, ?> keyToObject) {
+    return toStringHelper(precision, keyToObject, signedFractions.entrySet()
+        .stream()
+        .sorted(comparing(v -> v.getValue().asBigDecimal().abs())));
+  }
+
+  private String toStringHelper(
+      int precision, Function<K, ?> keyToObject, Stream<Entry<K, SignedFraction>> sortedEntriesStream) {
+    List<String> components = sortedEntriesStream
         .map(e -> String.format("%s %s", e.getValue().toPercentString(precision), keyToObject.apply(e.getKey())))
         .collect(Collectors.toList());
     return Strings.format("MAD_bps= %s ; %s",
