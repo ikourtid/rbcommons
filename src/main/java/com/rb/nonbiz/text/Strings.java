@@ -32,7 +32,9 @@ import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_I
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 import static java.lang.Character.isUpperCase;
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.reverseOrder;
+import static java.util.Map.Entry.comparingByKey;
 
 public class Strings {
 
@@ -129,6 +131,16 @@ public class Strings {
     return formatMapHelper(
         map,
         key -> key.toString(),
+        value -> value.toString(instrumentMaster, date));
+  }
+
+  public static <K extends Comparable<? super K>, V extends PrintsInstruments> String
+  formatMapInKeyOrderWhereValuesPrintInstruments(
+      RBMap<K, V> map, String separator, InstrumentMaster instrumentMaster, LocalDate date) {
+    return formatSortedMapHelper(
+        map,
+        separator,
+        comparingByKey(),
         value -> value.toString(instrumentMaster, date));
   }
 
