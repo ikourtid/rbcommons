@@ -495,7 +495,7 @@ public class Strings {
   }
 
   /**
-   * Use this for cases where you want to using 'natural' order for items implementing {@link Comparable}
+   * Use this for cases where you want to use 'natural' order for items implementing {@link Comparable}.
    */
   public static <T extends Comparable<? super T>> String formatCollectionInOrder(Collection<T> collection) {
     return formatCollectionInOrder(collection, Ordering.natural());
