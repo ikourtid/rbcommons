@@ -535,4 +535,9 @@ public class Strings {
     return optional.map(v -> v.toString()).orElse("(none)");
   }
 
+  public static <T extends PrintsInstruments> String formatOptionalPrintsInstruments(
+      Optional<T> optional, InstrumentMaster instrumentMaster, LocalDate date) {
+    return optional.map(v -> v.toString(instrumentMaster, date)).orElse("(none)");
+  }
+
 }
