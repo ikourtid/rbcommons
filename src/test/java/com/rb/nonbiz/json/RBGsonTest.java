@@ -13,6 +13,9 @@ import static com.rb.biz.types.OnesBasedReturn.onesBasedLoss;
 import static com.rb.biz.types.SignedMoney.ZERO_SIGNED_MONEY;
 import static com.rb.biz.types.SignedMoney.signedMoney;
 import static com.rb.nonbiz.json.RBGson.*;
+import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
+import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
+import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
@@ -442,13 +445,31 @@ public class RBGsonTest {
   }
 
   @Test
-  public void testIsEmpty() {
+  public void testIsEmpty_JsonObject() {
     assertTrue(isEmpty(emptyJsonObject()));
     assertFalse(isEmpty(singletonJsonObject(DUMMY_STRING, jsonDouble(DUMMY_DOUBLE))));
     assertFalse(isEmpty(singletonJsonObject(DUMMY_STRING, emptyJsonObject())));
     assertFalse(isEmpty(jsonObject(
         "dummy1", jsonDouble(DUMMY_DOUBLE),
         "dummy2", jsonString(DUMMY_STRING))));
+  }
+
+  @Test
+  public void testIsEmpty_JsonArray() {
+    assertTrue(isEmpty(emptyJsonArray()));
+    assertFalse(isEmpty(singletonJsonArray(jsonString(DUMMY_STRING))));
+    assertFalse(isEmpty(singletonJsonArray(emptyJsonArray())));
+    assertFalse(isEmpty(singletonJsonArray(emptyJsonObject())));
+  }
+
+  @Test
+  public void testIsSingleton_JsonArray() {
+    assertFalse(isSingleton(emptyJsonArray()));
+    assertTrue(isSingleton(singletonJsonArray(jsonString(DUMMY_STRING))));
+    assertTrue(isSingleton(singletonJsonArray(emptyJsonArray())));
+    assertTrue(isSingleton(singletonJsonArray(emptyJsonObject())));
+    assertFalse(isSingleton(jsonArray(jsonString("abc"), jsonString("def"))));
+    assertFalse(isSingleton(jsonArray(jsonString("abc"), jsonString("def"), jsonString("ghi"))));
   }
 
 }

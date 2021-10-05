@@ -225,13 +225,11 @@ public class RBGson {
     return jsonObject.size() == 0;
   }
 
-  // FIXME IAK GS test
   // We could call this jsonArrayIsEmpty (longer), but usually it will be obvious from the variable name.
   public static boolean isEmpty(JsonArray jsonArray) {
     return jsonArray.size() == 0;
   }
 
-  // FIXME IAK GS test
   // We could call this jsonArrayIsSingleton (longer), but usually it will be obvious from the variable name.
   public static boolean isSingleton(JsonArray jsonArray) {
     return jsonArray.size() == 1;
