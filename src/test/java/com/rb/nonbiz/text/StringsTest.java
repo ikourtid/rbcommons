@@ -150,7 +150,7 @@ public class StringsTest {
   @Test
   public void testFormatOptionalTransformValue() {
     assertEquals("abc_XYZ", Strings.formatOptional(Optional.of("abc"), v -> v + "_XYZ"));
-    assertEquals("(none)",  Strings.formatOptional(Optional.empty(), v -> v + "_XYZ"));
+    assertEquals("(none)",  Strings.formatOptional(Optional.empty(),   v -> v + "_XYZ"));
   }
 
   @Test
