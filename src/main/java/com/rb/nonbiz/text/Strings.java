@@ -544,7 +544,11 @@ public class Strings {
   }
 
   public static <T> String formatOptional(Optional<T> optional) {
-    return optional.map(v -> v.toString()).orElse("(none)");
+    return formatOptional(optional, v -> v.toString());
+  }
+
+  public static <T> String formatOptional(Optional<T> optional, Function<T, String> valueTransformer) {
+    return optional.map(v -> valueTransformer.apply(v)).orElse("(none)");
   }
 
   public static <T extends PrintsInstruments> String formatOptionalPrintsInstruments(
