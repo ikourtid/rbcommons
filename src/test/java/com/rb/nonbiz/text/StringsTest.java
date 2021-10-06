@@ -2,6 +2,7 @@ package com.rb.nonbiz.text;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
+import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
@@ -10,8 +11,7 @@ import org.junit.Test;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
-import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_INSTRUMENT_MASTER;
+import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.singletonHardCodedInstrumentMaster;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
@@ -155,11 +155,13 @@ public class StringsTest {
 
   @Test
   public void testFormatOptionalPrintsInstrument() {
-    assertEquals("iid 1234 (iid 1_234 )", formatOptionalPrintsInstruments(
-        Optional.of(instrumentId(1_234L)), NULL_INSTRUMENT_MASTER, UNUSED_DATE));
+    InstrumentMaster instrumentMaster = singletonHardCodedInstrumentMaster(instrumentId(1_234L), "IBM");
+
+    assertEquals("IBM (iid 1_234 )", formatOptionalPrintsInstruments(
+        Optional.of(instrumentId(1_234L)),instrumentMaster, UNUSED_DATE));
 
     assertEquals("(none)", formatOptionalPrintsInstruments(
-        Optional.<InstrumentId>empty(), NULL_INSTRUMENT_MASTER, UNUSED_DATE));
+        Optional.<InstrumentId>empty(), instrumentMaster, UNUSED_DATE));
   }
 
 }
