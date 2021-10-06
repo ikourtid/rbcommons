@@ -2,16 +2,23 @@ package com.rb.nonbiz.text;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
+import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import org.junit.Test;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
+import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_INSTRUMENT_MASTER;
+import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 import static com.rb.nonbiz.text.Strings.formatCollectionInOrder;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
+import static com.rb.nonbiz.text.Strings.formatOptionalPrintsInstruments;
 import static com.rb.nonbiz.text.Strings.joinWithHarvardComma;
 import static com.rb.nonbiz.text.Strings.toTrimmedStandaloneSentence;
 import static com.rb.nonbiz.types.PreciseValue.formatWithoutCommas;
@@ -132,6 +139,27 @@ public class StringsTest {
     assertEquals(
         "4 : D = 1.1|||C = 2.2|||B = 3.3|||A = 4.4",
         Strings.formatMapInValueOrder(rbMap, Double::compareTo, "|||", v -> formatWithoutCommas(8).format(v)));
+  }
+
+  @Test
+  public void testFormatOptional() {
+    assertEquals("abc", Strings.formatOptional(Optional.of("abc")));
+    assertEquals("(none)", Strings.formatOptional(Optional.empty()));
+  }
+
+  @Test
+  public void testFormatOptionalTransformValue() {
+    assertEquals("abc_XYZ", Strings.formatOptional(Optional.of("abc"), v -> v + "_XYZ"));
+    assertEquals("(none)",  Strings.formatOptional(Optional.empty(), v -> v + "_XYZ"));
+  }
+
+  @Test
+  public void testFormatOptionalPrintsInstrument() {
+    assertEquals("iid 1234 (iid 1_234 )", formatOptionalPrintsInstruments(
+        Optional.of(instrumentId(1_234L)), NULL_INSTRUMENT_MASTER, UNUSED_DATE));
+
+    assertEquals("(none)", formatOptionalPrintsInstruments(
+        Optional.<InstrumentId>empty(), NULL_INSTRUMENT_MASTER, UNUSED_DATE));
   }
 
 }
