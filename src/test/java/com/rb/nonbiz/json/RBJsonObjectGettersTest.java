@@ -43,6 +43,7 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class RBJsonObjectGettersTest {
@@ -598,10 +599,12 @@ public class RBJsonObjectGettersTest {
   @Test
   public void test_getJsonPrimitiveOrThrow() {
     JsonObject jsonObject = jsonObject(
-        "n",    jsonInteger(10),
-        "x",    jsonDouble(1.23),
-        "text", jsonString("abc"),
-        "obj",  jsonObject(
+        "n",     jsonInteger(10),
+        "x",     jsonDouble(1.23),
+        "text",  jsonString("abc"),
+        "null",  JsonNull.INSTANCE,
+        "array", jsonArray(jsonString("A"), jsonString("B")),
+        "obj",   jsonObject(
             "A", jsonInteger(111),
             "B", jsonInteger(222)));
 
@@ -617,6 +620,10 @@ public class RBJsonObjectGettersTest {
 
     assertIllegalArgumentException( () -> getJsonPrimitiveOrThrow(jsonObject, "missingProperty"));
 
+    // "null" is not a JsonPrimitive; it's a JsonNull
+    assertThrowsAnyException( () -> getJsonPrimitiveOrThrow(jsonObject, "null"));
+    // "array" is not a JsonPrimitive; it's a JsonArray
+    assertThrowsAnyException( () -> getJsonPrimitiveOrThrow(jsonObject, "array"));
     // "obj" is not a JsonPrimitive; it's a JsonObject
     assertThrowsAnyException( () -> getJsonPrimitiveOrThrow(jsonObject, "obj"));
   }
