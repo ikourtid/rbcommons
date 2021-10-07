@@ -43,7 +43,6 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class RBJsonObjectGettersTest {
