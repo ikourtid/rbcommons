@@ -37,11 +37,13 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEquals;
+import static com.rb.nonbiz.testutils.Asserters.assertThrowsAnyException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_PRICE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class RBJsonObjectGettersTest {
@@ -592,6 +594,38 @@ public class RBJsonObjectGettersTest {
     assertEquals("isTrue",    getJsonBooleanOrDefault(jsonObject, "booleanTrue", v -> v ? "isTrue" : "isFalse", "isDefault"));
     assertEquals("isFalse",   getJsonBooleanOrDefault(jsonObject, "booleanFalse", v -> v ? "isTrue" : "isFalse", "isDefault"));
     assertEquals("isDefault", getJsonBooleanOrDefault(jsonObject, "missingKey", v -> v ? "isTrue" : "isFalse", "isDefault"));
+  }
+
+  @Test
+  public void test_getJsonPrimitiveOrThrow() {
+    JsonObject jsonObject = jsonObject(
+        "n",     jsonInteger(10),
+        "x",     jsonDouble(1.23),
+        "text",  jsonString("abc"),
+        "null",  JsonNull.INSTANCE,
+        "array", jsonArray(jsonString("A"), jsonString("B")),
+        "obj",   jsonObject(
+            "A", jsonInteger(111),
+            "B", jsonInteger(222)));
+
+    assertEquals(
+        10,
+        getJsonPrimitiveOrThrow(jsonObject, "n").getAsInt());
+    assertEquals(
+        1.23,
+        getJsonPrimitiveOrThrow(jsonObject, "x").getAsDouble());
+    assertEquals(
+        "abc",
+        getJsonPrimitiveOrThrow(jsonObject, "text").getAsString());
+
+    assertIllegalArgumentException( () -> getJsonPrimitiveOrThrow(jsonObject, "missingProperty"));
+
+    // "null" is not a JsonPrimitive; it's a JsonNull
+    assertThrowsAnyException( () -> getJsonPrimitiveOrThrow(jsonObject, "null"));
+    // "array" is not a JsonPrimitive; it's a JsonArray
+    assertThrowsAnyException( () -> getJsonPrimitiveOrThrow(jsonObject, "array"));
+    // "obj" is not a JsonPrimitive; it's a JsonObject
+    assertThrowsAnyException( () -> getJsonPrimitiveOrThrow(jsonObject, "obj"));
   }
 
 }
