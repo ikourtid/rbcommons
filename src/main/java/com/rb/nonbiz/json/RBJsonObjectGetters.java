@@ -3,6 +3,7 @@ package com.rb.nonbiz.json;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.rb.biz.jsonapi.JsonSerializedEnumStringMap;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -478,6 +479,21 @@ public class RBJsonObjectGetters {
         "JSON object does not have property: %s : json was %s",
         property, jsonObject);
     return jsonObject.get(property);
+  }
+
+  /**
+   * From 'jsonObject', get the value of 'property'.
+   * If missing, throw an exception.
+   * Return as a JsonPrimitive.
+   */
+  public static JsonPrimitive getJsonPrimitiveOrThrow(
+      JsonObject jsonObject,
+      String property) {
+    RBPreconditions.checkArgument(
+        jsonObject.has(property),
+        "JSON object does not have property: %s : json was %s",
+        property, jsonObject);
+    return jsonObject.get(property).getAsJsonPrimitive();
   }
 
 }

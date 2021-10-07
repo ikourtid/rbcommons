@@ -37,6 +37,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEquals;
+import static com.rb.nonbiz.testutils.Asserters.assertThrowsAnyException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_PRICE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static junit.framework.TestCase.assertEquals;
@@ -592,6 +593,32 @@ public class RBJsonObjectGettersTest {
     assertEquals("isTrue",    getJsonBooleanOrDefault(jsonObject, "booleanTrue", v -> v ? "isTrue" : "isFalse", "isDefault"));
     assertEquals("isFalse",   getJsonBooleanOrDefault(jsonObject, "booleanFalse", v -> v ? "isTrue" : "isFalse", "isDefault"));
     assertEquals("isDefault", getJsonBooleanOrDefault(jsonObject, "missingKey", v -> v ? "isTrue" : "isFalse", "isDefault"));
+  }
+
+  @Test
+  public void test_getJsonPrimitiveOrThrow() {
+    JsonObject jsonObject = jsonObject(
+        "n",    jsonInteger(10),
+        "x",    jsonDouble(1.23),
+        "text", jsonString("abc"),
+        "obj",  jsonObject(
+            "A", jsonInteger(111),
+            "B", jsonInteger(222)));
+
+    assertEquals(
+        10,
+        getJsonPrimitiveOrThrow(jsonObject, "n").getAsInt());
+    assertEquals(
+        1.23,
+        getJsonPrimitiveOrThrow(jsonObject, "x").getAsDouble());
+    assertEquals(
+        "abc",
+        getJsonPrimitiveOrThrow(jsonObject, "text").getAsString());
+
+    assertIllegalArgumentException( () -> getJsonPrimitiveOrThrow(jsonObject, "missingProperty"));
+
+    // "obj" is not a JsonPrimitive; it's a JsonObject
+    assertThrowsAnyException( () -> getJsonPrimitiveOrThrow(jsonObject, "obj"));
   }
 
 }
