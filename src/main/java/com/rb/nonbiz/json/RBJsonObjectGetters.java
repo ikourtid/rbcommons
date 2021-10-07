@@ -493,7 +493,12 @@ public class RBJsonObjectGetters {
         jsonObject.has(property),
         "JSON object does not have property: %s : json was %s",
         property, jsonObject);
-    return jsonObject.get(property).getAsJsonPrimitive();
+    JsonElement jsonElement = jsonObject.get(property);
+    RBPreconditions.checkArgument(
+        jsonElement.isJsonPrimitive(),
+        "jsonElement %s is not a jsonPrimitive",
+        jsonElement);
+    return jsonElement.getAsJsonPrimitive();
   }
 
 }
