@@ -600,6 +600,7 @@ public class RBJsonObjectGettersTest {
     JsonObject jsonObject = jsonObject(
         "n",     jsonInteger(10),
         "x",     jsonDouble(1.23),
+        "bool",  jsonBoolean(true),
         "text",  jsonString("abc"),
         "null",  JsonNull.INSTANCE,
         "array", jsonArray(jsonString("A"), jsonString("B")),
@@ -613,6 +614,8 @@ public class RBJsonObjectGettersTest {
     assertEquals(
         1.23,
         getJsonPrimitiveOrThrow(jsonObject, "x").getAsDouble());
+    assertTrue(
+        getJsonPrimitiveOrThrow(jsonObject, "bool").getAsBoolean());
     assertEquals(
         "abc",
         getJsonPrimitiveOrThrow(jsonObject, "text").getAsString());
