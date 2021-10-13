@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.RBLists.*;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
@@ -189,7 +190,7 @@ public class RBListsTest {
 
   @Test
   public void testListConcatenationFromEach() {
-    Function<Integer, List<String>> transformer = intValue -> ImmutableList.of(
+    Function<Integer, Stream<String>> transformer = intValue -> Stream.of(
         Strings.format("%s_A", intValue),
         Strings.format("%s_B", intValue));
     assertEmpty(listConcatenationFromEach(emptyList(),            transformer));

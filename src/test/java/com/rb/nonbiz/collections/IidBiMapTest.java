@@ -42,6 +42,9 @@ public class IidBiMapTest extends RBTestMatcher<IidBiMap<String>> {
 
     assertFalse(iidBiMap.isEmpty());
     assertTrue(emptyIidBiMap().isEmpty());
+
+    assertEquals(1, iidBiMap.size());
+    assertEquals(0, emptyIidBiMap().size());
   }
 
   @Test

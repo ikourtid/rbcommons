@@ -132,7 +132,6 @@ public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidation
     return makeMatcher(expected,
         match(v -> v.getRequiredProperties(), f -> rbSetEqualsMatcher(f)),
         match(v -> v.getOptionalProperties(), f -> rbSetEqualsMatcher(f)));
-
   }
 
 }

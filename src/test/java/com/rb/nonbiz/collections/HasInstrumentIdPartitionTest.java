@@ -11,6 +11,8 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A2;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_C;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
@@ -25,6 +27,11 @@ import static com.rb.nonbiz.collections.HasInstrumentIdPartition.hasInstrumentId
 import static com.rb.nonbiz.collections.HasInstrumentIdPartition.hasInstrumentIdPartitionFromWeights;
 import static com.rb.nonbiz.collections.HasInstrumentIdPartition.singletonHasInstrumentIdPartition;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
+import static com.rb.nonbiz.collections.Partition.partition;
+import static com.rb.nonbiz.collections.Partition.singletonPartition;
+import static com.rb.nonbiz.collections.PartitionTest.epsilonPartitionMatcher;
+import static com.rb.nonbiz.collections.PartitionTest.partitionMatcher;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.TestHasInstrumentId.testHasInstrumentId;
@@ -37,6 +44,7 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DATE;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -299,6 +307,36 @@ public class HasInstrumentIdPartitionTest extends RBTestMatcher<HasInstrumentIdP
         hasInstrumentIdMapOf(
             d, unitFraction(doubleExplained(0.2, 0.5 / (0.5 + 2.0))),
             e, unitFraction(doubleExplained(0.8, 2.0 / (0.5 + 2.0)))));
+  }
+
+  @Test
+  public void testToRegularPartition() {
+    assertThat(
+        singletonHasInstrumentIdPartition(testHasInstrumentId(STOCK_A1, 1.1))
+            .toInstrumentIdPartition(),
+        partitionMatcher(
+            singletonPartition(STOCK_A1)));
+    assertThat(
+        singletonHasInstrumentIdPartition(testHasInstrumentId(STOCK_A1, 1.1))
+            .toAssetIdPartition(),
+        partitionMatcher(
+            singletonPartition(STOCK_A1)));
+
+    HasInstrumentIdPartition<TestHasInstrumentId> testObject = hasInstrumentIdPartition(hasInstrumentIdMapOf(
+        testHasInstrumentId(STOCK_A1, 1.1), unitFraction(0.4),
+        testHasInstrumentId(STOCK_A2, 2.2), unitFraction(0.6)));
+    assertThat(
+        testObject.toInstrumentIdPartition(),
+        partitionMatcher(
+            partition(rbMapOf(
+                STOCK_A1, unitFraction(0.4),
+                STOCK_A2, unitFraction(0.6)))));
+    assertThat(
+        testObject.toAssetIdPartition(),
+        partitionMatcher(
+            partition(rbMapOf(
+                STOCK_A1, unitFraction(0.4),
+                STOCK_A2, unitFraction(0.6)))));
   }
 
   private void assertResult(

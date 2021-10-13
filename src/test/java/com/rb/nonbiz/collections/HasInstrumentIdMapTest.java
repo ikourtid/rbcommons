@@ -17,6 +17,10 @@ import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.HasInstrumentIdMaps.emptyHasInstrumentIdMap;
 import static com.rb.nonbiz.collections.HasInstrumentIdMaps.hasInstrumentIdMapOf;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
+import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
+import static com.rb.nonbiz.collections.IidMapTest.iidMapPreciseValueMatcher;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
 import static com.rb.nonbiz.collections.PairTest.pairMatcher;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
@@ -157,6 +161,23 @@ public class HasInstrumentIdMapTest extends RBTestMatcher<HasInstrumentIdMap<Tes
                 testHasInstrumentId(instrumentId(3), 3.3), "iid 3 3.3 _ $ 133.33"),
             k -> testHasInstrumentIdMatcher(k),
             v -> typeSafeEqualTo(v)));
+  }
+
+  @Test
+  public void testToIidMap() {
+    assertThat(
+        emptyHasInstrumentIdMap().toIidMap(),
+        iidMapEqualityMatcher(emptyIidMap()));
+    assertThat(
+        hasInstrumentIdMapOf(
+            testHasInstrumentId(STOCK_A1, 1.1), money(11.11),
+            testHasInstrumentId(STOCK_A2, 2.2), money(22.22))
+            .toIidMap(),
+        iidMapPreciseValueMatcher(
+            iidMapOf(
+                STOCK_A1, money(11.11),
+                STOCK_A2, money(22.22)),
+            1e-8));
   }
 
   @Override

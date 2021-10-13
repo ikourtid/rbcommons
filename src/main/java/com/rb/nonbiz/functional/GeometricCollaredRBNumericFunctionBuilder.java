@@ -137,7 +137,7 @@ public class GeometricCollaredRBNumericFunctionBuilder<X extends Number, Y exten
     // g(0) = 1/7 * (21 ^ 0) = 1/7 since dxFraction = 0
     // g(8) = 1/7 * (21 ^ 1) = 3  since dxFraction = 1
     // and
-    // g(4) = 1/7 * sqrt(21) = 0.654653671, which kind of makes sense, since this tilt is not 'symmetric'.
+    // g(4) = 1/7 * sqrt(21) = sqrt(1/7 * 3) = 0.654653671, which kind of makes sense, since this tilt is not 'symmetric'.
 
     return rbNumericFunction(
         label,

@@ -29,6 +29,10 @@ public class RBListWithSpecialValue<T> {
     return new RBListWithSpecialValue<>(emptyList(), OptionalInt.empty());
   }
 
+  public static <T> RBListWithSpecialValue<T> rbListWithoutSpecialValue(List<T> list) {
+    return new RBListWithSpecialValue<>(list, OptionalInt.empty());
+  }
+
   public static <T> RBListWithSpecialValue<T> singletonRBListWithoutSpecialValue(T item) {
     return new RBListWithSpecialValue<>(singletonList(item), OptionalInt.empty());
   }

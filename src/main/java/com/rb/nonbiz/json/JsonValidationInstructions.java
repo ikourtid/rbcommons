@@ -31,8 +31,8 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
  */
 public class JsonValidationInstructions {
 
-  private RBSet<String> requiredProperties;
-  private RBSet<String> optionalProperties;
+  private final RBSet<String> requiredProperties;
+  private final RBSet<String> optionalProperties;
 
   private JsonValidationInstructions(
       RBSet<String> requiredProperties, RBSet<String> optionalProperties) {
@@ -105,7 +105,7 @@ public class JsonValidationInstructions {
       RBPreconditions.checkNotNull(
           optionalProperties,
           "must either call 'hasNoOptionalProperties() or add at least one optional property");
-      RBSet intersection = RBSets.intersection(requiredProperties, optionalProperties);
+      RBSet<String> intersection = RBSets.intersection(requiredProperties, optionalProperties);
       RBPreconditions.checkArgument(
           intersection.isEmpty(),
           "required properties cannot also be optional; found overlap = %s",

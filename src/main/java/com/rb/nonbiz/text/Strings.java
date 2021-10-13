@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -31,7 +32,9 @@ import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_I
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 import static java.lang.Character.isUpperCase;
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.reverseOrder;
+import static java.util.Map.Entry.comparingByKey;
 
 public class Strings {
 
@@ -131,6 +134,16 @@ public class Strings {
         value -> value.toString(instrumentMaster, date));
   }
 
+  public static <K extends Comparable<? super K>, V extends PrintsInstruments> String
+  formatMapInKeyOrderWhereValuesPrintInstruments(
+      RBMap<K, V> map, String separator, InstrumentMaster instrumentMaster, LocalDate date) {
+    return formatSortedMapHelper(
+        map,
+        separator,
+        comparingByKey(),
+        value -> value.toString(instrumentMaster, date));
+  }
+
   private static <K, V> String formatMapHelper(
       RBMap<K, V> map, Function<K, String> keyTransformer, Function<V, String> valueTransformer) {
     return sizePrefix(map.size()) + Joiner.on(" , ").join(map.entrySet()
@@ -166,6 +179,15 @@ public class Strings {
         indexableArray1D,
         key -> key.toString(),
         value -> value.toString(instrumentMaster, date));
+  }
+
+  public static <K extends PrintsInstruments, V>
+  String formatIndexableArray1DWhereKeysPrintInstruments(
+      ImmutableIndexableArray1D<K, V> indexableArray1D, InstrumentMaster instrumentMaster, LocalDate date) {
+    return formatIndexableArray1DHelper(
+        indexableArray1D,
+        key -> key.toString(instrumentMaster, date),
+        value -> value.toString());
   }
 
   private static <K, V> String formatIndexableArray1DHelper(
@@ -344,7 +366,7 @@ public class Strings {
 
   public static String formatDeviationsOfAssetId(
       Deviations<AssetId> deviations, InstrumentMaster instrumentMaster, LocalDate date, boolean printInstrumentIds) {
-    return deviations.toString(4, assetId -> assetId.visit(new AssetIdVisitor<String>() {
+    return deviations.toStringInIncreasingAbsDeviation(4, assetId -> assetId.visit(new AssetIdVisitor<String>() {
       @Override
       public String visitInstrumentId(InstrumentId instrumentId) {
         return displaySymbol(instrumentId, instrumentMaster, date, printInstrumentIds);
@@ -485,7 +507,7 @@ public class Strings {
   }
 
   /**
-   * Use this for cases where you want to using 'natural' order for items implementing {@link Comparable}
+   * Use this for cases where you want to use 'natural' order for items implementing {@link Comparable}.
    */
   public static <T extends Comparable<? super T>> String formatCollectionInOrder(Collection<T> collection) {
     return formatCollectionInOrder(collection, Ordering.natural());
@@ -519,6 +541,19 @@ public class Strings {
     return size <= 2
         ? ""
         : size + " : ";
+  }
+
+  public static <T> String formatOptional(Optional<T> optional) {
+    return formatOptional(optional, v -> v.toString());
+  }
+
+  public static <T> String formatOptional(Optional<T> optional, Function<T, String> valueTransformer) {
+    return optional.map(v -> valueTransformer.apply(v)).orElse("(none)");
+  }
+
+  public static <T extends PrintsInstruments> String formatOptionalPrintsInstruments(
+      Optional<T> optional, InstrumentMaster instrumentMaster, LocalDate date) {
+    return optional.map(v -> v.toString(instrumentMaster, date)).orElse("(none)");
   }
 
 }
