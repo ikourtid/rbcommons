@@ -157,7 +157,8 @@ public class Asserters {
     assertEquals(expected, actual.getAsLong());
   }
 
-  public static <T extends PreciseValue> void assertOptionalAlmostEquals(T expected, Optional<T> actual, double epsilon) {
+  public static <T extends PreciseValue<? super T>> void assertOptionalAlmostEquals(
+      T expected, Optional<T> actual, double epsilon) {
     assertTrue(actual.isPresent());
     assertAlmostEquals(expected, actual.get(), epsilon);
   }

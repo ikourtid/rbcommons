@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.function.DoubleFunction;
 import java.util.function.Function;
 
-import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 import static com.rb.nonbiz.functional.RBNumericFunction.rbIdentityNumericFunction;
 
 /**
@@ -19,7 +18,7 @@ import static com.rb.nonbiz.functional.RBNumericFunction.rbIdentityNumericFuncti
  * where it's also possible to have a 'missing' X.
  */
 public class RBNumericFunctionThatHandlesMissingValues<X extends Number, Y extends RBNumeric<? super Y>>
-    implements Function<AllowsMissingValues<X>, Y>, HasHumanReadableLabel {
+    implements Function<AllowsMissingValues<X>, Optional<Y>>, HasHumanReadableLabel {
 
   private final RBNumericFunction<X, Y> functionForPresentValues;
   private final Optional<Y> yForMissingX;
@@ -32,89 +31,66 @@ public class RBNumericFunctionThatHandlesMissingValues<X extends Number, Y exten
   }
 
   public static <X extends Number, Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<X, Y>
-  rbNumericFunctionThatHandlesMissingValues(
-      RBNumericFunction<X, Y> functionForPresentValues, Optional<Y> yForMissingX) {
-    return new RBNumericFunctionThatHandlesMissingValues<>(functionForPresentValues, yForMissingX);
-  }
-
-  public static <Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<Double, Y>
-  rbDoubleNumericFunctionThatHandlesMissingValues(
-      RBNumericFunction<Double, Y> functionForPresentValues, Optional<Y> yForMissingX) {
-    return new RBNumericFunctionThatHandlesMissingValues<>(functionForPresentValues, yForMissingX);
-  }
-
-  public static <Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<Long, Y>
-  rbLongNumericFunctionThatHandlesMissingValues(
-      RBNumericFunction<Long, Y> functionForPresentValues, Optional<Y> yForMissingX) {
-    return new RBNumericFunctionThatHandlesMissingValues<>(functionForPresentValues, yForMissingX);
-  }
-
-
-  public static <X extends Number, Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<X, Y>
-  rbNumericFunctionThatAllowsMissingValues(
+  rbNumericFunctionThatReturnsSpecifiedDefaultOnMissingValues(
       RBNumericFunction<X, Y> functionForPresentValues, Y yForMissingX) {
     return new RBNumericFunctionThatHandlesMissingValues<>(functionForPresentValues, Optional.of(yForMissingX));
   }
 
+  public static <X extends Number, Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<X, Y>
+  rbNumericFunctionThatReturnsEmptyOnMissingValues(RBNumericFunction<X, Y> functionForPresentValues) {
+    return new RBNumericFunctionThatHandlesMissingValues<>(functionForPresentValues, Optional.empty());
+  }
+
+
   public static <Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<Double, Y>
-  rbDoubleNumericFunctionThatAllowsMissingValues(
+  rbDoubleFunctionThatReturnsSpecifiedDefaultOnMissingValues(
       RBNumericFunction<Double, Y> functionForPresentValues, Y yForMissingX) {
-    return new RBNumericFunctionThatHandlesMissingValues<>(functionForPresentValues, Optional.of(yForMissingX));
-  }
-
-  public static <Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<Long, Y>
-  rbLongNumericFunctionThatAllowsMissingValues(
-      RBNumericFunction<Long, Y> functionForPresentValues, Y yForMissingX) {
-    return new RBNumericFunctionThatHandlesMissingValues<>(functionForPresentValues, Optional.of(yForMissingX));
-  }
-
-
-  public static <X extends Number, Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<X, Y>
-  rbNumericFunctionThatThrowsOnMissingValues(
-      RBNumericFunction<X, Y> functionForPresentValues) {
-    return new RBNumericFunctionThatHandlesMissingValues<>(functionForPresentValues, Optional.empty());
+    return rbNumericFunctionThatReturnsSpecifiedDefaultOnMissingValues(functionForPresentValues, yForMissingX);
   }
 
   public static <Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<Double, Y>
-  rbDoubleNumericFunctionThatThrowsOnMissingValues(
-      RBNumericFunction<Double, Y> functionForPresentValues) {
-    return new RBNumericFunctionThatHandlesMissingValues<>(functionForPresentValues, Optional.empty());
+  rbDoubleFunctionThatReturnsEmptyOnMissingValues(RBNumericFunction<Double, Y> functionForPresentValues) {
+    return rbNumericFunctionThatReturnsEmptyOnMissingValues(functionForPresentValues);
+  }
+
+
+  public static <Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<Long, Y>
+  rbLongFunctionThatReturnsSpecifiedDefaultOnMissingValues(
+      RBNumericFunction<Long, Y> functionForPresentValues, Y yForMissingX) {
+    return rbNumericFunctionThatReturnsSpecifiedDefaultOnMissingValues(functionForPresentValues, yForMissingX);
   }
 
   public static <Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<Long, Y>
-  rbLongNumericFunctionThatThrowsOnMissingValues(
-      RBNumericFunction<Long, Y> functionForPresentValues) {
-    return new RBNumericFunctionThatHandlesMissingValues<>(functionForPresentValues, Optional.empty());
+  rbLongFunctionThatReturnsEmptyOnMissingValues(RBNumericFunction<Long, Y> functionForPresentValues) {
+    return rbNumericFunctionThatReturnsEmptyOnMissingValues(functionForPresentValues);
   }
 
 
   public static <X extends Number, Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<X, Y>
-  rbIdentityNumericFunctionThatAllowsMissingValues(
+  rbIdentityNumericFunctionThatReturnsSpecifiedDefaultOnMissingValues(
       DoubleFunction<Y> instantiator, Y yForMissingX) {
-    return rbNumericFunctionThatAllowsMissingValues(
+    return rbNumericFunctionThatReturnsSpecifiedDefaultOnMissingValues(
         rbIdentityNumericFunction(instantiator), yForMissingX);
   }
 
   public static <X extends Number, Y extends RBNumeric<? super Y>> RBNumericFunctionThatHandlesMissingValues<X, Y>
-  rbIdentityNumericFunctionThatThrowsOnMissing(
+  rbIdentityNumericFunctionThatReturnsEmptyOnMissingValues(
       DoubleFunction<Y> instantiator) {
-    return rbNumericFunctionThatThrowsOnMissingValues(rbIdentityNumericFunction(instantiator));
+    return rbNumericFunctionThatReturnsEmptyOnMissingValues(rbIdentityNumericFunction(instantiator));
   }
 
+
   @Override
-  public Y apply(AllowsMissingValues<X> allowsMissingValues) {
-    return allowsMissingValues.visit(new Visitor<Y, X>() {
+  public Optional<Y> apply(AllowsMissingValues<X> allowsMissingValues) {
+    return allowsMissingValues.visit(new Visitor<Optional<Y>, X>() {
       @Override
-      public Y visitPresentValue(X presentValue) {
-        return functionForPresentValues.apply(presentValue);
+      public Optional<Y> visitPresentValue(X presentValue) {
+        return Optional.of(functionForPresentValues.apply(presentValue));
       }
 
       @Override
-      public Y visitMissingValue() {
-        return getOrThrow(
-            yForMissingX,
-            "%s : we are intentionally throwing an exception on missing X value",
-            getHumanReadableLabel());
+      public Optional<Y> visitMissingValue() {
+        return yForMissingX;
       }
     });
   }

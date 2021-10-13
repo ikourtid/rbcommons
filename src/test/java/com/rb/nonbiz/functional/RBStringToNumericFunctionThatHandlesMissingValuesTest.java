@@ -18,6 +18,8 @@ import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.rbNumericMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_LABEL;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static org.junit.Assert.assertEquals;
@@ -32,7 +34,7 @@ public class RBStringToNumericFunctionThatHandlesMissingValuesTest
         .setLabel(DUMMY_LABEL)
         .setStringToValueMap(emptyRBMap())
         .throwOnUnknownString()
-        .throwOnMissingString()
+        .returnEmptyOnMissingString()
         .build();
   }
 
@@ -45,12 +47,12 @@ public class RBStringToNumericFunctionThatHandlesMissingValuesTest
                 "_100", money(100),
                 "_200", money(200)))
         .throwOnUnknownString()
-        .throwOnMissingString()
+        .returnEmptyOnMissingString()
         .build();
-    assertEquals(money(100), function.apply(testAllowsMissingValues(Optional.of("_100"))));
-    assertEquals(money(200), function.apply(testAllowsMissingValues(Optional.of("_200"))));
+    assertOptionalEquals(money(100), function.apply(testAllowsMissingValues(Optional.of("_100"))));
+    assertOptionalEquals(money(200), function.apply(testAllowsMissingValues(Optional.of("_200"))));
     assertIllegalArgumentException( () -> function.apply(testAllowsMissingValues(Optional.of("UNKNOWN STRING"))));
-    assertIllegalArgumentException( () -> function.apply(testAllowsMissingValues(Optional.empty())));
+    assertOptionalEmpty(function.apply(testAllowsMissingValues(Optional.empty())));
   }
 
   @Test
@@ -64,10 +66,10 @@ public class RBStringToNumericFunctionThatHandlesMissingValuesTest
         .useThisForUnknownString(money(333))
         .useThisForMissingString(money(444))
         .build();
-    assertEquals(money(100), function.apply(testAllowsMissingValues(Optional.of("_100"))));
-    assertEquals(money(200), function.apply(testAllowsMissingValues(Optional.of("_200"))));
-    assertEquals(money(333), function.apply(testAllowsMissingValues(Optional.of("UNKNOWN STRING"))));
-    assertEquals(money(444), function.apply(testAllowsMissingValues(Optional.empty())));
+    assertOptionalEquals(money(100), function.apply(testAllowsMissingValues(Optional.of("_100"))));
+    assertOptionalEquals(money(200), function.apply(testAllowsMissingValues(Optional.of("_200"))));
+    assertOptionalEquals(money(333), function.apply(testAllowsMissingValues(Optional.of("UNKNOWN STRING"))));
+    assertOptionalEquals(money(444), function.apply(testAllowsMissingValues(Optional.empty())));
   }
 
   private AllowsMissingValues<String> testAllowsMissingValues(Optional<String> optional) {
