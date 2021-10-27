@@ -6,6 +6,7 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -59,6 +60,10 @@ public class RBJsonDoubleArray {
 
   public static RBJsonDoubleArray rbJsonDoubleArray(DoubleStream items) {
     return new RBJsonDoubleArray(items.boxed().collect(Collectors.toList()));
+  }
+
+  public static RBJsonDoubleArray rbJsonDoubleArray(Iterator<Double> itemsIterator) {
+    return new RBJsonDoubleArray(newArrayList(itemsIterator));
   }
 
   public JsonArray asJsonArray() {
