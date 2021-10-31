@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.google.inject.Inject;
+import com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRange;
 import com.rb.nonbiz.types.UnitFraction;
 
 import static com.rb.nonbiz.collections.ClosedUnitFractionHardAndSoftRanges.closedUnitFractionHardAndSoftRanges;
@@ -20,9 +21,14 @@ public class ClosedUnitFractionHardAndSoftRangesShrinker {
   public <K> ClosedUnitFractionHardAndSoftRanges<K> shrink(
       ClosedUnitFractionHardAndSoftRanges<K> unscaled, UnitFraction fractionOfOriginal) {
     return closedUnitFractionHardAndSoftRanges(
-        unscaled.getRawMap().transformValuesCopy(v -> closedUnitFractionHardAndPossiblySameSoftRange(
-            closedUnitFractionRangeShrinker.shrink(v.getHardRange(), fractionOfOriginal),
-            closedUnitFractionRangeShrinker.shrink(v.getSoftRange(), fractionOfOriginal))));
+        unscaled.getRawMap().transformValuesCopy(v -> shrinkSingle(v, fractionOfOriginal)));
+  }
+
+  public ClosedUnitFractionHardAndSoftRange shrinkSingle(
+      ClosedUnitFractionHardAndSoftRange unscaled, UnitFraction fractionOfOriginal) {
+    return closedUnitFractionHardAndPossiblySameSoftRange(
+        closedUnitFractionRangeShrinker.shrink(unscaled.getHardRange(), fractionOfOriginal),
+        closedUnitFractionRangeShrinker.shrink(unscaled.getSoftRange(), fractionOfOriginal));
   }
 
 }
