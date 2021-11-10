@@ -82,7 +82,9 @@ public class ClosedUnitFractionHardAndSoftRanges<K> {
 
   @Override
   public String toString() {
-    return Strings.format("[CUFHASR %s CUFHASR]", rawMap);
+    return rawMap.isEmpty()
+        ? Strings.format("[CUFHASRs]")
+        : Strings.format("[CUFHASRs %s CUFHASRs]", rawMap);
   }
 
 }

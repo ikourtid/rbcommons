@@ -65,7 +65,7 @@ public class HasInstrumentIdSet<T extends HasInstrumentId> extends HasLongMap<In
   public String toString(InstrumentMaster instrumentMaster, LocalDate date) {
     return Strings.format("[HIIS %s entries: %s HIIS]",
         this.size(),
-        Joiner.on(';').join(stream()
+        Joiner.on("; ").join(stream()
             .map(v -> v.toString(instrumentMaster, date))
             .sorted()
             .iterator()));
