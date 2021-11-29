@@ -289,8 +289,8 @@ public class Strings {
 
   public static <V> String formatSortedIidMap(
       IidMap<V> map, InstrumentMaster instrumentMaster, LocalDate date,
-      String joinString, Comparator<V> comparator, boolean printInstruments) {
-    return formatSortedIidMap(map, instrumentMaster, date, joinString, comparator, v -> v.toString(), printInstruments);
+      String joinString, Comparator<V> comparator, boolean printInstrumentIds) {
+    return formatSortedIidMap(map, instrumentMaster, date, joinString, comparator, v -> v.toString(), printInstrumentIds);
   }
 
   public static <V> String formatSortedIidMap(
