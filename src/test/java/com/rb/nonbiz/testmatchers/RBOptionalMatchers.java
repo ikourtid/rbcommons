@@ -153,6 +153,22 @@ public class RBOptionalMatchers {
     };
   }
 
+  public static <T extends ImpreciseValue<T>> TypeSafeMatcher<Optional<T>> nonEmptyOptionalImpreciseValueMatcher(
+      T expected, double epsilon) {
+    assertValidEpsilon(epsilon);
+    return new TypeSafeMatcher<Optional<T>>() {
+      @Override
+      protected boolean matchesSafely(Optional<T> actual) {
+        return actual.isPresent() && impreciseValueMatcher(expected, epsilon).matches(actual.get());
+      }
+
+      @Override
+      public void describeTo(Description description) {
+        impreciseValueMatcher(expected, epsilon).describeTo(description);
+      }
+    };
+  }
+
   public static TypeSafeMatcher<OptionalDouble> nonEmptyOptionalDoubleMatcher(double expected, double epsilon) {
     assertValidEpsilon(epsilon);
     return new TypeSafeMatcher<OptionalDouble>() {
