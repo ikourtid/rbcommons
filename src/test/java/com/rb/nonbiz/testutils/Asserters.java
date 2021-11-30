@@ -8,6 +8,7 @@ import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
+import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.lang3.ArrayUtils;
 import org.hamcrest.TypeSafeMatcher;
@@ -37,26 +38,22 @@ import static org.junit.Assert.fail;
 
 public class Asserters {
 
-  public static void assertAlmostEquals(PreciseValue value1, PreciseValue value2, double epsilon) {
+  public static <T extends RBNumeric<? super T>> void assertAlmostEquals(T value1, T value2, double epsilon) {
     assertAlmostEquals(
         Strings.format("Values must be within %s but were %s and %s", epsilon, value1, value2),
         value1, value2, epsilon);
   }
 
-  public static void assertAlmostEquals(String message, PreciseValue value1, PreciseValue value2, double epsilon) {
+  public static <T extends RBNumeric<? super T>> void assertAlmostEquals(String message, T value1, T value2, double epsilon) {
     if (value1 == null && value2 == null) {
       return;
     }
     assertNotNull(value1);
-    assertTrue(
+    assertEquals(
         Strings.format("%s is not within %s of %s ; %s", value1, epsilon, value2, message),
-        value1.almostEquals(value2, epsilon));
-  }
-
-  public static <V extends ImpreciseValue<V>> void assertAlmostEquals(V value1, V value2, double epsilon) {
-    assertAlmostEquals(
-        Strings.format("Values must be within %s but were %s and %s", epsilon, value1, value2),
-        value1, value2, epsilon);
+        value1.doubleValue(),
+        value2.doubleValue(),
+        epsilon);
   }
 
   public static <V extends ImpreciseValue<V>> void assertAlmostEquals(
@@ -157,7 +154,7 @@ public class Asserters {
     assertEquals(expected, actual.getAsLong());
   }
 
-  public static <T extends PreciseValue<? super T>> void assertOptionalAlmostEquals(
+  public static <T extends RBNumeric<? super T>> void assertOptionalAlmostEquals(
       T expected, Optional<T> actual, double epsilon) {
     assertTrue(actual.isPresent());
     assertAlmostEquals(expected, actual.get(), epsilon);
