@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.Iterators;
 import com.rb.nonbiz.functional.QuadriFunction;
+import com.rb.nonbiz.functional.QuintFunction;
 import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.ImpreciseValue;
@@ -243,6 +244,40 @@ public class RBIterators {
       @Override
       public T next() {
         return quadriFunction.apply(iter1.next(), iter2.next(), iter3.next(), iter4.next());
+      }
+    };
+  }
+
+  /**
+   * Transforms 5 iterators into a new iterator, based on a supplied function.
+   * If the iterators have unequal # of items, this iterator will throw when we're done iterating over it.
+   * Of course, we'll only find out at runtime, since we can't consume the 5 input iterators in this method
+   * just to see if they have the same # of items.
+   */
+  public static <T1, T2, T3, T4, T5, T> Iterator<T> paste5IntoNewIterator(
+      Iterator<T1> iter1, Iterator<T2> iter2, Iterator<T3> iter3, Iterator<T4> iter4, Iterator<T5> iter5,
+      QuintFunction<T1, T2, T3, T4, T5, T> quintFunction) {
+    return new Iterator<T>() {
+      @Override
+      public boolean hasNext() {
+        int numHasNext = (iter1.hasNext() ? 1 : 0)
+            + (iter2.hasNext() ? 1 : 0)
+            + (iter3.hasNext() ? 1 : 0)
+            + (iter4.hasNext() ? 1 : 0)
+            + (iter5.hasNext() ? 1 : 0);
+        if (numHasNext == 0) {
+          return false;
+        } else if (numHasNext == 5) {
+          return true;
+        }
+        throw new IllegalArgumentException(Strings.format(
+            "The 5 iterators are of unequal sizes; %s of 5 have hasNext() be true. Should be all or none",
+            numHasNext));
+      }
+
+      @Override
+      public T next() {
+        return quintFunction.apply(iter1.next(), iter2.next(), iter3.next(), iter4.next(), iter5.next());
       }
     };
   }
