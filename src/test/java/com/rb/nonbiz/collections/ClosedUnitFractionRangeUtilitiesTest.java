@@ -15,6 +15,7 @@ import static com.rb.nonbiz.collections.RBRanges.transformRange;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.closedUnitFractionHardToSoftRangeTighteningInstructions;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
 import static com.rb.nonbiz.types.ClosedUnitFractionRangeTest.closedUnitFractionRangeMatcher;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
@@ -145,32 +146,38 @@ public class ClosedUnitFractionRangeUtilitiesTest {
         (initialRange, multiplierOnInitialRangeWidth, expectedResult) -> assertThat(
             tightenClosedUnitFractionRangeProportionally(
                 closedUnitFractionRange(transformRange(initialRange, v -> unitFraction(v))),
-                unitFraction(multiplierOnInitialRangeWidth)),
+                closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(multiplierOnInitialRangeWidth))),
             closedUnitFractionRangeMatcher(
                 closedUnitFractionRange(transformRange(expectedResult, v -> unitFraction(v)))));
     asserter.accept(Range.closed(0.0, 1.0), 1.0, Range.closed(0.0,  1.0));
     asserter.accept(Range.closed(0.0, 1.0), 0.9, Range.closed(0.05, 0.95));
-    asserter.accept(Range.closed(0.0, 1.0), 0.0, Range.closed(0.5,  0.5));
+    // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
+    // asserter.accept(Range.closed(0.0, 1.0), 0.0, Range.closed(0.5,  0.5));
 
     asserter.accept(Range.closed(0.4, 1.0), 1.0, Range.closed(0.4,  1.0));
     asserter.accept(Range.closed(0.4, 1.0), 0.9, Range.closed(0.43, 0.97));
-    asserter.accept(Range.closed(0.4, 1.0), 0.0, Range.closed(0.7,  0.7));
+    // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
+    // asserter.accept(Range.closed(0.4, 1.0), 0.0, Range.closed(0.7,  0.7));
 
     asserter.accept(Range.closed(0.0, 0.6), 1.0, Range.closed(0.0,  0.6));
     asserter.accept(Range.closed(0.0, 0.6), 0.9, Range.closed(0.03, 0.57));
-    asserter.accept(Range.closed(0.0, 0.6), 0.0, Range.closed(0.3,  0.3));
+    // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
+    // asserter.accept(Range.closed(0.0, 0.6), 0.0, Range.closed(0.3,  0.3));
 
     asserter.accept(Range.closed(0.0, 0.0), 1.0, Range.closed(0.0,  0.0));
     asserter.accept(Range.closed(0.0, 0.0), 0.9, Range.closed(0.0,  0.0));
-    asserter.accept(Range.closed(0.0, 0.0), 0.0, Range.closed(0.0,  0.0));
+    // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
+    // asserter.accept(Range.closed(0.0, 0.0), 0.0, Range.closed(0.0,  0.0));
 
     asserter.accept(Range.closed(0.4, 0.4), 1.0, Range.closed(0.4,  0.4));
     asserter.accept(Range.closed(0.4, 0.4), 0.9, Range.closed(0.4,  0.4));
-    asserter.accept(Range.closed(0.4, 0.4), 0.0, Range.closed(0.4,  0.4));
+    // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
+    // asserter.accept(Range.closed(0.4, 0.4), 0.0, Range.closed(0.4,  0.4));
 
     asserter.accept(Range.closed(1.0, 1.0), 1.0, Range.closed(1.0,  1.0));
     asserter.accept(Range.closed(1.0, 1.0), 0.9, Range.closed(1.0,  1.0));
-    asserter.accept(Range.closed(1.0, 1.0), 0.0, Range.closed(1.0,  1.0));
+    // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
+    // asserter.accept(Range.closed(1.0, 1.0), 0.0, Range.closed(1.0,  1.0));
   }
 
 }
