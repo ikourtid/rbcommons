@@ -2,9 +2,11 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.Range;
 import com.rb.nonbiz.functional.TriConsumer;
+import com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.function.BiConsumer;
 
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.loosenClosedUnitFractionRangeByFixedAmount;
@@ -16,7 +18,9 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.closedUnitFractionHardToSoftRangeTighteningInstructions;
+import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.setClosedUnitFractionSoftRangeToSameAsHard;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
+import static com.rb.nonbiz.types.ClosedUnitFractionRange.unitFractionAtMost;
 import static com.rb.nonbiz.types.ClosedUnitFractionRangeTest.closedUnitFractionRangeMatcher;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
@@ -178,6 +182,19 @@ public class ClosedUnitFractionRangeUtilitiesTest {
     asserter.accept(Range.closed(1.0, 1.0), 0.9, Range.closed(1.0,  1.0));
     // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
     // asserter.accept(Range.closed(1.0, 1.0), 0.0, Range.closed(1.0,  1.0));
+  }
+
+  @Test
+  public void softRangeSameAsHard_doesNotThrowDueToNumericalIssues() {
+    // Unfortunately this test does not fail if we remove the fix about special-casing
+    // ClosedUnitFractionHardToSoftRangeTighteningInstructions#setClosedUnitFractionSoftRangeToSameAsHard.
+    // This looks identical to a situation that was throwing an exception in DirectIndexingJapanBacktest,
+    // which is fixed by the prod code fix we're trying to test here.
+    // But I might as well keep it in.
+    ClosedUnitFractionRange range = unitFractionAtMost(unitFraction(new BigDecimal("0.00695779989577999128")));
+    assertThat(
+        tightenClosedUnitFractionRangeProportionally(range, setClosedUnitFractionSoftRangeToSameAsHard()),
+        closedUnitFractionRangeMatcher(range));
   }
 
 }
