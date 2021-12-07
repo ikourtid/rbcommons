@@ -65,12 +65,23 @@ public class ClosedUnitFractionRangeUtilities {
   public static ClosedUnitFractionRange tightenClosedUnitFractionRangeProportionally(
       ClosedUnitFractionRange initialRange,
       ClosedUnitFractionHardToSoftRangeTighteningInstructions closedUnitFractionHardToSoftRangeTighteningInstructions) {
+    UnitFraction rawMultiplier = closedUnitFractionHardToSoftRangeTighteningInstructions.getRawMultiplier();
+    if (rawMultiplier.isAlmostOne(1e-8)) {
+      // There are some cases where we need to special-case this, because
+      // Unfortunately, the only way I'm able to test this for tiny epsilons is with DirectIndexingJapanBacktest.
+      // There was a case where where the double operations below would result in a soft range that was just a tiny
+      // bit wider than the hard range, and that would cause an exception. Since there are cases where
+      // we expressly want the soft range to be the same as the hard range (see static constructor
+      // ClosedUnitFractionHardToSoftRangeTighteningInstructions#setClosedUnitFractionSoftRangeToSameAsHard)
+      // it makes sense to special-case this.
+      return initialRange;
+    }
+
     double oldLower = initialRange.lowerEndpoint().doubleValue();
     double oldUpper = initialRange.upperEndpoint().doubleValue();
     double middle = 0.5 * (oldLower + oldUpper);
     double oldWidth = oldUpper - oldLower;
-    double newHalfWidth = 0.5 * oldWidth
-        * closedUnitFractionHardToSoftRangeTighteningInstructions.getRawMultiplier().doubleValue();
+    double newHalfWidth = 0.5 * oldWidth * rawMultiplier.doubleValue();
 
     return closedUnitFractionRange(
         unitFraction(middle - newHalfWidth),
