@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -63,12 +64,13 @@ public class ClosedUnitFractionRangeUtilities {
    */
   public static ClosedUnitFractionRange tightenClosedUnitFractionRangeProportionally(
       ClosedUnitFractionRange initialRange,
-      UnitFraction multiplierOnInitialRangeWidth) {
+      ClosedUnitFractionHardToSoftRangeTighteningInstructions closedUnitFractionHardToSoftRangeTighteningInstructions) {
     double oldLower = initialRange.lowerEndpoint().doubleValue();
     double oldUpper = initialRange.upperEndpoint().doubleValue();
     double middle = 0.5 * (oldLower + oldUpper);
     double oldWidth = oldUpper - oldLower;
-    double newHalfWidth = 0.5 * oldWidth * multiplierOnInitialRangeWidth.doubleValue();
+    double newHalfWidth = 0.5 * oldWidth
+        * closedUnitFractionHardToSoftRangeTighteningInstructions.getRawMultiplier().doubleValue();
 
     return closedUnitFractionRange(
         unitFraction(middle - newHalfWidth),
