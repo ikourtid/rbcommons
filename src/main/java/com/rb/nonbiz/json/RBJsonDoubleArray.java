@@ -6,6 +6,7 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,6 +67,10 @@ public class RBJsonDoubleArray {
     return new RBJsonDoubleArray(newArrayList(itemsIterator));
   }
 
+  public static RBJsonDoubleArray rbJsonDoubleArray(Iterable<Double> items) {
+    return new RBJsonDoubleArray(newArrayList(items.iterator()));
+  }
+
   public JsonArray asJsonArray() {
     JsonArray jsonArray = newJsonArrayWithExpectedSize(rawDoublesList.size());
     rawDoublesList.forEach(v -> jsonArray.add(v));
@@ -86,6 +91,7 @@ public class RBJsonDoubleArray {
   public String toString() {
     return Strings.format("[RBJDA %s RBJDA]", formatListInExistingOrder(rawDoublesList));
   }
+
 
   public static class RBJsonDoubleArrayBuilder implements RBBuilder<RBJsonDoubleArray> {
 
