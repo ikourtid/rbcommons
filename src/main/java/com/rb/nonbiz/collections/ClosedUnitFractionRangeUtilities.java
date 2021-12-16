@@ -67,7 +67,7 @@ public class ClosedUnitFractionRangeUtilities {
       ClosedUnitFractionHardToSoftRangeTighteningInstructions closedUnitFractionHardToSoftRangeTighteningInstructions) {
     UnitFraction rawMultiplier = closedUnitFractionHardToSoftRangeTighteningInstructions.getRawMultiplier();
     if (rawMultiplier.isAlmostOne(1e-8)) {
-      // There are some cases where we need to special-case this, because
+      // There are some cases where we need to special-case this, to avoid numerical issues.
       // Unfortunately, the only way I'm able to test this for tiny epsilons is with DirectIndexingJapanBacktest.
       // There was a case where where the double operations below would result in a soft range that was just a tiny
       // bit wider than the hard range, and that would cause an exception. Since there are cases where
