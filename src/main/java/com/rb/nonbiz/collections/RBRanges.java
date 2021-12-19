@@ -21,6 +21,7 @@ import static com.google.common.collect.BoundType.OPEN;
 import static com.google.common.collect.Range.range;
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
+import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.POSITIVE_INFINITY;
 
@@ -318,10 +319,20 @@ public class RBRanges {
    * Throws if the collection is empty.
    */
   public static <C extends Comparable<? super C>> ClosedRange<C> getMinMaxClosedRange(Iterator<C> iterator) {
+    return getOrThrow(
+        getOptionalMinMaxClosedRange(iterator),
+        "Cannot get min & max for empty iterator");
+  }
+
+  /**
+   * Returns a closed range for this collection, i.e. [smallest, largest].
+   * Throws if the collection is empty.
+   */
+  public static <C extends Comparable<? super C>> Optional<ClosedRange<C>> getOptionalMinMaxClosedRange(Iterator<C> iterator) {
     C min = null;
     C max = null;
     if (!iterator.hasNext()) {
-      throw new IllegalArgumentException("Cannot get min & max for empty collection");
+      return Optional.empty();
     }
     while (iterator.hasNext()) {
       C item = iterator.next();
@@ -336,7 +347,7 @@ public class RBRanges {
         max = item;
       }
     }
-    return closedRange(min, max);
+    return Optional.of(closedRange(min, max));
   }
 
   /**

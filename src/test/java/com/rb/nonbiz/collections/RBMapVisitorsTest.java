@@ -2,11 +2,13 @@ package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.collections.RBMapVisitors.PairOfRBSetAndRBMapVisitor;
 import com.rb.nonbiz.collections.RBMapVisitors.TwoRBMapsVisitor;
+import com.rb.nonbiz.functional.QuadriConsumer;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.text.Strings;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBMapVisitors.visitItemsOfRBSetAndRBMap;
@@ -16,6 +18,9 @@ import static com.rb.nonbiz.collections.RBMapVisitors.visitSharedItemsOfTwoRBMap
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static org.junit.Assert.assertEquals;
 
 public class RBMapVisitorsTest {
@@ -131,7 +136,7 @@ public class RBMapVisitorsTest {
   }
 
   @Test
-  public void testVisitRBMapsExpectingSameKeys() {
+  public void testVisitRBMapsExpectingSameKeys_twoMaps() {
     RBMap<Integer, String> stringRBMap = rbMapOf(
         1, "A",
         2, "B",
@@ -164,8 +169,74 @@ public class RBMapVisitorsTest {
         stringRBMap,
         rbMapOf(
             2, 2.2,
-            3, 3.3),   // right number of entries, but the keys do not match
+            3, 3.3,
+            4, 4.4),   // right number of entries, but the keys do not match
         mapUpdater));
+  }
+
+  @Test
+  public void testVisitRBMapsExpectingSameKeys_threeMaps() {
+    RBMap<Integer, String> stringRBMap = rbMapOf(
+        1, "A",
+        2, "B",
+        3, "C");
+    RBMap<Integer, Double> doubleRBMap = rbMapOf(
+        1, 1.1,
+        2, 2.2,
+        3, 3.3);
+    RBMap<Integer, Integer> intRBMap = rbMapOf(
+        1, 111,
+        2, 222,
+        3, 333);
+
+    MutableRBSet<String> mutableSet = newMutableRBSet();
+    QuadriConsumer<Integer, String, Double, Integer> mapUpdater = (key, stringVal, doubleVal, intVal) ->
+        mutableSet.add(Strings.format("%s:%s_%s_%s", key, stringVal, doubleVal, intVal));
+
+    visitRBMapsExpectingSameKeys(
+        stringRBMap,
+        doubleRBMap,
+        intRBMap,
+        mapUpdater);
+    assertEquals(
+        rbSetOf("1:A_1.1_111", "2:B_2.2_222", "3:C_3.3_333"),
+        newRBSet(mutableSet));
+
+    TriConsumer<RBMap<Integer, String>, RBMap<Integer, Double>, RBMap<Integer, Integer>> assertThrows =
+        (map1, map2, map3) -> assertIllegalArgumentException( () ->
+            visitRBMapsExpectingSameKeys(map1, map2, map3, mapUpdater));
+
+    // if the number of keys is not the same, the keysets can't be equal, so an exception will be thrown
+    assertThrows.accept(emptyRBMap(), doubleRBMap,  intRBMap);
+    assertThrows.accept(stringRBMap,  emptyRBMap(), intRBMap);
+    assertThrows.accept(stringRBMap,  doubleRBMap,  emptyRBMap());
+
+    assertThrows.accept(singletonRBMap(1, "A"), doubleRBMap,            intRBMap);
+    assertThrows.accept(stringRBMap,            singletonRBMap(1, 1.1), intRBMap);
+    assertThrows.accept(stringRBMap,            doubleRBMap,            singletonRBMap(1, 111));
+
+    // Correct number of entries, but the keys do not match.
+    assertThrows.accept(
+        rbMapOf(
+            2, "B",
+            3, "C",
+            4, DUMMY_STRING),
+        doubleRBMap,
+        intRBMap);
+    assertThrows.accept(
+        stringRBMap,
+        rbMapOf(
+            2, 2.2,
+            3, 3.3,
+            4, DUMMY_DOUBLE),
+        intRBMap);
+    assertThrows.accept(
+        stringRBMap,
+        doubleRBMap,
+        rbMapOf(
+            2, 222,
+            3, 333,
+            4, DUMMY_POSITIVE_INTEGER));
   }
 
 }
