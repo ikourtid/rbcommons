@@ -155,4 +155,13 @@ public class RBMapVisitors {
     });
   }
 
+  public static <K, V1, V2, V3> void visitRBMapsExpectingSameKeys(
+      RBMap<K, V1> map1,
+      RBMap<K, V2> map2,
+      RBMap<K, V3> map3,
+      TriConsumer<V1, V2, V3> consumer) {
+    visitRBMapsExpectingSameKeys(map1, map2, map3,
+        (ignoredKey, value1, value2, value3) -> consumer.accept(value1, value2, value3));
+  }
+
 }
