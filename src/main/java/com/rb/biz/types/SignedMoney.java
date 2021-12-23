@@ -49,6 +49,10 @@ public class SignedMoney extends PreciseValue<SignedMoney> {
     return signedMoney(asBigDecimal().add(other.asBigDecimal()));
   }
 
+  public SignedMoney add(Money money) {
+    return signedMoney(asBigDecimal().add(money.asBigDecimal()));
+  }
+
   public SignedMoney subtract(SignedMoney other) {
     return signedMoney(asBigDecimal().subtract(other.asBigDecimal()));
   }

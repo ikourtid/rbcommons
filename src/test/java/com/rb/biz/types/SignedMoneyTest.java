@@ -30,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 public class SignedMoneyTest {
 
   @Test
-  public void testAdd() {
+  public void testAddSignedMoney() {
     assertEquals(signedMoney(-123.45).add(ZERO_SIGNED_MONEY), signedMoney(-123.45));
     assertEquals(ZERO_SIGNED_MONEY   .add(ZERO_SIGNED_MONEY), ZERO_SIGNED_MONEY);
     assertEquals(signedMoney( 123.45).add(ZERO_SIGNED_MONEY), signedMoney( 123.45));
@@ -43,6 +43,18 @@ public class SignedMoneyTest {
 
     assertEquals(signedMoney(-123.45).add(signedMoney(-123.45)), signedMoney(-246.90));
     assertEquals(signedMoney( 123.45).add(signedMoney( 123.45)), signedMoney( 246.90));
+  }
+
+  @Test
+  public void testAddMoney() {
+    assertEquals(ZERO_SIGNED_MONEY   .add(ZERO_MONEY), ZERO_SIGNED_MONEY);
+    assertEquals(signedMoney(-123.45).add(ZERO_MONEY), signedMoney(-123.45));
+    assertEquals(signedMoney( 123.45).add(ZERO_MONEY), signedMoney( 123.45));
+
+    assertEquals(ZERO_SIGNED_MONEY.add(money(123.45)), signedMoney(123.45));
+
+    assertEquals(signedMoney(-123.45).add(money( 123.45)), ZERO_SIGNED_MONEY);
+    assertEquals(signedMoney( 123.45).add(money( 123.45)), signedMoney(246.90));
   }
 
   @Test
