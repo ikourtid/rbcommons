@@ -250,9 +250,7 @@ public class RBJsonObjects {
         jsonArrayToList(jsonArray, valueDeserializer));
   }
 
-  // FIXME IAK refactor this to say toRange, since toClosedRange assumes we return a ClosedRange (new class now),
-  // whereas the 3 scenarios currently (Mar 2020) are not really closed ranges.
-  public static <C extends Comparable<? super C>> Range<C> jsonObjectToClosedRange(
+  public static <C extends Comparable<? super C>> Range<C> jsonObjectToRange(
       JsonObject jsonObject,
       Function<JsonElement, C> valueDeserializer) {
     JsonValidator.staticValidate(jsonObject, jsonValidationInstructionsBuilder()

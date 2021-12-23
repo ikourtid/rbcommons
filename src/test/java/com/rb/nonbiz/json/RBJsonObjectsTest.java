@@ -136,7 +136,7 @@ public class RBJsonObjectsTest {
   public void testJsonObjectToClosedRange() {
     BiConsumer<JsonObject, Range<UnitFraction>> asserter = (jsonObject, expectedRange) ->
         assertThat(
-            jsonObjectToClosedRange(jsonObject, v -> unitFraction(v.getAsDouble())),
+            jsonObjectToRange(jsonObject, v -> unitFraction(v.getAsDouble())),
             preciseValueRangeMatcher(expectedRange, 1e-8));
 
     // the 'min' and 'max' properties are both optional:
@@ -156,7 +156,7 @@ public class RBJsonObjectsTest {
         Range.closed(UNIT_FRACTION_0, UNIT_FRACTION_1));
 
     // it is possible for the JSON object to specify an invalid range:
-    assertIllegalArgumentException(() -> RBJsonObjects.<UnitFraction>jsonObjectToClosedRange(
+    assertIllegalArgumentException(() -> RBJsonObjects.<UnitFraction>jsonObjectToRange(
         jsonObject(
             "min", jsonDouble(1.0),
             "max", jsonDouble(0.0)),   // invalid: max is less than min
@@ -164,7 +164,7 @@ public class RBJsonObjectsTest {
 
     // a typo in an optional JSON property (as opposed to simply omitting it)
     // will cause the conversion to fail:
-    assertIllegalArgumentException(() -> RBJsonObjects.<UnitFraction>jsonObjectToClosedRange(
+    assertIllegalArgumentException(() -> RBJsonObjects.<UnitFraction>jsonObjectToRange(
         jsonObject(
             "mni", jsonDouble(0.5),     // TYPO: "min" -> "mni"
             "max", jsonDouble(1.0)),
