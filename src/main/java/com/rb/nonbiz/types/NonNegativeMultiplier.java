@@ -29,7 +29,6 @@ public class NonNegativeMultiplier extends ImpreciseValue<NonNegativeMultiplier>
     return nonNegativeMultiplier(this.doubleValue() * other.doubleValue());
   }
 
-  // FIXME IAK WGT test this
   public static NonNegativeMultiplier sum(Collection<NonNegativeMultiplier> collection) {
     return nonNegativeMultiplier(collection.stream().mapToDouble(v -> v.doubleValue()).sum());
   }
