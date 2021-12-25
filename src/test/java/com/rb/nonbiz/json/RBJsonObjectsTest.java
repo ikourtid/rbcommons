@@ -11,6 +11,7 @@ import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.CaseInsensitiveStringFilter;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
+import com.rb.nonbiz.collections.RBRanges;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
@@ -22,11 +23,14 @@ import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.rb.biz.jsonapi.JsonTickerMapImplTest.jsonTickerMap;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
+import static com.rb.nonbiz.collections.ClosedRange.closedRange;
+import static com.rb.nonbiz.collections.ClosedRangeTest.closedRangeMatcher;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
@@ -50,6 +54,7 @@ import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
@@ -133,7 +138,7 @@ public class RBJsonObjectsTest {
   }
 
   @Test
-  public void testJsonObjectToClosedRange() {
+  public void testJsonObjectToRange() {
     BiConsumer<JsonObject, Range<UnitFraction>> asserter = (jsonObject, expectedRange) ->
         assertThat(
             jsonObjectToRange(jsonObject, v -> unitFraction(v.getAsDouble())),
@@ -169,6 +174,43 @@ public class RBJsonObjectsTest {
             "mni", jsonDouble(0.5),     // TYPO: "min" -> "mni"
             "max", jsonDouble(1.0)),
         v -> unitFraction(v.getAsDouble())));
+  }
+
+  @Test
+  public void testJsonObjectToClosedRange() {
+    // the 'min' and 'max' properties must both exist for a ClosedRange.
+    assertThat(
+        jsonObjectToClosedRange(
+            jsonObject(
+                "min", jsonDouble(0.1),
+                "max", jsonDouble(0.9)),
+            v -> unitFraction(v.getAsDouble())),
+        closedRangeMatcher(
+            closedRange(unitFraction(0.1), unitFraction(0.9)),
+            f -> preciseValueMatcher(f, 1e-8)));
+
+    Consumer<JsonObject> assertThrows = invalidJsonObject -> assertIllegalArgumentException( () ->
+        RBJsonObjects.<UnitFraction>jsonObjectToClosedRange(
+                invalidJsonObject,
+                v -> unitFraction(v.getAsDouble())));
+    assertThrows.accept(emptyJsonObject());
+    assertThrows.accept(
+        singletonJsonObject("min", jsonDouble(0.1)));
+    assertThrows.accept(
+        singletonJsonObject("max", jsonDouble(0.9)));
+
+    // it is possible for the JSON object to specify an invalid range:
+    assertThrows.accept(
+        jsonObject(
+            "min", jsonDouble(0.8),
+            "max", jsonDouble(0.2)));
+
+    // a typo in an optional JSON property (as opposed to simply omitting it)
+    // will cause the conversion to fail:
+    assertThrows.accept(
+        jsonObject(
+            "mni", jsonDouble(0.1),
+            "max", jsonDouble(0.9)));
   }
 
   @Test
@@ -310,8 +352,8 @@ public class RBJsonObjectsTest {
                 "subAccount2", jsonString("subAccount2")),
             jsonElement -> testHasUniqueId(uniqueId(jsonElement.getAsString()), unitFraction(0.123))),
         rbSetOfHasUniqueIdMatcher(rbSetOfHasUniqueId(rbMapOf(
-            uniqueId("subAccount1"), testHasUniqueId(uniqueId("subAccount1"), unitFraction(0.123)),
-            uniqueId("subAccount2"), testHasUniqueId(uniqueId("subAccount2"), unitFraction(0.123)))),
+                uniqueId("subAccount1"), testHasUniqueId(uniqueId("subAccount1"), unitFraction(0.123)),
+                uniqueId("subAccount2"), testHasUniqueId(uniqueId("subAccount2"), unitFraction(0.123)))),
             f -> testHasUniqueIdMatcher(f)));
   }
 
