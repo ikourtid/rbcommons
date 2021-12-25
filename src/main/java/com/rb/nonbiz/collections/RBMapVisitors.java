@@ -128,7 +128,7 @@ public class RBMapVisitors {
         "The two maps must have the same keys, but the map sizes are different: %s %s",
         map1, map2);
     map1.forEachEntry( (key, value1) -> {
-      V2 value2 = map2.getOrThrow(key, "Key %s appers in left map but not right one: left= %s ; right= %s",
+      V2 value2 = map2.getOrThrow(key, "Key %s appears in left map but not right one: left= %s ; right= %s",
           key, map1, map2);
       consumer.accept(key, value1, value2);
     });
@@ -147,9 +147,9 @@ public class RBMapVisitors {
         "The three maps must have the same keys, but the map sizes are different: %s %s %s",
         map1, map2, map3);
     map1.forEachEntry( (key, value1) -> {
-      V2 value2 = map2.getOrThrow(key, "Key %s appers in 1st map but not the 2nd one: 1st= %s ; 2nd= %s",
+      V2 value2 = map2.getOrThrow(key, "Key %s appears in 1st map but not the 2nd one: 1st= %s ; 2nd= %s",
           key, map1, map2);
-      V3 value3 = map3.getOrThrow(key, "Key %s appers in 1st & 2nd map but not the 3rd one: 1st= %s ; 2nd= %s ; 3rd= %s",
+      V3 value3 = map3.getOrThrow(key, "Key %s appears in 1st & 2nd map but not the 3rd one: 1st= %s ; 2nd= %s ; 3rd= %s",
           key, map1, map2, map3);
       consumer.accept(key, value1, value2, value3);
     });
