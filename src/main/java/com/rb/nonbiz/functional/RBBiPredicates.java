@@ -149,7 +149,8 @@ public class RBBiPredicates {
         // possible answer.
         return v2 < 0;
       }
-      return (v1 - v2) / v1 <= unitFraction.doubleValue();
+      // e.g. if unitFraction is 0.1 (10%) and v1 = 1000, v2 = 899, then this is true
+      return (v1 - v2) / Math.abs(v1) >= unitFraction.doubleValue();
     };
   }
 
