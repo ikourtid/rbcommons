@@ -211,6 +211,13 @@ public class RBJsonObjectsTest {
         jsonObject(
             "mni", jsonDouble(0.1),
             "max", jsonDouble(0.9)));
+
+    // extraneous field:
+    assertThrows.accept(
+        jsonObject(
+            "XYZ", jsonDouble(0.12345),
+            "min", jsonDouble(0.1),
+            "max", jsonDouble(0.9)));
   }
 
   @Test
