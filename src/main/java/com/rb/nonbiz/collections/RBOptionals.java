@@ -182,6 +182,31 @@ public class RBOptionals {
   }
 
   /**
+   * If the first supplier returns non-empty, return that value.
+   * Then, if the second supplier returns non-empty, return that value.
+   * Otherwise, return the value from the last supplier.
+   *
+   * We could have done this with varargs, but then we'd have to put the supplier of the non-optional as the
+   * 1st arg, and that would be inconsistent with the logical ordering of the steps as the caller would see them,
+   * because the 1st supplier would really be the last step.
+   */
+  public static <T> T lazyGetFirstPresentOptionalOrElse(
+      Supplier<Optional<T>> supplier1,
+      Supplier<Optional<T>> supplier2,
+      Supplier<T> supplier3) {
+    Optional<T> value1 = supplier1.get();
+    if (value1.isPresent()) {
+      return value1.get();
+    }
+    Optional<T> value2 = supplier2.get();
+    if (value2.isPresent()) {
+      return value2.get();
+    }
+    return supplier3.get();
+
+  }
+
+  /**
    *
    * Similar functionality as lazyGetIfPresent, except that it's only for a pair, and it is also less general,
    * as you must use the same transformer function for both left and right item (vs arbitrary suppliers).
