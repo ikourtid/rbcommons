@@ -203,7 +203,6 @@ public class RBOptionals {
       return value2.get();
     }
     return supplier3.get();
-
   }
 
   /**
