@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.functional.TriConsumer;
+import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Pointer;
@@ -52,6 +53,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 public class RBOptionalsTest {
 
@@ -135,6 +137,41 @@ public class RBOptionalsTest {
   public void lazyGetIfPresent_emptyInputs_returnsEmptyList() {
     assertOptionalEquals(emptyList(), lazyGetIfPresent(emptyList()));
     assertOptionalEquals(emptyList(), lazyGetIfPresent());
+  }
+
+  @Test
+  public void test_lazyGetFirstPresentOptionalOrElse() {
+    Pointer<Integer> count = uninitializedPointer();
+    assertEquals(
+        "A",
+        lazyGetFirstPresentOptionalOrElse(
+            () -> Optional.of("A"),
+            () -> { count.modifyExisting(1, Integer::sum); return Optional.of("B"); },
+            () -> { count.set(123); return "C"; }));
+    assertFalse("The suppliers for B and C will not be evaluated", count.isInitialized());
+
+    assertEquals(
+        "A",
+        lazyGetFirstPresentOptionalOrElse(
+            () -> Optional.of("A"),
+            () -> { count.set(123); return Optional.empty(); },
+            () -> { count.set(123); return "C"; }));
+    assertFalse("The suppliers for B and C will not be evaluated", count.isInitialized());
+
+    assertEquals(
+        "B",
+        lazyGetFirstPresentOptionalOrElse(
+            () -> Optional.empty(),
+            () -> Optional.of("B"),
+            () -> { count.set(123); return "C"; }));
+    assertFalse("The supplier for C will not be evaluated", count.isInitialized());
+
+    assertEquals(
+        "C",
+        lazyGetFirstPresentOptionalOrElse(
+            () -> Optional.empty(),
+            () -> Optional.empty(),
+            () -> "C"));
   }
 
   @Test
