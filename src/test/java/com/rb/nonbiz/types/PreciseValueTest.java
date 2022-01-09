@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import com.rb.biz.types.Money;
 import com.rb.biz.types.SignedMoney;
 import com.rb.biz.types.trading.SignedQuantity;
-import org.checkerframework.checker.fenum.qual.SwingHorizontalOrientation;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -69,9 +68,7 @@ public class PreciseValueTest {
     assertEquals(  1, money15digits.intValue());
     assertEquals( -1, negativeMoney15digits.intValue());
     assertEquals( 11, moneyWouldRoundUp.intValue());               // doesn't round
-    assertEquals(-11, negativeMoneyWouldRoundDown.intValue());     // doesn't round
-    assertEquals(Integer.MAX_VALUE, signedMoney(Integer.MAX_VALUE    ).intValue());  // wraps
-    assertEquals(Integer.MIN_VALUE, signedMoney(Integer.MAX_VALUE + 1).intValue());
+    assertEquals(-11, negativeMoneyWouldRoundDown.intValue());     // doesn't round 
 
     assertEquals( 1L, money15digits.longValue());
     assertEquals(-1L, negativeMoney15digits.longValue());
