@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.rb.biz.types.Money;
 import com.rb.biz.types.SignedMoney;
 import com.rb.biz.types.trading.SignedQuantity;
+import org.checkerframework.checker.fenum.qual.SwingHorizontalOrientation;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -37,6 +38,51 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class PreciseValueTest {
+
+  @Test
+  public void testConversions() {
+    SignedMoney money15digits               = signedMoney(1.234_567_890_123_456);
+    SignedMoney negativeMoney15digits       = signedMoney(-1.234_567_890_123_456);
+    SignedMoney moneyWouldRoundUp           = signedMoney( 11.987_654_321);
+    SignedMoney negativeMoneyWouldRoundDown = signedMoney(-11.987_654_321);
+
+    assertEquals(  1, money15digits.byteValue());
+    assertEquals( -1, negativeMoney15digits.byteValue());
+    assertEquals( 11, moneyWouldRoundUp.byteValue());              // doesn't round
+    assertEquals(-11, negativeMoneyWouldRoundDown.byteValue());    // doesn't round
+    //assertIllegalArgumentException( () -> signedMoney(257).byteValue());
+    assertEquals( 127, signedMoney( 127).byteValue());
+    assertEquals(-128, signedMoney( 128).byteValue());             // wraps
+    assertEquals(-127, signedMoney( 129).byteValue());
+    assertEquals(  -1, signedMoney(  -1).byteValue());
+    assertEquals(-127, signedMoney(-127).byteValue());
+    assertEquals(-128, signedMoney(-128).byteValue());
+    assertEquals( 127, signedMoney(-129).byteValue());
+
+    assertEquals(  1, money15digits.shortValue());
+    assertEquals( -1, negativeMoney15digits.shortValue());
+    assertEquals( 11, moneyWouldRoundUp.shortValue());             // doesn't round
+    assertEquals(-11, negativeMoneyWouldRoundDown.shortValue());   // doesn't round
+    assertEquals(Short.MAX_VALUE, signedMoney(Short.MAX_VALUE    ).shortValue());   // wraps
+    assertEquals(Short.MIN_VALUE, signedMoney(Short.MAX_VALUE + 1).shortValue());
+
+    assertEquals(  1, money15digits.intValue());
+    assertEquals( -1, negativeMoney15digits.intValue());
+    assertEquals( 11, moneyWouldRoundUp.intValue());               // doesn't round
+    assertEquals(-11, negativeMoneyWouldRoundDown.intValue());     // doesn't round
+    assertEquals(Integer.MAX_VALUE, signedMoney(Integer.MAX_VALUE    ).intValue());  // wraps
+    assertEquals(Integer.MIN_VALUE, signedMoney(Integer.MAX_VALUE + 1).intValue());
+
+    assertEquals( 1L, money15digits.longValue());
+    assertEquals(-1L, negativeMoney15digits.longValue());
+    assertEquals( 11L, moneyWouldRoundUp.longValue());             // doesn't round
+    assertEquals(-11L, negativeMoneyWouldRoundDown.longValue());   // doesn't round
+
+    assertEquals(  1.234_567, money15digits.floatValue(), 1e-6);
+    assertEquals( -1.234_567, negativeMoney15digits.floatValue(), 1e-6);
+    assertEquals( 11.987_654, moneyWouldRoundUp.floatValue(), 1e-6);
+    assertEquals(-11.987_654, negativeMoneyWouldRoundDown.floatValue(), 1e-6);
+  }
 
   @Test
   public void testSumToBigDecimal() {
@@ -274,6 +320,7 @@ public class PreciseValueTest {
     assertFalse(signedMoney(-1.0).isZero());
     assertFalse(signedMoney(-1e-12).isZero());
     assertTrue(signedMoney(0.0).isZero());
+    assertTrue(ZERO_SIGNED_MONEY.isZero());
     assertFalse(signedMoney(1e-12).isZero());
     assertFalse(signedMoney(1.0).isZero());
   }
@@ -289,6 +336,16 @@ public class PreciseValueTest {
   }
 
   @Test
+  public void isNegativeOrZero() {
+    assertTrue(signedMoney(-0.01).isNegativeOrZero());
+    assertTrue(signedMoney(-1e-12).isNegativeOrZero());
+    assertTrue(signedMoney(0).isNegativeOrZero());
+    assertTrue(ZERO_SIGNED_MONEY.isNegativeOrZero());
+    assertFalse(signedMoney(1e-12).isNegativeOrZero());
+    assertFalse(signedMoney(0.01).isNegativeOrZero());
+  }
+
+  @Test
   public void isPositive() {
     assertFalse(signedMoney(-0.01).isPositive());
     assertFalse(signedMoney(-1e-12).isPositive());
@@ -296,6 +353,16 @@ public class PreciseValueTest {
     assertFalse(ZERO_SIGNED_MONEY.isPositive());
     assertTrue(signedMoney(1e-12).isPositive());
     assertTrue(signedMoney(0.01).isPositive());
+  }
+
+  @Test
+  public void isPositiveOrZero() {
+    assertFalse(signedMoney(-0.01).isPositiveOrZero());
+    assertFalse(signedMoney(-1e-12).isPositiveOrZero());
+    assertTrue(signedMoney(0).isPositiveOrZero());
+    assertTrue(ZERO_SIGNED_MONEY.isPositiveOrZero());
+    assertTrue(signedMoney(1e-12).isPositiveOrZero());
+    assertTrue(signedMoney(0.01).isPositiveOrZero());
   }
 
   @Test
