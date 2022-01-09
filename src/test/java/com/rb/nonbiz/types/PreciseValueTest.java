@@ -68,7 +68,7 @@ public class PreciseValueTest {
     assertEquals(  1, money15digits.intValue());
     assertEquals( -1, negativeMoney15digits.intValue());
     assertEquals( 11, moneyWouldRoundUp.intValue());               // doesn't round
-    assertEquals(-11, negativeMoneyWouldRoundDown.intValue());     // doesn't round 
+    assertEquals(-11, negativeMoneyWouldRoundDown.intValue());     // doesn't round
 
     assertEquals( 1L, money15digits.longValue());
     assertEquals(-1L, negativeMoney15digits.longValue());
