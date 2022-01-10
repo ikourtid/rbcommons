@@ -1408,7 +1408,7 @@ public class RBRangesTest {
   public void testMinimallyLoosenToOverlapRange() {
     TriConsumer<Range<Double>, Range<Double>, Range<Double>> asserter = (initial, other, expected) ->
         assertThat(
-            minimallyLoosenToOverlapRange(initial, other),
+            minimallyLoosenRangeToTouchOtherRange(initial, other),
             doubleRangeMatcher(expected, 1e-8));
 
     // if the ranges overlap, the initial range is returned
