@@ -21,6 +21,7 @@ import static com.google.common.collect.BoundType.OPEN;
 import static com.google.common.collect.Range.range;
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
+import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.POSITIVE_INFINITY;
 
@@ -318,10 +319,20 @@ public class RBRanges {
    * Throws if the collection is empty.
    */
   public static <C extends Comparable<? super C>> ClosedRange<C> getMinMaxClosedRange(Iterator<C> iterator) {
+    return getOrThrow(
+        getOptionalMinMaxClosedRange(iterator),
+        "Cannot get min & max for empty iterator");
+  }
+
+  /**
+   * Returns a closed range for this collection, i.e. [smallest, largest].
+   * Throws if the collection is empty.
+   */
+  public static <C extends Comparable<? super C>> Optional<ClosedRange<C>> getOptionalMinMaxClosedRange(Iterator<C> iterator) {
     C min = null;
     C max = null;
     if (!iterator.hasNext()) {
-      throw new IllegalArgumentException("Cannot get min & max for empty collection");
+      return Optional.empty();
     }
     while (iterator.hasNext()) {
       C item = iterator.next();
@@ -336,7 +347,7 @@ public class RBRanges {
         max = item;
       }
     }
-    return closedRange(min, max);
+    return Optional.of(closedRange(min, max));
   }
 
   /**
@@ -805,17 +816,17 @@ public class RBRanges {
    *
    * <p> For example, [3.0, 5.0] would be loosened to [3.0, 7.0] to mininally overlap with [7.0, 9.0]. </p>
    *
-   * <p> Note that if the initial range is extended, the extended bound type will be CLOSED.
-   * E.g. [3.0, 5.0) would be loosened to [3.0, 7.0] to minimall overlap with [7.0, 10.0]. </p>
+   * <p> Note that if the initial range is loosened, the bound type on the loosened side will be CLOSED.
+   * E.g. [3.0, 5.0) would be loosened to [3.0, 7.0] to minimally overlap with [7.0, 10.0]. </p>
    *
    * <p> Note that Guava defines (3.0, 5.0) to intersect with (5.0, 9.0), even though the intersection
    * range (5.0, 5.0) is empty. </p>
    *
-   * <p> This means that [3.0, 5.0) will be extended to [3.0, 7.0] to overlap with (7.0, 9.0),
+   * <p> This means that [3.0, 5.0) will be loosened to [3.0, 7.0] to overlap with (7.0, 9.0),
    * even though the extended range doesn't "overlap" the other range in the usual sense. However,
    * they would "connect" according to Guava's definition. </p>
    */
-  public static <P extends Comparable<? super P>> Range<P> minimallyLoosenToOverlapRange(
+  public static <P extends Comparable<? super P>> Range<P> minimallyLoosenRangeToTouchOtherRange(
       Range<P> initialRange,
       Range<P> otherRange) {
     // If the ranges intersect, return the original range; no loosening is needed.

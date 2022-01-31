@@ -1,10 +1,15 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.ImmutableList;
+import com.rb.nonbiz.functional.QuadriConsumer;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
+
+import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkAllSame;
+import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 public class RBMapVisitors {
 
@@ -117,16 +122,46 @@ public class RBMapVisitors {
       RBMap<K, V1> map1,
       RBMap<K, V2> map2,
       TriConsumer<K, V1, V2> consumer) {
-    RBSimilarityPreconditions.checkBothSame(
+    checkBothSame(
         map1.size(),
         map2.size(),
         "The two maps must have the same keys, but the map sizes are different: %s %s",
         map1, map2);
     map1.forEachEntry( (key, value1) -> {
-      V2 value2 = map2.getOrThrow(key, "Key %s appers in left map but not right one: left= %s ; right= %s",
+      V2 value2 = map2.getOrThrow(key, "Key %s appears in left map but not right one: left= %s ; right= %s",
           key, map1, map2);
       consumer.accept(key, value1, value2);
     });
+  }
+
+  public static <K, V1, V2, V3> void visitRBMapsExpectingSameKeys(
+      RBMap<K, V1> map1,
+      RBMap<K, V2> map2,
+      RBMap<K, V3> map3,
+      QuadriConsumer<K, V1, V2, V3> consumer) {
+    checkAllSame(
+        ImmutableList.of(
+            map1.size(),
+            map2.size(),
+            map3.size()),
+        "The three maps must have the same keys, but the map sizes are different: %s %s %s",
+        map1, map2, map3);
+    map1.forEachEntry( (key, value1) -> {
+      V2 value2 = map2.getOrThrow(key, "Key %s appears in 1st map but not the 2nd one: 1st= %s ; 2nd= %s",
+          key, map1, map2);
+      V3 value3 = map3.getOrThrow(key, "Key %s appears in 1st & 2nd map but not the 3rd one: 1st= %s ; 2nd= %s ; 3rd= %s",
+          key, map1, map2, map3);
+      consumer.accept(key, value1, value2, value3);
+    });
+  }
+
+  public static <K, V1, V2, V3> void visitRBMapsExpectingSameKeys(
+      RBMap<K, V1> map1,
+      RBMap<K, V2> map2,
+      RBMap<K, V3> map3,
+      TriConsumer<V1, V2, V3> consumer) {
+    visitRBMapsExpectingSameKeys(map1, map2, map3,
+        (ignoredKey, value1, value2, value3) -> consumer.accept(value1, value2, value3));
   }
 
 }

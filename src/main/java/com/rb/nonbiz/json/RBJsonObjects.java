@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
+import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.MutableIidMap;
 import com.rb.nonbiz.collections.MutableRBMap;
@@ -29,6 +30,7 @@ import java.util.stream.Stream;
 
 import static com.rb.biz.jsonapi.JsonTicker.jsonTicker;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
+import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
@@ -43,6 +45,7 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstru
 import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
+import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonElementOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getOptionalJsonElement;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.text.RBSetOfHasUniqueId.rbSetOfHasUniqueId;
@@ -250,9 +253,7 @@ public class RBJsonObjects {
         jsonArrayToList(jsonArray, valueDeserializer));
   }
 
-  // FIXME IAK refactor this to say toRange, since toClosedRange assumes we return a ClosedRange (new class now),
-  // whereas the 3 scenarios currently (Mar 2020) are not really closed ranges.
-  public static <C extends Comparable<? super C>> Range<C> jsonObjectToClosedRange(
+  public static <C extends Comparable<? super C>> Range<C> jsonObjectToRange(
       JsonObject jsonObject,
       Function<JsonElement, C> valueDeserializer) {
     JsonValidator.staticValidate(jsonObject, jsonValidationInstructionsBuilder()
@@ -262,6 +263,18 @@ public class RBJsonObjects {
     return constructRange(
         transformOptional(getOptionalJsonElement(jsonObject, "min"), valueDeserializer), BoundType.CLOSED,
         transformOptional(getOptionalJsonElement(jsonObject, "max"), valueDeserializer), BoundType.CLOSED);
+  }
+
+  public static <C extends Comparable<? super C>> ClosedRange<C> jsonObjectToClosedRange(
+      JsonObject jsonObject,
+      Function<JsonElement, C> valueDeserializer) {
+    JsonValidator.staticValidate(jsonObject, jsonValidationInstructionsBuilder()
+        .setRequiredProperties("min", "max")
+        .hasNoOptionalProperties()
+        .build());
+    return closedRange(
+        valueDeserializer.apply(getJsonElementOrThrow(jsonObject, "min")),
+        valueDeserializer.apply(getJsonElementOrThrow(jsonObject, "max")));
   }
 
   public static void ifHasJsonObjectProperty(

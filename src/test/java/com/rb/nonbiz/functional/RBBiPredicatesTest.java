@@ -7,6 +7,8 @@ import com.rb.biz.types.trading.NonNegativeQuantity;
 import com.rb.biz.types.trading.PositiveQuantity;
 import org.junit.Test;
 
+import java.util.function.BiFunction;
+
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.SignedMoney.signedMoney;
 import static com.rb.biz.types.trading.BuyQuantity.buyQuantity;
@@ -229,7 +231,6 @@ public class RBBiPredicatesTest {
     assertTrue(doubleMustIncreaseByAtLeast( unitFraction(0.2)).test(-30_000.0, 1.0));
   }
 
-
   @Test
   public void testDoubleMustNotDecreaseByMoreThan_positiveValues() {
     assertFalse(doubleMustNotDecreaseByMoreThan(unitFraction(0.2)).test(30_000.0, -1.0));
@@ -289,31 +290,76 @@ public class RBBiPredicatesTest {
 
   @Test
   public void testMustIncreaseByAtLeast_positiveValues() {
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(30_000.0), signedMoney(-1.0)));
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(30_000.0), signedMoney(0.0)));
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(30_000.0), signedMoney(23_999.0)));
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(30_000.0), signedMoney(24_001.0)));
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(30_000.0), signedMoney(29_999.0)));
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(30_000.0), signedMoney(30_000.0)));
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(30_000.0), signedMoney(30_001.0)));
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(30_000.0), signedMoney(35_999.0)));
-    assertTrue( RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(30_000.0), signedMoney(36_000.0)));
-    assertTrue( RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(30_000.0), signedMoney(36_001.0)));
+    BiFunction<Double, Double, Boolean> maker = (starting, ending) ->
+        RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2))
+            .test(signedMoney(starting), signedMoney(ending));
+
+    assertFalse(maker.apply(30_000.0, -1.0));
+    assertFalse(maker.apply(30_000.0, 0.0));
+    assertFalse(maker.apply(30_000.0, 23_999.0));
+    assertFalse(maker.apply(30_000.0, 24_001.0));
+    assertFalse(maker.apply(30_000.0, 29_999.0));
+    assertFalse(maker.apply(30_000.0, 30_000.0));
+    assertFalse(maker.apply(30_000.0, 30_001.0));
+    assertFalse(maker.apply(30_000.0, 35_999.0));
+    assertTrue( maker.apply(30_000.0, 36_000.0));
+    assertTrue( maker.apply(30_000.0, 36_001.0));
   }
 
   @Test
   public void testMustIncreaseByAtLeast_negativeValues() {
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(-30_000.0), signedMoney(-36_001.0)));
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(-30_000.0), signedMoney(-35_999.0)));
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(-30_000.0), signedMoney(-30_001.0)));
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(-30_000.0), signedMoney(-30_000.0)));
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(-30_000.0), signedMoney(-29_999.0)));
-    assertFalse(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(-30_000.0), signedMoney(-24_001.0)));
-    assertTrue(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(-30_000.0), signedMoney(-24_000.0)));
-    assertTrue(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(-30_000.0), signedMoney(-23_999.0)));
-    assertTrue(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(-30_000.0), signedMoney(-1.0)));
-    assertTrue(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(-30_000.0), signedMoney(0.0)));
-    assertTrue(RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2)).test(signedMoney(-30_000.0), signedMoney(1.0)));
+    BiFunction<Double, Double, Boolean> maker = (starting, ending) ->
+        RBBiPredicates.<SignedMoney>mustIncreaseByAtLeast(unitFraction(0.2))
+            .test(signedMoney(starting), signedMoney(ending));
+
+    assertFalse(maker.apply(-30_000.0, -36_001.0));
+    assertFalse(maker.apply(-30_000.0, -35_999.0));
+    assertFalse(maker.apply(-30_000.0, -30_001.0));
+    assertFalse(maker.apply(-30_000.0, -30_000.0));
+    assertFalse(maker.apply(-30_000.0, -29_999.0));
+    assertFalse(maker.apply(-30_000.0, -24_001.0));
+    assertTrue(maker.apply(-30_000.0, -24_000.0));
+    assertTrue(maker.apply(-30_000.0, -23_999.0));
+    assertTrue(maker.apply(-30_000.0, -1.0));
+    assertTrue(maker.apply(-30_000.0, 0.0));
+    assertTrue(maker.apply(-30_000.0, 1.0));
+  }
+
+  @Test
+  public void testMustDecreaseByAtLeast_positiveValues() {
+    BiFunction<Double, Double, Boolean> maker = (starting, ending) ->
+        RBBiPredicates.<SignedMoney>mustDecreaseByAtLeast(unitFraction(0.2))
+            .test(signedMoney(starting), signedMoney(ending));
+
+    assertTrue( maker.apply(30_000.0, -1.0));
+    assertTrue( maker.apply(30_000.0, 0.0));
+    assertTrue( maker.apply(30_000.0, 23_999.0));
+    assertFalse(maker.apply(30_000.0, 24_001.0));
+    assertFalse(maker.apply(30_000.0, 29_999.0));
+    assertFalse(maker.apply(30_000.0, 30_000.0));
+    assertFalse(maker.apply(30_000.0, 30_001.0));
+    assertFalse(maker.apply(30_000.0, 35_999.0));
+    assertFalse(maker.apply(30_000.0, 36_000.0));
+    assertFalse(maker.apply(30_000.0, 36_001.0));
+  }
+
+  @Test
+  public void testMustDecreaseByAtLeast_negativeValues() {
+    BiFunction<Double, Double, Boolean> maker = (starting, ending) ->
+        RBBiPredicates.<SignedMoney>mustDecreaseByAtLeast(unitFraction(0.2))
+            .test(signedMoney(starting), signedMoney(ending));
+
+    assertTrue(maker.apply(-30_000.0, -36_001.0));
+    assertFalse(maker.apply(-30_000.0, -35_999.0));
+    assertFalse(maker.apply(-30_000.0, -30_001.0));
+    assertFalse(maker.apply(-30_000.0, -30_000.0));
+    assertFalse(maker.apply(-30_000.0, -29_999.0));
+    assertFalse(maker.apply(-30_000.0, -24_001.0));
+    assertFalse(maker.apply(-30_000.0, -24_000.0));
+    assertFalse(maker.apply(-30_000.0, -23_999.0));
+    assertFalse(maker.apply(-30_000.0, -1.0));
+    assertFalse(maker.apply(-30_000.0, 0.0));
+    assertFalse(maker.apply(-30_000.0, 1.0));
   }
 
   @Test

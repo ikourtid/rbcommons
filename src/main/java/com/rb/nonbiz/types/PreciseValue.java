@@ -292,10 +292,18 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
         : asBigDecimal().signum() > 0;
   }
 
+  public boolean isPositiveOrZero() {
+    return !isNegative();
+  }
+
   public boolean isNegative() {
     return !isNaN(doubleValue)
         ? doubleValue < 0
         : asBigDecimal().signum() < 0;
+  }
+
+  public boolean isNegativeOrZero() {
+    return !isPositive();
   }
 
   public boolean isAlmostZero(double epsilon) {

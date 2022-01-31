@@ -4,6 +4,7 @@ import com.rb.nonbiz.collections.Pair;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -83,6 +84,10 @@ public class RBMapOfHasUniqueId<K extends HasUniqueId<K>, V> {
 
   public V getOrThrow(K hasUniqueId) {
     return rawMap.getOrThrow(hasUniqueId.getUniqueId()).getRight();
+  }
+
+  public Optional<V> getOptional(K hasUniqueId) {
+    return transformOptional(rawMap.getOptional(hasUniqueId.getUniqueId()), v -> v.getRight());
   }
 
   public boolean containsKey(UniqueId<K> key) {

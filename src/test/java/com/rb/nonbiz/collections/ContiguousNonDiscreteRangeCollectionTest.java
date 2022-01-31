@@ -8,8 +8,12 @@ import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.Collections;
+import java.util.function.BiConsumer;
+
 import static com.rb.nonbiz.collections.ContiguousNonDiscreteRangeCollection.contiguousNonDiscreteRangeCollectionWithEnd;
 import static com.rb.nonbiz.collections.ContiguousNonDiscreteRangeCollection.contiguousNonDiscreteRangeCollectionWithNoEnd;
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.Match.matchList;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -29,10 +33,10 @@ public class ContiguousNonDiscreteRangeCollectionTest extends RBTestMatcher<Cont
   @Test
   public void hasNoRangesOrItems_throws() {
     assertIllegalArgumentException( () ->
-        contiguousNonDiscreteRangeCollectionWithNoEnd(emptyList()));
+        contiguousNonDiscreteRangeCollectionWithNoEnd(Collections.<Double>emptyList()));
     for (LastPointInRangeTreatment lastPointInRangeTreatment : LastPointInRangeTreatment.values()) {
       assertIllegalArgumentException( () ->
-          contiguousNonDiscreteRangeCollectionWithEnd(emptyList(), lastPointInRangeTreatment));
+          contiguousNonDiscreteRangeCollectionWithEnd(Collections.<Double>emptyList(), lastPointInRangeTreatment));
       assertIllegalArgumentException( () ->
           contiguousNonDiscreteRangeCollectionWithEnd(ImmutableList.of(1.1), lastPointInRangeTreatment));
     }
@@ -88,6 +92,32 @@ public class ContiguousNonDiscreteRangeCollectionTest extends RBTestMatcher<Cont
     }
   }
 
+  @Test
+  public void testGetEntireRange() {
+    BiConsumer<ContiguousNonDiscreteRangeCollection<Double>, Range<Double>> asserter =
+        (contiguousNonDiscreteRangeCollection, expectedEntireRange) -> assertThat(
+            contiguousNonDiscreteRangeCollection.getEntireRange(),
+            doubleRangeMatcher(expectedEntireRange, 1e-8));
+
+    asserter.accept(
+        contiguousNonDiscreteRangeCollectionWithNoEnd(
+            singletonList(-1.1)),
+        Range.atLeast(-1.1));
+    asserter.accept(
+        contiguousNonDiscreteRangeCollectionWithNoEnd(
+            singletonList(1.1)),
+        Range.atLeast(1.1));
+
+    asserter.accept(
+        contiguousNonDiscreteRangeCollectionWithEnd(
+            ImmutableList.of(-7.7, 1.1, 2.2), LastPointInRangeTreatment.INCLUDE),
+        Range.closed(-7.7, 2.2));
+    asserter.accept(
+        contiguousNonDiscreteRangeCollectionWithEnd(
+            ImmutableList.of(-7.7, 1.1, 2.2), LastPointInRangeTreatment.EXCLUDE),
+        Range.closedOpen(-7.7, 2.2));
+  }
+
   @Override
   public ContiguousNonDiscreteRangeCollection<Double> makeTrivialObject() {
     return contiguousNonDiscreteRangeCollectionWithNoEnd(
@@ -113,7 +143,8 @@ public class ContiguousNonDiscreteRangeCollectionTest extends RBTestMatcher<Cont
     return contiguousNonDiscreteRangeCollectionMatcher(expected, v -> doubleAlmostEqualsMatcher(v, 1e-8)).matches(actual);
   }
 
-  public static <K extends Comparable> TypeSafeMatcher<ContiguousNonDiscreteRangeCollection<K>> contiguousNonDiscreteRangeCollectionMatcher(
+  public static <K extends Comparable<? super K>> TypeSafeMatcher<ContiguousNonDiscreteRangeCollection<K>>
+  contiguousNonDiscreteRangeCollectionMatcher(
       ContiguousNonDiscreteRangeCollection<K> expected, MatcherGenerator<K> valueMatcherGenerator) {
     return makeMatcher(expected,
         matchList(v -> v.getRawRangeCollection(), f -> rangeMatcher(f, valueMatcherGenerator)));

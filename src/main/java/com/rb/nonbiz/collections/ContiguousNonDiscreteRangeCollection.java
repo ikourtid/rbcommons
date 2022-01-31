@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.BoundType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.rb.nonbiz.text.Strings;
@@ -27,9 +28,10 @@ import static java.util.Collections.singletonList;
  *
  * A better word for this is 'continuous', but ContiguousContinuousRangeCollection sounds very confusing.
  */
-public class ContiguousNonDiscreteRangeCollection<K extends Comparable> {
+public class ContiguousNonDiscreteRangeCollection<K extends Comparable<? super K>> {
 
   public enum LastPointInRangeTreatment {
+
     INCLUDE(true),
     EXCLUDE(false);
 
@@ -45,6 +47,7 @@ public class ContiguousNonDiscreteRangeCollection<K extends Comparable> {
 
   }
 
+
   private final List<Range<K>> rawRangeCollection;
 
   private ContiguousNonDiscreteRangeCollection(List<Range<K>> rawRangeCollection) {
@@ -54,7 +57,8 @@ public class ContiguousNonDiscreteRangeCollection<K extends Comparable> {
   /**
    * E.g. [1.1, 3.3), [3.3, +inf)
    */
-  public static <K extends Comparable> ContiguousNonDiscreteRangeCollection<K> contiguousNonDiscreteRangeCollectionWithNoEnd(
+  public static <K extends Comparable<? super K>> ContiguousNonDiscreteRangeCollection<K>
+  contiguousNonDiscreteRangeCollectionWithNoEnd(
       List<K> rangeStartingPoints) {
     sanityCheckCommon(rangeStartingPoints);
     List<Range<K>> rawRangeCollection = newArrayList();
@@ -68,7 +72,8 @@ public class ContiguousNonDiscreteRangeCollection<K extends Comparable> {
     return new ContiguousNonDiscreteRangeCollection<K>(rawRangeCollection);
   }
 
-  public static <K extends Comparable> ContiguousNonDiscreteRangeCollection<K> singletonNonDiscreteContiguousRangeCollectionWithNoEnd(
+  public static <K extends Comparable<? super K>> ContiguousNonDiscreteRangeCollection<K>
+  singletonNonDiscreteContiguousRangeCollectionWithNoEnd(
       K rangeStartingPoint) {
     return contiguousNonDiscreteRangeCollectionWithNoEnd(singletonList(rangeStartingPoint));
   }
@@ -76,7 +81,7 @@ public class ContiguousNonDiscreteRangeCollection<K extends Comparable> {
   /**
    * E.g. [1.1, 3.3), [3.3, 7.7)
    */
-  public static <K extends Comparable> ContiguousNonDiscreteRangeCollection<K> contiguousNonDiscreteRangeCollectionWithEnd(
+  public static <K extends Comparable<? super K>> ContiguousNonDiscreteRangeCollection<K> contiguousNonDiscreteRangeCollectionWithEnd(
       List<K> rangePoints,
       LastPointInRangeTreatment lastPointInRangeTreatment) {
     sanityCheckCommon(rangePoints);
@@ -97,7 +102,8 @@ public class ContiguousNonDiscreteRangeCollection<K extends Comparable> {
     return new ContiguousNonDiscreteRangeCollection<K>(rawRangeCollection);
   }
 
-  public static <K extends Comparable> ContiguousNonDiscreteRangeCollection<K> singletonNonDiscreteContiguousRangeCollectionWithEnd(
+  public static <K extends Comparable<? super K>> ContiguousNonDiscreteRangeCollection<K>
+  singletonNonDiscreteContiguousRangeCollectionWithEnd(
       K rangeStartingPoint,
       K rangeEndingPoint,
       LastPointInRangeTreatment lastPointInRangeTreatment) {
@@ -106,7 +112,7 @@ public class ContiguousNonDiscreteRangeCollection<K extends Comparable> {
         lastPointInRangeTreatment);
   }
 
-  private static <K extends Comparable> void sanityCheckCommon(List<K> rangeStartingPoints) {
+  private static <K extends Comparable<? super K>> void sanityCheckCommon(List<K> rangeStartingPoints) {
     RBPreconditions.checkArgument(
         !rangeStartingPoints.isEmpty(),
         "You must have > 0 ranges");
@@ -117,6 +123,18 @@ public class ContiguousNonDiscreteRangeCollection<K extends Comparable> {
 
   public List<Range<K>> getRawRangeCollection() {
     return rawRangeCollection;
+  }
+
+  public Range<K> getEntireRange() {
+    K lowerEndpoint = rawRangeCollection.get(0).lowerEndpoint();
+    Range<K> lastRange = rawRangeCollection.get(rawRangeCollection.size() - 1);
+    if (!lastRange.hasUpperBound()) {
+      return Range.atLeast(lowerEndpoint);
+    }
+    K upperEndpoint = lastRange.upperEndpoint();
+    return lastRange.upperBoundType() == BoundType.CLOSED
+        ? Range.closed(lowerEndpoint, upperEndpoint)
+        : Range.closedOpen(lowerEndpoint, upperEndpoint);
   }
 
   @Override
