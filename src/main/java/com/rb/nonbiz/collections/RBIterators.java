@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.Iterators;
+import com.rb.nonbiz.functional.HexFunction;
 import com.rb.nonbiz.functional.QuadriFunction;
 import com.rb.nonbiz.functional.QuintFunction;
 import com.rb.nonbiz.functional.TriFunction;
@@ -278,6 +279,42 @@ public class RBIterators {
       @Override
       public T next() {
         return quintFunction.apply(iter1.next(), iter2.next(), iter3.next(), iter4.next(), iter5.next());
+      }
+    };
+  }
+
+  /**
+   * Transforms 6 iterators into a new iterator, based on a supplied function.
+   * If the iterators have unequal # of items, this iterator will throw when we're done iterating over it.
+   * Of course, we'll only find out at runtime, since we can't consume the 6 input iterators in this method
+   * just to see if they have the same # of items.
+   */
+  public static <T1, T2, T3, T4, T5, T6, T> Iterator<T> paste6IntoNewIterator(
+      Iterator<T1> iter1, Iterator<T2> iter2, Iterator<T3> iter3, Iterator<T4> iter4, Iterator<T5> iter5,
+      Iterator<T6> iter6,
+      HexFunction<T1, T2, T3, T4, T5, T6, T> hexFunction) {
+    return new Iterator<T>() {
+      @Override
+      public boolean hasNext() {
+        int numHasNext = (iter1.hasNext() ? 1 : 0)
+            + (iter2.hasNext() ? 1 : 0)
+            + (iter3.hasNext() ? 1 : 0)
+            + (iter4.hasNext() ? 1 : 0)
+            + (iter5.hasNext() ? 1 : 0)
+            + (iter6.hasNext() ? 1 : 0);
+        if (numHasNext == 0) {
+          return false;
+        } else if (numHasNext == 6) {
+          return true;
+        }
+        throw new IllegalArgumentException(Strings.format(
+            "The 6 iterators are of unequal sizes; %s of 6 have hasNext() be true. Should be all or none",
+            numHasNext));
+      }
+
+      @Override
+      public T next() {
+        return hexFunction.apply(iter1.next(), iter2.next(), iter3.next(), iter4.next(), iter5.next(), iter6.next());
       }
     };
   }
