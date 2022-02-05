@@ -446,6 +446,80 @@ public class RBIteratorsTest {
   }
 
   @Test
+  public void testPaste5IntoNewIterator() {
+    assertThat(
+        paste5IntoNewIterator(
+            ImmutableList.of("a", "b").iterator(),
+            ImmutableList.of(0, 1).iterator(),
+            ImmutableList.of(true, false).iterator(),
+            ImmutableList.of(1.0, 2.0).iterator(),
+            ImmutableList.of('x', 'y').iterator(),
+            (a, b, c, d, e) -> Strings.format("%s,%s,%s,%s,%s", a, b, c, d, e)),
+        iteratorEqualityMatcher(
+            ImmutableList.of("a,0,true,1.0,x", "b,1,false,2.0,y").iterator()));
+  }
+
+  @Test
+  public void testPaste5IntoNewIterator_unequalElements_throws() {
+    Function<List<String>, Iterator<String>> maker = stringList ->
+        paste5IntoNewIterator(
+            stringList.iterator(),
+            ImmutableList.of(0, 1).iterator(),
+            ImmutableList.of(true, false).iterator(),
+            ImmutableList.of(1.0, 2.0).iterator(),
+            ImmutableList.of('x', 'y').iterator(),
+            (a, b, c, d, e) -> Strings.format("%s,%s,%s,%s,%s", a, b, c, d, e));
+
+    Iterator<String> doesNotThrow = maker.apply(ImmutableList.of("a", "b"));
+    assertEquals(2, Iterators.size(doesNotThrow));
+
+    // If the pasted Iterator is invalid because the inputs have differing lengths, we will not be
+    // able to call Iterator.size(); doing so will iterate and count, discovering the mismatch.
+
+    assertIllegalArgumentException( () -> Iterators.size(maker.apply(emptyList())));
+    assertIllegalArgumentException( () -> Iterators.size(maker.apply(ImmutableList.of("a"))));
+    assertIllegalArgumentException( () -> Iterators.size(maker.apply(ImmutableList.of("a", "b", "c"))));
+  }
+
+  @Test
+  public void testPaste6IntoNewIterator() {
+    assertThat(
+        paste6IntoNewIterator(
+            ImmutableList.of("a", "b").iterator(),
+            ImmutableList.of(0, 1).iterator(),
+            ImmutableList.of(true, false).iterator(),
+            ImmutableList.of(1.0, 2.0).iterator(),
+            ImmutableList.of('x', 'y').iterator(),
+            ImmutableList.of(10, 11).iterator(),
+            (a, b, c, d, e, f) -> Strings.format("%s,%s,%s,%s,%s,%s", a, b, c, d, e, f)),
+        iteratorEqualityMatcher(
+            ImmutableList.of("a,0,true,1.0,x,10", "b,1,false,2.0,y,11").iterator()));
+  }
+
+  @Test
+  public void testPaste6IntoNewIterator_unequalElements_throws() {
+    Function<List<String>, Iterator<String>> maker = stringList ->
+        paste6IntoNewIterator(
+            stringList.iterator(),
+            ImmutableList.of(0, 1).iterator(),
+            ImmutableList.of(true, false).iterator(),
+            ImmutableList.of(1.0, 2.0).iterator(),
+            ImmutableList.of('x', 'y').iterator(),
+            ImmutableList.of(10, 11).iterator(),
+            (a, b, c, d, e, f) -> Strings.format("%s,%s,%s,%s,%s,%s", a, b, c, d, e, f));
+
+    Iterator<String> doesNotThrow = maker.apply(ImmutableList.of("a", "b"));
+    assertEquals(2, Iterators.size(doesNotThrow));
+
+    // If the pasted Iterator is invalid because the inputs have differing lengths, we will not be
+    // able to call Iterator.size(); doing so will iterate and count, discovering the mismatch.
+
+    assertIllegalArgumentException( () -> Iterators.size(maker.apply(emptyList())));
+    assertIllegalArgumentException( () -> Iterators.size(maker.apply(ImmutableList.of("a"))));
+    assertIllegalArgumentException( () -> Iterators.size(maker.apply(ImmutableList.of("a", "b", "c"))));
+  }
+
+  @Test
   public void testPasteMultipleIntoNewIterator() {
     assertThat(
         pasteMultipleIntoNewIterator(
