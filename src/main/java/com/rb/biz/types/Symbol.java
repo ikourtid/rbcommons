@@ -15,7 +15,7 @@ public class Symbol {
 
   // 40 ^ 11 can fit under a long (using our uuencoding for symbols), so we can have up to 11 chars,
   // but let's be safe; there should never be any symbols this long
-  private static final int MAX_SYMBOL_LENGTH = 8;
+  public static final int MAX_SYMBOL_LENGTH = 8;
 
   private final String tickerSymbol;
 
@@ -67,7 +67,8 @@ public class Symbol {
         || Character.isDigit(c)
         || c == '.'
         || c == '/'
-        || c == '_';
+        || c == '_'
+        || c == '-';
   }
 
   @Override
