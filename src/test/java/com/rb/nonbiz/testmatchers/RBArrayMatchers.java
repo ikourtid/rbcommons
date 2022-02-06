@@ -9,6 +9,8 @@ import org.hamcrest.TypeSafeMatcher;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+
 public class RBArrayMatchers {
 
   public static <T> TypeSafeMatcher<T[]> arrayMatcher(T[] expected, MatcherGenerator<T> itemMatcherGenerator) {
@@ -30,7 +32,11 @@ public class RBArrayMatchers {
     };
   }
 
-  public static TypeSafeMatcher<double[]> doubleArrayMatcher(double[] expected, double epsilon) {
+  public static <T> TypeSafeMatcher<T[]> arrayEqualityMatcher(T[] expected) {
+    return arrayMatcher(expected, f -> typeSafeEqualTo(f));
+  }
+
+    public static TypeSafeMatcher<double[]> doubleArrayMatcher(double[] expected, double epsilon) {
     return new TypeSafeMatcher<double[]>() {
       @Override
       protected boolean matchesSafely(double[] actual) {
