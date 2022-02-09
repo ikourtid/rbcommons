@@ -63,6 +63,16 @@ public class Symbol {
   }
 
   private static boolean isValidSymbolCharacter(char c) {
+    // Don't just add stuff below; it will affect that uuencoding trick that EncodedIdGenerator uses.
+    // Unfortunately this set of characters mapped to what our older datasource showed. Our new datasource (SEP,
+    // as of Feb 2022) has a hyphen for some tickers, and also the caret for some stock indexes (e.g. ^DJI).
+    // We *could* start supporting these in the EncodedIdGenerator, but it will change our instrument IDs,
+    // which means that many tests will need to be upgraded, plus any definition of I_* that has a numeric ID
+    // such as in KnownInstrumentIds.java. One thing we could do to support this is to map any new character to
+    // behave e.g. like the slash character. This means that if we ever had X/Y and X^Y, we'd have a bug.
+    // In practice, that's unlikely to happen. Anyway, let's wait until this ever becomes a problem. In the end,
+    // when this gets used in production, the callers will probably have their own instrument IDs anyway.
+    // Our EncodedIdGenerator is only used to create an instrument master for our internal testing and backtests.
     return Character.isAlphabetic(c)
         || Character.isDigit(c)
         || c == '.'
