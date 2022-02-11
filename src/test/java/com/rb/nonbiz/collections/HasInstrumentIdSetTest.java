@@ -1,12 +1,15 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.asset.HasInstrumentId;
+import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
@@ -46,6 +49,31 @@ public class HasInstrumentIdSetTest extends RBTestMatcher<HasInstrumentIdSet<Tes
         rbSetEqualsMatcher(rbSetOf(
             instrumentId(1), instrumentId(2), instrumentId(3),
             instrumentId(4), instrumentId(5), instrumentId(6))));
+  }
+
+  @Test
+  public void testFilterValues() {
+    TriConsumer<
+        HasInstrumentIdSet<TestHasInstrumentId>,
+        Predicate<TestHasInstrumentId>,
+        HasInstrumentIdSet<TestHasInstrumentId>> asserter =
+        (initialSet, predicate, expectedFilteredSet) -> assertThat(
+            initialSet.filterValues(predicate),
+            hasInstrumentIdSetMatcher(
+                expectedFilteredSet, f -> testHasInstrumentIdMatcher(f)));
+
+    // filter always passes => same result
+    asserter.accept(TEST_SET,                  v -> true, TEST_SET);
+    asserter.accept(emptyHasInstrumentIdSet(), v -> true, emptyHasInstrumentIdSet());
+
+    // filter never passes => empty result
+    asserter.accept(TEST_SET,                  v -> false, emptyHasInstrumentIdSet());
+    asserter.accept(emptyHasInstrumentIdSet(), v -> false, emptyHasInstrumentIdSet());
+
+    // general
+    asserter.accept(TEST_SET, v -> v.getNumericValue() < 2.8, hasInstrumentIdSetOf(
+        testHasInstrumentId(instrumentId(1), 1.1),
+        testHasInstrumentId(instrumentId(2), 2.2)));
   }
 
   @Test
