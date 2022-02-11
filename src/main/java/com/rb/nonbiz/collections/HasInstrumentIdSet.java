@@ -66,12 +66,12 @@ public class HasInstrumentIdSet<T extends HasInstrumentId> extends HasLongMap<In
     TLongObjectHashMap<T> hashMap = new TLongObjectHashMap<>(size());
     TLongObjectIterator<T> iterator = getRawMapUnsafe().iterator();
     while (iterator.hasNext()) {
-      iterator.advance();
+      iterator.advance(); // this is not standard java iterators, hence the weird notation.
+      long instrumentIdAsLong = iterator.key();
       T value = iterator.value();
-      InstrumentId instrumentId = value.getInstrumentId();
 
       if (predicate.test(value)) {
-        hashMap.putIfAbsent(instrumentId.asLong(), value);
+        hashMap.putIfAbsent(instrumentIdAsLong, value);
       }
     }
     return new HasInstrumentIdSet<>(hashMap);
