@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import static com.rb.nonbiz.collections.RBOptionals.findFirstPresentOptional;
+
 /**
  * This acts as a plain {@link InstrumentMaster}, but it looks at 2 or more supplied {@link InstrumentMaster}s
  * in order, and returns the first non-empty value it finds.
@@ -21,10 +23,6 @@ import java.util.Optional;
  * determined answer. Plus, we don't need to worry about a list of 0 or 1 items.
  */
 public class CascadingInstrumentMaster implements InstrumentMaster {
-
-
-
-
 
   private final List<InstrumentMaster> instrumentMasterList;
 
@@ -40,35 +38,17 @@ public class CascadingInstrumentMaster implements InstrumentMaster {
 
   @Override
   public Optional<InstrumentId> getInstrumentId(Symbol symbol, LocalDate effectiveDate) {
-    for (InstrumentMaster instrumentMaster : instrumentMasterList) {
-      Optional<InstrumentId> instrumentId = instrumentMaster.getInstrumentId(symbol, effectiveDate);
-      if (instrumentId.isPresent()) {
-        return instrumentId;
-      }
-    }
-    return Optional.empty();
+    return findFirstPresentOptional(instrumentMasterList, v -> v.getInstrumentId(symbol, effectiveDate));
   }
 
   @Override
   public Optional<Symbol> getSymbol(InstrumentId instrumentId, LocalDate effectiveDate) {
-    for (InstrumentMaster instrumentMaster : instrumentMasterList) {
-      Optional<Symbol> symbol = instrumentMaster.getSymbol(instrumentId, effectiveDate);
-      if (symbol.isPresent()) {
-        return symbol;
-      }
-    }
-    return Optional.empty();
+    return findFirstPresentOptional(instrumentMasterList, v -> v.getSymbol(instrumentId, effectiveDate));
   }
 
   @Override
   public Optional<Symbol> getLatestValidSymbol(InstrumentId instrumentId, LocalDate effectiveDate) {
-    for (InstrumentMaster instrumentMaster : instrumentMasterList) {
-      Optional<Symbol> symbol = instrumentMaster.getLatestValidSymbol(instrumentId, effectiveDate);
-      if (symbol.isPresent()) {
-        return symbol;
-      }
-    }
-    return Optional.empty();
+    return findFirstPresentOptional(instrumentMasterList, v -> v.getLatestValidSymbol(instrumentId, effectiveDate));
   }
 
 }

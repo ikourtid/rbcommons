@@ -34,7 +34,6 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class CascadingInstrumentMasterTest {
 
-
   // For this test, we can't use HardCodedInstrumentMaster, because it does some fail-fast logic in cases of
   // missing items. So we'll redefine it here but call getOptional in various places.
   static class LocalHardCodedInstrumentMaster implements InstrumentMaster {
