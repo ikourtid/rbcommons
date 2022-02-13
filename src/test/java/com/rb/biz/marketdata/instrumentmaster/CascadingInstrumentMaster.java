@@ -17,8 +17,8 @@ import static com.rb.nonbiz.collections.RBOptionals.findFirstPresentOptional;
  * So it's more like "if there's a value in the first instrument master, return that; then if there's a value in the
  * 2nd, return that; etc".
  *
- * We currently only have explicit static constructors for the case of exactly 2 instrument masters. If needed, we can
- * add 3-arg (and more) versions later. We could also add a list argument, but it would be less succinct, because typically
+ * We currently only have explicit static constructors for the case of exactly 2 and 3 instrument masters. If needed, we can
+ * add 4+-arg (and more) versions later. We could also add a list argument, but it would be less succinct, because typically
  * when we use this, we will know exactly how many {@link InstrumentMaster}s we would need; it's not a programmatically
  * determined answer. Plus, we don't need to worry about a list of 0 or 1 items.
  */
@@ -34,6 +34,13 @@ public class CascadingInstrumentMaster implements InstrumentMaster {
       InstrumentMaster instrumentMaster1,
       InstrumentMaster instrumentMaster2) {
     return new CascadingInstrumentMaster(ImmutableList.of(instrumentMaster1, instrumentMaster2));
+  }
+
+  public static CascadingInstrumentMaster cascadingInstrumentMaster(
+      InstrumentMaster instrumentMaster1,
+      InstrumentMaster instrumentMaster2,
+      InstrumentMaster instrumentMaster3) {
+    return new CascadingInstrumentMaster(ImmutableList.of(instrumentMaster1, instrumentMaster2, instrumentMaster3));
   }
 
   @Override
