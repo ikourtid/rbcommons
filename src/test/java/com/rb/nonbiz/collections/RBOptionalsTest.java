@@ -3,13 +3,13 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.functional.TriConsumer;
-import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Pointer;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
@@ -33,6 +33,7 @@ import static com.rb.nonbiz.collections.RBOptionals.*;
 import static com.rb.nonbiz.math.stats.ZScore.zScore;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorEqualityMatcher;
+import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.optionalMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -53,7 +54,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 public class RBOptionalsTest {
 
@@ -460,6 +460,29 @@ public class RBOptionalsTest {
     assertFalse(allOptionalsEmpty(present1, empty2, present3));
     assertFalse(allOptionalsEmpty(present1, present2, empty3, present4));
     assertTrue(allOptionalsEmpty(empty1, empty2, empty3));
+  }
+
+  @Test
+  public void test_findFirstPresentOptional() {
+    BiConsumer<List<Integer>, Optional<String>> asserter = (list, expected) ->
+        assertThat(
+            findFirstPresentOptional(
+                list,
+                v -> v > 5 ? Optional.of(v.toString()) : Optional.empty()),
+            optionalMatcher(expected, f -> typeSafeEqualTo(f)));
+    asserter.accept(emptyList(),            Optional.empty());
+    asserter.accept(singletonList(4),       Optional.empty());
+    asserter.accept(ImmutableList.of(3, 4), Optional.empty());
+
+    asserter.accept(singletonList(6),          Optional.of("6"));
+    asserter.accept(ImmutableList.of(6, 3, 4), Optional.of("6"));
+    asserter.accept(ImmutableList.of(3, 6, 4), Optional.of("6"));
+    asserter.accept(ImmutableList.of(3, 4, 6), Optional.of("6"));
+
+    asserter.accept(ImmutableList.of(3, 4, 6, 7), Optional.of("6"));
+    asserter.accept(ImmutableList.of(3, 4, 7, 6), Optional.of("7"));
+    asserter.accept(ImmutableList.of(3, 7, 4, 6), Optional.of("7"));
+    asserter.accept(ImmutableList.of(7, 3, 4, 6), Optional.of("7"));
   }
 
 }

@@ -8,6 +8,7 @@ import com.rb.nonbiz.text.Strings;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -352,6 +353,18 @@ public class RBOptionals {
     } else {
       emptyAction.run();
     }
+  }
+
+  public static <V1, V2> Optional<V2> findFirstPresentOptional(
+      Collection<V1> collection,
+      Function<V1, Optional<V2>> transformer) {
+    for (V1 item : collection) {
+      Optional<V2> transformed = transformer.apply(item);
+      if (transformed.isPresent()) {
+        return transformed;
+      }
+    }
+    return Optional.empty();
   }
 
 }

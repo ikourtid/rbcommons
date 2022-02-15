@@ -1,12 +1,14 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.base.Joiner;
+import java.util.function.Predicate;
 import com.google.common.collect.Iterators;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.biz.types.asset.HasInstrumentId;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.text.PrintsInstruments;
 import com.rb.nonbiz.text.Strings;
+import gnu.trove.iterator.TLongObjectIterator;
 import gnu.trove.map.hash.TLongObjectHashMap;
 
 import java.time.LocalDate;
@@ -54,6 +56,25 @@ public class HasInstrumentIdSet<T extends HasInstrumentId> extends HasLongMap<In
 
   public IidSet toIidSet() {
     return newIidSet(instrumentIdKeysIterator(), size());
+  }
+
+  /**
+   * Return a subset (not necessarily a proper subset) of the original map that only contains the
+   * map entries where the value matches the predicate.
+   */
+  public HasInstrumentIdSet<T> filterValues(Predicate<T> predicate) {
+    TLongObjectHashMap<T> hashMap = new TLongObjectHashMap<>(size());
+    TLongObjectIterator<T> iterator = getRawMapUnsafe().iterator();
+    while (iterator.hasNext()) {
+      iterator.advance(); // this is not standard java iterators, hence the weird notation.
+      long instrumentIdAsLong = iterator.key();
+      T value = iterator.value();
+
+      if (predicate.test(value)) {
+        hashMap.putIfAbsent(instrumentIdAsLong, value);
+      }
+    }
+    return new HasInstrumentIdSet<>(hashMap);
   }
 
   @Override
