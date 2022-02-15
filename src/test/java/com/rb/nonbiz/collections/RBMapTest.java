@@ -567,6 +567,24 @@ public class RBMapTest {
   }
 
   @Test
+  public void transformKeysAndValuesCopy_testOverloadWithBiFunction() {
+    RBMap<String, Integer> emptyMap = emptyRBMap();
+
+    BiFunction<String, Integer, String> transformedKeyAndIntValueTransformer = (transformedKey, intValue) ->
+        Strings.format("%s_%s", transformedKey, intValue + 10);
+    assertEquals(
+        emptyRBMap(),
+        emptyMap.transformKeysAndValuesCopy(key -> "x" + key, transformedKeyAndIntValueTransformer));
+    assertEquals(
+        rbMapOf(
+            "xa", "xa_11",
+            "xb", "xb_12"),
+        rbMapOf(
+            "a", 1,
+            "b", 2).transformKeysAndValuesCopy(key -> "x" + key, transformedKeyAndIntValueTransformer));
+  }
+
+  @Test
   public void orderedTransformKeysAndValuesCopy() {
     RBMap<String, Integer> emptyMap = emptyRBMap();
     assertEquals(

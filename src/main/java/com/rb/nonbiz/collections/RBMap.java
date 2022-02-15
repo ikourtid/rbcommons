@@ -399,6 +399,21 @@ public class RBMap<K, V> {
   }
 
   /**
+   * Creates a new map whose keys AND values are a transformation of the original ones,
+   * and the key transformation doesn't depend on the value in any particular entry, and also
+   * the value transformation doesn't depend on the key in any particular entry.
+   */
+  public <K1, V1> RBMap<K1, V1> transformKeysAndValuesCopy(Function<K, K1> keyTransformer,
+                                                           BiFunction<K1, V, V1> valuesTransformer) {
+    MutableRBMap<K1, V1> mutableMap = newMutableRBMapWithExpectedSize(size());
+    forEachEntry( (key, value) -> {
+      K1 transformedKey = keyTransformer.apply(key);
+      mutableMap.putAssumingAbsent(transformedKey, valuesTransformer.apply(transformedKey, value));
+    });
+    return newRBMap(mutableMap);
+  }
+
+  /**
    * Like transformKeysAndValuesCopy, except that it goes through the entries in some deterministic ordering
    */
   public <K1, V1> RBMap<K1, V1> orderedTransformKeysAndValuesCopy(
