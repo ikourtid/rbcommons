@@ -17,7 +17,7 @@ import static java.util.Collections.singletonList;
  * [thursday, friday]  {@code ->} 2.2
  *
  * This is similar to a Guava RangeMap, except it is guaranteed (via preconditions at assertion time)
- * to be non-disjoint/contiguous, i.e. to have neither wholes nor overlap.
+ * to be non-disjoint/contiguous, i.e. to have neither holes nor overlaps.
  *
  * It has 'discrete' in the name because it works for ints, LocalDates, etc. where there's a clear notion of a
  * next item. This is not the case with doubles, for instance.
