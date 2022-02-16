@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import static com.rb.nonbiz.collections.RBIterators.getFirstNonUniqueIteratorItem;
+import static com.rb.nonbiz.collections.RBOptionals.findOnlyPresentOptional;
 
 public class RBPreconditions {
 
@@ -66,16 +67,13 @@ public class RBPreconditions {
 
   /**
    * Throws if neither or both optionals passed in are empty.
+   * Otherwise, it returns the value inside the (only) non-empty optional.
+   *
+   * It just calls findOnlyPresentOptional, but it's good to have it as a precondition directly,
+   * so it's easy to locate in the IDE's autocomplete when we're looking for an appropriate precondition.
    */
-  public static <T> void checkExactlyOneOptionalIsNonEmpty(Optional<T> opt1, Optional<T> opt2) {
-    int numPresent = 0;
-    if (opt1.isPresent()) {
-      numPresent++;
-    }
-    if (opt2.isPresent()) {
-      numPresent++;
-    }
-    RBPreconditions.checkArgument(numPresent == 1);
+  public static <T> T checkExactlyOneOptionalIsNonEmpty(Optional<T> opt1, Optional<T> opt2) {
+    return findOnlyPresentOptional(opt1, opt2);
   }
 
   public static void checkAtLeastOneOptionalIsPresent(Optional<?> opt1, Optional<?> opt2, Optional<?>...rest) {

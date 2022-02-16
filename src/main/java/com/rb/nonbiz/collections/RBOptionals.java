@@ -5,6 +5,7 @@ import com.google.common.collect.Iterators;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.nonbiz.text.PrintsInstruments;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBPreconditions;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -365,6 +366,48 @@ public class RBOptionals {
       }
     }
     return Optional.empty();
+  }
+
+  /**
+   * Throws if neither or both optionals passed in are empty.
+   * Otherwise, it returns the value inside the (only) non-empty optional.
+   */
+  public static <T> T findOnlyPresentOptional(Optional<T> opt1, Optional<T> opt2) {
+    int numPresent = 0;
+    T toReturn = null;
+    if (opt1.isPresent()) {
+      toReturn = opt1.get();
+      numPresent++;
+    }
+    if (opt2.isPresent()) {
+      toReturn = opt2.get();
+      numPresent++;
+    }
+    RBPreconditions.checkArgument(numPresent == 1);
+    return toReturn;
+  }
+
+  /**
+   * Throws unless exactly one of the 3 optionals passed in is present.
+   * Otherwise, it returns the value inside the (only) non-empty optional.
+   */
+  public static <T> T findOnlyPresentOptional(Optional<T> opt1, Optional<T> opt2, Optional<T> opt3) {
+    int numPresent = 0;
+    T toReturn = null;
+    if (opt1.isPresent()) {
+      toReturn = opt1.get();
+      numPresent++;
+    }
+    if (opt2.isPresent()) {
+      toReturn = opt2.get();
+      numPresent++;
+    }
+    if (opt3.isPresent()) {
+      toReturn = opt3.get();
+      numPresent++;
+    }
+    RBPreconditions.checkArgument(numPresent == 1);
+    return toReturn;
   }
 
 }

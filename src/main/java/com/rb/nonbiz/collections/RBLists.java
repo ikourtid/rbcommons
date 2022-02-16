@@ -1,5 +1,8 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.nonbiz.util.RBPreconditions;
+import com.rb.nonbiz.util.RBSimilarityPreconditions;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -18,6 +21,7 @@ import static com.rb.nonbiz.collections.RBComparators.composeComparators;
 import static com.rb.nonbiz.collections.RBIterators.getFirstNonUniqueIteratorItem;
 import static com.rb.nonbiz.collections.RBIterators.iteratorItemsAreUnique;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
+import static com.rb.nonbiz.collections.RBStreams.pasteIntoStream;
 import static java.util.Comparator.comparing;
 
 /**
@@ -214,6 +218,15 @@ public class RBLists {
     List<T> list = newArrayListWithExpectedSize(size);
     iterator.forEachRemaining(v -> list.add(v));
     return list;
+  }
+
+  /**
+   * Create a list that has the same size as the two input lists (which are expected to have the same size),
+   * each element of which is the function of the corresponding items (for the same list index) from the two
+   * input lists.
+   */
+  public static <T, T1, T2> List<T> pasteLists(List<T1> list1, List<T2> list2, BiFunction<T1, T2, T> pasteTransformer) {
+    return pasteIntoStream(list1, list2, pasteTransformer).collect(Collectors.toList());
   }
 
 }
