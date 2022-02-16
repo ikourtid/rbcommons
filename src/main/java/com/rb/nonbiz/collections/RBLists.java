@@ -220,7 +220,11 @@ public class RBLists {
     return list;
   }
 
-  // FIXME IAK SEP comment and test
+  /**
+   * Create a list that has the same size as the two input lists (which are expected to have the same size),
+   * each element of which is the function of the corresponding items (for the same list index) from the two
+   * input lists.
+   */
   public static <T, T1, T2> List<T> pasteLists(List<T1> list1, List<T2> list2, BiFunction<T1, T2, T> pasteTransformer) {
     return pasteIntoStream(list1, list2, pasteTransformer).collect(Collectors.toList());
   }
