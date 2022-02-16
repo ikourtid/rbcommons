@@ -1,10 +1,10 @@
 package com.rb.nonbiz.text.csv;
 
-import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -14,6 +14,14 @@ import static java.util.Collections.singletonList;
 
 public class SimpleCsvRowTest extends RBTestMatcher<SimpleCsvRow> {
 
+  public static SimpleCsvRow singletonSimpleCsvRow(String onlyCell) {
+    return simpleCsvRow(singletonList(onlyCell));
+  }
+
+  public static SimpleCsvRow testSimpleCsvRow(String first, String second, String ... rest) {
+    return simpleCsvRow(concatenateFirstSecondAndRest(first, second, rest));
+  }
+
   @Test
   public void noCells_throws() {
     assertIllegalArgumentException( () -> simpleCsvRow(emptyList()));
@@ -21,17 +29,17 @@ public class SimpleCsvRowTest extends RBTestMatcher<SimpleCsvRow> {
 
   @Override
   public SimpleCsvRow makeTrivialObject() {
-    return simpleCsvRow(singletonList(""));
+    return singletonSimpleCsvRow("");
   }
 
   @Override
   public SimpleCsvRow makeNontrivialObject() {
-    return simpleCsvRow(ImmutableList.of("abc", "123", "456.789"));
+    return testSimpleCsvRow("abc", "123", "456.789");
   }
 
   @Override
   public SimpleCsvRow makeMatchingNontrivialObject() {
-    return simpleCsvRow(ImmutableList.of("abc", "123", "456.789"));
+    return testSimpleCsvRow("abc", "123", "456.789");
   }
 
   @Override

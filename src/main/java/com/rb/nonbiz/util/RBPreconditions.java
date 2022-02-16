@@ -66,16 +66,21 @@ public class RBPreconditions {
 
   /**
    * Throws if neither or both optionals passed in are empty.
+   * Otherwise, it returns the value inside the (only) non-empty optional.
    */
-  public static <T> void checkExactlyOneOptionalIsNonEmpty(Optional<T> opt1, Optional<T> opt2) {
+  public static <T> T checkExactlyOneOptionalIsNonEmpty(Optional<T> opt1, Optional<T> opt2) {
     int numPresent = 0;
+    T toReturn = null;
     if (opt1.isPresent()) {
+      toReturn = opt1.get();
       numPresent++;
     }
     if (opt2.isPresent()) {
+      toReturn = opt2.get();
       numPresent++;
     }
     RBPreconditions.checkArgument(numPresent == 1);
+    return toReturn;
   }
 
   public static void checkAtLeastOneOptionalIsPresent(Optional<?> opt1, Optional<?> opt2, Optional<?>...rest) {

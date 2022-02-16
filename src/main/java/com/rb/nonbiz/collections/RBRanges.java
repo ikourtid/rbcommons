@@ -888,10 +888,10 @@ public class RBRanges {
         : Range.all();
   }
 
-  /**
-   * The constructors of Guava Range do not guard against some weird cases for Double ranges, so let's check here
-   * just to be safe.
-   */
+    /**
+     * The constructors of Guava Range do not guard against some weird cases for Double ranges, so let's check here
+     * just to be safe.
+     */
   public static void validateAgainstExtremes(Range<Double> range) {
     if (range.hasLowerBound()) {
       double lower = range.lowerEndpoint();

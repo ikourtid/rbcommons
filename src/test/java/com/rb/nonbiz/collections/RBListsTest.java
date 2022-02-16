@@ -17,8 +17,10 @@ import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.RBLists.*;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyListIterator;
@@ -52,9 +54,9 @@ public class RBListsTest {
     assertEquals(
         ImmutableList.of("a", "b", "x", "y", "1", "2"),
         listConcatenation(ImmutableList.<List<String>>of(
-            ImmutableList.of("a", "b"),
-            ImmutableList.of("x", "y"),
-            ImmutableList.of("1", "2"))
+                ImmutableList.of("a", "b"),
+                ImmutableList.of("x", "y"),
+                ImmutableList.of("1", "2"))
             .iterator()));
   }
 
@@ -246,6 +248,31 @@ public class RBListsTest {
     assertEquals(
         ImmutableList.of("a", "b", "c"),
         newRBListWithExpectedSize(3, ImmutableList.of("a", "b", "c").iterator()));
+  }
+
+  @Test
+  public void testPasteLists() {
+    Function<List<Integer>, List<String>> maker = intList -> pasteLists(
+        intList,
+        ImmutableList.of(true, false),
+        (intValue, booleanValue) -> Strings.format("%s_%s", intValue, booleanValue));
+    assertEquals(
+        ImmutableList.of("1_true", "2_false"),
+        maker.apply(ImmutableList.of(1, 2)));
+
+    // too few / many items in list => sizes don't match
+    assertIllegalArgumentException( () -> maker.apply(singletonList(DUMMY_POSITIVE_INTEGER)));
+    assertIllegalArgumentException( () -> maker.apply(Collections.nCopies(3, DUMMY_POSITIVE_INTEGER)));
+  }
+
+  @Test
+  public void testPasteLists_worksOnEmpty() {
+    assertEquals(
+        emptyList(),
+        pasteLists(
+            emptyList(),
+            emptyList(),
+            (intValue, booleanValue) -> Strings.format("%s_%s", intValue, booleanValue)));
   }
 
 }
