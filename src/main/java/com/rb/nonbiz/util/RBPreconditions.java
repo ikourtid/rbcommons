@@ -68,6 +68,9 @@ public class RBPreconditions {
   /**
    * Throws if neither or both optionals passed in are empty.
    * Otherwise, it returns the value inside the (only) non-empty optional.
+   *
+   * It just calls findOnlyPresentOptional, but it's good to have it as a precondition directly,
+   * so it's easy to locate in the IDE's autocomplete when we're looking for an appropriate precondition.
    */
   public static <T> T checkExactlyOneOptionalIsNonEmpty(Optional<T> opt1, Optional<T> opt2) {
     return findOnlyPresentOptional(opt1, opt2);
