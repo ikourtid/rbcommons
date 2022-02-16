@@ -485,8 +485,7 @@ public class RBOptionalsTest {
     asserter.accept(ImmutableList.of(3, 7, 4, 6), Optional.of("7"));
     asserter.accept(ImmutableList.of(7, 3, 4, 6), Optional.of("7"));
   }
-
-
+  
   @Test
   public void test_findOnlyPresentOptional_twoArgOverload() {
     assertIllegalArgumentException( () -> findOnlyPresentOptional(Optional.empty(), Optional.empty()));
