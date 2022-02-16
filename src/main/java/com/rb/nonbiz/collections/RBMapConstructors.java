@@ -5,10 +5,12 @@ import com.rb.nonbiz.text.UniqueId;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
@@ -113,6 +115,19 @@ public class RBMapConstructors {
     MutableRBMap<K, V> mutableRBMap = newMutableRBMapWithExpectedSize(expectedSize);
     stream.forEach(v -> mutableRBMap.putAssumingAbsent(keyExtractor.apply(v), valueExtractor.apply(v)));
     return newRBMap(mutableRBMap);
+  }
+
+  /**
+   * Similar to to using Collectors.groupingBy() on a stream, except that the extractor returns an optional key,
+   * and we do nothing if the key is empty.
+   */
+  public static <K, V> RBMap<K, List<V>> rbMapGroupingByPresentOptional(
+      Stream<V> values, Function<V, Optional<K>> optionalKeyExtractor) {
+    MutableRBMap<K, List<V>> mutableMap = newMutableRBMap();
+    values.forEach(v ->
+      optionalKeyExtractor.apply(v).ifPresent(key ->
+          mutableMap.possiblyInitializeAndThenUpdateInPlace(key, () -> newArrayList(), list -> list.add(v))));
+    return newRBMap(mutableMap);
   }
 
 }
