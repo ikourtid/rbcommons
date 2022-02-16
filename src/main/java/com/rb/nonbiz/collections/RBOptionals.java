@@ -410,4 +410,27 @@ public class RBOptionals {
     return toReturn;
   }
 
+  /**
+   * Throws if more than one of the optionals passed in is present.
+   * If all are empty, returns empty optional, otherwise it returns the only non-empty optional.
+   */
+  public static <T> Optional<T> findZeroOrOnePresentOptional(Optional<T> opt1, Optional<T> opt2, Optional<T> opt3) {
+    int numPresent = 0;
+    T toReturn = null;
+    if (opt1.isPresent()) {
+      toReturn = opt1.get();
+      numPresent++;
+    }
+    if (opt2.isPresent()) {
+      toReturn = opt2.get();
+      numPresent++;
+    }
+    if (opt3.isPresent()) {
+      toReturn = opt3.get();
+      numPresent++;
+    }
+    RBPreconditions.checkArgument(numPresent <= 1);
+    return Optional.ofNullable(toReturn);
+  }
+
 }
