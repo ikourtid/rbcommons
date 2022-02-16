@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.functional.TriConsumer;
+import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Pointer;
@@ -507,6 +508,20 @@ public class RBOptionalsTest {
     assertEquals(1, findOnlyPresentOptional(Optional.of(1),   Optional.empty(), Optional.empty()).intValue());
     assertEquals(1, findOnlyPresentOptional(Optional.empty(), Optional.of(1),   Optional.empty()).intValue());
     assertEquals(1, findOnlyPresentOptional(Optional.empty(), Optional.empty(), Optional.of(1))  .intValue());
+  }
+
+  @Test
+  public void test_findZeroOrOnePresentOptional() {
+    assertIllegalArgumentException( () -> findZeroOrOnePresentOptional(Optional.of(1),   Optional.of(2),   Optional.empty()));
+    assertIllegalArgumentException( () -> findZeroOrOnePresentOptional(Optional.of(1),   Optional.empty(), Optional.of(2)));
+    assertIllegalArgumentException( () -> findZeroOrOnePresentOptional(Optional.empty(), Optional.of(1),   Optional.of(2)));
+    assertIllegalArgumentException( () -> findZeroOrOnePresentOptional(Optional.of(1),   Optional.of(2),   Optional.of(3)));
+
+    assertOptionalEmpty(findZeroOrOnePresentOptional(Optional.empty(), Optional.empty(), Optional.empty()));
+
+    assertOptionalEquals(1, findZeroOrOnePresentOptional(Optional.of(1),   Optional.empty(), Optional.empty()));
+    assertOptionalEquals(1, findZeroOrOnePresentOptional(Optional.empty(), Optional.of(1),   Optional.empty()));
+    assertOptionalEquals(1, findZeroOrOnePresentOptional(Optional.empty(), Optional.empty(), Optional.of(1)));
   }
 
 }
