@@ -4,6 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.functional.TriConsumer;
+import com.rb.nonbiz.testmatchers.RBMapMatchers;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.LongCounter;
 import com.rb.nonbiz.types.Pointer;
@@ -35,6 +36,7 @@ import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.biMapEqualityMatcher;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrows;
@@ -773,6 +775,28 @@ public class RBMapTest {
             "d", 3)
             .toRBSet( (ignoredStringKey, intValue) -> intValue),
         rbSetEqualsMatcher(rbSetOf(1, 2, 3)));
+  }
+
+  @Test
+  public void test_filterValuesAndTransformKeysAndValuesCopy() {
+    BiConsumer<RBMap<Integer, String>, RBMap<String, String>> asserter = (startingMap, expectedMap) ->
+      assertThat(
+          startingMap
+              .filterValuesAndTransformKeysAndValuesCopy(
+                  intKey -> "_" + intKey.toString(),
+                  (newKey, value) -> value.length() == 2
+                      ? Optional.empty()
+                      : Optional.of(Strings.format("%s/%s", newKey, value))),
+          rbMapMatcher(expectedMap, f -> typeSafeEqualTo(f)));
+
+    asserter.accept(
+        rbMapOf(
+            1, "a",
+            2, "bb"),
+        singletonRBMap(
+            "_1", "_1/a"));
+    asserter.accept(singletonRBMap(2, "bb"), emptyRBMap());
+    asserter.accept(emptyRBMap(), emptyRBMap());
   }
 
 }
