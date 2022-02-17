@@ -413,6 +413,19 @@ public class RBMap<K, V> {
     return newRBMap(mutableMap);
   }
 
+  // FIXME IAK SEP comment and test
+  public <K1, V1> RBMap<K1, V1> filterValuesAndTransformKeysAndValuesCopy(
+      Function<K, K1> keyTransformer,
+      BiFunction<K1, V, Optional<V1>> valuesTransformer) {
+    MutableRBMap<K1, V1> mutableMap = newMutableRBMapWithExpectedSize(size());
+    forEachEntry( (key, value) -> {
+      K1 transformedKey = keyTransformer.apply(key);
+      valuesTransformer.apply(transformedKey, value)
+              .ifPresent(transformedValue -> mutableMap.putAssumingAbsent(transformedKey, transformedValue));
+    });
+    return newRBMap(mutableMap);
+  }
+
   /**
    * Like transformKeysAndValuesCopy, except that it goes through the entries in some deterministic ordering
    */
