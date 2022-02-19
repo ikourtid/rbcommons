@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -73,6 +74,21 @@ public class RBMapConstructors {
       Stream<T> stream, Function<T, K> keyExtractor, Function<T, V> valueExtractor) {
     MutableRBMap<K, V> mutableRBMap = newMutableRBMap();
     stream.forEach(v -> mutableRBMap.putAssumingAbsent(keyExtractor.apply(v), valueExtractor.apply(v)));
+    return newRBMap(mutableRBMap);
+  }
+
+  /**
+   * Builds an RBMap based on a stream. Each key-value pair depends on a single stream item.
+   *
+   * This will also throw if there is more than 1 item with the same key.
+   */
+  public static <K, V, T> RBMap<K, V> rbMapFromStream(
+      Stream<T> stream, Function<T, K> keyExtractor, BiFunction<K, T, V> valueExtractor) {
+    MutableRBMap<K, V> mutableRBMap = newMutableRBMap();
+    stream.forEach(v -> {
+      K key = keyExtractor.apply(v);
+      mutableRBMap.putAssumingAbsent(key, valueExtractor.apply(key, v));
+    });
     return newRBMap(mutableRBMap);
   }
 
