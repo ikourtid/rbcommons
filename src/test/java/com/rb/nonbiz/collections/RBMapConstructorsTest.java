@@ -205,6 +205,28 @@ public class RBMapConstructorsTest {
   }
 
   @Test
+  public void testRbMapFromStream_separateKeyAndValueExtractors_valueExtractionReliesOnKey() {
+    BiConsumer<Stream<Pair<String, Integer>>, RBMap<String, String>> asserter = (stream, expectedResult) -> assertThat(
+        rbMapFromStream(
+            stream,
+            v -> Strings.format("%s%sk", v.getLeft(), v.getRight()),
+            (key, v) -> Strings.format("%s_%s%sv", key, v.getLeft(), v.getRight())),
+        rbMapMatcher(
+            expectedResult,
+            f -> typeSafeEqualTo(f)));
+    asserter.accept(Stream.empty(), emptyRBMap());
+    asserter.accept(
+        Stream.of(pair("a", 1)),
+        singletonRBMap(
+            "a1k", "a1k_a1v"));
+    asserter.accept(
+        Stream.of(pair("a", 1), pair("b", 2)),
+        rbMapOf(
+            "a1k", "a1k_a1v",
+            "b2k", "b2k_b2v"));
+  }
+
+  @Test
   public void testRbMapFromStreamOfOptionals_separateKeyAndValueExtractors() {
     BiConsumer<Stream<InstrumentId>, RBMap<Long, String>> asserter = (stream, expectedResult) ->
         assertThat(
