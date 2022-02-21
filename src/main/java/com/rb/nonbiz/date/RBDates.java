@@ -1,5 +1,7 @@
 package com.rb.nonbiz.date;
 
+import com.rb.nonbiz.collections.ContiguousDiscreteRangeMap;
+import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -15,7 +17,10 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static com.rb.nonbiz.collections.ContiguousDiscreteRangeMap.contiguousDiscreteRangeMap;
+import static com.rb.nonbiz.collections.RBRanges.makeClosedRangesForDiscreteValues;
 import static java.time.temporal.TemporalAdjusters.firstInMonth;
+import static java.util.Comparator.naturalOrder;
 
 public class RBDates {
 
@@ -179,6 +184,18 @@ public class RBDates {
 
   public static boolean yearsAreConsecutive(Year year1, Year year2) {
     return year2.getValue() == year1.getValue() + 1;
+  }
+
+  public static <V> ContiguousDiscreteRangeMap<LocalDate, V> makeContiguousDateDiscreteRangeMap(
+      RBMap<LocalDate, V> rawMap, LocalDate endDateInclusive) {
+    // This is a bit inefficient because we sort twice.
+    return contiguousDiscreteRangeMap(
+        makeClosedRangesForDiscreteValues(
+            rawMap.sortedKeys(naturalOrder()),
+            endDateInclusive,
+            date -> date.minusDays(1)),
+        rawMap.valuesInSortedKeyOrder(naturalOrder()),
+        date -> date.plusDays(1));
   }
 
 }
