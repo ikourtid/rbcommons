@@ -537,6 +537,18 @@ public class RBMap<K, V> {
         .collect(Collectors.toSet()));
   }
 
+  public List<K> sortedKeys(Comparator<K> keyComparator) {
+    return keySet().stream().sorted(keyComparator).collect(Collectors.toList());
+  }
+
+  public List<V> valuesInSortedKeyOrder(Comparator<K> keyComparator) {
+    return entrySet()
+        .stream()
+        .sorted( (entry1, entry2) -> keyComparator.compare(entry1.getKey(), entry2.getKey()))
+        .map(entry -> entry.getValue())
+        .collect(Collectors.toList());
+  }
+
   // IDE-generated
   @Override
   public boolean equals(Object o) {

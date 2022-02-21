@@ -11,6 +11,7 @@ import com.rb.nonbiz.types.Pointer;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -38,11 +39,19 @@ import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.biMapEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrows;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY0;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY1;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY2;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY3;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY4;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY5;
 import static com.rb.nonbiz.types.LongCounter.longCounter;
 import static com.rb.nonbiz.types.Pointer.initializedPointer;
+import static java.util.Comparator.naturalOrder;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
@@ -594,7 +603,7 @@ public class RBMapTest {
         emptyMap.orderedTransformKeysAndValuesCopy(
             key -> "x" + key,
             intValue -> intValue + 10,
-            Comparator.naturalOrder()));
+            naturalOrder()));
 
     // check if the transformed map is transvered in order
     LongCounter previousValue = longCounter();
@@ -620,7 +629,7 @@ public class RBMapTest {
               previousValue.increment();
               return intValue + 10;
             },
-            Comparator.naturalOrder()));
+            naturalOrder()));
   }
 
   @Test
@@ -797,6 +806,34 @@ public class RBMapTest {
             "_1", "_1/a"));
     asserter.accept(singletonRBMap(2, "bb"), emptyRBMap());
     asserter.accept(emptyRBMap(), emptyRBMap());
+  }
+
+  @Test
+  public void testSortedKeys_sortedValues() {
+    // Intentionally constructing this out-of-order, in case construction order matters.
+    RBMap<LocalDate, String> rawMap = rbMapOf(
+        DAY4, "4",
+        DAY3, "3",
+        DAY2, "2",
+        DAY1, "1",
+        DAY0, "0");
+    assertThat(
+        rawMap.sortedKeys(naturalOrder()),
+        orderedListMatcher(
+            ImmutableList.of(DAY0, DAY1, DAY2, DAY3, DAY4),
+            f -> typeSafeEqualTo(f)));
+    assertThat(
+        rawMap.valuesInSortedKeyOrder(naturalOrder()),
+        orderedListMatcher(
+            ImmutableList.of("0", "1", "2", "3", "4"),
+            f -> typeSafeEqualTo(f)));
+
+    assertEmpty(
+        RBMapSimpleConstructors.<LocalDate, String>emptyRBMap()
+            .sortedKeys(naturalOrder()));
+    assertEmpty(
+        RBMapSimpleConstructors.<LocalDate, String>emptyRBMap()
+            .valuesInSortedKeyOrder(naturalOrder()));
   }
 
 }

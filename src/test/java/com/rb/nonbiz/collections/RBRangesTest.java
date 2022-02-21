@@ -6,12 +6,14 @@ import com.rb.biz.types.Money;
 import com.rb.biz.types.SignedMoney;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.math.stats.ZScore;
+import com.rb.nonbiz.testmatchers.RBRangeMatchers;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.PositiveMultiplier;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +40,7 @@ import static com.rb.nonbiz.collections.RBRanges.*;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.math.stats.ZScore.Z_SCORE_0;
 import static com.rb.nonbiz.math.stats.ZScore.zScore;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.doubleRangeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueClosedRangeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatcher;
@@ -1749,6 +1752,40 @@ public class RBRangesTest {
     asserter.accept(singletonClosedRange(unitFraction(0.3)), Range.singleton(unitFraction(0.3)));
     asserter.accept(singletonClosedRange(unitFraction(1 - 1e-9)), Range.singleton(unitFraction(1 - 1e-9)));
     asserter.accept(singletonClosedRange(UNIT_FRACTION_1), Range.singleton(unitFraction(1)));
+  }
+
+  @Test
+  public void test_makeClosedRangesForDiscreteValues() {
+    assertThat(
+        "2 starting points",
+        makeClosedRangesForDiscreteValues(
+            ImmutableList.of(
+                LocalDate.of(2020, 1, 20),
+                LocalDate.of(2020, 1, 25)),
+            LocalDate.of(2020, 1, 30),
+            date -> date.minusDays(1)),
+        orderedListMatcher(
+            ImmutableList.of(
+                Range.closed(LocalDate.of(2020, 1, 20), LocalDate.of(2020, 1, 24)),
+                Range.closed(LocalDate.of(2020, 1, 25), LocalDate.of(2020, 1, 30))),
+            f -> rangeEqualityMatcher(f)));
+
+    assertThat(
+        "1 starting point",
+        makeClosedRangesForDiscreteValues(
+            ImmutableList.of(
+                LocalDate.of(2020, 1, 20)),
+            LocalDate.of(2020, 1, 30),
+            date -> date.minusDays(1)),
+        orderedListMatcher(
+            ImmutableList.of(
+                Range.closed(LocalDate.of(2020, 1, 20), LocalDate.of(2020, 1, 30))),
+            f -> rangeEqualityMatcher(f)));
+
+    assertIllegalArgumentException( () -> makeClosedRangesForDiscreteValues(
+        emptyList(),
+        LocalDate.of(2020, 1, 30),
+        date -> date.minusDays(1)));
   }
 
 }

@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.BoundType;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
@@ -11,6 +12,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -18,8 +20,10 @@ import java.util.stream.Stream;
 
 import static com.google.common.collect.BoundType.CLOSED;
 import static com.google.common.collect.BoundType.OPEN;
+import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.google.common.collect.Range.range;
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
+import static com.rb.nonbiz.collections.RBIterables.consecutivePairsForEach;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 import static java.lang.Double.NEGATIVE_INFINITY;
@@ -967,6 +971,23 @@ public class RBRanges {
     return constructRange(
         lower.compareTo(trivialLowerEndpoint) == 0 ? Optional.empty() : Optional.of(lower), CLOSED,
         upper.compareTo(trivialUpperEndpoint) == 0 ? Optional.empty() : Optional.of(upper), CLOSED);
+  }
+
+  public static <T extends Comparable<? super T>> List<Range<T>> makeClosedRangesForDiscreteValues(
+      List<T> startingPoints,
+      T endingPointInclusive,
+      UnaryOperator<T> generatePreviousPoint) {
+    RBPreconditions.checkArgument(
+        !startingPoints.isEmpty(),
+        "We must have at least one starting point! endingPointInclusive= %s",
+        endingPointInclusive);
+    List<Range<T>> closedRanges = newArrayListWithExpectedSize(startingPoints.size());
+    consecutivePairsForEach(
+        startingPoints,
+        (startingPoint, nextStartingPoint) -> closedRanges.add(
+            Range.closed(startingPoint, generatePreviousPoint.apply(nextStartingPoint))));
+    closedRanges.add(Range.closed(Iterables.getLast(startingPoints), endingPointInclusive));
+    return closedRanges;
   }
 
 }
