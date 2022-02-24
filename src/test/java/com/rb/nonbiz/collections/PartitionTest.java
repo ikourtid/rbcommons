@@ -21,7 +21,7 @@ import static com.rb.nonbiz.collections.DoubleMap.doubleMap;
 import static com.rb.nonbiz.collections.DoubleMap.emptyDoubleMap;
 import static com.rb.nonbiz.collections.DoubleMap.singletonDoubleMap;
 import static com.rb.nonbiz.collections.Partition.partition;
-import static com.rb.nonbiz.collections.Partition.partitionFromWeights;
+import static com.rb.nonbiz.collections.Partition.partitionFromPositiveWeightsWhichMayNotSumTo1;
 import static com.rb.nonbiz.collections.Partition.singletonPartition;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
@@ -113,8 +113,8 @@ public class PartitionTest extends RBTestMatcher<Partition> {
   }
 
   @Test
-  public void partitionFromWeights_happyPath() {
-    Partition<String> partition = partitionFromWeights(rbMapOf(
+  public void partitionFromPositiveWeightsWhichMayNotSumTo1_happyPath() {
+    Partition<String> partition = partitionFromPositiveWeightsWhichMayNotSumTo1(rbMapOf(
         "a", money(100),
         "b", money(400)));
     assertEquals(unitFraction(1, 5), partition.getFraction("a"));
@@ -125,15 +125,15 @@ public class PartitionTest extends RBTestMatcher<Partition> {
   @Test
   public void paritionFromWeights_doubleMap_negativeWeight_throws() {
     // no negative weights allowed
-    assertIllegalArgumentException( () -> partitionFromWeights(singletonDoubleMap("a", -0.123)));
-    assertIllegalArgumentException( () -> partitionFromWeights(doubleMap(rbMapOf(
+    assertIllegalArgumentException( () -> Partition.partitionFromPositiveWeightsWhichMayNotSumTo1(singletonDoubleMap("a", -0.123)));
+    assertIllegalArgumentException( () -> Partition.partitionFromPositiveWeightsWhichMayNotSumTo1(doubleMap(rbMapOf(
         "a",  0.5,
         "b", -0.1,
         "c",  0.9))));
 
     // except for extremely small negative weights (max magnitude -1e-12), which are skipped
     assertThat(
-        partitionFromWeights(doubleMap(rbMapOf(
+        Partition.partitionFromPositiveWeightsWhichMayNotSumTo1(doubleMap(rbMapOf(
             "a", 4.0,
             "b", -1e-13,
             "c", 6.0))),
@@ -146,21 +146,21 @@ public class PartitionTest extends RBTestMatcher<Partition> {
   @Test
   public void partitionFromWeights_doubleMap() {
     // can't renormalize an empty map
-    assertIllegalArgumentException( () -> partitionFromWeights(emptyDoubleMap()));
+    assertIllegalArgumentException( () -> Partition.partitionFromPositiveWeightsWhichMayNotSumTo1(emptyDoubleMap()));
 
     // a single item can be renormalized to a singletonPartition
     assertThat(
-        partitionFromWeights(singletonDoubleMap("a", 0.123)),
+        Partition.partitionFromPositiveWeightsWhichMayNotSumTo1(singletonDoubleMap("a", 0.123)),
         partitionMatcher(singletonPartition("a")));
     assertThat(
-        partitionFromWeights(singletonDoubleMap("b", 456.7)),
+        Partition.partitionFromPositiveWeightsWhichMayNotSumTo1(singletonDoubleMap("b", 456.7)),
         partitionMatcher(singletonPartition("b")));
     // unless it's too small
-    assertIllegalArgumentException( () -> partitionFromWeights(singletonDoubleMap("a", 1e-13)));
+    assertIllegalArgumentException( () -> Partition.partitionFromPositiveWeightsWhichMayNotSumTo1(singletonDoubleMap("a", 1e-13)));
 
     // the general case; the weights supplied are normalized to create a valid partition
     assertThat(
-        partitionFromWeights(doubleMap(rbMapOf(
+        Partition.partitionFromPositiveWeightsWhichMayNotSumTo1(doubleMap(rbMapOf(
             "a", 0.2,
             "b", 0.3))),
         partitionMatcher(partition(rbMapOf(
@@ -169,7 +169,7 @@ public class PartitionTest extends RBTestMatcher<Partition> {
 
     // scaling all the above input weights equally does not change the partition
     assertThat(
-        partitionFromWeights(doubleMap(rbMapOf(
+        Partition.partitionFromPositiveWeightsWhichMayNotSumTo1(doubleMap(rbMapOf(
             "a", 20.0,
             "b", 30.0))),
         partitionMatcher(partition(rbMapOf(
@@ -180,7 +180,7 @@ public class PartitionTest extends RBTestMatcher<Partition> {
   @Test
   public void partitionFromWeights_doubleMap_tinyWeightsIgnored() {
     assertThat(
-        partitionFromWeights(doubleMap(rbMapOf(
+        Partition.partitionFromPositiveWeightsWhichMayNotSumTo1(doubleMap(rbMapOf(
             "a", -1.11e-13,
             "b",  0.0,
             "c",  2.22e-13,
@@ -192,16 +192,16 @@ public class PartitionTest extends RBTestMatcher<Partition> {
   }
 
   @Test
-  public void partitionFromWeights_hasNegativeWeightSomewhere_throws() {
-    assertIllegalArgumentException( () -> partitionFromWeights(rbMapOf(
+  public void partitionFromPositiveWeightsWhichMayNotSumTo1_hasNegativeWeightSomewhere_throws() {
+    assertIllegalArgumentException( () -> partitionFromPositiveWeightsWhichMayNotSumTo1(rbMapOf(
         "a", signedQuantity(-100),
         "b", signedQuantity(400))));
   }
 
   @Test
-  public void partitionFromWeights_oneWeightIsZero_works() {
+  public void partitionFromPositiveWeightsWhichMayNotSumTo1_oneWeightIsZero_works() {
     assertThat(
-        partitionFromWeights(rbMapOf(
+        partitionFromPositiveWeightsWhichMayNotSumTo1(rbMapOf(
             "a", ZERO_MONEY,
             "b", money(1))),
         partitionMatcher(
@@ -209,15 +209,15 @@ public class PartitionTest extends RBTestMatcher<Partition> {
   }
 
   @Test
-  public void partitionFromWeights_oneWeightIsNegative_throws() {
-    assertIllegalArgumentException( () -> partitionFromWeights(rbMapOf(
+  public void partitionFromPositiveWeightsWhichMayNotSumTo1_oneWeightIsNegative_throws() {
+    assertIllegalArgumentException( () -> partitionFromPositiveWeightsWhichMayNotSumTo1(rbMapOf(
         "a", signedMoney(-1),
         "b", signedMoney(3))));
   }
 
   @Test
-  public void partitionFromWeights_allWeightsAreZero_throws() {
-    assertIllegalArgumentException( () -> partitionFromWeights(rbMapOf(
+  public void partitionFromPositiveWeightsWhichMayNotSumTo1_allWeightsAreZero_throws() {
+    assertIllegalArgumentException( () -> partitionFromPositiveWeightsWhichMayNotSumTo1(rbMapOf(
         "a", ZERO_MONEY,
         "b", ZERO_MONEY)));
   }
