@@ -38,6 +38,8 @@ import static java.util.Comparator.reverseOrder;
  */
 public class Partition<K> {
 
+  private static final BigDecimal ONE_PLUS_EPSILON = BigDecimal.valueOf(1 + 1e-12);
+
   private final RBMap<K, UnitFraction> fractions;
 
   private Partition(RBMap<K, UnitFraction> fractions) {
@@ -59,11 +61,46 @@ public class Partition<K> {
     return new Partition<>(fractions);
   }
 
-  public static <K, V extends PreciseValue<V>> Partition<K> partitionFromWeights(RBMap<K, V> weightsMap) {
+  /**
+   * Creates a partition by normalizing a map of positive weights which may not sum to 100%.
+   * There is a similar overload that takes in DoubleMap, where the concept of summing to 100% makes more sense.
+   * Here, since we're dealing with PreciseValue, it's a bit meaningless to care about 1 vs. not 1 if the weights
+   * are of type e.g. Money. But for certain other types (UnitFraction, SignedFraction, etc.) it does make sense.
+   * However, here's no way to distinguish that given how generics work in Java. So this is reasonable.
+   */
+  public static <K, V extends PreciseValue<V>> Partition<K> partitionFromPositiveWeightsWhichMayNotSumTo1(
+      RBMap<K, V> weightsMap) {
     BigDecimal sum = sumToBigDecimal(weightsMap.values());
-    if (sum.signum() != 1) {
-      throw new IllegalArgumentException(Strings.format("Sum of weights must be >0. Input was %s", weightsMap));
-    }
+    RBPreconditions.checkArgument(
+        sum.signum() == 1,
+      "Sum of weights must be >0. Input was %s", weightsMap);
+    return partitionFromPositiveWeights(weightsMap, sum);
+  }
+
+  /**
+   * Creates a partition by normalizing a map of positive weights which may sum to below 100%.
+   * There is a similar overload that takes in DoubleMap, where the concept of summing to 100% makes more sense.
+   * Here, since we're dealing with PreciseValue, it's a bit meaningless to care about 1 vs. not 1 if the weights
+   * are of type e.g. Money. But for certain other types (UnitFraction, SignedFraction, etc.) it does make sense.
+   * However, here's no way to distinguish that given how generics work in Java. So this is reasonable.
+   */
+  public static <K, V extends PreciseValue<V>> Partition<K> partitionFromPositiveWeightsWhichMaySumToBelow1(
+      RBMap<K, V> weightsMap) {
+    BigDecimal sum = sumToBigDecimal(weightsMap.values());
+    RBPreconditions.checkArgument(
+        sum.signum() == 1,
+        "Sum of weights must be >0. Input was %s",
+        weightsMap);
+    RBPreconditions.checkArgument(
+        sum.compareTo(ONE_PLUS_EPSILON) < 0,
+        "Sum of weights must be < 1 + epsilon. Input was %s",
+        weightsMap);
+
+    return partitionFromPositiveWeights(weightsMap, sum);
+  }
+
+  private static <K, V extends PreciseValue<V>> Partition<K> partitionFromPositiveWeights(
+      RBMap<K, V> weightsMap, BigDecimal precomputedSum) {
     MutableRBMap<K, UnitFraction> fractionsMap = newMutableRBMapWithExpectedSize(weightsMap.size());
     weightsMap.forEachEntry( (key, value) -> {
       BigDecimal bd = value.asBigDecimal();
@@ -74,22 +111,47 @@ public class Partition<K> {
           bd.signum() == 1,
           "Cannot create a PreciseValue weights partition if it includes a negative or zero weight of %s : input was %s",
           bd, weightsMap);
-      fractionsMap.putAssumingAbsent(key, unitFraction(bd.divide(sum, DEFAULT_MATH_CONTEXT)));
+      fractionsMap.putAssumingAbsent(key, unitFraction(bd.divide(precomputedSum, DEFAULT_MATH_CONTEXT)));
     });
     return new Partition<>(newRBMap(fractionsMap));
   }
 
   /**
-   * Creates a partition by normalizing a map of weights which may not sum to 100%.
-   *
+   * Creates a partition by normalizing a map of positive weights which may not sum to 100%.
    */
-  public static <K> Partition<K> partitionFromWeights(DoubleMap<K> weightsMap) {
+  public static <K> Partition<K> partitionFromPositiveWeightsWhichMayNotSumTo1(DoubleMap<K> weightsMap) {
     // epsilon of 1e-12 is tighter than the usual 1e-8; note that doubles normally have precision of around 1e-14 to 1e-15.
     double e = 1e-12;
     double sum = weightsMap.sum();
-    if (sum <= e) {
-      throw new IllegalArgumentException(Strings.format("Sum of weights must be >0 (actually, 1e-12). Input was %s", weightsMap));
-    }
+    RBPreconditions.checkArgument(
+        sum > e,
+        "Sum of weights must be >0 (actually, 1e-12). Input was %s",
+        weightsMap);
+    return partitionFromPositiveWeights(weightsMap, sum);
+  }
+
+  /**
+   * Creates a partition by normalizing a map of weights which may sum to below 100%, but not above.
+   */
+  public static <K> Partition<K> partitionFromPositiveWeightsWhichMaySumToBelow1(DoubleMap<K> weightsMap) {
+    // epsilon of 1e-12 is tighter than the usual 1e-8; note that doubles normally have precision of around 1e-14 to 1e-15.
+    double e = 1e-12;
+    double sum = weightsMap.sum();
+    RBPreconditions.checkArgument(
+        sum > e,
+        "Sum of weights must be >0 (actually, 1e-12). Input was %s",
+        weightsMap);
+    // Adding epsilon here to avoid
+    RBPreconditions.checkArgument(
+        sum < 1 + e,
+        "Sum of weights must be <= 1 (actually, 1 + 1e-12). Input was %s",
+        weightsMap);
+    return partitionFromPositiveWeights(weightsMap, sum);
+  }
+
+  private static <K> Partition<K> partitionFromPositiveWeights(DoubleMap<K> weightsMap, double precomputedSum) {
+    // epsilon of 1e-12 is tighter than the usual 1e-8; note that doubles normally have precision of around 1e-14 to 1e-15.
+    double e = 1e-12;
     MutableRBMap<K, UnitFraction> fractionsMap = newMutableRBMapWithExpectedSize(weightsMap.size());
     weightsMap.getRawMap().forEachEntry( (key, weight) -> {
       if (Math.abs(weight) < e) {
@@ -99,7 +161,7 @@ public class Partition<K> {
           weight > e,
           "Cannot create a PreciseValue weights partition if it includes a negative or zero weight of %s : input was %s",
           weight, weightsMap);
-      fractionsMap.putAssumingAbsent(key, unitFraction(weight / sum));
+      fractionsMap.putAssumingAbsent(key, unitFraction(weight / precomputedSum));
     });
     return new Partition<>(newRBMap(fractionsMap));
   }

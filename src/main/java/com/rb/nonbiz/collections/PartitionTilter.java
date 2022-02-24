@@ -3,7 +3,6 @@ package com.rb.nonbiz.collections;
 import com.rb.nonbiz.types.PositiveMultipliersMap;
 
 import static com.rb.nonbiz.collections.DoubleMap.doubleMap;
-import static com.rb.nonbiz.collections.Partition.partitionFromWeights;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.collections.RBSets.noSharedItems;
 
@@ -20,7 +19,7 @@ public class PartitionTilter {
     if (noSharedItems(original.getRawFractionsMap().keySet(), multipliers.getRawMap().keySet())) {
       return original; // small performance optimization
     }
-    return partitionFromWeights(
+    return Partition.partitionFromPositiveWeightsWhichMayNotSumTo1(
         doubleMap(
             original.getRawFractionsMap()
                 .transformEntriesCopy( (key, originalWeight) ->
