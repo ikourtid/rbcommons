@@ -61,7 +61,13 @@ public class Partition<K> {
     return new Partition<>(fractions);
   }
 
-
+  /**
+   * Creates a partition by normalizing a map of positive weights which may not sum to 100%.
+   * There is a similar overload that takes in DoubleMap, where the concept of summing to 100% makes more sense.
+   * Here, since we're dealing with PreciseValue, it's a bit meaningless to care about 1 vs. not 1 if the weights
+   * are of type e.g. Money. But for certain other types (UnitFraction, SignedFraction, etc.) it does make sense.
+   * However, here's no way to distinguish that given how generics work in Java. So this is reasonable.
+   */
   public static <K, V extends PreciseValue<V>> Partition<K> partitionFromPositiveWeightsWhichMayNotSumTo1(
       RBMap<K, V> weightsMap) {
     BigDecimal sum = sumToBigDecimal(weightsMap.values());
@@ -71,6 +77,13 @@ public class Partition<K> {
     return partitionFromPositiveWeights(weightsMap, sum);
   }
 
+  /**
+   * Creates a partition by normalizing a map of positive weights which may sum to below 100%.
+   * There is a similar overload that takes in DoubleMap, where the concept of summing to 100% makes more sense.
+   * Here, since we're dealing with PreciseValue, it's a bit meaningless to care about 1 vs. not 1 if the weights
+   * are of type e.g. Money. But for certain other types (UnitFraction, SignedFraction, etc.) it does make sense.
+   * However, here's no way to distinguish that given how generics work in Java. So this is reasonable.
+   */
   public static <K, V extends PreciseValue<V>> Partition<K> partitionFromPositiveWeightsWhichMaySumToBelow1(
       RBMap<K, V> weightsMap) {
     BigDecimal sum = sumToBigDecimal(weightsMap.values());
