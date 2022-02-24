@@ -27,7 +27,7 @@ public class CascadingInstrumentMasterTest {
             STOCK_A, "A1",
             STOCK_B, "B1"),
         hardCodedAllowingEmptyInstrumentMaster(
-            STOCK_B, "A2",
+            STOCK_B, "B2", // obscured by the first hardCodedAllowingEmptyInstrumentMaster, above
             STOCK_C, "C2"));
 
     // For simplicity, this test doesn't use the date, because hardCodedInstrumentMaster doesn't either.
@@ -35,6 +35,12 @@ public class CascadingInstrumentMasterTest {
     assertOptionalEquals(STOCK_B, instrumentMaster.getInstrumentId(symbol("B1"), DUMMY_DATE));
     assertOptionalEquals(STOCK_C, instrumentMaster.getInstrumentId(symbol("C2"), DUMMY_DATE));
     assertOptionalEmpty(instrumentMaster.getInstrumentId(DUMMY_SYMBOL, DUMMY_DATE));
+
+    // The semantics are a bit unexpected with CascadingInstrumentMaster when you go from symbol to instrument ID
+    // (instead of vice versa), but they are simple: just fall through to the next IM if you can't find the answer.
+    // Here, even though the first IM's STOCK_B ("B1") 'obscures' the second IM's entry ("B2"),
+    // asking for B2's instrument ID will just fall through and return STOCK_B from the second IM.
+    assertOptionalEquals(STOCK_B, instrumentMaster.getInstrumentId(symbol("B2"), DUMMY_DATE));
 
     assertOptionalEquals(symbol("A1"), instrumentMaster.getSymbol(STOCK_A, DUMMY_DATE));
     assertOptionalEquals(symbol("B1"), instrumentMaster.getSymbol(STOCK_B, DUMMY_DATE));
