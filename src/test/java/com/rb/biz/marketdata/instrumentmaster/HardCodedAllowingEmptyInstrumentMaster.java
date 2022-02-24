@@ -13,7 +13,8 @@ import static com.rb.nonbiz.collections.IidBiMap.iidBiMap;
 import static com.rb.nonbiz.collections.IidBiMaps.iidBiMapOf;
 
 /**
- * Similar to {@link HardCodedInstrumentMaster}, except that it allows missing items, instead of throwing.
+ * Similar to {@link HardCodedInstrumentMaster}, except that it allows missing items and returns empty optionals
+ * from the {@link InstrumentMaster} interface methods, instead of throwing (as in getOrThrow).
  */
 public class HardCodedAllowingEmptyInstrumentMaster implements InstrumentMaster {
 
