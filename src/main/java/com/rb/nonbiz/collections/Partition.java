@@ -93,8 +93,8 @@ public class Partition<K> {
         weightsMap);
     RBPreconditions.checkArgument(
         sum.compareTo(ONE_PLUS_EPSILON) < 0,
-        "Sum of weights must be < 1 + epsilon. Input was %s",
-        weightsMap);
+        "Sum of weights must be < 1 + epsilon; was %s . Input was %s",
+        sum, weightsMap);
 
     return partitionFromPositiveWeights(weightsMap, sum);
   }
@@ -121,44 +121,58 @@ public class Partition<K> {
    */
   public static <K> Partition<K> partitionFromPositiveWeightsWhichMayNotSumTo1(DoubleMap<K> weightsMap) {
     // epsilon of 1e-12 is tighter than the usual 1e-8; note that doubles normally have precision of around 1e-14 to 1e-15.
-    double e = 1e-12;
+    return partitionFromPositiveWeightsWhichMayNotSumTo1(weightsMap, 1e-12);
+  }
+
+  /**
+   * Creates a partition by normalizing a map of positive weights which may not sum to 100%.
+   */
+  public static <K> Partition<K> partitionFromPositiveWeightsWhichMayNotSumTo1(
+      DoubleMap<K> weightsMap, double epsilon) {
     double sum = weightsMap.sum();
     RBPreconditions.checkArgument(
-        sum > e,
-        "Sum of weights must be >0 (actually, 1e-12). Input was %s",
-        weightsMap);
-    return partitionFromPositiveWeights(weightsMap, sum);
+        sum > epsilon,
+        "Sum of weights must be >0 (actually, %s ). Input was %s",
+        epsilon, weightsMap);
+    return partitionFromPositiveWeights(weightsMap, sum, epsilon);
   }
+
 
   /**
    * Creates a partition by normalizing a map of weights which may sum to below 100%, but not above.
    */
   public static <K> Partition<K> partitionFromPositiveWeightsWhichMaySumToBelow1(DoubleMap<K> weightsMap) {
     // epsilon of 1e-12 is tighter than the usual 1e-8; note that doubles normally have precision of around 1e-14 to 1e-15.
-    double e = 1e-12;
-    double sum = weightsMap.sum();
-    RBPreconditions.checkArgument(
-        sum > e,
-        "Sum of weights must be >0 (actually, 1e-12). Input was %s",
-        weightsMap);
-    // Adding epsilon here to avoid
-    RBPreconditions.checkArgument(
-        sum < 1 + e,
-        "Sum of weights must be <= 1 (actually, 1 + 1e-12). Input was %s",
-        weightsMap);
-    return partitionFromPositiveWeights(weightsMap, sum);
+    return partitionFromPositiveWeightsWhichMaySumToBelow1(weightsMap, 1e-12);
   }
 
-  private static <K> Partition<K> partitionFromPositiveWeights(DoubleMap<K> weightsMap, double precomputedSum) {
-    // epsilon of 1e-12 is tighter than the usual 1e-8; note that doubles normally have precision of around 1e-14 to 1e-15.
-    double e = 1e-12;
+  /**
+   * Creates a partition by normalizing a map of weights which may sum to below 100%, but not above.
+   */
+  public static <K> Partition<K> partitionFromPositiveWeightsWhichMaySumToBelow1(
+      DoubleMap<K> weightsMap, double epsilon) {
+    double sum = weightsMap.sum();
+    RBPreconditions.checkArgument(
+        sum > epsilon,
+        "Sum of weights must be >0 (actually, %s ). Input was %s",
+        epsilon, weightsMap);
+    // Adding epsilon here to avoid
+    RBPreconditions.checkArgument(
+        sum < 1 + epsilon,
+        "Sum of weights must be <= 1 (actually, 1 + %s ). Input was %s",
+        epsilon, weightsMap);
+    return partitionFromPositiveWeights(weightsMap, sum, epsilon);
+  }
+
+  private static <K> Partition<K> partitionFromPositiveWeights(
+      DoubleMap<K> weightsMap, double precomputedSum, double epsilon) {
     MutableRBMap<K, UnitFraction> fractionsMap = newMutableRBMapWithExpectedSize(weightsMap.size());
     weightsMap.getRawMap().forEachEntry( (key, weight) -> {
-      if (Math.abs(weight) < e) {
+      if (Math.abs(weight) < epsilon) {
         return;
       }
       RBPreconditions.checkArgument(
-          weight > e,
+          weight > epsilon,
           "Cannot create a PreciseValue weights partition if it includes a negative or zero weight of %s : input was %s",
           weight, weightsMap);
       fractionsMap.putAssumingAbsent(key, unitFraction(weight / precomputedSum));

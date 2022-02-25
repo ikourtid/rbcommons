@@ -167,10 +167,11 @@ public class PartitionTest extends RBTestMatcher<Partition> {
         partitionFromPositiveWeightsWhichMaySumToBelow1(doubleMap(rbMapOf(
             "a", 0.04,
             "b", -1e-13,
-            "c", 0.06))),
+            "c", +2e-13,
+            "d", 0.06))),
         partitionMatcher(partition(rbMapOf(
             "a", unitFraction(0.4),
-            "c", unitFraction(0.6)))));
+            "d", unitFraction(0.6)))));
   }
 
   // If the weights don't sum to 1.0, should still get a valid partition.
