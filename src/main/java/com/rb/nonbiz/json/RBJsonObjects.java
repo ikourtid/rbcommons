@@ -26,6 +26,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static com.rb.biz.jsonapi.JsonTicker.jsonTicker;
@@ -130,6 +131,19 @@ public class RBJsonObjects {
       IidMap<V> iidMap,
       JsonTickerMap jsonTickerMap,
       BiFunction<InstrumentId, V, JsonElement> valueSerializer) {
+    // pass in a predicate that is always true; no filtering
+    return iidMapToFilteredJsonObject(iidMap, jsonTickerMap, valueSerializer, v -> true);
+  }
+
+  /**
+   * Converts an iidMap to a JsonObject using a BiFunction that transforms each (InstrumentId, JsonElement) entry.
+   * Keeps only those elements that pass a supplied predicate.
+   */
+  public static <V> JsonObject iidMapToFilteredJsonObject(
+      IidMap<V> iidMap,
+      JsonTickerMap jsonTickerMap,
+      BiFunction<InstrumentId, V, JsonElement> valueSerializer,
+      Predicate<JsonElement> mustIncludeIf) {
     JsonObject jsonObject = new JsonObject();
     // The following code will insert items into the JSON object in ticker alphabetical order.
     // I'm not sure if there's a guarantee that they will also PRINT in that order,
@@ -143,6 +157,7 @@ public class RBJsonObjects {
               valueSerializer.apply(instrumentId, value));
         })
         .sorted(comparing(v -> v.getLeft()))
+        .filter(pair -> mustIncludeIf.test(pair.getRight()))
         .forEach(pair -> jsonObject.add(pair.getLeft(), pair.getRight()));
     return jsonObject;
   }
