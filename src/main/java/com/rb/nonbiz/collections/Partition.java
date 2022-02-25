@@ -38,8 +38,6 @@ import static java.util.Comparator.reverseOrder;
  */
 public class Partition<K> {
 
-  private static final BigDecimal ONE_PLUS_EPSILON = BigDecimal.valueOf(1 + 1e-12);
-
   private final RBMap<K, UnitFraction> fractions;
 
   private Partition(RBMap<K, UnitFraction> fractions) {
@@ -78,6 +76,14 @@ public class Partition<K> {
   }
 
   /**
+   * @see #partitionFromPositiveWeightsWhichMaySumToBelow1(RBMap, double)
+   */
+  public static <K, V extends PreciseValue<V>> Partition<K> partitionFromPositiveWeightsWhichMaySumToBelow1(
+      RBMap<K, V> weightsMap) {
+    return partitionFromPositiveWeightsWhichMaySumToBelow1(weightsMap, 1e-12);
+  }
+
+  /**
    * Creates a partition by normalizing a map of positive weights which may sum to below 100%.
    * There is a similar overload that takes in DoubleMap, where the concept of summing to 100% makes more sense.
    * Here, since we're dealing with PreciseValue, it's a bit meaningless to care about 1 vs. not 1 if the weights
@@ -85,16 +91,16 @@ public class Partition<K> {
    * However, here's no way to distinguish that given how generics work in Java. So this is reasonable.
    */
   public static <K, V extends PreciseValue<V>> Partition<K> partitionFromPositiveWeightsWhichMaySumToBelow1(
-      RBMap<K, V> weightsMap) {
+      RBMap<K, V> weightsMap, double epsilon) {
     BigDecimal sum = sumToBigDecimal(weightsMap.values());
     RBPreconditions.checkArgument(
         sum.signum() == 1,
         "Sum of weights must be >0. Input was %s",
         weightsMap);
     RBPreconditions.checkArgument(
-        sum.compareTo(ONE_PLUS_EPSILON) < 0,
-        "Sum of weights must be < 1 + epsilon; was %s . Input was %s",
-        sum, weightsMap);
+        sum.doubleValue() <= 1 + epsilon,
+        "Sum of weights must be <= 1 + epsilon of %s ; was %s . Input was %s",
+        sum, epsilon, weightsMap);
 
     return partitionFromPositiveWeights(weightsMap, sum);
   }
