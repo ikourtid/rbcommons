@@ -346,6 +346,7 @@ public class RBJsonObjectsTest {
         // In reality, we store maps of PreciseValue by storing the numeric value.
         // In this test, we intentionally rely on Money#toString (with precision 2) to make the conversion less trivial.
         singletonJsonObject(
+            // "S1" is filtered out
             "S2", jsonString("iid 2 : $ 2.20")));
     
     asserter.accept(
