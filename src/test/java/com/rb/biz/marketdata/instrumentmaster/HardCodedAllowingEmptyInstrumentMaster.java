@@ -37,6 +37,16 @@ public class HardCodedAllowingEmptyInstrumentMaster implements InstrumentMaster 
         instrumentId2, symbol(symbol2)));
   }
 
+  public static HardCodedAllowingEmptyInstrumentMaster hardCodedAllowingEmptyInstrumentMaster(
+      InstrumentId instrumentId1, String symbol1,
+      InstrumentId instrumentId2, String symbol2,
+      InstrumentId instrumentId3, String symbol3) {
+    return new HardCodedAllowingEmptyInstrumentMaster(iidBiMapOf(
+        instrumentId1, symbol(symbol1),
+        instrumentId2, symbol(symbol2),
+        instrumentId3, symbol(symbol3)));
+  }
+
   @Override
   public Optional<InstrumentId> getInstrumentId(Symbol symbol, LocalDate ignoredDate) {
     return hardCodedSymbolBiMap.getInstrumentIdFromItem().getOptional(symbol);
