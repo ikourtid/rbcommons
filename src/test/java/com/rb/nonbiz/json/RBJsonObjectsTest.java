@@ -329,6 +329,32 @@ public class RBJsonObjectsTest {
   }
 
   @Test
+  public void testIidMapToFilteredJsonObject_biFunctionTransformation() {
+    BiConsumer<IidMap<Money>, JsonObject> asserter = (map, expectedJsonObject) ->
+        assertThat(
+            iidMapToFilteredJsonObject(
+                map,
+                TICKER_MAP,
+                (iid, v) -> jsonString(Strings.format("iid %s : %s", iid.asLong(), v.toString(2))),
+                jsonElement -> jsonElement.getAsString().contains("iid 2")),
+            jsonObjectEpsilonMatcher(expectedJsonObject));
+
+    asserter.accept(
+        iidMapOf(
+            instrumentId(1), money(1.1),
+            instrumentId(2), money(2.2)),
+        // In reality, we store maps of PreciseValue by storing the numeric value.
+        // In this test, we intentionally rely on Money#toString (with precision 2) to make the conversion less trivial.
+        singletonJsonObject(
+            // "S1" is filtered out
+            "S2", jsonString("iid 2 : $ 2.20")));
+    
+    asserter.accept(
+        emptyIidMap(),
+        emptyJsonObject());
+  }
+
+  @Test
   public void testRBSetOfHasUniqueIdToJsonObject() {
     RBSetOfHasUniqueId<TestHasUniqueId> rbSetOfHasUniqueId2 = rbSetOfHasUniqueId(rbMapOf(
         uniqueId("id1"), testHasUniqueId(uniqueId("id1"), unitFraction(0.11)),
