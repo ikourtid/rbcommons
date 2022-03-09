@@ -58,6 +58,12 @@ public class FakeInstruments {
   public static InstrumentId STOCK_D4 = instrumentIdGenerator.generate(symbol("STOCK_D4"));
   public static InstrumentId STOCK_D5 = instrumentIdGenerator.generate(symbol("STOCK_D5"));
 
+  public static InstrumentId STOCK_E1 = instrumentIdGenerator.generate(symbol("STOCK_E1"));
+  public static InstrumentId STOCK_E2 = instrumentIdGenerator.generate(symbol("STOCK_E2"));
+  public static InstrumentId STOCK_E3 = instrumentIdGenerator.generate(symbol("STOCK_E3"));
+  public static InstrumentId STOCK_E4 = instrumentIdGenerator.generate(symbol("STOCK_E4"));
+  public static InstrumentId STOCK_E5 = instrumentIdGenerator.generate(symbol("STOCK_E5"));
+
   /** You can use these for stocks where you want to specify that their lots get long-term tax treatment (hence L) */
   public static InstrumentId STOCK_L1 = instrumentIdGenerator.generate(symbol("STOCK_L1"));
   public static InstrumentId STOCK_L2 = instrumentIdGenerator.generate(symbol("STOCK_L2"));
