@@ -138,10 +138,17 @@ public class CsvColumnExtractorTest {
           .allMatch(entry -> {
             String cellValue = entry.getKey();
             T expectedParsedValue = entry.getValue();
-            return transformOptional(
-                expected.extractOptionalValue(cellValue),
-                v -> matcherGenerator.apply(expectedParsedValue).matches(v))
-                .orElse(false); // empty optional means not a match, since this is for 'throws on invalid values'
+            try {
+              Optional<T> optionalExtractedValue = expected.extractOptionalValue(cellValue);
+              return transformOptional(
+                  optionalExtractedValue,
+                  v -> matcherGenerator.apply(expectedParsedValue).matches(v))
+                  .orElse(false); // empty optional means not a match, since this is for 'throws on invalid values'
+            } catch (Exception e) {
+              // If there was an exception in the conversion; we shouldn't just propagate it up; it means
+              // that the two items don't match.
+              return false;
+            }
           })
           && invalidConversionSamples
           .stream()
