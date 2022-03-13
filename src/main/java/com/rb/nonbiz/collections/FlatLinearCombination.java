@@ -6,17 +6,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.RBNumeric;
-import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.types.WeightedBy;
-import com.rb.nonbiz.types.WeightedByUnitFraction;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Iterator;
 import java.util.List;
 
-import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.WeightedBy.weightedBy;
-import static com.rb.nonbiz.types.WeightedByUnitFraction.weightedByUnitFraction;
 import static java.util.Collections.singletonList;
 
 /**

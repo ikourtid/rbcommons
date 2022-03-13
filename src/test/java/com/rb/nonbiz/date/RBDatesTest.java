@@ -16,7 +16,6 @@ import static com.rb.nonbiz.collections.ContiguousDiscreteRangeMapTest.contiguou
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
-import static com.rb.nonbiz.collections.RBRanges.makeClosedRangesForDiscreteValues;
 import static com.rb.nonbiz.date.RBDates.*;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;

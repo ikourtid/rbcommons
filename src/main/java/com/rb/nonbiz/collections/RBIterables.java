@@ -1,12 +1,10 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.text.Strings;
-import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;

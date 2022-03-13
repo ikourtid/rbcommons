@@ -2,7 +2,6 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.Range;
 import com.rb.nonbiz.functional.TriConsumer;
-import com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import org.junit.Test;
 

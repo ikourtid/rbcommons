@@ -8,15 +8,11 @@ import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_C;
 import static com.rb.biz.marketdata.instrumentmaster.CascadingInstrumentMaster.cascadingInstrumentMaster;
 import static com.rb.biz.marketdata.instrumentmaster.HardCodedAllowingEmptyInstrumentMaster.hardCodedAllowingEmptyInstrumentMaster;
-import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.hardCodedInstrumentMaster;
 import static com.rb.biz.types.Symbol.symbol;
-import static com.rb.nonbiz.collections.IidBiMaps.iidBiMapOf;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DATE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_SYMBOL;
-
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class CascadingInstrumentMasterTest {
 

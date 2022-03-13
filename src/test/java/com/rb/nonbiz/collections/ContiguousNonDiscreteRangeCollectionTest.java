@@ -13,7 +13,6 @@ import java.util.function.BiConsumer;
 
 import static com.rb.nonbiz.collections.ContiguousNonDiscreteRangeCollection.contiguousNonDiscreteRangeCollectionWithEnd;
 import static com.rb.nonbiz.collections.ContiguousNonDiscreteRangeCollection.contiguousNonDiscreteRangeCollectionWithNoEnd;
-import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.Match.matchList;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -21,7 +20,6 @@ import static com.rb.nonbiz.testmatchers.RBRangeMatchers.doubleRangeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.rangeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 

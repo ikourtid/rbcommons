@@ -1,6 +1,5 @@
 package com.rb.nonbiz.collections;
 
-import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.asset.HasInstrumentId;
 import com.rb.nonbiz.functional.TriConsumer;

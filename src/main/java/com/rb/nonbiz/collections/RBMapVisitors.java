@@ -3,7 +3,6 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.functional.QuadriConsumer;
 import com.rb.nonbiz.functional.TriConsumer;
-import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;

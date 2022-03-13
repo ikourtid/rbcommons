@@ -2,7 +2,6 @@ package com.rb.nonbiz.util;
 
 import com.rb.nonbiz.collections.MutableRBMap;
 import com.rb.nonbiz.collections.RBMap;
-import com.rb.nonbiz.collections.RBMapConstructors;
 import com.rb.nonbiz.collections.RBSet;
 
 import java.util.Arrays;
@@ -13,7 +12,6 @@ import java.util.function.Function;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
-import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 
 public class RBEnumMaps {
 

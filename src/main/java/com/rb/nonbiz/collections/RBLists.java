@@ -1,8 +1,5 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.util.RBPreconditions;
-import com.rb.nonbiz.util.RBSimilarityPreconditions;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
