@@ -1,6 +1,5 @@
 package com.rb.nonbiz.collections;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.rb.nonbiz.text.Strings;
 
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;

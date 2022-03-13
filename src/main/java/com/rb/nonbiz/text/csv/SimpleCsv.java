@@ -1,6 +1,5 @@
 package com.rb.nonbiz.text.csv;
 
-import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;

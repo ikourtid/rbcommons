@@ -1,7 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.base.Joiner;
-import java.util.function.Predicate;
 import com.google.common.collect.Iterators;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.biz.types.asset.HasInstrumentId;
@@ -13,6 +12,7 @@ import gnu.trove.map.hash.TLongObjectHashMap;
 
 import java.time.LocalDate;
 import java.util.Iterator;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_INSTRUMENT_MASTER;

@@ -2,7 +2,6 @@ package com.rb.nonbiz.text.csv;
 
 import com.google.common.base.Joiner;
 import com.rb.nonbiz.testutils.RBTest;
-import com.rb.nonbiz.text.csv.CsvLineSplitter;
 import org.junit.Test;
 
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
