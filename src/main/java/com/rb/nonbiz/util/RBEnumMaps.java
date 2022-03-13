@@ -49,7 +49,7 @@ public class RBEnumMaps {
         enumValues,
         "All values for enum %s must appear in the map: enum has %s ; map is %s",
         enumClass, enumValues, valuesMap);
-    return new EnumMap<E, V>(valuesMap.asMap());
+    return new EnumMap<>(valuesMap.asMap());
   }
 
   /**
@@ -60,7 +60,7 @@ public class RBEnumMaps {
       Class<E> enumClass,
       Function<E, V> valueGenerator) {
     RBPreconditions.checkArgument(enumClass.isEnum());
-    return new EnumMap<E, V>(rbMapFromStream(
+    return new EnumMap<>(rbMapFromStream(
         Arrays.stream(enumClass.getEnumConstants()),
         key -> key,
         valueGenerator)
