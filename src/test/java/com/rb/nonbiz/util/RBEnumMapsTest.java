@@ -72,7 +72,7 @@ public class RBEnumMapsTest {
   }
 
   @Test
-  public void testEnumMapCoveringAllEnumValues() {
+  public void testEnumMapCoveringAllEnumValues_fromMapOverload() {
     assertIllegalArgumentException( () -> enumMapCoveringAllEnumValues(TestEnumXYZ.class, emptyRBMap()));
     assertIllegalArgumentException( () -> enumMapCoveringAllEnumValues(TestEnumXYZ.class, singletonRBMap(
         TestEnumXYZ.X, DUMMY_STRING)));
@@ -89,6 +89,18 @@ public class RBEnumMapsTest {
     assertThat(
         newRBMap(enumMap),
         rbMapMatcher(rbMap, f -> typeSafeEqualTo(f)));
+  }
+
+  @Test
+  public void testEnumMapCoveringAllEnumValues_fromEnumConstantOverload() {
+    assertThat(
+        newRBMap(enumMapCoveringAllEnumValues(TestEnumXYZ.class, v -> "_" + v.toString())),
+        rbMapMatcher(
+            rbMapOf(
+                TestEnumXYZ.X, "_X",
+                TestEnumXYZ.Y, "_Y",
+                TestEnumXYZ.Z, "_Z"),
+            f -> typeSafeEqualTo(f)));
   }
 
 }
