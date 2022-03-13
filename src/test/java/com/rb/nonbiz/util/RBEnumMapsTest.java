@@ -7,12 +7,18 @@ import org.junit.Test;
 
 import java.util.EnumMap;
 
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapMatcher;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.util.RBEnumMaps.enumMapCoveringAllEnumValues;
 import static com.rb.nonbiz.util.RBEnumMaps.transformEnumMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -63,6 +69,26 @@ public class RBEnumMapsTest {
             newEnumMap(rbMapOf(
                 TestEnumXYZ.X, "X_11",
                 TestEnumXYZ.Y, "Y_22"))));
+  }
+
+  @Test
+  public void testEnumMapCoveringAllEnumValues() {
+    assertIllegalArgumentException( () -> enumMapCoveringAllEnumValues(TestEnumXYZ.class, emptyRBMap()));
+    assertIllegalArgumentException( () -> enumMapCoveringAllEnumValues(TestEnumXYZ.class, singletonRBMap(
+        TestEnumXYZ.X, DUMMY_STRING)));
+    assertIllegalArgumentException( () -> enumMapCoveringAllEnumValues(TestEnumXYZ.class, rbMapOf(
+        TestEnumXYZ.X, DUMMY_STRING,
+        TestEnumXYZ.Y, DUMMY_STRING)));
+
+    RBMap<TestEnumXYZ, String> rbMap = rbMapOf(
+        TestEnumXYZ.X, "_x",
+        TestEnumXYZ.Y, "_y",
+        TestEnumXYZ.Z, "_z");
+    // The main assertion here is that the following does not throw
+    EnumMap<TestEnumXYZ, String> enumMap = enumMapCoveringAllEnumValues(TestEnumXYZ.class, rbMap);
+    assertThat(
+        newRBMap(enumMap),
+        rbMapMatcher(rbMap, f -> typeSafeEqualTo(f)));
   }
 
 }

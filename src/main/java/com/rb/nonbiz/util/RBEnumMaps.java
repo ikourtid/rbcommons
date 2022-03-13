@@ -1,12 +1,16 @@
 package com.rb.nonbiz.util;
 
 import com.rb.nonbiz.collections.MutableRBMap;
+import com.rb.nonbiz.collections.RBMap;
+import com.rb.nonbiz.collections.RBSet;
 
 import java.util.EnumMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
+import static com.rb.nonbiz.collections.RBSet.newRBSet;
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 
 public class RBEnumMaps {
 
@@ -26,6 +30,23 @@ public class RBEnumMaps {
     MutableRBMap<E, V2> mutableMap = newMutableRBMapWithExpectedSize(original.size());
     original.forEach( (enumValue, valueInMap) -> mutableMap.put(enumValue, transformer.apply(enumValue, valueInMap)));
     return new EnumMap<E, V2>(mutableMap.asMap());
+  }
+
+  /**
+   * Creates an EnumMap using the convenient RBMap constructors, while also asserting that every enum constant
+   * appears in the map.
+   */
+  public static <E extends Enum<E>, V> EnumMap<E, V> enumMapCoveringAllEnumValues(
+      Class<E> enumClass,
+      RBMap<E, V> valuesMap) {
+    RBPreconditions.checkArgument(enumClass.isEnum());
+    RBSet<E> enumValues = newRBSet(enumClass.getEnumConstants());
+    RBSimilarityPreconditions.checkBothSame(
+        newRBSet(valuesMap.keySet()),
+        enumValues,
+        "All values for enum %s must appear in the map: enum has %s ; map is %s",
+        enumClass, enumValues, valuesMap);
+    return new EnumMap<E, V>(valuesMap.asMap());
   }
 
 }
