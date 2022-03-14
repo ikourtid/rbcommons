@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+import static com.rb.nonbiz.text.Strings.sizePrefix;
+
 /**
  * This is one of the rare mutable data classes in the codebase.
  * Typically, we will build a MutableRBSet and then 'lock' its values into an RBSet in the same method, and then return it.
@@ -95,6 +97,11 @@ public class MutableRBSet<T> {
 
   public void clear() {
     rawSet.clear();
+  }
+
+  @Override
+  public String toString() {
+    return sizePrefix(rawSet.size()) + rawSet.toString();
   }
 
 }

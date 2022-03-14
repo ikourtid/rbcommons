@@ -399,6 +399,40 @@ public class RBMap<K, V> {
   }
 
   /**
+   * Creates a new map whose keys AND values are a transformation of the original ones,
+   * and the key transformation doesn't depend on the value in any particular entry, and also
+   * the value transformation doesn't depend on the key in any particular entry.
+   */
+  public <K1, V1> RBMap<K1, V1> transformKeysAndValuesCopy(Function<K, K1> keyTransformer,
+                                                           BiFunction<K1, V, V1> valuesTransformer) {
+    MutableRBMap<K1, V1> mutableMap = newMutableRBMapWithExpectedSize(size());
+    forEachEntry( (key, value) -> {
+      K1 transformedKey = keyTransformer.apply(key);
+      mutableMap.putAssumingAbsent(transformedKey, valuesTransformer.apply(transformedKey, value));
+    });
+    return newRBMap(mutableMap);
+  }
+
+  /**
+   * Creates a new map whose keys AND values are a transformation of the original ones,
+   * and the key transformation doesn't depend on the value in any particular entry, but the
+   * the value transformation depends on the original value and the transformed key.
+   * The value transformer function returns an optional, with the semantics that only if the optional is present
+   * will we create a corresponding entry in the new map.
+   */
+  public <K1, V1> RBMap<K1, V1> filterValuesAndTransformKeysAndValuesCopy(
+      Function<K, K1> keyTransformer,
+      BiFunction<K1, V, Optional<V1>> valuesTransformer) {
+    MutableRBMap<K1, V1> mutableMap = newMutableRBMapWithExpectedSize(size());
+    forEachEntry( (key, value) -> {
+      K1 transformedKey = keyTransformer.apply(key);
+      valuesTransformer.apply(transformedKey, value)
+              .ifPresent(transformedValue -> mutableMap.putAssumingAbsent(transformedKey, transformedValue));
+    });
+    return newRBMap(mutableMap);
+  }
+
+  /**
    * Like transformKeysAndValuesCopy, except that it goes through the entries in some deterministic ordering
    */
   public <K1, V1> RBMap<K1, V1> orderedTransformKeysAndValuesCopy(
@@ -501,6 +535,18 @@ public class RBMap<K, V> {
           return transformer.apply(key, value);
         })
         .collect(Collectors.toSet()));
+  }
+
+  public List<K> sortedKeys(Comparator<K> keyComparator) {
+    return keySet().stream().sorted(keyComparator).collect(Collectors.toList());
+  }
+
+  public List<V> valuesInSortedKeyOrder(Comparator<K> keyComparator) {
+    return entrySet()
+        .stream()
+        .sorted( (entry1, entry2) -> keyComparator.compare(entry1.getKey(), entry2.getKey()))
+        .map(entry -> entry.getValue())
+        .collect(Collectors.toList());
   }
 
   // IDE-generated

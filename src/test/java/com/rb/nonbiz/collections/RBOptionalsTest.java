@@ -484,5 +484,41 @@ public class RBOptionalsTest {
     asserter.accept(ImmutableList.of(3, 7, 4, 6), Optional.of("7"));
     asserter.accept(ImmutableList.of(7, 3, 4, 6), Optional.of("7"));
   }
+  
+  @Test
+  public void test_findOnlyPresentOptional_twoArgOverload() {
+    assertIllegalArgumentException( () -> findOnlyPresentOptional(Optional.empty(), Optional.empty()));
+    assertIllegalArgumentException( () -> findOnlyPresentOptional(Optional.of(1), Optional.of(2)));
+
+    assertEquals(1, findOnlyPresentOptional(Optional.of(1),   Optional.empty()).intValue());
+    assertEquals(1, findOnlyPresentOptional(Optional.empty(), Optional.of(1))  .intValue());
+  }
+
+  @Test
+  public void test_findOnlyPresentOptional_threeArgOverload() {
+    assertIllegalArgumentException( () -> findOnlyPresentOptional(Optional.empty(), Optional.empty(), Optional.empty()));
+    assertIllegalArgumentException( () -> findOnlyPresentOptional(Optional.of(1),   Optional.of(2),   Optional.empty()));
+    assertIllegalArgumentException( () -> findOnlyPresentOptional(Optional.of(1),   Optional.empty(), Optional.of(2)));
+    assertIllegalArgumentException( () -> findOnlyPresentOptional(Optional.empty(), Optional.of(1),   Optional.of(2)));
+    assertIllegalArgumentException( () -> findOnlyPresentOptional(Optional.of(1),   Optional.of(2),   Optional.of(3)));
+
+    assertEquals(1, findOnlyPresentOptional(Optional.of(1),   Optional.empty(), Optional.empty()).intValue());
+    assertEquals(1, findOnlyPresentOptional(Optional.empty(), Optional.of(1),   Optional.empty()).intValue());
+    assertEquals(1, findOnlyPresentOptional(Optional.empty(), Optional.empty(), Optional.of(1))  .intValue());
+  }
+
+  @Test
+  public void test_findZeroOrOnePresentOptional() {
+    assertIllegalArgumentException( () -> findZeroOrOnePresentOptional(Optional.of(1),   Optional.of(2),   Optional.empty()));
+    assertIllegalArgumentException( () -> findZeroOrOnePresentOptional(Optional.of(1),   Optional.empty(), Optional.of(2)));
+    assertIllegalArgumentException( () -> findZeroOrOnePresentOptional(Optional.empty(), Optional.of(1),   Optional.of(2)));
+    assertIllegalArgumentException( () -> findZeroOrOnePresentOptional(Optional.of(1),   Optional.of(2),   Optional.of(3)));
+
+    assertOptionalEmpty(findZeroOrOnePresentOptional(Optional.empty(), Optional.empty(), Optional.empty()));
+
+    assertOptionalEquals(1, findZeroOrOnePresentOptional(Optional.of(1),   Optional.empty(), Optional.empty()));
+    assertOptionalEquals(1, findZeroOrOnePresentOptional(Optional.empty(), Optional.of(1),   Optional.empty()));
+    assertOptionalEquals(1, findZeroOrOnePresentOptional(Optional.empty(), Optional.empty(), Optional.of(1)));
+  }
 
 }

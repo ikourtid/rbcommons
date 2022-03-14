@@ -22,7 +22,6 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_LABEL;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
-import static org.junit.Assert.assertEquals;
 
 // This test class is not generic, but the publicly exposed static matcher is
 public class RBStringToNumericFunctionThatHandlesMissingValuesTest

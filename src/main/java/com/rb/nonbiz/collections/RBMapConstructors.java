@@ -5,10 +5,13 @@ import com.rb.nonbiz.text.UniqueId;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
@@ -78,6 +81,21 @@ public class RBMapConstructors {
    * Builds an RBMap based on a stream. Each key-value pair depends on a single stream item.
    *
    * This will also throw if there is more than 1 item with the same key.
+   */
+  public static <K, V, T> RBMap<K, V> rbMapFromStream(
+      Stream<T> stream, Function<T, K> keyExtractor, BiFunction<K, T, V> valueExtractor) {
+    MutableRBMap<K, V> mutableRBMap = newMutableRBMap();
+    stream.forEach(v -> {
+      K key = keyExtractor.apply(v);
+      mutableRBMap.putAssumingAbsent(key, valueExtractor.apply(key, v));
+    });
+    return newRBMap(mutableRBMap);
+  }
+
+  /**
+   * Builds an RBMap based on a stream. Each key-value pair depends on a single stream item.
+   *
+   * This will also throw if there is more than 1 item with the same key.
    *
    * Similar to #rbMapFromStream, but the value transformer returns Optional.empty for values that shouldn't go
    * into the final map, and non-empty optional for the values that should go into the map.
@@ -113,6 +131,19 @@ public class RBMapConstructors {
     MutableRBMap<K, V> mutableRBMap = newMutableRBMapWithExpectedSize(expectedSize);
     stream.forEach(v -> mutableRBMap.putAssumingAbsent(keyExtractor.apply(v), valueExtractor.apply(v)));
     return newRBMap(mutableRBMap);
+  }
+
+  /**
+   * Similar to to using Collectors.groupingBy() on a stream, except that the extractor returns an optional key,
+   * and we do nothing if the key is empty.
+   */
+  public static <K, V> RBMap<K, List<V>> rbMapGroupingByPresentOptional(
+      Stream<V> values, Function<V, Optional<K>> optionalKeyExtractor) {
+    MutableRBMap<K, List<V>> mutableMap = newMutableRBMap();
+    values.forEach(v ->
+      optionalKeyExtractor.apply(v).ifPresent(key ->
+          mutableMap.possiblyInitializeAndThenUpdateInPlace(key, () -> newArrayList(), list -> list.add(v))));
+    return newRBMap(mutableMap);
   }
 
 }

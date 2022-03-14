@@ -29,7 +29,6 @@ import static com.rb.nonbiz.collections.HasInstrumentIdPartition.singletonHasIns
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.Partition.singletonPartition;
-import static com.rb.nonbiz.collections.PartitionTest.epsilonPartitionMatcher;
 import static com.rb.nonbiz.collections.PartitionTest.partitionMatcher;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
@@ -44,7 +43,6 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DATE;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
-import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;

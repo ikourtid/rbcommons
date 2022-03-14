@@ -3,11 +3,14 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.text.csv.SimpleCsvRow;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
@@ -18,15 +21,20 @@ import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromCollectionOfH
 import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromIterator;
 import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
 import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStreamOfOptionals;
+import static com.rb.nonbiz.collections.RBMapConstructors.rbMapGroupingByPresentOptional;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueId;
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueIdMatcher;
 import static com.rb.nonbiz.text.UniqueId.uniqueId;
+import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.simpleCsvRowMatcher;
+import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.testSimpleCsvRow;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -197,6 +205,28 @@ public class RBMapConstructorsTest {
   }
 
   @Test
+  public void testRbMapFromStream_separateKeyAndValueExtractors_valueExtractionReliesOnKey() {
+    BiConsumer<Stream<Pair<String, Integer>>, RBMap<String, String>> asserter = (stream, expectedResult) -> assertThat(
+        rbMapFromStream(
+            stream,
+            v -> Strings.format("%s%sk", v.getLeft(), v.getRight()),
+            (key, v) -> Strings.format("%s_%s%sv", key, v.getLeft(), v.getRight())),
+        rbMapMatcher(
+            expectedResult,
+            f -> typeSafeEqualTo(f)));
+    asserter.accept(Stream.empty(), emptyRBMap());
+    asserter.accept(
+        Stream.of(pair("a", 1)),
+        singletonRBMap(
+            "a1k", "a1k_a1v"));
+    asserter.accept(
+        Stream.of(pair("a", 1), pair("b", 2)),
+        rbMapOf(
+            "a1k", "a1k_a1v",
+            "b2k", "b2k_b2v"));
+  }
+
+  @Test
   public void testRbMapFromStreamOfOptionals_separateKeyAndValueExtractors() {
     BiConsumer<Stream<InstrumentId>, RBMap<Long, String>> asserter = (stream, expectedResult) ->
         assertThat(
@@ -237,6 +267,50 @@ public class RBMapConstructorsTest {
                 uniqueId("a"), testHasUniqueId(uniqueId("a"), unitFraction(0.11)),
                 uniqueId("b"), testHasUniqueId(uniqueId("b"), unitFraction(0.22))),
             f -> testHasUniqueIdMatcher(f)));
+  }
+
+  @Test
+  public void testRbMapGroupingByPresentOptional() {
+    Function<SimpleCsvRow, Optional<String>> optionalKeyExtractor = row ->
+        Integer.parseInt(row.getCell(0)) <= 8
+            ? Optional.of("_" + row.getCell(0))
+            : Optional.empty();
+
+    BiConsumer<Stream<SimpleCsvRow>, RBMap<String, List<SimpleCsvRow>>> asserter = (stream, expectedMap) ->
+        assertThat(
+            rbMapGroupingByPresentOptional(stream, optionalKeyExtractor),
+            rbMapMatcher(expectedMap, f -> orderedListMatcher(f, f2 -> simpleCsvRowMatcher(f2))));
+
+    asserter.accept(
+        Stream.of(
+            testSimpleCsvRow("7", "a1"),
+            testSimpleCsvRow("7", "a2"),
+            testSimpleCsvRow("8", "b1"),
+            testSimpleCsvRow("9", DUMMY_STRING)),
+        rbMapOf(
+            "_7", ImmutableList.of(
+                testSimpleCsvRow("7", "a1"),
+                testSimpleCsvRow("7", "a2")),
+            "_8", singletonList(
+                testSimpleCsvRow("8", "b1"))));
+
+    asserter.accept(
+        Stream.of(
+            testSimpleCsvRow("7", "a1"),
+            testSimpleCsvRow("7", "a2"),
+            testSimpleCsvRow("9", DUMMY_STRING)),
+        singletonRBMap(
+            "_7", ImmutableList.of(
+                testSimpleCsvRow("7", "a1"),
+                testSimpleCsvRow("7", "a2"))));
+
+    asserter.accept(
+        Stream.of(testSimpleCsvRow("9", DUMMY_STRING)),
+        emptyRBMap());
+
+    asserter.accept(
+        Stream.empty(),
+        emptyRBMap());
   }
 
 }

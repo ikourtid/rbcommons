@@ -14,6 +14,7 @@ import static com.rb.nonbiz.text.csv.SimpleCsvRow.simpleCsvRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.simpleCsvRowMatcher;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SimpleCsvTest extends RBTestMatcher<SimpleCsv> {
 
@@ -29,6 +30,22 @@ public class SimpleCsvTest extends RBTestMatcher<SimpleCsv> {
         ImmutableList.of(
             simpleCsvRow(ImmutableList.of("l1a", "l1b")),
             simpleCsvRow(ImmutableList.of("l2a", "l2b")))));
+  }
+
+  @Test
+  public void test_copyWithFilteredRows() {
+    assertThat(
+        simpleCsv(
+            simpleCsvRow(ImmutableList.of("col1", "col2")),
+            ImmutableList.of(
+                simpleCsvRow(ImmutableList.of("l1a", "l1b")),
+                simpleCsvRow(ImmutableList.of("l2a", "l2b"))))
+            .copyWithFilteredRows(row -> row.getCell(0).equals("l1a")),
+        simpleCsvMatcher(
+            simpleCsv(
+                simpleCsvRow(ImmutableList.of("col1", "col2")),
+                ImmutableList.of(
+                    simpleCsvRow(ImmutableList.of("l1a", "l1b"))))));
   }
 
   @Test

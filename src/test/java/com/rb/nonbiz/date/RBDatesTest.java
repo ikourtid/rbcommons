@@ -1,6 +1,7 @@
 package com.rb.nonbiz.date;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Range;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -9,6 +10,12 @@ import java.time.Year;
 import java.time.YearMonth;
 import java.util.Optional;
 
+import static com.rb.nonbiz.collections.ContiguousDiscreteRangeMap.contiguousDiscreteRangeMap;
+import static com.rb.nonbiz.collections.ContiguousDiscreteRangeMap.singletonContiguousDiscreteRangeMap;
+import static com.rb.nonbiz.collections.ContiguousDiscreteRangeMapTest.contiguousDiscreteRangeMapEqualityMatcher;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.date.RBDates.*;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
@@ -23,6 +30,7 @@ import static java.time.DayOfWeek.TUESDAY;
 import static java.time.DayOfWeek.WEDNESDAY;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -218,6 +226,40 @@ public class RBDatesTest {
     assertTrue( yearsAreConsecutive(Year.of(2014), Year.of(2015)));
     assertFalse(yearsAreConsecutive(Year.of(2014), Year.of(2016)));
     assertFalse(yearsAreConsecutive(Year.of(2014), Year.of(2017)));
+  }
+
+  @Test
+  public void test_makeContiguousDateDiscreteRangeMap() {
+    assertThat(
+        "2 starting points",
+        makeContiguousDateDiscreteRangeMap(
+            rbMapOf(
+                LocalDate.of(2020, 1, 20), "20 to 24",
+                LocalDate.of(2020, 1, 25), "25 to 30"),
+            LocalDate.of(2020, 1, 30)),
+        contiguousDiscreteRangeMapEqualityMatcher(
+            contiguousDiscreteRangeMap(
+                ImmutableList.of(
+                    Range.closed(LocalDate.of(2020, 1, 20), LocalDate.of(2020, 1, 24)),
+                    Range.closed(LocalDate.of(2020, 1, 25), LocalDate.of(2020, 1, 30))),
+                ImmutableList.of(
+                    "20 to 24", "25 to 30"),
+                date -> date.plusDays(1))));
+
+    assertThat(
+        "1 starting point",
+        makeContiguousDateDiscreteRangeMap(
+            singletonRBMap(
+                LocalDate.of(2020, 1, 20), "20 to 30"),
+            LocalDate.of(2020, 1, 30)),
+        contiguousDiscreteRangeMapEqualityMatcher(
+            singletonContiguousDiscreteRangeMap(
+                Range.closed(LocalDate.of(2020, 1, 20), LocalDate.of(2020, 1, 30)),
+                "20 to 30")));
+
+    assertIllegalArgumentException( () -> makeContiguousDateDiscreteRangeMap(
+        emptyRBMap(),
+        LocalDate.of(2020, 1, 30)));
   }
 
 }

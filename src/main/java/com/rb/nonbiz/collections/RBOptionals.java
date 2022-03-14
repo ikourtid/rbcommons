@@ -5,6 +5,7 @@ import com.google.common.collect.Iterators;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.nonbiz.text.PrintsInstruments;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBPreconditions;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -365,6 +366,55 @@ public class RBOptionals {
       }
     }
     return Optional.empty();
+  }
+
+  /**
+   * Throws if neither or both optionals passed in are empty.
+   * Otherwise, it returns the value inside the (only) non-empty optional.
+   */
+  public static <T> T findOnlyPresentOptional(Optional<T> opt1, Optional<T> opt2) {
+    return getOrThrow(
+        findZeroOrOnePresentOptionalsFromStream(Stream.of(opt1, opt2)),
+        "Expected to find exactly one present optional: inputs were %s %s",
+        opt1, opt2);
+  }
+
+  /**
+   * Throws unless exactly one of the 3 optionals passed in is present.
+   * Otherwise, it returns the value inside the (only) non-empty optional.
+   */
+  public static <T> T findOnlyPresentOptional(Optional<T> opt1, Optional<T> opt2, Optional<T> opt3) {
+    return getOrThrow(
+        findZeroOrOnePresentOptionalsFromStream(Stream.of(opt1, opt2, opt3)),
+        "Expected to find exactly one present optional: inputs were %s %s %s",
+        opt1, opt2, opt3);
+  }
+
+  /**
+   * Throws if more than one of the optionals passed in is present.
+   * If all are empty, returns empty optional, otherwise it returns the only non-empty optional.
+   */
+  public static <T> Optional<T> findZeroOrOnePresentOptional(Optional<T> opt1, Optional<T> opt2, Optional<T> opt3) {
+    return findZeroOrOnePresentOptionalsFromStream(Stream.of(opt1, opt2, opt3));
+  }
+
+  public static <T> Optional<T> findZeroOrOnePresentOptionalsFromStream(Stream<Optional<T>> stream) {
+    int numPresent = 0;
+    T toReturn = null;
+
+    Iterator<Optional<T>> iter = stream.iterator();
+    while (iter.hasNext()) {
+      Optional<T> next = iter.next();
+      if (next.isPresent()) {
+        numPresent++;
+        toReturn = next.get();
+      }
+    }
+    RBPreconditions.checkArgument(
+        numPresent <= 1,
+        "Expected to find up to 1 present optional; found %s of them",
+        numPresent);
+    return Optional.ofNullable(toReturn);
   }
 
 }

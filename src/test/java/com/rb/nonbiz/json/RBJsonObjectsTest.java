@@ -11,7 +11,6 @@ import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.CaseInsensitiveStringFilter;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
-import com.rb.nonbiz.collections.RBRanges;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
@@ -323,6 +322,32 @@ public class RBJsonObjectsTest {
         jsonObject(
             "S1", jsonString("iid 1 : $ 1.10"),
             "S2", jsonString("iid 2 : $ 2.20")));
+    asserter.accept(
+        emptyIidMap(),
+        emptyJsonObject());
+  }
+
+  @Test
+  public void testIidMapToFilteredJsonObject_biFunctionTransformation() {
+    BiConsumer<IidMap<Money>, JsonObject> asserter = (map, expectedJsonObject) ->
+        assertThat(
+            iidMapToFilteredJsonObject(
+                map,
+                TICKER_MAP,
+                (iid, v) -> jsonString(Strings.format("iid %s : %s", iid.asLong(), v.toString(2))),
+                jsonElement -> jsonElement.getAsString().contains("iid 2")),
+            jsonObjectEpsilonMatcher(expectedJsonObject));
+
+    asserter.accept(
+        iidMapOf(
+            instrumentId(1), money(1.1),
+            instrumentId(2), money(2.2)),
+        // In reality, we store maps of PreciseValue by storing the numeric value.
+        // In this test, we intentionally rely on Money#toString (with precision 2) to make the conversion less trivial.
+        singletonJsonObject(
+            // "S1" is filtered out
+            "S2", jsonString("iid 2 : $ 2.20")));
+    
     asserter.accept(
         emptyIidMap(),
         emptyJsonObject());

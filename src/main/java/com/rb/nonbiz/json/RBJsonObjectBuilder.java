@@ -16,7 +16,6 @@ import java.util.OptionalInt;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static com.rb.nonbiz.collections.RBVoid.rbVoid;
 import static com.rb.nonbiz.json.RBGson.jsonBigDecimal;
 import static com.rb.nonbiz.json.RBGson.jsonBoolean;
 import static com.rb.nonbiz.json.RBGson.jsonDate;

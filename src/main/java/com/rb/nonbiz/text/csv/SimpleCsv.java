@@ -5,6 +5,8 @@ import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class SimpleCsv {
 
@@ -45,6 +47,14 @@ public class SimpleCsv {
 
   public int getNumColumns() {
     return numColumns;
+  }
+
+  public SimpleCsv copyWithFilteredRows(Predicate<SimpleCsvRow> mustKeepRow) {
+    return simpleCsv(
+        headerRow,
+        dataRows.stream()
+            .filter(mustKeepRow)
+            .collect(Collectors.toList()));
   }
 
   @Override
