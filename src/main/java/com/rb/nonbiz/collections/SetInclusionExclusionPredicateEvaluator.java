@@ -57,7 +57,7 @@ public class SetInclusionExclusionPredicateEvaluator {
    */
   public static class SetInclusionExclusionInstructions<T> {
 
-    enum BehaviorForRest {
+    public enum BehaviorForRest {
       INCLUDE,
       EXCLUDE,
       USE_RULES
