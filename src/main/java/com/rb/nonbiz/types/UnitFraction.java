@@ -97,7 +97,10 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
   public static UnitFraction unitFraction(long numerator, long denominator) {
     RBPreconditions.checkArgument(numerator >= 0);
     RBPreconditions.checkArgument(denominator > 0);
-    RBPreconditions.checkArgument(numerator <= denominator);
+    RBPreconditions.checkArgument(
+        numerator <= denominator,
+        "Numerator %s must be <= denominator %s",
+        numerator, denominator);
     return new UnitFraction(new BigDecimal(numerator).divide(new BigDecimal(denominator), DEFAULT_MATH_CONTEXT));
   }
 
