@@ -18,16 +18,17 @@ import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
  */
 public class OverridesApplier {
 
-  public <K, V extends Comparable> V getValue(K key, RBMap<K, V> originalMap, Overrides<K, V> overrides) {
+  public <K, V extends Comparable<? super V>> V getValue(K key, RBMap<K, V> originalMap, Overrides<K, V> overrides) {
     return getValueForSingleItem(key, originalMap.getOptional(key), overrides);
   }
 
-  public <K extends HasLongRepresentation, V extends Comparable> V getValue(
+  public <K extends HasLongRepresentation, V extends Comparable<? super V>> V getValue(
       K key, HasLongMap<K, V> originalMap, Overrides<K, V> overrides) {
     return getValueForSingleItem(key, originalMap.getOptional(key), overrides);
   }
 
-  public <K, V extends Comparable> V getValueForSingleItem(K key, Optional<V> maybeExisting, Overrides<K, V> overrides) {
+  public <K, V extends Comparable<? super V>> V getValueForSingleItem(
+      K key, Optional<V> maybeExisting, Overrides<K, V> overrides) {
     Optional<V> maybeOverride = overrides.getOverridesMap().getOptional(key);
     if (!maybeExisting.isPresent()) {
       return maybeOverride.isPresent()
