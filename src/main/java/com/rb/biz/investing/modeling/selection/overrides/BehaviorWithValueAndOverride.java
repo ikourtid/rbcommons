@@ -5,21 +5,22 @@ package com.rb.biz.investing.modeling.selection.overrides;
  *
  * @see Overrides
  */
-public abstract class BehaviorWithValueAndOverride<T extends Comparable> {
+public abstract class BehaviorWithValueAndOverride<T extends Comparable<? super T>> {
 
   public interface Visitor<T> {
 
     T visitAlwaysUseOverrideAndIgnoreExistingValue();
+    T visitAlwaysUseExistingValueAndIgnoreOverride();
     T visitOnlyUseOverrideToFurtherReduceExistingValue();
 
   }
 
   abstract T visit(Visitor<T> visitor);
 
-  public static class AlwaysUseOverrideAndIgnoreExistingValue<T extends Comparable>
+  public static class AlwaysUseOverrideAndIgnoreExistingValue<T extends Comparable<? super T>>
       extends BehaviorWithValueAndOverride<T> {
 
-    public static <T extends Comparable> AlwaysUseOverrideAndIgnoreExistingValue<T> alwaysUseOverrideAndIgnoreExistingValue() {
+    public static <T extends Comparable<? super T>> AlwaysUseOverrideAndIgnoreExistingValue<T> alwaysUseOverrideAndIgnoreExistingValue() {
       return new AlwaysUseOverrideAndIgnoreExistingValue<>();
     }
 
@@ -35,10 +36,31 @@ public abstract class BehaviorWithValueAndOverride<T extends Comparable> {
 
   }
 
-  public static class OnlyUseOverrideToFurtherReduceExistingValue<T extends Comparable>
+
+  public static class AlwaysUseExistingValueAndIgnoreOverride<T extends Comparable<? super T>>
       extends BehaviorWithValueAndOverride<T> {
 
-    public static <T extends Comparable> OnlyUseOverrideToFurtherReduceExistingValue<T>
+    public static <T extends Comparable<? super T>> AlwaysUseExistingValueAndIgnoreOverride<T> alwaysUseExistingValueAndIgnoreOverride() {
+      return new AlwaysUseExistingValueAndIgnoreOverride<>();
+    }
+
+    @Override
+    T visit(Visitor<T> visitor) {
+      return visitor.visitAlwaysUseExistingValueAndIgnoreOverride();
+    }
+
+    @Override
+    public String toString() {
+      return "always_use_override_and_ignore_existing_value";
+    }
+
+  }
+
+
+  public static class OnlyUseOverrideToFurtherReduceExistingValue<T extends Comparable<? super T>>
+      extends BehaviorWithValueAndOverride<T> {
+
+    public static <T extends Comparable<? super T>> OnlyUseOverrideToFurtherReduceExistingValue<T>
     onlyUseOverrideToFurtherReduceExistingValue() {
       return new OnlyUseOverrideToFurtherReduceExistingValue<>();
     }
