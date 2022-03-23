@@ -11,6 +11,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.Optional;
 
 import static com.rb.biz.investing.modeling.selection.overrides.BehaviorWithValueAndOverride.AlwaysUseOverrideAndIgnoreExistingValue.alwaysUseOverrideAndIgnoreExistingValue;
+import static com.rb.biz.investing.modeling.selection.overrides.BehaviorWithValueAndOverride.OnlyUseOverrideToFurtherReduceExistingValue.onlyUseOverrideToFurtherReduceExistingValue;
 import static com.rb.biz.investing.modeling.selection.overrides.BehaviorWithValueButNoOverride.UseExistingValueWhenOverrideMissing.useExistingValueWhenOverrideMissing;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
@@ -60,6 +61,16 @@ public class Overrides<K, V extends Comparable> {
         .setBehaviorWithValueAndOverride(alwaysUseOverrideAndIgnoreExistingValue())
         .setBehaviorWithValueButNoOverride(useExistingValueWhenOverrideMissing())
         .throwWhenNoValueAndNoOverride()
+        .build();
+  }
+
+  public static <K, V extends Comparable<? super V>> Overrides<K, V>
+  useGlobalOverrideOnlyIfValueMissing(V defaultValue) {
+    return OverridesBuilder.<K, V>overridesBuilder()
+        .setOverridesMap(emptyRBMap())
+        .setBehaviorWithValueAndOverride(onlyUseOverrideToFurtherReduceExistingValue()) // FIXME IAK KOREA create a a 'always use value'
+        .setBehaviorWithValueButNoOverride(useExistingValueWhenOverrideMissing()) // vs. UseFixedValueWhenOverrideMissing
+        .useThisWhenNoValueAndNoOverride(defaultValue)
         .build();
   }
 
