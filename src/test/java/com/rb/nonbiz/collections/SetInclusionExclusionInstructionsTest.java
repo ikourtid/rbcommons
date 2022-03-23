@@ -1,14 +1,18 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.collections.SetInclusionExclusionPredicateEvaluator.SetInclusionExclusionInstructions;
+import com.rb.nonbiz.collections.SetInclusionExclusionPredicateEvaluator.SetInclusionExclusionInstructionsBuilder;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.util.RBPreconditions;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
+import static com.rb.nonbiz.collections.RBSets.noSharedItems;
 import static com.rb.nonbiz.collections.SetInclusionExclusionPredicateEvaluator.SetInclusionExclusionInstructions.*;
+import static com.rb.nonbiz.collections.SetInclusionExclusionPredicateEvaluator.SetInclusionExclusionInstructions.BehaviorForRest.USE_RULES;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 
@@ -56,12 +60,23 @@ public class SetInclusionExclusionInstructionsTest extends RBTestMatcher<SetIncl
 
   @Override
   public SetInclusionExclusionInstructions<Character> makeNontrivialObject() {
-    return includeTheseExcludeTheseUseRulesForRest(rbSetOf('a', 'b'), rbSetOf('c', 'd'));
+    return SetInclusionExclusionInstructionsBuilder.<Character>setInclusionExclusionInstructionsBuilder()
+        .alwaysInclude(rbSetOf('a', 'b'))
+        .alwaysExclude(rbSetOf('c', 'd'))
+        .alwaysUseRules(rbSetOf('e', 'f'))
+        .setBehaviorForRest(USE_RULES)
+        .build();
   }
 
   @Override
   public SetInclusionExclusionInstructions<Character> makeMatchingNontrivialObject() {
-    return includeTheseExcludeTheseUseRulesForRest(rbSetOf('a', 'b'), rbSetOf('c', 'd'));
+    // Nothing to tweak here
+    return SetInclusionExclusionInstructionsBuilder.<Character>setInclusionExclusionInstructionsBuilder()
+        .alwaysInclude(rbSetOf('a', 'b'))
+        .alwaysExclude(rbSetOf('c', 'd'))
+        .alwaysUseRules(rbSetOf('e', 'f'))
+        .setBehaviorForRest(USE_RULES)
+        .build();
   }
 
   @Override

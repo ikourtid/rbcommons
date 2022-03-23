@@ -213,6 +213,7 @@ public class IidMap<V> extends HasLongMap<InstrumentId, V> implements PrintsInst
     forEachEntry( (instrumentId, value) -> mutableMap.put(Long.toString(instrumentId.asLong()), value));
     return newRBMap(mutableMap);
   }
+
   /**
    * Creates a new map whose keys are the same, and whose values are a transformation
    * of the values of the original map, when you don't care about they key when doing the transformation.
@@ -221,12 +222,25 @@ public class IidMap<V> extends HasLongMap<InstrumentId, V> implements PrintsInst
   public <V1> IidMap<V1> filterKeysAndTransformValuesCopy(
       Function<V, V1> valueTransformer,
       Predicate<InstrumentId> mustKeepKey) {
+    return filterKeysAndTransformEntriesCopy(
+        (ignoredInstrumentId, value) -> valueTransformer.apply(value),
+        mustKeepKey);
+  }
+
+  /**
+   * Creates a new map whose keys are the same, and whose values are a transformation
+   * of the entries (key + value) of the original map.
+   * ADDITIONALLY, it may filter keys so that the final map may be smaller than the original.
+   */
+  public <V1> IidMap<V1> filterKeysAndTransformEntriesCopy(
+      BiFunction<InstrumentId, V, V1> valueTransformer,
+      Predicate<InstrumentId> mustKeepKey) {
     MutableIidMap<V1> mutableMap = newMutableIidMapWithExpectedSize(size());
     forEachEntry( (instrumentId, originalValue) -> {
       if (!mustKeepKey.test(instrumentId)) {
         return;
       }
-      V1 transformedValue = valueTransformer.apply(originalValue);
+      V1 transformedValue = valueTransformer.apply(instrumentId, originalValue);
       mutableMap.putAssumingAbsent(instrumentId, transformedValue);
     });
     return newIidMap(mutableMap);

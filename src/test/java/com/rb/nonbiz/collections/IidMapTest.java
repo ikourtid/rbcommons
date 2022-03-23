@@ -565,6 +565,46 @@ public class IidMapTest extends RBTestMatcher<IidMap<Money>> {
   }
 
   @Test
+  public void testFilterKeysAndTransformEntriesCopy() {
+    TriConsumer<IidMap<String>, IidMap<Integer>, Predicate<InstrumentId>> asserter =
+        (expectedResult, inputMap, predicate) -> assertThat(
+            expectedResult,
+            iidMapEqualityMatcher(
+                inputMap.filterKeysAndTransformEntriesCopy(
+                    (instrumentId, intValue) -> Strings.format("%s_%s", instrumentId.asLong(), intValue + 100),
+                    predicate)));
+
+    asserter.accept(emptyIidMap(), emptyIidMap(), k -> true);
+    asserter.accept(emptyIidMap(), emptyIidMap(), k -> false);
+
+    // only A passes filter
+    asserter.accept(
+        singletonIidMap(instrumentId(10), "10_101"),
+        iidMapOf(
+            instrumentId(10), 1,
+            instrumentId(20), 2),
+        k -> k.equals(instrumentId(10)));
+
+    // both A and B pass filter
+    asserter.accept(
+        iidMapOf(
+            instrumentId(10), "10_101",
+            instrumentId(20), "20_102"),
+        iidMapOf(
+            instrumentId(10), 1,
+            instrumentId(20), 2),
+        k -> rbSetOf(instrumentId(10), instrumentId(20)).contains(k));
+
+    // neither A nor B pass the filter
+    asserter.accept(
+        emptyIidMap(),
+        iidMapOf(
+            instrumentId(10), 1,
+            instrumentId(20), 2),
+        k -> k.equals(STOCK_C));
+  }
+
+  @Test
   public void testTransformAndFilterValuesCopy() {
     TriConsumer<IidMap<String>, IidMap<Integer>, Predicate<String>> asserter =
         (expectedResult, inputMap, predicate) -> assertThat(

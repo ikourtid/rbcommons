@@ -1,6 +1,8 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.nonbiz.collections.SetInclusionExclusionPredicateEvaluator.SetInclusionExclusionInstructions.BehaviorForRest;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Optional;
@@ -55,7 +57,7 @@ public class SetInclusionExclusionPredicateEvaluator {
    */
   public static class SetInclusionExclusionInstructions<T> {
 
-    enum BehaviorForRest {
+    public enum BehaviorForRest {
       INCLUDE,
       EXCLUDE,
       USE_RULES
@@ -75,57 +77,102 @@ public class SetInclusionExclusionPredicateEvaluator {
     }
 
     public static <T> SetInclusionExclusionInstructions<T> includeEverything() {
-      return new SetInclusionExclusionInstructions<T>(emptyRBSet(), emptyRBSet(), emptyRBSet(), INCLUDE);
+      return SetInclusionExclusionInstructionsBuilder.<T>setInclusionExclusionInstructionsBuilder()
+          .alwaysInclude(emptyRBSet())
+          .alwaysExclude(emptyRBSet())
+          .alwaysUseRules(emptyRBSet())
+          .setBehaviorForRest(INCLUDE)
+          .build();
     }
 
     public static <T> SetInclusionExclusionInstructions<T> excludeEverything() {
-      return new SetInclusionExclusionInstructions<T>(emptyRBSet(), emptyRBSet(), emptyRBSet(), EXCLUDE);
+      return SetInclusionExclusionInstructionsBuilder.<T>setInclusionExclusionInstructionsBuilder()
+          .alwaysInclude(emptyRBSet())
+          .alwaysExclude(emptyRBSet())
+          .alwaysUseRules(emptyRBSet())
+          .setBehaviorForRest(EXCLUDE)
+          .build();
     }
 
     public static <T> SetInclusionExclusionInstructions<T> useRulesForEverything() {
-      return new SetInclusionExclusionInstructions<T>(emptyRBSet(), emptyRBSet(), emptyRBSet(), USE_RULES);
+      return SetInclusionExclusionInstructionsBuilder.<T>setInclusionExclusionInstructionsBuilder()
+          .alwaysInclude(emptyRBSet())
+          .alwaysExclude(emptyRBSet())
+          .alwaysUseRules(emptyRBSet())
+          .setBehaviorForRest(USE_RULES)
+          .build();
     }
 
     public static <T> SetInclusionExclusionInstructions<T> useRulesForTheseExcludeRest(RBSet<T> alwaysUseRules) {
       RBPreconditions.checkArgument(
           !alwaysUseRules.isEmpty(),
           "If there's no 'always use rules' items, use the static constructor #useRulesForEverything");
-      return new SetInclusionExclusionInstructions<T>(emptyRBSet(), emptyRBSet(), alwaysUseRules, EXCLUDE);
+      return SetInclusionExclusionInstructionsBuilder.<T>setInclusionExclusionInstructionsBuilder()
+          .alwaysInclude(emptyRBSet())
+          .alwaysExclude(emptyRBSet())
+          .alwaysUseRules(alwaysUseRules)
+          .setBehaviorForRest(EXCLUDE)
+          .build();
     }
 
     public static <T> SetInclusionExclusionInstructions<T> useRulesForTheseIncludeRest(RBSet<T> alwaysUseRules) {
       RBPreconditions.checkArgument(
           !alwaysUseRules.isEmpty(),
           "If there's no 'always use rules' items, use the static constructor #useRulesForEverything");
-      return new SetInclusionExclusionInstructions<T>(emptyRBSet(), emptyRBSet(), alwaysUseRules, INCLUDE);
+      return SetInclusionExclusionInstructionsBuilder.<T>setInclusionExclusionInstructionsBuilder()
+          .alwaysInclude(emptyRBSet())
+          .alwaysExclude(emptyRBSet())
+          .alwaysUseRules(alwaysUseRules)
+          .setBehaviorForRest(INCLUDE)
+          .build();
     }
 
     public static <T> SetInclusionExclusionInstructions<T> includeTheseExcludeRest(RBSet<T> alwaysInclude) {
       RBPreconditions.checkArgument(
           !alwaysInclude.isEmpty(),
           "If there's no inclusion or exclusion list, use the static constructor #useRulesForEverything");
-      return new SetInclusionExclusionInstructions<T>(alwaysInclude, emptyRBSet(), emptyRBSet(), EXCLUDE);
+      return SetInclusionExclusionInstructionsBuilder.<T>setInclusionExclusionInstructionsBuilder()
+          .alwaysInclude(alwaysInclude)
+          .alwaysExclude(emptyRBSet())
+          .alwaysUseRules(emptyRBSet())
+          .setBehaviorForRest(EXCLUDE)
+          .build();
     }
 
     public static <T> SetInclusionExclusionInstructions<T> includeTheseUseRulesForRest(RBSet<T> alwaysInclude) {
       RBPreconditions.checkArgument(
           !alwaysInclude.isEmpty(),
           "If there's no inclusion or exclusion list, use the static constructor #useRulesForEverything");
-      return new SetInclusionExclusionInstructions<T>(alwaysInclude, emptyRBSet(), emptyRBSet(), USE_RULES);
+      return SetInclusionExclusionInstructionsBuilder.<T>setInclusionExclusionInstructionsBuilder()
+          .alwaysInclude(alwaysInclude)
+          .alwaysExclude(emptyRBSet())
+          .alwaysUseRules(emptyRBSet())
+          .setBehaviorForRest(USE_RULES)
+          .build();
     }
 
     public static <T> SetInclusionExclusionInstructions<T> excludeTheseIncludeRest(RBSet<T> alwaysExclude) {
       RBPreconditions.checkArgument(
           !alwaysExclude.isEmpty(),
           "If there's no exclusion list, use the static constructor #includeEverything");
-      return new SetInclusionExclusionInstructions<T>(emptyRBSet(), alwaysExclude, emptyRBSet(), INCLUDE);
+      return SetInclusionExclusionInstructionsBuilder.<T>setInclusionExclusionInstructionsBuilder()
+          .alwaysInclude(emptyRBSet())
+          .alwaysExclude(alwaysExclude)
+          .alwaysUseRules(emptyRBSet())
+          .setBehaviorForRest(INCLUDE)
+          .build();
     }
 
     public static <T> SetInclusionExclusionInstructions<T> excludeTheseUseRulesForRest(RBSet<T> alwaysExclude) {
       RBPreconditions.checkArgument(
           !alwaysExclude.isEmpty(),
           "If there's no exclusion list, use the static constructor #useRulesForEverything");
-      return new SetInclusionExclusionInstructions<T>(emptyRBSet(), alwaysExclude, emptyRBSet(), USE_RULES);
+      return SetInclusionExclusionInstructionsBuilder.<T>setInclusionExclusionInstructionsBuilder()
+          .alwaysInclude(emptyRBSet())
+          .alwaysExclude(alwaysExclude)
+          .alwaysUseRules(emptyRBSet())
+          .setBehaviorForRest(USE_RULES)
+          .build();
     }
 
     public static <T> SetInclusionExclusionInstructions<T> includeTheseExcludeTheseUseRulesForRest(
@@ -135,9 +182,14 @@ public class SetInclusionExclusionPredicateEvaluator {
           "If the inclusion or exclusion lists are empty, use a different static constructor");
       RBPreconditions.checkArgument(
           noSharedItems(alwaysInclude, alwaysExclude),
-          "Some stocks are both in the alwaysInclude and the alwaysExclude lists; lists are %s and %s",
+          "Some items are both in the alwaysInclude and the alwaysExclude lists; lists are %s and %s",
           alwaysInclude, alwaysExclude);
-      return new SetInclusionExclusionInstructions<T>(alwaysInclude, alwaysExclude, emptyRBSet(), USE_RULES);
+      return SetInclusionExclusionInstructionsBuilder.<T>setInclusionExclusionInstructionsBuilder()
+          .alwaysInclude(alwaysInclude)
+          .alwaysExclude(alwaysExclude)
+          .alwaysUseRules(emptyRBSet())
+          .setBehaviorForRest(USE_RULES)
+          .build();
     }
 
     /** You should access this data class via a SetInclusionExclusionApplier; this is here for the test matcher. */
@@ -158,6 +210,61 @@ public class SetInclusionExclusionPredicateEvaluator {
     /** You should access this data class via a SetInclusionExclusionApplier; this is here for the test matcher. */
     public BehaviorForRest getBehaviorForRest() {
       return behaviorForRest;
+    }
+
+  }
+
+
+  public static class SetInclusionExclusionInstructionsBuilder<T>
+      implements RBBuilder<SetInclusionExclusionInstructions<T>> {
+
+    private RBSet<T> alwaysInclude;
+    private RBSet<T> alwaysExclude;
+    private RBSet<T> alwaysUseRules;
+    private BehaviorForRest behaviorForRest;
+
+    private SetInclusionExclusionInstructionsBuilder() {}
+
+    public static <T> SetInclusionExclusionInstructionsBuilder<T> setInclusionExclusionInstructionsBuilder() {
+      return new SetInclusionExclusionInstructionsBuilder<>();
+    }
+
+    public SetInclusionExclusionInstructionsBuilder<T> alwaysInclude(RBSet<T> alwaysInclude) {
+      this.alwaysInclude = checkNotAlreadySet(this.alwaysInclude, alwaysInclude);
+      return this;
+    }
+
+    public SetInclusionExclusionInstructionsBuilder<T> alwaysExclude(RBSet<T> alwaysExclude) {
+      this.alwaysExclude = checkNotAlreadySet(this.alwaysExclude, alwaysExclude);
+      return this;
+    }
+
+    public SetInclusionExclusionInstructionsBuilder<T> alwaysUseRules(RBSet<T> alwaysUseRules) {
+      this.alwaysUseRules = checkNotAlreadySet(this.alwaysUseRules, alwaysUseRules);
+      return this;
+    }
+
+    public SetInclusionExclusionInstructionsBuilder<T> setBehaviorForRest(BehaviorForRest behaviorForRest) {
+      this.behaviorForRest = checkNotAlreadySet(this.behaviorForRest, behaviorForRest);
+      return this;
+    }
+
+    @Override
+    public void sanityCheckContents() {
+      RBPreconditions.checkNotNull(alwaysInclude);
+      RBPreconditions.checkNotNull(alwaysExclude);
+      RBPreconditions.checkNotNull(alwaysUseRules);
+      RBPreconditions.checkNotNull(behaviorForRest);
+
+      RBPreconditions.checkArgument(
+          noSharedItems(alwaysInclude, alwaysExclude, alwaysUseRules),
+          "Same item is in multiple places: alwaysInclude= %s ; alwaysExclude= %s ; alwaysUseRules= %s",
+          alwaysInclude, alwaysExclude, alwaysUseRules);
+    }
+
+    @Override
+    public SetInclusionExclusionInstructions<T> buildWithoutPreconditions() {
+      return new SetInclusionExclusionInstructions<>(alwaysInclude, alwaysExclude, alwaysUseRules, behaviorForRest);
     }
 
   }
