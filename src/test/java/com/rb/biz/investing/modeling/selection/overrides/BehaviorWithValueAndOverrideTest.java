@@ -6,7 +6,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class BehaviorWithValueAndOverrideTest {
 
-  public static <T extends Comparable<T>> TypeSafeMatcher<BehaviorWithValueAndOverride<T>>
+  public static <T extends Comparable<? super T>> TypeSafeMatcher<BehaviorWithValueAndOverride<T>>
   behaviorWithValueAndOverrideMatcher(BehaviorWithValueAndOverride<T> expected) {
     // Normally, we would use a generalVisitorMatcher for these, but this is simpler, since all
     // subclasses of BehaviorWithValueAndOverride have no data fields.

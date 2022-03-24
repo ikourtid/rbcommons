@@ -98,7 +98,7 @@ public class OverridesTest extends RBTestMatcher<Overrides<String, Double>> {
     return overridesMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
   }
 
-  public static <K, V extends Comparable> TypeSafeMatcher<Overrides<K, V>> overridesMatcher(
+  public static <K, V extends Comparable<? super V>> TypeSafeMatcher<Overrides<K, V>> overridesMatcher(
       Overrides<K, V> expected, MatcherGenerator<V> valuesMatcherGenerator) {
     return makeMatcher(expected,
         match(v -> v.getOverridesMap(),                   f -> rbMapMatcher(f, valuesMatcherGenerator)),
