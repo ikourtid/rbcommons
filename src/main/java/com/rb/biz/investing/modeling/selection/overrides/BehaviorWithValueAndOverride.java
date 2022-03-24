@@ -51,7 +51,7 @@ public abstract class BehaviorWithValueAndOverride<T extends Comparable<? super 
 
     @Override
     public String toString() {
-      return "always_use_override_and_ignore_existing_value";
+      return "always_use_existing_value_and_ignore_override";
     }
 
   }
