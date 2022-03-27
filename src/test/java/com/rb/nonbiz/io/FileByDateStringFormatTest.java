@@ -15,6 +15,8 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 // Note that the class inside the generic is irrelevant for logic purposes; it's really there just for type safety.
@@ -44,6 +46,12 @@ public class FileByDateStringFormatTest extends RBTestMatcher<FileByDateStringFo
     assertEquals(
         fixedFilenameIgnoringDate("a/b/x").getFilePathForDate(LocalDate.of(2010, 12, 31)),
         "a/b/x");
+  }
+
+  @Test
+  public void test_allDaysUseTheSameFile() {
+    assertTrue(fixedFilenameIgnoringDate("x").allDaysUseTheSameFile());
+    assertFalse(fileByDateStringFormat("a/b/x.%s.protobuf").allDaysUseTheSameFile());
   }
 
   @Override
