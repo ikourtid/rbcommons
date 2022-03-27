@@ -71,6 +71,20 @@ public class FileByDateStringFormat<T> {
     });
   }
 
+  public boolean allDaysUseTheSameFile() {
+    return rawFormatOrFixedFilename.visit(new Visitor<String, String, Boolean>() {
+      @Override
+      public Boolean visitLeft(String rawFormat) {
+        return false;
+      }
+
+      @Override
+      public Boolean visitRight(String fixedFilename) {
+        return true;
+      }
+    });
+  }
+
   @Override
   public String toString() {
     return Strings.format("[FBDSF %s FBDSF]",
