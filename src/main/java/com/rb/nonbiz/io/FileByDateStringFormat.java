@@ -41,7 +41,7 @@ public class FileByDateStringFormat<T> {
 
   // Don't use this; this is here to test the matcher
   @VisibleForTesting
-  Either<String, String> getRawFormatOrFixedFilename() {
+  Either<String, String> getRawEither() {
     return rawFormatOrFixedFilename;
   }
 

@@ -70,7 +70,7 @@ public class FileByDateStringFormatTest extends RBTestMatcher<FileByDateStringFo
   public static <T> TypeSafeMatcher<FileByDateStringFormat<T>> fileByDateStringFormatMatcher(
       FileByDateStringFormat<T> expected) {
     return makeMatcher(expected,
-        match(v -> v.getRawFormatOrFixedFilename(), f -> eitherMatcher(f,
+        match(v -> v.getRawEither(), f -> eitherMatcher(f,
             f2 -> typeSafeEqualTo(f2),
             f3 -> typeSafeEqualTo(f3))));
   }
