@@ -29,25 +29,22 @@ public class SimpleCsvRowTest extends RBTestMatcher<SimpleCsvRow> {
   }
 
   public static List<SimpleCsvRow> makeSingletonRowListFromCsvLine(String onlyCsvLine) {
-    List<String> components = Arrays.asList(onlyCsvLine.split(","));
-    // We need this hackery because String#split doesn't seem to work if the trailing
-    // component is the empty string.
-    return singletonList(simpleCsvRow(onlyCsvLine.endsWith(",")
-        ? listConcatenation(components, singletonList(""))
-        : components));
+    return singletonList(convertSingle(onlyCsvLine));
   }
 
   public static List<SimpleCsvRow> makeRowListFromCsvLines(String first, String second, String ... rest) {
     return RBStreams.concatenateFirstSecondAndRest(first, second, rest)
-        .map(stringAsRow -> {
-          List<String> components = Arrays.asList(stringAsRow.split(","));
-          // We need this hackery because String#split doesn't seem to work if the trailing
-          // component is the empty string.
-          return simpleCsvRow(stringAsRow.endsWith(",")
-              ? listConcatenation(components, singletonList(""))
-              : components);
-        })
+        .map(stringAsRow -> convertSingle(stringAsRow))
         .collect(Collectors.toList());
+  }
+
+  private static SimpleCsvRow convertSingle(String csvRowAsString) {
+    List<String> components = Arrays.asList(csvRowAsString.split(","));
+    // We need this hackery because String#split doesn't seem to work if the trailing
+    // component is the empty string.
+    return simpleCsvRow(csvRowAsString.endsWith(",")
+        ? listConcatenation(components, singletonList(""))
+        : components);
   }
 
   @Test
