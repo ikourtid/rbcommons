@@ -1,5 +1,6 @@
 package com.rb.nonbiz.text.csv;
 
+import com.rb.nonbiz.collections.RBStreams;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -10,7 +11,6 @@ import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.collections.RBLists.listConcatenation;
-import static com.rb.nonbiz.collections.RBStreams.concatenateFirstAndRest;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -37,8 +37,8 @@ public class SimpleCsvRowTest extends RBTestMatcher<SimpleCsvRow> {
         : components));
   }
 
-  public static List<SimpleCsvRow> makeRowListFromCsvLines(String firstCsvLine, String ... restCsvLines) {
-    return concatenateFirstAndRest(firstCsvLine, restCsvLines)
+  public static List<SimpleCsvRow> makeRowListFromCsvLines(String first, String second, String ... rest) {
+    return RBStreams.concatenateFirstSecondAndRest(first, second, rest)
         .map(stringAsRow -> {
           List<String> components = Arrays.asList(stringAsRow.split(","));
           // We need this hackery because String#split doesn't seem to work if the trailing
