@@ -93,7 +93,7 @@ public class SimpleCsvParser {
           List<String> filteredHeaderRow = newArrayListWithExpectedSize(v.cardinality());
           for (int i = 0; i < v.size(); i++) {
             if (v.get(i)) {
-              filteredHeaderRow.add(originalHeaderRow.getColumnHeaderAt(i));
+              filteredHeaderRow.add(originalHeaderRow.getColumnHeader(i));
             }
           }
           return simpleCsvHeaderRow(simpleCsvRow(filteredHeaderRow));
@@ -106,7 +106,7 @@ public class SimpleCsvParser {
       CsvColumnInclusionFilter csvColumnInclusionFilter) {
     BitSet positionalInclusionFilter = new BitSet(headerRow.getNumColumns());
     for (int i = 0; i < headerRow.getNumColumns(); i++) {
-      String columnHeader = headerRow.getColumnHeaderAt(i);
+      String columnHeader = headerRow.getColumnHeader(i);
       positionalInclusionFilter.set(i, csvColumnInclusionFilter.getColumnsToInclude().contains(columnHeader));
     }
     return positionalInclusionFilter;
