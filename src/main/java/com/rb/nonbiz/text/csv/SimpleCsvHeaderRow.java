@@ -36,8 +36,16 @@ public class SimpleCsvHeaderRow {
     return arrayIndexMapping;
   }
 
+  public int getNumColumns() {
+    return simpleCsvRow.getCellsInRow().size();
+  }
+
   public int getColumnIndex(String columnHeader) {
     return arrayIndexMapping.getIndex(columnHeader);
+  }
+
+  public String getColumnHeaderAt(int index) {
+    return simpleCsvRow.getCell(index);
   }
 
   @Override

@@ -3,11 +3,14 @@ package com.rb.nonbiz.text.csv;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.junit.Test;
 
+import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.text.csv.SimpleCsvHeaderRow.simpleCsvHeaderRow;
+import static com.rb.nonbiz.text.csv.SimpleCsvRow.simpleCsvRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.simpleCsvRowMatcher;
 import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.singletonSimpleCsvRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.testSimpleCsvRow;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
 import org.hamcrest.TypeSafeMatcher;
@@ -17,11 +20,19 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class SimpleCsvHeaderRowTest extends RBTestMatcher<SimpleCsvHeaderRow> {
 
+  public static SimpleCsvHeaderRow singletonSimpleCsvHeaderRow(String onlyCell) {
+    return simpleCsvHeaderRow(singletonSimpleCsvRow(onlyCell));
+  }
+
+  public static SimpleCsvHeaderRow testSimpleCsvHeaderRow(String first, String second, String ... rest) {
+    return simpleCsvHeaderRow(testSimpleCsvRow(first, second, rest));
+  }
+
   @Test
   public void hasEmptyColumnHeader_throws() {
-    assertIllegalArgumentException( () -> simpleCsvHeaderRow(singletonSimpleCsvRow("")));
-    assertIllegalArgumentException( () -> simpleCsvHeaderRow(testSimpleCsvRow("", "c")));
-    assertIllegalArgumentException( () -> simpleCsvHeaderRow(testSimpleCsvRow("c", "")));
+    assertIllegalArgumentException( () -> singletonSimpleCsvHeaderRow(""));
+    assertIllegalArgumentException( () -> testSimpleCsvHeaderRow("", "c"));
+    assertIllegalArgumentException( () -> testSimpleCsvHeaderRow("c", ""));
   }
 
   @Override

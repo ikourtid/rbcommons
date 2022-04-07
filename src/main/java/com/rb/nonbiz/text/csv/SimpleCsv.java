@@ -21,10 +21,10 @@ public class SimpleCsv {
   }
 
   public static SimpleCsv simpleCsv(SimpleCsvHeaderRow headerRow, List<SimpleCsvRow> dataRows) {
-    int numColumns = headerRow.getCellsInRow().size();
+    int numColumns = headerRow.getNumColumns();
 
     for (int i = 0; i < dataRows.size(); i++) {
-      SimpleCsvHeaderRow row = dataRows.get(i);
+      SimpleCsvRow row = dataRows.get(i);
       RBSimilarityPreconditions.checkBothSame(
           row.getNumColumns(), numColumns,
           "Row # %s in CSV has %s instead of %s columns; headerRow= %s ; row was %s",
@@ -37,7 +37,7 @@ public class SimpleCsv {
     return new SimpleCsv(headerRow, dataRows, numColumns);
   }
 
-  public SimpleCsvRow getHeaderRow() {
+  public SimpleCsvHeaderRow getHeaderRow() {
     return headerRow;
   }
 
