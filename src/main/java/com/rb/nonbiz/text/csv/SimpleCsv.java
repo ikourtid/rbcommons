@@ -10,21 +10,21 @@ import java.util.stream.Collectors;
 
 public class SimpleCsv {
 
-  private final SimpleCsvRow headerRow;
+  private final SimpleCsvHeaderRow headerRow;
   private final List<SimpleCsvRow> dataRows;
   private final int numColumns;
 
-  private SimpleCsv(SimpleCsvRow headerRow, List<SimpleCsvRow> dataRows, int numColumns) {
+  private SimpleCsv(SimpleCsvHeaderRow headerRow, List<SimpleCsvRow> dataRows, int numColumns) {
     this.headerRow = headerRow;
     this.dataRows = dataRows;
     this.numColumns = numColumns;
   }
 
-  public static SimpleCsv simpleCsv(SimpleCsvRow headerRow, List<SimpleCsvRow> dataRows) {
+  public static SimpleCsv simpleCsv(SimpleCsvHeaderRow headerRow, List<SimpleCsvRow> dataRows) {
     int numColumns = headerRow.getCellsInRow().size();
 
     for (int i = 0; i < dataRows.size(); i++) {
-      SimpleCsvRow row = dataRows.get(i);
+      SimpleCsvHeaderRow row = dataRows.get(i);
       RBSimilarityPreconditions.checkBothSame(
           row.getNumColumns(), numColumns,
           "Row # %s in CSV has %s instead of %s columns; headerRow= %s ; row was %s",
