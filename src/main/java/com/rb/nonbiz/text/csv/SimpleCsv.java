@@ -10,18 +10,18 @@ import java.util.stream.Collectors;
 
 public class SimpleCsv {
 
-  private final SimpleCsvRow headerRow;
+  private final SimpleCsvHeaderRow headerRow;
   private final List<SimpleCsvRow> dataRows;
   private final int numColumns;
 
-  private SimpleCsv(SimpleCsvRow headerRow, List<SimpleCsvRow> dataRows, int numColumns) {
+  private SimpleCsv(SimpleCsvHeaderRow headerRow, List<SimpleCsvRow> dataRows, int numColumns) {
     this.headerRow = headerRow;
     this.dataRows = dataRows;
     this.numColumns = numColumns;
   }
 
-  public static SimpleCsv simpleCsv(SimpleCsvRow headerRow, List<SimpleCsvRow> dataRows) {
-    int numColumns = headerRow.getCellsInRow().size();
+  public static SimpleCsv simpleCsv(SimpleCsvHeaderRow headerRow, List<SimpleCsvRow> dataRows) {
+    int numColumns = headerRow.getNumColumns();
 
     for (int i = 0; i < dataRows.size(); i++) {
       SimpleCsvRow row = dataRows.get(i);
@@ -37,7 +37,7 @@ public class SimpleCsv {
     return new SimpleCsv(headerRow, dataRows, numColumns);
   }
 
-  public SimpleCsvRow getHeaderRow() {
+  public SimpleCsvHeaderRow getHeaderRow() {
     return headerRow;
   }
 
