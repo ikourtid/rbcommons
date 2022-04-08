@@ -39,6 +39,7 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
 
   private static final BigDecimal ONE_HUNDRED = BigDecimal.valueOf(100);
   private static final BigDecimal TEN_THOUSAND = BigDecimal.valueOf(10_000);
+  private static final BigDecimal BPS_TO_FRACTION = new BigDecimal("0.0001");
 
   protected UnitFraction(BigDecimal value) {
     super(value);
@@ -58,6 +59,10 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
 
   public static UnitFraction unitFractionInBps(double bps) {
     return unitFraction(bps / 10_000);
+  }
+
+  public static UnitFraction unitFractionInBps(BigDecimal bps) {
+    return unitFraction(bps.multiply(BPS_TO_FRACTION));
   }
 
   public static UnitFraction unitFraction(BigDecimal value, double doubleValue) {
