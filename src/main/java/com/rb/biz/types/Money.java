@@ -2,6 +2,7 @@ package com.rb.biz.types;
 
 import com.rb.biz.types.trading.BuyQuantity;
 import com.rb.biz.types.trading.NonNegativeQuantity;
+import com.rb.biz.types.trading.PositiveQuantity;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.UnitFraction;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
+import static com.rb.biz.types.Price.price;
 import static com.rb.biz.types.SignedMoney.signedMoney;
 import static com.rb.biz.types.trading.BuyQuantity.buyQuantity;
 import static com.rb.biz.types.trading.NonNegativeQuantity.nonNegativeQuantity;
@@ -241,6 +243,10 @@ public class Money extends PreciseValue<Money> {
 
   public NonNegativeQuantity divide(Price price) {
     return nonNegativeQuantity(asBigDecimal().divide(price.asBigDecimal(), DEFAULT_MATH_CONTEXT));
+  }
+
+  public Price divide(PositiveQuantity positiveQuantity) {
+    return price(asBigDecimal().divide(positiveQuantity.asBigDecimal(), DEFAULT_MATH_CONTEXT));
   }
 
   public Money divide(double denominator) {
