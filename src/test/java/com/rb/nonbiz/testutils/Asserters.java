@@ -7,6 +7,7 @@ import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.ImpreciseValue;
+import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.lang3.ArrayUtils;
@@ -320,6 +321,16 @@ public class Asserters {
               expected, i, actuals.get(i)),
           expected, actuals.get(i));
     }
+    return expected;
+  }
+
+  public static <P extends PreciseValue<? super P>> P preciseValueExplained(P expected, P actual) {
+    assertAlmostEquals(
+        Strings.format(
+            "You have a mistake in your calculations (hopefully not in the test itself) for value= %s", expected),
+        expected,
+        actual,
+        1e-8);
     return expected;
   }
 
