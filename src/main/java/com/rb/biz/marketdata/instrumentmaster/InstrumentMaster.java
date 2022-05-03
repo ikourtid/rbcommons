@@ -37,14 +37,16 @@ public interface InstrumentMaster {
   default Symbol getLatestValidSymbolOrBestGuess(InstrumentId instrumentId, LocalDate effectiveDate) {
     InstrumentIdGenerator instrumentIdGenerator = new InstrumentIdGenerator();
     instrumentIdGenerator.encodedIdGenerator = new EncodedIdGenerator();
-    return getLatestValidSymbol(instrumentId, effectiveDate).orElse(instrumentIdGenerator.getBestGuessSymbol(instrumentId));
+    return getLatestValidSymbol(instrumentId, effectiveDate)
+        .orElseGet( () -> instrumentIdGenerator.getBestGuessSymbol(instrumentId));
   }
 
   default Symbol getLatestValidSymbolOrAssetIdAsSymbol(AssetId assetId, LocalDate effectiveDate) {
     return assetId.visit(new AssetIdVisitor<Symbol>() {
       @Override
       public Symbol visitInstrumentId(InstrumentId instrumentId) {
-        return getLatestValidSymbol(instrumentId, effectiveDate).orElse(instrumentIdAsSymbol(instrumentId));
+        return getLatestValidSymbol(instrumentId, effectiveDate)
+            .orElseGet( () -> instrumentIdAsSymbol(instrumentId));
       }
 
       @Override
