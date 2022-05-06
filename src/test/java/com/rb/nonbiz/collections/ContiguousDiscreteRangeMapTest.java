@@ -19,6 +19,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatch
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_DOUBLE;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -29,6 +30,15 @@ public class ContiguousDiscreteRangeMapTest extends RBTestMatcher<ContiguousDisc
   private final LocalDate dayA = LocalDate.of(1974, 4, 4);
   private final LocalDate dayB = LocalDate.of(1975, 5, 5);
   private final LocalDate dayC = LocalDate.of(1976, 6, 6);
+
+  @Test
+  public void emptyMap_throws() {
+    // The exception is thrown from 'deeper inside', namely the NonContiguousRangeMap constructor,
+    // but let's test this here as well.
+    assertIllegalArgumentException( () ->
+        ContiguousDiscreteRangeMap.<LocalDate, Double>
+            contiguousDiscreteRangeMap(emptyList(), emptyList(), date -> date.plusDays(1)));
+  }
 
   @Test
   public void mustBeContiguous_otherwiseThrows() {
