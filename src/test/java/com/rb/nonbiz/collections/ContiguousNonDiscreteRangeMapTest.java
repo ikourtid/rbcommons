@@ -26,7 +26,9 @@ public class ContiguousNonDiscreteRangeMapTest extends RBTestMatcher<ContiguousN
   @Test
   public void hasNoRangesOrItems_throws() {
     assertIllegalArgumentException( () ->
-        contiguousNonDiscreteRangeMapWithNoEnd(emptyList(), emptyList()));
+        // The specific classes don't matter here, but we need something, otherwise there's a compiler error.
+        ContiguousNonDiscreteRangeMap.<Double, String>
+            contiguousNonDiscreteRangeMapWithNoEnd(emptyList(), emptyList()));
     assertIllegalArgumentException( () ->
         contiguousNonDiscreteRangeMapWithEnd(emptyList(), emptyList(), DUMMY_DOUBLE));
   }
@@ -158,7 +160,7 @@ public class ContiguousNonDiscreteRangeMapTest extends RBTestMatcher<ContiguousN
    * There's no general concept of 'almost equals' for a range map, so matching will rely on equality
    * of the ranges in the underlying RangeMap keys.
    */
-  public static <K extends Comparable, V> TypeSafeMatcher<ContiguousNonDiscreteRangeMap<K, V>> contiguousNonDiscreteRangeMapMatcher(
+  public static <K extends Comparable<? super K>, V> TypeSafeMatcher<ContiguousNonDiscreteRangeMap<K, V>> contiguousNonDiscreteRangeMapMatcher(
       ContiguousNonDiscreteRangeMap<K, V> expected, MatcherGenerator<V> valueMatcherGenerator) {
     return makeMatcher(expected, actual ->
         rangeMapMatcher(expected.getRawRangeMap(), valueMatcherGenerator).matches(actual.getRawRangeMap()));
