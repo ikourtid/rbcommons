@@ -61,7 +61,7 @@ public class ContiguousNonDiscreteRangeMap<K extends Comparable<? super K>, V> {
    * Represents e.g.
    * [1.1, +inf) {@code ->} "a"
    */
-  public static <K extends Comparable<? super K>, V> ContiguousNonDiscreteRangeMap<K, V> singletonNonDiscreteContiguousRangeMapWithNoEnd(
+  public static <K extends Comparable<? super K>, V> ContiguousNonDiscreteRangeMap<K, V> singletonContiguousNonDiscreteRangeMapWithNoEnd(
       K rangeStartingPoint, V value) {
     return contiguousNonDiscreteRangeMapWithNoEnd(
         singletonList(rangeStartingPoint),
@@ -97,8 +97,7 @@ public class ContiguousNonDiscreteRangeMap<K extends Comparable<? super K>, V> {
    * Represents e.g.
    * [1.1, 3.3) {@code ->} "a"
    */
-  // FIXME IAK rename this
-  public static <K extends Comparable<? super K>, V> ContiguousNonDiscreteRangeMap<K, V> singletonNonDiscreteContiguousRangeMapWithEnd(
+  public static <K extends Comparable<? super K>, V> ContiguousNonDiscreteRangeMap<K, V> singletonContiguousNonDiscreteRangeMapWithEnd(
       K rangeStartingPoint,
       V value,
       K firstInvalidPointAfterRange) {
