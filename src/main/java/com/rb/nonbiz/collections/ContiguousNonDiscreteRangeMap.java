@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
@@ -96,6 +97,7 @@ public class ContiguousNonDiscreteRangeMap<K extends Comparable<? super K>, V> {
    * Represents e.g.
    * [1.1, 3.3) {@code ->} "a"
    */
+  // FIXME IAK rename this
   public static <K extends Comparable<? super K>, V> ContiguousNonDiscreteRangeMap<K, V> singletonNonDiscreteContiguousRangeMapWithEnd(
       K rangeStartingPoint,
       V value,
@@ -134,6 +136,17 @@ public class ContiguousNonDiscreteRangeMap<K extends Comparable<? super K>, V> {
 
   public RangeMap<K, V> getRawRangeMap() {
     return rawRangeMap;
+  }
+
+  public boolean hasEnd() {
+    return Iterables.getLast(rawRangeMap.asMapOfRanges().keySet()).hasUpperBound();
+  }
+
+  public Optional<K> getFirstInvalidPointAfterRange() {
+    Range<K> lastRange = Iterables.getLast(rawRangeMap.asMapOfRanges().keySet());
+    return lastRange.hasUpperBound()
+        ? Optional.of(lastRange.upperEndpoint())
+        : Optional.empty();
   }
 
   @Override

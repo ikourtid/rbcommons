@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
+import com.rb.nonbiz.testmatchers.RBValueMatchers;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -10,13 +11,17 @@ import static com.rb.nonbiz.collections.ContiguousNonDiscreteRangeMap.contiguous
 import static com.rb.nonbiz.collections.ContiguousNonDiscreteRangeMap.contiguousNonDiscreteRangeMapWithNoEnd;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rangeMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_DOUBLE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This concrete test class is not generic, but the publicly exposed static matcher is.
@@ -121,6 +126,37 @@ public class ContiguousNonDiscreteRangeMapTest extends RBTestMatcher<ContiguousN
     assertOptionalEmpty(map.getOptional(3.5));
     assertOptionalEmpty(map.getOptional(3.5001));
     assertOptionalEmpty(map.getOptional(999.0));
+  }
+
+  @Test
+  public void test_hasEnd() {
+    assertFalse(
+        contiguousNonDiscreteRangeMapWithNoEnd(
+            singletonList(0.0),
+            singletonList("[0,inf)"))
+            .hasEnd());
+    assertTrue(
+        contiguousNonDiscreteRangeMapWithEnd(
+            singletonList(0.0),
+            singletonList("[0,7)"),
+            7.0)
+            .hasEnd());
+  }
+
+  @Test
+  public void test_getFirstInvalidPointAfterRange() {
+    assertOptionalEmpty(
+        contiguousNonDiscreteRangeMapWithNoEnd(
+            singletonList(0.0),
+            singletonList("[0,inf)"))
+            .getFirstInvalidPointAfterRange());
+    assertOptionalNonEmpty(
+        contiguousNonDiscreteRangeMapWithEnd(
+            singletonList(0.0),
+            singletonList("[0,7)"),
+            7.0)
+            .getFirstInvalidPointAfterRange(),
+        doubleAlmostEqualsMatcher(7.0, 1e-8));
   }
 
   @Override
