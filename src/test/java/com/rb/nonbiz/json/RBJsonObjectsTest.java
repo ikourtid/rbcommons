@@ -119,9 +119,9 @@ public class RBJsonObjectsTest {
             "max", jsonDouble(-0.789))));  // 'max' is less than 'min'
 
     // range must be closed
-    assertIllegalArgumentException(() -> closedRangeToJsonObject(Range.greaterThan(UNIT_FRACTION_0), v -> jsonDouble(v)));
-    assertIllegalArgumentException(() -> closedRangeToJsonObject(Range.lessThan(UNIT_FRACTION_0), v -> jsonDouble(v)));
-    assertIllegalArgumentException(() -> closedRangeToJsonObject(
+    assertIllegalArgumentException( () -> closedRangeToJsonObject(Range.greaterThan(UNIT_FRACTION_0), v -> jsonDouble(v)));
+    assertIllegalArgumentException( () -> closedRangeToJsonObject(Range.lessThan(UNIT_FRACTION_0), v -> jsonDouble(v)));
+    assertIllegalArgumentException( () -> closedRangeToJsonObject(
         Range.open(UNIT_FRACTION_0, UNIT_FRACTION_1),
         v -> jsonDouble(v)));
   }
@@ -160,7 +160,7 @@ public class RBJsonObjectsTest {
         Range.closed(UNIT_FRACTION_0, UNIT_FRACTION_1));
 
     // it is possible for the JSON object to specify an invalid range:
-    assertIllegalArgumentException(() -> RBJsonObjects.<UnitFraction>jsonObjectToRange(
+    assertIllegalArgumentException( () -> RBJsonObjects.<UnitFraction>jsonObjectToRange(
         jsonObject(
             "min", jsonDouble(1.0),
             "max", jsonDouble(0.0)),   // invalid: max is less than min
@@ -168,7 +168,7 @@ public class RBJsonObjectsTest {
 
     // a typo in an optional JSON property (as opposed to simply omitting it)
     // will cause the conversion to fail:
-    assertIllegalArgumentException(() -> RBJsonObjects.<UnitFraction>jsonObjectToRange(
+    assertIllegalArgumentException( () -> RBJsonObjects.<UnitFraction>jsonObjectToRange(
         jsonObject(
             "mni", jsonDouble(0.5),     // TYPO: "min" -> "mni"
             "max", jsonDouble(1.0)),
@@ -245,7 +245,7 @@ public class RBJsonObjectsTest {
     RBMap<InstrumentId, Money> map = rbMapOf(
         instrumentId(1), money(1.1),
         instrumentId(2), money(2.2));
-    assertIllegalArgumentException(() ->
+    assertIllegalArgumentException( () ->
         rbMapToJsonObject(map, v -> "fixed_value", v -> jsonString(v.toString())));
   }
 
@@ -273,7 +273,7 @@ public class RBJsonObjectsTest {
     RBMap<InstrumentId, Money> map = rbMapOf(
         instrumentId(1), money(1.1),
         instrumentId(2), money(2.2));
-    assertIllegalArgumentException(() ->
+    assertIllegalArgumentException( () ->
         rbSetToJsonObject(
             rbSetOf(
                 "ZZcde",
@@ -439,7 +439,7 @@ public class RBJsonObjectsTest {
 
   @Test
   public void testJsonObjectToRBSet_rbSetValuesNotUnique_throws() {
-    assertIllegalArgumentException(() -> jsonObjectToRBSet(
+    assertIllegalArgumentException( () -> jsonObjectToRBSet(
         jsonObject(
             "abc", jsonString("123"),
             "def", jsonString("456")),
@@ -580,12 +580,12 @@ public class RBJsonObjectsTest {
     ifHasDoublePropertyElse(jsonObject, "a", v -> pointer.set(v * 100), () -> pointer.set(7.7));
     assertEquals(doubleExplained(110, 1.1 * 100), pointer.getOrThrow(), 1e-8);
 
-    assertIllegalArgumentException(() -> ifHasDoublePropertyElse(
+    assertIllegalArgumentException( () -> ifHasDoublePropertyElse(
         jsonObject,
         "notANumber",
         v -> pointer.set(DUMMY_DOUBLE),
         () -> pointer.set(DUMMY_DOUBLE)));
-    assertIllegalArgumentException(() -> ifHasDoublePropertyElse(
+    assertIllegalArgumentException( () -> ifHasDoublePropertyElse(
         jsonObject,
         "subObject",
         v -> pointer.set(DUMMY_DOUBLE),
