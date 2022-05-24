@@ -60,7 +60,9 @@ public class IidBiMap<V> implements PrintsInstruments {
   @Override
   public String toString(InstrumentMaster instrumentMaster, LocalDate date) {
     // No point in printing the reverse order, because there's no new information there.
-    return Strings.format("[IBM %s IBM]", itemFromInstrumentId.toString(instrumentMaster, date));
+    return isEmpty() ?
+        "[IBM]"
+        : Strings.format("[IBM %s IBM]", itemFromInstrumentId.toString(instrumentMaster, date));
   }
 
 }
