@@ -60,6 +60,11 @@ public class OverridesApplier {
       }
 
       @Override
+      public V visitAlwaysUseExistingValueAndIgnoreOverride() {
+        return existing;
+      }
+
+      @Override
       public V visitOnlyUseOverrideToFurtherReduceExistingValue() {
         return existing.compareTo(override) < 0 ? existing : override;
       }

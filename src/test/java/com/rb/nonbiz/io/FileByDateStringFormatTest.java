@@ -8,10 +8,15 @@ import org.junit.Test;
 import java.time.LocalDate;
 
 import static com.rb.nonbiz.io.FileByDateStringFormat.fileByDateStringFormat;
-import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
+import static com.rb.nonbiz.io.FileByDateStringFormat.fixedFilenameIgnoringDate;
+import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.RBEitherMatchers.eitherMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 // Note that the class inside the generic is irrelevant for logic purposes; it's really there just for type safety.
@@ -19,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 public class FileByDateStringFormatTest extends RBTestMatcher<FileByDateStringFormat<RBVoid>> {
 
   @Test
-  public void mustHaveExactlyOnePercentS() {
+  public void hasDateFormatAndIsNotFixedFileName_mustHaveExactlyOnePercentS() {
     assertIllegalArgumentException( () -> fileByDateStringFormat(""));
     assertIllegalArgumentException( () -> fileByDateStringFormat("abc"));
     FileByDateStringFormat<Object> doesNotThrow = fileByDateStringFormat("%s");
@@ -38,11 +43,20 @@ public class FileByDateStringFormatTest extends RBTestMatcher<FileByDateStringFo
     assertEquals(
         fileByDateStringFormat("a/b/x.%s.protobuf").getFilePathForDate(LocalDate.of(2010, 12, 31)),
         "a/b/x.2010-12-31.protobuf");
+    assertEquals(
+        fixedFilenameIgnoringDate("a/b/x").getFilePathForDate(LocalDate.of(2010, 12, 31)),
+        "a/b/x");
+  }
+
+  @Test
+  public void test_allDaysUseTheSameFile() {
+    assertTrue(fixedFilenameIgnoringDate("x").allDaysUseTheSameFile());
+    assertFalse(fileByDateStringFormat("a/b/x.%s.protobuf").allDaysUseTheSameFile());
   }
 
   @Override
   public FileByDateStringFormat<RBVoid> makeTrivialObject() {
-    return fileByDateStringFormat("%s");
+    return fixedFilenameIgnoringDate("x");
   }
 
   @Override
@@ -64,7 +78,9 @@ public class FileByDateStringFormatTest extends RBTestMatcher<FileByDateStringFo
   public static <T> TypeSafeMatcher<FileByDateStringFormat<T>> fileByDateStringFormatMatcher(
       FileByDateStringFormat<T> expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getRawFormat()));
+        match(v -> v.getRawEither(), f -> eitherMatcher(f,
+            f2 -> typeSafeEqualTo(f2),
+            f3 -> typeSafeEqualTo(f3))));
   }
 
 }

@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeMap;
 import com.google.common.collect.TreeRangeMap;
@@ -24,7 +25,11 @@ import static java.util.Collections.singletonList;
  *
  * A better word for this is 'continuous', but ContiguousContinuousRangeMap sounds very confusing.
  */
-public class ContiguousNonDiscreteRangeMap<K extends Comparable, V> {
+// RangeMap is officially marked @Beta / unstable, but it sounds like this is an oversight. So it's safe to use.
+// https://github.com/google/guava/issues/3376
+// However, we'll add this to prevent warnings / 'yellowness'.
+@SuppressWarnings("UnstableApiUsage")
+public class ContiguousNonDiscreteRangeMap<K extends Comparable<? super K>, V> {
 
   private final RangeMap<K, V> rawRangeMap;
 
@@ -37,7 +42,7 @@ public class ContiguousNonDiscreteRangeMap<K extends Comparable, V> {
    * [1.1, 3.3) {@code ->} "a"
    * [3.3, +inf) {@code ->} "b"
    */
-  public static <K extends Comparable, V> ContiguousNonDiscreteRangeMap<K, V> contiguousNonDiscreteRangeMapWithNoEnd(
+  public static <K extends Comparable<? super K>, V> ContiguousNonDiscreteRangeMap<K, V> contiguousNonDiscreteRangeMapWithNoEnd(
       List<K> rangeStartingPoints,
       List<V> values) {
     sanityCheckCommon(rangeStartingPoints, values);
@@ -56,7 +61,7 @@ public class ContiguousNonDiscreteRangeMap<K extends Comparable, V> {
    * Represents e.g.
    * [1.1, +inf) {@code ->} "a"
    */
-  public static <K extends Comparable, V> ContiguousNonDiscreteRangeMap<K, V> singletonNonDiscreteContiguousRangeMapWithNoEnd(
+  public static <K extends Comparable<? super K>, V> ContiguousNonDiscreteRangeMap<K, V> singletonContiguousNonDiscreteRangeMapWithNoEnd(
       K rangeStartingPoint, V value) {
     return contiguousNonDiscreteRangeMapWithNoEnd(
         singletonList(rangeStartingPoint),
@@ -68,7 +73,7 @@ public class ContiguousNonDiscreteRangeMap<K extends Comparable, V> {
    * [1.1, 3.3) {@code ->} "a"
    * [3.3, 7.7) {@code ->} "b"
    */
-  public static <K extends Comparable, V> ContiguousNonDiscreteRangeMap<K, V> contiguousNonDiscreteRangeMapWithEnd(
+  public static <K extends Comparable<? super K>, V> ContiguousNonDiscreteRangeMap<K, V> contiguousNonDiscreteRangeMapWithEnd(
       List<K> rangeStartingPoints,
       List<V> values,
       K firstInvalidPointAfterRanges) {
@@ -92,7 +97,7 @@ public class ContiguousNonDiscreteRangeMap<K extends Comparable, V> {
    * Represents e.g.
    * [1.1, 3.3) {@code ->} "a"
    */
-  public static <K extends Comparable, V> ContiguousNonDiscreteRangeMap<K, V> singletonNonDiscreteContiguousRangeMapWithEnd(
+  public static <K extends Comparable<? super K>, V> ContiguousNonDiscreteRangeMap<K, V> singletonContiguousNonDiscreteRangeMapWithEnd(
       K rangeStartingPoint,
       V value,
       K firstInvalidPointAfterRange) {
@@ -102,7 +107,7 @@ public class ContiguousNonDiscreteRangeMap<K extends Comparable, V> {
         firstInvalidPointAfterRange);
   }
 
-  private static <K extends Comparable, V> void sanityCheckCommon(List<K> rangeStartingPoints, List<V> values) {
+  private static <K extends Comparable<? super K>, V> void sanityCheckCommon(List<K> rangeStartingPoints, List<V> values) {
     RBPreconditions.checkArgument(
         rangeStartingPoints.size() == values.size(),
         "You have %s ranges but %s items",
@@ -130,6 +135,17 @@ public class ContiguousNonDiscreteRangeMap<K extends Comparable, V> {
 
   public RangeMap<K, V> getRawRangeMap() {
     return rawRangeMap;
+  }
+
+  public boolean hasEnd() {
+    return Iterables.getLast(rawRangeMap.asMapOfRanges().keySet()).hasUpperBound();
+  }
+
+  public Optional<K> getFirstInvalidPointAfterRange() {
+    Range<K> lastRange = Iterables.getLast(rawRangeMap.asMapOfRanges().keySet());
+    return lastRange.hasUpperBound()
+        ? Optional.of(lastRange.upperEndpoint())
+        : Optional.empty();
   }
 
   @Override

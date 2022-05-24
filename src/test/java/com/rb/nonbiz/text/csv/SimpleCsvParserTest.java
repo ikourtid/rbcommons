@@ -17,7 +17,11 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.text.csv.CsvColumnInclusionFilterTest.csvColumnInclusionFilter;
 import static com.rb.nonbiz.text.csv.CsvColumnInclusionFilterTest.singletonCsvColumnInclusionFilter;
 import static com.rb.nonbiz.text.csv.SimpleCsv.simpleCsv;
+import static com.rb.nonbiz.text.csv.SimpleCsvHeaderRowTest.singletonSimpleCsvHeaderRow;
+import static com.rb.nonbiz.text.csv.SimpleCsvHeaderRowTest.testSimpleCsvHeaderRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvRow.simpleCsvRow;
+import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.singletonSimpleCsvRow;
+import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.testSimpleCsvRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvTest.simpleCsvMatcher;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,11 +44,11 @@ public class SimpleCsvParserTest extends RBCommonsIntegrationTest<SimpleCsvParse
         makeRealObject().parseSimpleCsv("A,B\na1,b1\na2,b2\na3,b3"),
         simpleCsvMatcher(
             simpleCsv(
-                simpleCsvRow(ImmutableList.of("A", "B")),
+                testSimpleCsvHeaderRow("A", "B"),
                 ImmutableList.of(
-                    simpleCsvRow(ImmutableList.of("a1", "b1")),
-                    simpleCsvRow(ImmutableList.of("a2", "b2")),
-                    simpleCsvRow(ImmutableList.of("a3", "b3"))))));
+                    testSimpleCsvRow("a1", "b1"),
+                    testSimpleCsvRow("a2", "b2"),
+                    testSimpleCsvRow("a3", "b3")))));
   }
 
   @Test
@@ -54,11 +58,11 @@ public class SimpleCsvParserTest extends RBCommonsIntegrationTest<SimpleCsvParse
         nonEmptyOptionalMatcher(
             simpleCsvMatcher(
                 simpleCsv(
-                    simpleCsvRow(singletonList("A")),
+                    singletonSimpleCsvHeaderRow("A"),
                     ImmutableList.of(
-                        simpleCsvRow(singletonList("a1")),
-                        simpleCsvRow(singletonList("a2")),
-                        simpleCsvRow(singletonList("a3")))))));
+                        singletonSimpleCsvRow("a1"),
+                        singletonSimpleCsvRow("a2"),
+                        singletonSimpleCsvRow("a3"))))));
     asserter.accept(singletonCsvColumnInclusionFilter("A"));
     asserter.accept(csvColumnInclusionFilter("A", "NON_EXISTENT_COLUMN"));
     asserter.accept(csvColumnInclusionFilter("NON_EXISTENT_COLUMN", "A"));
@@ -71,11 +75,11 @@ public class SimpleCsvParserTest extends RBCommonsIntegrationTest<SimpleCsvParse
         nonEmptyOptionalMatcher(
             simpleCsvMatcher(
                 simpleCsv(
-                    simpleCsvRow(singletonList("B")),
+                    singletonSimpleCsvHeaderRow("B"),
                     ImmutableList.of(
-                        simpleCsvRow(singletonList("b1")),
-                        simpleCsvRow(singletonList("b2")),
-                        simpleCsvRow(singletonList("b3")))))));
+                        singletonSimpleCsvRow("b1"),
+                        singletonSimpleCsvRow("b2"),
+                        singletonSimpleCsvRow("b3"))))));
     asserter.accept(singletonCsvColumnInclusionFilter("B"));
     asserter.accept(csvColumnInclusionFilter("B", "NON_EXISTENT_COLUMN"));
     asserter.accept(csvColumnInclusionFilter("NON_EXISTENT_COLUMN", "B"));
@@ -93,21 +97,21 @@ public class SimpleCsvParserTest extends RBCommonsIntegrationTest<SimpleCsvParse
         nonEmptyOptionalMatcher(
             simpleCsvMatcher(
                 simpleCsv(
-                    simpleCsvRow(ImmutableList.of("A", "B")),
+                    testSimpleCsvHeaderRow("A", "B"),
                     ImmutableList.of(
-                        simpleCsvRow(ImmutableList.of("a1", "b1")),
-                        simpleCsvRow(ImmutableList.of("a2", "b2")),
-                        simpleCsvRow(ImmutableList.of("a3", "b3")))))));
+                        testSimpleCsvRow("a1", "b1"),
+                        testSimpleCsvRow("a2", "b2"),
+                        testSimpleCsvRow("a3", "b3"))))));
     assertThat(
         maker.apply(wellFormedCsv, singletonCsvColumnInclusionFilter("A")),
         nonEmptyOptionalMatcher(
             simpleCsvMatcher(
                 simpleCsv(
-                    simpleCsvRow(singletonList("A")),
+                    singletonSimpleCsvHeaderRow("A"),
                     ImmutableList.of(
-                        simpleCsvRow(singletonList("a1")),
-                        simpleCsvRow(singletonList("a2")),
-                        simpleCsvRow(singletonList("a3")))))));
+                        singletonSimpleCsvRow("a1"),
+                        singletonSimpleCsvRow("a2"),
+                        singletonSimpleCsvRow("a3"))))));
 
     rbSetOf(
         singletonCsvColumnInclusionFilter("A"),

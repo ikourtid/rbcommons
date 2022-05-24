@@ -10,7 +10,9 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Optional;
 
+import static com.rb.biz.investing.modeling.selection.overrides.BehaviorWithValueAndOverride.AlwaysUseExistingValueAndIgnoreOverride.alwaysUseExistingValueAndIgnoreOverride;
 import static com.rb.biz.investing.modeling.selection.overrides.BehaviorWithValueAndOverride.AlwaysUseOverrideAndIgnoreExistingValue.alwaysUseOverrideAndIgnoreExistingValue;
+import static com.rb.biz.investing.modeling.selection.overrides.BehaviorWithValueAndOverride.OnlyUseOverrideToFurtherReduceExistingValue.onlyUseOverrideToFurtherReduceExistingValue;
 import static com.rb.biz.investing.modeling.selection.overrides.BehaviorWithValueButNoOverride.UseExistingValueWhenOverrideMissing.useExistingValueWhenOverrideMissing;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.text.Strings.formatOptional;
@@ -36,7 +38,7 @@ import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
  * {@code AllComparableBacktestSettings} that you always want to exclude stock XYZ, don't set this
  * class to say 'always make XYZ sellable'.
  */
-public class Overrides<K, V extends Comparable> {
+public class Overrides<K, V extends Comparable<? super V>> {
 
   private final RBMap<K, V> overridesMap;
   private final BehaviorWithValueAndOverride<V> behaviorWithValueAndOverride;
@@ -54,13 +56,23 @@ public class Overrides<K, V extends Comparable> {
     this.whenNoValueAndNoOverride = whenNoValueAndNoOverride;
   }
 
-  public static <K, V extends Comparable> Overrides<K, V> noOverrides() {
+  public static <K, V extends Comparable<? super V>> Overrides<K, V> noOverrides() {
     return OverridesBuilder.<K, V>overridesBuilder()
         .setOverridesMap(emptyRBMap())
         // This is irrelevant in the case where there are no overrides to begin with
         .setBehaviorWithValueAndOverride(alwaysUseOverrideAndIgnoreExistingValue())
         .setBehaviorWithValueButNoOverride(useExistingValueWhenOverrideMissing())
         .throwWhenNoValueAndNoOverride()
+        .build();
+  }
+
+  public static <K, V extends Comparable<? super V>> Overrides<K, V>
+  useGlobalOverrideOnlyIfValueMissing(V defaultValue) {
+    return OverridesBuilder.<K, V>overridesBuilder()
+        .setOverridesMap(emptyRBMap())
+        .setBehaviorWithValueAndOverride(alwaysUseExistingValueAndIgnoreOverride())
+        .setBehaviorWithValueButNoOverride(useExistingValueWhenOverrideMissing()) // vs. e.g. UseFixedValueWhenOverrideMissing
+        .useThisWhenNoValueAndNoOverride(defaultValue)
         .build();
   }
 
@@ -121,7 +133,7 @@ public class Overrides<K, V extends Comparable> {
   }
 
 
-  public static class OverridesBuilder<K, V extends Comparable> implements RBBuilder<Overrides<K, V>> {
+  public static class OverridesBuilder<K, V extends Comparable<? super V>> implements RBBuilder<Overrides<K, V>> {
 
     private RBMap<K, V> overridesMap;
     private BehaviorWithValueAndOverride<V> behaviorWithValueAndOverride;
@@ -129,7 +141,7 @@ public class Overrides<K, V extends Comparable> {
     private Optional<V> whenNoValueAndNoOverride;
 
 
-    public static <K, V extends Comparable> OverridesBuilder<K, V> overridesBuilder() {
+    public static <K, V extends Comparable<? super V>> OverridesBuilder<K, V> overridesBuilder() {
       return new OverridesBuilder<>();
     }
 

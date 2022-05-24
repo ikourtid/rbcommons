@@ -14,6 +14,7 @@ import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 import static com.rb.nonbiz.text.csv.SimpleCsv.simpleCsv;
+import static com.rb.nonbiz.text.csv.SimpleCsvHeaderRow.simpleCsvHeaderRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvRow.simpleCsvRow;
 
 /**
@@ -55,7 +56,8 @@ public class SimpleCsvParser {
     // OptionalInt.empty() means we have no expectation for a # of cells (which makes sense, because we haven't
     // started reading the .csv yet).
     // Optional.empty() means we want to load all the column headers starting out, without filtering...
-    SimpleCsvRow headerRow = simpleCsvRowParser.parseLine(lines[0], Optional.empty(), OptionalInt.empty());
+    SimpleCsvHeaderRow headerRow = simpleCsvHeaderRow(
+        simpleCsvRowParser.parseLine(lines[0], Optional.empty(), OptionalInt.empty()));
 
     // ... up until this point, where we determine which subset of the columns we will keep.
     // If present, positionalInclusionFilter will tell us which columns to include (e.g. the 0th, 3rd, and 5th).
@@ -83,27 +85,28 @@ public class SimpleCsvParser {
             .collect(Collectors.toList())));
   }
 
-  private SimpleCsvRow filterHeaderRow(SimpleCsvRow originalHeaderRow, Optional<BitSet> positionalInclusionFilter) {
+  private SimpleCsvHeaderRow filterHeaderRow(
+      SimpleCsvHeaderRow originalHeaderRow, Optional<BitSet> positionalInclusionFilter) {
     return transformOptional(
         positionalInclusionFilter,
         v -> {
           List<String> filteredHeaderRow = newArrayListWithExpectedSize(v.cardinality());
           for (int i = 0; i < v.size(); i++) {
             if (v.get(i)) {
-              filteredHeaderRow.add(originalHeaderRow.getCell(i));
+              filteredHeaderRow.add(originalHeaderRow.getColumnHeader(i));
             }
           }
-          return simpleCsvRow(filteredHeaderRow);
+          return simpleCsvHeaderRow(simpleCsvRow(filteredHeaderRow));
         })
         .orElse(originalHeaderRow); // no filtering
   }
 
   private BitSet calculatePositionalInclusionFilter(
-      SimpleCsvRow headerRow,
+      SimpleCsvHeaderRow headerRow,
       CsvColumnInclusionFilter csvColumnInclusionFilter) {
     BitSet positionalInclusionFilter = new BitSet(headerRow.getNumColumns());
     for (int i = 0; i < headerRow.getNumColumns(); i++) {
-      String columnHeader = headerRow.getCellsInRow().get(i);
+      String columnHeader = headerRow.getColumnHeader(i);
       positionalInclusionFilter.set(i, csvColumnInclusionFilter.getColumnsToInclude().contains(columnHeader));
     }
     return positionalInclusionFilter;
