@@ -226,7 +226,7 @@ public class IidMapMergers {
    *
    * In the event a key appears in more than one map, apply a binary operator (e.g. '+') to merge
    * the values. This doesn't *assume* that the operator is commutative, but it probably should be.
-   * Otherwise, your result will depend in the order you pass the maps in the stream, which will be confusing.
+   * Otherwise, your result will depend on the order you pass the maps in the stream, which will be confusing.
    */
   public static <V> IidMap<V> mergeIidMapsByValue(BinaryOperator<V> mergeFunction, Stream<IidMap<V>> mapsStream) {
     MutableIidMap<V> mutableMap = newMutableIidMap();

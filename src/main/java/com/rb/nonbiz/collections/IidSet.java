@@ -119,13 +119,17 @@ public class IidSet extends HasLongSet<InstrumentId> implements PrintsInstrument
 
   @Override
   public String toString() {
-    return Strings.format("[IIS %s IIS]",
+    return isEmpty()
+        ? "[IIS]"
+        : Strings.format("[IIS %s IIS]",
         Joiner.on(" ; ").join(sortedStream().iterator()));
   }
 
   @Override
   public String toString(InstrumentMaster instrumentMaster, LocalDate date) {
-    return Strings.format("[IIS %s IIS]", toSimpleString(instrumentMaster, date));
+    return isEmpty()
+        ? "[IIS]"
+        : Strings.format("[IIS %s IIS]", toSimpleString(instrumentMaster, date));
   }
 
   public String toSimpleString(InstrumentMaster instrumentMaster, LocalDate date) {

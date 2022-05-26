@@ -15,6 +15,7 @@ import static com.rb.biz.investing.modeling.selection.overrides.BehaviorWithValu
 import static com.rb.biz.investing.modeling.selection.overrides.BehaviorWithValueAndOverride.OnlyUseOverrideToFurtherReduceExistingValue.onlyUseOverrideToFurtherReduceExistingValue;
 import static com.rb.biz.investing.modeling.selection.overrides.BehaviorWithValueButNoOverride.UseExistingValueWhenOverrideMissing.useExistingValueWhenOverrideMissing;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
+import static com.rb.nonbiz.text.Strings.formatOptional;
 import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 
 /**
@@ -127,7 +128,8 @@ public class Overrides<K, V extends Comparable<? super V>> {
   @Override
   public String toString() {
     return Strings.format("[O %s; valueAndOverride: %s ; valueNoOverride: %s ; noValueNoOverride: %s O]",
-        overridesMap, behaviorWithValueAndOverride, behaviorWithValueButNoOverride, whenNoValueAndNoOverride);
+        overridesMap, behaviorWithValueAndOverride, behaviorWithValueButNoOverride,
+        formatOptional(whenNoValueAndNoOverride));
   }
 
 
