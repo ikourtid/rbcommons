@@ -245,6 +245,18 @@ public class RBJsonObjectGetters {
 
   /**
    * From 'jsonObject', get the string value of 'property' and find the matching enum value per the
+   * JsonSerializedEnumStringMap passed in. Throw an exception if the property is missing
+   */
+  public static <E extends Enum<E>> E getEnumFromJsonOrThrow(
+      JsonObject jsonObject,
+      String property,
+      JsonSerializedEnumStringMap<E> jsonSerializedEnumStringMap) {
+    return jsonSerializedEnumStringMap.getEnumValueOrThrow(
+        getJsonStringOrThrow(jsonObject, property));
+  }
+
+  /**
+   * From 'jsonObject', get the string value of 'property' and find the matching enum value per the
    * JsonSerializedEnumStringMap passed in, or use the supplied default if the property is missing in the json object.
    */
   public static <E extends Enum<E>> E getEnumFromJsonOrDefault(
