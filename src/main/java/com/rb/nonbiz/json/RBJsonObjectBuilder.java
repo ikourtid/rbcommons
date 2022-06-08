@@ -218,7 +218,7 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
    * Throws if 'property' already exists in jsonObject.
    */
   public RBJsonObjectBuilder setIf(
-      String property,  boolean onlyIncludeIf, JsonElement jsonElement) {
+      String property, boolean onlyIncludeIf, JsonElement jsonElement) {
     checkPropertyNotAlreadySet(property);
     if (onlyIncludeIf) {
       jsonObject.add(property, jsonElement);

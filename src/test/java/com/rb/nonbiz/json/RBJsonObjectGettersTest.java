@@ -156,6 +156,26 @@ public class RBJsonObjectGettersTest {
   }
 
   @Test
+  public void test_getEnumFromJsonOrThrow() {
+    Function<String, TestEnumXYZ> getter = property -> getEnumFromJsonOrThrow(
+        jsonObject(
+            "hasValueX", jsonString("value_x"),
+            "hasValueY", jsonString("value_y"),
+            "hasValueZ", jsonString("value_z")),
+        property,
+        jsonSerializedEnumStringMap(
+            TestEnumXYZ.class,
+            TestEnumXYZ.X, "value_x",
+            TestEnumXYZ.Y, "value_y",
+            TestEnumXYZ.Z, "garbage"));
+
+    assertEquals(TestEnumXYZ.X, getter.apply("hasValueX"));
+    assertEquals(TestEnumXYZ.Y, getter.apply("hasValueY"));
+    assertIllegalArgumentException( () -> getter.apply("hasValueZ"));
+    assertIllegalArgumentException( () -> getter.apply("missing property"));
+  }
+
+  @Test
   public void test_getEnumFromJsonOrDefault() {
     Function<String, TestEnumXYZ> getter = property -> getEnumFromJsonOrDefault(
         jsonObject(

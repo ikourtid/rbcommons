@@ -56,7 +56,7 @@ public class Either<L, R> {
   /**
    * When you are looking at 2 'eithers' of the same type,
    * this helps you separate out when both 'eithers' only have a value on the left side,
-   * vs when both 'eithers' only have a value on the right side.
+   * vs. when both 'eithers' only have a value on the right side.
    * If the non-empty side is not the same for both 'eithers', this will throw.
    */
   public static <L, R, T> T visitBothAssumingSameSide(
