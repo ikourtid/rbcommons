@@ -31,13 +31,14 @@ public class WeightedBySignedFractionJsonApiConverter {
 
   public <T> JsonObject toJsonObject(
       WeightedBySignedFraction<T> weightedBySignedFraction,
-      Function<T, JsonObject> serializer) {
+      Function<T, JsonElement> serializer) {
     return jsonValidator.validate(
         rbJsonObjectBuilder()
             .setDouble(
                 "weight",
                 weightedBySignedFraction.getWeight().doubleValue())
-            .setJsonSubObject(
+            // translates a <T> to a JsonElement (JSON string, double, object), etc.
+            .set(
                 "item",
                 serializer.apply(weightedBySignedFraction.getItem()))
             .build(),
@@ -46,11 +47,12 @@ public class WeightedBySignedFractionJsonApiConverter {
 
   public <T> WeightedBySignedFraction<T> fromJsonObject(
       JsonObject jsonObject,
-      Function<JsonObject, T> deserializer) {
+      Function<JsonElement, T> deserializer) {
     jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
 
     return weightedBySignedFraction(
-        deserializer.apply(jsonObject.getAsJsonObject("item")),
+        // translates a JsonElement (JSON string, double, object, etc) to a <T>
+        deserializer.apply(jsonObject.get("item")),
         signedFraction(getJsonDoubleOrThrow(jsonObject, "weight")));
   }
 
