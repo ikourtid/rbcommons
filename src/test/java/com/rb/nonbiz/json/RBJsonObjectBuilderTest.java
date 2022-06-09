@@ -403,6 +403,28 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
             .setJsonElement("subObjectPassesPredicate", singletonJsonObject("passes", jsonInteger(11)))
             .setJsonElement("subObjectBooleanTrue",     singletonJsonObject("_true",  jsonInteger(22)))
             .build()));
+
+    // Same as above, but using the more explicit setters instead of setJsonElement.
+    assertThat(
+        builder.build(),
+        jsonObjectEpsilonMatcher(rbJsonObjectBuilder()
+            .setDouble("nonZeroDouble",      3.14)
+            .setDouble("nonZeroDoublePct",   5.67)
+            .setBoolean("trueBoolean1",      true)
+            .setBoolean("falseBoolean2",     false)
+            .setBoolean("falseBoolean3",     false)
+            .setInt("optionalPresent",       123)
+            .setInt("optionalPresent2",      789)
+            .setInt("optionalIntPresent",    456)
+            .setInt("ifTrue123",             123)
+            .setInt("ifEvenPredicate456",    456)
+            .setInt("ifEvenBoolean456",      456)
+            .setDouble("nonZeroSignedMoney", 1.23)
+            .setJsonSubObject("nonEmptySubObject",  singletonJsonObject("subObject", "aSubObject"))
+            .setJsonArray(     "nonEmptyArray",      jsonArray(jsonString("first"), jsonString("second")))
+            .setJsonSubObject("subObjectPassesPredicate", singletonJsonObject("passes", jsonInteger(11)))
+            .setJsonSubObject("subObjectBooleanTrue",     singletonJsonObject("_true",  jsonInteger(22)))
+            .build()));
   }
 
   @Test
