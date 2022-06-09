@@ -19,7 +19,11 @@ import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFraction;
 import static com.rb.nonbiz.types.WeightedBySignedFractionTest.weightedBySignedFractionMatcher;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This test class is not generic, but the publicly exposed matcher is.
@@ -70,6 +74,19 @@ public class FlatSignedLinearCombinationTest extends RBTestMatcher<FlatSignedLin
   @Test
   public void getsNoFractionsMap_throws() {
     assertIllegalArgumentException( () -> flatSignedLinearCombination(emptyList()));
+  }
+
+  @Test
+  public void testSize() {
+    FlatSignedLinearCombination<String> oneElement = flatSignedLinearCombination(
+        singletonList(weightedBySignedFraction("aaa", signedFraction(0.111))));
+    assertEquals(1, oneElement.size());
+
+    FlatSignedLinearCombination<String> twoElements = flatSignedLinearCombination(
+        ImmutableList.of(
+            weightedBySignedFraction("aaa", signedFraction(0.111)),
+            weightedBySignedFraction("bbb", signedFraction(0.222))));
+    assertEquals(2, twoElements.size());
   }
 
   @Override

@@ -12,7 +12,6 @@ import java.util.function.Function;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonBigDecimalOrThrow;
-import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonDoubleOrThrow;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFraction;
 

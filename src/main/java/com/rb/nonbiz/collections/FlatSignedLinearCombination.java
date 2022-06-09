@@ -78,6 +78,10 @@ public class FlatSignedLinearCombination<T> implements Iterable<WeightedBySigned
     return weightedItems.stream();
   }
 
+  public int size() {
+    return weightedItems.size();
+  }
+
   @VisibleForTesting // this is here for the test matcher; keep it hidden unless we have to expose it
   List<WeightedBySignedFraction<T>> getWeightedItems() {
     return weightedItems;
