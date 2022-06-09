@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.SignedFraction;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -39,9 +40,9 @@ public class FlatSignedLinearCombinationTest extends RBTestMatcher<FlatSignedLin
         flatSignedLinearCombination.iterator(),
         iteratorMatcher(
             ImmutableList.of(
-                weightedBySignedFraction("a", signedFraction(0.4)),
-                weightedBySignedFraction("b", signedFraction(-0.6)))
-            .iterator(),
+                    weightedBySignedFraction("a", signedFraction(0.4)),
+                    weightedBySignedFraction("b", signedFraction(-0.6)))
+                .iterator(),
             f -> weightedBySignedFractionMatcher(f, f2 -> typeSafeEqualTo(f2))));
   }
 
@@ -73,9 +74,11 @@ public class FlatSignedLinearCombinationTest extends RBTestMatcher<FlatSignedLin
 
   @Test
   public void hasAlmostZeroFraction_throws() {
-    assertIllegalArgumentException( () -> flatSignedLinearCombination(
-        "a", signedFraction(1e-9),
-        "b", SIGNED_FRACTION_1));
+    for (SignedFraction epsilonSignedFraction : ImmutableList.of(signedFraction(-1e-9), signedFraction(1e-9))) {
+      assertIllegalArgumentException(() -> flatSignedLinearCombination(
+          "a", epsilonSignedFraction,
+          "b", SIGNED_FRACTION_1));
+    }
   }
 
   @Test
