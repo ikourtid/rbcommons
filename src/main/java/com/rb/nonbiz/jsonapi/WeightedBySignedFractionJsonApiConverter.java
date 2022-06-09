@@ -37,7 +37,7 @@ public class WeightedBySignedFractionJsonApiConverter {
             .setDouble(
                 "weight",
                 weightedBySignedFraction.getWeight().doubleValue())
-            // translates a <T> to a JsonElement (JSON string, double, object), etc.
+            // translates a <T> to a JsonElement (a JSON string, double, object, etc.)
             .set(
                 "item",
                 serializer.apply(weightedBySignedFraction.getItem()))
@@ -51,7 +51,7 @@ public class WeightedBySignedFractionJsonApiConverter {
     jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
 
     return weightedBySignedFraction(
-        // translates a JsonElement (JSON string, double, object, etc) to a <T>
+        // translates a JsonElement (a JSON string, double, object, etc.) to a <T>
         deserializer.apply(jsonObject.get("item")),
         signedFraction(getJsonDoubleOrThrow(jsonObject, "weight")));
   }

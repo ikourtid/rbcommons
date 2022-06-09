@@ -37,6 +37,7 @@ public class WeightedBySignedFractionJsonApiConverterTest
             "weight", jsonDouble(0.123),
             "item",   jsonString("POSITIVE")));
 
+    // SignedFractions can be greater than 1.0
     testRoundTripConversionHelper(
         weightedBySignedFraction("POSITIVE_LARGE", signedFraction(123_456.0)),
         jsonObject(
