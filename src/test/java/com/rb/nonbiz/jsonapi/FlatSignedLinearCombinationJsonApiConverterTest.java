@@ -1,22 +1,16 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonArray;
 import com.rb.nonbiz.collections.FlatSignedLinearCombination;
 import com.rb.nonbiz.testutils.RBTest;
-import com.rb.nonbiz.types.SignedFraction;
-import com.rb.nonbiz.types.WeightedBySignedFraction;
 import org.junit.Test;
-
-import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.FlatSignedLinearCombination.flatSignedLinearCombination;
 import static com.rb.nonbiz.collections.FlatSignedLinearCombinationTest.flatSignedLinearCombinationMatcher;
-import static com.rb.nonbiz.json.RBGson.jsonBigDecimal;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
-import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
@@ -37,24 +31,29 @@ public class FlatSignedLinearCombinationJsonApiConverterTest
 
     assertEquals(1, singleItem.size());
 
+    testRoundTripConversionHelper(
+        singleItem,
+        singletonJsonArray(jsonObject(
+            "weight", jsonDouble(0.123),
+            "item",   jsonString("abc"))));
+  }
+
+  private void testRoundTripConversionHelper(
+      FlatSignedLinearCombination<String> flatSignedLinearCombination,
+      JsonArray jsonArray) {
+
     assertThat(
         makeTestObject().toJsonArray(
-            singleItem,
+            flatSignedLinearCombination,
             string -> jsonString(string)),
-        jsonArrayMatcher(
-            singletonJsonArray(jsonObject(
-                "weight", jsonDouble(0.123),
-                "item",   jsonString("abc"))),
-            1e-8));
+        jsonArrayMatcher(jsonArray, 1e-8));
 
     assertThat(
         makeTestObject().fromJsonArray(
-            singletonJsonArray(jsonObject(
-                "weight", jsonDouble(0.123),
-                "item",   jsonString("abc"))),
+            jsonArray,
             jsonElement -> jsonElement.getAsString()),
         flatSignedLinearCombinationMatcher(
-            singleItem, f -> typeSafeEqualTo(f)));
+            flatSignedLinearCombination, f -> typeSafeEqualTo(f)));
   }
 
   @Override
