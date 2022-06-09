@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.inject.Inject;
 import com.rb.nonbiz.collections.FlatSignedLinearCombination;
-import com.rb.nonbiz.types.WeightedBySignedFraction;
 
 import java.util.function.Function;
 
@@ -24,20 +23,24 @@ public class FlatSignedLinearCombinationJsonApiConverter {
 
   public <T> JsonArray toJsonArray(
       FlatSignedLinearCombination<T> flatSignedLinearCombination,
-      Function<WeightedBySignedFraction<T>, JsonElement> serializer) {
+      Function<T, JsonElement> serializer) {
     return iteratorToJsonArray(
         flatSignedLinearCombination.size(),
         flatSignedLinearCombination.iterator(),
-        serializer);
+        weightedBySignedFraction -> weightedBySignedFractionJsonApiConverter.toJsonObject(
+            weightedBySignedFraction,
+            serializer));
   }
 
   public <T> FlatSignedLinearCombination<T> fromJsonArray(
       JsonArray jsonArray,
-      Function<JsonElement, WeightedBySignedFraction<T>> deserializer) {
+      Function<JsonElement, T> deserializer) {
     return flatSignedLinearCombination(
         jsonArrayToList(
             jsonArray,
-            jsonElement -> deserializer.apply(jsonElement)));
+            jsonElement -> weightedBySignedFractionJsonApiConverter.fromJsonObject(
+                jsonElement.getAsJsonObject(),
+                deserializer)));
   }
 
 }
