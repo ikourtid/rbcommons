@@ -1,5 +1,6 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.rb.nonbiz.collections.FlatSignedLinearCombination;
 import com.rb.nonbiz.testutils.RBTest;
@@ -9,6 +10,7 @@ import static com.rb.nonbiz.collections.FlatSignedLinearCombination.flatSignedLi
 import static com.rb.nonbiz.collections.FlatSignedLinearCombinationTest.flatSignedLinearCombinationMatcher;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
+import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayMatcher;
@@ -36,6 +38,30 @@ public class FlatSignedLinearCombinationJsonApiConverterTest
         singletonJsonArray(jsonObject(
             "weight", jsonDouble(0.123),
             "item",   jsonString("abc"))));
+  }
+
+  @Test
+  public void testMultipleItemCombination() {
+    FlatSignedLinearCombination<String> multipleItems =
+        flatSignedLinearCombination(ImmutableList.of(
+            weightedBySignedFraction("aaa", signedFraction(-0.111)),    // weights can be negative
+            weightedBySignedFraction("bbb", signedFraction( 0.222)),
+            weightedBySignedFraction("ccc", signedFraction( 333.0))));  // weights can be > 1
+
+    assertEquals(3, multipleItems.size());
+
+    testRoundTripConversionHelper(
+        multipleItems,
+        jsonArray(
+            jsonObject(
+                "weight", jsonDouble(-0.111),
+                "item",   jsonString("aaa")),
+            jsonObject(
+                "weight", jsonDouble( 0.222),
+                "item",   jsonString("bbb")),
+            jsonObject(
+                "weight", jsonDouble( 333.0),
+                "item",   jsonString("ccc"))));
   }
 
   private void testRoundTripConversionHelper(
