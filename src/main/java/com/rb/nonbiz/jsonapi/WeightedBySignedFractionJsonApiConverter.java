@@ -18,7 +18,12 @@ import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFract
 /**
  * Converts {@link WeightedBySignedFraction} back and forth to JSON for our public API.
  *
- * This does not implement JsonRoundTripConverter because we need to supply serializers and deserializers.
+ * <p> Note that this converts a WeightedBySignedFraction to a JSON object that contains
+ * a double keyed by "weight" and a JsonElement keyed by "item". That is, the "item" can
+ * is a JSON element and can be of any JSON type: boolean, String, double, or Object. </p>
+ *
+ * <p> This does not implement JsonRoundTripConverter because we need to supply serializers
+ * and deserializers. </p>
  */
 public class WeightedBySignedFractionJsonApiConverter {
 
