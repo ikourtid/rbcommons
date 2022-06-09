@@ -11,6 +11,7 @@ import java.util.function.Function;
 
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
+import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonBigDecimalOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonDoubleOrThrow;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFraction;
@@ -39,9 +40,9 @@ public class WeightedBySignedFractionJsonApiConverter {
       Function<T, JsonElement> serializer) {
     return jsonValidator.validate(
         rbJsonObjectBuilder()
-            .setDouble(
+            .setPreciseValue(
                 "weight",
-                weightedBySignedFraction.getWeight().doubleValue())
+                weightedBySignedFraction.getWeight())
             // translates a <T> to a JsonElement (a JSON string, double, object, etc.)
             .set(
                 "item",
@@ -58,7 +59,7 @@ public class WeightedBySignedFractionJsonApiConverter {
     return weightedBySignedFraction(
         // translates a JsonElement (a JSON string, double, object, etc.) to a <T>
         deserializer.apply(jsonObject.get("item")),
-        signedFraction(getJsonDoubleOrThrow(jsonObject, "weight")));
+        signedFraction(getJsonBigDecimalOrThrow(jsonObject, "weight")));
   }
 
 }
