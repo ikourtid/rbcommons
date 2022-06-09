@@ -43,64 +43,49 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
   /**
    * Use the more specific setters, if you know more details about the JsonElement (e.g. is it a string? int?)
    */
-  public RBJsonObjectBuilder set(String property, JsonElement jsonElement) {
-    jsonObject.add(checkPropertyNotAlreadySet(property), jsonElement);
-    return this;
-  }
-
-  public RBJsonObjectBuilder setString(String property, String value) {
-    jsonObject.add(checkPropertyNotAlreadySet(property), jsonString(value));
-    return this;
-  }
-
-  public RBJsonObjectBuilder setInt(String property, int value) {
-    jsonObject.add(checkPropertyNotAlreadySet(property), jsonInteger(value));
-    return this;
-  }
-
-  public RBJsonObjectBuilder setLong(String property, long value) {
-    jsonObject.add(checkPropertyNotAlreadySet(property), jsonLong(value));
-    return this;
-  }
-
-  public RBJsonObjectBuilder setDouble(String property, double value) {
-    jsonObject.add(checkPropertyNotAlreadySet(property), jsonDouble(value));
-    return this;
-  }
-
-  public RBJsonObjectBuilder setDoublePercentage(String property, double value) {
-    jsonObject.add(checkPropertyNotAlreadySet(property), jsonDouble(value * 100));
-    return this;
-  }
-
-  public RBJsonObjectBuilder setDoublePercentage(String property, UnitFraction unitFraction) {
-    jsonObject.add(checkPropertyNotAlreadySet(property), jsonDouble(unitFraction.doubleValue() * 100));
-    return this;
-  }
-
-  public <N extends RBNumeric<N>> RBJsonObjectBuilder setDoublePercentage(String property, N rbNumeric) {
-    jsonObject.add(checkPropertyNotAlreadySet(property), jsonDouble(rbNumeric.doubleValue() * 100));
-    return this;
-  }
-
-  public RBJsonObjectBuilder setBoolean(String property, Boolean value) {
-    jsonObject.add(checkPropertyNotAlreadySet(property), jsonBoolean(value));
-    return this;
-  }
-
-  public RBJsonObjectBuilder setLocalDate(String property, LocalDate value) {
-    jsonObject.add(checkPropertyNotAlreadySet(property), jsonDate(value));
-    return this;
-  }
-
   public RBJsonObjectBuilder setJsonElement(String property, JsonElement jsonElement) {
     jsonObject.add(checkPropertyNotAlreadySet(property), jsonElement);
     return this;
   }
 
+  public RBJsonObjectBuilder setString(String property, String value) {
+    return setJsonElement(property, jsonString(value));
+  }
+
+  public RBJsonObjectBuilder setInt(String property, int value) {
+    return setJsonElement(property, jsonInteger(value));
+  }
+
+  public RBJsonObjectBuilder setLong(String property, long value) {
+    return setJsonElement(property, jsonLong(value));
+  }
+
+  public RBJsonObjectBuilder setDouble(String property, double value) {
+    return setJsonElement(property, jsonDouble(value));
+  }
+
+  public RBJsonObjectBuilder setDoublePercentage(String property, double value) {
+    return setJsonElement(property, jsonDouble(value * 100));
+  }
+
+  public RBJsonObjectBuilder setDoublePercentage(String property, UnitFraction unitFraction) {
+    return setJsonElement(property, jsonDouble(unitFraction.doubleValue() * 100));
+  }
+
+  public <N extends RBNumeric<N>> RBJsonObjectBuilder setDoublePercentage(String property, N rbNumeric) {
+    return setJsonElement(property, jsonDouble(rbNumeric.doubleValue() * 100));
+  }
+
+  public RBJsonObjectBuilder setBoolean(String property, Boolean value) {
+    return setJsonElement(property, jsonBoolean(value));
+  }
+
+  public RBJsonObjectBuilder setLocalDate(String property, LocalDate value) {
+    return setJsonElement(property, jsonDate(value));
+  }
+
   public RBJsonObjectBuilder setJsonSubObject(String property, JsonObject jsonSubObject) {
-    jsonObject.add(checkPropertyNotAlreadySet(property), jsonSubObject);
-    return this;
+    return setJsonElement(property, jsonSubObject);
   }
 
   public RBJsonObjectBuilder setJsonSubObjectIfNonEmpty(String property, Optional<JsonObject> jsonSubObject) {
@@ -302,7 +287,7 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
    * Throws if 'property' already exists in jsonObject.
    */
   public <P extends PreciseValue<? super P>> RBJsonObjectBuilder setPreciseValue(String property, P value) {
-    return set(property, jsonBigDecimal(value));
+    return setJsonElement(property, jsonBigDecimal(value));
   }
 
   /**

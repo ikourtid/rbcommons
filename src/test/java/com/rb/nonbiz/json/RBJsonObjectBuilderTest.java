@@ -30,7 +30,6 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObj
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonElementMatcher;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
-import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonPrimitiveMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
@@ -109,7 +108,7 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
   @Test
   public void testSimpleContents() {
     RBJsonObjectBuilder builder = rbJsonObjectBuilder()
-        .set("jsonElement", jsonInteger(123))
+        .setJsonElement("jsonElement", jsonInteger(123))
         .setInt("int", 456)
         .setString("string", "abc")
         .setDouble("double", 3.14)
@@ -387,22 +386,22 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
     assertThat(
         builder.build(),
         jsonObjectEpsilonMatcher(rbJsonObjectBuilder()
-            .set("nonZeroDouble",      jsonDouble(3.14))
-            .set("nonZeroDoublePct",   jsonDouble(5.67))
-            .set("trueBoolean1",       jsonBoolean(true))
-            .set("falseBoolean2",      jsonBoolean(false))
-            .set("falseBoolean3",      jsonBoolean(false))
-            .set("optionalPresent",    jsonInteger(123))
-            .set("optionalPresent2",   jsonInteger(789))
-            .set("optionalIntPresent", jsonInteger(456))
-            .set("ifTrue123",          jsonInteger(123))
-            .set("ifEvenPredicate456", jsonInteger(456))
-            .set("ifEvenBoolean456",   jsonInteger(456))
-            .set("nonZeroSignedMoney", jsonDouble(1.23))
-            .set("nonEmptySubObject",  singletonJsonObject("subObject", "aSubObject"))
-            .set("nonEmptyArray",      jsonArray(jsonString("first"), jsonString("second")))
-            .set("subObjectPassesPredicate", singletonJsonObject("passes", jsonInteger(11)))
-            .set("subObjectBooleanTrue",     singletonJsonObject("_true",  jsonInteger(22)))
+            .setJsonElement("nonZeroDouble",      jsonDouble(3.14))
+            .setJsonElement("nonZeroDoublePct",   jsonDouble(5.67))
+            .setJsonElement("trueBoolean1",       jsonBoolean(true))
+            .setJsonElement("falseBoolean2",      jsonBoolean(false))
+            .setJsonElement("falseBoolean3",      jsonBoolean(false))
+            .setJsonElement("optionalPresent",    jsonInteger(123))
+            .setJsonElement("optionalPresent2",   jsonInteger(789))
+            .setJsonElement("optionalIntPresent", jsonInteger(456))
+            .setJsonElement("ifTrue123",          jsonInteger(123))
+            .setJsonElement("ifEvenPredicate456", jsonInteger(456))
+            .setJsonElement("ifEvenBoolean456",   jsonInteger(456))
+            .setJsonElement("nonZeroSignedMoney", jsonDouble(1.23))
+            .setJsonElement("nonEmptySubObject",  singletonJsonObject("subObject", "aSubObject"))
+            .setJsonElement("nonEmptyArray",      jsonArray(jsonString("first"), jsonString("second")))
+            .setJsonElement("subObjectPassesPredicate", singletonJsonObject("passes", jsonInteger(11)))
+            .setJsonElement("subObjectBooleanTrue",     singletonJsonObject("_true",  jsonInteger(22)))
             .build()));
   }
 
@@ -466,7 +465,7 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
   public RBJsonObjectBuilder makeNontrivialObject() {
     RBJsonObjectBuilder builder = rbJsonObjectBuilder();
     builder
-        .set("element", jsonInteger(123))
+        .setJsonElement("element", jsonInteger(123))
         .setInt("int", 456)
         .setLong("long", 123_456_789L)
         .setString("string", "abc")
@@ -491,7 +490,7 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
     RBJsonObjectBuilder builder = rbJsonObjectBuilder();
     double e = 1e-9; // epsilon
     builder
-        .set("element", jsonInteger(123))
+        .setJsonElement("element", jsonInteger(123))
         .setInt("int", 456)
         .setLong("long", 123_456_789L)
         .setString("string", "abc")

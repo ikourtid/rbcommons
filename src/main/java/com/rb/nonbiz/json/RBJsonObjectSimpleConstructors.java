@@ -20,7 +20,7 @@ public class RBJsonObjectSimpleConstructors {
 
   public static JsonObject singletonJsonObject(String property, JsonElement element) {
     return rbJsonObjectBuilder()
-        .set(property, element)
+        .setJsonElement(property, element)
         .build();
   }
 
@@ -34,8 +34,8 @@ public class RBJsonObjectSimpleConstructors {
       String property1, JsonElement element1,
       String property2, JsonElement element2) {
     return rbJsonObjectBuilder()
-        .set(property1, element1)
-        .set(property2, element2)
+        .setJsonElement(property1, element1)
+        .setJsonElement(property2, element2)
         .build();
   }
 
@@ -44,9 +44,9 @@ public class RBJsonObjectSimpleConstructors {
       String property2, JsonElement element2,
       String property3, JsonElement element3) {
     return rbJsonObjectBuilder()
-        .set(property1, element1)
-        .set(property2, element2)
-        .set(property3, element3)
+        .setJsonElement(property1, element1)
+        .setJsonElement(property2, element2)
+        .setJsonElement(property3, element3)
         .build();
   }
 
@@ -56,10 +56,10 @@ public class RBJsonObjectSimpleConstructors {
       String property3, JsonElement element3,
       String property4, JsonElement element4) {
     return rbJsonObjectBuilder()
-        .set(property1, element1)
-        .set(property2, element2)
-        .set(property3, element3)
-        .set(property4, element4)
+        .setJsonElement(property1, element1)
+        .setJsonElement(property2, element2)
+        .setJsonElement(property3, element3)
+        .setJsonElement(property4, element4)
         .build();
   }
 
@@ -70,11 +70,11 @@ public class RBJsonObjectSimpleConstructors {
       String property4, JsonElement element4,
       String property5, JsonElement element5) {
     return rbJsonObjectBuilder()
-        .set(property1, element1)
-        .set(property2, element2)
-        .set(property3, element3)
-        .set(property4, element4)
-        .set(property5, element5)
+        .setJsonElement(property1, element1)
+        .setJsonElement(property2, element2)
+        .setJsonElement(property3, element3)
+        .setJsonElement(property4, element4)
+        .setJsonElement(property5, element5)
         .build();
   }
 
@@ -86,12 +86,12 @@ public class RBJsonObjectSimpleConstructors {
       String property5, JsonElement element5,
       String property6, JsonElement element6) {
     return rbJsonObjectBuilder()
-        .set(property1, element1)
-        .set(property2, element2)
-        .set(property3, element3)
-        .set(property4, element4)
-        .set(property5, element5)
-        .set(property6, element6)
+        .setJsonElement(property1, element1)
+        .setJsonElement(property2, element2)
+        .setJsonElement(property3, element3)
+        .setJsonElement(property4, element4)
+        .setJsonElement(property5, element5)
+        .setJsonElement(property6, element6)
         .build();
   }
 
@@ -104,13 +104,13 @@ public class RBJsonObjectSimpleConstructors {
       String property6, JsonElement element6,
       String property7, JsonElement element7) {
     return rbJsonObjectBuilder()
-        .set(property1, element1)
-        .set(property2, element2)
-        .set(property3, element3)
-        .set(property4, element4)
-        .set(property5, element5)
-        .set(property6, element6)
-        .set(property7, element7)
+        .setJsonElement(property1, element1)
+        .setJsonElement(property2, element2)
+        .setJsonElement(property3, element3)
+        .setJsonElement(property4, element4)
+        .setJsonElement(property5, element5)
+        .setJsonElement(property6, element6)
+        .setJsonElement(property7, element7)
         .build();
   }
 
@@ -124,14 +124,14 @@ public class RBJsonObjectSimpleConstructors {
       String property7, JsonElement element7,
       String property8, JsonElement element8) {
     return rbJsonObjectBuilder()
-        .set(property1, element1)
-        .set(property2, element2)
-        .set(property3, element3)
-        .set(property4, element4)
-        .set(property5, element5)
-        .set(property6, element6)
-        .set(property7, element7)
-        .set(property8, element8)
+        .setJsonElement(property1, element1)
+        .setJsonElement(property2, element2)
+        .setJsonElement(property3, element3)
+        .setJsonElement(property4, element4)
+        .setJsonElement(property5, element5)
+        .setJsonElement(property6, element6)
+        .setJsonElement(property7, element7)
+        .setJsonElement(property8, element8)
         .build();
   }
 
