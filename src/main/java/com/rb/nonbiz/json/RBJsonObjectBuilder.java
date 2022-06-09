@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.types.UnitFraction;
@@ -48,44 +49,52 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
     return this;
   }
 
+  public RBJsonObjectBuilder setJsonPrimitive(String property, JsonPrimitive jsonPrimitive) {
+    return setJsonElement(property, jsonPrimitive);
+  }
+
   public RBJsonObjectBuilder setString(String property, String value) {
-    return setJsonElement(property, jsonString(value));
+    return setJsonPrimitive(property, jsonString(value));
   }
 
   public RBJsonObjectBuilder setInt(String property, int value) {
-    return setJsonElement(property, jsonInteger(value));
+    return setJsonPrimitive(property, jsonInteger(value));
   }
 
   public RBJsonObjectBuilder setLong(String property, long value) {
-    return setJsonElement(property, jsonLong(value));
+    return setJsonPrimitive(property, jsonLong(value));
   }
 
   public RBJsonObjectBuilder setDouble(String property, double value) {
-    return setJsonElement(property, jsonDouble(value));
+    return setJsonPrimitive(property, jsonDouble(value));
   }
 
   public RBJsonObjectBuilder setDoublePercentage(String property, double value) {
-    return setJsonElement(property, jsonDouble(value * 100));
+    return setJsonPrimitive(property, jsonDouble(value * 100));
   }
 
   public RBJsonObjectBuilder setDoublePercentage(String property, UnitFraction unitFraction) {
-    return setJsonElement(property, jsonDouble(unitFraction.doubleValue() * 100));
+    return setJsonPrimitive(property, jsonDouble(unitFraction.doubleValue() * 100));
   }
 
   public <N extends RBNumeric<N>> RBJsonObjectBuilder setDoublePercentage(String property, N rbNumeric) {
-    return setJsonElement(property, jsonDouble(rbNumeric.doubleValue() * 100));
+    return setJsonPrimitive(property, jsonDouble(rbNumeric.doubleValue() * 100));
   }
 
   public RBJsonObjectBuilder setBoolean(String property, Boolean value) {
-    return setJsonElement(property, jsonBoolean(value));
+    return setJsonPrimitive(property, jsonBoolean(value));
   }
 
   public RBJsonObjectBuilder setLocalDate(String property, LocalDate value) {
-    return setJsonElement(property, jsonDate(value));
+    return setJsonPrimitive(property, jsonDate(value));
   }
 
   public RBJsonObjectBuilder setJsonSubObject(String property, JsonObject jsonSubObject) {
     return setJsonElement(property, jsonSubObject);
+  }
+
+  public RBJsonObjectBuilder setJsonArray(String property, JsonArray jsonArray) {
+    return setJsonElement(property, jsonArray);
   }
 
   public RBJsonObjectBuilder setJsonSubObjectIfNonEmpty(String property, Optional<JsonObject> jsonSubObject) {
