@@ -72,6 +72,13 @@ public class FlatSignedLinearCombinationTest extends RBTestMatcher<FlatSignedLin
   }
 
   @Test
+  public void hasAlmostZeroFraction_throws() {
+    assertIllegalArgumentException( () -> flatSignedLinearCombination(
+        "a", signedFraction(1e-9),
+        "b", SIGNED_FRACTION_1));
+  }
+
+  @Test
   public void getsNoFractionsMap_throws() {
     assertIllegalArgumentException( () -> flatSignedLinearCombination(emptyList()));
   }
