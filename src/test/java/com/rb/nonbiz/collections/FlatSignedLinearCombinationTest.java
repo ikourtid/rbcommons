@@ -73,7 +73,7 @@ public class FlatSignedLinearCombinationTest extends RBTestMatcher<FlatSignedLin
   @Test
   public void hasAlmostZeroFraction_throws() {
     for (SignedFraction epsilonSignedFraction : ImmutableList.of(signedFraction(-1e-9), signedFraction(1e-9))) {
-      assertIllegalArgumentException(() -> flatSignedLinearCombination(
+      assertIllegalArgumentException( () -> flatSignedLinearCombination(
           "a", epsilonSignedFraction,
           "b", SIGNED_FRACTION_1));
     }
