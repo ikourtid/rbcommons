@@ -93,6 +93,11 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
     return this;
   }
 
+  public RBJsonObjectBuilder setJsonElement(String property, JsonElement jsonElement) {
+    jsonObject.add(checkPropertyNotAlreadySet(property), jsonElement);
+    return this;
+  }
+
   public RBJsonObjectBuilder setJsonSubObject(String property, JsonObject jsonSubObject) {
     jsonObject.add(checkPropertyNotAlreadySet(property), jsonSubObject);
     return this;
