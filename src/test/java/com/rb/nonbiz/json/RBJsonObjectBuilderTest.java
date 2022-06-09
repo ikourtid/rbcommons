@@ -1,6 +1,7 @@
 package com.rb.nonbiz.json;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.rb.nonbiz.testutils.RBTestMatcher;
@@ -27,13 +28,16 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonElementMatcher;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
+import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonPrimitiveMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_EPSILON;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -134,6 +138,30 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
     assertEquals(
         new JsonPrimitive("2010-01-01"),
         builder.getJsonObject().getAsJsonPrimitive("date"));
+  }
+
+  @Test
+  public void testSetElement() {
+    JsonElement objectElement = jsonObject(
+        "int",    jsonInteger(123),
+        "string", jsonString("abc"));
+    JsonElement stringElement = jsonString("XYZ");
+    JsonElement doubleElement = jsonDouble(1.23);
+
+    RBJsonObjectBuilder builder = rbJsonObjectBuilder()
+        .setJsonElement("objectElement", objectElement)
+        .setJsonElement("stringElement", stringElement)
+        .setJsonElement("doubleElement", doubleElement);
+
+    assertThat(
+        builder.getJsonObject().getAsJsonObject("objectElement"),
+        jsonElementMatcher(objectElement, 1e-8));
+    assertThat(
+        builder.getJsonObject().getAsJsonPrimitive("stringElement"),
+        jsonElementMatcher(stringElement, DUMMY_EPSILON));  // no epsilon needed for String
+    assertThat(
+        builder.getJsonObject().getAsJsonPrimitive("doubleElement"),
+        jsonElementMatcher(doubleElement, 1e-8));
   }
 
   @Test
