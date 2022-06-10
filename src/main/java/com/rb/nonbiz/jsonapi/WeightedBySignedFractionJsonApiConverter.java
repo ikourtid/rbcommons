@@ -43,7 +43,7 @@ public class WeightedBySignedFractionJsonApiConverter {
                 "weight",
                 weightedBySignedFraction.getWeight())
             // translates a <T> to a JsonElement (a JSON string, double, object, etc.)
-            .set(
+            .setJsonElement(
                 "item",
                 serializer.apply(weightedBySignedFraction.getItem()))
             .build(),
