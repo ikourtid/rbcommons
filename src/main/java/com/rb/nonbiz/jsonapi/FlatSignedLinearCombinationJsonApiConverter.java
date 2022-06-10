@@ -14,6 +14,11 @@ import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
 /**
  * Converts a {@link FlatSignedLinearCombination} back and forth to a JSON array for our public API.
  *
+ * <p> This does not create a JSON Object as most converters do, but instead creates a JSON Array.
+ * It does so because a FlatSignedLinearCombinartion is just a thin wrapper for a
+ * {@code List<WeightedBySignedFraction<T>>}. Lists are more naturally represented by arrays.
+ * Furthermore, if we were to use a JsonObject, it's not clear what the keys would be. </p>
+ *
  * <p> This does not implement JsonRoundTripConverter because we need to supply serializers
  * and deserializers. </p>
  */
