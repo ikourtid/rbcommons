@@ -44,6 +44,9 @@ public class FlatSignedLinearCombinationJsonApiConverter {
         jsonArrayToList(
             jsonArray,
             jsonElement -> weightedBySignedFractionJsonApiConverter.fromJsonObject(
+                // jsonArrayToList() is general and can work with an array of general JSON elements. However, in this
+                // case we need the array to consist of JSON objects with keys "weight" and "item".
+                // Therefor we cast the JsonElement to a JsonObject. An error will be thrown if it's not a JsonObject.
                 jsonElement.getAsJsonObject(),
                 deserializer)));
   }
