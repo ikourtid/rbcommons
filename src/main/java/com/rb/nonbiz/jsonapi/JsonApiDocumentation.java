@@ -1,10 +1,10 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,14 +20,14 @@ public class JsonApiDocumentation<T> {
 
   private final String documentationHtml;
   private final List<HasJsonApiDocumentation<?>> childNodes;
-  private final Optional<JsonObject> trivialSampleJson;
-  private final Optional<JsonObject> nontrivialSampleJson;
+  private final Optional<JsonElement> trivialSampleJson;
+  private final Optional<JsonElement> nontrivialSampleJson;
 
   private JsonApiDocumentation(
       String documentationHtml,
       List<HasJsonApiDocumentation<?>> childNodes,
-      Optional<JsonObject> trivialSampleJson,
-      Optional<JsonObject> nontrivialSampleJson) {
+      Optional<JsonElement> trivialSampleJson,
+      Optional<JsonElement> nontrivialSampleJson) {
     this.documentationHtml = documentationHtml;
     this.childNodes = childNodes;
     this.trivialSampleJson = trivialSampleJson;
@@ -42,7 +42,7 @@ public class JsonApiDocumentation<T> {
   }
 
   /**
-   * The JSON API often contains {@link JsonObject}s that contain other {@link JsonObject}s etc.
+   * The JSON API often contains {@link JsonElement}s that contain other {@link JsonElement}s etc.
    * in them. This will tell us information about all contained objects.
    */
   public List<HasJsonApiDocumentation<?>> getJsonApiConvertersForContainedObjects() {
@@ -52,14 +52,14 @@ public class JsonApiDocumentation<T> {
   /**
    * Returns some trivial (i.e. minimal) sample JSON.
    */
-  public Optional<JsonObject> getTrivialSampleJson() {
+  public Optional<JsonElement> getTrivialSampleJson() {
     return trivialSampleJson;
   }
 
   /**
    * Returns some non-trivial (i.e. not minimal) sample JSON.
    */
-  Optional<JsonObject> getNontrivialSampleJson() {
+  Optional<JsonElement> getNontrivialSampleJson() {
     return nontrivialSampleJson;
   }
 
@@ -73,21 +73,27 @@ public class JsonApiDocumentation<T> {
 
     private String documentationHtml;
     private List<HasJsonApiDocumentation<?>> childNodes;
-    private Optional<JsonObject> trivialSampleJson;
-    private Optional<JsonObject> nontrivialSampleJson;
-
-    @Override
-    public void sanityCheckContents() {
-      RBPreconditions.checkNotNull(documentationHtml);
-      RBPreconditions.checkNotNull(childNodes);
-      RBPreconditions.checkNotNull(trivialSampleJson);
-      RBPreconditions.checkNotNull(nontrivialSampleJson);
-    }
+    private Optional<JsonElement> trivialSampleJson;
+    private Optional<JsonElement> nontrivialSampleJson;
 
     private JsonApiDocumentationBuilder() {}
 
     public static <T> JsonApiDocumentationBuilder<T> jsonApiDocumentationBuilder() {
       return new JsonApiDocumentationBuilder<>();
+    }
+
+    // FIXME IAK / FIXME SWA
+    // Until we change JsonRoundTripConverter to implement HasJsonApiDocumentation,
+    // we should use this. Once all JSON API classes get documented, we should remove this.
+    public static <T> JsonApiDocumentation<T> intermediateJsonApiDocumentationWithFixme(
+        HasJsonApiDocumentation<?> ... items) {
+      return JsonApiDocumentationBuilder
+          .<T>jsonApiDocumentationBuilder()
+          .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+          .hasChildNodes(Arrays.asList(items))
+          .noTrivialSampleJsonSupplied()
+          .noNontrivialSampleJsonSupplied()
+          .build();
     }
 
     public JsonApiDocumentationBuilder<T> setDocumentationHtml(String documentationHtml) {
@@ -116,7 +122,7 @@ public class JsonApiDocumentation<T> {
       return hasChildNodes(emptyList());
     }
 
-    public JsonApiDocumentationBuilder<T> setTrivialSampleJson(JsonObject trivialSampleJson) {
+    public JsonApiDocumentationBuilder<T> setTrivialSampleJson(JsonElement trivialSampleJson) {
       this.trivialSampleJson = checkNotAlreadySet(this.trivialSampleJson, Optional.of(trivialSampleJson));
       return this;
     }
@@ -126,7 +132,7 @@ public class JsonApiDocumentation<T> {
       return this;
     }
 
-    public JsonApiDocumentationBuilder<T> setNontrivialSampleJson(JsonObject nontrivialSampleJson) {
+    public JsonApiDocumentationBuilder<T> setNontrivialSampleJson(JsonElement nontrivialSampleJson) {
       this.nontrivialSampleJson = checkNotAlreadySet(this.nontrivialSampleJson, Optional.of(nontrivialSampleJson));
       return this;
     }
@@ -135,7 +141,20 @@ public class JsonApiDocumentation<T> {
       this.nontrivialSampleJson = checkNotAlreadySet(this.nontrivialSampleJson, Optional.empty());
       return this;
     }
-    
+
+    @Override
+    public void sanityCheckContents() {
+      RBPreconditions.checkNotNull(documentationHtml);
+      RBPreconditions.checkNotNull(childNodes);
+      RBPreconditions.checkNotNull(trivialSampleJson);
+      RBPreconditions.checkNotNull(nontrivialSampleJson);
+
+      // Since the child nodes are 'verb classes', which never implement equals/hashCode (we rarely even do this with
+      // data classes), this will check using simple pointer equality. We have it here to prevent mistakes where a
+      // JSON API converter class specifies the same 'child JSON API converter' more than once.
+      RBPreconditions.checkUnique(childNodes);
+    }
+
     @Override
     public JsonApiDocumentation<T> buildWithoutPreconditions() {
       return new JsonApiDocumentation<>(documentationHtml, childNodes, trivialSampleJson, nontrivialSampleJson);

@@ -17,6 +17,7 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.json.RBGson.jsonBigDecimal;
 import static com.rb.nonbiz.json.RBJsonObjectAdders.addToJsonObject;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
 import static java.util.Comparator.comparing;
 
 /**
@@ -40,7 +41,7 @@ import static java.util.Comparator.comparing;
  *
  * ... where 111 and 222 are the numeric values for the instrument IDs that are the keys in the iid map.
  */
-public class PreciseValueIidMapJsonConverter {
+public class PreciseValueIidMapJsonConverter implements HasJsonApiDocumentation<IidMap<?>> {
 
   @Inject PreciseValueJsonApiConverter preciseValueJsonApiConverter;
 
@@ -70,6 +71,12 @@ public class PreciseValueIidMapJsonConverter {
       mutableMap.putAssumingAbsent(jsonTickerMap.getInstrumentIdOrThrow(jsonTicker), preciseValue);
     });
     return newIidMap(mutableMap);
+  }
+
+  @Override
+  public JsonApiDocumentation<IidMap<?>> getJsonApiDocumentation() {
+    return intermediateJsonApiDocumentationWithFixme(
+        preciseValueJsonApiConverter);
   }
 
 }
