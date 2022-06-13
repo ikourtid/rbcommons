@@ -41,7 +41,7 @@ import static java.util.Comparator.comparing;
  *
  * ... where 111 and 222 are the numeric values for the instrument IDs that are the keys in the iid map.
  */
-public class PreciseValueIidMapJsonConverter implements HasJsonApiDocumentation<IidMap<?>> {
+public class PreciseValueIidMapJsonConverter implements HasJsonApiDocumentation {
 
   @Inject PreciseValueJsonApiConverter preciseValueJsonApiConverter;
 
@@ -74,8 +74,9 @@ public class PreciseValueIidMapJsonConverter implements HasJsonApiDocumentation<
   }
 
   @Override
-  public JsonApiDocumentation<IidMap<?>> getJsonApiDocumentation() {
+  public JsonApiDocumentation getJsonApiDocumentation() {
     return intermediateJsonApiDocumentationWithFixme(
+        IidMap.class,
         preciseValueJsonApiConverter);
   }
 

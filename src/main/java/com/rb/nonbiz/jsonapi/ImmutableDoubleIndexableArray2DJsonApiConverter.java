@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.ImmutableDoubleIndexableArray2D;
 import com.rb.nonbiz.collections.MutableDoubleIndexableArray2D;
+import com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder;
 
 import java.util.Iterator;
 import java.util.function.Function;
@@ -19,11 +20,12 @@ import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
 
 /**
  * Converts ImmutableDoubleIndexableArray2D back and forth to JSON for our public API.
  */
-public class ImmutableDoubleIndexableArray2DJsonApiConverter {
+public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonApiDocumentation {
 
   public <R, C> JsonObject toJsonObject(
       ImmutableDoubleIndexableArray2D<R, C> array2D,
@@ -75,6 +77,11 @@ public class ImmutableDoubleIndexableArray2DJsonApiConverter {
       }
     }
     return immutableDoubleIndexableArray2D(mutableArray2D);
+  }
+
+  @Override
+  public JsonApiDocumentation getJsonApiDocumentation() {
+    return intermediateJsonApiDocumentationWithFixme(ImmutableDoubleIndexableArray2D.class);
   }
 
 }

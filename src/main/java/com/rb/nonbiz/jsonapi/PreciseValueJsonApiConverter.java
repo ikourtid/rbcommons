@@ -20,7 +20,7 @@ import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBui
  * that mentions the relevant instrument - not just e.g.
  * "Attempt to construct a PositiveQuantity with -93 &le; 0"
  */
-public class PreciseValueJsonApiConverter implements HasJsonApiDocumentation<PreciseValue<?>> {
+public class PreciseValueJsonApiConverter implements HasJsonApiDocumentation {
 
   public <V extends PreciseValue<? super V>> V fromJsonBigDecimal(
       JsonElement valueAsJsonElementDouble,
@@ -43,8 +43,8 @@ public class PreciseValueJsonApiConverter implements HasJsonApiDocumentation<Pre
   }
 
   @Override
-  public JsonApiDocumentation<PreciseValue<?>> getJsonApiDocumentation() {
-    return intermediateJsonApiDocumentationWithFixme();
+  public JsonApiDocumentation getJsonApiDocumentation() {
+    return intermediateJsonApiDocumentationWithFixme(PreciseValue.class);
   }
 
 }

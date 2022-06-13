@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.rb.nonbiz.collections.MutableRBMap;
 import com.rb.nonbiz.collections.MutableRBSet;
 import com.rb.nonbiz.collections.RBMap;
+import com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder;
 import com.rb.nonbiz.types.PreciseValue;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.json.RBGson.jsonBigDecimal;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
 
 /**
  * This makes for shorter, easier-to-read JSON for cases where we're dealing with a map of precise values.
@@ -34,7 +36,7 @@ import static com.rb.nonbiz.json.RBGson.jsonBigDecimal;
  *    tips:       0.05988
  *
  */
-public class PreciseValueRBMapJsonConverter {
+public class PreciseValueRBMapJsonConverter implements HasJsonApiDocumentation {
 
   public <K, V extends PreciseValue<? super V>> JsonObject toJsonObject(
       RBMap<K, V> map,
@@ -58,6 +60,11 @@ public class PreciseValueRBMapJsonConverter {
       mutableMap.putAssumingAbsent(keyConverter.apply(key), bigDecimalConverter.apply(value));
     });
     return newRBMap(mutableMap);
+  }
+
+  @Override
+  public JsonApiDocumentation getJsonApiDocumentation() {
+    return intermediateJsonApiDocumentationWithFixme(RBMap.class);
   }
 
 }
