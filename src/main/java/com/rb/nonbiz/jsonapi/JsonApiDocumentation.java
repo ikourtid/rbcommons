@@ -2,6 +2,7 @@ package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonElement;
 import com.rb.nonbiz.text.HumanReadableLabel;
+import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -50,6 +51,8 @@ public class JsonApiDocumentation {
    * The reader of the JSON API should not care what the names of the Java classes are. But we need some sort of
    * unique way of referring to this JSON "class" (in the general object-oriented sense, not in the Java sense),
    * so let's just use the {@link Class#getSimpleName()} for that purpose.
+   *
+   * This is similar to what we do for instantiating {@link RBLog}.
    */
   public Class<?> getClazz() {
     return clazz;
