@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
+
 /**
  * Reads a PreciseValue from JSON for the case where it's the value of a JsonObject that's keyed by instrument
  * (JsonTicker, to be precise).
@@ -18,11 +20,13 @@ import java.util.function.Function;
  * that mentions the relevant instrument - not just e.g.
  * "Attempt to construct a PositiveQuantity with -93 &le; 0"
  */
-public class PreciseValueJsonApiConverter {
+public class PreciseValueJsonApiConverter implements HasJsonApiDocumentation {
 
   public <V extends PreciseValue<? super V>> V fromJsonBigDecimal(
       JsonElement valueAsJsonElementDouble,
-      JsonTicker jsonTicker, JsonTickerMap jsonTickerMap, Function<BigDecimal, V> converter) {
+      JsonTicker jsonTicker,
+      JsonTickerMap jsonTickerMap,
+      Function<BigDecimal, V> converter) {
     Optional<InstrumentId> instrumentId = jsonTickerMap.getOptionalInstrumentId(jsonTicker);
     BigDecimal value = valueAsJsonElementDouble.getAsBigDecimal();
     if (!instrumentId.isPresent()) {
@@ -36,6 +40,11 @@ public class PreciseValueJsonApiConverter {
           "Error converting known ticker %s (instrumentId %s ): %s",
               jsonTicker, instrumentId.get().asLong(), e.getMessage()));
     }
+  }
+
+  @Override
+  public JsonApiDocumentation getJsonApiDocumentation() {
+    return intermediateJsonApiDocumentationWithFixme(PreciseValue.class);
   }
 
 }
