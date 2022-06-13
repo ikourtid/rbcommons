@@ -158,8 +158,7 @@ public class JsonApiDocumentation {
       this.childNodes = checkNotAlreadySet(this.childNodes, childNodes);
       return this;
     }
-
-
+    
     public JsonApiDocumentationBuilder hasChildNodes(
         HasJsonApiDocumentation first,
         HasJsonApiDocumentation second,
