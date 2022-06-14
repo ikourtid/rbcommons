@@ -7,10 +7,12 @@ import com.google.inject.Inject;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
 import com.rb.nonbiz.json.RBJsonObjectBuilder;
+import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Optional;
 import java.util.function.Function;
 
+import static com.rb.nonbiz.collections.RBRanges.hasEitherBoundOpen;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getOptionalJsonPrimitive;
@@ -33,6 +35,13 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
   public <C extends Comparable<? super C>> JsonObject toJsonObject(
       Range<C> range,
       Function<C, JsonPrimitive> serializer) {
+    // Since fromJsonObject() will create ranges with closed bounds, make sure
+    // that we aren't converting a range with open bounds here.
+    RBPreconditions.checkArgument(
+        !hasEitherBoundOpen(range),
+        "Neither bound may be both present and open: %s",
+        range);
+
     RBJsonObjectBuilder builder = rbJsonObjectBuilder();
     if (range.hasLowerBound()) {
       builder.setJsonPrimitive("min", serializer.apply(range.lowerEndpoint()));
