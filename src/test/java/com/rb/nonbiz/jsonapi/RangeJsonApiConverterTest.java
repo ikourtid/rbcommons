@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.util.function.Function;
 
+import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
@@ -22,6 +23,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatch
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.types.Correlation.correlation;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
@@ -29,6 +31,24 @@ import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RangeJsonApiConverterTest extends RBTest<RangeJsonApiConverter> {
+
+  @Test
+  public void convertRangeWithOpenBound_throws() {
+    Function<Range<Money>, JsonObject> maker =
+        range -> makeTestObject().toJsonObject(
+            range,
+            money -> jsonDouble(money.doubleValue()));
+
+    JsonObject doesNotThrow;
+    doesNotThrow = maker.apply(Range.atLeast(money(111)));
+    doesNotThrow = maker.apply(Range.atMost( money(222)));
+    doesNotThrow = maker.apply(Range.closed( money(111), money(222)));
+
+    // can't convert ranges with open bounds
+    assertIllegalArgumentException( () -> maker.apply(Range.greaterThan(money(111))));
+    assertIllegalArgumentException( () -> maker.apply(Range.lessThan(   money(222))));
+    assertIllegalArgumentException( () -> maker.apply(Range.open(money(111), money(222))));
+  }
 
   @Test
   public void testRanges_differentTypes() {
