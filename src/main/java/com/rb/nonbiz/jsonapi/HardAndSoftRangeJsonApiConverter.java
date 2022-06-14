@@ -19,7 +19,7 @@ import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 /**
  * Converts a {@link HardAndSoftRange} back and forth to a JSON array for our public API.
  */
-public class HardAndSoftRangeJsonApiConverter implements HasJsonApiDocumentation{
+public class HardAndSoftRangeJsonApiConverter implements HasJsonApiDocumentation {
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties("hardRange", "softRange")
