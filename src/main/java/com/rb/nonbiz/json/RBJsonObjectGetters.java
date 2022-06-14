@@ -41,6 +41,10 @@ public class RBJsonObjectGetters {
         : Optional.empty();
   }
 
+  /**
+   * From 'jsonObject', get the value of 'property' if it exists (which we assume to be a JsonPrimitive).
+   * If missing, return empty optional.
+   */
   public static Optional<JsonPrimitive> getOptionalJsonPrimitive(
       JsonObject jsonObject,
       String property) {
