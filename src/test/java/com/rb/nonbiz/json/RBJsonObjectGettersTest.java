@@ -83,6 +83,21 @@ public class RBJsonObjectGettersTest {
   }
 
   @Test
+  public void test_getOptionalJsonPrimitive() {
+    JsonObject jsonObject = jsonObject(
+        "x", jsonDouble(1.23),
+        "y", jsonString("abc"));
+    assertOptionalEmpty(getOptionalJsonPrimitive(jsonObject, ""));
+    assertOptionalEmpty(getOptionalJsonPrimitive(jsonObject, "z"));
+    assertOptionalEquals(
+        jsonDouble(1.23),
+        getOptionalJsonPrimitive(jsonObject, "x"));
+    assertOptionalEquals(
+        jsonString("abc"),
+        getOptionalJsonPrimitive(jsonObject, "y"));
+  }
+
+  @Test
   public void testGetOptionalJsonSubObject() {
     JsonObject jsonObject = jsonObject(
         "notSubobject", jsonDouble(1.23),
