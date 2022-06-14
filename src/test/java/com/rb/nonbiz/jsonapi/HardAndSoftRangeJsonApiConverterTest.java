@@ -89,6 +89,10 @@ public class HardAndSoftRangeJsonApiConverterTest extends RBTest<HardAndSoftRang
                 "min", jsonDouble(20))));
   }
 
+  // can't check for a hard range with no bounds;      HardAndSoftRange disallows that
+  // can't check for a soft range with a single point; HardAndSoftRange disallows that
+  // can't check for hard and soft ranges that have one common boundary; not allowed
+
   private void testMoneyRoundTripConversionHelper(
       HardAndSoftRange<Money> moneyHardAndSoftRange,
       JsonObject jsonObject) {
