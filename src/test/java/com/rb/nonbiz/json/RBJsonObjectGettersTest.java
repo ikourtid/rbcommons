@@ -29,15 +29,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
-import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
-import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.Asserters.assertOptionalDoubleAlmostEquals;
-import static com.rb.nonbiz.testutils.Asserters.assertOptionalDoubleEmpty;
-import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
-import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
-import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEmpty;
-import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEquals;
-import static com.rb.nonbiz.testutils.Asserters.assertThrowsAnyException;
+import static com.rb.nonbiz.testutils.Asserters.*;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_PRICE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static junit.framework.TestCase.assertEquals;
@@ -86,7 +78,10 @@ public class RBJsonObjectGettersTest {
   public void test_getOptionalJsonPrimitive() {
     JsonObject jsonObject = jsonObject(
         "x", jsonDouble(1.23),
-        "y", jsonString("abc"));
+        "y", jsonString("abc"),
+        "obj", jsonObject(
+            "key1", jsonBoolean(true),
+            "key2", jsonInteger(3)));
     assertOptionalEmpty(getOptionalJsonPrimitive(jsonObject, ""));
     assertOptionalEmpty(getOptionalJsonPrimitive(jsonObject, "z"));
     assertOptionalEquals(
@@ -95,6 +90,9 @@ public class RBJsonObjectGettersTest {
     assertOptionalEquals(
         jsonString("abc"),
         getOptionalJsonPrimitive(jsonObject, "y"));
+
+    // can't use this to retrieve a JSON sub-object; JsonPrimitives only
+    assertThrowsAnyException( () -> getOptionalJsonPrimitive(jsonObject, "obj"));
   }
 
   @Test
