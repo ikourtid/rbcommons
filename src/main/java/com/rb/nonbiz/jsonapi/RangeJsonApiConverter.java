@@ -1,26 +1,25 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.google.common.collect.Range;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.inject.Inject;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
-import com.rb.nonbiz.types.RBNumeric;
+import com.rb.nonbiz.json.RBJsonObjectBuilder;
 
 import java.util.Optional;
-import java.util.OptionalDouble;
 import java.util.function.Function;
 
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
-import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonPrimitiveOrThrow;
-import static com.rb.nonbiz.json.RBJsonObjectGetters.getOptionalJsonDouble;
-import static com.rb.nonbiz.json.RBJsonObjectGetters.getOptionalJsonElement;
+import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
+import static com.rb.nonbiz.json.RBJsonObjectGetters.getOptionalJsonPrimitive;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
 
 /**
  * Convert a Range back and forth to JSON for our public API.
+ *
+ * <p> Note that this only returns closed ranges. That is, the ranges include their endpoints. </p>
  */
 public class RangeJsonApiConverter implements HasJsonApiDocumentation {
 
@@ -31,43 +30,52 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
 
   @Inject JsonValidator jsonValidator;
 
-  public <T extends RBNumeric<? super T>> JsonObject toJsonObject(
-      Range<T> range,
-      Function<T, JsonPrimitive> serializer) {
-    return null;
+  public <C extends Comparable<? super C>> JsonObject toJsonObject(
+      Range<C> range,
+      Function<C, JsonPrimitive> serializer) {
+
+    RBJsonObjectBuilder builder = rbJsonObjectBuilder();
+    if (range.hasLowerBound()) {
+      builder.setJsonPrimitive("min", serializer.apply(range.lowerEndpoint()));
+    }
+    if (range.hasUpperBound()) {
+      builder.setJsonPrimitive("max", serializer.apply(range.upperEndpoint()));
+    }
+
+    return jsonValidator.validate(
+        builder.build(),
+        JSON_VALIDATION_INSTRUCTIONS);
   }
 
-  public <T extends RBNumeric<? super T>> Range<T> fromJsonObject(
+  public <C extends Comparable<? super C>> Range<C> fromJsonObject(
       JsonObject jsonObject,
-      Function<JsonPrimitive, T> deserializer) {
+      Function<JsonPrimitive, C> deserializer) {
     jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
 
+    Optional<JsonPrimitive> maybeMin = getOptionalJsonPrimitive(jsonObject, "min");
+    Optional<JsonPrimitive> maybeMax = getOptionalJsonPrimitive(jsonObject, "max");
 
-    boolean hasMin = jsonObject.has("min");
-    boolean hasMax = jsonObject.has("max");
-
-    if (hasMin) {
-      T minValue = deserializer.apply(getJsonPrimitiveOrThrow(jsonObject, "min") );
-      if (hasMax) {
+    if (maybeMin.isPresent()) {
+      C minValue = deserializer.apply(maybeMin.get());
+      if (maybeMax.isPresent()) {
         // has both min and max
-        T maxValue = deserializer.apply(getJsonPrimitiveOrThrow(jsonObject, "max"));
+        C maxValue = deserializer.apply(maybeMax.get());
         return Range.closed(minValue, maxValue);
       } else {
         // has min but no max
         return Range.atLeast(minValue);
       }
     } else {
-      if (hasMax) {
+      if (maybeMax.isPresent()) {
         // no min but has max
-        T maxValue = deserializer.apply(getJsonPrimitiveOrThrow(jsonObject, "max"));
+        C maxValue = deserializer.apply(maybeMax.get());
         return Range.atMost(maxValue);
       } else {
-        // no min or max
+        // no min or max; return the open range with no bounds
         return Range.all();
       }
     }
   }
-
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
