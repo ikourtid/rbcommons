@@ -24,6 +24,7 @@ import org.junit.Test;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.rb.biz.jsonapi.JsonTickerMapImplTest.jsonTickerMap;
 import static com.rb.biz.types.Money.money;
@@ -373,6 +374,28 @@ public class RBJsonObjectsTest {
                 "id2", jsonObject(
                     "id",       jsonString("id2"),
                     "fraction", jsonDouble(0.22)))));
+  }
+
+  @Test
+  public void testStreamOfHasUniqueIdToJsonObject() {
+    Stream<TestHasUniqueId> streamOfHasUniqueId2 = Stream.of(
+        testHasUniqueId(uniqueId("id1"), unitFraction(0.11)),
+        testHasUniqueId(uniqueId("id2"), unitFraction(0.22)));
+
+    assertThat(
+        streamOfHasUniqueIdToJsonObject(
+            streamOfHasUniqueId2,
+            testHasUniqueId -> jsonObject(
+                "uniqueId", jsonString(testHasUniqueId.getUniqueId().getStringId()),
+                "value",    jsonDouble(testHasUniqueId.getValue()))),
+        jsonObjectEpsilonMatcher(
+            jsonObject(
+                "id1", jsonObject(
+                    "uniqueId", jsonString("id1"),
+                    "value",    jsonDouble(0.11)),
+                "id2", jsonObject(
+                    "uniqueId", jsonString("id2"),
+                    "value",    jsonDouble(0.22)))));
   }
 
   @Test
