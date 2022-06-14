@@ -37,6 +37,9 @@ import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpect
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
 import static com.rb.nonbiz.collections.Pair.pair;
+import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromCollectionOfHasInstrumentId;
+import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
+import static com.rb.nonbiz.collections.RBMapConstructors.rbMapWithExpectedSizeFromStream;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.collections.RBRanges.constructRange;
@@ -169,6 +172,15 @@ public class RBJsonObjects {
         rbSetOfHasUniqueId.getRawMap(),
         uniqueId -> uniqueId.getStringId(),
         valueSerializer);
+  }
+
+  public static <V extends HasUniqueId<V>> JsonObject streamOfHasUniqueIdToJsonObject(
+      Stream<V> stream,
+      Function<V, JsonElement> itemSerializer) {
+    JsonObject jsonObject = new JsonObject();
+    stream.forEachOrdered(
+        v -> jsonObject.add(v.getUniqueId().getStringId(), itemSerializer.apply(v)));
+    return jsonObject;
   }
 
   public static <V> JsonArray arrayIndexMappingToJsonArray(
