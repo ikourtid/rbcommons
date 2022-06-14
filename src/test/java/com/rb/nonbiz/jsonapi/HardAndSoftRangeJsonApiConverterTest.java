@@ -14,6 +14,7 @@ import java.util.function.Function;
 import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectMatcher;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.types.Correlation.correlation;
@@ -39,7 +40,7 @@ public class HardAndSoftRangeJsonApiConverterTest extends RBTest<HardAndSoftRang
                 "min", jsonDouble(0.2),
                 "max", jsonDouble(0.3))),
         signedFraction -> jsonDouble(signedFraction.doubleValue()),
-        jsonPrimitive -> signedFraction(jsonPrimitive.getAsDouble()));
+        jsonPrimitive  -> signedFraction(jsonPrimitive.getAsDouble()));
   }
 
   // convert a HardAndSoftRange of ImpreciseValues
@@ -56,8 +57,36 @@ public class HardAndSoftRangeJsonApiConverterTest extends RBTest<HardAndSoftRang
             "softRange", jsonObject(
                 "min", jsonDouble(0.222),
                 "max", jsonDouble(0.333))),
-        correlation -> jsonDouble(correlation.doubleValue()),
+        correlation   -> jsonDouble(correlation.doubleValue()),
         jsonPrimitive -> correlation(jsonPrimitive.getAsDouble()));
+  }
+
+  @Test
+  public void testOpenRanges_atMost() {
+    // convert a HardAndSoftRange that has no lower bounds
+    testMoneyRoundTripConversionHelper(
+        hardAndSoftRange(
+            Range.atMost(money(100)),
+            Range.atMost(money(90))),
+        jsonObject(
+            "hardRange", singletonJsonObject(
+                "max", jsonDouble(100)),
+            "softRange", singletonJsonObject(
+                "max", jsonDouble( 90))));
+  }
+
+  @Test
+  public void testOpenRanges_atLeast() {
+    // convert a HardAndSoftRange that has no upper bounds
+    testMoneyRoundTripConversionHelper(
+        hardAndSoftRange(
+            Range.atLeast(money(10)),
+            Range.atLeast(money(20))),
+        jsonObject(
+            "hardRange", singletonJsonObject(
+                "min", jsonDouble(10)),
+            "softRange", singletonJsonObject(
+                "min", jsonDouble(20))));
   }
 
   private void testMoneyRoundTripConversionHelper(
