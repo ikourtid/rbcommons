@@ -33,7 +33,6 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
   public <C extends Comparable<? super C>> JsonObject toJsonObject(
       Range<C> range,
       Function<C, JsonPrimitive> serializer) {
-
     RBJsonObjectBuilder builder = rbJsonObjectBuilder();
     if (range.hasLowerBound()) {
       builder.setJsonPrimitive("min", serializer.apply(range.lowerEndpoint()));
