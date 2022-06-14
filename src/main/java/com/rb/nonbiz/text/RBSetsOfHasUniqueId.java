@@ -1,7 +1,12 @@
 package com.rb.nonbiz.text;
 
+import com.rb.nonbiz.collections.MutableRBMap;
+import com.rb.nonbiz.collections.RBMap;
+
+import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromCollection;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.text.RBSetOfHasUniqueId.rbSetOfHasUniqueId;
 
@@ -21,6 +26,15 @@ public class RBSetsOfHasUniqueId {
     return rbSetOfHasUniqueId(
         rbMapFromCollection(
             concatenateFirstSecondAndRest(first, second, rest), v -> v.getUniqueId()));
+  }
+
+  public static <V extends HasUniqueId<V>> RBMap<UniqueId<V>, V> rbSetOfHasUniqueIdToRBMap(
+      RBSetOfHasUniqueId<V> rbSetOfHasUniqueId) {
+    MutableRBMap<UniqueId<V>, V> mutableRBMap = newMutableRBMapWithExpectedSize(rbSetOfHasUniqueId.size());
+    rbSetOfHasUniqueId
+        .entrySet()
+        .forEach(entry -> mutableRBMap.putAssumingAbsent(entry.getKey(), entry.getValue()));
+    return newRBMap(mutableRBMap);
   }
 
 }
