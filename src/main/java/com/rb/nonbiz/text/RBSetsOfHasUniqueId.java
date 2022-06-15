@@ -28,13 +28,4 @@ public class RBSetsOfHasUniqueId {
             concatenateFirstSecondAndRest(first, second, rest), v -> v.getUniqueId()));
   }
 
-  public static <V extends HasUniqueId<V>> RBMap<UniqueId<V>, V> rbSetOfHasUniqueIdToRBMap(
-      RBSetOfHasUniqueId<V> rbSetOfHasUniqueId) {
-    MutableRBMap<UniqueId<V>, V> mutableRBMap = newMutableRBMapWithExpectedSize(rbSetOfHasUniqueId.size());
-    rbSetOfHasUniqueId
-        .entrySet()
-        .forEach(entry -> mutableRBMap.putAssumingAbsent(entry.getKey(), entry.getValue()));
-    return newRBMap(mutableRBMap);
-  }
-
 }
