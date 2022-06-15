@@ -91,7 +91,7 @@ public class RBGson {
     return new JsonPrimitive(roundTo8digits(bigDecimal.doubleValue()));
   }
 
-  public static JsonPrimitive jsonBigDecimalUnrounded(PreciseValue preciseValue) {
+  public static <P extends PreciseValue<? super P>> JsonPrimitive jsonBigDecimalUnrounded(P preciseValue) {
     return jsonBigDecimalUnrounded(preciseValue.asBigDecimal());
   }
 
