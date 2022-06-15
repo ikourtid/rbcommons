@@ -8,11 +8,13 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.unorderedCollectionMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -24,6 +26,7 @@ import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueIdMatcher;
 import static com.rb.nonbiz.text.UniqueId.uniqueId;
 import static com.rb.nonbiz.types.UnitFraction.DUMMY_UNIT_FRACTION;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static java.util.Comparator.comparing;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -55,7 +58,7 @@ public class RBSetOfHasUniqueIdTest extends RBTestMatcher<RBSetOfHasUniqueId<Tes
   @Test
   public void testOrderedStream() {
     Collections2.permutations(ImmutableList.<UniqueId<TestHasUniqueId>>of(
-        uniqueId("idA"), uniqueId("idB"), uniqueId("idC"), uniqueId("idD")))
+            uniqueId("idA"), uniqueId("idB"), uniqueId("idC"), uniqueId("idD")))
         .forEach(list ->
             assertThat(
                 "Whichever way we permute the unique IDs, the ordered stream should come out the same",
@@ -73,6 +76,41 @@ public class RBSetOfHasUniqueIdTest extends RBTestMatcher<RBSetOfHasUniqueId<Tes
                         testHasUniqueId(uniqueId("idC"), unitFraction(0.123)),
                         testHasUniqueId(uniqueId("idD"), unitFraction(0.123))),
                     f -> testHasUniqueIdMatcher(f))));
+  }
+
+  @Test
+  public void testAlternateConstructors() {
+    UniqueId<TestHasUniqueId> id1 = uniqueId("id1");
+    UniqueId<TestHasUniqueId> id2 = uniqueId("id2");
+
+    TestHasUniqueId testHasUniqueId1 = testHasUniqueId(id1, unitFraction(0.111));
+    TestHasUniqueId testHasUniqueId2 = testHasUniqueId(id2, unitFraction(0.222));
+
+    ImmutableList<TestHasUniqueId> listOfHasUniqueIds = ImmutableList.of(
+        testHasUniqueId1,
+        testHasUniqueId2);
+
+    // try both the Collection-based and Stream-based constructors
+    for (RBSetOfHasUniqueId<TestHasUniqueId> usingAlternateConstructor : ImmutableList.of(
+        rbSetOfHasUniqueId(listOfHasUniqueIds),
+        rbSetOfHasUniqueId(Stream.of(testHasUniqueId1, testHasUniqueId2)))) {
+
+      // test that values() returns the expected values
+      assertThat(
+          usingAlternateConstructor.values(),
+          unorderedCollectionMatcher(
+              listOfHasUniqueIds,
+              v -> testHasUniqueIdMatcher(v),
+              comparing(v -> v.getUniqueId())));
+
+      // test that getRawMap returns the expected map
+      assertThat(
+          usingAlternateConstructor.getRawMap(),
+          rbMapMatcher(rbMapOf(
+                  id1, testHasUniqueId1,
+                  id2, testHasUniqueId2),
+              f -> testHasUniqueIdMatcher(f)));
+    }
   }
 
   @Override
