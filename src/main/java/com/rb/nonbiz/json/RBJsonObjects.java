@@ -37,9 +37,6 @@ import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpect
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
 import static com.rb.nonbiz.collections.Pair.pair;
-import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromCollectionOfHasInstrumentId;
-import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
-import static com.rb.nonbiz.collections.RBMapConstructors.rbMapWithExpectedSizeFromStream;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.collections.RBRanges.constructRange;
@@ -110,7 +107,7 @@ public class RBJsonObjects {
       IidMap<V> iidMap,
       JsonTickerMap jsonTickerMap,
       Function<V, JsonElement> valueSerializer) {
-    JsonObject jsonObject = new JsonObject();
+    RBJsonObjectBuilder builder = rbJsonObjectBuilder();
     // The following code will insert items into the JSON object in ticker alphabetical order.
     // I'm not sure if there's a guarantee that they will also PRINT in that order,
     // but in practice that seems to be the case.
@@ -123,8 +120,8 @@ public class RBJsonObjects {
               valueSerializer.apply(value));
         })
         .sorted(comparing(v -> v.getLeft()))
-        .forEach(pair -> jsonObject.add(pair.getLeft(), pair.getRight()));
-    return jsonObject;
+        .forEach(pair -> builder.setJsonElement(pair.getLeft(), pair.getRight()));
+    return builder.build();
   }
 
   /**
@@ -147,7 +144,7 @@ public class RBJsonObjects {
       JsonTickerMap jsonTickerMap,
       BiFunction<InstrumentId, V, JsonElement> valueSerializer,
       Predicate<JsonElement> mustIncludeIf) {
-    JsonObject jsonObject = new JsonObject();
+    RBJsonObjectBuilder builder = rbJsonObjectBuilder();
     // The following code will insert items into the JSON object in ticker alphabetical order.
     // I'm not sure if there's a guarantee that they will also PRINT in that order,
     // but in practice that seems to be the case.
@@ -161,8 +158,8 @@ public class RBJsonObjects {
         })
         .sorted(comparing(v -> v.getLeft()))
         .filter(pair -> mustIncludeIf.test(pair.getRight()))
-        .forEach(pair -> jsonObject.add(pair.getLeft(), pair.getRight()));
-    return jsonObject;
+        .forEach(pair -> builder.setJsonElement(pair.getLeft(), pair.getRight()));
+    return builder.build();
   }
 
   public static <V extends HasUniqueId<V>> JsonObject rbSetOfHasUniqueIdToJsonObject(
@@ -177,10 +174,12 @@ public class RBJsonObjects {
   public static <V extends HasUniqueId<V>> JsonObject streamOfHasUniqueIdToJsonObject(
       Stream<V> stream,
       Function<V, JsonElement> itemSerializer) {
-    JsonObject jsonObject = new JsonObject();
+    RBJsonObjectBuilder builder = rbJsonObjectBuilder();
     stream.forEachOrdered(
-        v -> jsonObject.add(v.getUniqueId().getStringId(), itemSerializer.apply(v)));
-    return jsonObject;
+        v -> builder.setJsonElement(
+            v.getUniqueId().getStringId(),
+            itemSerializer.apply(v)));
+    return builder.build();
   }
 
   public static <V> JsonArray arrayIndexMappingToJsonArray(
