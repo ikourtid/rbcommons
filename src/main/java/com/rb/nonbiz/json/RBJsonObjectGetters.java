@@ -54,9 +54,22 @@ public class RBJsonObjectGetters {
   }
 
   /**
+   * From 'jsonObject', get the value of 'property' if it exists (which we assume to be a JsonObject).
+   * If missing, return empty optional.
+   */
+  public static Optional<JsonObject> getOptionalJsonObject(
+      JsonObject jsonObject,
+      String property) {
+    return jsonObject.has(property)
+        ? Optional.of(jsonObject.getAsJsonObject(property))
+        : Optional.empty();
+  }
+
+  /**
    * From 'jsonObject', get the value of 'property' if it exists (which we assume to be another JsonObject)
    * and return a transformed version of it, otherwise return empty optional.
    */
+  // FIXME SWA JSON rename to getOptionalTransformedJsonSubObject?
   public static <T> Optional<T> getOptionalJsonSubObject(
       JsonObject jsonObject,
       String property,
