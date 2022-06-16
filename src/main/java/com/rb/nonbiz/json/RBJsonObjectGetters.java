@@ -61,7 +61,7 @@ public class RBJsonObjectGetters {
       JsonObject jsonObject,
       String property) {
     return jsonObject.has(property)
-        ? Optional.of(jsonObject.getAsJsonObject(property))
+        ? Optional.of(getJsonObjectOrThrow(jsonObject, property))
         : Optional.empty();
   }
 
