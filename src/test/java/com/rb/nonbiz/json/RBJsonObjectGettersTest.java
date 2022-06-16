@@ -96,6 +96,28 @@ public class RBJsonObjectGettersTest {
   }
 
   @Test
+  public void test_getOptionalJsonObject() {
+    JsonObject jsonObject = jsonObject(
+        "x", jsonDouble(1.23),
+        "y", jsonString("abc"),
+        "obj", jsonObject(
+            "key1", jsonBoolean(true),
+            "key2", jsonInteger(3)));
+    assertOptionalEmpty(getOptionalJsonObject(jsonObject, ""));
+    assertOptionalEmpty(getOptionalJsonObject(jsonObject, "z"));
+    assertThat(
+        getOptionalJsonObject(jsonObject, "obj").get(),
+        jsonObjectEpsilonMatcher(
+            jsonObject(
+                "key1", jsonBoolean(true),
+                "key2", jsonInteger(3))));
+
+    // can't use this to retrieve a JsonPrimitive
+    assertThrowsAnyException( () -> getOptionalJsonObject(jsonObject, "x"));
+    assertThrowsAnyException( () -> getOptionalJsonObject(jsonObject, "y"));
+  }
+
+  @Test
   public void testGetOptionalJsonSubObject() {
     JsonObject jsonObject = jsonObject(
         "notSubobject", jsonDouble(1.23),
