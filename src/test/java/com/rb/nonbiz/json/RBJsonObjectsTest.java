@@ -378,13 +378,11 @@ public class RBJsonObjectsTest {
 
   @Test
   public void testStreamOfHasUniqueIdToJsonObject() {
-    Stream<TestHasUniqueId> streamOfHasUniqueId2 = Stream.of(
-        testHasUniqueId(uniqueId("id1"), unitFraction(0.11)),
-        testHasUniqueId(uniqueId("id2"), unitFraction(0.22)));
-
     assertThat(
         streamOfHasUniqueIdToJsonObject(
-            streamOfHasUniqueId2,
+            Stream.of(
+                testHasUniqueId(uniqueId("id1"), unitFraction(0.11)),
+                testHasUniqueId(uniqueId("id2"), unitFraction(0.22))),
             testHasUniqueId -> jsonObject(
                 "uniqueId", jsonString(testHasUniqueId.getUniqueId().getStringId()),
                 "value",    jsonDouble(testHasUniqueId.getValue()))),
