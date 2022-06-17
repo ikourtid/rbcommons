@@ -86,6 +86,19 @@ public class RBRangesTest {
         Range.all());
   }
 
+  /**
+   * Return a List of all the types of ranges that have at least one exclusive bound. E.g. the
+   * boundary point itself is not in the range.
+   */
+  public static <V extends Comparable<? super V>> List<Range<V>> allRangesWithAnExlusiveBound(V min, V max) {
+    return ImmutableList.of(
+        Range.greaterThan(min),
+        Range.lessThan(max),
+        Range.open(min, max),
+        Range.openClosed(min, max),
+        Range.closedOpen(min, max));
+  }
+
   public static <V extends Comparable<? super V>> List<Range<V>> allNonClosedRanges(V min, V max) {
     return ImmutableList.of(
         Range.atLeast(min),

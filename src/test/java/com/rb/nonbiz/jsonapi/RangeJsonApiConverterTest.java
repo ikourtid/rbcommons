@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import java.util.function.Function;
 
-import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
+import static com.rb.nonbiz.collections.RBRangesTest.allRangesWithAnExlusiveBound;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
@@ -44,10 +44,10 @@ public class RangeJsonApiConverterTest extends RBTest<RangeJsonApiConverter> {
     doesNotThrow = maker.apply(Range.atMost( money(222)));
     doesNotThrow = maker.apply(Range.closed( money(111), money(222)));
 
-    // can't convert ranges with open bounds
-    assertIllegalArgumentException( () -> maker.apply(Range.greaterThan(money(111))));
-    assertIllegalArgumentException( () -> maker.apply(Range.lessThan(   money(222))));
-    assertIllegalArgumentException( () -> maker.apply(Range.open(money(111), money(222))));
+    // can't convert ranges with open bounds, e.g. with a boundary point that is not part of the range
+    for (Range<Money> exclusiveBoundRange: allRangesWithAnExlusiveBound(money(111), money(222))) {
+      assertIllegalArgumentException( () -> maker.apply(exclusiveBoundRange));
+    }
   }
 
   @Test

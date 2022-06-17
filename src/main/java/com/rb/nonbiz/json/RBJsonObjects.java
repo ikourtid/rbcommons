@@ -60,7 +60,7 @@ public class RBJsonObjects {
 
   /**
    * Converts a closed range to a JSON object.
-   * Throws if the range has either an open lower bound or an open upper bound.
+   * Throws if the range has only one bound, or if the range has either an open upper or lower bound.
    */
   public static <C extends Comparable<? super C>> JsonObject closedRangeToJsonObject(
       Range<C> range, Function<C, JsonElement> valueSerializer) {
