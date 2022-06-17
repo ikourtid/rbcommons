@@ -39,7 +39,7 @@ public class HardAndSoftRangeJsonApiConverterTest extends RBTest<HardAndSoftRang
             "softRange", jsonObject(
                 "min", jsonDouble(0.2),
                 "max", jsonDouble(0.3))),
-        signedFraction -> jsonDouble(signedFraction.doubleValue()),
+        signedFraction -> jsonDouble(signedFraction),
         jsonPrimitive  -> signedFraction(jsonPrimitive.getAsDouble()));
   }
 
@@ -57,7 +57,7 @@ public class HardAndSoftRangeJsonApiConverterTest extends RBTest<HardAndSoftRang
             "softRange", jsonObject(
                 "min", jsonDouble(0.222),
                 "max", jsonDouble(0.333))),
-        correlation   -> jsonDouble(correlation.doubleValue()),
+        correlation   -> jsonDouble(correlation),
         jsonPrimitive -> correlation(jsonPrimitive.getAsDouble()));
   }
 
