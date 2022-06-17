@@ -4,9 +4,11 @@ import com.google.common.collect.Range;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.inject.Inject;
+import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
 import com.rb.nonbiz.json.RBJsonObjectBuilder;
+import com.rb.nonbiz.json.RBJsonObjects;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Optional;
@@ -21,7 +23,22 @@ import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBui
 /**
  * Convert a Range back and forth to JSON for our public API.
  *
- * <p> Note that this only returns closed ranges. That is, the ranges include their endpoints. </p>
+ * <p> Note that this only converts ranges that *include* any endpoints they may have. That is,
+ * (-inf, inf), [1, inf), (-inf, 10] and [1, 10] can all be converted because their boundary points
+ * are included. </p>
+ *
+ * <p> Conversely, ranges that *exclude* an endpoint cannot be converted here. E.g. converting ranges
+ * such as (-inf, 10), (1, inf), (1, 10], [1, 10) is not supported here. </p>
+ *
+ * <p> Note that our notation is not entirely clear, because we use "closed" when refering to both ranges
+ * and individual boundaries. We use {@link ClosedRange} to mean a range with both
+ * a lower bound and an upper bound, with both bounds being "closed" (e.g. inclusive). We also refer to a
+ * range with only one boundary (e.g. Range.atLeast(1), Range.atMost(10)) as having a "closed" bound. </p>
+ *
+ * <p> In order to convert a {@link ClosedRange} to JSON, use {@link RBJsonObjects#closedRangeToJsonObject}. </p>
+ *
+ * @see ClosedRange
+ * @see RBJsonObjects#closedRangeToJsonObject
  */
 public class RangeJsonApiConverter implements HasJsonApiDocumentation {
 
@@ -42,16 +59,11 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
         "Neither bound may be both present and open: %s",
         range);
 
-    RBJsonObjectBuilder builder = rbJsonObjectBuilder();
-    if (range.hasLowerBound()) {
-      builder.setJsonPrimitive("min", serializer.apply(range.lowerEndpoint()));
-    }
-    if (range.hasUpperBound()) {
-      builder.setJsonPrimitive("max", serializer.apply(range.upperEndpoint()));
-    }
-
     return jsonValidator.validate(
-        builder.build(),
+        rbJsonObjectBuilder()
+            .setIf("min", range, r -> r.hasLowerBound(), r -> serializer.apply(r.lowerEndpoint()))
+            .setIf("max", range, r -> r.hasUpperBound(), r -> serializer.apply(r.upperEndpoint()))
+            .build(),
         JSON_VALIDATION_INSTRUCTIONS);
   }
 
