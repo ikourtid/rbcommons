@@ -1,9 +1,15 @@
 package com.rb.nonbiz.testutils;
 
 import com.google.common.io.CharStreams;
+import com.rb.nonbiz.jsonapi.HasJsonApiDocumentation;
+import com.rb.nonbiz.jsonapi.JsonApiDocumentation;
+import com.rb.nonbiz.text.HasHumanReadableLabel;
+import com.rb.nonbiz.text.HumanReadableLabel;
+import com.rb.nonbiz.util.RBPreconditions;
 import org.jmock.Mockery;
 import org.jmock.Sequence;
 import org.junit.After;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -124,5 +130,18 @@ public abstract class RBTest<T> extends RBCommonsTestConstants<T> {
    * However, in tests, we often just instantiate with new, unless we *have* to use makeRealObject.
    */
   protected abstract T makeTestObject();
+
+  @Test
+  public void testGetJsonApiDocumentation() {
+    T testObject = makeTestObject();
+    if (!HasJsonApiDocumentation.class.isAssignableFrom(testObject.getClass())) {
+      return;
+    }
+    // Asserting that this does not throw.
+    JsonApiDocumentation jsonApiDocumentation = ((HasJsonApiDocumentation) testObject).getJsonApiDocumentation();
+
+    // We could additionally check that the various getters don't return null or throw an exception.
+    // However, that's the job of the JsonApiDocumentationBuilder.
+  }
 
 }
