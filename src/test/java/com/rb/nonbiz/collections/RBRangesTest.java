@@ -87,9 +87,9 @@ public class RBRangesTest {
   }
 
   /**
-   * Return a List of all the types of ranges that have at least one exclusive bound. That is, a range
+   * Return a List of all the types of ranges that have at least one exclusive bound. That is, ranges
    * for which at least one boundary point is itself not part of the range. In terms of the Range class,
-   * a range with a boundary of type BoundType.OPEN.
+   * a range with at least one boundary of type BoundType.OPEN.
    */
   public static <V extends Comparable<? super V>> List<Range<V>> allRangesWithAnExlusiveBound(V min, V max) {
     return ImmutableList.of(
