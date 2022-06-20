@@ -51,7 +51,7 @@ public class PreciseValueJsonApiConverter implements HasJsonApiDocumentation {
         .setClass(PreciseValue.class)
         .setSingleLineSummary(label(asSingleLine(
             "A PreciseValue is the base class of many value classes in the code. ",
-            "It exists to avoid rounding problems with doubles such as 9.9999999999")))
+            "It exists to avoid rounding problems with doubles such as 9.9999999999.")))
         .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()

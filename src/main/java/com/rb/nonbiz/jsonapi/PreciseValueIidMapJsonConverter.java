@@ -91,7 +91,7 @@ public class PreciseValueIidMapJsonConverter implements HasJsonApiDocumentation 
         .setClass(IidMap.class)
         .setSingleLineSummary(label(asSingleLine(
             "An IidMap of PreciseValues. That is, an RBMap with keys that are InstrumentIds ",
-            "and values that are PreciseValues")))
+            "and values that are PreciseValues.")))
         .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
         .hasChildNode(preciseValueJsonApiConverter)
         .noTrivialSampleJsonSupplied()

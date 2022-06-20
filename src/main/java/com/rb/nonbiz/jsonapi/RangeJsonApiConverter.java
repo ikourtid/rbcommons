@@ -105,7 +105,7 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiDocumentationBuilder()
         .setClass(Range.class)
-        .setSingleLineSummary(label("A range holds an optional lower bound and an optional upper bound"))
+        .setSingleLineSummary(label("A range holds an optional lower bound and an optional upper bound."))
         .setDocumentationHtml(asSingleLine(
             "This class only supports range bounds that are 'closed'. That is, any boundary point ",
             "is part of the range. E.g. [1, 10], (-inf, 10], [1, inf), or (-inf, inf) would all be ",
