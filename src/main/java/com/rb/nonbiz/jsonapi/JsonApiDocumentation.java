@@ -155,6 +155,8 @@ public class JsonApiDocumentation {
           .setClass(clazz)
           .setSingleLineSummary(label("FIXME IAK / FIXME SWA JSONDOC"))
           .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+          .hasNoRequiredKeys()
+          .hasNoOptionalKeys()
           .hasChildNodes(Arrays.asList(items))
           .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied()
