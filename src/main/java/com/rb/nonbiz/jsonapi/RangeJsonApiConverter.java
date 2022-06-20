@@ -9,6 +9,7 @@ import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
 import com.rb.nonbiz.json.RBJsonObjectBuilder;
 import com.rb.nonbiz.json.RBJsonObjects;
+import com.rb.nonbiz.types.WeightedBySignedFraction;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Optional;
@@ -19,6 +20,9 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstru
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getOptionalJsonPrimitive;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
 
 /**
  * Convert a Range back and forth to JSON for our public API.
@@ -99,7 +103,17 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return intermediateJsonApiDocumentationWithFixme(Range.class);
+    return jsonApiDocumentationBuilder()
+        .setClass(Range.class)
+        .setSingleLineSummary(label("A range holds an optional lower bound and an optional upper bound"))
+        .setDocumentationHtml(asSingleLine(
+            "This class only supports range bounds that are 'closed'. That is, any boundary point ",
+            "is part of the range. E.g. [1, 10], (-inf, 10], [1, inf), or (-inf, inf) would all be ",
+            "supported."))
+        .hasNoChildNodes()
+        .noTrivialSampleJsonSupplied()
+        .noNontrivialSampleJsonSupplied()
+        .build();
   }
 
 }
