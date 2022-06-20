@@ -2,6 +2,7 @@ package com.rb.nonbiz.json;
 
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSets;
+import com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -11,6 +12,7 @@ import java.util.List;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
+import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 
 /**
  * Hold information about required and optional top-level properties for a JSON object.
@@ -42,6 +44,13 @@ public class JsonValidationInstructions {
       RBSet<String> requiredProperties, RBSet<String> optionalProperties) {
     this.requiredProperties = requiredProperties;
     this.optionalProperties = optionalProperties;
+  }
+
+  public static JsonValidationInstructions emptyJsonValidationInstructions() {
+    return jsonValidationInstructionsBuilder()
+        .hasNoRequiredProperties()
+        .hasNoOptionalProperties()
+        .build();
   }
 
   public RBSet<String> getRequiredProperties() {

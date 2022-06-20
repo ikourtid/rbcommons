@@ -1,6 +1,7 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonElement;
+import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.util.RBBuilder;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
+import static com.rb.nonbiz.json.JsonValidationInstructions.emptyJsonValidationInstructions;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -24,8 +26,7 @@ public class JsonApiDocumentation {
   private final Class<?> clazz;
   private final HumanReadableLabel singleLineSummary;
   private final String documentationHtml;
-  private final List<String> requiredKeys;
-  private final List<String> optionalKeys;
+  private final JsonValidationInstructions jsonValidationInstructions;
   private final List<HasJsonApiDocumentation> childNodes;
   private final Optional<JsonElement> trivialSampleJson;
   private final Optional<JsonElement> nontrivialSampleJson;
@@ -35,15 +36,13 @@ public class JsonApiDocumentation {
       HumanReadableLabel singleLineSummary,
       String documentationHtml,
       List<HasJsonApiDocumentation> childNodes,
-      List<String> requiredKeys,
-      List<String> optionalKeys,
+      JsonValidationInstructions jsonValidationInstructions,
       Optional<JsonElement> trivialSampleJson,
       Optional<JsonElement> nontrivialSampleJson) {
     this.clazz = clazz;
-    this.singleLineSummary =singleLineSummary;
+    this.singleLineSummary = singleLineSummary;
     this.documentationHtml = documentationHtml;
-    this.requiredKeys = requiredKeys;
-    this.optionalKeys = optionalKeys;
+    this.jsonValidationInstructions = jsonValidationInstructions;
     this.childNodes = childNodes;
     this.trivialSampleJson = trivialSampleJson;
     this.nontrivialSampleJson = nontrivialSampleJson;
@@ -72,17 +71,24 @@ public class JsonApiDocumentation {
   }
 
   /**
+   * The JSON validation instructions.
+   */
+  public JsonValidationInstructions getJsonValidationInstructions() {
+    return jsonValidationInstructions;
+  }
+
+  /**
    * A list of the required JSON keys.
    */
   public List<String> getRequiredKeys() {
-    return requiredKeys;
+    return jsonValidationInstructions.getRequiredProperties().toSortedList();
   }
 
   /**
    * A list of the optional JSON keys.
    */
   public List<String> getOptionalKeys() {
-    return optionalKeys;
+    return jsonValidationInstructions.getOptionalProperties().toSortedList();
   }
 
   /**
@@ -135,8 +141,7 @@ public class JsonApiDocumentation {
     private Class<?> clazz;
     private HumanReadableLabel singleLineSummary;
     private String documentationHtml;
-    private List<String> requiredKeys;
-    private List<String> optionalKeys;
+    private JsonValidationInstructions jsonValidationInstructions;
     private List<HasJsonApiDocumentation> childNodes;
     private Optional<JsonElement> trivialSampleJson;
     private Optional<JsonElement> nontrivialSampleJson;
@@ -155,6 +160,7 @@ public class JsonApiDocumentation {
           .setClass(clazz)
           .setSingleLineSummary(label("FIXME IAK / FIXME SWA JSONDOC"))
           .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+          .hasNoJsonValidationInstructions()
           .hasChildNodes(Arrays.asList(items))
           .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied()
@@ -171,38 +177,16 @@ public class JsonApiDocumentation {
       return this;
     }
 
-    public JsonApiDocumentationBuilder setRequiredKeys(List<String> requiredKeys) {
-      this.requiredKeys = checkNotAlreadySet(this.requiredKeys, requiredKeys);
+    public JsonApiDocumentationBuilder setJsonValidationInstructions(
+        JsonValidationInstructions jsonValidationInstructions) {
+      this.jsonValidationInstructions = checkNotAlreadySet(
+          this.jsonValidationInstructions,
+          jsonValidationInstructions);
       return this;
     }
 
-    public JsonApiDocumentationBuilder setRequiredKeys(String first, String second, String ... rest) {
-      return setRequiredKeys(concatenateFirstSecondAndRest(first, second, rest));
-    }
-
-    public JsonApiDocumentationBuilder hasNoRequiredKeys() {
-      return setRequiredKeys(emptyList());
-    }
-
-    public JsonApiDocumentationBuilder setRequiredKey(String requiredKey) {
-      return setRequiredKeys(singletonList(requiredKey));
-    }
-
-    public JsonApiDocumentationBuilder setOptionalKeys(List<String> optionalKeys) {
-      this.optionalKeys = checkNotAlreadySet(this.optionalKeys, optionalKeys);
-      return this;
-    }
-
-    public JsonApiDocumentationBuilder setOptionalKeys(String first, String second, String ... rest) {
-      return setOptionalKeys(concatenateFirstSecondAndRest(first, second, rest));
-    }
-
-    public JsonApiDocumentationBuilder hasNoOptionalKeys() {
-      return setOptionalKeys(emptyList());
-    }
-
-    public JsonApiDocumentationBuilder setOptionalKey(String requiredKey) {
-      return setRequiredKeys(singletonList(requiredKey));
+    public JsonApiDocumentationBuilder hasNoJsonValidationInstructions() {
+      return setJsonValidationInstructions(emptyJsonValidationInstructions());
     }
 
     public JsonApiDocumentationBuilder setDocumentationHtml(String documentationHtml) {
@@ -214,7 +198,7 @@ public class JsonApiDocumentation {
       this.childNodes = checkNotAlreadySet(this.childNodes, childNodes);
       return this;
     }
-    
+
     public JsonApiDocumentationBuilder hasChildNodes(
         HasJsonApiDocumentation first,
         HasJsonApiDocumentation second,
@@ -255,8 +239,7 @@ public class JsonApiDocumentation {
       RBPreconditions.checkNotNull(clazz);
       RBPreconditions.checkNotNull(singleLineSummary);
       RBPreconditions.checkNotNull(documentationHtml);
-      RBPreconditions.checkNotNull(requiredKeys);
-      RBPreconditions.checkNotNull(optionalKeys);
+      RBPreconditions.checkNotNull(jsonValidationInstructions);
       RBPreconditions.checkNotNull(childNodes);
       RBPreconditions.checkNotNull(trivialSampleJson);
       RBPreconditions.checkNotNull(nontrivialSampleJson);
@@ -270,7 +253,7 @@ public class JsonApiDocumentation {
     @Override
     public JsonApiDocumentation buildWithoutPreconditions() {
       return new JsonApiDocumentation(
-          clazz, singleLineSummary, documentationHtml, childNodes, requiredKeys, optionalKeys,
+          clazz, singleLineSummary, documentationHtml, childNodes, jsonValidationInstructions,
           trivialSampleJson, nontrivialSampleJson);
     }
 
