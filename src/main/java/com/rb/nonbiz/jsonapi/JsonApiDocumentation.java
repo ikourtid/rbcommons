@@ -202,7 +202,7 @@ public class JsonApiDocumentation {
     }
 
     public JsonApiDocumentationBuilder setOptionalKey(String requiredKey) {
-      return setRequiredKeys(singletonList(requiredKey));
+      return setOptionalKeys(singletonList(requiredKey));
     }
 
     public JsonApiDocumentationBuilder setDocumentationHtml(String documentationHtml) {
