@@ -12,6 +12,9 @@ import java.util.function.Function;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonBigDecimalOrThrow;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFraction;
 
@@ -25,7 +28,7 @@ import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFract
  * <p> This does not implement JsonRoundTripConverter because we need to supply serializers
  * and deserializers. </p>
  */
-public class WeightedBySignedFractionJsonApiConverter {
+public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocumentation{
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties("item", "weight")
@@ -59,6 +62,18 @@ public class WeightedBySignedFractionJsonApiConverter {
         // translates a JsonElement (a JSON string, double, object, etc.) to a <T>
         deserializer.apply(jsonObject.get("item")),
         signedFraction(getJsonBigDecimalOrThrow(jsonObject, "weight")));
+  }
+
+  @Override
+  public JsonApiDocumentation getJsonApiDocumentation() {
+    return jsonApiDocumentationBuilder()
+        .setClass(WeightedBySignedFraction.class)
+        .setSingleLineSummary(label("A single item with a SignedFraction weight."))
+        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .hasNoChildNodes()
+        .noTrivialSampleJsonSupplied()
+        .noNontrivialSampleJsonSupplied()
+        .build();
   }
 
 }
