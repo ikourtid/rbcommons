@@ -14,9 +14,10 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 
 /**
  * Hold information about required and optional top-level properties for a JSON object.
- * The purpose is to check JSON objects being converted via our JsonApiConverters.
+ *
+ * <p> The purpose is to check JSON objects being converted via our JsonApiConverters.
  * In particular, we want to know if an optional property is misspelled, which could allow
- * a silent failure to propagate.
+ * a silent failure to propagate. </p>
  *
  * <p> E.g. if a JSON object contained optional entries: </p>
  * <pre>
