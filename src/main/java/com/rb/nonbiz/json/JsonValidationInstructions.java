@@ -14,20 +14,24 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 
 /**
  * Hold information about required and optional top-level properties for a JSON object.
- * The purpose is to check JSON objects being converted via our JsonApiConverters.
- * In particular, we want to know if an optional property is misspelled, which could allow
- * a silent failure to propagate.
  *
- * E.g. if a JSON object contained optional entries:
+ * <p> The purpose is to check JSON objects being converted via our JsonApiConverters.
+ * In particular, we want to know if an optional property is misspelled, which could allow
+ * a silent failure to propagate. </p>
+ *
+ * <p> E.g. if a JSON object contained optional entries: </p>
+ * <pre>
  * "orderNotionalLimits" = {
  *   "min": 100,
  *   "mxa": 1000     // TYPO: "mxa" instead of "max"
  * }
- * Because the max order notional size is optional, a typo would result in no maximum,
- * e.g. unlimited order size.
+ * </pre>
  *
- * We could extend validation to checking valid data ranges (e.g. UnitFractions must be between 0.0 and 1.0).
- * However, this wouldn't add much value since our constructors already enforce these limits.
+ * <p> Because the max order notional size is optional, a typo would result in no maximum,
+ * e.g. unlimited order size. </p>
+ *
+ * <p> We could extend validation to checking valid data ranges (e.g. UnitFractions must be between 0.0 and 1.0).
+ * However, this wouldn't add much value since our constructors already enforce these limits. </p>
  */
 public class JsonValidationInstructions {
 

@@ -24,6 +24,8 @@ public class JsonApiDocumentation {
   private final Class<?> clazz;
   private final HumanReadableLabel singleLineSummary;
   private final String documentationHtml;
+  private final List<String> requiredKeys;
+  private final List<String> optionalKeys;
   private final List<HasJsonApiDocumentation> childNodes;
   private final Optional<JsonElement> trivialSampleJson;
   private final Optional<JsonElement> nontrivialSampleJson;
@@ -33,11 +35,15 @@ public class JsonApiDocumentation {
       HumanReadableLabel singleLineSummary,
       String documentationHtml,
       List<HasJsonApiDocumentation> childNodes,
+      List<String> requiredKeys,
+      List<String> optionalKeys,
       Optional<JsonElement> trivialSampleJson,
       Optional<JsonElement> nontrivialSampleJson) {
     this.clazz = clazz;
     this.singleLineSummary =singleLineSummary;
     this.documentationHtml = documentationHtml;
+    this.requiredKeys = requiredKeys;
+    this.optionalKeys = optionalKeys;
     this.childNodes = childNodes;
     this.trivialSampleJson = trivialSampleJson;
     this.nontrivialSampleJson = nontrivialSampleJson;
@@ -63,6 +69,20 @@ public class JsonApiDocumentation {
    */
   public HumanReadableLabel getSingleLineSummary() {
     return singleLineSummary;
+  }
+
+  /**
+   * A list of the required JSON keys.
+   */
+  public List<String> getRequiredKeys() {
+    return requiredKeys;
+  }
+
+  /**
+   * A list of the optional JSON keys.
+   */
+  public List<String> getOptionalKeys() {
+    return optionalKeys;
   }
 
   /**
@@ -115,6 +135,8 @@ public class JsonApiDocumentation {
     private Class<?> clazz;
     private HumanReadableLabel singleLineSummary;
     private String documentationHtml;
+    private List<String> requiredKeys;
+    private List<String> optionalKeys;
     private List<HasJsonApiDocumentation> childNodes;
     private Optional<JsonElement> trivialSampleJson;
     private Optional<JsonElement> nontrivialSampleJson;
@@ -147,6 +169,32 @@ public class JsonApiDocumentation {
     public JsonApiDocumentationBuilder setSingleLineSummary(HumanReadableLabel singleLineSummary) {
       this.singleLineSummary = checkNotAlreadySet(this.singleLineSummary, singleLineSummary);
       return this;
+    }
+
+    public JsonApiDocumentationBuilder setRequiredKeys(List<String> requiredKeys) {
+      this.requiredKeys = checkNotAlreadySet(this.requiredKeys, requiredKeys);
+      return this;
+    }
+
+    public JsonApiDocumentationBuilder hasNoRequiredKeys() {
+      return setRequiredKeys(emptyList());
+    }
+
+    public JsonApiDocumentationBuilder setRequiredKey(String requiredKey) {
+      return setRequiredKeys(singletonList(requiredKey));
+    }
+
+    public JsonApiDocumentationBuilder setOptionalKeys(List<String> optionalKeys) {
+      this.optionalKeys = checkNotAlreadySet(this.optionalKeys, optionalKeys);
+      return this;
+    }
+
+    public JsonApiDocumentationBuilder hasNoOptionalKeys() {
+      return setOptionalKeys(emptyList());
+    }
+
+    public JsonApiDocumentationBuilder setOptionalKey(String requiredKey) {
+      return setRequiredKeys(singletonList(requiredKey));
     }
 
     public JsonApiDocumentationBuilder setDocumentationHtml(String documentationHtml) {
@@ -199,6 +247,8 @@ public class JsonApiDocumentation {
       RBPreconditions.checkNotNull(clazz);
       RBPreconditions.checkNotNull(singleLineSummary);
       RBPreconditions.checkNotNull(documentationHtml);
+      RBPreconditions.checkNotNull(requiredKeys);
+      RBPreconditions.checkNotNull(optionalKeys);
       RBPreconditions.checkNotNull(childNodes);
       RBPreconditions.checkNotNull(trivialSampleJson);
       RBPreconditions.checkNotNull(nontrivialSampleJson);
@@ -212,7 +262,8 @@ public class JsonApiDocumentation {
     @Override
     public JsonApiDocumentation buildWithoutPreconditions() {
       return new JsonApiDocumentation(
-          clazz, singleLineSummary, documentationHtml, childNodes, trivialSampleJson, nontrivialSampleJson);
+          clazz, singleLineSummary, documentationHtml, childNodes, requiredKeys, optionalKeys,
+          trivialSampleJson, nontrivialSampleJson);
     }
 
   }
