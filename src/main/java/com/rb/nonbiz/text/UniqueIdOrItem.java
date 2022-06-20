@@ -7,14 +7,16 @@ import com.rb.nonbiz.collections.Either;
  * Represents either an object of type T, or an ID of that object. If the latter, the assumption is that the user
  * of this class knows how to retrieve that object.
  *
- * This sounds like a pointer, and you may wonder why one wouldn't just use a reference (pointer) to an existing
+ * <p> This sounds like a pointer, and you may wonder why one wouldn't just use a reference (pointer) to an existing
  * object instead. One example is ESG and optimization. We may or may not want to have an EsgScorableMetric
  * participate in the objective function. If we do want to min/maximize some EsgScorableMetric in the optimization,
  * and that metric already appears in the list of constraints, we don't want to specify it again. This isn't just an
  * issue of avoiding the inconvenience of specifying the metric twice in the investor settings:
  * if we were able to specify the same EsgScorableMetric separately for the objective function with the same UniqueId,
  * we wouldn't have an easy way of confirming that it is identical to the EsgScorableMetric that appears inside
- * the constraints under the same UniqueId.
+ * the constraints under the same UniqueId. </p>
+ *
+ * @see Either
  */
 public class UniqueIdOrItem<T extends HasUniqueId<T>> {
 
