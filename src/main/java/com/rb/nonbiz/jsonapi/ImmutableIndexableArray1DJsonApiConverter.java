@@ -81,7 +81,7 @@ public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocu
     return jsonApiDocumentationBuilder()
         .setClass(ImmutableIndexableArray1D.class)
         .setSingleLineSummary(label(asSingleLine(
-            "An indexable 1-D array is like a regular array, except that you can ",
+            "An indexable 1-D array is like a regular 1-D array, except that you can ",
             "also access it based on more meaningful keys - not just an integer index.")))
         .setDocumentationHtml("This is like a MutableIndexableArray1D, but is immutable.")
         .hasNoChildNodes()
