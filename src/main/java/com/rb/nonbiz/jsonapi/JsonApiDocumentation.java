@@ -71,7 +71,7 @@ public class JsonApiDocumentation {
   }
 
   /**
-   * The JSON validation instructions
+   * The JSON validation instructions.
    */
   public JsonValidationInstructions getJsonValidationInstructions() {
     return jsonValidationInstructions;
