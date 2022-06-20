@@ -176,6 +176,10 @@ public class JsonApiDocumentation {
       return this;
     }
 
+    public JsonApiDocumentationBuilder setRequiredKeys(String first, String second, String ... rest) {
+      return setRequiredKeys(concatenateFirstSecondAndRest(first, second, rest));
+    }
+
     public JsonApiDocumentationBuilder hasNoRequiredKeys() {
       return setRequiredKeys(emptyList());
     }
@@ -187,6 +191,10 @@ public class JsonApiDocumentation {
     public JsonApiDocumentationBuilder setOptionalKeys(List<String> optionalKeys) {
       this.optionalKeys = checkNotAlreadySet(this.optionalKeys, optionalKeys);
       return this;
+    }
+
+    public JsonApiDocumentationBuilder setOptionalKeys(String first, String second, String ... rest) {
+      return setOptionalKeys(concatenateFirstSecondAndRest(first, second, rest));
     }
 
     public JsonApiDocumentationBuilder hasNoOptionalKeys() {
