@@ -25,7 +25,7 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 
 /**
- * Converts ImmutableIndexableArray1D back and forth to JSON for our public API.
+ * Converts an {@link ImmutableIndexableArray1D} back and forth to JSON for our public API.
  *
  * This does not implement JsonRoundTripConverter because we need to supply serializers and deserializers.
  */

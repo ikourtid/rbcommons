@@ -24,7 +24,7 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 
 /**
- * Converts {@link ImmutableDoubleIndexableArray2D} back and forth to JSON for our public API.
+ * Converts an {@link ImmutableDoubleIndexableArray2D} back and forth to JSON for our public API.
  */
 public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonApiDocumentation {
 

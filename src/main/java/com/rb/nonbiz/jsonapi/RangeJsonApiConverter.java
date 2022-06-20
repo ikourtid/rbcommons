@@ -25,7 +25,7 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 
 /**
- * Convert a Range back and forth to JSON for our public API.
+ * Convert a {@link Range} back and forth to JSON for our public API.
  *
  * <p> Note that this only converts ranges that *include* any endpoints they may have. That is,
  * (-inf, inf), [1, inf), (-inf, 10] and [1, 10] can all be converted because their boundary points
