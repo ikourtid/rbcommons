@@ -160,7 +160,7 @@ public class JsonApiDocumentation {
           .setClass(clazz)
           .setSingleLineSummary(label("FIXME IAK / FIXME SWA JSONDOC"))
           .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
-          .setJsonValidationInstructions(emptyJsonValidationInstructions())
+          .hasNoJsonValidationInstructions()
           .hasChildNodes(Arrays.asList(items))
           .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied()
