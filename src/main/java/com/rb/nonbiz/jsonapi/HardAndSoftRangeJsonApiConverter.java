@@ -13,7 +13,9 @@ import java.util.function.Function;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 
 /**
@@ -64,7 +66,21 @@ public class HardAndSoftRangeJsonApiConverter implements HasJsonApiDocumentation
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return intermediateJsonApiDocumentationWithFixme(HardAndSoftRange.class);
+    return jsonApiDocumentationBuilder()
+        .setClass(HardAndSoftRange.class)
+        .setSingleLineSummary(label(asSingleLine(
+            "A combination of an outer 'hard' range that an optimization solution must observe ",
+            "and an inner 'soft' range that the optimization should observe.")))
+        .setDocumentationHtml(asSingleLine(
+            "By 'should observe the soft limit', we mean ",
+            "that if a value drifts outside the soft limit, it will not be allowed ",
+            "to drift further, but will not be forced to immediate move in the other direction. ",
+            "In contrast, if a value drifts outside a hard limit, the system will insist ",
+            "that it move back to the soft limit."))
+        .hasNoChildNodes()
+        .noTrivialSampleJsonSupplied()
+        .noNontrivialSampleJsonSupplied()
+        .build();
   }
 
 }

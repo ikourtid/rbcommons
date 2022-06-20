@@ -10,6 +10,9 @@ import java.util.function.Function;
 import static com.rb.nonbiz.collections.FlatSignedLinearCombination.flatSignedLinearCombination;
 import static com.rb.nonbiz.json.RBJsonArrays.iteratorToJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
 
 /**
  * Converts a {@link FlatSignedLinearCombination} back and forth to a JSON array for our public API.
@@ -22,7 +25,7 @@ import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
  * <p> This does not implement JsonRoundTripConverter because we need to supply serializers
  * and deserializers. </p>
  */
-public class FlatSignedLinearCombinationJsonApiConverter {
+public class FlatSignedLinearCombinationJsonApiConverter implements HasJsonApiDocumentation {
 
   @Inject WeightedBySignedFractionJsonApiConverter weightedBySignedFractionJsonApiConverter;
 
@@ -49,6 +52,20 @@ public class FlatSignedLinearCombinationJsonApiConverter {
                 // Therefor we cast the JsonElement to a JsonObject. An error will be thrown if it's not a JsonObject.
                 jsonElement.getAsJsonObject(),
                 deserializer)));
+  }
+
+  @Override
+  public JsonApiDocumentation getJsonApiDocumentation() {
+    return jsonApiDocumentationBuilder()
+        .setClass(FlatSignedLinearCombination.class)
+        .setSingleLineSummary(label(asSingleLine(
+            "A collection of weighted items, similar to FlatLinearCombination ",
+            "except that it allows both positive and negative weights (but not zero).")))
+        .hasChildNode(weightedBySignedFractionJsonApiConverter)
+        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .noTrivialSampleJsonSupplied()
+        .noNontrivialSampleJsonSupplied()
+        .build();
   }
 
 }

@@ -5,8 +5,10 @@ import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.rb.biz.jsonapi.JsonTicker;
 import com.rb.biz.jsonapi.JsonTickerMap;
+import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.MutableIidMap;
+import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.types.PreciseValue;
 
 import java.math.BigDecimal;
@@ -17,29 +19,39 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.json.RBGson.jsonBigDecimal;
 import static com.rb.nonbiz.json.RBJsonObjectAdders.addToJsonObject;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static java.util.Comparator.comparing;
 
 /**
- * This makes for shorter, easier-to-read JSON for cases where we're dealing with an IidMap of precise values.
+ * Converts an {@link IidMap} of {@link PreciseValue}s. That is, a map from {@link InstrumentId}
+ * to {@link PreciseValue}.
+ *
+ * <p> This makes for shorter, easier-to-read JSON for cases where we're dealing with an IidMap of precise values.
  * This allows for precise values to be written as a number, instead of a full object (which we'd see if we
- * were to use a generic Gson conversion).
+ * were to use a generic Gson conversion). </p>
  *
- * Example: instead of a map (in this case, of unit fractions) looking like this:
+ * <p> Example: instead of a map (in this case, of unit fractions) looking like this: </p>
  *
- * rawMap
+ * <p> rawMap </p>
+ * <pre>
  *    111:
  *       value: 0.002
  *    222:
  *       value: 0.05988
+ * </pre>
  *
- * ... it will look like this:
+ * <p>... it will look like this: </p>
  *
- * rawMap
+ * <p> rawMap </p>
+ * <pre>
  *    111: 0.002
  *    222: 0.05988
+ * </pre>
  *
- * ... where 111 and 222 are the numeric values for the instrument IDs that are the keys in the iid map.
+ * <p>... where 111 and 222 are the numeric values for the instrument IDs that are the
+ * keys in the iid map. </p>
  */
 public class PreciseValueIidMapJsonConverter implements HasJsonApiDocumentation {
 
@@ -75,9 +87,16 @@ public class PreciseValueIidMapJsonConverter implements HasJsonApiDocumentation 
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return intermediateJsonApiDocumentationWithFixme(
-        IidMap.class,
-        preciseValueJsonApiConverter);
+    return jsonApiDocumentationBuilder()
+        .setClass(IidMap.class)
+        .setSingleLineSummary(label(asSingleLine(
+            "An IidMap of PreciseValues. That is, an RBMap with keys that are InstrumentIds ",
+            "and values that are PreciseValues.")))
+        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .hasChildNode(preciseValueJsonApiConverter)
+        .noTrivialSampleJsonSupplied()
+        .noNontrivialSampleJsonSupplied()
+        .build();
   }
 
 }

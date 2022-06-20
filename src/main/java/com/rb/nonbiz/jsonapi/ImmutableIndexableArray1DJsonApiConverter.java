@@ -3,6 +3,7 @@ package com.rb.nonbiz.jsonapi;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
+import com.rb.nonbiz.collections.ImmutableDoubleIndexableArray2D;
 import com.rb.nonbiz.collections.ImmutableIndexableArray1D;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
@@ -19,13 +20,16 @@ import static com.rb.nonbiz.json.RBJsonArrays.listToJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonArrayOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjects.jsonArrayToSimpleArrayIndexMapping;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
 
 /**
- * Converts ImmutableIndexableArray1D back and forth to JSON for our public API.
+ * Converts an {@link ImmutableIndexableArray1D} back and forth to JSON for our public API.
  *
  * This does not implement JsonRoundTripConverter because we need to supply serializers and deserializers.
  */
-public class ImmutableIndexableArray1DJsonApiConverter {
+public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocumentation {
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties("keys", "data")
@@ -72,4 +76,17 @@ public class ImmutableIndexableArray1DJsonApiConverter {
         dataArray);
   }
 
+  @Override
+  public JsonApiDocumentation getJsonApiDocumentation() {
+    return jsonApiDocumentationBuilder()
+        .setClass(ImmutableIndexableArray1D.class)
+        .setSingleLineSummary(label(asSingleLine(
+            "An indexable 1-D array is like a regular 1-D array, except that you can ",
+            "also access it based on more meaningful keys - not just an integer index.")))
+        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .hasNoChildNodes()
+        .noTrivialSampleJsonSupplied()
+        .noNontrivialSampleJsonSupplied()
+        .build();
+  }
 }

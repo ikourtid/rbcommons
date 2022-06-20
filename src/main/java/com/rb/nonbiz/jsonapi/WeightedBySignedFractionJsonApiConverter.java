@@ -12,20 +12,23 @@ import java.util.function.Function;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonBigDecimalOrThrow;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFraction;
 
 /**
- * Converts {@link WeightedBySignedFraction} back and forth to JSON for our public API.
+ * Converts a {@link WeightedBySignedFraction} back and forth to JSON for our public API.
  *
  * <p> Note that this converts a WeightedBySignedFraction to a JSON object that contains
  * a double keyed by "weight" and a JsonElement keyed by "item". That is, the "item" can
- * is a JSON element and can be of any JSON type: boolean, String, double, or Object. </p>
+ * is a JSON element and can be of any JSON type: boolean, String, double, Object, or Array. </p>
  *
  * <p> This does not implement JsonRoundTripConverter because we need to supply serializers
  * and deserializers. </p>
  */
-public class WeightedBySignedFractionJsonApiConverter {
+public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocumentation{
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties("item", "weight")
@@ -59,6 +62,18 @@ public class WeightedBySignedFractionJsonApiConverter {
         // translates a JsonElement (a JSON string, double, object, etc.) to a <T>
         deserializer.apply(jsonObject.get("item")),
         signedFraction(getJsonBigDecimalOrThrow(jsonObject, "weight")));
+  }
+
+  @Override
+  public JsonApiDocumentation getJsonApiDocumentation() {
+    return jsonApiDocumentationBuilder()
+        .setClass(WeightedBySignedFraction.class)
+        .setSingleLineSummary(label("A single item with a SignedFraction weight."))
+        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .hasNoChildNodes()
+        .noTrivialSampleJsonSupplied()
+        .noNontrivialSampleJsonSupplied()
+        .build();
   }
 
 }
