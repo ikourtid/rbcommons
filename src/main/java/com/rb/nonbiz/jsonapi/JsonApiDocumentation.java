@@ -1,6 +1,5 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.RBLog;
