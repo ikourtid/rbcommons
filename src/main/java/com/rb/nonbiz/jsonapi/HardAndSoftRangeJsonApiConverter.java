@@ -7,14 +7,12 @@ import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
 import com.rb.nonbiz.types.HardAndSoftRange;
 import com.rb.nonbiz.types.RBNumeric;
-import com.rb.nonbiz.types.WeightedBySignedFraction;
 
 import java.util.function.Function;
 
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
@@ -73,7 +71,12 @@ public class HardAndSoftRangeJsonApiConverter implements HasJsonApiDocumentation
         .setSingleLineSummary(label(asSingleLine(
             "A combination of an outer 'hard' range that the optimization most observe ",
             "and an inner 'soft' range that the optimization should observe.")))
-        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .setDocumentationHtml(asSingleLine(
+            "By 'should observe the soft limit', we mean ",
+            "that if a value drifts beyond the soft limit, it will not be allowed ",
+            "to drift further, but will not be forced to immediate move in the other direction. ",
+            "In contrast, if a value drifts beyond a hard limit, the system will insist ",
+            "that it move back to the soft limit."))
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()
