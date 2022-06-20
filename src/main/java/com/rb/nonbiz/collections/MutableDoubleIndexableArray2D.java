@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 import static com.rb.nonbiz.collections.RBOptionals.getIntOrThrow;
 
 /**
- * See #MutableIndexableArray2D.
+ * See {@link MutableIndexableArray2D}.
  *
  * This is a specialized, more memory-efficient alternative to a {@code MutableIndexableArray2D<Double>}.
  * It's a bit more efficient because it uses unboxed lowercase-d doubles.
