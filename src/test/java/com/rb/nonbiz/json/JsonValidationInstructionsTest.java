@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.util.function.BiFunction;
 
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
+import static com.rb.nonbiz.json.JsonValidationInstructions.emptyJsonValidationInstructions;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -14,13 +15,6 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertNullPointerException;
 
 public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidationInstructions> {
-
-  public JsonValidationInstructions emptyJsonValidationInstructions() {
-    return jsonValidationInstructionsBuilder()
-        .hasNoRequiredProperties()
-        .hasNoOptionalProperties()
-        .build();
-  }
 
   @Test
   public void mustSpecifyEmptyRequiredOrOptionalSetsExplicitly_orThrows() {
