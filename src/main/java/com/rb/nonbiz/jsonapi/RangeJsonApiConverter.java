@@ -7,7 +7,6 @@ import com.google.inject.Inject;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
-import com.rb.nonbiz.json.RBJsonObjectBuilder;
 import com.rb.nonbiz.json.RBJsonObjects;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -18,10 +17,11 @@ import static com.rb.nonbiz.collections.RBRanges.hasEitherBoundOpen;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getOptionalJsonPrimitive;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 /**
- * Convert a Range back and forth to JSON for our public API.
+ * Convert a {@link Range} back and forth to JSON for our public API.
  *
  * <p> Note that this only converts ranges that *include* any endpoints they may have. That is,
  * (-inf, inf), [1, inf), (-inf, 10] and [1, 10] can all be converted because their boundary points
@@ -99,7 +99,14 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return intermediateJsonApiDocumentationWithFixme(Range.class);
+    return jsonApiDocumentationBuilder()
+        .setClass(Range.class)
+        .setSingleLineSummary(label("A range holds an optional lower bound and an optional upper bound."))
+        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .hasNoChildNodes()
+        .noTrivialSampleJsonSupplied()
+        .noNontrivialSampleJsonSupplied()
+        .build();
   }
 
 }

@@ -10,10 +10,10 @@ import static com.rb.nonbiz.collections.MutableDoubleIndexableArray2D.mutableDou
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 
 /**
- * Just like MutableDoubleIndexableArray2D, except immutable.
+ * Just like {@link MutableDoubleIndexableArray2D}, except this is immutable.
  *
- * Note that someone can modify the underlying object if they have a handle to it via getRawArrayUnsafe()
- * but at least they can't modify it through THIS object; there's no set() method here.
+ * <p> Note that someone can modify the underlying object if they have a handle to it via getRawArrayUnsafe()
+ * but at least they can't modify it through THIS object; there's no set() method here. </p>
  */
 public class ImmutableDoubleIndexableArray2D<R, C> {
 

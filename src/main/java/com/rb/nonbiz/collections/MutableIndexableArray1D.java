@@ -18,9 +18,9 @@ import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndex
  * An indexable array is like a regular array, except that you can also access it based on some
  * more meaningful key - not just an integer index.
  *
- * Why not use a map instead? This is a performance optimization for cases where 3rd party libraries
+ * <p> Why not use a map instead? This is a performance optimization for cases where 3rd party libraries
  * operate using arrays. This way, we won't have to convert back and forth from arrays (needed by the 3rd party library)
- * to our own implementation (e.g. maps of arrays, maps of maps, etc.)
+ * to our own implementation (e.g. maps of arrays, maps of maps, etc.) </p>
  */
 public class MutableIndexableArray1D<K, V> {
 

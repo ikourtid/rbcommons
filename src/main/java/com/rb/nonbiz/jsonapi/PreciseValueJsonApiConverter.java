@@ -11,14 +11,17 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
 
 /**
- * Reads a PreciseValue from JSON for the case where it's the value of a JsonObject that's keyed by instrument
- * (JsonTicker, to be precise).
- * In case of an exception, we will throw a detailed new exception
+ * Reads a {@link PreciseValue} from JSON for the case where it's the value of a JsonObject
+ * that's keyed by instrument (JsonTicker, to be precise).
+ *
+ * <p> In case of an exception, we will throw a detailed new exception
  * that mentions the relevant instrument - not just e.g.
- * "Attempt to construct a PositiveQuantity with -93 &le; 0"
+ * "Attempt to construct a PositiveQuantity with -93 &le; 0" </p>
  */
 public class PreciseValueJsonApiConverter implements HasJsonApiDocumentation {
 
@@ -44,7 +47,16 @@ public class PreciseValueJsonApiConverter implements HasJsonApiDocumentation {
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return intermediateJsonApiDocumentationWithFixme(PreciseValue.class);
+    return jsonApiDocumentationBuilder()
+        .setClass(PreciseValue.class)
+        .setSingleLineSummary(label(asSingleLine(
+            "A PreciseValue is the base class of many value classes in the code. ",
+            "It exists to avoid rounding problems with doubles such as 9.9999999999.")))
+        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .hasNoChildNodes()
+        .noTrivialSampleJsonSupplied()
+        .noNontrivialSampleJsonSupplied()
+        .build();
   }
 
 }
