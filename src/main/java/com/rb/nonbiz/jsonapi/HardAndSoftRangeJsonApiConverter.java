@@ -7,6 +7,7 @@ import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
 import com.rb.nonbiz.types.HardAndSoftRange;
 import com.rb.nonbiz.types.RBNumeric;
+import com.rb.nonbiz.types.WeightedBySignedFraction;
 
 import java.util.function.Function;
 
@@ -14,6 +15,9 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstru
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 
 /**
@@ -64,7 +68,16 @@ public class HardAndSoftRangeJsonApiConverter implements HasJsonApiDocumentation
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return intermediateJsonApiDocumentationWithFixme(HardAndSoftRange.class);
+    return jsonApiDocumentationBuilder()
+        .setClass(HardAndSoftRange.class)
+        .setSingleLineSummary(label(asSingleLine(
+            "A combination of an outer 'hard' range that the optimization most observe ",
+            "and an inner 'soft' range that the optimization should observe.")))
+        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .hasNoChildNodes()
+        .noTrivialSampleJsonSupplied()
+        .noNontrivialSampleJsonSupplied()
+        .build();
   }
 
 }

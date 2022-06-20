@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.rb.biz.jsonapi.JsonTicker;
 import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.asset.InstrumentId;
+import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.PreciseValue;
 
@@ -12,6 +13,9 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
 
 /**
  * Reads a PreciseValue from JSON for the case where it's the value of a JsonObject that's keyed by instrument
@@ -44,7 +48,16 @@ public class PreciseValueJsonApiConverter implements HasJsonApiDocumentation {
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return intermediateJsonApiDocumentationWithFixme(PreciseValue.class);
+    return jsonApiDocumentationBuilder()
+        .setClass(PreciseValue.class)
+        .setSingleLineSummary(label(asSingleLine(
+            "A PreciseValue is the base class of many value classes in the code. ",
+            "It exists to avoid rounding problems with doubles such as 9.9999999999")))
+        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .hasNoChildNodes()
+        .noTrivialSampleJsonSupplied()
+        .noNontrivialSampleJsonSupplied()
+        .build();
   }
 
 }

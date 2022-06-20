@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.ImmutableDoubleIndexableArray2D;
 import com.rb.nonbiz.collections.MutableDoubleIndexableArray2D;
-import com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder;
 
 import java.util.Iterator;
 import java.util.function.Function;
@@ -20,10 +19,12 @@ import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.intermediateJsonApiDocumentationWithFixme;
+import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
 
 /**
- * Converts ImmutableDoubleIndexableArray2D back and forth to JSON for our public API.
+ * Converts {@link ImmutableDoubleIndexableArray2D} back and forth to JSON for our public API.
  */
 public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonApiDocumentation {
 
@@ -81,7 +82,16 @@ public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonA
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return intermediateJsonApiDocumentationWithFixme(ImmutableDoubleIndexableArray2D.class);
+    return jsonApiDocumentationBuilder()
+        .setClass(ImmutableDoubleIndexableArray2D.class)
+        .setSingleLineSummary(label(asSingleLine(
+            "An indexable 2-D array is like a regular array, except that you can ",
+            "also access it based on more meaningful keys - not just an integer index.")))
+        .setDocumentationHtml("This is like a MutableDoubleIndexableArray2D, but is immutable.")
+        .hasNoChildNodes()
+        .noTrivialSampleJsonSupplied()
+        .noNontrivialSampleJsonSupplied()
+        .build();
   }
 
 }
