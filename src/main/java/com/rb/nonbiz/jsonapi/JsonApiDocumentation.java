@@ -185,6 +185,10 @@ public class JsonApiDocumentation {
       return this;
     }
 
+    public JsonApiDocumentationBuilder hasNoJsonValidationInstructions() {
+      return setJsonValidationInstructions(emptyJsonValidationInstructions());
+    }
+
     public JsonApiDocumentationBuilder setDocumentationHtml(String documentationHtml) {
       this.documentationHtml = checkNotAlreadySet(this.documentationHtml, documentationHtml);
       return this;
