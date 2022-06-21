@@ -4,9 +4,12 @@ import com.google.common.collect.Iterators;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.inject.Inject;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.ImmutableDoubleIndexableArray2D;
 import com.rb.nonbiz.collections.MutableDoubleIndexableArray2D;
+import com.rb.nonbiz.json.JsonValidationInstructions;
+import com.rb.nonbiz.json.JsonValidator;
 
 import java.util.Iterator;
 import java.util.function.Function;
@@ -15,6 +18,7 @@ import java.util.stream.IntStream;
 import static com.rb.nonbiz.collections.ImmutableDoubleIndexableArray2D.immutableDoubleIndexableArray2D;
 import static com.rb.nonbiz.collections.MutableDoubleIndexableArray2D.mutableDoubleIndexableArray2D;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
+import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
@@ -28,34 +32,45 @@ import static com.rb.nonbiz.text.Strings.asSingleLine;
  */
 public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonApiDocumentation {
 
+  private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
+      .setRequiredProperties("rowKeys", "columnKeys", "data")
+      .hasNoOptionalProperties()
+      .build();
+
+  @Inject JsonValidator jsonValidator;
+
   public <R, C> JsonObject toJsonObject(
       ImmutableDoubleIndexableArray2D<R, C> array2D,
       Function<R, String> rowKeySerializer,
       Function<C, String> columnKeySerializer) {
-    return jsonObject(
-        "rowKeys", jsonArray(
-            array2D.getRowMapping().size(),
-            IntStream
-                .range(0, array2D.getRowMapping().size())
-                .mapToObj(i -> jsonString(rowKeySerializer.apply(array2D.getRowMapping().getKey(i))))),
-        "columnKeys", jsonArray(
-            array2D.getColumnMapping().size(),
-            IntStream
-                .range(0, array2D.getColumnMapping().size())
-                .mapToObj(i -> jsonString(columnKeySerializer.apply(array2D.getColumnMapping().getKey(i))))),
-        "data", jsonArray(
-            array2D.getRowMapping().size(),
-            IntStream.range(0, array2D.getRowMapping().size())
-                .mapToObj(rowIndex -> jsonArray(
-                    array2D.getColumnMapping().size(),
-                    IntStream.range(0, array2D.getColumnMapping().size())
-                        .mapToObj(columnIndex -> jsonDouble(array2D.getByIndex(rowIndex, columnIndex)))))));
+    return jsonValidator.validate(
+        jsonObject(
+            "rowKeys", jsonArray(
+                array2D.getRowMapping().size(),
+                IntStream
+                    .range(0, array2D.getRowMapping().size())
+                    .mapToObj(i -> jsonString(rowKeySerializer.apply(array2D.getRowMapping().getKey(i))))),
+            "columnKeys", jsonArray(
+                array2D.getColumnMapping().size(),
+                IntStream
+                    .range(0, array2D.getColumnMapping().size())
+                    .mapToObj(i -> jsonString(columnKeySerializer.apply(array2D.getColumnMapping().getKey(i))))),
+            "data", jsonArray(
+                array2D.getRowMapping().size(),
+                IntStream.range(0, array2D.getRowMapping().size())
+                    .mapToObj(rowIndex -> jsonArray(
+                        array2D.getColumnMapping().size(),
+                        IntStream.range(0, array2D.getColumnMapping().size())
+                            .mapToObj(columnIndex -> jsonDouble(array2D.getByIndex(rowIndex, columnIndex))))))),
+        JSON_VALIDATION_INSTRUCTIONS);
   }
 
   public <R, C> ImmutableDoubleIndexableArray2D<R, C> fromJsonObject(
       JsonObject jsonObject,
       Function<String, R> rowKeyDeserializer,
       Function<String, C> columnKeyDeserializer) {
+    jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
+
     ArrayIndexMapping<R> rowKeysMapping = simpleArrayIndexMapping(
         Iterators.transform(
             jsonObject.getAsJsonArray("rowKeys").iterator(),
@@ -88,7 +103,7 @@ public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonA
             "An indexable 2-D array is like a regular 2-D array, except that you can ",
             "also access it based on more meaningful keys - not just integer indices.")))
         .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
-        .hasNoJsonValidationInstructions()
+        .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()

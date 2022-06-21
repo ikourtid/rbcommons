@@ -13,6 +13,7 @@ import static com.rb.nonbiz.json.RBJsonArrays.jsonDoubleArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
+import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ImmutableDoubleIndexableArray2DJsonApiConverterTest
@@ -53,7 +54,7 @@ public class ImmutableDoubleIndexableArray2DJsonApiConverterTest
 
   @Override
   protected ImmutableDoubleIndexableArray2DJsonApiConverter makeTestObject() {
-    return new ImmutableDoubleIndexableArray2DJsonApiConverter();
+    return makeRealObject(ImmutableDoubleIndexableArray2DJsonApiConverter.class);
   }
 
 }
