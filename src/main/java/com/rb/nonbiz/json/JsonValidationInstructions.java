@@ -1,5 +1,7 @@
 package com.rb.nonbiz.json;
 
+import com.google.common.collect.Sets;
+import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSets;
 import com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder;
@@ -10,8 +12,12 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.List;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
+import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 
 /**
@@ -37,11 +43,12 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstru
  */
 public class JsonValidationInstructions {
 
-  private final RBSet<String> requiredProperties;
-  private final RBSet<String> optionalProperties;
+  private final RBMap<String, Class<?>> requiredProperties;
+  private final RBMap<String, Class<?>> optionalProperties;
 
   private JsonValidationInstructions(
-      RBSet<String> requiredProperties, RBSet<String> optionalProperties) {
+      RBMap<String, Class<?>> requiredProperties,
+      RBMap<String, Class<?>> optionalProperties) {
     this.requiredProperties = requiredProperties;
     this.optionalProperties = optionalProperties;
   }
@@ -53,11 +60,11 @@ public class JsonValidationInstructions {
         .build();
   }
 
-  public RBSet<String> getRequiredProperties() {
+  public RBMap<String, Class<?>> getRequiredProperties() {
     return requiredProperties;
   }
 
-  public RBSet<String> getOptionalProperties() {
+  public RBMap<String, Class<?>> getOptionalProperties() {
     return optionalProperties;
   }
 
@@ -71,8 +78,8 @@ public class JsonValidationInstructions {
 
   public static class JsonValidationInstructionsBuilder implements RBBuilder<JsonValidationInstructions> {
 
-    private RBSet<String> requiredProperties;
-    private RBSet<String> optionalProperties;
+    private RBMap<String, Class<?>> requiredProperties;
+    private RBMap<String, Class<?>> optionalProperties;
 
     private JsonValidationInstructionsBuilder() {}
 
@@ -80,33 +87,93 @@ public class JsonValidationInstructions {
       return new JsonValidationInstructionsBuilder();
     }
 
-    public JsonValidationInstructionsBuilder setRequiredProperties(String firstProperty, String... rest) {
-      List<String> firstAndRest = concatenateFirstAndRest(firstProperty, rest);
-      RBPreconditions.checkArgument(
-          firstAndRest.size() == newRBSet(firstAndRest).size(),
-          "setting required properties with duplicate entries: %s",
-          firstAndRest);
-      requiredProperties = checkNotAlreadySet(this.requiredProperties, newRBSet(firstAndRest));
-      return this;
-    }
-
-    public JsonValidationInstructionsBuilder setOptionalProperties(String firstProperty, String... rest) {
-      List<String> firstAndRest = concatenateFirstAndRest(firstProperty, rest);
-      RBPreconditions.checkArgument(
-          firstAndRest.size() == newRBSet(firstAndRest).size(),
-          "setting optional properties with duplicate entries: %s",
-          firstAndRest);
-      optionalProperties = checkNotAlreadySet(this.optionalProperties, newRBSet(firstAndRest));
-      return this;
-    }
-
     public JsonValidationInstructionsBuilder hasNoRequiredProperties() {
-      requiredProperties = checkNotAlreadySet(this.requiredProperties, emptyRBSet());
+      requiredProperties = checkNotAlreadySet(this.requiredProperties, emptyRBMap());
+      return this;
+    }
+
+    public JsonValidationInstructionsBuilder setRequiredProperties(
+        String property1, Class<?> class1) {
+      return setRequiredProperties(singletonRBMap(property1, class1));
+    }
+
+    public JsonValidationInstructionsBuilder setRequiredProperties(
+        String property1, Class<?> class1,
+        String property2, Class<?> class2) {
+      return setRequiredProperties(rbMapOf(
+          property1, class1,
+          property2, class2));
+    }
+
+    public JsonValidationInstructionsBuilder setRequiredProperties(
+        String property1, Class<?> class1,
+        String property2, Class<?> class2,
+        String property3, Class<?> class3) {
+      return setRequiredProperties(rbMapOf(
+          property1, class1,
+          property2, class2,
+          property3, class3));
+    }
+
+    public JsonValidationInstructionsBuilder setRequiredProperties(
+        String property1, Class<?> class1,
+        String property2, Class<?> class2,
+        String property3, Class<?> class3,
+        String property4, Class<?> class4) {
+      return setRequiredProperties(rbMapOf(
+          property1, class1,
+          property2, class2,
+          property3, class3,
+          property4, class4));
+    }
+
+    public JsonValidationInstructionsBuilder setRequiredProperties(RBMap<String, Class<?>> requiredProperties) {
+      this.requiredProperties = checkNotAlreadySet(this.requiredProperties, requiredProperties);
       return this;
     }
 
     public JsonValidationInstructionsBuilder hasNoOptionalProperties() {
-      optionalProperties = checkNotAlreadySet(this.optionalProperties, emptyRBSet());
+      optionalProperties = checkNotAlreadySet(this.optionalProperties, emptyRBMap());
+      return this;
+    }
+
+    public JsonValidationInstructionsBuilder setOptionalProperties(
+        String property1, Class<?> class1) {
+      return setOptionalProperties(singletonRBMap(property1, class1));
+    }
+
+    public JsonValidationInstructionsBuilder setOptionalProperties(
+        String property1, Class<?> class1,
+        String property2, Class<?> class2) {
+      return setOptionalProperties(rbMapOf(
+          property1, class1,
+          property2, class2));
+    }
+
+    public JsonValidationInstructionsBuilder setOptionalProperties(
+        String property1, Class<?> class1,
+        String property2, Class<?> class2,
+        String property3, Class<?> class3) {
+      return setOptionalProperties(rbMapOf(
+          property1, class1,
+          property2, class2,
+          property3, class3));
+    }
+
+    public JsonValidationInstructionsBuilder setOptionalProperties(
+        String property1, Class<?> class1,
+        String property2, Class<?> class2,
+        String property3, Class<?> class3,
+        String property4, Class<?> class4) {
+      return setOptionalProperties(rbMapOf(
+          property1, class1,
+          property2, class2,
+          property3, class3,
+          property4, class4));
+    }
+
+    public JsonValidationInstructionsBuilder setOptionalProperties(RBMap<String, Class<?>> optionalProperties) {
+      this.optionalProperties = checkNotAlreadySet(this.optionalProperties, optionalProperties);
       return this;
     }
 
@@ -118,7 +185,7 @@ public class JsonValidationInstructions {
       RBPreconditions.checkNotNull(
           optionalProperties,
           "must either call 'hasNoOptionalProperties() or add at least one optional property");
-      RBSet<String> intersection = RBSets.intersection(requiredProperties, optionalProperties);
+      RBSet<String> intersection = newRBSet(Sets.intersection(requiredProperties.keySet(), optionalProperties.keySet()));
       RBPreconditions.checkArgument(
           intersection.isEmpty(),
           "required properties cannot also be optional; found overlap = %s",
