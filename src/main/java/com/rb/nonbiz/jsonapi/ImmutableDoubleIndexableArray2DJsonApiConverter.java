@@ -22,7 +22,7 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstru
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
-import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
@@ -44,24 +44,25 @@ public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonA
       Function<R, String> rowKeySerializer,
       Function<C, String> columnKeySerializer) {
     return jsonValidator.validate(
-        jsonObject(
-            "rowKeys", jsonArray(
+        rbJsonObjectBuilder()
+            .setArray("rowKeys", jsonArray(
                 array2D.getRowMapping().size(),
                 IntStream
                     .range(0, array2D.getRowMapping().size())
-                    .mapToObj(i -> jsonString(rowKeySerializer.apply(array2D.getRowMapping().getKey(i))))),
-            "columnKeys", jsonArray(
+                    .mapToObj(i -> jsonString(rowKeySerializer.apply(array2D.getRowMapping().getKey(i))))))
+            .setArray("columnKeys", jsonArray(
                 array2D.getColumnMapping().size(),
                 IntStream
                     .range(0, array2D.getColumnMapping().size())
-                    .mapToObj(i -> jsonString(columnKeySerializer.apply(array2D.getColumnMapping().getKey(i))))),
-            "data", jsonArray(
+                    .mapToObj(i -> jsonString(columnKeySerializer.apply(array2D.getColumnMapping().getKey(i))))))
+            .setArray("data", jsonArray(
                 array2D.getRowMapping().size(),
                 IntStream.range(0, array2D.getRowMapping().size())
                     .mapToObj(rowIndex -> jsonArray(
                         array2D.getColumnMapping().size(),
                         IntStream.range(0, array2D.getColumnMapping().size())
-                            .mapToObj(columnIndex -> jsonDouble(array2D.getByIndex(rowIndex, columnIndex))))))),
+                            .mapToObj(columnIndex -> jsonDouble(array2D.getByIndex(rowIndex, columnIndex)))))))
+            .build(),
         JSON_VALIDATION_INSTRUCTIONS);
   }
 
