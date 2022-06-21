@@ -70,6 +70,7 @@ public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocum
         .setClass(WeightedBySignedFraction.class)
         .setSingleLineSummary(label("A single item with a SignedFraction weight."))
         .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()
