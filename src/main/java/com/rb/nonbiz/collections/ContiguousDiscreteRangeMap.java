@@ -12,15 +12,19 @@ import static com.rb.nonbiz.collections.NonContiguousRangeMap.nonContiguousRange
 import static java.util.Collections.singletonList;
 
 /**
- * Represents e.g.
+ * Represents a set of ranges of discrete values with no gaps or overlaps.  E.g.
+ * <pre>
  * [monday, wednesday] {@code ->} 1.1
  * [thursday, friday]  {@code ->} 2.2
+ * </pre>
  *
- * This is similar to a Guava RangeMap, except it is guaranteed (via preconditions at assertion time)
- * to be non-disjoint/contiguous, i.e. to have neither holes nor overlaps.
+ * <p> This is similar to a Guava RangeMap, except it is guaranteed (via preconditions at assertion time)
+ * to be non-disjoint/contiguous, i.e. to have neither holes nor overlaps. </p>
  *
- * It has 'discrete' in the name because it works for ints, LocalDates, etc. where there's a clear notion of a
- * next item. This is not the case with doubles, for instance.
+ * <p> It has 'discrete' in the name because it works for ints, LocalDates, etc. where there's a clear notion of a
+ * next item. This is not the case with doubles, for instance. </p>
+ *
+ * @see NonContiguousRangeMap
  */
 public class ContiguousDiscreteRangeMap<K extends Comparable<? super K>, V> {
 

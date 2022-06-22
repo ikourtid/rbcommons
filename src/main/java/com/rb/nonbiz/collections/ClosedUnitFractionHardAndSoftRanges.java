@@ -13,18 +13,20 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 /**
  * This is a generalization of the following use case:
  *
- * Say an asset class is specified by an advisor to be between 30% to 40% of total (hard range).
+ * <p> Say an asset class is specified by an advisor to be between 30% to 40% of total (hard range). </p>
  *
- * If a portfolio is outside the hard range, we should force it to be a bit inside of the 30%-40% range -
+ * <p> If a portfolio is outside the hard range, we should force it to be a bit inside of the 30%-40% range -
  * i.e. not exactly at the edge (e.g. 30%).
- * For example, we can use the 'soft range' of 31% to 39%, post-trading.
+ * For example, we can use the 'soft range' of 31% to 39%, post-trading. </p>
  *
- * Here's why: If an asset class at 29% was traded to be exactly at 30%,
+ * <p> Here's why: If an asset class at 29% was traded to be exactly at 30%,
  * then if it dropped in price more than the other asset classes on the next day and went to 29.99% of the total,
- * we'd have to trade again.
+ * we'd have to trade again. </p>
  *
- * It's like how a house heating thermostat may turn on the heat when the temperature goes to 68,
- * but only turn it off when it goes to 70. It is to prevent oscillations around a single cutoff point.
+ * <p> It's like how a house heating thermostat may turn on the heat when the temperature goes to 68,
+ * but only turn it off when it goes to 70. It is to prevent oscillations around a single cutoff point. </p>
+ *
+ * @see ClosedUnitFractionHardAndSoftRange
  */
 public class ClosedUnitFractionHardAndSoftRanges<K> {
 
