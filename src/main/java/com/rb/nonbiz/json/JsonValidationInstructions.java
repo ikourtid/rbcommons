@@ -2,6 +2,7 @@ package com.rb.nonbiz.json;
 
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSets;
+import com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -11,23 +12,28 @@ import java.util.List;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
+import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 
 /**
  * Hold information about required and optional top-level properties for a JSON object.
- * The purpose is to check JSON objects being converted via our JsonApiConverters.
- * In particular, we want to know if an optional property is misspelled, which could allow
- * a silent failure to propagate.
  *
- * E.g. if a JSON object contained optional entries:
+ * <p> The purpose is to check JSON objects being converted via our JsonApiConverters.
+ * In particular, we want to know if an optional property is misspelled, which could allow
+ * a silent failure to propagate. </p>
+ *
+ * <p> E.g. if a JSON object contained optional entries: </p>
+ * <pre>
  * "orderNotionalLimits" = {
  *   "min": 100,
  *   "mxa": 1000     // TYPO: "mxa" instead of "max"
  * }
- * Because the max order notional size is optional, a typo would result in no maximum,
- * e.g. unlimited order size.
+ * </pre>
  *
- * We could extend validation to checking valid data ranges (e.g. UnitFractions must be between 0.0 and 1.0).
- * However, this wouldn't add much value since our constructors already enforce these limits.
+ * <p> Because the max order notional size is optional, a typo would result in no maximum,
+ * e.g. unlimited order size. </p>
+ *
+ * <p> We could extend validation to checking valid data ranges (e.g. UnitFractions must be between 0.0 and 1.0).
+ * However, this wouldn't add much value since our constructors already enforce these limits. </p>
  */
 public class JsonValidationInstructions {
 
@@ -38,6 +44,13 @@ public class JsonValidationInstructions {
       RBSet<String> requiredProperties, RBSet<String> optionalProperties) {
     this.requiredProperties = requiredProperties;
     this.optionalProperties = optionalProperties;
+  }
+
+  public static JsonValidationInstructions emptyJsonValidationInstructions() {
+    return jsonValidationInstructionsBuilder()
+        .hasNoRequiredProperties()
+        .hasNoOptionalProperties()
+        .build();
   }
 
   public RBSet<String> getRequiredProperties() {
