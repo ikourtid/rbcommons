@@ -15,6 +15,7 @@ import java.util.function.Function;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.immutableIndexableArray1D;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
 import static com.rb.nonbiz.json.RBJsonArrays.listToJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
@@ -32,7 +33,9 @@ import static com.rb.nonbiz.text.Strings.asSingleLine;
 public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocumentation {
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
-      .setRequiredProperties("keys", "data")
+      .setRequiredProperties(
+          "keys", String.class,
+          "data", UNKNOWN_CLASS_OF_JSON_PROPERTY)
       .hasNoOptionalProperties()
       .build();
 

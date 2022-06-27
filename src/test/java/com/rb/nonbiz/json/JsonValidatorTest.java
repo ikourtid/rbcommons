@@ -15,12 +15,15 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 
 public class JsonValidatorTest extends RBTest<JsonValidator> {
 
+  // This does not have to be shared across all tests, but doing so simplifies the tests.
+  private static final Class<?> SHARED_CLASS = String.class;
+
   @Test
   public void missingRequiredProperty_throws() {
     Consumer<JsonObject> validator = jsonObject -> {
       JsonValidationInstructions instructions = jsonValidationInstructionsBuilder()
-          .setRequiredProperties("required1", "required2")
-          .setOptionalProperties("optional1")
+          .setRequiredProperties("required1", SHARED_CLASS, "required2", SHARED_CLASS)
+          .setOptionalProperties("optional1", SHARED_CLASS)
           .build();
       makeTestObject().validate(jsonObject, instructions);
     };
@@ -56,8 +59,8 @@ public class JsonValidatorTest extends RBTest<JsonValidator> {
   public void typo_throws() {
     Consumer<JsonObject> validator = jsonObject -> {
       JsonValidationInstructions instructions = jsonValidationInstructionsBuilder()
-          .setRequiredProperties("required1", "required2")
-          .setOptionalProperties("optional1")
+          .setRequiredProperties("required1", SHARED_CLASS, "required2", SHARED_CLASS)
+          .setOptionalProperties("optional1", SHARED_CLASS)
           .build();
       makeTestObject().validate(jsonObject, instructions);
     };
@@ -83,8 +86,8 @@ public class JsonValidatorTest extends RBTest<JsonValidator> {
   public void extraProperty_throws() {
     Consumer<JsonObject> validator = jsonObject -> {
       JsonValidationInstructions instructions = jsonValidationInstructionsBuilder()
-          .setRequiredProperties("required1", "required2")
-          .setOptionalProperties("optional1")
+          .setRequiredProperties("required1", SHARED_CLASS, "required2", SHARED_CLASS)
+          .setOptionalProperties("optional1", SHARED_CLASS)
           .build();
       makeTestObject().validate(jsonObject, instructions);
     };

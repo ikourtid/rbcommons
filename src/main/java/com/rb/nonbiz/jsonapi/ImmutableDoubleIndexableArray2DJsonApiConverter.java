@@ -33,7 +33,10 @@ import static com.rb.nonbiz.text.Strings.asSingleLine;
 public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonApiDocumentation {
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
-      .setRequiredProperties("rowKeys", "columnKeys", "data")
+      .setRequiredProperties(
+          "rowKeys",    String.class,
+          "columnKeys", String.class,
+          "data",       Double.class)
       .hasNoOptionalProperties()
       .build();
 

@@ -1,5 +1,6 @@
 package com.rb.nonbiz.json;
 
+import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
@@ -43,6 +44,12 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstru
  */
 public class JsonValidationInstructions {
 
+  /**
+   * Some JSON properties, such as the data under YearlyTimeSeries, do not have a fixed class.
+   * We will use class to denote that.
+   */
+  public static final Class<?> UNKNOWN_CLASS_OF_JSON_PROPERTY = Class.class;
+
   private final RBMap<String, Class<?>> requiredProperties;
   private final RBMap<String, Class<?>> optionalProperties;
 
@@ -64,8 +71,16 @@ public class JsonValidationInstructions {
     return requiredProperties;
   }
 
+  public List<String> getRequiredPropertiesAsSortedList() {
+    return requiredProperties.sortedKeys(Ordering.natural());
+  }
+
   public RBMap<String, Class<?>> getOptionalProperties() {
     return optionalProperties;
+  }
+
+  public List<String> getOptionalPropertiesAsSortedList() {
+    return optionalProperties.sortedKeys(Ordering.natural());
   }
 
   @Override

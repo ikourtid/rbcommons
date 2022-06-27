@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
+import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.WeightedBySignedFraction;
 
 import java.util.function.Function;
@@ -31,7 +32,9 @@ import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFract
 public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocumentation{
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
-      .setRequiredProperties("item", "weight")
+      .setRequiredProperties(
+          "item", JsonElement.class,
+          "weight", PreciseValue.class)
       .hasNoOptionalProperties()
       .build();
 

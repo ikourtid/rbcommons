@@ -43,6 +43,7 @@ import static com.rb.nonbiz.collections.RBRanges.constructRange;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
 import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
@@ -284,7 +285,9 @@ public class RBJsonObjects {
       Function<JsonElement, C> valueDeserializer) {
     JsonValidator.staticValidate(jsonObject, jsonValidationInstructionsBuilder()
         .hasNoRequiredProperties()
-        .setOptionalProperties("min", "max")
+        .setOptionalProperties(
+            "min", UNKNOWN_CLASS_OF_JSON_PROPERTY,
+            "max", UNKNOWN_CLASS_OF_JSON_PROPERTY)
         .build());
     return constructRange(
         transformOptional(getOptionalJsonElement(jsonObject, "min"), valueDeserializer), BoundType.CLOSED,
@@ -295,7 +298,9 @@ public class RBJsonObjects {
       JsonObject jsonObject,
       Function<JsonElement, C> valueDeserializer) {
     JsonValidator.staticValidate(jsonObject, jsonValidationInstructionsBuilder()
-        .setRequiredProperties("min", "max")
+        .setRequiredProperties(
+            "min", UNKNOWN_CLASS_OF_JSON_PROPERTY,
+            "max", UNKNOWN_CLASS_OF_JSON_PROPERTY)
         .hasNoOptionalProperties()
         .build());
     return closedRange(
