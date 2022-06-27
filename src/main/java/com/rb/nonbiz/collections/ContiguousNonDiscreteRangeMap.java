@@ -14,16 +14,17 @@ import java.util.Optional;
 import static java.util.Collections.singletonList;
 
 /**
- * This is similar to a RangeMap, except it is guaranteed (via preconditions at assertion time)
+ * This is similar to a {@link RangeMap}, except it is guaranteed (via preconditions at assertion time)
  * to be non-disjoint/contiguous.
  *
- * It has 'non-discrete' in its name to clarify that it should be used for cases where there's no clearly
+ * <p> It has 'non-discrete' in its name to clarify that it should be used for cases where there's no clearly
  * defined notion of a next item. So it essentially represents a bunch of ranges like
- * [k1, k2) , [k2, k3), [k3, k4), ...
- * E.g. doubles is a good example.
- * Integers, LocalDates etc are NOT.
+ * [k1, k2) , [k2, k3), [k3, k4), ... </p>
  *
- * A better word for this is 'continuous', but ContiguousContinuousRangeMap sounds very confusing.
+ * <p> E.g. doubles is a good example.
+ * Integers, LocalDates etc are NOT. </p>
+ *
+ * <p> A better word for this is 'continuous', but ContiguousContinuousRangeMap sounds very confusing. </p>
  */
 // RangeMap is officially marked @Beta / unstable, but it sounds like this is an oversight. So it's safe to use.
 // https://github.com/google/guava/issues/3376
