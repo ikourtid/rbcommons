@@ -126,7 +126,7 @@ public class JsonApiDocumentation {
   /**
    * Returns some non-trivial (i.e. not minimal) sample JSON.
    */
-  Optional<JsonElement> getNontrivialSampleJson() {
+  public Optional<JsonElement> getNontrivialSampleJson() {
     return nontrivialSampleJson;
   }
 
