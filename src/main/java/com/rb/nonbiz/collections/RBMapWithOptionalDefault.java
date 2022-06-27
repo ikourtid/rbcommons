@@ -7,7 +7,7 @@ import java.util.Optional;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 
 /**
- * Basically just an RBMap, but it also stores an optional default value, with the semantics that the
+ * Basically just an {@link RBMap}, but it also stores an optional default value, with the semantics that the
  * default value applies when a value for a given key (K) is missing AND the default value is present.
  *
  * <p> Otherwise, a missing key in the map is supposed to get some default behavior based on the semantics of its
