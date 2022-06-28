@@ -17,10 +17,12 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 
 /**
- * Basically just an IidMap, but it also stores a default value per instrument type,
- * with the semantics that the default value applies when a value for a given InstrumentId is missing.
+ * Basically just an {@link IidMap}, but it also stores a default value per instrument type,
+ * with the semantics that the default value applies when a value for a given {@link InstrumentId}
+ * is missing.
  *
  * @see IidMap
+ * @see InstrumentTypeMap
  */
 public class IidMapWithDefaultsByInstrumentType<V> implements PrintsInstruments {
 

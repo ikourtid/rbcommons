@@ -24,8 +24,9 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 
 /**
- * A set of InstrumentId that can be indexed by InstrumentId.
- * It uses the instrument-id-specific optimized maps (using GNU Trove)
+ * A set of {@link InstrumentId}s that can be indexed by InstrumentId.
+ *
+ * <p> It uses the instrument-id-specific optimized maps (using GNU Trove). </p>
  *
  * @see HasLongSet
  * @see HasInstrumentIdSet
@@ -47,7 +48,7 @@ public class IidSet extends HasLongSet<InstrumentId> implements PrintsInstrument
   }
 
   /**
-   * This converts this set into an IidMap with the same instrument ID keys,
+   * This converts this set into an {@link IidMap} with the same instrument ID keys,
    * and whose corresponding values are some function of the key.
    *
    * See also #orderedToIidMap.
@@ -60,9 +61,10 @@ public class IidSet extends HasLongSet<InstrumentId> implements PrintsInstrument
   }
 
   /**
-   * In some cases, we still need to convert to an old-style, non-specialized RBMap.
-   * Examples (Sep 2018) are cases where the code is more general and uses {@code <K extends Investable>} instead of
-   * just an InstrumentId, such as {@code DoubleMap<K extends Investable>}.
+   * In some cases, we still need to convert to an old-style, non-specialized {@link RBMap}.
+   *
+   * <p> Examples (Sep 2018) are cases where the code is more general and uses {@code <K extends Investable>} instead of
+   * just an InstrumentId, such as {@code DoubleMap<K extends Investable>}. </p>
    */
   public <V> RBMap<InstrumentId, V> toRBMap(Function<InstrumentId, V> valueGenerator) {
     MutableRBMap<InstrumentId, V> mutableMap = newMutableRBMapWithExpectedSize(size());
@@ -72,10 +74,11 @@ public class IidSet extends HasLongSet<InstrumentId> implements PrintsInstrument
   }
 
   /**
-   * Converts this set into an IidMap whose instrument ids are a subset of the instrument ids in this set
+   * Converts this set into an {@link IidMap} whose instrument ids are a subset of the instrument ids in this set
    * and whose corresponding values are some function of the instrument id.
-   * The valueGenerator passed must return Optional.empty() if an instrument id is not supposed to go into
-   * a resulting map, and Optional.of(V) if it is.
+   *
+   * <p> The valueGenerator passed must return Optional.empty() if an instrument id is not supposed to go into
+   * a resulting map, and Optional.of(V) if it is. </p>
    *
    * @see #orderedToIidMap
    */
@@ -88,11 +91,11 @@ public class IidSet extends HasLongSet<InstrumentId> implements PrintsInstrument
   }
 
   /**
-   * This converts this set into an IidMap with the same instrument ids,
+   * This converts this set into an {@link IidMap} with the same instrument ids,
    * and whose corresponding values are some function of the instrument id.
    * However, the ordering that the valueGenerator is run on the instrument ids is fixed.
    *
-   * This matters when valueGenerator has a side effect, such as increasing some internal counter.
+   * <p> This matters when valueGenerator has a side effect, such as increasing some internal counter. </p>
    *
    * @see #toIidMap
    */
