@@ -5,14 +5,19 @@ import com.rb.nonbiz.text.Strings;
 /**
  * This is helpful in the JSON API documentation (OpenAPI / Swagger). It gives us type information for a property of a
  * JSON object in the JSON API serialization.
+ * FIXME IAK YAML these should prohibit InstrumentId, Strings, and Symbol.class from ever appearing inside them
+ * - or UniqueId, because that should have a T in it
  */
 public abstract class DataClassJsonApiDescriptor {
 
   public interface Visitor<T> {
 
     T visitSimpleClassJsonApiDescriptor(SimpleClassJsonApiDescriptor simpleClassJsonApiDescriptor);
+    T visitUniqueIdJsonApiDescriptor(UniqueIdJsonApiDescriptor uniqueIdJsonApiDescriptor);
     T visitIidMapJsonApiDescriptor(IidMapJsonApiDescriptor iidMapJsonApiDescriptor);
+    T visitRBMapJsonApiDescriptor(RBMapJsonApiDescriptor rbMapJsonApiDescriptor);
     T visitCollectionJsonApiDescriptor(CollectionJsonApiDescriptor collectionJsonApiDescriptor);
+    T visitYearlyTimeSeriesJsonApiDescriptor(YearlyTimeSeriesJsonApiDescriptor yearlyTimeSeriesJsonApiDescriptor);
 
   }
 
@@ -56,6 +61,42 @@ public abstract class DataClassJsonApiDescriptor {
 
 
   /**
+   * Tells us the type of a property of a JsonObject in the JSON API, in the simplest case
+   * where it is a single JSON API data class (e.g. not some collection).
+   */
+  public static class UniqueIdJsonApiDescriptor extends DataClassJsonApiDescriptor {
+
+    private final Class<?> clazz;
+
+    private UniqueIdJsonApiDescriptor(Class<?> clazz) {
+      this.clazz = clazz;
+    }
+
+    public static UniqueIdJsonApiDescriptor uniqueIdJsonApiDescriptor(Class<?> clazz) {
+      return new UniqueIdJsonApiDescriptor(clazz);
+    }
+
+    /**
+     * This cannot be called getClass because it's an existing method in java.lang.Object.
+     */
+    public Class<?> getClassOfId() {
+      return clazz;
+    }
+
+    @Override
+    public <T> T visit(Visitor<T> visitor) {
+      return visitor.visitUniqueIdJsonApiDescriptor(this);
+    }
+
+    @Override
+    public String toString() {
+      return Strings.format("[UIJAD %s UIJAD]", clazz);
+    }
+
+  }
+
+
+  /**
    * Tells us the type of a property of a JsonObject in the JSON API, in the case
    * where it is the JSON representation of an IidMap of some Java data class.
    */
@@ -90,6 +131,45 @@ public abstract class DataClassJsonApiDescriptor {
 
   /**
    * Tells us the type of a property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of an RBMap of some Java data class.
+   */
+  public static class RBMapJsonApiDescriptor extends DataClassJsonApiDescriptor {
+
+    private final Class<?> rbMapKeyClass;
+    private final Class<?> rbMapValueClass;
+
+    private RBMapJsonApiDescriptor(Class<?> rbMapKeyClass, Class<?> rbMapValueClass) {
+      this.rbMapKeyClass = rbMapKeyClass;
+      this.rbMapValueClass = rbMapValueClass;
+    }
+
+    public static RBMapJsonApiDescriptor rbMapJsonApiDescriptor(Class<?> rbMapKeyClass, Class<?> rbMapValueClass) {
+      return new RBMapJsonApiDescriptor(rbMapKeyClass, rbMapValueClass);
+    }
+
+    public Class<?> getRbMapKeyClass() {
+      return rbMapKeyClass;
+    }
+
+    public Class<?> getRBMapValueClass() {
+      return rbMapValueClass;
+    }
+
+    @Override
+    public <T> T visit(Visitor<T> visitor) {
+      return visitor.visitRBMapJsonApiDescriptor(this);
+    }
+
+    @Override
+    public String toString() {
+      return Strings.format("[RMJAD %s -> %s RMJAD]", rbMapKeyClass, rbMapValueClass);
+    }
+
+  }
+
+
+  /**
+   * Tells us the type of a property of a JsonObject in the JSON API, in the case
    * where it is the JSON representation of an collection (Set, List, or array) of some Java data class.
    */
   public static class CollectionJsonApiDescriptor extends DataClassJsonApiDescriptor {
@@ -116,6 +196,39 @@ public abstract class DataClassJsonApiDescriptor {
     @Override
     public String toString() {
       return Strings.format("[CJAD %s CJAD]", collectionValueClass);
+    }
+
+  }
+
+
+  /**
+   * Tells us the type of a property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of a YearlyTimeSeries of some Java data class.
+   */
+  public static class YearlyTimeSeriesJsonApiDescriptor extends DataClassJsonApiDescriptor {
+
+    private final Class<?> yearlyTimeSeriesValueClass;
+
+    private YearlyTimeSeriesJsonApiDescriptor(Class<?> yearlyTimeSeriesValueClass) {
+      this.yearlyTimeSeriesValueClass = yearlyTimeSeriesValueClass;
+    }
+
+    public static YearlyTimeSeriesJsonApiDescriptor yearlyTimeSeriesJsonApiDescriptor(Class<?> arrayValueClass) {
+      return new YearlyTimeSeriesJsonApiDescriptor(arrayValueClass);
+    }
+
+    public Class<?> getYearlyTimeSeriesValueClass() {
+      return yearlyTimeSeriesValueClass;
+    }
+
+    @Override
+    public <T> T visit(Visitor<T> visitor) {
+      return visitor.visitYearlyTimeSeriesJsonApiDescriptor(this);
+    }
+
+    @Override
+    public String toString() {
+      return Strings.format("[CJAD %s CJAD]", yearlyTimeSeriesValueClass);
     }
 
   }

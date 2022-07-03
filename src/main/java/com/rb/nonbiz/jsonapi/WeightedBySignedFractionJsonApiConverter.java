@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
 import com.rb.nonbiz.types.PreciseValue;
+import com.rb.nonbiz.types.SignedFraction;
 import com.rb.nonbiz.types.WeightedBySignedFraction;
 
 import java.util.function.Function;
@@ -33,8 +34,8 @@ public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocum
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties(
-          "item", JsonElement.class,
-          "weight", PreciseValue.class)
+          "item",   JsonElement.class,
+          "weight", SignedFraction.class)
       .hasNoOptionalProperties()
       .build();
 

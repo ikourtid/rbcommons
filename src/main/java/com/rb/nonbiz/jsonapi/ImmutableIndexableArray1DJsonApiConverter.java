@@ -3,7 +3,6 @@ package com.rb.nonbiz.jsonapi;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
-import com.rb.nonbiz.collections.ImmutableDoubleIndexableArray2D;
 import com.rb.nonbiz.collections.ImmutableIndexableArray1D;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
