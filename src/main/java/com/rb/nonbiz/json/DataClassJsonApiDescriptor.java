@@ -5,8 +5,6 @@ import com.rb.nonbiz.text.Strings;
 /**
  * This is helpful in the JSON API documentation (OpenAPI / Swagger). It gives us type information for a property of a
  * JSON object in the JSON API serialization.
- * FIXME IAK YAML these should prohibit InstrumentId, Strings, and Symbol.class from ever appearing inside them
- * - or UniqueId, because that should have a T in it
  */
 public abstract class DataClassJsonApiDescriptor {
 
