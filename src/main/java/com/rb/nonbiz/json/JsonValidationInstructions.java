@@ -186,6 +186,11 @@ public class JsonValidationInstructions {
     }
 
     public JsonValidationInstructionsBuilder setOptionalProperties(
+        String property, DataClassJsonApiDescriptor dataClassJsonApiDescriptor) {
+      return setOptionalProperties(singletonRBMap(property, dataClassJsonApiDescriptor));
+    }
+
+    public JsonValidationInstructionsBuilder setOptionalProperties(
         String property1, Class<?> class1) {
       return setOptionalProperties(singletonRBMap(property1, simpleClassJsonApiDescriptor(class1)));
     }
