@@ -60,8 +60,7 @@ public class RBMapJsonApiDescriptorTest extends RBTestMatcher<RBMapJsonApiDescri
         InstrumentId.class, // should use JsonTicker instead
         Symbol.class,       // should use JsonTicker instead
 
-        // These 4 have their own JsonApiDescriptor classes, which we should be using.
-        UniqueId.class,
+        // These 3 have their own JsonApiDescriptor classes, which we should be using.
         IidMap.class,
         RBMap.class,
         RBSet.class)
@@ -78,12 +77,12 @@ public class RBMapJsonApiDescriptorTest extends RBTestMatcher<RBMapJsonApiDescri
 
   @Override
   public RBMapJsonApiDescriptor makeNontrivialObject() {
-    return rbMapJsonApiDescriptor(UniqueId.class, ClosedRange.class);
+    return rbMapJsonApiDescriptor(String.class, ClosedRange.class);
   }
 
   @Override
   public RBMapJsonApiDescriptor makeMatchingNontrivialObject() {
-    return rbMapJsonApiDescriptor(UniqueId.class, ClosedRange.class);
+    return rbMapJsonApiDescriptor(String.class, ClosedRange.class);
   }
 
   @Override
