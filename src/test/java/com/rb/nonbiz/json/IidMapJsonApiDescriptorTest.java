@@ -50,10 +50,6 @@ public class IidMapJsonApiDescriptorTest extends RBTestMatcher<IidMapJsonApiDesc
         .forEach(clazz ->
             assertIllegalArgumentException( () -> iidMapJsonApiDescriptor(clazz)));
   }
-  @Test
-  public void reminder() {
-    fail("");
-  }
 
   @Override
   public IidMapJsonApiDescriptor makeTrivialObject() {
