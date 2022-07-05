@@ -26,20 +26,16 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 public class PseudoEnumJsonApiDescriptorTest extends RBTestMatcher<PseudoEnumJsonApiDescriptor> {
 
   @Test
-  public void mustHaveAtLeastTwoItems() {
+  public void mustHaveAtLeastOneItem() {
     assertIllegalArgumentException( () -> pseudoEnumJsonApiDescriptor(emptyRBMap()));
-    assertIllegalArgumentException( () -> pseudoEnumJsonApiDescriptor(singletonRBMap(
-        "a", label("x"))));
-    PseudoEnumJsonApiDescriptor doesNotThrow = pseudoEnumJsonApiDescriptor(rbMapOf(
-        "a", label("x"),
-        "b", label("y")));
+    PseudoEnumJsonApiDescriptor doesNotThrow = pseudoEnumJsonApiDescriptor(singletonRBMap(
+        "a", label("x")));
   }
 
   @Test
   public void mustHaveNonEmptyExplanations() {
-    Function<String, PseudoEnumJsonApiDescriptor> maker = description -> pseudoEnumJsonApiDescriptor(rbMapOf(
-        "a", label("x"),
-        "b", label(description)));
+    Function<String, PseudoEnumJsonApiDescriptor> maker = description -> pseudoEnumJsonApiDescriptor(singletonRBMap(
+        "a", label(description)));
 
     assertIllegalArgumentException( () -> maker.apply(""));
     PseudoEnumJsonApiDescriptor doesNotThrow = maker.apply("foo");
@@ -47,9 +43,8 @@ public class PseudoEnumJsonApiDescriptorTest extends RBTestMatcher<PseudoEnumJso
 
   @Override
   public PseudoEnumJsonApiDescriptor makeTrivialObject() {
-    return pseudoEnumJsonApiDescriptor(rbMapOf(
-        "a", label("x"),
-        "b", label("y")));
+    return pseudoEnumJsonApiDescriptor(singletonRBMap(
+        "a", label("x")));
   }
 
   @Override

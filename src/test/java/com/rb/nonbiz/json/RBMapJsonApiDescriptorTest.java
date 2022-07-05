@@ -39,8 +39,7 @@ public class RBMapJsonApiDescriptorTest extends RBTestMatcher<RBMapJsonApiDescri
         InstrumentId.class, // should use JsonTicker instead
         Symbol.class,       // should use JsonTicker instead
 
-        // These 4 have their own JsonApiDescriptor classes, which we should be using.
-        UniqueId.class,
+        // These 3 have their own JsonApiDescriptor classes, which we should be using.
         IidMap.class,
         RBMap.class,
         RBSet.class)

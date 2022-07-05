@@ -346,8 +346,8 @@ public abstract class DataClassJsonApiDescriptor {
     public static PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor(
         RBMap<String, HumanReadableLabel> validValuesToExplanations) {
       RBPreconditions.checkArgument(
-          validValuesToExplanations.size() >= 2,
-          "There must be at least 2 items here: %s",
+          !validValuesToExplanations.isEmpty(),
+          "There must be at least 1 item here: %s",
           validValuesToExplanations);
       validValuesToExplanations
           .forEachEntry( (pseudoEnumString, explanationLabel) -> {
@@ -447,9 +447,12 @@ public abstract class DataClassJsonApiDescriptor {
 
     public static JavaEnumJsonApiDescriptor javaEnumJsonApiDescriptor(
         EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
+      // This is for the rare cases where we only allow one value of the enum in the JSON API.
+      // You might wonder - why bother serializing such an enum in the first place? Well, this would allow us to
+      // support more enum values later if we decide to.
       RBPreconditions.checkArgument(
-          validValuesToExplanations.size() >= 2,
-          "There must be at least 2 items here: %s",
+          !validValuesToExplanations.isEmpty(),
+          "There must be at least 1 item here: %s",
           validValuesToExplanations);
       validValuesToExplanations
           .values()
