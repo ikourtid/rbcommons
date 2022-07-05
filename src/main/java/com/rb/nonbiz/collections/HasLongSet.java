@@ -17,20 +17,20 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 
 
 /**
- * This is a special implementation of an RBSet (SORT OF) for the cases where the key class
- * implements HasLongRepresentation. In those cases, we can key off of the long, and can therefore use
+ * This is a special implementation of an {@link RBSet} (SORT OF) for the cases where the key class
+ * implements {@link HasLongRepresentation}. In those cases, we can key off of the long, and can therefore use
  * specialized classes which are faster and more space-efficient (which can also result in speed increases
  * due to fewer cache misses, presumably).
  *
- * This is used in IidSet in particular, but can also be used for other cases
- * of HasLongRepresentation (AssetId, Investable, AssetClass, etc.)
+ * <p> This is used in IidSet in particular, but can also be used for other cases
+ * of HasLongRepresentation (AssetId, Investable, AssetClass, etc.) </p>
  *
- * I originally wanted to make this look just like RBSet, so that the code can be agnostic
+ * <p> I originally wanted to make this look just like RBSet, so that the code can be agnostic
  * about whether it's using a special implementation for the cases
  * However, it's just not possible. The GNU Trove objects that we use for the raw underlying set
- * do not really support a java.util.Set-like interface.
+ * do not really support a java.util.Set-like interface. </p>
  *
- * Therefore, any code that uses this will need to treat this specially (i.e. not like an RBSet),
+ * <p> Therefore, any code that uses this will need to treat this specially (i.e. not like an RBSet). </p>
  *
  * @see RBSet
  * @see HasLongMap

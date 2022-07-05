@@ -153,6 +153,14 @@ public class JsonApiDocumentation {
     }
 
     // FIXME IAK / FIXME SWA JSONDOC: once all JSON API classes get documented, we should remove this.
+    public static JsonApiDocumentationBuilder intermediateJsonApiDocumentationBuilder() {
+      return new JsonApiDocumentationBuilder()
+          .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+          .noTrivialSampleJsonSupplied()
+          .noNontrivialSampleJsonSupplied();
+    }
+
+    // FIXME IAK / FIXME SWA JSONDOC: once all JSON API classes get documented, we should remove this.
     public static JsonApiDocumentation intermediateJsonApiDocumentationWithFixme(
         Class<?> clazz,
         HasJsonApiDocumentation ... items) {

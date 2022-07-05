@@ -1,14 +1,20 @@
 package com.rb.nonbiz.math.eigen;
 
+import com.rb.biz.types.asset.AssetId;
+import com.rb.biz.types.asset.CashId;
+import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.types.HasLongRepresentation;
 
 /**
  * An investable is something that
- * a) can be a key to an eigendecomposition
- * b) can be something we can buy. E.g. we can buy shares in VTI, or we can buy shares in the US stocks
- *    instrument class (or, more generally, asset class).
+ * <ol>
+ *  <li> can be a key to an eigendecomposition </li>
+ *  <li> can be something we can buy. E.g. we can buy shares in VTI, or we can buy shares in the US stocks
+ *    instrument class (or, more generally, asset class). </li>
+ * </ol>
  *
- * The current examples (Jan 2017) are InstrumentId, InstrumentClass, AssetClass.
+ * <p> The current examples (Jun 2022) are {@link InstrumentId}, {@link AssetId},
+ * InstrumentClass, and AssetClass, and {@link CashId}. </p>
  */
 public interface Investable extends HasLongRepresentation {
 
