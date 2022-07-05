@@ -2,12 +2,13 @@ package com.rb.nonbiz.json;
 
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.CollectionJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.IidMapJsonApiDescriptor;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaEnumJsonApiDescriptor;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.PseudoEnumJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.RBMapJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.UniqueIdJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.Visitor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.YearlyTimeSeriesJsonApiDescriptor;
-import com.rb.nonbiz.testmatchers.RBMatchers;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testmatchers.RBVisitorMatchers.VisitorMatchInfo;
 import com.rb.nonbiz.testutils.RBTestMatcher;
@@ -15,6 +16,8 @@ import org.hamcrest.TypeSafeMatcher;
 
 import static com.rb.nonbiz.json.CollectionJsonApiDescriptorTest.collectionJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.json.IidMapJsonApiDescriptorTest.iidMapJsonApiDescriptorMatcher;
+import static com.rb.nonbiz.json.JavaEnumJsonApiDescriptorTest.javaEnumJsonApiDescriptorMatcher;
+import static com.rb.nonbiz.json.PseudoEnumJsonApiDescriptorTest.pseudoEnumJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.json.RBMapJsonApiDescriptorTest.rbMapJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.json.SimpleClassJsonApiDescriptorTest.simpleClassJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.json.UniqueIdJsonApiDescriptorTest.uniqueIdJsonApiDescriptorMatcher;
@@ -87,6 +90,20 @@ public class DataClassJsonApiDescriptorTest extends RBTestMatcher<DataClassJsonA
           YearlyTimeSeriesJsonApiDescriptor yearlyTimeSeriesJsonApiDescriptor) {
         return visitorMatchInfo(6, yearlyTimeSeriesJsonApiDescriptor,
             (MatcherGenerator<YearlyTimeSeriesJsonApiDescriptor>) f -> yearlyTimeSeriesJsonApiDescriptorMatcher(f));
+      }
+
+      @Override
+      public VisitorMatchInfo<DataClassJsonApiDescriptor> visitPseudoEnumJsonApiDescriptor(
+          PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor) {
+        return visitorMatchInfo(7, pseudoEnumJsonApiDescriptor,
+            (MatcherGenerator<PseudoEnumJsonApiDescriptor>) f -> pseudoEnumJsonApiDescriptorMatcher(f));
+      }
+
+      @Override
+      public VisitorMatchInfo<DataClassJsonApiDescriptor> visitJavaEnumJsonApiDescriptor(
+          JavaEnumJsonApiDescriptor javaEnumJsonApiDescriptor) {
+        return visitorMatchInfo(8, javaEnumJsonApiDescriptor,
+            (MatcherGenerator<JavaEnumJsonApiDescriptor>) f -> javaEnumJsonApiDescriptorMatcher(f));
       }
     }));
   }

@@ -5,14 +5,17 @@ import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;
+import java.util.EnumMap;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
 
 /**
  * This is helpful in the JSON API documentation (OpenAPI / Swagger). It gives us type information for a property of a
@@ -28,6 +31,8 @@ public abstract class DataClassJsonApiDescriptor {
     T visitRBMapJsonApiDescriptor(RBMapJsonApiDescriptor rbMapJsonApiDescriptor);
     T visitCollectionJsonApiDescriptor(CollectionJsonApiDescriptor collectionJsonApiDescriptor);
     T visitYearlyTimeSeriesJsonApiDescriptor(YearlyTimeSeriesJsonApiDescriptor yearlyTimeSeriesJsonApiDescriptor);
+    T visitPseudoEnumJsonApiDescriptor(PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor);
+    T visitJavaEnumJsonApiDescriptor(JavaEnumJsonApiDescriptor javaEnumJsonApiDescriptor);
 
   }
 
@@ -317,5 +322,165 @@ public abstract class DataClassJsonApiDescriptor {
 
   }
 
+
+  /**
+   * We often serialize a base class with multiple subclasses by using a string key in the JSON to represent the
+   * subclass's type. Example: NaiveSubObjectiveFormulationDetailsJsonApiConverter. The strings in the JSON may not
+   * be exact matches to Java classes - and anyway, they shouldn't be, because if we rename Java classes, we
+   * don't want the API to change, as others may be relying on those specific strings.
+   * Also, there are other cases where we use a special string in the JSON API
+   * to represent some special values (e.g. GlobalObjectiveThreshold where the threshold always passes).
+   *
+   * For those JSON properties, we should be using this.
+   *
+   * Note that this does not represent an actual enum.
+   */
+  public static class PseudoEnumJsonApiDescriptor extends DataClassJsonApiDescriptor {
+
+    private final RBMap<String, HumanReadableLabel> validValuesToExplanations;
+
+    private PseudoEnumJsonApiDescriptor(RBMap<String, HumanReadableLabel> validValuesToExplanations) {
+      this.validValuesToExplanations = validValuesToExplanations;
+    }
+
+    public static PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor(
+        RBMap<String, HumanReadableLabel> validValuesToExplanations) {
+      RBPreconditions.checkArgument(
+          validValuesToExplanations.size() >= 2,
+          "There must be at least 2 items here: %s",
+          validValuesToExplanations);
+      validValuesToExplanations
+          .forEachEntry( (pseudoEnumString, explanationLabel) -> {
+            RBPreconditions.checkArgument(
+                !pseudoEnumString.equals(""),
+                "No 'pseudo-enum' string key may be empty: %s",
+                validValuesToExplanations);
+            RBPreconditions.checkArgument(
+                !explanationLabel.getLabelText().equals(""),
+                "No explanation may be empty: %s",
+                validValuesToExplanations);
+          });
+      return new PseudoEnumJsonApiDescriptor(validValuesToExplanations);
+    }
+
+    public RBMap<String, HumanReadableLabel> getValidValuesToExplanations() {
+      return validValuesToExplanations;
+    }
+
+    @Override
+    public <T> T visit(Visitor<T> visitor) {
+      return visitor.visitPseudoEnumJsonApiDescriptor(this);
+    }
+
+    @Override
+    public String toString() {
+      return Strings.format("[PEJAD %s PEJAD]",
+          formatMapInKeyOrder(validValuesToExplanations, String::compareTo, " ; "));
+    }
+
+  }
+
+
+
+  /**
+   * We often serialize a Java enum by using strings that are similar in meaning to the Java identifier, but
+   * possibly looking different (e.g. JSON API tends to use camelcase instead of capitalized snake case in Java).
+   * We have to do this, because if we ever rename the Java enum class or its enum values, we
+   * don't want the API to change, as others may be relying on those specific strings.
+   *
+   * For those JSON properties, we should be using this.
+   */
+  public static class JavaEnumJsonApiDescriptor extends DataClassJsonApiDescriptor {
+
+    /**
+     * Not all enum values are guaranteed to be serializable. Ideally the API would support everything, but there are
+     * sometimes old deprecated enum values that we expressly do not want to be part of the API.
+     *
+     * For those enum values that get serialized, this will store the string value to use in the JSON API,
+     * as well as the human-readable explanation.
+     */
+    public static class JavaEnumSerializationAndExplanation {
+
+      private final String jsonSerialization;
+      private final HumanReadableLabel explanation;
+
+      private JavaEnumSerializationAndExplanation(String jsonSerialization, HumanReadableLabel explanation) {
+        this.jsonSerialization = jsonSerialization;
+        this.explanation = explanation;
+      }
+
+      public static JavaEnumSerializationAndExplanation javaEnumSerializationAndExplanation(
+          String jsonSerialization, HumanReadableLabel explanation) {
+        RBPreconditions.checkArgument(
+            !jsonSerialization.isEmpty(),
+            "We can't use an empty string for serialization; explanation is: %s",
+            explanation);
+        RBPreconditions.checkArgument(
+            !explanation.getLabelText().isEmpty(),
+            "Explanation can't be empty for enum value= %s",
+            jsonSerialization);
+        return new JavaEnumSerializationAndExplanation(jsonSerialization, explanation);
+      }
+
+      public String getJsonSerialization() {
+        return jsonSerialization;
+      }
+
+      public HumanReadableLabel getExplanation() {
+        return explanation;
+      }
+
+      @Override
+      public String toString() {
+        return Strings.format("[JESAE %s %s JESAE]", jsonSerialization, explanation);
+      }
+
+    }
+
+
+    private final EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> validValuesToExplanations;
+
+    public JavaEnumJsonApiDescriptor(
+        EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
+      this.validValuesToExplanations = validValuesToExplanations;
+    }
+
+    public static JavaEnumJsonApiDescriptor javaEnumJsonApiDescriptor(
+        EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
+      RBPreconditions.checkArgument(
+          validValuesToExplanations.size() >= 2,
+          "There must be at least 2 items here: %s",
+          validValuesToExplanations);
+      validValuesToExplanations
+          .values()
+          .forEach(javaEnumSerializationAndExplanation -> {
+            RBPreconditions.checkArgument(
+                !javaEnumSerializationAndExplanation.getJsonSerialization().equals(""),
+                "No 'pseudo-enum' string key may be empty: %s",
+                validValuesToExplanations);
+            RBPreconditions.checkArgument(
+                !javaEnumSerializationAndExplanation.getExplanation().getLabelText().equals(""),
+                "No explanation may be empty: %s",
+                validValuesToExplanations);
+          });
+      return new JavaEnumJsonApiDescriptor(validValuesToExplanations);
+    }
+
+    public EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> getValidValuesToExplanations() {
+      return validValuesToExplanations;
+    }
+
+    @Override
+    public <T> T visit(Visitor<T> visitor) {
+      return visitor.visitJavaEnumJsonApiDescriptor(this);
+    }
+
+    @Override
+    public String toString() {
+      // Can't use formatMap because this is an EnumMap, not a RBMap.
+      return Strings.format("[JEJAD %s JEJAD]", validValuesToExplanations);
+    }
+
+  }
 
 }

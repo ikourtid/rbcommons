@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.function.BiFunction;
 
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptorTest.dataClassJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.JsonValidationInstructions.emptyJsonValidationInstructions;
 import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
@@ -143,8 +144,8 @@ public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidation
   public static TypeSafeMatcher<JsonValidationInstructions> jsonValidationInstructionsMatcher(
       JsonValidationInstructions expected) {
     return makeMatcher(expected,
-        matchRBMap(v -> v.getRequiredProperties(), f -> typeSafeEqualTo(f)),
-        matchRBMap(v -> v.getOptionalProperties(), f -> typeSafeEqualTo(f)));
+        matchRBMap(v -> v.getRequiredProperties(), f -> dataClassJsonApiDescriptorMatcher(f)),
+        matchRBMap(v -> v.getOptionalProperties(), f -> dataClassJsonApiDescriptorMatcher(f)));
   }
 
 }
