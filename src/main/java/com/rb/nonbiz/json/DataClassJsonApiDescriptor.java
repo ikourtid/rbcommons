@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.EnumMap;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
 
 /**
@@ -336,6 +337,12 @@ public abstract class DataClassJsonApiDescriptor {
    * Note that this does not represent an actual enum.
    */
   public static class PseudoEnumJsonApiDescriptor extends DataClassJsonApiDescriptor {
+
+    // This should be removed once we have human-readable descriptions for all instances where we use it.
+    // The reason it exists is that it helps us avoid having fixmes in multiple places.
+    public static HumanReadableLabel undefinedPseudoEnumJsonApiDescription() {
+      return label("FIXME SWA JSONDOC");
+    }
 
     private final RBMap<String, HumanReadableLabel> validValuesToExplanations;
 
