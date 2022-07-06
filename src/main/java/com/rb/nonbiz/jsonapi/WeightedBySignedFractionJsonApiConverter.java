@@ -5,11 +5,14 @@ import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
+import com.rb.nonbiz.types.PreciseValue;
+import com.rb.nonbiz.types.SignedFraction;
 import com.rb.nonbiz.types.WeightedBySignedFraction;
 
 import java.util.function.Function;
 
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonBigDecimalOrThrow;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
@@ -31,7 +34,9 @@ import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFract
 public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocumentation{
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
-      .setRequiredProperties("item", "weight")
+      .setRequiredProperties(
+          "item",   UNKNOWN_CLASS_OF_JSON_PROPERTY,
+          "weight", SignedFraction.class)
       .hasNoOptionalProperties()
       .build();
 

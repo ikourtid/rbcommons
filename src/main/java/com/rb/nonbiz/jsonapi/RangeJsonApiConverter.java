@@ -15,6 +15,7 @@ import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.RBRanges.hasEitherBoundOpen;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getOptionalJsonPrimitive;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
@@ -44,7 +45,9 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .hasNoRequiredProperties()
-      .setOptionalProperties("min", "max")
+      .setOptionalProperties(
+          "min", UNKNOWN_CLASS_OF_JSON_PROPERTY,
+          "max", UNKNOWN_CLASS_OF_JSON_PROPERTY)
       .build();
 
   @Inject JsonValidator jsonValidator;

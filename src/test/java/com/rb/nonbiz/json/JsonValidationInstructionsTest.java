@@ -6,33 +6,37 @@ import org.junit.Test;
 
 import java.util.function.BiFunction;
 
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptorTest.dataClassJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.JsonValidationInstructions.emptyJsonValidationInstructions;
-import static com.rb.nonbiz.testmatchers.Match.match;
-import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
+import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertNullPointerException;
 
 public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidationInstructions> {
 
+  // This does not have to be shared across all tests in this file, but doing so simplifies the tests.
+  private static final Class<?> SHARED_CLASS = String.class;
+
   @Test
   public void mustSpecifyEmptyRequiredOrOptionalSetsExplicitly_orThrows() {
     assertNullPointerException( () -> jsonValidationInstructionsBuilder()
-        .setRequiredProperties("requiredPropertyOnly")
+        .setRequiredProperties("requiredPropertyOnly", SHARED_CLASS)
         .build());    // absence of optional properties is implied; throws
     assertNullPointerException( () -> jsonValidationInstructionsBuilder()
-        .setOptionalProperties("optionalPropertyOnly")
+        .setOptionalProperties("optionalPropertyOnly", SHARED_CLASS)
         .build());    // absence of required properities is implied; throws
 
     JsonValidationInstructions doesNotThrow;
     doesNotThrow = jsonValidationInstructionsBuilder()
-        .setRequiredProperties("requiredPropertyOnly")
+        .setRequiredProperties("requiredPropertyOnly", SHARED_CLASS)
         .hasNoOptionalProperties()   // explicitly specify 'no optional properties'
         .build();
     doesNotThrow = jsonValidationInstructionsBuilder()
         .hasNoRequiredProperties()   // explicitly specify 'no required properties'
-        .setOptionalProperties("optionalPropertyOnly")
+        .setOptionalProperties("optionalPropertyOnly", SHARED_CLASS)
         .build();
   }
 
@@ -40,8 +44,12 @@ public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidation
   public void duplicateProperties_throws() {
     BiFunction<String, String, JsonValidationInstructions> builder = (newRequired, newOptional) ->
         jsonValidationInstructionsBuilder()
-            .setRequiredProperties("required1", newRequired)
-            .setOptionalProperties("optional1", newOptional)
+            .setRequiredProperties(
+                "required1", SHARED_CLASS,
+                newRequired, SHARED_CLASS)
+            .setOptionalProperties(
+                "optional1", SHARED_CLASS,
+                newOptional, SHARED_CLASS)
             .build();
 
     JsonValidationInstructions doesNotThrow = builder.apply("required2", "optional2");
@@ -55,8 +63,12 @@ public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidation
   public void propertiesBothOptionalAndRequired_throws() {
     BiFunction<String, String, JsonValidationInstructions> builder = (newRequired, newOptional) ->
         jsonValidationInstructionsBuilder()
-            .setRequiredProperties("required1", newRequired)
-            .setOptionalProperties("optional1", newOptional)
+            .setRequiredProperties(
+                "required1", SHARED_CLASS,
+                newRequired, SHARED_CLASS)
+            .setOptionalProperties(
+                "optional1", SHARED_CLASS,
+                newOptional, SHARED_CLASS)
             .build();
 
     JsonValidationInstructions doesNotThrow = builder.apply("required2", "optional2");
@@ -72,26 +84,26 @@ public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidation
   @Test
   public void specifyHasNoPropertiesMultipleTimes_throws() {
     assertIllegalArgumentException( () -> jsonValidationInstructionsBuilder()
-        .setRequiredProperties("required")
+        .setRequiredProperties("required", SHARED_CLASS)
         .hasNoOptionalProperties()
         .hasNoOptionalProperties());
 
     assertIllegalArgumentException( () -> jsonValidationInstructionsBuilder()
         .hasNoRequiredProperties()
         .hasNoRequiredProperties()
-        .setOptionalProperties("optional"));
+        .setOptionalProperties("optional", SHARED_CLASS));
   }
 
   @Test
   public void specifyProperties_andHasNoProperties_throws() {
     assertIllegalArgumentException( () -> jsonValidationInstructionsBuilder()
-        .setRequiredProperties("required")
+        .setRequiredProperties("required", SHARED_CLASS)
         .hasNoRequiredProperties()    // but already have a required property
         .hasNoOptionalProperties());
 
     assertIllegalArgumentException( () -> jsonValidationInstructionsBuilder()
         .hasNoRequiredProperties()
-        .setOptionalProperties("optional")
+        .setOptionalProperties("optional", SHARED_CLASS)
         .hasNoOptionalProperties());    // but already have an optional property
   }
 
@@ -103,16 +115,24 @@ public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidation
   @Override
   public JsonValidationInstructions makeNontrivialObject() {
     return jsonValidationInstructionsBuilder()
-        .setRequiredProperties("firstRequired", "secondRequired")
-        .setOptionalProperties("firstOptional", "secondOptional")
+        .setRequiredProperties(
+            "firstRequired", SHARED_CLASS,
+            "secondRequired", SHARED_CLASS)
+        .setOptionalProperties(
+            "firstOptional", SHARED_CLASS,
+            "secondOptional", SHARED_CLASS)
         .build();
   }
 
   @Override
   public JsonValidationInstructions makeMatchingNontrivialObject() {
     return jsonValidationInstructionsBuilder()
-        .setRequiredProperties("firstRequired", "secondRequired")
-        .setOptionalProperties("firstOptional", "secondOptional")
+        .setRequiredProperties(
+            "firstRequired", SHARED_CLASS,
+            "secondRequired", SHARED_CLASS)
+        .setOptionalProperties(
+            "firstOptional", SHARED_CLASS,
+            "secondOptional", SHARED_CLASS)
         .build();
   }
 
@@ -124,8 +144,8 @@ public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidation
   public static TypeSafeMatcher<JsonValidationInstructions> jsonValidationInstructionsMatcher(
       JsonValidationInstructions expected) {
     return makeMatcher(expected,
-        match(v -> v.getRequiredProperties(), f -> rbSetEqualsMatcher(f)),
-        match(v -> v.getOptionalProperties(), f -> rbSetEqualsMatcher(f)));
+        matchRBMap(v -> v.getRequiredProperties(), f -> dataClassJsonApiDescriptorMatcher(f)),
+        matchRBMap(v -> v.getOptionalProperties(), f -> dataClassJsonApiDescriptorMatcher(f)));
   }
 
 }

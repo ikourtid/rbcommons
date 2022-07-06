@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSet;
 
 /**
@@ -29,8 +30,8 @@ public class JsonValidator {
   public static JsonObject staticValidate(
       JsonObject jsonObject,
       JsonValidationInstructions jsonValidationInstructions) {
-    RBSet<String> requiredProperties = jsonValidationInstructions.getRequiredProperties();
-    RBSet<String> optionalProperties = jsonValidationInstructions.getOptionalProperties();
+    RBSet<String> requiredProperties = newRBSet(jsonValidationInstructions.getRequiredProperties().keySet());
+    RBSet<String> optionalProperties = newRBSet(jsonValidationInstructions.getOptionalProperties().keySet());
     RBSet<String> jsonKeys = rbSet(jsonObject.keySet());
 
     // Check each (top-level) JSON property to make sure it is found in either

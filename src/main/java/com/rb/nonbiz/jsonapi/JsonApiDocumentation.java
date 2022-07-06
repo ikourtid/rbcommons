@@ -78,17 +78,17 @@ public class JsonApiDocumentation {
   }
 
   /**
-   * A list of the required JSON keys.
+   * A list of the required JSON properties.
    */
-  public List<String> getRequiredKeys() {
-    return jsonValidationInstructions.getRequiredProperties().toSortedList();
+  public List<String> getRequiredProperties() {
+    return jsonValidationInstructions.getRequiredPropertiesAsSortedList();
   }
 
   /**
-   * A list of the optional JSON keys.
+   * A list of the optional JSON properties.
    */
-  public List<String> getOptionalKeys() {
-    return jsonValidationInstructions.getOptionalProperties().toSortedList();
+  public List<String> getOptionalProperties() {
+    return jsonValidationInstructions.getOptionalPropertiesAsSortedList();
   }
 
   /**
@@ -126,7 +126,7 @@ public class JsonApiDocumentation {
   /**
    * Returns some non-trivial (i.e. not minimal) sample JSON.
    */
-  Optional<JsonElement> getNontrivialSampleJson() {
+  public Optional<JsonElement> getNontrivialSampleJson() {
     return nontrivialSampleJson;
   }
 

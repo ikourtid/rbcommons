@@ -11,6 +11,7 @@ import com.rb.nonbiz.types.RBNumeric;
 import java.util.function.Function;
 
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
@@ -24,7 +25,9 @@ import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 public class HardAndSoftRangeJsonApiConverter implements HasJsonApiDocumentation {
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
-      .setRequiredProperties("hardRange", "softRange")
+      .setRequiredProperties(
+          "hardRange", UNKNOWN_CLASS_OF_JSON_PROPERTY,
+          "softRange", UNKNOWN_CLASS_OF_JSON_PROPERTY)
       .hasNoOptionalProperties()
       .build();
 
