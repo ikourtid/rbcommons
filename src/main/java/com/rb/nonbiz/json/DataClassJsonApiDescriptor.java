@@ -27,11 +27,10 @@ public abstract class DataClassJsonApiDescriptor {
   public interface Visitor<T> {
 
     T visitSimpleClassJsonApiDescriptor(SimpleClassJsonApiDescriptor simpleClassJsonApiDescriptor);
-    T visitUniqueIdJsonApiDescriptor(UniqueIdJsonApiDescriptor uniqueIdJsonApiDescriptor);
     T visitIidMapJsonApiDescriptor(IidMapJsonApiDescriptor iidMapJsonApiDescriptor);
     T visitRBMapJsonApiDescriptor(RBMapJsonApiDescriptor rbMapJsonApiDescriptor);
     T visitCollectionJsonApiDescriptor(CollectionJsonApiDescriptor collectionJsonApiDescriptor);
-    T visitYearlyTimeSeriesJsonApiDescriptor(YearlyTimeSeriesJsonApiDescriptor yearlyTimeSeriesJsonApiDescriptor);
+    T visitSimpleJavaGenericJsonApiDescriptor(SimpleJavaGenericJsonApiDescriptor simpleJavaGenericJsonApiDescriptor);
     T visitPseudoEnumJsonApiDescriptor(PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor);
     T visitJavaEnumJsonApiDescriptor(JavaEnumJsonApiDescriptor javaEnumJsonApiDescriptor);
 
@@ -89,42 +88,6 @@ public abstract class DataClassJsonApiDescriptor {
     @Override
     public String toString() {
       return Strings.format("[SCJAD %s SCJAD]", clazz);
-    }
-
-  }
-
-
-  /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the simplest case
-   * where it is a single JSON API data class (e.g. not some collection).
-   */
-  public static class UniqueIdJsonApiDescriptor extends DataClassJsonApiDescriptor {
-
-    private final Class<?> clazz;
-
-    private UniqueIdJsonApiDescriptor(Class<?> clazz) {
-      this.clazz = clazz;
-    }
-
-    public static UniqueIdJsonApiDescriptor uniqueIdJsonApiDescriptor(Class<?> clazz) {
-      return new UniqueIdJsonApiDescriptor(clazz);
-    }
-
-    /**
-     * This cannot be called getClass because it's an existing method in java.lang.Object.
-     */
-    public Class<?> getClassOfId() {
-      return clazz;
-    }
-
-    @Override
-    public <T> T visit(Visitor<T> visitor) {
-      return visitor.visitUniqueIdJsonApiDescriptor(this);
-    }
-
-    @Override
-    public String toString() {
-      return Strings.format("[UIJAD %s UIJAD]", clazz);
     }
 
   }
@@ -293,32 +256,59 @@ public abstract class DataClassJsonApiDescriptor {
 
   /**
    * Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of a YearlyTimeSeries of some Java data class.
+   * where it is the JSON representation of a java generic such as {@code Foo<T>}.
    */
-  public static class YearlyTimeSeriesJsonApiDescriptor extends DataClassJsonApiDescriptor {
+  public static class SimpleJavaGenericJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
-    private final Class<?> yearlyTimeSeriesValueClass;
+    private final Class<?> outerClass;
+    private final Class<?> innerClass;
 
-    private YearlyTimeSeriesJsonApiDescriptor(Class<?> yearlyTimeSeriesValueClass) {
-      this.yearlyTimeSeriesValueClass = yearlyTimeSeriesValueClass;
+    private SimpleJavaGenericJsonApiDescriptor(Class<?> outerClass, Class<?> innerClass) {
+      this.outerClass = outerClass;
+      this.innerClass = innerClass;
     }
 
-    public static YearlyTimeSeriesJsonApiDescriptor yearlyTimeSeriesJsonApiDescriptor(Class<?> arrayValueClass) {
-      return new YearlyTimeSeriesJsonApiDescriptor(arrayValueClass);
+    /**
+     * Represents e.g. a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
+     * (2nd argument).
+     *
+     * We normally use a builder when there can be two arguments of the same type, but this is meant to be used
+     * inline in the various definitions of JSON_VALIDATION_INSTRUCTIONS in the JSON API converter verb classes,
+     * so we want its invocation to look short.
+     */
+    public static SimpleJavaGenericJsonApiDescriptor simpleJavaGenericJsonApiDescriptor(
+        Class<?> outerClass, Class<?> innerClass) {
+      RBPreconditions.checkArgument(
+          !outerClass.equals(innerClass),
+          "Outer and inner class of generic shouldn't be the same: %s vs. %s",
+          outerClass, innerClass);
+      // FIXME IAK YAML add class exceptions
+      return new SimpleJavaGenericJsonApiDescriptor(outerClass, innerClass);
     }
 
-    public Class<?> getYearlyTimeSeriesValueClass() {
-      return yearlyTimeSeriesValueClass;
+    /**
+     * A shorthand for the case of {@link UniqueId}.
+     */
+    public static SimpleJavaGenericJsonApiDescriptor uniqueIdJsonApiDescriptor(Class<?> innerClass) {
+      return new SimpleJavaGenericJsonApiDescriptor(UniqueId.class, innerClass);
+    }
+
+    public Class<?> getOuterClass() {
+      return outerClass;
+    }
+
+    public Class<?> getInnerClass() {
+      return innerClass;
     }
 
     @Override
     public <T> T visit(Visitor<T> visitor) {
-      return visitor.visitYearlyTimeSeriesJsonApiDescriptor(this);
+      return visitor.visitSimpleJavaGenericJsonApiDescriptor(this);
     }
 
     @Override
     public String toString() {
-      return Strings.format("[CJAD %s CJAD]", yearlyTimeSeriesValueClass);
+      return Strings.format("[SJGJAD %s < %s > SJGJAD]", outerClass, innerClass);
     }
 
   }

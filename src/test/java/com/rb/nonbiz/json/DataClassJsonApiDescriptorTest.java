@@ -6,9 +6,8 @@ import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaEnumJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.PseudoEnumJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.RBMapJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor;
-import com.rb.nonbiz.json.DataClassJsonApiDescriptor.UniqueIdJsonApiDescriptor;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleJavaGenericJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.Visitor;
-import com.rb.nonbiz.json.DataClassJsonApiDescriptor.YearlyTimeSeriesJsonApiDescriptor;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testmatchers.RBVisitorMatchers.VisitorMatchInfo;
 import com.rb.nonbiz.testutils.RBTestMatcher;
@@ -20,8 +19,7 @@ import static com.rb.nonbiz.json.JavaEnumJsonApiDescriptorTest.javaEnumJsonApiDe
 import static com.rb.nonbiz.json.PseudoEnumJsonApiDescriptorTest.pseudoEnumJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.json.RBMapJsonApiDescriptorTest.rbMapJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.json.SimpleClassJsonApiDescriptorTest.simpleClassJsonApiDescriptorMatcher;
-import static com.rb.nonbiz.json.UniqueIdJsonApiDescriptorTest.uniqueIdJsonApiDescriptorMatcher;
-import static com.rb.nonbiz.json.YearlyTimeSeriesJsonApiDescriptorTest.yearlyTimeSeriesJsonApiDescriptorMatcher;
+import static com.rb.nonbiz.json.SimpleJavaGenericJsonApiDescriptorTest.yearlyTimeSeriesJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.testmatchers.RBVisitorMatchers.VisitorMatchInfo.visitorMatchInfo;
 import static com.rb.nonbiz.testmatchers.RBVisitorMatchers.generalVisitorMatcher;
 
@@ -58,51 +56,44 @@ public class DataClassJsonApiDescriptorTest extends RBTestMatcher<DataClassJsonA
       }
 
       @Override
-      public VisitorMatchInfo<DataClassJsonApiDescriptor> visitUniqueIdJsonApiDescriptor(
-          UniqueIdJsonApiDescriptor uniqueIdJsonApiDescriptor) {
-        return visitorMatchInfo(2, uniqueIdJsonApiDescriptor,
-            (MatcherGenerator<UniqueIdJsonApiDescriptor>) f -> uniqueIdJsonApiDescriptorMatcher(f));
-      }
-
-      @Override
       public VisitorMatchInfo<DataClassJsonApiDescriptor> visitIidMapJsonApiDescriptor(
           IidMapJsonApiDescriptor iidMapJsonApiDescriptor) {
-        return visitorMatchInfo(3, iidMapJsonApiDescriptor,
+        return visitorMatchInfo(2, iidMapJsonApiDescriptor,
             (MatcherGenerator<IidMapJsonApiDescriptor>) f -> iidMapJsonApiDescriptorMatcher(f));
       }
 
       @Override
       public VisitorMatchInfo<DataClassJsonApiDescriptor> visitRBMapJsonApiDescriptor(
           RBMapJsonApiDescriptor rbMapJsonApiDescriptor) {
-        return visitorMatchInfo(4, rbMapJsonApiDescriptor,
+        return visitorMatchInfo(3, rbMapJsonApiDescriptor,
             (MatcherGenerator<RBMapJsonApiDescriptor>) f -> rbMapJsonApiDescriptorMatcher(f));
       }
 
       @Override
       public VisitorMatchInfo<DataClassJsonApiDescriptor> visitCollectionJsonApiDescriptor(
           CollectionJsonApiDescriptor collectionJsonApiDescriptor) {
-        return visitorMatchInfo(5, collectionJsonApiDescriptor,
+        return visitorMatchInfo(4, collectionJsonApiDescriptor,
             (MatcherGenerator<CollectionJsonApiDescriptor>) f -> collectionJsonApiDescriptorMatcher(f));
       }
 
       @Override
-      public VisitorMatchInfo<DataClassJsonApiDescriptor> visitYearlyTimeSeriesJsonApiDescriptor(
-          YearlyTimeSeriesJsonApiDescriptor yearlyTimeSeriesJsonApiDescriptor) {
-        return visitorMatchInfo(6, yearlyTimeSeriesJsonApiDescriptor,
-            (MatcherGenerator<YearlyTimeSeriesJsonApiDescriptor>) f -> yearlyTimeSeriesJsonApiDescriptorMatcher(f));
+      public VisitorMatchInfo<DataClassJsonApiDescriptor> visitSimpleJavaGenericJsonApiDescriptor(
+          SimpleJavaGenericJsonApiDescriptor simpleJavaGenericJsonApiDescriptor) {
+        return visitorMatchInfo(5, simpleJavaGenericJsonApiDescriptor,
+            (MatcherGenerator<SimpleJavaGenericJsonApiDescriptor>) f -> yearlyTimeSeriesJsonApiDescriptorMatcher(f));
       }
 
       @Override
       public VisitorMatchInfo<DataClassJsonApiDescriptor> visitPseudoEnumJsonApiDescriptor(
           PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor) {
-        return visitorMatchInfo(7, pseudoEnumJsonApiDescriptor,
+        return visitorMatchInfo(6, pseudoEnumJsonApiDescriptor,
             (MatcherGenerator<PseudoEnumJsonApiDescriptor>) f -> pseudoEnumJsonApiDescriptorMatcher(f));
       }
 
       @Override
       public VisitorMatchInfo<DataClassJsonApiDescriptor> visitJavaEnumJsonApiDescriptor(
           JavaEnumJsonApiDescriptor javaEnumJsonApiDescriptor) {
-        return visitorMatchInfo(8, javaEnumJsonApiDescriptor,
+        return visitorMatchInfo(7, javaEnumJsonApiDescriptor,
             (MatcherGenerator<JavaEnumJsonApiDescriptor>) f -> javaEnumJsonApiDescriptorMatcher(f));
       }
     }));

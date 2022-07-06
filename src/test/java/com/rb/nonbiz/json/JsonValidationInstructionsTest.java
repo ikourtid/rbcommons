@@ -17,7 +17,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertNullPointerException;
 
 public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidationInstructions> {
 
-  // This does not have to be shared across all tests, but doing so simplifies the tests.
+  // This does not have to be shared across all tests in this file, but doing so simplifies the tests.
   private static final Class<?> SHARED_CLASS = String.class;
 
   @Test

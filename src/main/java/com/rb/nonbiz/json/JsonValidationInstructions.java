@@ -41,10 +41,10 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstru
 public class JsonValidationInstructions {
 
   /**
-   * Some JSON properties, such as the data under YearlyTimeSeries, do not have a fixed class.
-   * We will use class to denote that. This is convenient because many JSON API converters have a private static final
-   * JsonValidationInstructions. Because that's static and gets created once, there's no way to know the type of
-   * the property at that time.
+   * Some JSON properties, such as the data under YearlyTimeSeries, have a Java object that's generic.
+   * We will use the below object to denote that.
+   * This is convenient because many JSON API converters have a private static final JsonValidationInstructions.
+   * Because that's static and gets created once, there's no way to know the type of the property at that time.
    */
   public static final Class<?> UNKNOWN_CLASS_OF_JSON_PROPERTY = Class.class;
 
