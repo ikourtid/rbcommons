@@ -6,7 +6,7 @@ import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaEnumJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.PseudoEnumJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.RBMapJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor;
-import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleJavaGenericJsonApiDescriptor;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaGenericJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.Visitor;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testmatchers.RBVisitorMatchers.VisitorMatchInfo;
@@ -19,7 +19,7 @@ import static com.rb.nonbiz.json.JavaEnumJsonApiDescriptorTest.javaEnumJsonApiDe
 import static com.rb.nonbiz.json.PseudoEnumJsonApiDescriptorTest.pseudoEnumJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.json.RBMapJsonApiDescriptorTest.rbMapJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.json.SimpleClassJsonApiDescriptorTest.simpleClassJsonApiDescriptorMatcher;
-import static com.rb.nonbiz.json.SimpleJavaGenericJsonApiDescriptorTest.yearlyTimeSeriesJsonApiDescriptorMatcher;
+import static com.rb.nonbiz.json.JavaGenericJsonApiDescriptorTest.javaGenericJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.testmatchers.RBVisitorMatchers.VisitorMatchInfo.visitorMatchInfo;
 import static com.rb.nonbiz.testmatchers.RBVisitorMatchers.generalVisitorMatcher;
 
@@ -78,9 +78,9 @@ public class DataClassJsonApiDescriptorTest extends RBTestMatcher<DataClassJsonA
 
       @Override
       public VisitorMatchInfo<DataClassJsonApiDescriptor> visitSimpleJavaGenericJsonApiDescriptor(
-          SimpleJavaGenericJsonApiDescriptor simpleJavaGenericJsonApiDescriptor) {
-        return visitorMatchInfo(5, simpleJavaGenericJsonApiDescriptor,
-            (MatcherGenerator<SimpleJavaGenericJsonApiDescriptor>) f -> yearlyTimeSeriesJsonApiDescriptorMatcher(f));
+          JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor) {
+        return visitorMatchInfo(5, javaGenericJsonApiDescriptor,
+            (MatcherGenerator<JavaGenericJsonApiDescriptor>) f -> javaGenericJsonApiDescriptorMatcher(f));
       }
 
       @Override

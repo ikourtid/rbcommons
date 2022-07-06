@@ -1,5 +1,6 @@
 package com.rb.nonbiz.json;
 
+import com.google.common.base.Joiner;
 import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidMap;
@@ -13,7 +14,9 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;
 import java.util.EnumMap;
+import java.util.List;
 
+import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
@@ -30,7 +33,7 @@ public abstract class DataClassJsonApiDescriptor {
     T visitIidMapJsonApiDescriptor(IidMapJsonApiDescriptor iidMapJsonApiDescriptor);
     T visitRBMapJsonApiDescriptor(RBMapJsonApiDescriptor rbMapJsonApiDescriptor);
     T visitCollectionJsonApiDescriptor(CollectionJsonApiDescriptor collectionJsonApiDescriptor);
-    T visitSimpleJavaGenericJsonApiDescriptor(SimpleJavaGenericJsonApiDescriptor simpleJavaGenericJsonApiDescriptor);
+    T visitSimpleJavaGenericJsonApiDescriptor(JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor);
     T visitPseudoEnumJsonApiDescriptor(PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor);
     T visitJavaEnumJsonApiDescriptor(JavaEnumJsonApiDescriptor javaEnumJsonApiDescriptor);
 
@@ -257,15 +260,31 @@ public abstract class DataClassJsonApiDescriptor {
   /**
    * Tells us the type of a property of a JsonObject in the JSON API, in the case
    * where it is the JSON representation of a java generic such as {@code Foo<T>}.
+   *
+   * It should only be used when T is an actual data class that has a JSON serialization. Example:
+   * {@code UniqueId<NamedFactor>}. It should not be used for 'marker interface' classes, such as
+   * {@code Portfolio<HeldByUs>}. This makes sense, because HeldByUs is not something that gets serialized.
    */
-  public static class SimpleJavaGenericJsonApiDescriptor extends DataClassJsonApiDescriptor {
+  public static class JavaGenericJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
     private final Class<?> outerClass;
-    private final Class<?> innerClass;
+    private final List<Class<?>> genericArgumentClasses;
 
-    private SimpleJavaGenericJsonApiDescriptor(Class<?> outerClass, Class<?> innerClass) {
+    private JavaGenericJsonApiDescriptor(Class<?> outerClass, List<Class<?>> genericArgumentClasses) {
       this.outerClass = outerClass;
-      this.innerClass = innerClass;
+      this.genericArgumentClasses = genericArgumentClasses;
+    }
+
+    public static JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor(
+        Class<?> outerClass, List<Class<?>> genericArgumentClasses) {
+      for (Class<?> innerClass : genericArgumentClasses) {
+        RBPreconditions.checkArgument(
+            !outerClass.equals(innerClass),
+            "Outer and generic argument class of generic shouldn't be the same: %s vs. %s : %s",
+            outerClass, innerClass, genericArgumentClasses);
+      }
+      // FIXME IAK YAML add class exceptions
+      return new JavaGenericJsonApiDescriptor(outerClass, genericArgumentClasses);
     }
 
     /**
@@ -276,29 +295,24 @@ public abstract class DataClassJsonApiDescriptor {
      * inline in the various definitions of JSON_VALIDATION_INSTRUCTIONS in the JSON API converter verb classes,
      * so we want its invocation to look short.
      */
-    public static SimpleJavaGenericJsonApiDescriptor simpleJavaGenericJsonApiDescriptor(
-        Class<?> outerClass, Class<?> innerClass) {
-      RBPreconditions.checkArgument(
-          !outerClass.equals(innerClass),
-          "Outer and inner class of generic shouldn't be the same: %s vs. %s",
-          outerClass, innerClass);
-      // FIXME IAK YAML add class exceptions
-      return new SimpleJavaGenericJsonApiDescriptor(outerClass, innerClass);
+    public static JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor(
+        Class<?> outerClass, Class<?> first, Class<?> ... rest) {
+      return javaGenericJsonApiDescriptor(outerClass, concatenateFirstAndRest(first, rest));
     }
 
     /**
      * A shorthand for the case of {@link UniqueId}.
      */
-    public static SimpleJavaGenericJsonApiDescriptor uniqueIdJsonApiDescriptor(Class<?> innerClass) {
-      return new SimpleJavaGenericJsonApiDescriptor(UniqueId.class, innerClass);
+    public static JavaGenericJsonApiDescriptor uniqueIdJsonApiDescriptor(Class<?> innerClass) {
+      return javaGenericJsonApiDescriptor(UniqueId.class, innerClass);
     }
 
     public Class<?> getOuterClass() {
       return outerClass;
     }
 
-    public Class<?> getInnerClass() {
-      return innerClass;
+    public List<Class<?>> getGenericArgumentClasses() {
+      return genericArgumentClasses;
     }
 
     @Override
@@ -308,7 +322,9 @@ public abstract class DataClassJsonApiDescriptor {
 
     @Override
     public String toString() {
-      return Strings.format("[SJGJAD %s < %s > SJGJAD]", outerClass, innerClass);
+      return Strings.format("[JGJAD %s < %s > JGJAD]",
+          outerClass,
+          Joiner.on(" , ").join(genericArgumentClasses));
     }
 
   }
