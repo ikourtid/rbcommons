@@ -1,31 +1,61 @@
 package com.rb.nonbiz.json;
 
 import com.rb.biz.types.Money;
+import com.rb.biz.types.Symbol;
+import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ClosedRange;
+import com.rb.nonbiz.collections.IidMap;
+import com.rb.nonbiz.collections.IidSet;
+import com.rb.nonbiz.collections.RBMap;
+import com.rb.nonbiz.collections.RBMapWithDefault;
+import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaGenericJsonApiDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.text.UniqueId;
+import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaGenericJsonApiDescriptor.javaGenericJsonApiDescriptor;
 import static com.rb.nonbiz.testmatchers.Match.matchList;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
-import static org.junit.Assert.fail;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 
 public class JavaGenericJsonApiDescriptorTest extends RBTestMatcher<JavaGenericJsonApiDescriptor> {
 
   @Test
   public void prohibitsCertainTypes() {
-    fail("FIXME IAK YAML");
+    rbSetOf(
+        BigDecimal.class,
+        PreciseValue.class,
+        ImpreciseValue.class,
+
+        Strings.class,
+        InstrumentId.class,
+        Symbol.class,
+
+        RBSet.class,
+        IidSet.class,
+        IidMap.class,
+        RBMap.class).forEach(badOuterClass -> {
+          Class<?> dummyClass = String.class;
+          assertIllegalArgumentException( () -> javaGenericJsonApiDescriptor(badOuterClass, dummyClass));
+          assertIllegalArgumentException( () -> javaGenericJsonApiDescriptor(badOuterClass, dummyClass, dummyClass));
+        }
+    );
   }
 
   @Override
   public JavaGenericJsonApiDescriptor makeTrivialObject() {
-    return javaGenericJsonApiDescriptor(PreciseValue.class, Money.class);
+    return javaGenericJsonApiDescriptor(RBMapWithDefault.class, Money.class);
   }
 
   @Override
