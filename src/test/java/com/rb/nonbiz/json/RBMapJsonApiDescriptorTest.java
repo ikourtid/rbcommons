@@ -10,6 +10,7 @@ import com.rb.nonbiz.json.DataClassJsonApiDescriptor.RBMapJsonApiDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
+import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import org.junit.Test;
 
@@ -34,6 +35,7 @@ public class RBMapJsonApiDescriptorTest extends RBTestMatcher<RBMapJsonApiDescri
     rbSetOf(
         BigDecimal.class,   // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
         PreciseValue.class, // we always want to describe a specific subclass of PreciseValue
+        ImpreciseValue.class, // same
 
         Strings.class,      // a common misspelling of String.class,
         InstrumentId.class, // should use JsonTicker instead

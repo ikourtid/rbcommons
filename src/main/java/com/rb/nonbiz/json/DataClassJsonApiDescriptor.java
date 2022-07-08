@@ -4,11 +4,13 @@ import com.google.common.base.Joiner;
 import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidMap;
+import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
+import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -112,6 +114,7 @@ public abstract class DataClassJsonApiDescriptor {
       rbSetOf(
           BigDecimal.class,   // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
           PreciseValue.class, // we always want to describe a specific subclass of PreciseValue
+          ImpreciseValue.class, // same
 
           Strings.class,      // a common misspelling of String.class,
           InstrumentId.class, // sounds weird to have an IidMap that maps to an instrument
@@ -167,6 +170,7 @@ public abstract class DataClassJsonApiDescriptor {
       rbSetOf(
           BigDecimal.class,   // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
           PreciseValue.class, // we always want to describe a specific subclass of PreciseValue
+          ImpreciseValue.class, // same
 
           Strings.class,      // a common misspelling of String.class,
           InstrumentId.class, // should use JsonTicker instead
@@ -226,6 +230,7 @@ public abstract class DataClassJsonApiDescriptor {
       rbSetOf(
           BigDecimal.class,   // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
           PreciseValue.class, // we always want to describe a specific subclass of PreciseValue
+          ImpreciseValue.class, // same
 
           Strings.class,      // a common misspelling of String.class,
           InstrumentId.class, // should use JsonTicker instead
@@ -283,7 +288,29 @@ public abstract class DataClassJsonApiDescriptor {
             "Outer and generic argument class of generic shouldn't be the same: %s vs. %s : %s",
             outerClass, innerClass, genericArgumentClasses);
       }
-      // FIXME IAK YAML add class exceptions
+      // Ideally, we want to restrict the usage of this class (JavaGenericJsonApiDescriptor)
+      // to cases where the 'outer' class is generic on one or more 'generic argument' classes.
+      // However, due to Java type erasure, we don't know at runtime what's generic and what's not.
+      // But let's just add a few obvious exceptions that we know will never be true.
+      rbSetOf(
+          BigDecimal.class,   // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
+          PreciseValue.class, // we always want to describe a specific subclass of PreciseValue
+          ImpreciseValue.class, // same
+
+          Strings.class,      // a common misspelling of String.class,
+          InstrumentId.class, // sounds weird to have an IidMap that maps to an instrument
+          Symbol.class,       // same as above
+
+          // These have their own JsonApiDescriptor classes, which we should be using.
+          RBSet.class,
+          IidSet.class,
+          IidMap.class,
+          RBMap.class)
+          .forEach(badOuterClass -> RBPreconditions.checkArgument(
+              !outerClass.equals(badOuterClass),
+              "Outer class %s is invalid",
+              outerClass));
+
       return new JavaGenericJsonApiDescriptor(outerClass, genericArgumentClasses);
     }
 
