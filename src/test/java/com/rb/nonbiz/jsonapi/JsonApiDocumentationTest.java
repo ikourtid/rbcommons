@@ -23,6 +23,21 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 public class JsonApiDocumentationTest extends RBTestMatcher<JsonApiDocumentation> {
 
+  public static JsonApiDocumentation testJsonApiDocumentationWithSeed(Class<?> clazz, String seed) {
+    return jsonApiDocumentationBuilder()
+        .setClass(clazz)
+        .setSingleLineSummary(label("summary" + seed))
+        .setDocumentationHtml("documentation" + seed)
+        .setJsonValidationInstructions(new JsonValidationInstructionsTest().makeNontrivialObject())
+        .hasNoChildNodes() // hard to set this here
+        .setTrivialSampleJson(singletonJsonObject(
+            "key" + seed, "value" + seed))
+        .setNontrivialSampleJson(jsonObject(
+            "key1" + seed, jsonString("value1" + seed),
+            "key2" + seed, jsonString("value2" + seed)))
+        .build();
+  }
+
   @Override
   public JsonApiDocumentation makeTrivialObject() {
     return jsonApiDocumentationBuilder()
@@ -38,35 +53,13 @@ public class JsonApiDocumentationTest extends RBTestMatcher<JsonApiDocumentation
 
   @Override
   public JsonApiDocumentation makeNontrivialObject() {
-    return jsonApiDocumentationBuilder()
-        .setClass(RBMapWithDefault.class)
-        .setSingleLineSummary(label("summary"))
-        .setDocumentationHtml("documentation")
-        .setJsonValidationInstructions(new JsonValidationInstructionsTest().makeNontrivialObject())
-        .hasNoChildNodes() // hard to set this here
-        .setTrivialSampleJson(singletonJsonObject(
-            "key", "value"))
-        .setNontrivialSampleJson(jsonObject(
-            "key1", jsonString("value1"),
-            "key2", jsonString("value2")))
-        .build();
+    return testJsonApiDocumentationWithSeed(RBMapWithDefault.class, "");
   }
 
   @Override
   public JsonApiDocumentation makeMatchingNontrivialObject() {
     // Nothing to tweak here
-    return jsonApiDocumentationBuilder()
-        .setClass(RBMapWithDefault.class)
-        .setSingleLineSummary(label("summary"))
-        .setDocumentationHtml("documentation")
-        .setJsonValidationInstructions(new JsonValidationInstructionsTest().makeNontrivialObject())
-        .hasNoChildNodes() // hard to set this here
-        .setTrivialSampleJson(singletonJsonObject(
-            "key", "value"))
-        .setNontrivialSampleJson(jsonObject(
-            "key1", jsonString("value1"),
-            "key2", jsonString("value2")))
-        .build();
+    return testJsonApiDocumentationWithSeed(RBMapWithDefault.class, "");
   }
 
   @Override
