@@ -11,7 +11,6 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstru
 import static com.rb.nonbiz.json.JsonValidationInstructions.emptyJsonValidationInstructions;
 import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
-import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertNullPointerException;
 
