@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.RBLog;
+import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -14,12 +15,14 @@ import java.util.Optional;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.json.JsonValidationInstructions.emptyJsonValidationInstructions;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.Strings.formatListInExistingOrder;
+import static com.rb.nonbiz.text.Strings.formatOptional;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 /**
  * This is (mostly) human-readable text that explains how a Java object of this type
- * will get converted into JSON. It's useful mostly to 3rd party developers.
+ * will get converted to/from JSON. It's useful mostly to 3rd party developers.
  */
 public class JsonApiDocumentation {
 
@@ -132,7 +135,14 @@ public class JsonApiDocumentation {
 
   @Override
   public String toString() {
-    return super.toString();
+    return Strings.format("[JAD %s %s %s %s %s %s %s JAD]",
+        clazz,
+        singleLineSummary,
+        documentationHtml,
+        jsonValidationInstructions,
+        formatListInExistingOrder(childNodes),
+        formatOptional(trivialSampleJson),
+        formatOptional(nontrivialSampleJson));
   }
 
 
