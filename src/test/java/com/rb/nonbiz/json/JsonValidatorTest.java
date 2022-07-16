@@ -23,7 +23,7 @@ public class JsonValidatorTest extends RBTest<JsonValidator> {
     Consumer<JsonObject> validator = jsonObject -> {
       JsonValidationInstructions instructions = jsonValidationInstructionsBuilder()
           .setRequiredProperties("required1", SHARED_CLASS, "required2", SHARED_CLASS)
-          .setOptionalProperties("optional1", SHARED_CLASS)
+          .setOnlyOptionalProperty("optional1", SHARED_CLASS)
           .build();
       makeTestObject().validate(jsonObject, instructions);
     };
@@ -60,7 +60,7 @@ public class JsonValidatorTest extends RBTest<JsonValidator> {
     Consumer<JsonObject> validator = jsonObject -> {
       JsonValidationInstructions instructions = jsonValidationInstructionsBuilder()
           .setRequiredProperties("required1", SHARED_CLASS, "required2", SHARED_CLASS)
-          .setOptionalProperties("optional1", SHARED_CLASS)
+          .setOnlyOptionalProperty("optional1", SHARED_CLASS)
           .build();
       makeTestObject().validate(jsonObject, instructions);
     };
@@ -87,7 +87,7 @@ public class JsonValidatorTest extends RBTest<JsonValidator> {
     Consumer<JsonObject> validator = jsonObject -> {
       JsonValidationInstructions instructions = jsonValidationInstructionsBuilder()
           .setRequiredProperties("required1", SHARED_CLASS, "required2", SHARED_CLASS)
-          .setOptionalProperties("optional1", SHARED_CLASS)
+          .setOnlyOptionalProperty("optional1", SHARED_CLASS)
           .build();
       makeTestObject().validate(jsonObject, instructions);
     };

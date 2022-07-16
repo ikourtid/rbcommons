@@ -22,20 +22,20 @@ public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidation
   @Test
   public void mustSpecifyEmptyRequiredOrOptionalSetsExplicitly_orThrows() {
     assertNullPointerException( () -> jsonValidationInstructionsBuilder()
-        .setRequiredProperties("requiredPropertyOnly", SHARED_CLASS)
+        .setOnlyRequiredProperty("requiredPropertyOnly", SHARED_CLASS)
         .build());    // absence of optional properties is implied; throws
     assertNullPointerException( () -> jsonValidationInstructionsBuilder()
-        .setOptionalProperties("optionalPropertyOnly", SHARED_CLASS)
+        .setOnlyOptionalProperty("optionalPropertyOnly", SHARED_CLASS)
         .build());    // absence of required properities is implied; throws
 
     JsonValidationInstructions doesNotThrow;
     doesNotThrow = jsonValidationInstructionsBuilder()
-        .setRequiredProperties("requiredPropertyOnly", SHARED_CLASS)
+        .setOnlyRequiredProperty("requiredPropertyOnly", SHARED_CLASS)
         .hasNoOptionalProperties()   // explicitly specify 'no optional properties'
         .build();
     doesNotThrow = jsonValidationInstructionsBuilder()
         .hasNoRequiredProperties()   // explicitly specify 'no required properties'
-        .setOptionalProperties("optionalPropertyOnly", SHARED_CLASS)
+        .setOnlyOptionalProperty("optionalPropertyOnly", SHARED_CLASS)
         .build();
   }
 
@@ -83,26 +83,26 @@ public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidation
   @Test
   public void specifyHasNoPropertiesMultipleTimes_throws() {
     assertIllegalArgumentException( () -> jsonValidationInstructionsBuilder()
-        .setRequiredProperties("required", SHARED_CLASS)
+        .setOnlyRequiredProperty("required", SHARED_CLASS)
         .hasNoOptionalProperties()
         .hasNoOptionalProperties());
 
     assertIllegalArgumentException( () -> jsonValidationInstructionsBuilder()
         .hasNoRequiredProperties()
         .hasNoRequiredProperties()
-        .setOptionalProperties("optional", SHARED_CLASS));
+        .setOnlyOptionalProperty("optional", SHARED_CLASS));
   }
 
   @Test
   public void specifyProperties_andHasNoProperties_throws() {
     assertIllegalArgumentException( () -> jsonValidationInstructionsBuilder()
-        .setRequiredProperties("required", SHARED_CLASS)
+        .setOnlyRequiredProperty("required", SHARED_CLASS)
         .hasNoRequiredProperties()    // but already have a required property
         .hasNoOptionalProperties());
 
     assertIllegalArgumentException( () -> jsonValidationInstructionsBuilder()
         .hasNoRequiredProperties()
-        .setOptionalProperties("optional", SHARED_CLASS)
+        .setOnlyOptionalProperty("optional", SHARED_CLASS)
         .hasNoOptionalProperties());    // but already have an optional property
   }
 
