@@ -3,21 +3,22 @@ package com.rb.nonbiz.jsonapi;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
-import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.SignedFraction;
 import com.rb.nonbiz.types.WeightedBySignedFraction;
 
 import java.util.function.Function;
 
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor.simpleClassJsonApiDescriptor;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
-import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonBigDecimalOrThrow;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
-import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFraction;
 
@@ -34,9 +35,9 @@ import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFract
 public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocumentation{
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
-      .setRequiredProperties(
-          "item",   UNKNOWN_CLASS_OF_JSON_PROPERTY,
-          "weight", SignedFraction.class)
+      .setRequiredProperties(rbMapOf(
+          "item",   UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR,
+          "weight", simpleClassJsonApiDescriptor(SignedFraction.class)))
       .hasNoOptionalProperties()
       .build();
 

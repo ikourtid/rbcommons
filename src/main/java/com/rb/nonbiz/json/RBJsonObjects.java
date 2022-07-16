@@ -38,12 +38,13 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.collections.RBRanges.constructRange;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
-import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
 import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
@@ -285,9 +286,9 @@ public class RBJsonObjects {
       Function<JsonElement, C> valueDeserializer) {
     JsonValidator.staticValidate(jsonObject, jsonValidationInstructionsBuilder()
         .hasNoRequiredProperties()
-        .setOptionalProperties(
-            "min", UNKNOWN_CLASS_OF_JSON_PROPERTY,
-            "max", UNKNOWN_CLASS_OF_JSON_PROPERTY)
+        .setOptionalProperties(rbMapOf(
+            "min", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR,
+            "max", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR))
         .build());
     return constructRange(
         transformOptional(getOptionalJsonElement(jsonObject, "min"), valueDeserializer), BoundType.CLOSED,
@@ -298,9 +299,9 @@ public class RBJsonObjects {
       JsonObject jsonObject,
       Function<JsonElement, C> valueDeserializer) {
     JsonValidator.staticValidate(jsonObject, jsonValidationInstructionsBuilder()
-        .setRequiredProperties(
-            "min", UNKNOWN_CLASS_OF_JSON_PROPERTY,
-            "max", UNKNOWN_CLASS_OF_JSON_PROPERTY)
+        .setRequiredProperties(rbMapOf(
+            "min", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR,
+            "max", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR))
         .hasNoOptionalProperties()
         .build());
     return closedRange(

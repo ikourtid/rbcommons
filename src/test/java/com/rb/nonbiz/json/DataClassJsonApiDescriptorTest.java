@@ -77,7 +77,7 @@ public class DataClassJsonApiDescriptorTest extends RBTestMatcher<DataClassJsonA
       }
 
       @Override
-      public VisitorMatchInfo<DataClassJsonApiDescriptor> visitSimpleJavaGenericJsonApiDescriptor(
+      public VisitorMatchInfo<DataClassJsonApiDescriptor> visitJavaGenericJsonApiDescriptor(
           JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor) {
         return visitorMatchInfo(5, javaGenericJsonApiDescriptor,
             (MatcherGenerator<JavaGenericJsonApiDescriptor>) f -> javaGenericJsonApiDescriptorMatcher(f));

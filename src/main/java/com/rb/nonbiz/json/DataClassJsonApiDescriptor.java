@@ -37,7 +37,7 @@ public abstract class DataClassJsonApiDescriptor {
     T visitIidMapJsonApiDescriptor(IidMapJsonApiDescriptor iidMapJsonApiDescriptor);
     T visitRBMapJsonApiDescriptor(RBMapJsonApiDescriptor rbMapJsonApiDescriptor);
     T visitCollectionJsonApiDescriptor(CollectionJsonApiDescriptor collectionJsonApiDescriptor);
-    T visitSimpleJavaGenericJsonApiDescriptor(JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor);
+    T visitJavaGenericJsonApiDescriptor(JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor);
     T visitPseudoEnumJsonApiDescriptor(PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor);
     T visitJavaEnumJsonApiDescriptor(JavaEnumJsonApiDescriptor javaEnumJsonApiDescriptor);
 
@@ -327,7 +327,7 @@ public abstract class DataClassJsonApiDescriptor {
 
     @Override
     public <T> T visit(Visitor<T> visitor) {
-      return visitor.visitSimpleJavaGenericJsonApiDescriptor(this);
+      return visitor.visitJavaGenericJsonApiDescriptor(this);
     }
 
     @Override
