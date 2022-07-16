@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.List;
 
+import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
@@ -51,7 +52,7 @@ public abstract class DataClassJsonApiDescriptor {
         PreciseValue.class,   // we always want to describe a specific subclass of PreciseValue
         ImpreciseValue.class, // same
 
-        Strings.class,        // a common misspelling of String.class,
+        Strings.class,        // a common misspelling of String.class
         InstrumentId.class,   // sounds weird to have an IidMap that maps to an instrument
         Symbol.class);        // same as above
   }
@@ -132,7 +133,7 @@ public abstract class DataClassJsonApiDescriptor {
           .forEach(clazz ->
               RBPreconditions.checkArgument(
                   !iidMapValueClass.equals(clazz),
-                  "CollectionJsonApiDescriptor uses an invalid class of %s",
+                  "IidMapJsonApiDescriptor uses an invalid class of %s",
                   clazz));
       return new IidMapJsonApiDescriptor(iidMapValueClass);
     }
@@ -269,7 +270,7 @@ public abstract class DataClassJsonApiDescriptor {
       this.genericArgumentClasses = genericArgumentClasses;
     }
 
-    public static JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor(
+    private static JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor(
         Class<?> outerClass, List<Class<?>> genericArgumentClasses) {
       for (Class<?> innerClass : genericArgumentClasses) {
         RBPreconditions.checkArgument(
@@ -293,7 +294,13 @@ public abstract class DataClassJsonApiDescriptor {
               !outerClass.equals(badOuterClass),
               "Outer class %s is invalid",
               outerClass));
-
+      // We can't test the following, because this is a private static constructor, and the only way to construct a
+      // JavaGenericJsonApiDescriptor is through some other static constructors that can't allow this to happen,
+      // but let's keep it anyway.
+      RBPreconditions.checkArgument(
+          !genericArgumentClasses.isEmpty(),
+          "JavaGenericJsonApiDescriptor describes a generic class '%s' without generic arguments",
+          outerClass);
       return new JavaGenericJsonApiDescriptor(outerClass, genericArgumentClasses);
     }
 
@@ -368,6 +375,11 @@ public abstract class DataClassJsonApiDescriptor {
 
     public static PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor(
         RBMap<String, HumanReadableLabel> validValuesToExplanations) {
+      // One reasonable question is:
+      // The variable name is validValuesToExplanations, but is there a way to make sure the String keys are valid?
+      // Or does this happen somewhere else?
+      // The answer is that these are valid as per whatever portion of the JSON API uses this infrastructure.
+      // We don't know what 'pseudo-enum' is being represented here, and what the valid strings in the serialization are.
       RBPreconditions.checkArgument(
           !validValuesToExplanations.isEmpty(),
           "There must be at least 1 item here: %s",
@@ -375,12 +387,12 @@ public abstract class DataClassJsonApiDescriptor {
       validValuesToExplanations
           .forEachEntry( (pseudoEnumString, explanationLabel) -> {
             RBPreconditions.checkArgument(
-                !pseudoEnumString.equals(""),
-                "No 'pseudo-enum' string key may be empty: %s",
+                !isAllWhiteSpace(pseudoEnumString),
+                "No 'pseudo-enum' string key may be all whitespace: %s",
                 validValuesToExplanations);
             RBPreconditions.checkArgument(
-                !explanationLabel.getLabelText().equals(""),
-                "No explanation may be empty: %s",
+                !isAllWhiteSpace(explanationLabel.getLabelText()),
+                "No explanation may be all whitespace: %s",
                 validValuesToExplanations);
           });
       return new PseudoEnumJsonApiDescriptor(validValuesToExplanations);
@@ -402,7 +414,6 @@ public abstract class DataClassJsonApiDescriptor {
     }
 
   }
-
 
 
   /**
@@ -463,14 +474,15 @@ public abstract class DataClassJsonApiDescriptor {
 
     private final EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> validValuesToExplanations;
 
-    public JavaEnumJsonApiDescriptor(
+    private JavaEnumJsonApiDescriptor(
         EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
       this.validValuesToExplanations = validValuesToExplanations;
     }
 
     public static JavaEnumJsonApiDescriptor javaEnumJsonApiDescriptor(
         EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
-      // This is for the rare cases where we only allow one value of the enum in the JSON API.
+      // The 1 in the following precondition (vs. e.g. 2+)
+      // is for the rare cases where we only allow one value of the enum in the JSON API.
       // You might wonder - why bother serializing such an enum in the first place? Well, this would allow us to
       // support more enum values later if we decide to.
       RBPreconditions.checkArgument(
@@ -481,12 +493,12 @@ public abstract class DataClassJsonApiDescriptor {
           .values()
           .forEach(javaEnumSerializationAndExplanation -> {
             RBPreconditions.checkArgument(
-                !javaEnumSerializationAndExplanation.getJsonSerialization().equals(""),
-                "No 'pseudo-enum' string key may be empty: %s",
+                !isAllWhiteSpace(javaEnumSerializationAndExplanation.getJsonSerialization()),
+                "No Java enum serialized string representation in the API may be all whitespace: %s",
                 validValuesToExplanations);
             RBPreconditions.checkArgument(
-                !javaEnumSerializationAndExplanation.getExplanation().getLabelText().equals(""),
-                "No explanation may be empty: %s",
+                !isAllWhiteSpace(javaEnumSerializationAndExplanation.getExplanation().getLabelText()),
+                "No explanation may be all whitespace (which includes the empty string): %s",
                 validValuesToExplanations);
           });
       return new JavaEnumJsonApiDescriptor(validValuesToExplanations);
