@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.rb.nonbiz.collections.ImmutableIndexableArray1D;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
 import com.rb.nonbiz.json.RBJsonObjectBuilder;
@@ -13,8 +14,10 @@ import java.util.function.Function;
 
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.immutableIndexableArray1D;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor.simpleClassJsonApiDescriptor;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
-import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
 import static com.rb.nonbiz.json.RBJsonArrays.listToJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
@@ -32,9 +35,9 @@ import static com.rb.nonbiz.text.Strings.asSingleLine;
 public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocumentation {
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
-      .setRequiredProperties(
-          "keys", String.class,
-          "data", UNKNOWN_CLASS_OF_JSON_PROPERTY)
+      .setRequiredProperties(rbMapOf(
+          "keys", simpleClassJsonApiDescriptor(String.class),
+          "data", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR))
       .hasNoOptionalProperties()
       .build();
 
