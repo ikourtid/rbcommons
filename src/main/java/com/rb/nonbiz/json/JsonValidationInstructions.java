@@ -105,12 +105,12 @@ public class JsonValidationInstructions {
       return this;
     }
 
-    public JsonValidationInstructionsBuilder setRequiredProperties(
+    public JsonValidationInstructionsBuilder setOnlyRequiredProperty(
         String property, DataClassJsonApiDescriptor dataClassJsonApiDescriptor) {
       return setRequiredProperties(singletonRBMap(property, dataClassJsonApiDescriptor));
     }
 
-    public JsonValidationInstructionsBuilder setRequiredProperties(
+    public JsonValidationInstructionsBuilder setOnlyRequiredProperty(
         String property1, Class<?> class1) {
       return setRequiredProperties(singletonRBMap(property1, simpleClassJsonApiDescriptor(class1)));
     }
@@ -185,12 +185,12 @@ public class JsonValidationInstructions {
       return this;
     }
 
-    public JsonValidationInstructionsBuilder setOptionalProperties(
+    public JsonValidationInstructionsBuilder setOnlyOptionalProperty(
         String property, DataClassJsonApiDescriptor dataClassJsonApiDescriptor) {
       return setOptionalProperties(singletonRBMap(property, dataClassJsonApiDescriptor));
     }
 
-    public JsonValidationInstructionsBuilder setOptionalProperties(
+    public JsonValidationInstructionsBuilder setOnlyOptionalProperty(
         String property1, Class<?> class1) {
       return setOptionalProperties(singletonRBMap(property1, simpleClassJsonApiDescriptor(class1)));
     }

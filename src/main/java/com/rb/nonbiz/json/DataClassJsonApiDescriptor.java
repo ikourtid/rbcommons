@@ -7,6 +7,7 @@ import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.collections.RBSets;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
 
@@ -43,6 +45,17 @@ public abstract class DataClassJsonApiDescriptor {
 
   public abstract <T> T visit(Visitor<T> visitor);
 
+  protected static RBSet<Class<?>> getInvalidClasses() {
+    return rbSetOf(
+        BigDecimal.class,     // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
+        PreciseValue.class,   // we always want to describe a specific subclass of PreciseValue
+        ImpreciseValue.class, // same
+
+        Strings.class,        // a common misspelling of String.class,
+        InstrumentId.class,   // sounds weird to have an IidMap that maps to an instrument
+        Symbol.class);        // same as above
+  }
+
 
   /**
    * Tells us the type of a property of a JsonObject in the JSON API, in the simplest case
@@ -57,19 +70,14 @@ public abstract class DataClassJsonApiDescriptor {
     }
 
     public static SimpleClassJsonApiDescriptor simpleClassJsonApiDescriptor(Class<?> clazz) {
-      rbSetOf(
-          BigDecimal.class,   // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
-          PreciseValue.class, // we always want to describe a specific subclass of PreciseValue
-
-          Strings.class,      // a common misspelling of String.class,
-          InstrumentId.class, // should use JsonTicker instead
-          Symbol.class,       // should use JsonTicker instead
-
-          // These 4 have their own JsonApiDescriptor classes, which we should be using.
-          UniqueId.class,
-          IidMap.class,
-          RBMap.class,
-          RBSet.class)
+      RBSets.union(
+              getInvalidClasses(),
+              rbSetOf(
+                  // These 4 have their own JsonApiDescriptor classes, which we should be using.
+                  UniqueId.class,
+                  IidMap.class,
+                  RBMap.class,
+                  RBSet.class))
           .forEach(badClass ->
               RBPreconditions.checkArgument(
                   !clazz.equals(badClass),
@@ -111,22 +119,16 @@ public abstract class DataClassJsonApiDescriptor {
     }
 
     public static IidMapJsonApiDescriptor iidMapJsonApiDescriptor(Class<?> iidMapValueClass) {
-      rbSetOf(
-          BigDecimal.class,   // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
-          PreciseValue.class, // we always want to describe a specific subclass of PreciseValue
-          ImpreciseValue.class, // same
+      RBSets.union(
+              getInvalidClasses(),
+              rbSetOf(
+                  // These 2 have their own JsonApiDescriptor classes, which we should be using.
+                  UniqueId.class,
+                  RBSet.class,
 
-          Strings.class,      // a common misspelling of String.class,
-          InstrumentId.class, // sounds weird to have an IidMap that maps to an instrument
-          Symbol.class,       // same as above
-
-          // These 2 have their own JsonApiDescriptor classes, which we should be using.
-          UniqueId.class,
-          RBSet.class,
-
-          // It's unlikely that we'll be mapping to another map, although not impossible.
-          IidMap.class,
-          RBMap.class)
+                  // It's unlikely that we'll be mapping to another map, although not impossible.
+                  IidMap.class,
+                  RBMap.class))
           .forEach(clazz ->
               RBPreconditions.checkArgument(
                   !iidMapValueClass.equals(clazz),
@@ -167,19 +169,13 @@ public abstract class DataClassJsonApiDescriptor {
     }
 
     public static RBMapJsonApiDescriptor rbMapJsonApiDescriptor(Class<?> rbMapKeyClass, Class<?> rbMapValueClass) {
-      rbSetOf(
-          BigDecimal.class,   // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
-          PreciseValue.class, // we always want to describe a specific subclass of PreciseValue
-          ImpreciseValue.class, // same
-
-          Strings.class,      // a common misspelling of String.class,
-          InstrumentId.class, // should use JsonTicker instead
-          Symbol.class,       // should use JsonTicker instead
-
-          // These 3 have their own JsonApiDescriptor classes, which we should be using.
-          IidMap.class,
-          RBMap.class,
-          RBSet.class)
+      RBSets.union(
+              getInvalidClasses(),
+              rbSetOf(
+                  // These 3 have their own JsonApiDescriptor classes, which we should be using.
+                  IidMap.class,
+                  RBMap.class,
+                  RBSet.class))
           .forEach(clazz -> {
             RBPreconditions.checkArgument(
                 !rbMapKeyClass.equals(clazz),
@@ -227,16 +223,9 @@ public abstract class DataClassJsonApiDescriptor {
     }
 
     public static CollectionJsonApiDescriptor collectionJsonApiDescriptor(Class<?> arrayValueClass) {
-      rbSetOf(
-          BigDecimal.class,   // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
-          PreciseValue.class, // we always want to describe a specific subclass of PreciseValue
-          ImpreciseValue.class, // same
-
-          Strings.class,      // a common misspelling of String.class,
-          InstrumentId.class, // should use JsonTicker instead
-          Symbol.class,       // should use JsonTicker instead
-
-          UniqueId.class)
+      RBSets.union(
+              getInvalidClasses(),
+              singletonRBSet(UniqueId.class))
           .forEach(clazz ->
               RBPreconditions.checkArgument(
                   !arrayValueClass.equals(clazz),
@@ -292,20 +281,14 @@ public abstract class DataClassJsonApiDescriptor {
       // to cases where the 'outer' class is generic on one or more 'generic argument' classes.
       // However, due to Java type erasure, we don't know at runtime what's generic and what's not.
       // But let's just add a few obvious exceptions that we know will never be true.
-      rbSetOf(
-          BigDecimal.class,   // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
-          PreciseValue.class, // we always want to describe a specific subclass of PreciseValue
-          ImpreciseValue.class, // same
-
-          Strings.class,      // a common misspelling of String.class,
-          InstrumentId.class, // sounds weird to have an IidMap that maps to an instrument
-          Symbol.class,       // same as above
-
-          // These have their own JsonApiDescriptor classes, which we should be using.
-          RBSet.class,
-          IidSet.class,
-          IidMap.class,
-          RBMap.class)
+      RBSets.union(
+              getInvalidClasses(),
+              rbSetOf(
+                  // These have their own JsonApiDescriptor classes, which we should be using.
+                  RBSet.class,
+                  IidSet.class,
+                  IidMap.class,
+                  RBMap.class))
           .forEach(badOuterClass -> RBPreconditions.checkArgument(
               !outerClass.equals(badOuterClass),
               "Outer class %s is invalid",
