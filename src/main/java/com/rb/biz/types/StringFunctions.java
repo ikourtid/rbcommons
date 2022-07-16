@@ -15,4 +15,8 @@ public class StringFunctions {
     return sb.reverse().toString();
   }
 
+  public static boolean isAllWhiteSpace(String str) {
+    return str.trim().equals("");
+  }
+
 }

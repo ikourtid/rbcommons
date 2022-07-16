@@ -12,6 +12,7 @@ import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testmatchers.RBVisitorMatchers.VisitorMatchInfo;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Test;
 
 import static com.rb.nonbiz.json.CollectionJsonApiDescriptorTest.collectionJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.json.IidMapJsonApiDescriptorTest.iidMapJsonApiDescriptorMatcher;
@@ -22,8 +23,14 @@ import static com.rb.nonbiz.json.SimpleClassJsonApiDescriptorTest.simpleClassJso
 import static com.rb.nonbiz.json.JavaGenericJsonApiDescriptorTest.javaGenericJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.testmatchers.RBVisitorMatchers.VisitorMatchInfo.visitorMatchInfo;
 import static com.rb.nonbiz.testmatchers.RBVisitorMatchers.generalVisitorMatcher;
+import static org.junit.Assert.fail;
 
 public class DataClassJsonApiDescriptorTest extends RBTestMatcher<DataClassJsonApiDescriptor> {
+
+  @Test
+  public void noGenericArguments_throws() {
+    fail("");
+  }
 
   @Override
   public DataClassJsonApiDescriptor makeTrivialObject() {

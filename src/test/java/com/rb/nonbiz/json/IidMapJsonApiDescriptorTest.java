@@ -38,7 +38,7 @@ public class IidMapJsonApiDescriptorTest extends RBTestMatcher<IidMapJsonApiDesc
         PreciseValue.class, // we always want to describe a specific subclass of PreciseValue
         ImpreciseValue.class, // same
 
-        Strings.class,      // a common misspelling of String.class,
+        Strings.class,      // a common misspelling of String.class
         InstrumentId.class, // sounds weird to have an IidMap that maps to an instrument
         Symbol.class,       // same as above
 

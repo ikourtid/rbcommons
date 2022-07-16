@@ -38,7 +38,7 @@ public class CollectionJsonApiDescriptorTest extends RBTestMatcher<CollectionJso
         PreciseValue.class, // we always want to describe a specific subclass of PreciseValue
         ImpreciseValue.class, // same
 
-        Strings.class,      // a common misspelling of String.class,
+        Strings.class,      // a common misspelling of String.class
         InstrumentId.class, // should use JsonTicker instead
         Symbol.class,       // should use JsonTicker instead
 
