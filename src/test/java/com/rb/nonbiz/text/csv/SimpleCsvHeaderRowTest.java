@@ -1,22 +1,16 @@
 package com.rb.nonbiz.text.csv;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import org.junit.Test;
-
-import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
-import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.text.csv.SimpleCsvHeaderRow.simpleCsvHeaderRow;
-import static com.rb.nonbiz.text.csv.SimpleCsvRow.simpleCsvRow;
-import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.simpleCsvRowMatcher;
-import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.singletonSimpleCsvRow;
-import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.testSimpleCsvRow;
-import static java.util.Collections.singletonList;
-import static org.junit.Assert.*;
-
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Test;
 
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.text.csv.SimpleCsvHeaderRow.simpleCsvHeaderRow;
+import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.simpleCsvRowMatcher;
+import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.singletonSimpleCsvRow;
+import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.testSimpleCsvRow;
 
 public class SimpleCsvHeaderRowTest extends RBTestMatcher<SimpleCsvHeaderRow> {
 

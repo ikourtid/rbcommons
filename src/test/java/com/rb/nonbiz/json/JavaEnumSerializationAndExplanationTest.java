@@ -2,22 +2,18 @@ package com.rb.nonbiz.json;
 
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaEnumJsonApiDescriptor.JavaEnumSerializationAndExplanation;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.text.HumanReadableLabelTest;
-import org.junit.Test;
-
-import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaEnumJsonApiDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
-import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
-import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.text.HumanReadableLabelTest.humanReadableLabelMatcher;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
-import static org.junit.Assert.*;
-
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Test;
 
 import java.util.function.BiFunction;
 
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaEnumJsonApiDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.text.HumanReadableLabelTest.humanReadableLabelMatcher;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 public class JavaEnumSerializationAndExplanationTest extends RBTestMatcher<JavaEnumSerializationAndExplanation> {
 

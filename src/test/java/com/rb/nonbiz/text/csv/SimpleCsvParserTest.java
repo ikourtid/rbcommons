@@ -19,11 +19,9 @@ import static com.rb.nonbiz.text.csv.CsvColumnInclusionFilterTest.singletonCsvCo
 import static com.rb.nonbiz.text.csv.SimpleCsv.simpleCsv;
 import static com.rb.nonbiz.text.csv.SimpleCsvHeaderRowTest.singletonSimpleCsvHeaderRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvHeaderRowTest.testSimpleCsvHeaderRow;
-import static com.rb.nonbiz.text.csv.SimpleCsvRow.simpleCsvRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.singletonSimpleCsvRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.testSimpleCsvRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvTest.simpleCsvMatcher;
-import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SimpleCsvParserTest extends RBCommonsIntegrationTest<SimpleCsvParser> {
