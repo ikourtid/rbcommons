@@ -15,7 +15,6 @@ import static com.rb.nonbiz.text.csv.SimpleCsvHeaderRowTest.singletonSimpleCsvHe
 import static com.rb.nonbiz.text.csv.SimpleCsvHeaderRowTest.testSimpleCsvHeaderRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvRow.simpleCsvRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.simpleCsvRowMatcher;
-import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.singletonSimpleCsvRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvRowTest.testSimpleCsvRow;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
