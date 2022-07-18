@@ -19,4 +19,8 @@ public class StringFunctions {
     return str.trim().equals("");
   }
 
+  public static boolean isTrimmed(String str) {
+    return str.trim().equals(str);
+  }
+
 }
