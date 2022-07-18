@@ -3,6 +3,7 @@ package com.rb.biz.types;
 import org.junit.Test;
 
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
+import static com.rb.biz.types.StringFunctions.isTrimmed;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -44,6 +45,29 @@ public class StringFunctionsTest {
         "  X" ,
         " \t\r\n X ")
         .forEach(str -> assertFalse(isAllWhiteSpace(str)));
+  }
+
+  @Test
+  public void test_isTrimmed() {
+    rbSetOf(
+        "\t",
+        "\r",
+        "\n",
+        "  ",
+        " \t\r\n ",
+        " abc",
+        "abc ",
+        "\nabc",
+        "abc\n")
+        .forEach(str -> assertFalse(isTrimmed(str)));
+    rbSetOf(
+        "",
+        "X",
+        "X Y",  // can have interior whitespace
+        "X\tY",
+        "X\nY",
+        "X  \t  \n \r Y")
+        .forEach(str -> assertTrue(isTrimmed(str)));
   }
 
 }
