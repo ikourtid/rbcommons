@@ -27,11 +27,6 @@ import static org.junit.Assert.fail;
 
 public class DataClassJsonApiDescriptorTest extends RBTestMatcher<DataClassJsonApiDescriptor> {
 
-  @Test
-  public void noGenericArguments_throws() {
-    fail("");
-  }
-
   @Override
   public DataClassJsonApiDescriptor makeTrivialObject() {
     return new SimpleClassJsonApiDescriptorTest().makeTrivialObject();
