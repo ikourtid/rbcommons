@@ -9,7 +9,7 @@ package com.rb.nonbiz.collections;
  *
  * By making an interface out of this, it means that we:
  * a) enforce some uniformity b/c all methods will be called getRoughIidCount.
- *    This may or may not be the same as size() (whenever size() is present); we don’t enforce any relationship.
+ *    This may or may not be the same as size() (whenever size() is present); we don't enforce any relationship.
  *    E.g. GroupedAggregateValues#size could be the # of instrument classes, OR asset classes, but likely not the same
  *    as the # of instrument IDs.
  * b) can use as a shorthand getNumInstrumentsInMapValues and other such handy methods, in order to keep the code shorter.
