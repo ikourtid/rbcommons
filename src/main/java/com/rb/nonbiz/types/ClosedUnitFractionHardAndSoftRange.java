@@ -67,7 +67,7 @@ public class ClosedUnitFractionHardAndSoftRange {
    *   (i.e. down to 30%) is that, if we were to do that, then the next time we consider trading, this position could go
    *   above 30% due to market drift, even if we don't trade, and we wouldn't want to sell yet again.
    *   In other words, we want to slightly over-shoot the hard limit,
-   *   so we won’t have to immediately trade again due to price fluctuations.
+   *   so we won't have to immediately trade again due to price fluctuations.
    * - if the current position is within the soft range (e.g. 22%), then we will return the soft range. We don't want
    *   it to go above 26%, so we'll use that as a max since the returned range will be [14%, 26%].
    * - if the current position is outside the soft range BUT within the hard range (e.g. 27%), then we don't want to
