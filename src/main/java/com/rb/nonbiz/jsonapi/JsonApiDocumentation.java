@@ -171,6 +171,14 @@ public class JsonApiDocumentation {
     }
 
     // FIXME IAK / FIXME SWA JSONDOC: once all JSON API classes get documented, we should remove this.
+    // Same as above, but doesn't define NontrivialSampleJson
+    public static JsonApiDocumentationBuilder intermediate2JsonApiDocumentationBuilder() {
+      return new JsonApiDocumentationBuilder()
+          .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+          .noTrivialSampleJsonSupplied();
+    }
+
+    // FIXME IAK / FIXME SWA JSONDOC: once all JSON API classes get documented, we should remove this.
     public static JsonApiDocumentation intermediateJsonApiDocumentationWithFixme(
         Class<?> clazz,
         HasJsonApiDocumentation ... items) {
