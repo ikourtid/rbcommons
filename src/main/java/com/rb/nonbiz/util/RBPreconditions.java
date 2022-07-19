@@ -126,7 +126,7 @@ public class RBPreconditions {
   }
 
   public static <T> void checkUnique(Stream<T> stream) {
-    checkUnique(stream.iterator(), "Items in stream must be unique but were not");
+    checkUnique(stream, "Items in stream must be unique but were not");
   }
 
   public static <T> void checkUnique(List<T> list, String format, Object...args) {
@@ -139,6 +139,10 @@ public class RBPreconditions {
       throw new IllegalArgumentException(Strings.format("non-unique item of %s : %s",
           firstNonUniqueIteratorItem.get(), Strings.format(format, args)));
     }
+  }
+
+  public static <T> void checkUnique(Stream<T> stream, String format, Object...args) {
+    checkUnique(stream.iterator(), format, args);
   }
 
   /**
