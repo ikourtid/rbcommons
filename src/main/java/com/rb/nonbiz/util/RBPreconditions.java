@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.RBIterators.getFirstNonUniqueIteratorItem;
 import static com.rb.nonbiz.collections.RBOptionals.findOnlyPresentOptional;
@@ -122,6 +123,10 @@ public class RBPreconditions {
 
   public static <T> void checkUnique(Iterator<T> iterator) {
     checkUnique(iterator, "Items in list must be unique but were not");
+  }
+
+  public static <T> void checkUnique(Stream<T> stream) {
+    checkUnique(stream.iterator(), "Items in stream must be unique but were not");
   }
 
   public static <T> void checkUnique(List<T> list, String format, Object...args) {
