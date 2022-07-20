@@ -35,6 +35,10 @@ import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
 import static java.util.Map.Entry.comparingByKey;
 
+/**
+ * A version of Java's String, with the advantage that Strings.format() doesn't throw an exception if the format doesn't
+ * match its arguments.
+ */
 public class Strings {
 
   /**
