@@ -1,5 +1,8 @@
 package com.rb.biz.types;
 
+/**
+ * Utility functions for Strings.
+ */
 public class StringFunctions {
 
   public static String withUnderscores(long l) {

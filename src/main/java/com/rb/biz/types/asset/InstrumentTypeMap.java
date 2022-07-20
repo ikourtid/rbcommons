@@ -106,6 +106,9 @@ public class InstrumentTypeMap<T> {
   }
 
 
+  /**
+   * An {@link RBBuilder} for a {@link InstrumentTypeMap}.
+   */
   public static class InstrumentTypeMapBuilder<T> implements RBBuilder<InstrumentTypeMap<T>> {
 
     private T valueForEtfs;

@@ -36,6 +36,9 @@ import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
  * Just make sure you don't make a mistake when you set up your backtests: e.g. if you specified in
  * {@code AllComparableBacktestSettings} that you always want to exclude stock XYZ, don't set this
  * class to say 'always make XYZ sellable'.
+ *
+ * @see BehaviorWithValueButNoOverride
+ * @see BehaviorWithValueAndOverride
  */
 public class Overrides<K, V extends Comparable<? super V>> {
 
