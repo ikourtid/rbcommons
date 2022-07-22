@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 /**
- * Holds a positive quantity. That is, holds a value x such that {@code x > 0}.
+ * Holds a positive quantity of shares. That is, holds a value x such that {@code x > 0}.
  *
  * @see NonNegativeQuantity
  * @see SignedQuantity
