@@ -7,9 +7,10 @@ import com.rb.nonbiz.util.RBPreconditions;
 /**
  * This is a thin wrapper around a regular String, but it gives us type safety
  * whenever we want to represent a ticker symbol for an instrument (stock or ETF).
- * Note that sometimes stocks have 'ticker changes' where the symbol can change,
+ *
+ * <p> Note that sometimes stocks have 'ticker changes' where the symbol can change,
  * even though the underlying traded entity is fundamentally the same.
- * One such example was QQQ {@code ->} QQQQ {@code ->} QQQ.
+ * One such example was QQQ {@code ->} QQQQ {@code ->} QQQ. </p>
  */
 public class Symbol {
 

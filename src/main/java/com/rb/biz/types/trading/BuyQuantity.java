@@ -41,10 +41,16 @@ public class BuyQuantity extends PositiveQuantity {
     return buyQuantity(positiveQuantity.asBigDecimal());
   }
 
+  /**
+   * Add one BuyQuantity to another.
+   */
   public BuyQuantity add(BuyQuantity quantityToAdd) {
     return buyQuantity(asBigDecimal().add(quantityToAdd.asBigDecimal()));
   }
 
+  /**
+   * Sell one BuyQuantity from another.
+   */
   public BuyQuantity subtract(BuyQuantity quantityToSubtract) {
     return buyQuantity(asBigDecimal().subtract(quantityToSubtract.asBigDecimal()));
   }

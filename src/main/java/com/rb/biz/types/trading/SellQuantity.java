@@ -40,10 +40,16 @@ public class SellQuantity extends PositiveQuantity {
     return sellQuantity(quantity.asBigDecimal());
   }
 
+  /**
+   * Add one SellQuantity to another.
+   */
   public SellQuantity add(SellQuantity other) {
     return sellQuantity(asBigDecimal().add(other.asBigDecimal()));
   }
 
+  /**
+   * Subtract one SellQuantity from another.
+   */
   public SellQuantity subtract(SellQuantity subtrahend) {
     return sellQuantity(asBigDecimal().subtract(subtrahend.asBigDecimal()));
   }

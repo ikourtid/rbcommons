@@ -22,6 +22,9 @@ import static com.rb.nonbiz.collections.RBRanges.makeClosedRangesForDiscreteValu
 import static java.time.temporal.TemporalAdjusters.firstInMonth;
 import static java.util.Comparator.naturalOrder;
 
+/**
+ * Utility functions for {@code LocalDate}s.
+ */
 public class RBDates {
 
   // The plain toString method in classes that implement PrintsInstruments
