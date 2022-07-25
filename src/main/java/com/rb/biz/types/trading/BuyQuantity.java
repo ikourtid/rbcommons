@@ -49,7 +49,7 @@ public class BuyQuantity extends PositiveQuantity {
   }
 
   /**
-   * Sell one BuyQuantity from another.
+   * Subtract one BuyQuantity from another.
    */
   public BuyQuantity subtract(BuyQuantity quantityToSubtract) {
     return buyQuantity(asBigDecimal().subtract(quantityToSubtract.asBigDecimal()));
