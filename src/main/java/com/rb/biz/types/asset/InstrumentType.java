@@ -6,7 +6,8 @@ import com.rb.nonbiz.text.HumanReadableLabel;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 /**
- * Tells us what kind of instrument we are dealing with (ETF, stock, mutual fund - as of Aug 2019).
+ * Tells us what kind of instrument we are dealing with
+ * (ETF, stock, mutual fund, structured product - as of July 2022).
  *
  * <p> The {@link InstrumentId} itself does not (and should not) record this information.
  *
@@ -15,10 +16,10 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  *
  * <p> The current possibilities are:
  * <ul>
- *   <li> {@link EtfInstrumentType EtfInstrumentType}
- *   <li> {@link StockInstrumentType StockInstrumentType}
- *   <li> {@link MutualFundInstrumentType MutualFundInstrumentType}
- *   <li> {@link StructuredProductInstrumentType StructuredProductInstrumentType}</li>
+ *   <li> {@link EtfInstrumentType EtfInstrumentType} </li>
+ *   <li> {@link StockInstrumentType StockInstrumentType} </li>
+ *   <li> {@link MutualFundInstrumentType MutualFundInstrumentType} </li>
+ *   <li> {@link StructuredProductInstrumentType StructuredProductInstrumentType} </li>
  * </ul>
  */
 public abstract class InstrumentType implements HasHumanReadableLabel {

@@ -21,7 +21,7 @@ import static java.util.Collections.emptyList;
  *
  * <p> Unlike a ticker symbol (e.g. QQQ), which can change for a security, the {@code InstrumentId} is supposed to be stable.
  * E.g. the Nasdaq 100 ETF used to be QQQ, then became QQQQ (4 Qs), then became QQQ again. In such a case,
- * the {@code InstrumentId} will be the same for the underlying security, despite the ticker changes.
+ * the {@code InstrumentId} will be the same for the underlying security, despite the ticker changes. </p>
  *
  * @see AssetId
  * @see CashId

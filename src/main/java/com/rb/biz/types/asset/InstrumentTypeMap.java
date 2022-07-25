@@ -18,9 +18,11 @@ import static com.rb.biz.types.asset.InstrumentType.StockInstrumentType.stockIns
 import static com.rb.biz.types.asset.InstrumentType.StructuredProductInstrumentType.structuredProductInstrumentType;
 
 /**
- * <p> A special case of a map of InstrumentType {@code ->} some value. </p>
+ * <p> A special case of a map of {@link InstrumentType} {@code ->} some value. </p>
  *
  * <p> Unlike an {@code RBMap<InstrumentType, T>}, this forces you to specify values for all keys. </p>
+ *
+ * @see InstrumentType
  */
 public class InstrumentTypeMap<T> {
 
