@@ -2,8 +2,10 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+import com.rb.biz.types.Money;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.PreciseValue;
+import com.rb.nonbiz.types.SignedFraction;
 import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -29,12 +31,13 @@ import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
 
 /**
- * Use this whenever you want to represent having N items with proportions that sum to 1,
+ * Use this whenever you want to represent having <i>N</i> items with proportions that sum to 1,
  * where the items all have a positive proportion.
- * A traditional asset allocation that does not allow short positions is a good example.
  *
- * #see LinearCombination
- * #see FlatLinearCombination
+ * <p> A traditional asset allocation that does not allow short positions is a good example. </p>
+ *
+ * @see LinearCombination
+ * @see FlatLinearCombination
  */
 public class Partition<K> {
 
@@ -44,6 +47,9 @@ public class Partition<K> {
     this.fractions = fractions;
   }
 
+  /**
+   * Creates a {@link Partition} from an {@link RBMap} of {@link UnitFraction}s.
+   */
   public static <K> Partition<K> partition(RBMap<K, UnitFraction> fractions) {
     for (UnitFraction unitFraction : fractions.values()) {
       if (unitFraction.isZero()) {
@@ -61,10 +67,11 @@ public class Partition<K> {
 
   /**
    * Creates a partition by normalizing a map of positive weights which may not sum to 100%.
-   * There is a similar overload that takes in DoubleMap, where the concept of summing to 100% makes more sense.
-   * Here, since we're dealing with PreciseValue, it's a bit meaningless to care about 1 vs. not 1 if the weights
-   * are of type e.g. Money. But for certain other types (UnitFraction, SignedFraction, etc.) it does make sense.
-   * However, here's no way to distinguish that given how generics work in Java. So this is reasonable.
+   *
+   * <p> There is a similar overload that takes in {@link DoubleMap}, where the concept of summing to 100% makes more sense.
+   * Here, since we're dealing with {@link PreciseValue}, it's a bit meaningless to care about 1 vs. not 1 if the weights
+   * are of type e.g. {@link Money}. But for certain other types ({@link UnitFraction}, {@link SignedFraction}, etc.)
+   * it does make sense. However, here's no way to distinguish that given how generics work in Java. So this is reasonable. </p>
    */
   public static <K, V extends PreciseValue<V>> Partition<K> partitionFromPositiveWeightsWhichMayNotSumTo1(
       RBMap<K, V> weightsMap) {
@@ -85,10 +92,12 @@ public class Partition<K> {
 
   /**
    * Creates a partition by normalizing a map of positive weights which may sum to below 100%.
-   * There is a similar overload that takes in DoubleMap, where the concept of summing to 100% makes more sense.
-   * Here, since we're dealing with PreciseValue, it's a bit meaningless to care about 1 vs. not 1 if the weights
-   * are of type e.g. Money. But for certain other types (UnitFraction, SignedFraction, etc.) it does make sense.
-   * However, here's no way to distinguish that given how generics work in Java. So this is reasonable.
+   *
+   * <p> There is a similar overload that takes in {@link DoubleMap}, where the concept of summing to 100% makes more sense.
+   * Here, since we're dealing with {@link PreciseValue}, it's a bit meaningless to care about 1 vs. not 1 if the weights
+   * are of type e.g. Money. But for certain other types ({@link UnitFraction}, {@link SignedFraction}, etc.)
+   * it does make sense. However, here's no way to distinguish that given how generics work in Java.
+   * So this is reasonable. </p>
    */
   public static <K, V extends PreciseValue<V>> Partition<K> partitionFromPositiveWeightsWhichMaySumToBelow1(
       RBMap<K, V> weightsMap, double epsilon) {
@@ -105,6 +114,9 @@ public class Partition<K> {
     return partitionFromPositiveWeights(weightsMap, sum);
   }
 
+  /**
+   * Creates a partition by normalizing a map of positive weights.
+   */
   private static <K, V extends PreciseValue<V>> Partition<K> partitionFromPositiveWeights(
       RBMap<K, V> weightsMap, BigDecimal precomputedSum) {
     MutableRBMap<K, UnitFraction> fractionsMap = newMutableRBMapWithExpectedSize(weightsMap.size());
