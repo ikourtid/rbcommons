@@ -55,12 +55,12 @@ public class JsonApiDocumentation {
    * Returns the Java class of the data class (NOT the JSON API converter verb class)
    * that this documentation refers to.
    *
-   * Design-wise, this does not have to be a Java class - it could have been just a string, or some other unique ID.
+   * <p> Design-wise, this does not have to be a Java class - it could have been just a string, or some other unique ID.
    * The reader of the JSON API should not care what the names of the Java classes are. But we need some sort of
    * unique way of referring to this JSON "class" (in the general object-oriented sense, not in the Java sense),
-   * so let's just use the {@link Class#getSimpleName()} for that purpose.
+   * so let's just use the {@link Class#getSimpleName()} for that purpose. </p>
    *
-   * This is similar to what we do for instantiating {@link RBLog}.
+   * <p> This is similar to what we do for instantiating {@link RBLog}. </p>
    */
   public Class<?> getClazz() {
     return clazz;
@@ -97,8 +97,9 @@ public class JsonApiDocumentation {
   /**
    * All the "sub"-JSON API converters that are being used by this JSON API converter.
    * This will help us generate pages that link to the JSON subobjects.
-   * For example, we want the page that describes MarketInfo to also have links to
-   * CurrentMarketInfo and DailyMarketInfo.
+   *
+   * <p> For example, we want the page that describes MarketInfo to also have links to
+   * CurrentMarketInfo and DailyMarketInfo. </p>
    */
   public List<HasJsonApiDocumentation> getChildNodes() {
     return childNodes;
@@ -171,11 +172,11 @@ public class JsonApiDocumentation {
     }
 
     // FIXME IAK / FIXME SWA JSONDOC: once all JSON API classes get documented, we should remove this.
-    // Same as above, but doesn't define NontrivialSampleJson
+    // Same as above, but doesn't call .setDocumentationHtml()
     public static JsonApiDocumentationBuilder intermediate2JsonApiDocumentationBuilder() {
       return new JsonApiDocumentationBuilder()
-          .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
-          .noTrivialSampleJsonSupplied();
+          .noTrivialSampleJsonSupplied()
+          .noNontrivialSampleJsonSupplied();
     }
 
     // FIXME IAK / FIXME SWA JSONDOC: once all JSON API classes get documented, we should remove this.
