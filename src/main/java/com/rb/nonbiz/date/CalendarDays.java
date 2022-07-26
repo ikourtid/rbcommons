@@ -6,7 +6,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 /**
- * Methods pertaining to calendar day calculations (vs market days).
+ * Methods pertaining to calendar day calculations (vs. market days).
  */
 public class CalendarDays {
 

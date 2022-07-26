@@ -56,7 +56,7 @@ public class RBListWithSpecialValue<T> {
    * If null appears after any item, it means that that item is the 'special' one.
    * The nice thing is that this allows for a compact instantiation of a RBListWithSpecialValue
    *
-   * You might say - "Why not a CTOR that takes an optional int and a list of values? The ‘null’ seems convoluted."
+   * You might say - "Why not a CTOR that takes an optional int and a list of values? The 'null' seems convoluted."
    *
    * That's a valid alternative, and it was my original design.
    * However, the number is hard to read if there are many choices for a knob,

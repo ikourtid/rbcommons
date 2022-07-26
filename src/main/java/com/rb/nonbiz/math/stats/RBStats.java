@@ -88,9 +88,9 @@ public class RBStats {
   public static ZScore getZScore(double value, StatisticalSummary statisticalSummary) {
     double stdDev = statisticalSummary.getStandardDeviation();
     // The standard deviation will either be 0, in the extreme case of all items being the same,
-    // or - if it’s tiny - it will be the result of calculating a std dev over very tightly spaced numbers,
+    // or - if it' tiny - it will be the result of calculating a std dev over very tightly spaced numbers,
     // in which case using an epsilon of e.g. 1e-8 will cause us to throw on calculating those z-scores.
-    // Therefore, I’m throwing on 0 (obviously - it’s a divide by zero exception) but not on e.g. 1e-8.
+    // Therefore, I'll be throwing on 0 (obviously - it's a divide by zero exception) but not on e.g. 1e-8.
     if (stdDev == 0) { // rare double equality, but might as well
       throw new IllegalArgumentException(Strings.format(
           "You are trying to take a z-score for value= %s when the std dev is 0 : %s",

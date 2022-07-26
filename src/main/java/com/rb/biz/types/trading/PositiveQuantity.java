@@ -7,6 +7,12 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.stream.Stream;
 
+/**
+ * Holds a positive quantity of shares. That is, holds a value x such that {@code x > 0}.
+ *
+ * @see NonNegativeQuantity
+ * @see SignedQuantity
+ */
 public class PositiveQuantity extends NonNegativeQuantity {
 
   public static final PositiveQuantity POSITIVE_QUANTITY_1 = positiveQuantity(1);

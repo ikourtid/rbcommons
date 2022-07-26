@@ -22,10 +22,11 @@ import static com.rb.biz.types.trading.BuyQuantity.buyQuantity;
 import static com.rb.biz.types.trading.NonNegativeQuantity.nonNegativeQuantity;
 
 /**
- * Represents a non-negative $ amount.
- * Instead of calling this NonNegativeMoney, we just call it Money,
+ * Represents a non-negative dollar amount.
+ *
+ * <p> Instead of calling this NonNegativeMoney, we just call it Money,
  * since in almost all cases, we want to enforce that the amounts are {@code >= 0}  $0.
- * For the cases where they can be negative, @see SignedMoney
+ * For the cases where they can be negative, see {@link SignedMoney}. </p>
  */
 public class Money extends PreciseValue<Money> {
 

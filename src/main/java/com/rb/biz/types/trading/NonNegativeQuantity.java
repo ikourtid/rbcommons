@@ -10,6 +10,11 @@ import java.util.stream.Stream;
 
 import static com.rb.biz.types.Money.money;
 
+/**
+ * Holds a non-negative quantity. That is, holds a value x such that {@code x >= 0}.
+ *
+ * @see SignedQuantity
+ */
 public class NonNegativeQuantity extends SignedQuantity {
 
   public static final NonNegativeQuantity ZERO_NON_NEGATIVE_QUANTITY = new NonNegativeQuantity(BigDecimal.ZERO);

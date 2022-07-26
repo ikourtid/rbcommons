@@ -16,6 +16,11 @@ import static com.rb.biz.types.SignedMoney.signedMoney;
 import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 import static com.rb.nonbiz.math.RBBigDecimals.bigDecimalAverage;
 
+/**
+ * Holds a price.
+ *
+ * <p> Just a thin wrapper around {@link PreciseValue}. </p>
+ */
 public class Price extends PreciseValue<Price> {
 
   /**
