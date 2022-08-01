@@ -19,8 +19,12 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchIidMap;
+import static com.rb.nonbiz.testmatchers.Match.matchList;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -252,6 +256,22 @@ public class RBMapMatchers {
   public static <A, B> TypeSafeMatcher<BiMap<A, B>> biMapEqualityMatcher(BiMap<A, B> expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.entrySet()));
+  }
+
+  public static <K, V> TypeSafeMatcher<Map.Entry<K, V>> mapEntryMatcher(
+      Map.Entry<K, V> expected,
+      MatcherGenerator<V> matcherGenerator) {
+    return makeMatcher(expected,
+        matchUsingEquals(v -> v.getKey()),
+        match(v -> v.getValue(), matcherGenerator));
+  }
+
+  public static <K, V> TypeSafeMatcher<LinkedHashMap<K, V>> linkedHashMapMatcher(
+      LinkedHashMap<K, V> expected, MatcherGenerator<V> valuesMatcherGenerator) {
+    // Because LinkedHashMap uses a fixed ordering of entries, we must check them in order
+    return makeMatcher(expected,
+        match(v -> v.entrySet().iterator(), f -> iteratorMatcher(f,
+            f2 -> mapEntryMatcher(f2, valuesMatcherGenerator))));
   }
 
 }
