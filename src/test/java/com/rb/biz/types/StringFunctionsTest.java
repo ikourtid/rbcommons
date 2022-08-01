@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.biz.types.StringFunctions.isTrimmed;
+import static com.rb.biz.types.StringFunctions.isValidJavaIdentifier;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -68,6 +69,15 @@ public class StringFunctionsTest {
         "X\nY",
         "X  \t  \n \r Y")
         .forEach(str -> assertTrue(isTrimmed(str)));
+  }
+
+  @Test
+  public void testIsValidJavaIdentifier() {
+    rbSetOf("foo", "foo1", "foo123", "_foo", "foo_", "fooBar", "foo_bar")
+        .forEach(v -> assertTrue(isValidJavaIdentifier(v)));
+
+    rbSetOf("foo ", " foo", "1foo", "123foo", "foo*", "foo$", "foo-bar")
+        .forEach(v -> assertFalse(isValidJavaIdentifier(v)));
   }
 
 }
