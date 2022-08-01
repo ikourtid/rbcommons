@@ -1,9 +1,15 @@
 package com.rb.biz.types;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Utility functions for Strings.
  */
 public class StringFunctions {
+
+  // Copied from https://www.geeksforgeeks.org/how-to-validate-identifier-using-regular-expression-in-java
+  private static final Pattern VALID_JAVA_IDENTIFIER_PATTERN = Pattern.compile("^([a-zA-Z_$][a-zA-Z\\d_$]*)$");
 
   public static String withUnderscores(long l) {
     String s = Long.toString(l);
@@ -24,6 +30,10 @@ public class StringFunctions {
 
   public static boolean isTrimmed(String str) {
     return str.trim().equals(str);
+  }
+
+  public static boolean isValidJavaIdentifier(String identifier) {
+    return VALID_JAVA_IDENTIFIER_PATTERN.matcher(identifier).matches();
   }
 
 }
