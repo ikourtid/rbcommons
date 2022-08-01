@@ -4,6 +4,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Range;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBLists;
+import com.rb.nonbiz.collections.RBStreams;
 import com.rb.nonbiz.text.Strings;
 
 import java.util.Collection;
@@ -115,6 +116,11 @@ public class RBPreconditions {
   public static <T> void checkIsNonEmpty(
       IidMap<T> iidMap, String format, Object...args) {
     checkArgument(!iidMap.isEmpty(), format, args);
+  }
+
+  @SafeVarargs
+  public static <T> void checkUnique(T first, T second, T ... rest) {
+    checkUnique(RBStreams.concatenateFirstSecondAndRest(first, second, rest));
   }
 
   public static <T> void checkUnique(List<T> list) {

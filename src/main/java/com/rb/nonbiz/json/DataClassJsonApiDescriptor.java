@@ -46,7 +46,7 @@ public abstract class DataClassJsonApiDescriptor {
 
   public abstract <T> T visit(Visitor<T> visitor);
 
-  protected static RBSet<Class<?>> getInvalidClasses() {
+  protected static RBSet<Class<?>> getInvalidJsonApiDescriptorClasses() {
     return rbSetOf(
         BigDecimal.class,     // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
         PreciseValue.class,   // we always want to describe a specific subclass of PreciseValue
@@ -72,7 +72,7 @@ public abstract class DataClassJsonApiDescriptor {
 
     public static SimpleClassJsonApiDescriptor simpleClassJsonApiDescriptor(Class<?> clazz) {
       RBSets.union(
-              getInvalidClasses(),
+              getInvalidJsonApiDescriptorClasses(),
               rbSetOf(
                   // These 4 have their own JsonApiDescriptor classes, which we should be using.
                   UniqueId.class,
@@ -121,7 +121,7 @@ public abstract class DataClassJsonApiDescriptor {
 
     public static IidMapJsonApiDescriptor iidMapJsonApiDescriptor(Class<?> iidMapValueClass) {
       RBSets.union(
-              getInvalidClasses(),
+              getInvalidJsonApiDescriptorClasses(),
               rbSetOf(
                   // These 2 have their own JsonApiDescriptor classes, which we should be using.
                   UniqueId.class,
@@ -171,7 +171,7 @@ public abstract class DataClassJsonApiDescriptor {
 
     public static RBMapJsonApiDescriptor rbMapJsonApiDescriptor(Class<?> rbMapKeyClass, Class<?> rbMapValueClass) {
       RBSets.union(
-              getInvalidClasses(),
+              getInvalidJsonApiDescriptorClasses(),
               rbSetOf(
                   // These 3 have their own JsonApiDescriptor classes, which we should be using.
                   IidMap.class,
@@ -225,7 +225,7 @@ public abstract class DataClassJsonApiDescriptor {
 
     public static CollectionJsonApiDescriptor collectionJsonApiDescriptor(Class<?> arrayValueClass) {
       RBSets.union(
-              getInvalidClasses(),
+              getInvalidJsonApiDescriptorClasses(),
               singletonRBSet(UniqueId.class))
           .forEach(clazz ->
               RBPreconditions.checkArgument(
@@ -283,7 +283,7 @@ public abstract class DataClassJsonApiDescriptor {
       // However, due to Java type erasure, we don't know at runtime what's generic and what's not.
       // But let's just add a few obvious exceptions that we know will never be true.
       RBSets.union(
-              getInvalidClasses(),
+              getInvalidJsonApiDescriptorClasses(),
               rbSetOf(
                   // These have their own JsonApiDescriptor classes, which we should be using.
                   RBSet.class,
@@ -388,11 +388,11 @@ public abstract class DataClassJsonApiDescriptor {
           .forEachEntry( (pseudoEnumString, explanationLabel) -> {
             RBPreconditions.checkArgument(
                 !isAllWhiteSpace(pseudoEnumString),
-                "No 'pseudo-enum' string key may be all whitespace: %s",
+                "No 'pseudo-enum' string key may be all whitespace (which includes the empty string): %s",
                 validValuesToExplanations);
             RBPreconditions.checkArgument(
                 !isAllWhiteSpace(explanationLabel.getLabelText()),
-                "No explanation may be all whitespace: %s",
+                "No explanation may be all whitespace (which includes the empty string): %s",
                 validValuesToExplanations);
           });
       return new PseudoEnumJsonApiDescriptor(validValuesToExplanations);
@@ -494,7 +494,7 @@ public abstract class DataClassJsonApiDescriptor {
           .forEach(javaEnumSerializationAndExplanation -> {
             RBPreconditions.checkArgument(
                 !isAllWhiteSpace(javaEnumSerializationAndExplanation.getJsonSerialization()),
-                "No Java enum serialized string representation in the API may be all whitespace: %s",
+                "No Java enum serialized string representation in the API may be all whitespace (which includes the empty string): %s",
                 validValuesToExplanations);
             RBPreconditions.checkArgument(
                 !isAllWhiteSpace(javaEnumSerializationAndExplanation.getExplanation().getLabelText()),
