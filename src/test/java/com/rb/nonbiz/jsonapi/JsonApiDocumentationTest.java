@@ -27,7 +27,7 @@ public class JsonApiDocumentationTest extends RBTestMatcher<JsonApiDocumentation
     return jsonApiDocumentationBuilder()
         .setClass(clazz)
         .setSingleLineSummary(label("summary" + seed))
-        .setDocumentationHtml("documentation" + seed)
+        .setLongDocumentation("documentation" + seed)
         .setJsonValidationInstructions(new JsonValidationInstructionsTest().makeNontrivialObject())
         .hasNoChildNodes() // hard to set this here
         .setTrivialSampleJson(singletonJsonObject(
@@ -43,7 +43,7 @@ public class JsonApiDocumentationTest extends RBTestMatcher<JsonApiDocumentation
     return jsonApiDocumentationBuilder()
         .setClass(JsonTicker.class)
         .setSingleLineSummary(label("x"))
-        .setDocumentationHtml("y")
+        .setLongDocumentation("y")
         .hasNoJsonValidationInstructions()
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
@@ -71,7 +71,7 @@ public class JsonApiDocumentationTest extends RBTestMatcher<JsonApiDocumentation
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getClazz()),
         match(           v -> v.getSingleLineSummary(),          f -> humanReadableLabelMatcher(f)),
-        matchUsingEquals(v -> v.getDocumentationHtml()),
+        matchUsingEquals(v -> v.getLongDocumentation()),
         match(           v -> v.getJsonValidationInstructions(), f -> jsonValidationInstructionsMatcher(f)),
         matchList(       v -> v.getChildNodes(),                 f -> hasJsonApiDocumentationMatcher(f)),
         matchOptional(   v -> v.getTrivialSampleJson(),          f -> jsonElementMatcher(f, 1e-8)),

@@ -63,7 +63,7 @@ public class FlatSignedLinearCombinationJsonApiConverter implements HasJsonApiDo
             "except that it allows both positive and negative weights (but not zero).")))
         .hasNoJsonValidationInstructions()
         .hasChildNode(weightedBySignedFractionJsonApiConverter)
-        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")
         .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()
         .build();
