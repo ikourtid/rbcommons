@@ -75,7 +75,7 @@ public class HardAndSoftRangeJsonApiConverter implements HasJsonApiDocumentation
         .setSingleLineSummary(label(asSingleLine(
             "A combination of an outer 'hard' range that an optimization solution must observe ",
             "and an inner 'soft' range that the optimization should observe.")))
-        .setDocumentationHtml(asSingleLine(
+        .setLongDocumentation(asSingleLine(
             "By 'should observe the soft limit', we mean ",
             "that if a value drifts outside the soft limit, it will not be allowed ",
             "to drift further, but will not be forced to immediate move in the other direction. ",

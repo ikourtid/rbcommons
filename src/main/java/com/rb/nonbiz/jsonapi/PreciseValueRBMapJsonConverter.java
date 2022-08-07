@@ -71,7 +71,7 @@ public class PreciseValueRBMapJsonConverter implements HasJsonApiDocumentation {
     return jsonApiDocumentationBuilder()
         .setClass(RBMap.class)
         .setSingleLineSummary(label("An RBMap whose values are PreciseValues."))
-        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")
         .hasNoJsonValidationInstructions()
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()

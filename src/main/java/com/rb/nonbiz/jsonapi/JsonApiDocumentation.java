@@ -28,7 +28,7 @@ public class JsonApiDocumentation {
 
   private final Class<?> clazz;
   private final HumanReadableLabel singleLineSummary;
-  private final String documentationHtml;
+  private final String longDocumentation;
   private final JsonValidationInstructions jsonValidationInstructions;
   private final List<HasJsonApiDocumentation> childNodes;
   private final Optional<JsonElement> trivialSampleJson;
@@ -37,14 +37,14 @@ public class JsonApiDocumentation {
   private JsonApiDocumentation(
       Class<?> clazz,
       HumanReadableLabel singleLineSummary,
-      String documentationHtml,
+      String longDocumentation,
       List<HasJsonApiDocumentation> childNodes,
       JsonValidationInstructions jsonValidationInstructions,
       Optional<JsonElement> trivialSampleJson,
       Optional<JsonElement> nontrivialSampleJson) {
     this.clazz = clazz;
     this.singleLineSummary = singleLineSummary;
-    this.documentationHtml = documentationHtml;
+    this.longDocumentation = longDocumentation;
     this.jsonValidationInstructions = jsonValidationInstructions;
     this.childNodes = childNodes;
     this.trivialSampleJson = trivialSampleJson;
@@ -108,8 +108,8 @@ public class JsonApiDocumentation {
   /**
    * Returns the human-readable documentation for this JSON API object
    */
-  public String getDocumentationHtml() {
-    return documentationHtml;
+  public String getLongDocumentation() {
+    return longDocumentation;
   }
 
   /**
@@ -139,7 +139,7 @@ public class JsonApiDocumentation {
     return Strings.format("[JAD %s %s %s %s %s %s %s JAD]",
         clazz,
         singleLineSummary,
-        documentationHtml,
+        longDocumentation,
         jsonValidationInstructions,
         formatListInExistingOrder(childNodes),
         formatOptional(trivialSampleJson),
@@ -151,7 +151,7 @@ public class JsonApiDocumentation {
 
     private Class<?> clazz;
     private HumanReadableLabel singleLineSummary;
-    private String documentationHtml;
+    private String longDocumentation;
     private JsonValidationInstructions jsonValidationInstructions;
     private List<HasJsonApiDocumentation> childNodes;
     private Optional<JsonElement> trivialSampleJson;
@@ -166,13 +166,13 @@ public class JsonApiDocumentation {
     // FIXME IAK / FIXME SWA JSONDOC: once all JSON API classes get documented, we should remove this.
     public static JsonApiDocumentationBuilder intermediateJsonApiDocumentationBuilder() {
       return new JsonApiDocumentationBuilder()
-          .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+          .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")
           .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied();
     }
 
     // FIXME IAK / FIXME SWA JSONDOC: once all JSON API classes get documented, we should remove this.
-    // Same as above, but doesn't call .setDocumentationHtml()
+    // Same as above, but doesn't call .setLongDocumentation()
     public static JsonApiDocumentationBuilder intermediate2JsonApiDocumentationBuilder() {
       return new JsonApiDocumentationBuilder()
           .noTrivialSampleJsonSupplied()
@@ -186,7 +186,7 @@ public class JsonApiDocumentation {
       return jsonApiDocumentationBuilder()
           .setClass(clazz)
           .setSingleLineSummary(label("FIXME IAK / FIXME SWA JSONDOC"))
-          .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+          .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")
           .hasNoJsonValidationInstructions()
           .hasChildNodes(Arrays.asList(items))
           .noTrivialSampleJsonSupplied()
@@ -216,8 +216,8 @@ public class JsonApiDocumentation {
       return setJsonValidationInstructions(emptyJsonValidationInstructions());
     }
 
-    public JsonApiDocumentationBuilder setDocumentationHtml(String documentationHtml) {
-      this.documentationHtml = checkNotAlreadySet(this.documentationHtml, documentationHtml);
+    public JsonApiDocumentationBuilder setLongDocumentation(String longDocumentation) {
+      this.longDocumentation = checkNotAlreadySet(this.longDocumentation, longDocumentation);
       return this;
     }
 
@@ -265,7 +265,7 @@ public class JsonApiDocumentation {
     public void sanityCheckContents() {
       RBPreconditions.checkNotNull(clazz);
       RBPreconditions.checkNotNull(singleLineSummary);
-      RBPreconditions.checkNotNull(documentationHtml);
+      RBPreconditions.checkNotNull(longDocumentation);
       RBPreconditions.checkNotNull(jsonValidationInstructions);
       RBPreconditions.checkNotNull(childNodes);
       RBPreconditions.checkNotNull(trivialSampleJson);
@@ -280,7 +280,7 @@ public class JsonApiDocumentation {
     @Override
     public JsonApiDocumentation buildWithoutPreconditions() {
       return new JsonApiDocumentation(
-          clazz, singleLineSummary, documentationHtml, childNodes, jsonValidationInstructions,
+          clazz, singleLineSummary, longDocumentation, childNodes, jsonValidationInstructions,
           trivialSampleJson, nontrivialSampleJson);
     }
 

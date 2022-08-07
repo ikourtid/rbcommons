@@ -106,7 +106,7 @@ public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonA
         .setSingleLineSummary(label(asSingleLine(
             "An indexable 2-D array is like a regular 2-D array, except that you can ",
             "also access it based on more meaningful keys - not just integer indices.")))
-        .setDocumentationHtml("FIXME IAK / FIXME SWA JSONDOC")
+        .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
