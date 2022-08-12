@@ -9,7 +9,9 @@ import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBMapWithDefault;
 import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.IidMapJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaGenericJsonApiDescriptor;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.ImpreciseValue;
@@ -21,7 +23,10 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.IidMapJsonApiDescriptor.iidMapJsonApiDescriptor;
 import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaGenericJsonApiDescriptor.javaGenericJsonApiDescriptor;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor.simpleClassJsonApiDescriptor;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptorTest.dataClassJsonApiDescriptorMatcher;
 import static com.rb.nonbiz.testmatchers.Match.matchList;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -45,26 +50,28 @@ public class JavaGenericJsonApiDescriptorTest extends RBTestMatcher<JavaGenericJ
         IidSet.class,
         IidMap.class,
         RBMap.class).forEach(badOuterClass -> {
-          Class<?> dummyClass = String.class;
-          assertIllegalArgumentException( () -> javaGenericJsonApiDescriptor(badOuterClass, dummyClass));
-          assertIllegalArgumentException( () -> javaGenericJsonApiDescriptor(badOuterClass, dummyClass, dummyClass));
+          DataClassJsonApiDescriptor dummy = simpleClassJsonApiDescriptor(String.class);
+          assertIllegalArgumentException( () -> javaGenericJsonApiDescriptor(badOuterClass, dummy));
+          assertIllegalArgumentException( () -> javaGenericJsonApiDescriptor(badOuterClass, dummy, dummy));
         }
     );
   }
 
   @Override
   public JavaGenericJsonApiDescriptor makeTrivialObject() {
-    return javaGenericJsonApiDescriptor(RBMapWithDefault.class, Money.class);
+    return javaGenericJsonApiDescriptor(RBMapWithDefault.class, simpleClassJsonApiDescriptor(Money.class));
   }
 
   @Override
   public JavaGenericJsonApiDescriptor makeNontrivialObject() {
-    return javaGenericJsonApiDescriptor(ClosedRange.class, UnitFraction.class);
+    return javaGenericJsonApiDescriptor(ClosedRange.class,
+        iidMapJsonApiDescriptor(simpleClassJsonApiDescriptor(UnitFraction.class)));
   }
 
   @Override
   public JavaGenericJsonApiDescriptor makeMatchingNontrivialObject() {
-    return javaGenericJsonApiDescriptor(ClosedRange.class, UnitFraction.class);
+    return javaGenericJsonApiDescriptor(ClosedRange.class,
+        iidMapJsonApiDescriptor(simpleClassJsonApiDescriptor(UnitFraction.class)));
   }
 
   @Override
@@ -76,7 +83,7 @@ public class JavaGenericJsonApiDescriptorTest extends RBTestMatcher<JavaGenericJ
       JavaGenericJsonApiDescriptor expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getOuterClass()),
-        matchList(       v -> v.getGenericArgumentClasses(), f -> typeSafeEqualTo(f)));
+        matchList(       v -> v.getGenericArgumentClassDescriptors(), f -> dataClassJsonApiDescriptorMatcher(f)));
   }
 
 }

@@ -5,6 +5,7 @@ import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.CollectionJsonApiDescriptor;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.IidMapJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaGenericJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
@@ -53,12 +54,14 @@ public class CollectionJsonApiDescriptorTest extends RBTestMatcher<CollectionJso
 
   @Override
   public CollectionJsonApiDescriptor makeNontrivialObject() {
-    return collectionJsonApiDescriptor(javaGenericJsonApiDescriptor(ClosedRange.class, Double.class));
+    return collectionJsonApiDescriptor(javaGenericJsonApiDescriptor(
+        ClosedRange.class, simpleClassJsonApiDescriptor(Double.class)));
   }
 
   @Override
   public CollectionJsonApiDescriptor makeMatchingNontrivialObject() {
-    return collectionJsonApiDescriptor(javaGenericJsonApiDescriptor(ClosedRange.class, Double.class));
+    return collectionJsonApiDescriptor(javaGenericJsonApiDescriptor(
+        ClosedRange.class, simpleClassJsonApiDescriptor(Double.class)));
   }
 
   @Override

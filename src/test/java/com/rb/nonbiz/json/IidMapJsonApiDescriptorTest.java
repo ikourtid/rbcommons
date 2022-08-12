@@ -8,6 +8,7 @@ import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.IidMapJsonApiDescriptor;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
@@ -58,12 +59,14 @@ public class IidMapJsonApiDescriptorTest extends RBTestMatcher<IidMapJsonApiDesc
 
   @Override
   public IidMapJsonApiDescriptor makeNontrivialObject() {
-    return iidMapJsonApiDescriptor(javaGenericJsonApiDescriptor(UniqueId.class, ClosedRange.class));
+    return iidMapJsonApiDescriptor(
+        javaGenericJsonApiDescriptor(UniqueId.class, simpleClassJsonApiDescriptor(ClosedRange.class)));
   }
 
   @Override
   public IidMapJsonApiDescriptor makeMatchingNontrivialObject() {
-    return iidMapJsonApiDescriptor(javaGenericJsonApiDescriptor(UniqueId.class, ClosedRange.class));
+    return iidMapJsonApiDescriptor(
+        javaGenericJsonApiDescriptor(UniqueId.class, simpleClassJsonApiDescriptor(ClosedRange.class)));
   }
 
   @Override

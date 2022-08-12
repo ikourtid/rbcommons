@@ -22,13 +22,16 @@ import java.util.List;
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
-import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
 
 /**
- * This is helpful in the JSON API documentation (OpenAPI / Swagger). It gives us type information for a property of a
- * JSON object in the JSON API serialization.
+ * <p> This is helpful in the JSON API documentation (OpenAPI / Swagger). It gives us type information for a property of a
+ * JSON object in the JSON API serialization. </p>
+ *
+ * <p> It is a bit like a generalization of the Java concept of a {@link Class} object, except tailored for
+ * purposes of serialization and generating documentation. For example, it records information about generic classes,
+ * whereas a simple {@link Class} object does not (due to Java type erasure). </p>
  */
 public abstract class DataClassJsonApiDescriptor {
 
@@ -59,8 +62,8 @@ public abstract class DataClassJsonApiDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the simplest case
-   * where it is a single JSON API data class (e.g. not some collection).
+   * <p> Tells us the type of a property of a JsonObject in the JSON API, in the simplest case
+   * where it is a single JSON API data class (e.g. not some collection). </p>
    */
   public static class SimpleClassJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
@@ -108,8 +111,11 @@ public abstract class DataClassJsonApiDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of an IidMap of some Java data class.
+   * <p> Tells us the type of a property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of an IidMap of some Java data class. </p>
+   *
+   * <p> Instead of just using a simple {@link Class} object, this stores a {@link DataClassJsonApiDescriptor},
+   * which is more general, so that we can also represent things such as {@literal IidMap<List<Double>>}.</p>
    */
   public static class IidMapJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
@@ -159,8 +165,12 @@ public abstract class DataClassJsonApiDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of an RBMap of some Java data class.
+   * <p> Tells us the type of a property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of an RBMap of some Java data class. </p>
+   *
+   * <p> Instead of just using simple {@link Class} objects, this stores {@link DataClassJsonApiDescriptor} objects,
+   * which are more general, so that we can also represent things such as
+   * {@literal RBMap<UniqueId<NamedFactor>, List<Double>>} (unrealistic example, but illustrates the point).</p>
    */
   public static class RBMapJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
@@ -225,9 +235,9 @@ public abstract class DataClassJsonApiDescriptor {
    * <p> Tells us the type of a property of a JsonObject in the JSON API, in the case
    * where it is the JSON representation of an collection (Set, List, or array) of some Java data class. </p>
    *
-   * We use a {@link DataClassJsonApiDescriptor} instead of just a raw {@link Class} so that we can represent
-   * things such as {@code List<UniqueId<NamedFactor>>}, i.e. where the value class inside the collection is not
-   * a simple class and is instead a generic, a map, etc.
+   * <p> We use a {@link DataClassJsonApiDescriptor} instead of just a raw {@link Class} so that we can represent
+   * things such as {@literal List<UniqueId<NamedFactor>> }, i.e. where the value class inside the collection is not
+   * a simple class and is instead a generic, a map, etc. </p>
    */
   public static class CollectionJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
@@ -238,6 +248,7 @@ public abstract class DataClassJsonApiDescriptor {
     }
 
     public static CollectionJsonApiDescriptor collectionJsonApiDescriptor(DataClassJsonApiDescriptor arrayValueClass) {
+      /* FIXME IAK YAML
       RBSets.union(
               getInvalidJsonApiDescriptorClasses(),
               singletonRBSet(UniqueId.class))
@@ -246,6 +257,8 @@ public abstract class DataClassJsonApiDescriptor {
                   !arrayValueClass.equals(clazz),
                   "CollectionJsonApiDescriptor uses an invalid class of %s",
                   clazz));
+
+       */
       return new CollectionJsonApiDescriptor(arrayValueClass);
     }
 
@@ -267,30 +280,39 @@ public abstract class DataClassJsonApiDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of a java generic such as {@code Foo<T>}.
+   * <p> Tells us the type of a property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of a java generic such as {@code Foo<T>}. </p>
    *
-   * It should only be used when T is an actual data class that has a JSON serialization. Example:
+   * <p> It should only be used when T is an actual data class that has a JSON serialization. Example:
    * {@code UniqueId<NamedFactor>}. It should not be used for 'marker interface' classes, such as
-   * {@code Portfolio<HeldByUs>}. This makes sense, because HeldByUs is not something that gets serialized.
+   * {@code Portfolio<HeldByUs>}. This makes sense, because HeldByUs is not something that gets serialized. </p>
+   *
+   * <p> For the inner classes, we use the more general {@link DataClassJsonApiDescriptor} instead of a raw
+   * {@link Class}. This allows us to support things like {@code UniqueId<List<Double>>}, i.e. situations
+   * where the generic argument class is not a 'simple' class. (This is an unrealistic example, as we'd never
+   * really need a unique ID of a list, but it should illustrate the point. </p>
    */
   public static class JavaGenericJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
     private final Class<?> outerClass;
-    private final List<Class<?>> genericArgumentClasses;
+    private final List<DataClassJsonApiDescriptor> genericArgumentClassDescriptors;
 
-    private JavaGenericJsonApiDescriptor(Class<?> outerClass, List<Class<?>> genericArgumentClasses) {
+    private JavaGenericJsonApiDescriptor(
+        Class<?> outerClass,
+        List<DataClassJsonApiDescriptor> genericArgumentClassDescriptors) {
       this.outerClass = outerClass;
-      this.genericArgumentClasses = genericArgumentClasses;
+      this.genericArgumentClassDescriptors = genericArgumentClassDescriptors;
     }
 
     private static JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor(
-        Class<?> outerClass, List<Class<?>> genericArgumentClasses) {
-      for (Class<?> innerClass : genericArgumentClasses) {
+        Class<?> outerClass,
+        List<DataClassJsonApiDescriptor> genericArgumentClasses) {
+      // FIXME IAK YAML
+      for (DataClassJsonApiDescriptor innerClassDescriptor : genericArgumentClasses) {
         RBPreconditions.checkArgument(
-            !outerClass.equals(innerClass),
+            !outerClass.equals(innerClassDescriptor),
             "Outer and generic argument class of generic shouldn't be the same: %s vs. %s : %s",
-            outerClass, innerClass, genericArgumentClasses);
+            outerClass, innerClassDescriptor, genericArgumentClasses);
       }
       // Ideally, we want to restrict the usage of this class (JavaGenericJsonApiDescriptor)
       // to cases where the 'outer' class is generic on one or more 'generic argument' classes.
@@ -327,23 +349,23 @@ public abstract class DataClassJsonApiDescriptor {
      * so we want its invocation to look short.
      */
     public static JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor(
-        Class<?> outerClass, Class<?> first, Class<?> ... rest) {
+        Class<?> outerClass, DataClassJsonApiDescriptor first, DataClassJsonApiDescriptor ... rest) {
       return javaGenericJsonApiDescriptor(outerClass, concatenateFirstAndRest(first, rest));
     }
 
     /**
      * A shorthand for the case of {@link UniqueId}.
      */
-    public static JavaGenericJsonApiDescriptor uniqueIdJsonApiDescriptor(Class<?> innerClass) {
-      return javaGenericJsonApiDescriptor(UniqueId.class, innerClass);
+    public static JavaGenericJsonApiDescriptor uniqueIdJsonApiDescriptor(DataClassJsonApiDescriptor innerClassDescriptor) {
+      return javaGenericJsonApiDescriptor(UniqueId.class, innerClassDescriptor);
     }
 
     public Class<?> getOuterClass() {
       return outerClass;
     }
 
-    public List<Class<?>> getGenericArgumentClasses() {
-      return genericArgumentClasses;
+    public List<DataClassJsonApiDescriptor> getGenericArgumentClassDescriptors() {
+      return genericArgumentClassDescriptors;
     }
 
     @Override
@@ -355,7 +377,7 @@ public abstract class DataClassJsonApiDescriptor {
     public String toString() {
       return Strings.format("[JGJAD %s < %s > JGJAD]",
           outerClass,
-          Joiner.on(" , ").join(genericArgumentClasses));
+          Joiner.on(" , ").join(genericArgumentClassDescriptors));
     }
 
   }

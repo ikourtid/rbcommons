@@ -82,15 +82,15 @@ public class RBMapJsonApiDescriptorTest extends RBTestMatcher<RBMapJsonApiDescri
   @Override
   public RBMapJsonApiDescriptor makeNontrivialObject() {
     return rbMapJsonApiDescriptor(
-        javaGenericJsonApiDescriptor(UniqueId.class, String.class),
-        javaGenericJsonApiDescriptor(ClosedRange.class, Double.class));
+        javaGenericJsonApiDescriptor(UniqueId.class, simpleClassJsonApiDescriptor(String.class)),
+        javaGenericJsonApiDescriptor(ClosedRange.class, simpleClassJsonApiDescriptor(Double.class)));
   }
 
   @Override
   public RBMapJsonApiDescriptor makeMatchingNontrivialObject() {
     return rbMapJsonApiDescriptor(
-        javaGenericJsonApiDescriptor(UniqueId.class, String.class),
-        javaGenericJsonApiDescriptor(ClosedRange.class, Double.class));
+        javaGenericJsonApiDescriptor(UniqueId.class, simpleClassJsonApiDescriptor(String.class)),
+        javaGenericJsonApiDescriptor(ClosedRange.class, simpleClassJsonApiDescriptor(Double.class)));
   }
 
   @Override
