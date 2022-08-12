@@ -73,11 +73,14 @@ public class StringFunctionsTest {
 
   @Test
   public void testIsValidJavaIdentifier() {
-    rbSetOf("foo", "foo1", "foo123", "_foo", "foo_", "fooBar", "foo_bar")
+    // Strangely, and I didn't know this, foo$ is a valid identifier in Java.
+    rbSetOf("foo", "foo1", "foo123", "_foo", "foo_", "fooBar", "foo_bar", "foo$")
         .forEach(v -> assertTrue(isValidJavaIdentifier(v)));
 
-    rbSetOf("foo ", " foo", "1foo", "123foo", "foo*", "foo$", "foo-bar")
-        .forEach(v -> assertFalse(isValidJavaIdentifier(v)));
+    rbSetOf("foo ", " foo", "1foo", "123foo", "foo*", "foo-bar")
+        .forEach(v -> assertFalse(
+            v + " must be an invalid identifier",
+            isValidJavaIdentifier(v)));
   }
 
 }
