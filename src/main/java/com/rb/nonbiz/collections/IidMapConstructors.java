@@ -50,6 +50,15 @@ public class IidMapConstructors {
   /**
    * This will also throw if there is more than 1 item with the same InstrumentId.
    */
+  public static <V> IidMap<V> iidMapFromCollection(Collection<V> collection, Function<V, InstrumentId> keyExtractor) {
+    MutableIidMap<V> mutableIidMap = newMutableIidMapWithExpectedSize(collection.size());
+    collection.forEach(v -> mutableIidMap.putAssumingAbsent(keyExtractor.apply(v), v));
+    return newIidMap(mutableIidMap);
+  }
+
+  /**
+   * This will also throw if there is more than 1 item with the same InstrumentId.
+   */
   public static <V extends HasInstrumentId> IidMap<V> iidMapFromStream(Stream<V> stream) {
     MutableIidMap<V> mutableIidMap = newMutableIidMap();
     stream.forEach(v -> mutableIidMap.putAssumingAbsent(v.getInstrumentId(), v));
