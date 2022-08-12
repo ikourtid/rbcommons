@@ -95,6 +95,11 @@ public class RBSets {
     return newRBSet(union);
   }
 
+  @SafeVarargs
+  public static <T> RBSet<T> unionOfRBSets(RBSet<T> first, RBSet<T> second, RBSet<T> ... rest) {
+    return union(concatenateFirstSecondAndRest(first, second, rest).iterator());
+  }
+
   /**
    * If you have N sets where N is big, this should be more efficient than doing N-1 set unions of pairs of sets.
    */
