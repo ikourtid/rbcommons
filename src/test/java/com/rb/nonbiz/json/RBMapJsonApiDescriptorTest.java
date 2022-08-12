@@ -6,9 +6,12 @@ import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaGenericJsonApiDescriptor;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.RBMapJsonApiDescriptor;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.text.UniqueId;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import org.hamcrest.TypeSafeMatcher;
@@ -17,7 +20,11 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaGenericJsonApiDescriptor.javaGenericJsonApiDescriptor;
 import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.RBMapJsonApiDescriptor.rbMapJsonApiDescriptor;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor.simpleClassJsonApiDescriptor;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptorTest.dataClassJsonApiDescriptorMatcher;
+import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -42,7 +49,8 @@ public class RBMapJsonApiDescriptorTest extends RBTestMatcher<RBMapJsonApiDescri
         .forEach(keyClass ->
             // Using Double.class as a simple key that we know would normally work.
             // This way, it's clearer that what makes the test fail is the key class.
-            assertIllegalArgumentException( () -> rbMapJsonApiDescriptor(keyClass, Double.class)));
+            assertIllegalArgumentException( () -> rbMapJsonApiDescriptor(
+                simpleClassJsonApiDescriptor(keyClass), simpleClassJsonApiDescriptor(Double.class))));
   }
 
   @Test
@@ -62,22 +70,27 @@ public class RBMapJsonApiDescriptorTest extends RBTestMatcher<RBMapJsonApiDescri
         .forEach(valueClass ->
             // Using String.class as a simple key that we know would normally work.
             // This way, it's clearer that what makes the test fail is the value class.
-            assertIllegalArgumentException( () -> rbMapJsonApiDescriptor(String.class, valueClass)));
+            assertIllegalArgumentException( () -> rbMapJsonApiDescriptor(
+                simpleClassJsonApiDescriptor(String.class), simpleClassJsonApiDescriptor(valueClass))));
   }
 
   @Override
   public RBMapJsonApiDescriptor makeTrivialObject() {
-    return rbMapJsonApiDescriptor(String.class, Double.class);
+    return rbMapJsonApiDescriptor(simpleClassJsonApiDescriptor(String.class), simpleClassJsonApiDescriptor(Double.class));
   }
 
   @Override
   public RBMapJsonApiDescriptor makeNontrivialObject() {
-    return rbMapJsonApiDescriptor(String.class, ClosedRange.class);
+    return rbMapJsonApiDescriptor(
+        javaGenericJsonApiDescriptor(UniqueId.class, simpleClassJsonApiDescriptor(String.class)),
+        javaGenericJsonApiDescriptor(ClosedRange.class, simpleClassJsonApiDescriptor(Double.class)));
   }
 
   @Override
   public RBMapJsonApiDescriptor makeMatchingNontrivialObject() {
-    return rbMapJsonApiDescriptor(String.class, ClosedRange.class);
+    return rbMapJsonApiDescriptor(
+        javaGenericJsonApiDescriptor(UniqueId.class, simpleClassJsonApiDescriptor(String.class)),
+        javaGenericJsonApiDescriptor(ClosedRange.class, simpleClassJsonApiDescriptor(Double.class)));
   }
 
   @Override
@@ -87,8 +100,8 @@ public class RBMapJsonApiDescriptorTest extends RBTestMatcher<RBMapJsonApiDescri
 
   public static TypeSafeMatcher<RBMapJsonApiDescriptor> rbMapJsonApiDescriptorMatcher(RBMapJsonApiDescriptor expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getKeyClass()),
-        matchUsingEquals(v -> v.getValueClass()));
+        match(v -> v.getKeyClassDescriptor(),   f -> dataClassJsonApiDescriptorMatcher(f)),
+        match(v -> v.getValueClassDescriptor(), f -> dataClassJsonApiDescriptorMatcher(f)));
   }
 
 }
