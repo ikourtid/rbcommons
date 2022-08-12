@@ -53,11 +53,6 @@ public class RBSet<T> implements Iterable<T> {
     return newRBSet(mutableSet);
   }
 
-  public static <T> RBSet<T> newRBSet(Set<T> items) {
-    // Performance optimization for cases where the underlying collection is already a Set.
-    return new RBSet<>(items);
-  }
-
   public static <T> RBSet<T> newRBSet(Collection<T> items) {
     if (items.isEmpty()) {
       return EMPTY_INSTANCE; // small performance optimization
