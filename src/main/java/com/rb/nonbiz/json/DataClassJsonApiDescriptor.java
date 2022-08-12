@@ -18,10 +18,12 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Optional;
 
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
 
@@ -48,6 +50,15 @@ public abstract class DataClassJsonApiDescriptor {
   }
 
   public abstract <T> T visit(Visitor<T> visitor);
+
+  private static Optional<Class<?>> getClassIfSimpleClassJsonApiDescriptor(
+      DataClassJsonApiDescriptor dataClassJsonApiDescriptor) {
+    // A bit ugly, but handy for certain preconditions.
+    // We could use a visitor here, but since we expressly only care about one case, instanceof & a cast is fine.
+    return dataClassJsonApiDescriptor instanceof SimpleClassJsonApiDescriptor
+        ? Optional.of( ((SimpleClassJsonApiDescriptor) dataClassJsonApiDescriptor).getClassBeingDescribed())
+        : Optional.empty();
+  }
 
   protected static RBSet<Class<?>> getInvalidJsonApiDescriptorClasses() {
     return rbSetOf(
@@ -125,26 +136,25 @@ public abstract class DataClassJsonApiDescriptor {
       this.valueClassDescriptor = valueClassDescriptor;
     }
 
-    public static IidMapJsonApiDescriptor iidMapJsonApiDescriptor(DataClassJsonApiDescriptor valueClass) {
-      /* FIXME IAK YAML
-      RBSets.union(
-              getInvalidJsonApiDescriptorClasses(),
-              rbSetOf(
-                  // These 2 have their own JsonApiDescriptor classes, which we should be using.
-                  UniqueId.class,
-                  RBSet.class,
+    public static IidMapJsonApiDescriptor iidMapJsonApiDescriptor(
+        DataClassJsonApiDescriptor valueClassDescriptor) {
+      getClassIfSimpleClassJsonApiDescriptor(valueClassDescriptor).ifPresent(valueClass ->
+          RBSets.union(
+                  getInvalidJsonApiDescriptorClasses(),
+                  rbSetOf(
+                      // These 2 have their own JsonApiDescriptor classes, which we should be using.
+                      UniqueId.class,
+                      RBSet.class,
 
-                  // It's unlikely that we'll be mapping to another map, although not impossible.
-                  IidMap.class,
-                  RBMap.class))
-          .forEach(clazz ->
-              RBPreconditions.checkArgument(
-                  !valueClass.equals(clazz),
-                  "IidMapJsonApiDescriptor uses an invalid class of %s",
-                  clazz));
-
-       */
-      return new IidMapJsonApiDescriptor(valueClass);
+                      // It's unlikely that we'll be mapping to another map, although not impossible.
+                      IidMap.class,
+                      RBMap.class))
+              .forEach(invalidClass ->
+                  RBPreconditions.checkArgument(
+                      !valueClass.equals(invalidClass),
+                      "IidMapJsonApiDescriptor uses an invalid class of %s",
+                      invalidClass)));
+      return new IidMapJsonApiDescriptor(valueClassDescriptor);
     }
 
     public DataClassJsonApiDescriptor getValueClassDescriptor() {
@@ -185,29 +195,30 @@ public abstract class DataClassJsonApiDescriptor {
     }
 
     public static RBMapJsonApiDescriptor rbMapJsonApiDescriptor(
-        DataClassJsonApiDescriptor keyClass,
-        DataClassJsonApiDescriptor valueClass) {
-      /* FIXME IAK YAML
-      RBSets.union(
-              getInvalidJsonApiDescriptorClasses(),
-              rbSetOf(
-                  // These 3 have their own JsonApiDescriptor classes, which we should be using.
-                  IidMap.class,
-                  RBMap.class,
-                  RBSet.class))
-          .forEach(clazz -> {
-            RBPreconditions.checkArgument(
-                !keyClass.equals(clazz),
-                "RBMapJsonApiDescriptor for %s -> %s : invalid key class",
-                keyClass, valueClass);
-            RBPreconditions.checkArgument(
-                !valueClass.equals(clazz),
-                "RBMapJsonApiDescriptor for %s -> %s : invalid value class",
-                keyClass, valueClass);
-          });
-
-       */
-      return new RBMapJsonApiDescriptor(keyClass, valueClass);
+        DataClassJsonApiDescriptor keyClassDescriptor,
+        DataClassJsonApiDescriptor valueClassDescriptor) {
+      RBSet<Class<?>> invalidClasses = RBSets.union(
+          getInvalidJsonApiDescriptorClasses(),
+          rbSetOf(
+              // These 3 have their own JsonApiDescriptor classes, which we should be using.
+              IidMap.class,
+              RBMap.class,
+              RBSet.class));
+      getClassIfSimpleClassJsonApiDescriptor(keyClassDescriptor)
+          .ifPresent(keyClass ->
+              invalidClasses.forEach(invalidClass ->
+                  RBPreconditions.checkArgument(
+                      !keyClass.equals(invalidClass),
+                      "RBMapJsonApiDescriptor for %s -> %s : invalid key class",
+                      keyClassDescriptor, valueClassDescriptor)));
+      getClassIfSimpleClassJsonApiDescriptor(valueClassDescriptor)
+          .ifPresent(valueClass ->
+              invalidClasses.forEach(invalidClass ->
+                  RBPreconditions.checkArgument(
+                      !valueClass.equals(invalidClass),
+                      "RBMapJsonApiDescriptor for %s -> %s : invalid value class",
+                      keyClassDescriptor, valueClassDescriptor)));
+      return new RBMapJsonApiDescriptor(keyClassDescriptor, valueClassDescriptor);
     }
 
     public DataClassJsonApiDescriptor getKeyClassDescriptor() {
@@ -247,19 +258,19 @@ public abstract class DataClassJsonApiDescriptor {
       this.collectionValueClassDescriptor = collectionValueClassDescriptor;
     }
 
-    public static CollectionJsonApiDescriptor collectionJsonApiDescriptor(DataClassJsonApiDescriptor arrayValueClass) {
-      /* FIXME IAK YAML
-      RBSets.union(
-              getInvalidJsonApiDescriptorClasses(),
-              singletonRBSet(UniqueId.class))
-          .forEach(clazz ->
-              RBPreconditions.checkArgument(
-                  !arrayValueClass.equals(clazz),
-                  "CollectionJsonApiDescriptor uses an invalid class of %s",
-                  clazz));
-
-       */
-      return new CollectionJsonApiDescriptor(arrayValueClass);
+    public static CollectionJsonApiDescriptor collectionJsonApiDescriptor(
+        DataClassJsonApiDescriptor arrayValueClassDescriptor) {
+      RBSet<Class<?>> invalidClasses = RBSets.union(
+          getInvalidJsonApiDescriptorClasses(),
+          singletonRBSet(UniqueId.class));
+      getClassIfSimpleClassJsonApiDescriptor(arrayValueClassDescriptor)
+          .ifPresent(arrayValueClass ->
+              invalidClasses.forEach(invalidClass ->
+                  RBPreconditions.checkArgument(
+                      !arrayValueClass.equals(invalidClass),
+                      "CollectionJsonApiDescriptor uses an invalid class of %s",
+                      invalidClass)));
+      return new CollectionJsonApiDescriptor(arrayValueClassDescriptor);
     }
 
     public DataClassJsonApiDescriptor getCollectionValueClassDescriptor() {
@@ -306,13 +317,14 @@ public abstract class DataClassJsonApiDescriptor {
 
     private static JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor(
         Class<?> outerClass,
-        List<DataClassJsonApiDescriptor> genericArgumentClasses) {
-      // FIXME IAK YAML
-      for (DataClassJsonApiDescriptor innerClassDescriptor : genericArgumentClasses) {
-        RBPreconditions.checkArgument(
-            !outerClass.equals(innerClassDescriptor),
-            "Outer and generic argument class of generic shouldn't be the same: %s vs. %s : %s",
-            outerClass, innerClassDescriptor, genericArgumentClasses);
+        List<DataClassJsonApiDescriptor> genericArgumentClassDescriptors) {
+      for (DataClassJsonApiDescriptor innerClassDescriptor : genericArgumentClassDescriptors) {
+        getClassIfSimpleClassJsonApiDescriptor(innerClassDescriptor)
+            .ifPresent(innerClass ->
+                RBPreconditions.checkArgument(
+                    !outerClass.equals(innerClass),
+                    "Outer and generic argument class of generic shouldn't be the same: %s vs. %s : %s",
+                    outerClass, innerClassDescriptor, genericArgumentClassDescriptors));
       }
       // Ideally, we want to restrict the usage of this class (JavaGenericJsonApiDescriptor)
       // to cases where the 'outer' class is generic on one or more 'generic argument' classes.
@@ -334,10 +346,10 @@ public abstract class DataClassJsonApiDescriptor {
       // JavaGenericJsonApiDescriptor is through some other static constructors that can't allow this to happen,
       // but let's keep it anyway.
       RBPreconditions.checkArgument(
-          !genericArgumentClasses.isEmpty(),
+          !genericArgumentClassDescriptors.isEmpty(),
           "JavaGenericJsonApiDescriptor describes a generic class '%s' without generic arguments",
           outerClass);
-      return new JavaGenericJsonApiDescriptor(outerClass, genericArgumentClasses);
+      return new JavaGenericJsonApiDescriptor(outerClass, genericArgumentClassDescriptors);
     }
 
     /**
