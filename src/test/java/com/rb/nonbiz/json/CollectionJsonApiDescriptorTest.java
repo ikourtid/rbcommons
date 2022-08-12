@@ -5,6 +5,8 @@ import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.json.DataClassJsonApiDescriptor.CollectionJsonApiDescriptor;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaGenericJsonApiDescriptor;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
@@ -17,6 +19,11 @@ import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.CollectionJsonApiDescriptor.collectionJsonApiDescriptor;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaGenericJsonApiDescriptor.javaGenericJsonApiDescriptor;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaGenericJsonApiDescriptor.uniqueIdJsonApiDescriptor;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor.simpleClassJsonApiDescriptor;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptorTest.dataClassJsonApiDescriptorMatcher;
+import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -36,22 +43,22 @@ public class CollectionJsonApiDescriptorTest extends RBTestMatcher<CollectionJso
 
         UniqueId.class)
         .forEach(clazz ->
-            assertIllegalArgumentException( () -> collectionJsonApiDescriptor(clazz)));
+            assertIllegalArgumentException( () -> collectionJsonApiDescriptor(simpleClassJsonApiDescriptor(clazz))));
   }
 
   @Override
   public CollectionJsonApiDescriptor makeTrivialObject() {
-    return collectionJsonApiDescriptor(Money.class);
+    return collectionJsonApiDescriptor(simpleClassJsonApiDescriptor(Money.class));
   }
 
   @Override
   public CollectionJsonApiDescriptor makeNontrivialObject() {
-    return collectionJsonApiDescriptor(ClosedRange.class);
+    return collectionJsonApiDescriptor(javaGenericJsonApiDescriptor(ClosedRange.class, Double.class));
   }
 
   @Override
   public CollectionJsonApiDescriptor makeMatchingNontrivialObject() {
-    return collectionJsonApiDescriptor(ClosedRange.class);
+    return collectionJsonApiDescriptor(javaGenericJsonApiDescriptor(ClosedRange.class, Double.class));
   }
 
   @Override
@@ -62,7 +69,7 @@ public class CollectionJsonApiDescriptorTest extends RBTestMatcher<CollectionJso
   public static TypeSafeMatcher<CollectionJsonApiDescriptor> collectionJsonApiDescriptorMatcher(
       CollectionJsonApiDescriptor expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getCollectionValueClass()));
+        match(v -> v.getCollectionValueClassDescriptor(), f -> dataClassJsonApiDescriptorMatcher(f)));
   }
 
 }

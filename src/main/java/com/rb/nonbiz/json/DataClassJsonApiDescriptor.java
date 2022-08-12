@@ -222,18 +222,22 @@ public abstract class DataClassJsonApiDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of an collection (Set, List, or array) of some Java data class.
+   * <p> Tells us the type of a property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of an collection (Set, List, or array) of some Java data class. </p>
+   *
+   * We use a {@link DataClassJsonApiDescriptor} instead of just a raw {@link Class} so that we can represent
+   * things such as {@code List<UniqueId<NamedFactor>>}, i.e. where the value class inside the collection is not
+   * a simple class and is instead a generic, a map, etc.
    */
   public static class CollectionJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
-    private final Class<?> collectionValueClass;
+    private final DataClassJsonApiDescriptor collectionValueClassDescriptor;
 
-    private CollectionJsonApiDescriptor(Class<?> collectionValueClass) {
-      this.collectionValueClass = collectionValueClass;
+    private CollectionJsonApiDescriptor(DataClassJsonApiDescriptor collectionValueClassDescriptor) {
+      this.collectionValueClassDescriptor = collectionValueClassDescriptor;
     }
 
-    public static CollectionJsonApiDescriptor collectionJsonApiDescriptor(Class<?> arrayValueClass) {
+    public static CollectionJsonApiDescriptor collectionJsonApiDescriptor(DataClassJsonApiDescriptor arrayValueClass) {
       RBSets.union(
               getInvalidJsonApiDescriptorClasses(),
               singletonRBSet(UniqueId.class))
@@ -245,8 +249,8 @@ public abstract class DataClassJsonApiDescriptor {
       return new CollectionJsonApiDescriptor(arrayValueClass);
     }
 
-    public Class<?> getCollectionValueClass() {
-      return collectionValueClass;
+    public DataClassJsonApiDescriptor getCollectionValueClassDescriptor() {
+      return collectionValueClassDescriptor;
     }
 
     @Override
@@ -256,7 +260,7 @@ public abstract class DataClassJsonApiDescriptor {
 
     @Override
     public String toString() {
-      return Strings.format("[CJAD %s CJAD]", collectionValueClass);
+      return Strings.format("[CJAD %s CJAD]", collectionValueClassDescriptor);
     }
 
   }
