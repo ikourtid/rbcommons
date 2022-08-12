@@ -45,7 +45,7 @@ public abstract class DataClassJsonApiDescriptor {
     T visitCollectionJsonApiDescriptor(CollectionJsonApiDescriptor collectionJsonApiDescriptor);
     T visitJavaGenericJsonApiDescriptor(JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor);
     T visitPseudoEnumJsonApiDescriptor(PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor);
-    T visitJavaEnumJsonApiDescriptor(JavaEnumJsonApiDescriptor javaEnumJsonApiDescriptor);
+    T visitJavaEnumJsonApiDescriptor(JavaEnumJsonApiDescriptor<? extends Enum<?>> javaEnumJsonApiDescriptor);
 
   }
 
@@ -472,7 +472,7 @@ public abstract class DataClassJsonApiDescriptor {
    *
    * For those JSON properties, we should be using this.
    */
-  public static class JavaEnumJsonApiDescriptor extends DataClassJsonApiDescriptor {
+  public static class JavaEnumJsonApiDescriptor<E extends Enum<E>> extends DataClassJsonApiDescriptor {
 
     /**
      * Not all enum values are guaranteed to be serializable. Ideally the API would support everything, but there are
@@ -520,15 +520,19 @@ public abstract class DataClassJsonApiDescriptor {
     }
 
 
-    private final EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> validValuesToExplanations;
+    private final Class<E> enumClass;
+    private final EnumMap<E, JavaEnumSerializationAndExplanation> validValuesToExplanations;
 
     private JavaEnumJsonApiDescriptor(
-        EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
+        Class<E> enumClass,
+        EnumMap<E, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
+      this.enumClass = enumClass;
       this.validValuesToExplanations = validValuesToExplanations;
     }
 
-    public static JavaEnumJsonApiDescriptor javaEnumJsonApiDescriptor(
-        EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
+    public static <E extends Enum<E>> JavaEnumJsonApiDescriptor<E> javaEnumJsonApiDescriptor(
+        Class<E> enumClass,
+        EnumMap<E, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
       // The 1 in the following precondition (vs. e.g. 2+)
       // is for the rare cases where we only allow one value of the enum in the JSON API.
       // You might wonder - why bother serializing such an enum in the first place? Well, this would allow us to
@@ -549,7 +553,11 @@ public abstract class DataClassJsonApiDescriptor {
                 "No explanation may be all whitespace (which includes the empty string): %s",
                 validValuesToExplanations);
           });
-      return new JavaEnumJsonApiDescriptor(validValuesToExplanations);
+      return new JavaEnumJsonApiDescriptor<>(enumClass, validValuesToExplanations);
+    }
+
+    public Class<E> getEnumClass() {
+      return enumClass;
     }
 
     public EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> getValidValuesToExplanations() {
@@ -564,7 +572,7 @@ public abstract class DataClassJsonApiDescriptor {
     @Override
     public String toString() {
       // Can't use formatMap because this is an EnumMap, not a RBMap.
-      return Strings.format("[JEJAD %s JEJAD]", validValuesToExplanations);
+      return Strings.format("[JEJAD %s %s JEJAD]", enumClass, validValuesToExplanations);
     }
 
   }
