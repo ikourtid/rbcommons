@@ -71,7 +71,7 @@ public class IidMapJsonApiDescriptorTest extends RBTestMatcher<IidMapJsonApiDesc
   public static TypeSafeMatcher<IidMapJsonApiDescriptor> iidMapJsonApiDescriptorMatcher(
       IidMapJsonApiDescriptor expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getIidMapValueClass()));
+        matchUsingEquals(v -> v.getValueClass()));
   }
 
 }

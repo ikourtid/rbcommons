@@ -113,13 +113,13 @@ public abstract class DataClassJsonApiDescriptor {
    */
   public static class IidMapJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
-    private final Class<?> iidMapValueClass;
+    private final Class<?> valueClass;
 
-    private IidMapJsonApiDescriptor(Class<?> iidMapValueClass) {
-      this.iidMapValueClass = iidMapValueClass;
+    private IidMapJsonApiDescriptor(Class<?> valueClass) {
+      this.valueClass = valueClass;
     }
 
-    public static IidMapJsonApiDescriptor iidMapJsonApiDescriptor(Class<?> iidMapValueClass) {
+    public static IidMapJsonApiDescriptor iidMapJsonApiDescriptor(Class<?> valueClass) {
       RBSets.union(
               getInvalidJsonApiDescriptorClasses(),
               rbSetOf(
@@ -132,14 +132,14 @@ public abstract class DataClassJsonApiDescriptor {
                   RBMap.class))
           .forEach(clazz ->
               RBPreconditions.checkArgument(
-                  !iidMapValueClass.equals(clazz),
+                  !valueClass.equals(clazz),
                   "IidMapJsonApiDescriptor uses an invalid class of %s",
                   clazz));
-      return new IidMapJsonApiDescriptor(iidMapValueClass);
+      return new IidMapJsonApiDescriptor(valueClass);
     }
 
-    public Class<?> getIidMapValueClass() {
-      return iidMapValueClass;
+    public Class<?> getValueClass() {
+      return valueClass;
     }
 
     @Override
@@ -149,7 +149,7 @@ public abstract class DataClassJsonApiDescriptor {
 
     @Override
     public String toString() {
-      return Strings.format("[IMJAD %s IMJAD]", iidMapValueClass);
+      return Strings.format("[IMJAD %s IMJAD]", valueClass);
     }
 
   }
@@ -161,15 +161,15 @@ public abstract class DataClassJsonApiDescriptor {
    */
   public static class RBMapJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
-    private final Class<?> rbMapKeyClass;
-    private final Class<?> rbMapValueClass;
+    private final Class<?> keyClass;
+    private final Class<?> valueClass;
 
-    private RBMapJsonApiDescriptor(Class<?> rbMapKeyClass, Class<?> rbMapValueClass) {
-      this.rbMapKeyClass = rbMapKeyClass;
-      this.rbMapValueClass = rbMapValueClass;
+    private RBMapJsonApiDescriptor(Class<?> keyClass, Class<?> valueClass) {
+      this.keyClass = keyClass;
+      this.valueClass = valueClass;
     }
 
-    public static RBMapJsonApiDescriptor rbMapJsonApiDescriptor(Class<?> rbMapKeyClass, Class<?> rbMapValueClass) {
+    public static RBMapJsonApiDescriptor rbMapJsonApiDescriptor(Class<?> keyClass, Class<?> valueClass) {
       RBSets.union(
               getInvalidJsonApiDescriptorClasses(),
               rbSetOf(
@@ -179,23 +179,23 @@ public abstract class DataClassJsonApiDescriptor {
                   RBSet.class))
           .forEach(clazz -> {
             RBPreconditions.checkArgument(
-                !rbMapKeyClass.equals(clazz),
+                !keyClass.equals(clazz),
                 "RBMapJsonApiDescriptor for %s -> %s : invalid key class",
-                rbMapKeyClass, rbMapValueClass);
+                keyClass, valueClass);
             RBPreconditions.checkArgument(
-                !rbMapValueClass.equals(clazz),
+                !valueClass.equals(clazz),
                 "RBMapJsonApiDescriptor for %s -> %s : invalid value class",
-                rbMapKeyClass, rbMapValueClass);
+                keyClass, valueClass);
           });
-      return new RBMapJsonApiDescriptor(rbMapKeyClass, rbMapValueClass);
+      return new RBMapJsonApiDescriptor(keyClass, valueClass);
     }
 
-    public Class<?> getRbMapKeyClass() {
-      return rbMapKeyClass;
+    public Class<?> getKeyClass() {
+      return keyClass;
     }
 
-    public Class<?> getRBMapValueClass() {
-      return rbMapValueClass;
+    public Class<?> getValueClass() {
+      return valueClass;
     }
 
     @Override
@@ -205,7 +205,7 @@ public abstract class DataClassJsonApiDescriptor {
 
     @Override
     public String toString() {
-      return Strings.format("[RMJAD %s -> %s RMJAD]", rbMapKeyClass, rbMapValueClass);
+      return Strings.format("[RMJAD %s -> %s RMJAD]", keyClass, valueClass);
     }
 
   }

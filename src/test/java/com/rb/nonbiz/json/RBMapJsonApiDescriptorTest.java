@@ -87,8 +87,8 @@ public class RBMapJsonApiDescriptorTest extends RBTestMatcher<RBMapJsonApiDescri
 
   public static TypeSafeMatcher<RBMapJsonApiDescriptor> rbMapJsonApiDescriptorMatcher(RBMapJsonApiDescriptor expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getRbMapKeyClass()),
-        matchUsingEquals(v -> v.getRBMapValueClass()));
+        matchUsingEquals(v -> v.getKeyClass()),
+        matchUsingEquals(v -> v.getValueClass()));
   }
 
 }
