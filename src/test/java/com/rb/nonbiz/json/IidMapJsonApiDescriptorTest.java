@@ -20,7 +20,10 @@ import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.IidMapJsonApiDescriptor.iidMapJsonApiDescriptor;
-import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaGenericJsonApiDescriptor.javaGenericJsonApiDescriptor;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor.simpleClassJsonApiDescriptor;
+import static com.rb.nonbiz.json.DataClassJsonApiDescriptorTest.dataClassJsonApiDescriptorMatcher;
+import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 
@@ -45,22 +48,22 @@ public class IidMapJsonApiDescriptorTest extends RBTestMatcher<IidMapJsonApiDesc
         IidMap.class,
         RBMap.class)
         .forEach(clazz ->
-            assertIllegalArgumentException( () -> iidMapJsonApiDescriptor(clazz)));
+            assertIllegalArgumentException( () -> iidMapJsonApiDescriptor(simpleClassJsonApiDescriptor(clazz))));
   }
 
   @Override
   public IidMapJsonApiDescriptor makeTrivialObject() {
-    return iidMapJsonApiDescriptor(Money.class);
+    return iidMapJsonApiDescriptor(simpleClassJsonApiDescriptor(Money.class));
   }
 
   @Override
   public IidMapJsonApiDescriptor makeNontrivialObject() {
-    return iidMapJsonApiDescriptor(ClosedRange.class);
+    return iidMapJsonApiDescriptor(javaGenericJsonApiDescriptor(UniqueId.class, ClosedRange.class));
   }
 
   @Override
   public IidMapJsonApiDescriptor makeMatchingNontrivialObject() {
-    return iidMapJsonApiDescriptor(ClosedRange.class);
+    return iidMapJsonApiDescriptor(javaGenericJsonApiDescriptor(UniqueId.class, ClosedRange.class));
   }
 
   @Override
@@ -71,7 +74,7 @@ public class IidMapJsonApiDescriptorTest extends RBTestMatcher<IidMapJsonApiDesc
   public static TypeSafeMatcher<IidMapJsonApiDescriptor> iidMapJsonApiDescriptorMatcher(
       IidMapJsonApiDescriptor expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getValueClass()));
+        match(v -> v.getValueClassDescriptor(), f -> dataClassJsonApiDescriptorMatcher(f)));
   }
 
 }

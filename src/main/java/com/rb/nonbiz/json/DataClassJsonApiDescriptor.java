@@ -113,13 +113,14 @@ public abstract class DataClassJsonApiDescriptor {
    */
   public static class IidMapJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
-    private final Class<?> valueClass;
+    private final DataClassJsonApiDescriptor valueClassDescriptor;
 
-    private IidMapJsonApiDescriptor(Class<?> valueClass) {
-      this.valueClass = valueClass;
+    private IidMapJsonApiDescriptor(DataClassJsonApiDescriptor valueClassDescriptor) {
+      this.valueClassDescriptor = valueClassDescriptor;
     }
 
-    public static IidMapJsonApiDescriptor iidMapJsonApiDescriptor(Class<?> valueClass) {
+    public static IidMapJsonApiDescriptor iidMapJsonApiDescriptor(DataClassJsonApiDescriptor valueClass) {
+      /* FIXME IAK YAML
       RBSets.union(
               getInvalidJsonApiDescriptorClasses(),
               rbSetOf(
@@ -135,11 +136,13 @@ public abstract class DataClassJsonApiDescriptor {
                   !valueClass.equals(clazz),
                   "IidMapJsonApiDescriptor uses an invalid class of %s",
                   clazz));
+
+       */
       return new IidMapJsonApiDescriptor(valueClass);
     }
 
-    public Class<?> getValueClass() {
-      return valueClass;
+    public DataClassJsonApiDescriptor getValueClassDescriptor() {
+      return valueClassDescriptor;
     }
 
     @Override
@@ -149,7 +152,7 @@ public abstract class DataClassJsonApiDescriptor {
 
     @Override
     public String toString() {
-      return Strings.format("[IMJAD %s IMJAD]", valueClass);
+      return Strings.format("[IMJAD %s IMJAD]", valueClassDescriptor);
     }
 
   }
@@ -161,15 +164,20 @@ public abstract class DataClassJsonApiDescriptor {
    */
   public static class RBMapJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
-    private final Class<?> keyClass;
-    private final Class<?> valueClass;
+    private final DataClassJsonApiDescriptor keyClassDescriptor;
+    private final DataClassJsonApiDescriptor valueClassDescriptor;
 
-    private RBMapJsonApiDescriptor(Class<?> keyClass, Class<?> valueClass) {
-      this.keyClass = keyClass;
-      this.valueClass = valueClass;
+    private RBMapJsonApiDescriptor(
+        DataClassJsonApiDescriptor keyClassDescriptor,
+        DataClassJsonApiDescriptor valueClassDescriptor) {
+      this.keyClassDescriptor = keyClassDescriptor;
+      this.valueClassDescriptor = valueClassDescriptor;
     }
 
-    public static RBMapJsonApiDescriptor rbMapJsonApiDescriptor(Class<?> keyClass, Class<?> valueClass) {
+    public static RBMapJsonApiDescriptor rbMapJsonApiDescriptor(
+        DataClassJsonApiDescriptor keyClass,
+        DataClassJsonApiDescriptor valueClass) {
+      /* FIXME IAK YAML
       RBSets.union(
               getInvalidJsonApiDescriptorClasses(),
               rbSetOf(
@@ -187,15 +195,17 @@ public abstract class DataClassJsonApiDescriptor {
                 "RBMapJsonApiDescriptor for %s -> %s : invalid value class",
                 keyClass, valueClass);
           });
+
+       */
       return new RBMapJsonApiDescriptor(keyClass, valueClass);
     }
 
-    public Class<?> getKeyClass() {
-      return keyClass;
+    public DataClassJsonApiDescriptor getKeyClassDescriptor() {
+      return keyClassDescriptor;
     }
 
-    public Class<?> getValueClass() {
-      return valueClass;
+    public DataClassJsonApiDescriptor getValueClassDescriptor() {
+      return valueClassDescriptor;
     }
 
     @Override
@@ -205,7 +215,7 @@ public abstract class DataClassJsonApiDescriptor {
 
     @Override
     public String toString() {
-      return Strings.format("[RMJAD %s -> %s RMJAD]", keyClass, valueClass);
+      return Strings.format("[RMJAD %s -> %s RMJAD]", keyClassDescriptor, valueClassDescriptor);
     }
 
   }
