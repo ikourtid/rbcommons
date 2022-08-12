@@ -53,7 +53,7 @@ public abstract class DataClassJsonApiDescriptor {
 
   private static Optional<Class<?>> getClassIfSimpleClassJsonApiDescriptor(
       DataClassJsonApiDescriptor dataClassJsonApiDescriptor) {
-    // A bit ugly, but handy for certain preconditions.
+    // A bit ugly, but handy for certain preconditions in this file. It's private anyway.
     // We could use a visitor here, but since we expressly only care about one case, instanceof & a cast is fine.
     return dataClassJsonApiDescriptor instanceof SimpleClassJsonApiDescriptor
         ? Optional.of( ((SimpleClassJsonApiDescriptor) dataClassJsonApiDescriptor).getClassBeingDescribed())
@@ -180,7 +180,7 @@ public abstract class DataClassJsonApiDescriptor {
    *
    * <p> Instead of just using simple {@link Class} objects, this stores {@link DataClassJsonApiDescriptor} objects,
    * which are more general, so that we can also represent things such as
-   * {@literal RBMap<UniqueId<NamedFactor>, List<Double>>} (unrealistic example, but illustrates the point).</p>
+   * {@literal RBMap<UniqueId<NamedFactor>, List<Double>>}.</p>
    */
   public static class RBMapJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
