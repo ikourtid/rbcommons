@@ -198,37 +198,6 @@ public class JsonApiDocumentation {
           .build();
     }
 
-
-    // FIXME IAK YAML move to separate class
-    // FIXME IAK YAML test this
-    public static <E extends Enum<E>> JsonApiDocumentation jsonApiDocumentationForEnum(
-        HumanReadableLabel singleLineSummary,
-        String longDocumentationPrefix,
-        JavaEnumJsonApiDescriptor<E> javaEnumJsonApiDescriptor) {
-      StringBuilder sb = new StringBuilder(longDocumentationPrefix);
-      sb.append("\n<p> The following values are valid:\n<ul>");
-      javaEnumJsonApiDescriptor.getValidValuesToExplanations()
-          .values()
-          .forEach(javaEnumSerializationAndExplanation ->
-              sb.append(Strings.format("<li> <strong>%s</strong> %s </li>\n",
-                  javaEnumSerializationAndExplanation.getJsonSerialization(),
-                  javaEnumSerializationAndExplanation.getExplanation())));
-      sb.append("\n</ul></p>\n");
-      return jsonApiDocumentationBuilder()
-          .setClass(javaEnumJsonApiDescriptor.getEnumClass())
-          .setSingleLineSummary(singleLineSummary)
-          .setLongDocumentation(sb.toString())
-          // JsonValidationInstructions is for cases where there are properties, but n/a for a primitive such as Enum.
-          .hasNoJsonValidationInstructions()
-          // primitives such as Enum do not mention other entities under them that get serialized.
-          .hasNoChildNodes()
-          .noTrivialSampleJsonSupplied()
-          .noNontrivialSampleJsonSupplied()
-          .build();
-    }
-
-
-
     public JsonApiDocumentationBuilder setClass(Class<?> clazz) {
       this.clazz = checkNotAlreadySet(this.clazz, clazz);
       return this;

@@ -1,6 +1,7 @@
 package com.rb.nonbiz.testutils;
 
 import com.google.common.io.CharStreams;
+import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.jsonapi.HasJsonApiDocumentation;
 import com.rb.nonbiz.jsonapi.JsonApiDocumentation;
 import org.jmock.Mockery;
@@ -10,6 +11,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Optional;
 
 import static com.rb.nonbiz.testutils.RBMockeries.imposterizingMockery;
 
@@ -146,8 +148,10 @@ public abstract class RBTest<T> extends RBCommonsTestConstants<T> {
     if (!HasJsonApiDocumentation.class.isAssignableFrom(testObject.getClass())) {
       return;
     }
-    // Asserting that this does not throw.
+    // Just asserting that these methods do not throw; there's not much more we can do.
     JsonApiDocumentation jsonApiDocumentation = ((HasJsonApiDocumentation) testObject).getJsonApiDocumentation();
+    Optional<RBSet<JsonApiDocumentation>> additionalJsonApiDocumentation =
+        ((HasJsonApiDocumentation) testObject).getAdditionalJsonApiDocumentation();
 
     // We could additionally check that the various getters don't return null or throw an exception.
     // However, that's the job of the JsonApiDocumentationBuilder.
