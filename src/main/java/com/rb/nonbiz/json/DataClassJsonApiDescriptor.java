@@ -66,6 +66,10 @@ public abstract class DataClassJsonApiDescriptor {
         PreciseValue.class,   // we always want to describe a specific subclass of PreciseValue
         ImpreciseValue.class, // same
 
+        // FIXME IAK YAML / FIXME SWA add this back, but make sure you can generate the .yaml,
+        // because adding it generates an exception currently.
+        // Enum.class,
+
         Strings.class,        // a common misspelling of String.class
         InstrumentId.class,   // sounds weird to have an IidMap that maps to an instrument
         Symbol.class);        // same as above
@@ -396,16 +400,16 @@ public abstract class DataClassJsonApiDescriptor {
 
 
   /**
-   * We often serialize a base class with multiple subclasses by using a string key in the JSON to represent the
+   * <p> We often serialize a base class with multiple subclasses by using a string key in the JSON to represent the
    * subclass's type. Example: NaiveSubObjectiveFormulationDetailsJsonApiConverter. The strings in the JSON may not
-   * be exact matches to Java classes - and anyway, they shouldn't be, because if we rename Java classes, we
+   * be exact matches to the Java class names - and anyway, they shouldn't be, because if we rename Java classes, we
    * don't want the API to change, as others may be relying on those specific strings.
    * Also, there are other cases where we use a special string in the JSON API
-   * to represent some special values (e.g. GlobalObjectiveThreshold where the threshold always passes).
+   * to represent some special values (e.g. GlobalObjectiveThreshold where the threshold always passes). </p>
    *
-   * For those JSON properties, we should be using this.
+   * <p> For those JSON properties, we should be using this. </p>
    *
-   * Note that this does not represent an actual enum.
+   * <p> Note that this does not represent an actual enum; for that, see {@link JavaEnumJsonApiDescriptor}. </p>
    */
   public static class PseudoEnumJsonApiDescriptor extends DataClassJsonApiDescriptor {
 
