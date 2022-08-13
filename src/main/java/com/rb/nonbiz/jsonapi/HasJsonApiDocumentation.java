@@ -1,8 +1,11 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.collections.RBSets;
 
 import java.util.Optional;
+
+import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 
 /**
  * Used by JSON API converters (NOT the classes they convert) to denote that a class has human-readable documentation
@@ -27,6 +30,14 @@ public interface HasJsonApiDocumentation {
    */
   default Optional<RBSet<JsonApiDocumentation>> getAdditionalJsonApiDocumentation() {
     return Optional.empty();
+  }
+
+  default RBSet<JsonApiDocumentation> getAllJsonApiDocumentation() {
+    JsonApiDocumentation main = getJsonApiDocumentation();
+    Optional<RBSet<JsonApiDocumentation>> additional = getAdditionalJsonApiDocumentation();
+    return additional.isPresent()
+        ? RBSets.union(additional.get(), main)
+        : singletonRBSet(main);
   }
 
 }
