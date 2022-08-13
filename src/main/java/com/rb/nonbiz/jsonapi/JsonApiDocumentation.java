@@ -1,6 +1,7 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonElement;
+import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaEnumJsonApiDescriptor;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.RBLog;
