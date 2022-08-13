@@ -35,10 +35,13 @@ public interface HasJsonApiDocumentation {
   /**
    * <p> Returns an {@link RBSet} consisting of the 'main' {@link JsonApiDocumentation} (which is required
    * per this interface) and any additional ones, per {@link #getAdditionalJsonApiDocumentation()}. </p>
+   *
+   * <p> This is not marked {@code default}, because we can't make 'default final' methods on interfaces,
+   * so keeping it static will prevent others from accidentally overriding it. </p>
    */
-  default RBSet<JsonApiDocumentation> getAllJsonApiDocumentation() {
-    JsonApiDocumentation main = getJsonApiDocumentation();
-    Optional<RBSet<JsonApiDocumentation>> additional = getAdditionalJsonApiDocumentation();
+  static RBSet<JsonApiDocumentation> getAllJsonApiDocumentation(HasJsonApiDocumentation hasJsonApiDocumentation) {
+    JsonApiDocumentation main = hasJsonApiDocumentation.getJsonApiDocumentation();
+    Optional<RBSet<JsonApiDocumentation>> additional = hasJsonApiDocumentation.getAdditionalJsonApiDocumentation();
     return additional.isPresent()
         ? RBSets.union(additional.get(), main)
         : singletonRBSet(main);
