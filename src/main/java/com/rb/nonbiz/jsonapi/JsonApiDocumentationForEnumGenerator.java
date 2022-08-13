@@ -22,7 +22,7 @@ public class JsonApiDocumentationForEnumGenerator {
     javaEnumJsonApiDescriptor.getValidValuesToExplanations()
         .values()
         .forEach(javaEnumSerializationAndExplanation ->
-            sb.append(Strings.format("<li> <strong>%s</strong> %s </li>\n",
+            sb.append(Strings.format("<li> <strong>%s</strong> : %s </li>\n",
                 javaEnumSerializationAndExplanation.getJsonSerialization(),
                 javaEnumSerializationAndExplanation.getExplanation())));
     sb.append("</ul></p>\n");
