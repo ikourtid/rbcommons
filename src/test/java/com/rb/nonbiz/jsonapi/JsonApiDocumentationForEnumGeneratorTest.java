@@ -1,6 +1,5 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.rb.nonbiz.collections.RBMapWithDefault;
 import com.rb.nonbiz.testutils.RBTest;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.junit.Test;
@@ -35,8 +34,8 @@ public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocu
                 .setLongDocumentation(asSingleLine(
                     "<p> Description for XYZ. </p>\n",
                     "<p> The following values are valid:\n<ul>",
-                    "<li> <strong>_x</strong> explanation for x </li>\n",
-                    "<li> <strong>_y</strong> explanation for y </li>\n",
+                    "<li> <strong>_x</strong> : explanation for x </li>\n",
+                    "<li> <strong>_y</strong> : explanation for y </li>\n",
                     "</ul></p>\n"))
                 .hasNoJsonValidationInstructions()
                 .hasNoChildNodes()
