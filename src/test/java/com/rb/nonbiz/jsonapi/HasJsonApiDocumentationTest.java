@@ -9,9 +9,9 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
+import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentation.getAllJsonApiDocumentation;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentationTest.jsonApiDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentationTest.testJsonApiDocumentationWithSeed;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -48,7 +48,7 @@ public class HasJsonApiDocumentationTest {
         })
         .forEach(hasJsonApiDocumentation -> {
           assertOptionalEmpty(hasJsonApiDocumentation.getAdditionalJsonApiDocumentation());
-          assertEquals(singletonRBSet(docA), hasJsonApiDocumentation.getAllJsonApiDocumentation());
+          assertEquals(singletonRBSet(docA), getAllJsonApiDocumentation(hasJsonApiDocumentation));
         });
   }
 
@@ -71,7 +71,7 @@ public class HasJsonApiDocumentationTest {
         hasJsonApiDocumentation.getAdditionalJsonApiDocumentation());
     assertEquals(
         rbSetOf(docA, docB, docC),
-        hasJsonApiDocumentation.getAllJsonApiDocumentation());
+        getAllJsonApiDocumentation(hasJsonApiDocumentation));
   }
 
   public static TypeSafeMatcher<HasJsonApiDocumentation> hasJsonApiDocumentationMatcher(
