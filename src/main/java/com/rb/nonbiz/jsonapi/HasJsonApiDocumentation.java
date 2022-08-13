@@ -32,6 +32,10 @@ public interface HasJsonApiDocumentation {
     return Optional.empty();
   }
 
+  /**
+   * <p> Returns an {@link RBSet} consisting of the 'main' {@link JsonApiDocumentation} (which is required
+   * per this interface) and any additional ones, per {@link #getAdditionalJsonApiDocumentation()}. </p>
+   */
   default RBSet<JsonApiDocumentation> getAllJsonApiDocumentation() {
     JsonApiDocumentation main = getJsonApiDocumentation();
     Optional<RBSet<JsonApiDocumentation>> additional = getAdditionalJsonApiDocumentation();
