@@ -165,8 +165,7 @@ public class JsonApiDocumentation {
     }
 
     // FIXME IAK / FIXME SWA JSONDOC: once all JSON API classes get documented, we should remove this,
-    // and also update SingleObjectJsonApiDocumentationRawGenerator
-    // and SingleStringDocumentationFuser.
+    // and also update SingleObjectJsonApiDocumentationRawGenerator and SingleStringDocumentationFuser.
     public static JsonApiDocumentationBuilder intermediateJsonApiDocumentationBuilder() {
       return new JsonApiDocumentationBuilder()
           .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")
