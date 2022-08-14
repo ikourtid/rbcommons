@@ -4,6 +4,7 @@ import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.collections.RBVoid;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -40,7 +41,12 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstru
  */
 public class JsonValidationInstructions {
 
-  public static final Class<?> UNKNOWN_CLASS_OF_JSON_PROPERTY = Class.class;
+  // We could have used Class.class here, but there's a precondition against that in the static constructors of the
+  // various DataClassJsonApiDescriptor subclasses. We're using RBVoid here, because it's conceivable that new code
+  // may use Class.class accidentally (not directly, but maybe calling .getClass() on a Class object),
+  // and we want to catch that with a precondition. RBVoid, on the other hand, isn't something you can get to
+  // inadvertently.
+  public static final Class<?> UNKNOWN_CLASS_OF_JSON_PROPERTY = RBVoid.class;
 
   /**
    * Some JSON properties, such as the data under YearlyTimeSeries, have a Java object that's generic.

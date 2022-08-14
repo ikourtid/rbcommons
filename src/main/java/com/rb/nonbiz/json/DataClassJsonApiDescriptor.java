@@ -66,9 +66,10 @@ public abstract class DataClassJsonApiDescriptor {
         PreciseValue.class,   // we always want to describe a specific subclass of PreciseValue
         ImpreciseValue.class, // same
 
-        // FIXME IAK YAML / FIXME SWA add this back, but make sure you can generate the .yaml,
-        // because adding it generates an exception currently.
+        // Add this back, but make sure you can generate the .yaml,
+        // because adding it generates an exception currently. Issue #1288
         // Enum.class,
+        Class.class,
 
         Strings.class,        // a common misspelling of String.class
         InstrumentId.class,   // sounds weird to have an IidMap that maps to an instrument
