@@ -4,6 +4,7 @@ import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.collections.RBVoid;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -40,7 +41,18 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstru
  */
 public class JsonValidationInstructions {
 
-  public static final Class<?> UNKNOWN_CLASS_OF_JSON_PROPERTY = Class.class;
+  // See UNKNOWN_CLASS_OF_JSON_PROPERTY about why we're creating this blank class.
+  public static class ContextSpecific {}
+
+  // We could have used Class.class here, but there's a precondition against that in the static constructors of the
+  // various DataClassJsonApiDescriptor subclasses. We're using ContextSpecific.class here,
+  // because it's conceivable that new code
+  // may use Class.class accidentally (not directly, but maybe calling .getClass() on a Class object),
+  // and we want to catch that with a precondition. ContextSpecific, on the other hand, isn't something you can get to
+  // inadvertently. The reason we created ContextSpecific is that this way the Swagger UI documentation
+  // will say 'ContextSpecific' for the type of generic classes such as RBMapWithDefault. It's really meant as
+  // human-readable documentation.
+  public static final Class<?> UNKNOWN_CLASS_OF_JSON_PROPERTY = ContextSpecific.class;
 
   /**
    * Some JSON properties, such as the data under YearlyTimeSeries, have a Java object that's generic.
