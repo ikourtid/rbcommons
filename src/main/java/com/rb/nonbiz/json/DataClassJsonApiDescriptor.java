@@ -1,6 +1,7 @@
 package com.rb.nonbiz.json;
 
 import com.google.common.base.Joiner;
+import com.rb.biz.types.OnesBasedReturn;
 import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidMap;
@@ -65,6 +66,13 @@ public abstract class DataClassJsonApiDescriptor {
         BigDecimal.class,     // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
         PreciseValue.class,   // we always want to describe a specific subclass of PreciseValue
         ImpreciseValue.class, // same
+
+        // The JSON API represents returns as zero-based, and as percentages.
+        // For example, onesBasedReturn(1.02) will be '2' in the JSON API, and onesBasedReturn(0.97) will be '-3'.
+        // Therefore, we should not confuse the JSON API documentation with the term 'OnesBasedReturn',
+        // which is not an accurate term. We will create a different class ZeroBasedPercentageReturn,
+        // with its own JsonApiDocumentation.
+        OnesBasedReturn.class,
 
         // Add this back, but make sure you can generate the .yaml,
         // because adding it generates an exception currently. Issue #1288
