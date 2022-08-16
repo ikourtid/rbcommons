@@ -27,7 +27,7 @@ public class JsonApiDocumentationForEnumGenerator {
                 javaEnumSerializationAndExplanation.getExplanation())));
     sb.append("</ul></p>\n");
     return JsonApiEnumDocumentationBuilder.<E>jsonApiEnumDocumentationBuilder()
-        .setEnumClass(jsonApiEnumDescriptor.getEnumClass())
+        .setJsonApiEnumDescriptor(jsonApiEnumDescriptor)
         .setSingleLineSummary(singleLineSummary)
         .setLongDocumentation(sb.toString())
         .build();

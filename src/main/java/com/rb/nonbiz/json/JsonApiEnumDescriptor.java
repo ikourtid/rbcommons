@@ -2,11 +2,13 @@ package com.rb.nonbiz.json;
 
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBEnumMapSimpleConstructors;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.EnumMap;
 
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.emptyEnumMap;
 
 /**
  * We often serialize a Java enum by using strings that are similar in meaning to the Java identifier, but
@@ -97,6 +99,13 @@ public class JsonApiEnumDescriptor<E extends Enum<E>> {
               "No explanation may be all whitespace (which includes the empty string): %s",
               validValuesToExplanations);
         });
+
+    RBPreconditions.checkArgument(
+        enumClass.isEnum(),
+        // 'internal error' because this should never happen due to the builder having <E extends Enum<E>>.
+        // But let's check it, just in case.
+        "Internal error: class %s must be an enum!",
+        enumClass);
     return new JsonApiEnumDescriptor<>(enumClass, validValuesToExplanations);
   }
 
