@@ -1,13 +1,13 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.rb.nonbiz.jsonapi.JsonApiEnumDocumentation.JsonApiEnumDocumentationBuilder;
 import com.rb.nonbiz.testutils.RBTest;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.junit.Test;
 
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor.javaEnumJsonApiPropertyDescriptor;
-import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentationTest.jsonApiDocumentationMatcher;
+import static com.rb.nonbiz.jsonapi.JsonApiEnumDocumentationTest.jsonApiEnumDocumentationMatcher;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
@@ -17,7 +17,6 @@ public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocu
 
   @Test
   public void testTextGeneration() {
-    new JsonApiDocumentationTest();
     assertThat(
         makeTestObject().generate(
             label("Summary for XYZ."),
@@ -27,9 +26,9 @@ public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocu
                 enumMapOf(
                     TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", label("explanation for x")),
                     TestEnumXYZ.Y, javaEnumSerializationAndExplanation("_y", label("explanation for y"))))),
-        jsonApiDocumentationMatcher(
-            jsonApiClassDocumentationBuilder()
-                .setClass(TestEnumXYZ.class)
+        jsonApiEnumDocumentationMatcher(
+            JsonApiEnumDocumentationBuilder.<TestEnumXYZ>jsonApiEnumDocumentationBuilder()
+                .setEnumClass(TestEnumXYZ.class)
                 .setSingleLineSummary(label("Summary for XYZ."))
                 .setLongDocumentation(asSingleLine(
                     "<p> Description for XYZ. </p>\n",
@@ -37,10 +36,6 @@ public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocu
                     "<li> <strong>_x</strong> : explanation for x </li>\n",
                     "<li> <strong>_y</strong> : explanation for y </li>\n",
                     "</ul></p>\n"))
-                .hasNoJsonValidationInstructions()
-                .hasNoChildNodes()
-                .noTrivialSampleJsonSupplied()
-                .noNontrivialSampleJsonSupplied()
                 .build()));
   }
 

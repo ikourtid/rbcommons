@@ -21,8 +21,10 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 /**
- * This is (mostly) human-readable text that explains how a Java object of this type
- * will get converted to/from JSON. It's useful mostly to 3rd party developers.
+ * <p> This is (mostly) human-readable text that explains how a Java object (non-enum) of this type
+ * will get converted to/from JSON. It's useful mostly to 3rd party developers. </p>
+ *
+ * <p> For the case of enums, see {@link JsonApiEnumDocumentation}. </p>
  */
 public class JsonApiClassDocumentation extends JsonApiDocumentation {
 
@@ -69,6 +71,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
   /**
    * A single-line summary for the class being converted to/from JSON by this JSON API converter.
    */
+  @Override
   public HumanReadableLabel getSingleLineSummary() {
     return singleLineSummary;
   }
@@ -108,6 +111,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
   /**
    * Returns the human-readable documentation for this JSON API object
    */
+  @Override
   public String getLongDocumentation() {
     return longDocumentation;
   }
@@ -284,12 +288,11 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       RBPreconditions.checkNotNull(trivialSampleJson);
       RBPreconditions.checkNotNull(nontrivialSampleJson);
 
-      /* FIXME IAK YAML add this
+      // FIXME IAK YAML test this
       RBPreconditions.checkArgument(
           !clazz.isEnum(),
-          "Class %s cannot be an enum!",
+          "Class %s cannot be an enum! Use JsonApiEnumDocumentation for that case",
           clazz);
-      */
 
       // Since the child nodes are 'verb classes', which never implement equals/hashCode (we rarely even do this with
       // data classes), this will check using simple pointer equality. We have it here to prevent mistakes where a

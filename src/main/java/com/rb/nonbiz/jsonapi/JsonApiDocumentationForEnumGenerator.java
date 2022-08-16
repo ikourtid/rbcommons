@@ -1,10 +1,9 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor;
+import com.rb.nonbiz.jsonapi.JsonApiEnumDocumentation.JsonApiEnumDocumentationBuilder;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
-
-import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 
 
 /**
@@ -14,7 +13,7 @@ import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocume
  */
 public class JsonApiDocumentationForEnumGenerator {
 
-  public <E extends Enum<E>> JsonApiDocumentation generate(
+  public <E extends Enum<E>> JsonApiEnumDocumentation<E> generate(
       HumanReadableLabel singleLineSummary,
       String longDocumentationPrefix,
       JavaEnumJsonApiPropertyDescriptor<E> javaEnumJsonApiPropertyDescriptor) {
@@ -27,16 +26,10 @@ public class JsonApiDocumentationForEnumGenerator {
                 javaEnumSerializationAndExplanation.getJsonSerialization(),
                 javaEnumSerializationAndExplanation.getExplanation())));
     sb.append("</ul></p>\n");
-    return jsonApiClassDocumentationBuilder()
-        .setClass(javaEnumJsonApiPropertyDescriptor.getEnumClass())
+    return JsonApiEnumDocumentationBuilder.<E>jsonApiEnumDocumentationBuilder()
+        .setEnumClass(javaEnumJsonApiPropertyDescriptor.getEnumClass())
         .setSingleLineSummary(singleLineSummary)
         .setLongDocumentation(sb.toString())
-        // JsonValidationInstructions is for cases where there are properties, but n/a for a primitive such as Enum.
-        .hasNoJsonValidationInstructions()
-        // primitives such as Enum do not mention other entities under them that get serialized.
-        .hasNoChildNodes()
-        .noTrivialSampleJsonSupplied()
-        .noNontrivialSampleJsonSupplied()
         .build();
   }
 
