@@ -15,7 +15,7 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstru
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
@@ -70,7 +70,7 @@ public class HardAndSoftRangeJsonApiConverter implements HasJsonApiDocumentation
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return jsonApiDocumentationBuilder()
+    return jsonApiClassDocumentationBuilder()
         .setClass(HardAndSoftRange.class)
         .setSingleLineSummary(label(asSingleLine(
             "A combination of an outer 'hard' range that an optimization solution must observe ",

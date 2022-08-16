@@ -4,7 +4,8 @@ import com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescr
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
+
 
 /**
  * <p> Generates {@link JsonApiDocumentation} specifically in the case of {@link Enum}s.
@@ -26,7 +27,7 @@ public class JsonApiDocumentationForEnumGenerator {
                 javaEnumSerializationAndExplanation.getJsonSerialization(),
                 javaEnumSerializationAndExplanation.getExplanation())));
     sb.append("</ul></p>\n");
-    return jsonApiDocumentationBuilder()
+    return jsonApiClassDocumentationBuilder()
         .setClass(javaEnumJsonApiPropertyDescriptor.getEnumClass())
         .setSingleLineSummary(singleLineSummary)
         .setLongDocumentation(sb.toString())

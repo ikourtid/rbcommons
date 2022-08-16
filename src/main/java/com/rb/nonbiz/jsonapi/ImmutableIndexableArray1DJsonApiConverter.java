@@ -22,7 +22,7 @@ import static com.rb.nonbiz.json.RBJsonArrays.listToJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonArrayOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjects.jsonArrayToSimpleArrayIndexMapping;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 
@@ -82,7 +82,7 @@ public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocu
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return jsonApiDocumentationBuilder()
+    return jsonApiClassDocumentationBuilder()
         .setClass(ImmutableIndexableArray1D.class)
         .setSingleLineSummary(label(asSingleLine(
             "An indexable 1-D array is like a regular 1-D array, except that you can ",

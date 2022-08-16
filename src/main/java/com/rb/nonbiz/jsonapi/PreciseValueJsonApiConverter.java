@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 
@@ -47,7 +47,7 @@ public class PreciseValueJsonApiConverter implements HasJsonApiDocumentation {
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return jsonApiDocumentationBuilder()
+    return jsonApiClassDocumentationBuilder()
         .setClass(PreciseValue.class)
         .setSingleLineSummary(label(asSingleLine(
             "A PreciseValue is the base class of many value classes in the code. ",

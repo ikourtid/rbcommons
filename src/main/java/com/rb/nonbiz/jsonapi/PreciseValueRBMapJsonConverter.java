@@ -13,7 +13,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.json.RBGson.jsonBigDecimal;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 /**
@@ -68,7 +68,7 @@ public class PreciseValueRBMapJsonConverter implements HasJsonApiDocumentation {
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return jsonApiDocumentationBuilder()
+    return jsonApiClassDocumentationBuilder()
         .setClass(RBMap.class)
         .setSingleLineSummary(label("An RBMap whose values are PreciseValues."))
         .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")

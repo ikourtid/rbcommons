@@ -188,7 +188,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
 
     // FIXME IAK / FIXME SWA JSONDOC: once all JSON API classes get documented, we should remove this,
     // and also update SingleObjectJsonApiDocumentationRawGenerator and SingleStringDocumentationFuser.
-    public static JsonApiClassDocumentation intermediateJsonApiDocumentationWithFixme(
+    public static JsonApiClassDocumentation intermediateJsonApiClassDocumentationWithFixme(
         Class<?> clazz,
         HasJsonApiDocumentation ... items) {
       return jsonApiClassDocumentationBuilder()

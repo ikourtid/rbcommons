@@ -10,7 +10,7 @@ import java.util.function.Function;
 import static com.rb.nonbiz.collections.FlatSignedLinearCombination.flatSignedLinearCombination;
 import static com.rb.nonbiz.json.RBJsonArrays.iteratorToJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 
@@ -56,7 +56,7 @@ public class FlatSignedLinearCombinationJsonApiConverter implements HasJsonApiDo
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return jsonApiDocumentationBuilder()
+    return jsonApiClassDocumentationBuilder()
         .setClass(FlatSignedLinearCombination.class)
         .setSingleLineSummary(label(asSingleLine(
             "A collection of weighted items, similar to FlatLinearCombination ",
