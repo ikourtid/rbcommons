@@ -69,6 +69,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
   /**
    * A single-line summary for the class being converted to/from JSON by this JSON API converter.
    */
+  @Override
   public HumanReadableLabel getSingleLineSummary() {
     return singleLineSummary;
   }
@@ -108,6 +109,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
   /**
    * Returns the human-readable documentation for this JSON API object
    */
+  @Override
   public String getLongDocumentation() {
     return longDocumentation;
   }

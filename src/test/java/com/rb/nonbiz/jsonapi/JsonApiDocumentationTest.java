@@ -7,6 +7,7 @@ import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentationTest.jsonApiClassDocumentationMatcher;
+import static com.rb.nonbiz.jsonapi.JsonApiEnumDocumentationTest.jsonApiEnumDocumentationMatcher;
 import static com.rb.nonbiz.testmatchers.RBVisitorMatchers.VisitorMatchInfo.visitorMatchInfo;
 import static com.rb.nonbiz.testmatchers.RBVisitorMatchers.generalVisitorMatcher;
 
@@ -40,6 +41,13 @@ public class JsonApiDocumentationTest extends RBTestMatcher<JsonApiDocumentation
           JsonApiClassDocumentation jsonApiClassDocumentation) {
         return visitorMatchInfo(1, jsonApiClassDocumentation,
             (MatcherGenerator<JsonApiClassDocumentation>) f -> jsonApiClassDocumentationMatcher(f));
+      }
+
+      @Override
+      public VisitorMatchInfo<JsonApiDocumentation> visitJsonApiEnumDocumentation(
+          JsonApiEnumDocumentation<? extends Enum<?>> jsonApiEnumDocumentation) {
+        return visitorMatchInfo(2, jsonApiEnumDocumentation,
+            (MatcherGenerator<JsonApiEnumDocumentation<? extends Enum<?>>>) f -> jsonApiEnumDocumentationMatcher(f));
       }
     }));
   }
