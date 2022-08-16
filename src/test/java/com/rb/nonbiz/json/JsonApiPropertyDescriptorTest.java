@@ -2,7 +2,6 @@ package com.rb.nonbiz.json;
 
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.CollectionJsonApiPropertyDescriptor;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor;
-import com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.PseudoEnumJsonApiPropertyDescriptor;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.RBMapJsonApiPropertyDescriptor;
@@ -88,13 +87,6 @@ public class JsonApiPropertyDescriptorTest extends RBTestMatcher<JsonApiProperty
           PseudoEnumJsonApiPropertyDescriptor pseudoEnumJsonApiPropertyDescriptor) {
         return visitorMatchInfo(6, pseudoEnumJsonApiPropertyDescriptor,
             (MatcherGenerator<PseudoEnumJsonApiPropertyDescriptor>) f -> pseudoEnumJsonApiPropertyDescriptorMatcher(f));
-      }
-
-      @Override
-      public VisitorMatchInfo<JsonApiPropertyDescriptor> visitJavaEnumJsonApiPropertyDescriptor(
-          JavaEnumJsonApiPropertyDescriptor javaEnumJsonApiPropertyDescriptor) {
-        return visitorMatchInfo(7, javaEnumJsonApiPropertyDescriptor,
-            (MatcherGenerator<JavaEnumJsonApiPropertyDescriptor>) f -> javaEnumJsonApiPropertyDescriptorMatcher(f));
       }
     }));
   }

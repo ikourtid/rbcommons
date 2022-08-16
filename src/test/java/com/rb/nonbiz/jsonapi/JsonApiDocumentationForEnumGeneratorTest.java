@@ -5,8 +5,8 @@ import com.rb.nonbiz.testutils.RBTest;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.junit.Test;
 
-import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
-import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor.javaEnumJsonApiPropertyDescriptor;
+import static com.rb.nonbiz.json.JsonApiEnumDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
+import static com.rb.nonbiz.json.JsonApiEnumDescriptor.jsonApiEnumDescriptor;
 import static com.rb.nonbiz.jsonapi.JsonApiEnumDocumentationTest.jsonApiEnumDocumentationMatcher;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
@@ -21,7 +21,7 @@ public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocu
         makeTestObject().generate(
             label("Summary for XYZ."),
             "Description for XYZ.",
-            javaEnumJsonApiPropertyDescriptor(
+            jsonApiEnumDescriptor(
                 TestEnumXYZ.class,
                 enumMapOf(
                     TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", label("explanation for x")),
