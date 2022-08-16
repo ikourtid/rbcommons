@@ -21,8 +21,10 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 /**
- * This is (mostly) human-readable text that explains how a Java object of this type
- * will get converted to/from JSON. It's useful mostly to 3rd party developers.
+ * <p> This is (mostly) human-readable text that explains how a Java object (non-enum) of this type
+ * will get converted to/from JSON. It's useful mostly to 3rd party developers. </p>
+ *
+ * <p> For the case of enums, see {@link JsonApiEnumDocumentation}. </p>
  */
 public class JsonApiClassDocumentation extends JsonApiDocumentation {
 

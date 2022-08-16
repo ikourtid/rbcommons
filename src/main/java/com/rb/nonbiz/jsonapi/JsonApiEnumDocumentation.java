@@ -7,8 +7,10 @@ import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
 /**
- * This is (mostly) human-readable text that explains how a Java object of this type
- * will get converted to/from JSON. It's useful mostly to 3rd party developers.
+ * <p> This is (mostly) human-readable text that explains how a Java enum of this type
+ * will get converted to/from JSON. It's useful mostly to 3rd party developers. </p>
+ *
+ * <p> For non-enums, see {@link JsonApiClassDocumentation}. </p>
  */
 public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocumentation {
 
