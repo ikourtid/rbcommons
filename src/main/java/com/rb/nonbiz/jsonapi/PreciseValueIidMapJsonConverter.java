@@ -18,7 +18,7 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.json.RBGson.jsonBigDecimal;
 import static com.rb.nonbiz.json.RBJsonObjectAdders.addToJsonObject;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static java.util.Comparator.comparing;
@@ -86,7 +86,7 @@ public class PreciseValueIidMapJsonConverter implements HasJsonApiDocumentation 
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return jsonApiDocumentationBuilder()
+    return jsonApiClassDocumentationBuilder()
         .setClass(IidMap.class)
         .setSingleLineSummary(label(asSingleLine(
             "An IidMap of PreciseValues. That is, an RBMap with keys that are InstrumentIds ",

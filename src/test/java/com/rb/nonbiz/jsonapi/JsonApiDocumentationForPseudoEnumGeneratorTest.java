@@ -6,14 +6,11 @@ import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.PseudoEnumJsonApiPropertyDescriptor.pseudoEnumJsonApiPropertyDescriptor;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentationTest.jsonApiDocumentationMatcher;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
-import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
 import static org.hamcrest.MatcherAssert.assertThat;
-
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class JsonApiDocumentationForPseudoEnumGeneratorTest extends RBTest<JsonApiDocumentationForPseudoEnumGenerator> {
 
@@ -28,7 +25,7 @@ public class JsonApiDocumentationForPseudoEnumGeneratorTest extends RBTest<JsonA
                 "is_etf",   label("Must also have 'etf' key with a `EtfInstrumentType` in its contents"),
                 "is_stock", label("Must also have 'stock' key with a `StockInstrumentType` in its contents")))),
         jsonApiDocumentationMatcher(
-            jsonApiDocumentationBuilder()
+            jsonApiClassDocumentationBuilder()
                 .setClass(InstrumentType.class)
                 .setSingleLineSummary(label("One of several security types."))
                 .setLongDocumentation(asSingleLine(

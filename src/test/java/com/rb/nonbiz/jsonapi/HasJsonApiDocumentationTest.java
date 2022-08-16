@@ -12,8 +12,8 @@ import java.util.Optional;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentation.getAllJsonApiDocumentation;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentationTest.testJsonApiClassDocumentationWithSeed;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentationTest.jsonApiDocumentationMatcher;
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentationTest.testJsonApiDocumentationWithSeed;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
@@ -22,9 +22,9 @@ import static org.junit.Assert.assertEquals;
 
 public class HasJsonApiDocumentationTest {
 
-  private final JsonApiDocumentation docA = testJsonApiDocumentationWithSeed(AssetId.class,     "a");
-  private final JsonApiDocumentation docB = testJsonApiDocumentationWithSeed(BigDecimal.class,  "b");
-  private final JsonApiDocumentation docC = testJsonApiDocumentationWithSeed(ClosedRange.class, "c");
+  private final JsonApiDocumentation docA = testJsonApiClassDocumentationWithSeed(AssetId.class,     "a");
+  private final JsonApiDocumentation docB = testJsonApiClassDocumentationWithSeed(BigDecimal.class,  "b");
+  private final JsonApiDocumentation docC = testJsonApiClassDocumentationWithSeed(ClosedRange.class, "c");
 
   @Test
   public void testDefaultMethods_noAdditionalDocumentation() {

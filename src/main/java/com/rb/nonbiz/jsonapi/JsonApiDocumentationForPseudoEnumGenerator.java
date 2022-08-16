@@ -4,7 +4,7 @@ import com.rb.nonbiz.json.JsonApiPropertyDescriptor.PseudoEnumJsonApiPropertyDes
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 
-import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 
 /**
  * <p> Generates {@link JsonApiDocumentation} specifically in the case of {@link PseudoEnumJsonApiPropertyDescriptor}s.
@@ -26,7 +26,7 @@ public class JsonApiDocumentationForPseudoEnumGenerator {
                 key,
                 explanationLabel.getLabelText())));
     sb.append("</ul></p>\n");
-    return jsonApiDocumentationBuilder()
+    return jsonApiClassDocumentationBuilder()
         .setClass(clazz)
         .setSingleLineSummary(singleLineSummary)
         .setLongDocumentation(sb.toString())
