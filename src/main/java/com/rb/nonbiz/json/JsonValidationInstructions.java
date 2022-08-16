@@ -44,7 +44,7 @@ public class JsonValidationInstructions {
   public static class ContextSpecific {}
 
   // We could have used Class.class here, but there's a precondition against that in the static constructors of the
-  // various DataClassJsonApiPropertyDescriptor subclasses. We're using ContextSpecific.class here,
+  // various JsonApiPropertyDescriptor subclasses. We're using ContextSpecific.class here,
   // because it's conceivable that new code
   // may use Class.class accidentally (not directly, but maybe calling .getClass() on a Class object),
   // and we want to catch that with a precondition. ContextSpecific, on the other hand, isn't something you can get to
