@@ -140,6 +140,11 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
   }
 
   @Override
+  public Class<?> getClassBeingDocumented() {
+    return getClazz();
+  }
+
+  @Override
   public String toString() {
     return Strings.format("[JACD %s %s %s %s %s %s %s JACD]",
         clazz,

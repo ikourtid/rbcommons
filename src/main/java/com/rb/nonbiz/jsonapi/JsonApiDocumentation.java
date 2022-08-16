@@ -6,12 +6,14 @@ package com.rb.nonbiz.jsonapi;
  */
 public abstract class JsonApiDocumentation {
 
-  interface Visitor<T> {
+  public interface Visitor<T> {
 
     T visitJsonApiClassDocumentation(JsonApiClassDocumentation jsonApiClassDocumentation);
 
   }
 
   public abstract <T> T visit(Visitor<T> visitor);
+
+  public abstract Class<?> getClassBeingDocumented();
 
 }
