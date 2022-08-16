@@ -2,12 +2,10 @@ package com.rb.nonbiz.jsonapi;
 
 import com.rb.biz.types.asset.InstrumentType;
 import com.rb.nonbiz.testutils.RBTest;
-import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
-import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.PseudoEnumJsonApiDescriptor.pseudoEnumJsonApiDescriptor;
-import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.PseudoEnumJsonApiDescriptor.undefinedPseudoEnumJsonApiDescription;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.PseudoEnumJsonApiPropertyDescriptor.pseudoEnumJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentationTest.jsonApiDocumentationMatcher;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
@@ -26,7 +24,7 @@ public class JsonApiDocumentationForPseudoEnumGeneratorTest extends RBTest<JsonA
             InstrumentType.class,
             label("One of several security types."),
             "This test only supports ETFs and stocks.",
-            pseudoEnumJsonApiDescriptor(rbMapOf(
+            pseudoEnumJsonApiPropertyDescriptor(rbMapOf(
                 "is_etf",   label("Must also have 'etf' key with a `EtfInstrumentType` in its contents"),
                 "is_stock", label("Must also have 'stock' key with a `StockInstrumentType` in its contents")))),
         jsonApiDocumentationMatcher(

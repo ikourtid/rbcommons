@@ -11,7 +11,7 @@ import com.rb.nonbiz.types.WeightedBySignedFraction;
 import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
-import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor.simpleClassJsonApiDescriptor;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
@@ -36,7 +36,7 @@ public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocum
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties(rbMapOf(
           "item",   UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR,
-          "weight", simpleClassJsonApiDescriptor(SignedFraction.class)))
+          "weight", simpleClassJsonApiPropertyDescriptor(SignedFraction.class)))
       .hasNoOptionalProperties()
       .build();
 

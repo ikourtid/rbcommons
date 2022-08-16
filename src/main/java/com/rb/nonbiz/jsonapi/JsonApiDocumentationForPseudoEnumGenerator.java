@@ -1,14 +1,13 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaEnumJsonApiDescriptor;
-import com.rb.nonbiz.json.DataClassJsonApiDescriptor.PseudoEnumJsonApiDescriptor;
+import com.rb.nonbiz.json.JsonApiPropertyDescriptor.PseudoEnumJsonApiPropertyDescriptor;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 
 import static com.rb.nonbiz.jsonapi.JsonApiDocumentation.JsonApiDocumentationBuilder.jsonApiDocumentationBuilder;
 
 /**
- * <p> Generates {@link JsonApiDocumentation} specifically in the case of {@link PseudoEnumJsonApiDescriptor}s.
+ * <p> Generates {@link JsonApiDocumentation} specifically in the case of {@link PseudoEnumJsonApiPropertyDescriptor}s.
  * Centralizing the text generation into this location will standardize the documentation format.
  * </p>
  */
@@ -18,10 +17,10 @@ public class JsonApiDocumentationForPseudoEnumGenerator {
       Class<?> clazz,
       HumanReadableLabel singleLineSummary,
       String longDocumentationPrefix,
-      PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor) {
+      PseudoEnumJsonApiPropertyDescriptor pseudoEnumJsonApiPropertyDescriptor) {
     StringBuilder sb = new StringBuilder(Strings.format("<p> %s </p>\n", longDocumentationPrefix));
     sb.append("<p> The following values are valid:\n<ul>");
-    pseudoEnumJsonApiDescriptor.getValidValuesToExplanations()
+    pseudoEnumJsonApiPropertyDescriptor.getValidValuesToExplanations()
         .forEachEntry( (key, explanationLabel) ->
             sb.append(Strings.format("<li> <strong>%s</strong> : %s </li>\n",
                 key,
