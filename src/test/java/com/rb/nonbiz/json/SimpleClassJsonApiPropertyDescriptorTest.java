@@ -6,7 +6,7 @@ import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
-import com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor;
+import com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
@@ -18,12 +18,12 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
-import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor.simpleClassJsonApiDescriptor;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 
-public class SimpleClassJsonApiDescriptorTest extends RBTestMatcher<SimpleClassJsonApiDescriptor> {
+public class SimpleClassJsonApiPropertyDescriptorTest extends RBTestMatcher<SimpleClassJsonApiPropertyDescriptor> {
 
   @Test
   public void prohibitsCertainTypes() {
@@ -36,37 +36,37 @@ public class SimpleClassJsonApiDescriptorTest extends RBTestMatcher<SimpleClassJ
         InstrumentId.class, // should use JsonTicker instead
         Symbol.class,       // should use JsonTicker instead
 
-        // These 4 have their own JsonApiDescriptor classes, which we should be using.
+        // These 4 have their own JsonApiPropertyDescriptor classes, which we should be using.
         UniqueId.class,
         IidMap.class,
         RBMap.class,
         RBSet.class)
         .forEach(clazz ->
-            assertIllegalArgumentException( () -> simpleClassJsonApiDescriptor(clazz)));
+            assertIllegalArgumentException( () -> simpleClassJsonApiPropertyDescriptor(clazz)));
   }
 
   @Override
-  public SimpleClassJsonApiDescriptor makeTrivialObject() {
-    return simpleClassJsonApiDescriptor(Double.class);
+  public SimpleClassJsonApiPropertyDescriptor makeTrivialObject() {
+    return simpleClassJsonApiPropertyDescriptor(Double.class);
   }
 
   @Override
-  public SimpleClassJsonApiDescriptor makeNontrivialObject() {
-    return simpleClassJsonApiDescriptor(ClosedRange.class);
+  public SimpleClassJsonApiPropertyDescriptor makeNontrivialObject() {
+    return simpleClassJsonApiPropertyDescriptor(ClosedRange.class);
   }
 
   @Override
-  public SimpleClassJsonApiDescriptor makeMatchingNontrivialObject() {
-    return simpleClassJsonApiDescriptor(ClosedRange.class);
+  public SimpleClassJsonApiPropertyDescriptor makeMatchingNontrivialObject() {
+    return simpleClassJsonApiPropertyDescriptor(ClosedRange.class);
   }
 
   @Override
-  protected boolean willMatch(SimpleClassJsonApiDescriptor expected, SimpleClassJsonApiDescriptor actual) {
-    return simpleClassJsonApiDescriptorMatcher(expected).matches(actual);
+  protected boolean willMatch(SimpleClassJsonApiPropertyDescriptor expected, SimpleClassJsonApiPropertyDescriptor actual) {
+    return simpleClassJsonApiPropertyDescriptorMatcher(expected).matches(actual);
   }
 
-  public static TypeSafeMatcher<SimpleClassJsonApiDescriptor> simpleClassJsonApiDescriptorMatcher(
-      SimpleClassJsonApiDescriptor expected) {
+  public static TypeSafeMatcher<SimpleClassJsonApiPropertyDescriptor> simpleClassJsonApiPropertyDescriptorMatcher(
+      SimpleClassJsonApiPropertyDescriptor expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getClassBeingDescribed()));
   }

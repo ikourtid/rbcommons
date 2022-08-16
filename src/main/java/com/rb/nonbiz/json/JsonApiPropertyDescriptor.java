@@ -36,32 +36,39 @@ import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
  * purposes of serialization and generating documentation. For example, it records information about generic classes,
  * whereas a simple {@link Class} object does not (due to Java type erasure). </p>
  */
-public abstract class DataClassJsonApiDescriptor {
+public abstract class JsonApiPropertyDescriptor {
 
   public interface Visitor<T> {
 
-    T visitSimpleClassJsonApiDescriptor(SimpleClassJsonApiDescriptor simpleClassJsonApiDescriptor);
-    T visitIidMapJsonApiDescriptor(IidMapJsonApiDescriptor iidMapJsonApiDescriptor);
-    T visitRBMapJsonApiDescriptor(RBMapJsonApiDescriptor rbMapJsonApiDescriptor);
-    T visitCollectionJsonApiDescriptor(CollectionJsonApiDescriptor collectionJsonApiDescriptor);
-    T visitJavaGenericJsonApiDescriptor(JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor);
-    T visitPseudoEnumJsonApiDescriptor(PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor);
-    T visitJavaEnumJsonApiDescriptor(JavaEnumJsonApiDescriptor<? extends Enum<?>> javaEnumJsonApiDescriptor);
+    T visitSimpleClassJsonApiPropertyDescriptor(
+        SimpleClassJsonApiPropertyDescriptor simpleClassJsonApiPropertyDescriptor);
+    T visitIidMapJsonApiPropertyDescriptor(
+        IidMapJsonApiPropertyDescriptor iidMapJsonApiPropertyDescriptor);
+    T visitRBMapJsonApiPropertyDescriptor(
+        RBMapJsonApiPropertyDescriptor rbMapJsonApiPropertyDescriptor);
+    T visitCollectionJsonApiPropertyDescriptor(
+        CollectionJsonApiPropertyDescriptor collectionJsonApiPropertyDescriptor);
+    T visitJavaGenericJsonApiPropertyDescriptor(
+        JavaGenericJsonApiPropertyDescriptor javaGenericJsonApiPropertyDescriptor);
+    T visitPseudoEnumJsonApiPropertyDescriptor(
+        PseudoEnumJsonApiPropertyDescriptor pseudoEnumJsonApiPropertyDescriptor);
+    T visitJavaEnumJsonApiPropertyDescriptor(
+        JavaEnumJsonApiPropertyDescriptor<? extends Enum<?>> javaEnumJsonApiPropertyDescriptor);
 
   }
 
   public abstract <T> T visit(Visitor<T> visitor);
 
-  private static Optional<Class<?>> getClassIfSimpleClassJsonApiDescriptor(
-      DataClassJsonApiDescriptor dataClassJsonApiDescriptor) {
+  private static Optional<Class<?>> getClassIfSimpleClassJsonApiPropertyDescriptor(
+      JsonApiPropertyDescriptor jsonApiPropertyDescriptor) {
     // A bit ugly, but handy for certain preconditions in this file. It's private anyway.
     // We could use a visitor here, but since we expressly only care about one case, instanceof & a cast is fine.
-    return dataClassJsonApiDescriptor instanceof SimpleClassJsonApiDescriptor
-        ? Optional.of( ((SimpleClassJsonApiDescriptor) dataClassJsonApiDescriptor).getClassBeingDescribed())
+    return jsonApiPropertyDescriptor instanceof SimpleClassJsonApiPropertyDescriptor
+        ? Optional.of( ((SimpleClassJsonApiPropertyDescriptor) jsonApiPropertyDescriptor).getClassBeingDescribed())
         : Optional.empty();
   }
 
-  protected static RBSet<Class<?>> getInvalidJsonApiDescriptorClasses() {
+  protected static RBSet<Class<?>> getInvalidJsonApiPropertyDescriptorClasses() {
     return rbSetOf(
         BigDecimal.class,     // I don't think we ever use a BigDecimal directly in the code; it's usually some PreciseValue
         PreciseValue.class,   // we always want to describe a specific subclass of PreciseValue
@@ -89,19 +96,19 @@ public abstract class DataClassJsonApiDescriptor {
    * <p> Tells us the type of a property of a JsonObject in the JSON API, in the simplest case
    * where it is a single JSON API data class (e.g. not some collection). </p>
    */
-  public static class SimpleClassJsonApiDescriptor extends DataClassJsonApiDescriptor {
+  public static class SimpleClassJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
     private final Class<?> clazz;
 
-    private SimpleClassJsonApiDescriptor(Class<?> clazz) {
+    private SimpleClassJsonApiPropertyDescriptor(Class<?> clazz) {
       this.clazz = clazz;
     }
 
-    public static SimpleClassJsonApiDescriptor simpleClassJsonApiDescriptor(Class<?> clazz) {
+    public static SimpleClassJsonApiPropertyDescriptor simpleClassJsonApiPropertyDescriptor(Class<?> clazz) {
       RBSets.union(
-              getInvalidJsonApiDescriptorClasses(),
+              getInvalidJsonApiPropertyDescriptorClasses(),
               rbSetOf(
-                  // These 4 have their own JsonApiDescriptor classes, which we should be using.
+                  // These 4 have their own JsonApiPropertyDescriptor classes, which we should be using.
                   UniqueId.class,
                   IidMap.class,
                   RBMap.class,
@@ -109,9 +116,9 @@ public abstract class DataClassJsonApiDescriptor {
           .forEach(badClass ->
               RBPreconditions.checkArgument(
                   !clazz.equals(badClass),
-                  "SimpleClassJsonApiDescriptor has bad class %s",
+                  "SimpleClassJsonApiPropertyDescriptor has bad class %s",
                   clazz));
-      return new SimpleClassJsonApiDescriptor(clazz);
+      return new SimpleClassJsonApiPropertyDescriptor(clazz);
     }
 
     /**
@@ -123,12 +130,12 @@ public abstract class DataClassJsonApiDescriptor {
 
     @Override
     public <T> T visit(Visitor<T> visitor) {
-      return visitor.visitSimpleClassJsonApiDescriptor(this);
+      return visitor.visitSimpleClassJsonApiPropertyDescriptor(this);
     }
 
     @Override
     public String toString() {
-      return Strings.format("[SCJAD %s SCJAD]", clazz);
+      return Strings.format("[SCJAPD %s SCJAPD]", clazz);
     }
 
   }
@@ -138,24 +145,24 @@ public abstract class DataClassJsonApiDescriptor {
    * <p> Tells us the type of a property of a JsonObject in the JSON API, in the case
    * where it is the JSON representation of an IidMap of some Java data class. </p>
    *
-   * <p> Instead of just using a simple {@link Class} object, this stores a {@link DataClassJsonApiDescriptor},
+   * <p> Instead of just using a simple {@link Class} object, this stores a {@link JsonApiPropertyDescriptor},
    * which is more general, so that we can also represent things such as {@literal IidMap<List<Double>>}.</p>
    */
-  public static class IidMapJsonApiDescriptor extends DataClassJsonApiDescriptor {
+  public static class IidMapJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
-    private final DataClassJsonApiDescriptor valueClassDescriptor;
+    private final JsonApiPropertyDescriptor valueClassDescriptor;
 
-    private IidMapJsonApiDescriptor(DataClassJsonApiDescriptor valueClassDescriptor) {
+    private IidMapJsonApiPropertyDescriptor(JsonApiPropertyDescriptor valueClassDescriptor) {
       this.valueClassDescriptor = valueClassDescriptor;
     }
 
-    public static IidMapJsonApiDescriptor iidMapJsonApiDescriptor(
-        DataClassJsonApiDescriptor valueClassDescriptor) {
-      getClassIfSimpleClassJsonApiDescriptor(valueClassDescriptor).ifPresent(valueClass ->
+    public static IidMapJsonApiPropertyDescriptor iidMapJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor valueClassDescriptor) {
+      getClassIfSimpleClassJsonApiPropertyDescriptor(valueClassDescriptor).ifPresent(valueClass ->
           RBSets.union(
-                  getInvalidJsonApiDescriptorClasses(),
+                  getInvalidJsonApiPropertyDescriptorClasses(),
                   rbSetOf(
-                      // These 2 have their own JsonApiDescriptor classes, which we should be using.
+                      // These 2 have their own JsonApiPropertyDescriptor classes, which we should be using.
                       UniqueId.class,
                       RBSet.class,
 
@@ -165,23 +172,23 @@ public abstract class DataClassJsonApiDescriptor {
               .forEach(invalidClass ->
                   RBPreconditions.checkArgument(
                       !valueClass.equals(invalidClass),
-                      "IidMapJsonApiDescriptor uses an invalid class of %s",
+                      "IidMapJsonApiPropertyDescriptor uses an invalid class of %s",
                       invalidClass)));
-      return new IidMapJsonApiDescriptor(valueClassDescriptor);
+      return new IidMapJsonApiPropertyDescriptor(valueClassDescriptor);
     }
 
-    public DataClassJsonApiDescriptor getValueClassDescriptor() {
+    public JsonApiPropertyDescriptor getValueClassDescriptor() {
       return valueClassDescriptor;
     }
 
     @Override
     public <T> T visit(Visitor<T> visitor) {
-      return visitor.visitIidMapJsonApiDescriptor(this);
+      return visitor.visitIidMapJsonApiPropertyDescriptor(this);
     }
 
     @Override
     public String toString() {
-      return Strings.format("[IMJAD %s IMJAD]", valueClassDescriptor);
+      return Strings.format("[IMJAPD %s IMJAPD]", valueClassDescriptor);
     }
 
   }
@@ -191,65 +198,65 @@ public abstract class DataClassJsonApiDescriptor {
    * <p> Tells us the type of a property of a JsonObject in the JSON API, in the case
    * where it is the JSON representation of an RBMap of some Java data class. </p>
    *
-   * <p> Instead of just using simple {@link Class} objects, this stores {@link DataClassJsonApiDescriptor} objects,
+   * <p> Instead of just using simple {@link Class} objects, this stores {@link JsonApiPropertyDescriptor} objects,
    * which are more general, so that we can also represent things such as
    * {@literal RBMap<UniqueId<NamedFactor>, List<Double>>}.</p>
    */
-  public static class RBMapJsonApiDescriptor extends DataClassJsonApiDescriptor {
+  public static class RBMapJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
-    private final DataClassJsonApiDescriptor keyClassDescriptor;
-    private final DataClassJsonApiDescriptor valueClassDescriptor;
+    private final JsonApiPropertyDescriptor keyClassDescriptor;
+    private final JsonApiPropertyDescriptor valueClassDescriptor;
 
-    private RBMapJsonApiDescriptor(
-        DataClassJsonApiDescriptor keyClassDescriptor,
-        DataClassJsonApiDescriptor valueClassDescriptor) {
+    private RBMapJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor keyClassDescriptor,
+        JsonApiPropertyDescriptor valueClassDescriptor) {
       this.keyClassDescriptor = keyClassDescriptor;
       this.valueClassDescriptor = valueClassDescriptor;
     }
 
-    public static RBMapJsonApiDescriptor rbMapJsonApiDescriptor(
-        DataClassJsonApiDescriptor keyClassDescriptor,
-        DataClassJsonApiDescriptor valueClassDescriptor) {
+    public static RBMapJsonApiPropertyDescriptor rbMapJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor keyClassDescriptor,
+        JsonApiPropertyDescriptor valueClassDescriptor) {
       RBSet<Class<?>> invalidClasses = RBSets.union(
-          getInvalidJsonApiDescriptorClasses(),
+          getInvalidJsonApiPropertyDescriptorClasses(),
           rbSetOf(
-              // These 3 have their own JsonApiDescriptor classes, which we should be using.
+              // These 3 have their own JsonApiPropertyDescriptor classes, which we should be using.
               IidMap.class,
               RBMap.class,
               RBSet.class));
-      getClassIfSimpleClassJsonApiDescriptor(keyClassDescriptor)
+      getClassIfSimpleClassJsonApiPropertyDescriptor(keyClassDescriptor)
           .ifPresent(keyClass ->
               invalidClasses.forEach(invalidClass ->
                   RBPreconditions.checkArgument(
                       !keyClass.equals(invalidClass),
-                      "RBMapJsonApiDescriptor for %s -> %s : invalid key class",
+                      "RBMapJsonApiPropertyDescriptor for %s -> %s : invalid key class",
                       keyClassDescriptor, valueClassDescriptor)));
-      getClassIfSimpleClassJsonApiDescriptor(valueClassDescriptor)
+      getClassIfSimpleClassJsonApiPropertyDescriptor(valueClassDescriptor)
           .ifPresent(valueClass ->
               invalidClasses.forEach(invalidClass ->
                   RBPreconditions.checkArgument(
                       !valueClass.equals(invalidClass),
-                      "RBMapJsonApiDescriptor for %s -> %s : invalid value class",
+                      "RBMapJsonApiPropertyDescriptor for %s -> %s : invalid value class",
                       keyClassDescriptor, valueClassDescriptor)));
-      return new RBMapJsonApiDescriptor(keyClassDescriptor, valueClassDescriptor);
+      return new RBMapJsonApiPropertyDescriptor(keyClassDescriptor, valueClassDescriptor);
     }
 
-    public DataClassJsonApiDescriptor getKeyClassDescriptor() {
+    public JsonApiPropertyDescriptor getKeyClassDescriptor() {
       return keyClassDescriptor;
     }
 
-    public DataClassJsonApiDescriptor getValueClassDescriptor() {
+    public JsonApiPropertyDescriptor getValueClassDescriptor() {
       return valueClassDescriptor;
     }
 
     @Override
     public <T> T visit(Visitor<T> visitor) {
-      return visitor.visitRBMapJsonApiDescriptor(this);
+      return visitor.visitRBMapJsonApiPropertyDescriptor(this);
     }
 
     @Override
     public String toString() {
-      return Strings.format("[RMJAD %s -> %s RMJAD]", keyClassDescriptor, valueClassDescriptor);
+      return Strings.format("[RMJAPD %s -> %s RMJAPD]", keyClassDescriptor, valueClassDescriptor);
     }
 
   }
@@ -259,45 +266,45 @@ public abstract class DataClassJsonApiDescriptor {
    * <p> Tells us the type of a property of a JsonObject in the JSON API, in the case
    * where it is the JSON representation of an collection (Set, List, or array) of some Java data class. </p>
    *
-   * <p> We use a {@link DataClassJsonApiDescriptor} instead of just a raw {@link Class} so that we can represent
+   * <p> We use a {@link JsonApiPropertyDescriptor} instead of just a raw {@link Class} so that we can represent
    * things such as {@literal List<UniqueId<NamedFactor>> }, i.e. where the value class inside the collection is not
    * a simple class and is instead a generic, a map, etc. </p>
    */
-  public static class CollectionJsonApiDescriptor extends DataClassJsonApiDescriptor {
+  public static class CollectionJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
-    private final DataClassJsonApiDescriptor collectionValueClassDescriptor;
+    private final JsonApiPropertyDescriptor collectionValueClassDescriptor;
 
-    private CollectionJsonApiDescriptor(DataClassJsonApiDescriptor collectionValueClassDescriptor) {
+    private CollectionJsonApiPropertyDescriptor(JsonApiPropertyDescriptor collectionValueClassDescriptor) {
       this.collectionValueClassDescriptor = collectionValueClassDescriptor;
     }
 
-    public static CollectionJsonApiDescriptor collectionJsonApiDescriptor(
-        DataClassJsonApiDescriptor arrayValueClassDescriptor) {
+    public static CollectionJsonApiPropertyDescriptor collectionJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor arrayValueClassDescriptor) {
       RBSet<Class<?>> invalidClasses = RBSets.union(
-          getInvalidJsonApiDescriptorClasses(),
+          getInvalidJsonApiPropertyDescriptorClasses(),
           singletonRBSet(UniqueId.class));
-      getClassIfSimpleClassJsonApiDescriptor(arrayValueClassDescriptor)
+      getClassIfSimpleClassJsonApiPropertyDescriptor(arrayValueClassDescriptor)
           .ifPresent(arrayValueClass ->
               invalidClasses.forEach(invalidClass ->
                   RBPreconditions.checkArgument(
                       !arrayValueClass.equals(invalidClass),
-                      "CollectionJsonApiDescriptor uses an invalid class of %s",
+                      "CollectionJsonApiPropertyDescriptor uses an invalid class of %s",
                       invalidClass)));
-      return new CollectionJsonApiDescriptor(arrayValueClassDescriptor);
+      return new CollectionJsonApiPropertyDescriptor(arrayValueClassDescriptor);
     }
 
-    public DataClassJsonApiDescriptor getCollectionValueClassDescriptor() {
+    public JsonApiPropertyDescriptor getCollectionValueClassDescriptor() {
       return collectionValueClassDescriptor;
     }
 
     @Override
     public <T> T visit(Visitor<T> visitor) {
-      return visitor.visitCollectionJsonApiDescriptor(this);
+      return visitor.visitCollectionJsonApiPropertyDescriptor(this);
     }
 
     @Override
     public String toString() {
-      return Strings.format("[CJAD %s CJAD]", collectionValueClassDescriptor);
+      return Strings.format("[CJAPD %s CJAPD]", collectionValueClassDescriptor);
     }
 
   }
@@ -311,42 +318,42 @@ public abstract class DataClassJsonApiDescriptor {
    * {@code UniqueId<NamedFactor>}. It should not be used for 'marker interface' classes, such as
    * {@code Portfolio<HeldByUs>}. This makes sense, because HeldByUs is not something that gets serialized. </p>
    *
-   * <p> For the inner classes, we use the more general {@link DataClassJsonApiDescriptor} instead of a raw
+   * <p> For the inner classes, we use the more general {@link JsonApiPropertyDescriptor} instead of a raw
    * {@link Class}. This allows us to support things like {@code UniqueId<List<Double>>}, i.e. situations
    * where the generic argument class is not a 'simple' class. (This is an unrealistic example, as we'd never
    * really need a unique ID of a list, but it should illustrate the point. </p>
    */
-  public static class JavaGenericJsonApiDescriptor extends DataClassJsonApiDescriptor {
+  public static class JavaGenericJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
     private final Class<?> outerClass;
-    private final List<DataClassJsonApiDescriptor> genericArgumentClassDescriptors;
+    private final List<JsonApiPropertyDescriptor> genericArgumentClassDescriptors;
 
-    private JavaGenericJsonApiDescriptor(
+    private JavaGenericJsonApiPropertyDescriptor(
         Class<?> outerClass,
-        List<DataClassJsonApiDescriptor> genericArgumentClassDescriptors) {
+        List<JsonApiPropertyDescriptor> genericArgumentClassDescriptors) {
       this.outerClass = outerClass;
       this.genericArgumentClassDescriptors = genericArgumentClassDescriptors;
     }
 
-    private static JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor(
+    private static JavaGenericJsonApiPropertyDescriptor javaGenericJsonApiPropertyDescriptor(
         Class<?> outerClass,
-        List<DataClassJsonApiDescriptor> genericArgumentClassDescriptors) {
-      for (DataClassJsonApiDescriptor innerClassDescriptor : genericArgumentClassDescriptors) {
-        getClassIfSimpleClassJsonApiDescriptor(innerClassDescriptor)
+        List<JsonApiPropertyDescriptor> genericArgumentClassDescriptors) {
+      for (JsonApiPropertyDescriptor innerClassDescriptor : genericArgumentClassDescriptors) {
+        getClassIfSimpleClassJsonApiPropertyDescriptor(innerClassDescriptor)
             .ifPresent(innerClass ->
                 RBPreconditions.checkArgument(
                     !outerClass.equals(innerClass),
                     "Outer and generic argument class of generic shouldn't be the same: %s vs. %s : %s",
                     outerClass, innerClassDescriptor, genericArgumentClassDescriptors));
       }
-      // Ideally, we want to restrict the usage of this class (JavaGenericJsonApiDescriptor)
+      // Ideally, we want to restrict the usage of this class (JavaGenericJsonApiPropertyDescriptor)
       // to cases where the 'outer' class is generic on one or more 'generic argument' classes.
       // However, due to Java type erasure, we don't know at runtime what's generic and what's not.
       // But let's just add a few obvious exceptions that we know will never be true.
       RBSets.union(
-              getInvalidJsonApiDescriptorClasses(),
+              getInvalidJsonApiPropertyDescriptorClasses(),
               rbSetOf(
-                  // These have their own JsonApiDescriptor classes, which we should be using.
+                  // These have their own JsonApiPropertyDescriptor classes, which we should be using.
                   RBSet.class,
                   IidSet.class,
                   IidMap.class,
@@ -356,13 +363,13 @@ public abstract class DataClassJsonApiDescriptor {
               "Outer class %s is invalid",
               outerClass));
       // We can't test the following, because this is a private static constructor, and the only way to construct a
-      // JavaGenericJsonApiDescriptor is through some other static constructors that can't allow this to happen,
+      // JavaGenericJsonApiPropertyDescriptor is through some other static constructors that can't allow this to happen,
       // but let's keep it anyway.
       RBPreconditions.checkArgument(
           !genericArgumentClassDescriptors.isEmpty(),
-          "JavaGenericJsonApiDescriptor describes a generic class '%s' without generic arguments",
+          "JavaGenericJsonApiPropertyDescriptor describes a generic class '%s' without generic arguments",
           outerClass);
-      return new JavaGenericJsonApiDescriptor(outerClass, genericArgumentClassDescriptors);
+      return new JavaGenericJsonApiPropertyDescriptor(outerClass, genericArgumentClassDescriptors);
     }
 
     /**
@@ -373,34 +380,35 @@ public abstract class DataClassJsonApiDescriptor {
      * inline in the various definitions of JSON_VALIDATION_INSTRUCTIONS in the JSON API converter verb classes,
      * so we want its invocation to look short.
      */
-    public static JavaGenericJsonApiDescriptor javaGenericJsonApiDescriptor(
-        Class<?> outerClass, DataClassJsonApiDescriptor first, DataClassJsonApiDescriptor ... rest) {
-      return javaGenericJsonApiDescriptor(outerClass, concatenateFirstAndRest(first, rest));
+    public static JavaGenericJsonApiPropertyDescriptor javaGenericJsonApiPropertyDescriptor(
+        Class<?> outerClass, JsonApiPropertyDescriptor first, JsonApiPropertyDescriptor... rest) {
+      return javaGenericJsonApiPropertyDescriptor(outerClass, concatenateFirstAndRest(first, rest));
     }
 
     /**
      * A shorthand for the case of {@link UniqueId}.
      */
-    public static JavaGenericJsonApiDescriptor uniqueIdJsonApiDescriptor(DataClassJsonApiDescriptor innerClassDescriptor) {
-      return javaGenericJsonApiDescriptor(UniqueId.class, innerClassDescriptor);
+    public static JavaGenericJsonApiPropertyDescriptor uniqueIdJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor innerClassDescriptor) {
+      return javaGenericJsonApiPropertyDescriptor(UniqueId.class, innerClassDescriptor);
     }
 
     public Class<?> getOuterClass() {
       return outerClass;
     }
 
-    public List<DataClassJsonApiDescriptor> getGenericArgumentClassDescriptors() {
+    public List<JsonApiPropertyDescriptor> getGenericArgumentClassDescriptors() {
       return genericArgumentClassDescriptors;
     }
 
     @Override
     public <T> T visit(Visitor<T> visitor) {
-      return visitor.visitJavaGenericJsonApiDescriptor(this);
+      return visitor.visitJavaGenericJsonApiPropertyDescriptor(this);
     }
 
     @Override
     public String toString() {
-      return Strings.format("[JGJAD %s < %s > JGJAD]",
+      return Strings.format("[JGJAPD %s < %s > JGJAPD]",
           outerClass,
           Joiner.on(" , ").join(genericArgumentClassDescriptors));
     }
@@ -418,23 +426,23 @@ public abstract class DataClassJsonApiDescriptor {
    *
    * <p> For those JSON properties, we should be using this. </p>
    *
-   * <p> Note that this does not represent an actual enum; for that, see {@link JavaEnumJsonApiDescriptor}. </p>
+   * <p> Note that this does not represent an actual enum; for that, see {@link JavaEnumJsonApiPropertyDescriptor}. </p>
    */
-  public static class PseudoEnumJsonApiDescriptor extends DataClassJsonApiDescriptor {
+  public static class PseudoEnumJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
     // This should be removed once we have human-readable descriptions for all instances where we use it.
     // The reason it exists is that it helps us avoid having fixmes in multiple places.
-    public static HumanReadableLabel undefinedPseudoEnumJsonApiDescription() {
+    public static HumanReadableLabel undefinedPseudoEnumJsonApiPropertyDescription() {
       return label("FIXME SWA JSONDOC");
     }
 
     private final RBMap<String, HumanReadableLabel> validValuesToExplanations;
 
-    private PseudoEnumJsonApiDescriptor(RBMap<String, HumanReadableLabel> validValuesToExplanations) {
+    private PseudoEnumJsonApiPropertyDescriptor(RBMap<String, HumanReadableLabel> validValuesToExplanations) {
       this.validValuesToExplanations = validValuesToExplanations;
     }
 
-    public static PseudoEnumJsonApiDescriptor pseudoEnumJsonApiDescriptor(
+    public static PseudoEnumJsonApiPropertyDescriptor pseudoEnumJsonApiPropertyDescriptor(
         RBMap<String, HumanReadableLabel> validValuesToExplanations) {
       // One reasonable question is:
       // The variable name is validValuesToExplanations, but is there a way to make sure the String keys are valid?
@@ -456,7 +464,7 @@ public abstract class DataClassJsonApiDescriptor {
                 "No explanation may be all whitespace (which includes the empty string): %s",
                 validValuesToExplanations);
           });
-      return new PseudoEnumJsonApiDescriptor(validValuesToExplanations);
+      return new PseudoEnumJsonApiPropertyDescriptor(validValuesToExplanations);
     }
 
     public RBMap<String, HumanReadableLabel> getValidValuesToExplanations() {
@@ -465,12 +473,12 @@ public abstract class DataClassJsonApiDescriptor {
 
     @Override
     public <T> T visit(Visitor<T> visitor) {
-      return visitor.visitPseudoEnumJsonApiDescriptor(this);
+      return visitor.visitPseudoEnumJsonApiPropertyDescriptor(this);
     }
 
     @Override
     public String toString() {
-      return Strings.format("[PEJAD %s PEJAD]",
+      return Strings.format("[PEJAPD %s PEJAPD]",
           formatMapInKeyOrder(validValuesToExplanations, String::compareTo, " ; "));
     }
 
@@ -485,7 +493,7 @@ public abstract class DataClassJsonApiDescriptor {
    *
    * For those JSON properties, we should be using this.
    */
-  public static class JavaEnumJsonApiDescriptor<E extends Enum<E>> extends DataClassJsonApiDescriptor {
+  public static class JavaEnumJsonApiPropertyDescriptor<E extends Enum<E>> extends JsonApiPropertyDescriptor {
 
     /**
      * Not all enum values are guaranteed to be serializable. Ideally the API would support everything, but there are
@@ -527,7 +535,7 @@ public abstract class DataClassJsonApiDescriptor {
 
       @Override
       public String toString() {
-        return Strings.format("[JESAE %s %s JESAE]", jsonSerialization, explanation);
+        return Strings.format("[JESAPE %s %s JESAPE]", jsonSerialization, explanation);
       }
 
     }
@@ -536,14 +544,14 @@ public abstract class DataClassJsonApiDescriptor {
     private final Class<E> enumClass;
     private final EnumMap<E, JavaEnumSerializationAndExplanation> validValuesToExplanations;
 
-    private JavaEnumJsonApiDescriptor(
+    private JavaEnumJsonApiPropertyDescriptor(
         Class<E> enumClass,
         EnumMap<E, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
       this.enumClass = enumClass;
       this.validValuesToExplanations = validValuesToExplanations;
     }
 
-    public static <E extends Enum<E>> JavaEnumJsonApiDescriptor<E> javaEnumJsonApiDescriptor(
+    public static <E extends Enum<E>> JavaEnumJsonApiPropertyDescriptor<E> javaEnumJsonApiPropertyDescriptor(
         Class<E> enumClass,
         EnumMap<E, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
       // The 1 in the following precondition (vs. e.g. 2+)
@@ -566,7 +574,7 @@ public abstract class DataClassJsonApiDescriptor {
                 "No explanation may be all whitespace (which includes the empty string): %s",
                 validValuesToExplanations);
           });
-      return new JavaEnumJsonApiDescriptor<>(enumClass, validValuesToExplanations);
+      return new JavaEnumJsonApiPropertyDescriptor<>(enumClass, validValuesToExplanations);
     }
 
     public Class<E> getEnumClass() {
@@ -579,13 +587,13 @@ public abstract class DataClassJsonApiDescriptor {
 
     @Override
     public <T> T visit(Visitor<T> visitor) {
-      return visitor.visitJavaEnumJsonApiDescriptor(this);
+      return visitor.visitJavaEnumJsonApiPropertyDescriptor(this);
     }
 
     @Override
     public String toString() {
       // Can't use formatMap because this is an EnumMap, not a RBMap.
-      return Strings.format("[JEJAD %s %s JEJAD]", enumClass, validValuesToExplanations);
+      return Strings.format("[JEJAPD %s %s JEJAPD]", enumClass, validValuesToExplanations);
     }
 
   }

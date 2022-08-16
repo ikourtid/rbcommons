@@ -1,6 +1,6 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaEnumJsonApiDescriptor;
+import com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 
@@ -16,10 +16,10 @@ public class JsonApiDocumentationForEnumGenerator {
   public <E extends Enum<E>> JsonApiDocumentation generate(
       HumanReadableLabel singleLineSummary,
       String longDocumentationPrefix,
-      JavaEnumJsonApiDescriptor<E> javaEnumJsonApiDescriptor) {
+      JavaEnumJsonApiPropertyDescriptor<E> javaEnumJsonApiPropertyDescriptor) {
     StringBuilder sb = new StringBuilder(Strings.format("<p> %s </p>\n", longDocumentationPrefix));
     sb.append("<p> The following values are valid:\n<ul>");
-    javaEnumJsonApiDescriptor.getValidValuesToExplanations()
+    javaEnumJsonApiPropertyDescriptor.getValidValuesToExplanations()
         .values()
         .forEach(javaEnumSerializationAndExplanation ->
             sb.append(Strings.format("<li> <strong>%s</strong> : %s </li>\n",
@@ -27,7 +27,7 @@ public class JsonApiDocumentationForEnumGenerator {
                 javaEnumSerializationAndExplanation.getExplanation())));
     sb.append("</ul></p>\n");
     return jsonApiDocumentationBuilder()
-        .setClass(javaEnumJsonApiDescriptor.getEnumClass())
+        .setClass(javaEnumJsonApiPropertyDescriptor.getEnumClass())
         .setSingleLineSummary(singleLineSummary)
         .setLongDocumentation(sb.toString())
         // JsonValidationInstructions is for cases where there are properties, but n/a for a primitive such as Enum.

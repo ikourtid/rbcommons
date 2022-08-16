@@ -1,13 +1,13 @@
 package com.rb.nonbiz.json;
 
-import com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaEnumJsonApiDescriptor;
+import com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaEnumJsonApiDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
-import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.JavaEnumJsonApiDescriptor.javaEnumJsonApiDescriptor;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor.javaEnumJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JavaEnumSerializationAndExplanationTest.javaEnumSerializationAndExplanationMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
@@ -19,24 +19,24 @@ import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.emptyEnumMap;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
 
-public class JavaEnumJsonApiDescriptorTest extends RBTestMatcher<JavaEnumJsonApiDescriptor<TestEnumXYZ>> {
+public class JavaEnumJsonApiPropertyDescriptorTest extends RBTestMatcher<JavaEnumJsonApiPropertyDescriptor<TestEnumXYZ>> {
 
   @Test
   public void mustHaveAtLeastOneItem() {
-    assertIllegalArgumentException( () -> javaEnumJsonApiDescriptor(TestEnumXYZ.class, emptyEnumMap()));
+    assertIllegalArgumentException( () -> javaEnumJsonApiPropertyDescriptor(TestEnumXYZ.class, emptyEnumMap()));
   }
 
   @Override
-  public JavaEnumJsonApiDescriptor<TestEnumXYZ> makeTrivialObject() {
-    return javaEnumJsonApiDescriptor(
+  public JavaEnumJsonApiPropertyDescriptor<TestEnumXYZ> makeTrivialObject() {
+    return javaEnumJsonApiPropertyDescriptor(
         TestEnumXYZ.class,
         singletonEnumMap(
             TestEnumXYZ.X, javaEnumSerializationAndExplanation("x", label("y"))));
   }
 
   @Override
-  public JavaEnumJsonApiDescriptor<TestEnumXYZ> makeNontrivialObject() {
-    return javaEnumJsonApiDescriptor(
+  public JavaEnumJsonApiPropertyDescriptor<TestEnumXYZ> makeNontrivialObject() {
+    return javaEnumJsonApiPropertyDescriptor(
         TestEnumXYZ.class,
         enumMapOf(
             TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", label("explanation for x")),
@@ -45,9 +45,9 @@ public class JavaEnumJsonApiDescriptorTest extends RBTestMatcher<JavaEnumJsonApi
   }
 
   @Override
-  public JavaEnumJsonApiDescriptor<TestEnumXYZ> makeMatchingNontrivialObject() {
+  public JavaEnumJsonApiPropertyDescriptor<TestEnumXYZ> makeMatchingNontrivialObject() {
     // Nothing to tweak here
-    return javaEnumJsonApiDescriptor(
+    return javaEnumJsonApiPropertyDescriptor(
         TestEnumXYZ.class,
         enumMapOf(
             TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", label("explanation for x")),
@@ -57,13 +57,13 @@ public class JavaEnumJsonApiDescriptorTest extends RBTestMatcher<JavaEnumJsonApi
 
   @Override
   protected boolean willMatch(
-      JavaEnumJsonApiDescriptor<TestEnumXYZ> expected,
-      JavaEnumJsonApiDescriptor<TestEnumXYZ> actual) {
-    return javaEnumJsonApiDescriptorMatcher(expected).matches(actual);
+      JavaEnumJsonApiPropertyDescriptor<TestEnumXYZ> expected,
+      JavaEnumJsonApiPropertyDescriptor<TestEnumXYZ> actual) {
+    return javaEnumJsonApiPropertyDescriptorMatcher(expected).matches(actual);
   }
 
-  public static <E extends Enum<E>> TypeSafeMatcher<JavaEnumJsonApiDescriptor<E>> javaEnumJsonApiDescriptorMatcher(
-      JavaEnumJsonApiDescriptor<E> expected) {
+  public static <E extends Enum<E>> TypeSafeMatcher<JavaEnumJsonApiPropertyDescriptor<E>> javaEnumJsonApiPropertyDescriptorMatcher(
+      JavaEnumJsonApiPropertyDescriptor<E> expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getEnumClass()),
         match(v -> v.getValidValuesToExplanations(), f -> enumMapMatcher(f,

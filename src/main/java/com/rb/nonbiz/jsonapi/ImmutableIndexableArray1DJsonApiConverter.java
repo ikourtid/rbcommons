@@ -14,7 +14,7 @@ import java.util.function.Function;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.immutableIndexableArray1D;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
-import static com.rb.nonbiz.json.DataClassJsonApiDescriptor.SimpleClassJsonApiDescriptor.simpleClassJsonApiDescriptor;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
@@ -35,7 +35,7 @@ public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocu
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties(rbMapOf(
-          "keys", simpleClassJsonApiDescriptor(String.class),
+          "keys", simpleClassJsonApiPropertyDescriptor(String.class),
           "data", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR))
       .hasNoOptionalProperties()
       .build();
