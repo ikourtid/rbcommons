@@ -42,7 +42,7 @@ public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocument
   }
 
   /**
-   * A single-line summary for the class being converted to/from JSON by this JSON API converter.
+   * A single-line summary for this enum.
    */
   @Override
   public HumanReadableLabel getSingleLineSummary() {
@@ -50,7 +50,7 @@ public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocument
   }
   
   /**
-   * Returns the human-readable documentation for this JSON API object
+   * The human-readable documentation for this enum.
    */
   @Override
   public String getLongDocumentation() {

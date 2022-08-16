@@ -288,12 +288,11 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       RBPreconditions.checkNotNull(trivialSampleJson);
       RBPreconditions.checkNotNull(nontrivialSampleJson);
 
-      /* FIXME IAK YAML add this
+      // FIXME IAK YAML test this
       RBPreconditions.checkArgument(
           !clazz.isEnum(),
-          "Class %s cannot be an enum!",
+          "Class %s cannot be an enum! Use JsonApiEnumDocumentation for that case",
           clazz);
-      */
 
       // Since the child nodes are 'verb classes', which never implement equals/hashCode (we rarely even do this with
       // data classes), this will check using simple pointer equality. We have it here to prevent mistakes where a
