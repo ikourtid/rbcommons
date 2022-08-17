@@ -14,7 +14,6 @@ import org.hamcrest.TypeSafeMatcher;
 
 import static com.rb.nonbiz.json.CollectionJsonApiPropertyDescriptorTest.collectionJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.IidMapJsonApiPropertyDescriptorTest.iidMapJsonApiPropertyDescriptorMatcher;
-import static com.rb.nonbiz.json.JavaEnumJsonApiPropertyDescriptorTest.javaEnumJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.JavaGenericJsonApiPropertyDescriptorTest.javaGenericJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.PseudoEnumJsonApiPropertyDescriptorTest.pseudoEnumJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.RBMapJsonApiPropertyDescriptorTest.rbMapJsonApiPropertyDescriptorMatcher;
