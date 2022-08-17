@@ -3,10 +3,12 @@ package com.rb.nonbiz.json;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Test;
 
 import static com.rb.nonbiz.json.JavaEnumSerializationAndExplanationTest.javaEnumSerializationAndExplanationMatcher;
 import static com.rb.nonbiz.json.JsonApiEnumDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
 import static com.rb.nonbiz.json.JsonApiEnumDescriptor.jsonApiEnumDescriptor;
+import static com.rb.nonbiz.json.JsonApiEnumDescriptor.simpleJsonApiEnumDescriptor;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapMatcher;
@@ -14,8 +16,22 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescriptor<TestEnumXYZ>> {
+
+  @Test
+  public void test_simpleJsonApiEnumDescriptor() {
+    assertThat(
+        simpleJsonApiEnumDescriptor(TestEnumXYZ.class),
+        jsonApiEnumDescriptorMatcher(
+            jsonApiEnumDescriptor(
+                TestEnumXYZ.class,
+                enumMapOf(
+                    TestEnumXYZ.X, javaEnumSerializationAndExplanation("X", label("test documentation for X")),
+                    TestEnumXYZ.Y, javaEnumSerializationAndExplanation("Y", label("test documentation for Y")),
+                    TestEnumXYZ.Z, javaEnumSerializationAndExplanation("Z", label("test documentation for Z"))))));
+  }
 
   @Override
   public JsonApiEnumDescriptor<TestEnumXYZ> makeTrivialObject() {

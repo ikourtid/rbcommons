@@ -1,14 +1,16 @@
 package com.rb.nonbiz.json;
 
+import com.rb.nonbiz.text.HasHumanReadableDocumentation;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
-import com.rb.nonbiz.util.RBEnumMapSimpleConstructors;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.EnumMap;
 
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
-import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.emptyEnumMap;
+import static com.rb.nonbiz.json.JsonApiEnumDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.util.RBEnumMaps.enumMapCoveringAllEnumValues;
 
 /**
  * We often serialize a Java enum by using strings that are similar in meaning to the Java identifier, but
@@ -107,6 +109,20 @@ public class JsonApiEnumDescriptor<E extends Enum<E>> {
         "Internal error: class %s must be an enum!",
         enumClass);
     return new JsonApiEnumDescriptor<>(enumClass, validValuesToExplanations);
+  }
+
+  /**
+   * <p> Creates a {@link JsonApiEnumDescriptor} for the cases where our JSON API serialization uses the
+   * Java identifiers of the enum values, where the enum class itself specifies its own documentation, and when
+   * the JSON API semantics are such that we want to expose all enum values, not just a subset. </p>
+   */
+  public static <E extends Enum<E> & HasHumanReadableDocumentation> JsonApiEnumDescriptor<E> simpleJsonApiEnumDescriptor(
+      Class<E> enumClass) {
+    return jsonApiEnumDescriptor(enumClass, enumMapCoveringAllEnumValues(
+        enumClass,
+        enumValue -> javaEnumSerializationAndExplanation(
+            enumValue.name(),
+            label(enumValue.getDocumentation().getAsString()))));
   }
 
   public Class<E> getEnumClass() {
