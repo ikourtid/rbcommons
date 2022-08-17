@@ -1,7 +1,7 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.rb.nonbiz.json.JsonApiEnumDescriptor;
 import com.rb.nonbiz.text.HumanReadableLabel;
-import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -14,31 +14,21 @@ import com.rb.nonbiz.util.RBPreconditions;
  */
 public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocumentation {
 
-  private final Class<E> enumClass;
+  private final JsonApiEnumDescriptor<E> jsonApiEnumDescriptor;
   private final HumanReadableLabel singleLineSummary;
   private final String longDocumentation;
 
   private JsonApiEnumDocumentation(
-      Class<E> enumClass,
+      JsonApiEnumDescriptor<E> jsonApiEnumDescriptor,
       HumanReadableLabel singleLineSummary,
       String longDocumentation) {
-    this.enumClass = enumClass;
+    this.jsonApiEnumDescriptor = jsonApiEnumDescriptor;
     this.singleLineSummary = singleLineSummary;
     this.longDocumentation = longDocumentation;
   }
 
-  /**
-   * Returns the Java class of the enum that this documentation refers to.
-   *
-   * <p> Design-wise, this does not have to be a Java class - it could have been just a string, or some other unique ID.
-   * The reader of the JSON API should not care what the names of the Java classes are. But we need some sort of
-   * unique way of referring to this JSON "class" (in the general object-oriented sense, not in the Java sense),
-   * so let's just use the {@link Class#getSimpleName()} for that purpose. </p>
-   *
-   * <p> This is similar to what we do for instantiating {@link RBLog}. </p>
-   */
-  public Class<E> getEnumClass() {
-    return enumClass;
+  public JsonApiEnumDescriptor<E> getJsonApiEnumDescriptor() {
+    return jsonApiEnumDescriptor;
   }
 
   /**
@@ -65,13 +55,13 @@ public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocument
 
   @Override
   public Class<?> getClassBeingDocumented() {
-    return getEnumClass();
+    return jsonApiEnumDescriptor.getEnumClass();
   }
 
   @Override
   public String toString() {
-    return Strings.format("[JACD %s %s %s %s %s %s %s JACD]",
-        enumClass,
+    return Strings.format("[JACD %s %s %s JACD]",
+        jsonApiEnumDescriptor,
         singleLineSummary,
         longDocumentation);
   }
@@ -80,7 +70,7 @@ public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocument
   public static class JsonApiEnumDocumentationBuilder<E extends Enum<E>>
       implements RBBuilder<JsonApiEnumDocumentation<E>> {
 
-    private Class<E> enumClass;
+    private JsonApiEnumDescriptor<E> jsonApiEnumDescriptor;
     private HumanReadableLabel singleLineSummary;
     private String longDocumentation;
 
@@ -90,8 +80,8 @@ public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocument
       return new JsonApiEnumDocumentationBuilder<>();
     }
 
-    public JsonApiEnumDocumentationBuilder<E> setEnumClass(Class<E> enumClass) {
-      this.enumClass = checkNotAlreadySet(this.enumClass, enumClass);
+    public JsonApiEnumDocumentationBuilder<E> setJsonApiEnumDescriptor(JsonApiEnumDescriptor<E> jsonApiEnumDescriptor) {
+      this.jsonApiEnumDescriptor = checkNotAlreadySet(this.jsonApiEnumDescriptor, jsonApiEnumDescriptor);
       return this;
     }
 
@@ -107,22 +97,15 @@ public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocument
 
     @Override
     public void sanityCheckContents() {
-      RBPreconditions.checkNotNull(enumClass);
+      RBPreconditions.checkNotNull(jsonApiEnumDescriptor);
       RBPreconditions.checkNotNull(singleLineSummary);
       RBPreconditions.checkNotNull(longDocumentation);
-
-      RBPreconditions.checkArgument(
-          enumClass.isEnum(),
-          // 'internal error' because this should never happen due to the builder having <E extends Enum<E>>.
-          // But let's check it, just in case.
-          "Internal error: class %s must be an enum!",
-          enumClass);
     }
 
     @Override
     public JsonApiEnumDocumentation<E> buildWithoutPreconditions() {
       return new JsonApiEnumDocumentation<E>(
-          enumClass, singleLineSummary, longDocumentation);
+          jsonApiEnumDescriptor, singleLineSummary, longDocumentation);
     }
 
   }

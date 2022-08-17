@@ -1,10 +1,12 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.rb.nonbiz.json.JsonApiEnumDescriptorTest;
 import com.rb.nonbiz.jsonapi.JsonApiEnumDocumentation.JsonApiEnumDocumentationBuilder;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.hamcrest.TypeSafeMatcher;
 
+import static com.rb.nonbiz.json.JsonApiEnumDescriptorTest.jsonApiEnumDescriptorMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -13,19 +15,10 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 public class JsonApiEnumDocumentationTest extends RBTestMatcher<JsonApiEnumDocumentation<TestEnumXYZ>> {
 
-  public static <E extends Enum<E>> JsonApiEnumDocumentation<E> testJsonApiEnumDocumentationWithSeed(
-      Class<E> enumClass, String seed) {
-    return JsonApiEnumDocumentationBuilder.<E>jsonApiEnumDocumentationBuilder()
-        .setEnumClass(enumClass)
-        .setSingleLineSummary(label("summary" + seed))
-        .setLongDocumentation("documentation" + seed)
-        .build();
-  }
-
   @Override
   public JsonApiEnumDocumentation<TestEnumXYZ> makeTrivialObject() {
     return JsonApiEnumDocumentationBuilder.<TestEnumXYZ>jsonApiEnumDocumentationBuilder()
-        .setEnumClass(TestEnumXYZ.class)
+        .setJsonApiEnumDescriptor(new JsonApiEnumDescriptorTest().makeTrivialObject())
         .setSingleLineSummary(label("x"))
         .setLongDocumentation("y")
         .build();
@@ -33,13 +26,20 @@ public class JsonApiEnumDocumentationTest extends RBTestMatcher<JsonApiEnumDocum
 
   @Override
   public JsonApiEnumDocumentation<TestEnumXYZ> makeNontrivialObject() {
-    return testJsonApiEnumDocumentationWithSeed(TestEnumXYZ.class, "");
+    return JsonApiEnumDocumentationBuilder.<TestEnumXYZ>jsonApiEnumDocumentationBuilder()
+        .setJsonApiEnumDescriptor(new JsonApiEnumDescriptorTest().makeNontrivialObject())
+        .setSingleLineSummary(label("Summary for TestEnumXYZ"))
+        .setLongDocumentation("Long documentation for TestEnumXYZ")
+        .build();
   }
 
   @Override
   public JsonApiEnumDocumentation<TestEnumXYZ> makeMatchingNontrivialObject() {
-    // Nothing to tweak here
-    return testJsonApiEnumDocumentationWithSeed(TestEnumXYZ.class, "");
+    return JsonApiEnumDocumentationBuilder.<TestEnumXYZ>jsonApiEnumDocumentationBuilder()
+        .setJsonApiEnumDescriptor(new JsonApiEnumDescriptorTest().makeMatchingNontrivialObject())
+        .setSingleLineSummary(label("Summary for TestEnumXYZ"))
+        .setLongDocumentation("Long documentation for TestEnumXYZ")
+        .build();
   }
 
   @Override
@@ -52,8 +52,8 @@ public class JsonApiEnumDocumentationTest extends RBTestMatcher<JsonApiEnumDocum
   public static TypeSafeMatcher<JsonApiEnumDocumentation<? extends Enum<?>>> jsonApiEnumDocumentationMatcher(
       JsonApiEnumDocumentation<? extends Enum<?>> expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getEnumClass()),
-        match(           v -> v.getSingleLineSummary(), f -> humanReadableLabelMatcher(f)),
+        match(           v -> v.getJsonApiEnumDescriptor(), f -> jsonApiEnumDescriptorMatcher(f)),
+        match(           v -> v.getSingleLineSummary(),     f -> humanReadableLabelMatcher(f)),
         matchUsingEquals(v -> v.getLongDocumentation()));
   }
 

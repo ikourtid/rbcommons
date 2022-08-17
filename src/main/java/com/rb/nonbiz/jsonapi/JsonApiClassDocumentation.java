@@ -288,7 +288,6 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       RBPreconditions.checkNotNull(trivialSampleJson);
       RBPreconditions.checkNotNull(nontrivialSampleJson);
 
-      // FIXME IAK YAML test this
       RBPreconditions.checkArgument(
           !clazz.isEnum(),
           "Class %s cannot be an enum! Use JsonApiEnumDocumentation for that case",

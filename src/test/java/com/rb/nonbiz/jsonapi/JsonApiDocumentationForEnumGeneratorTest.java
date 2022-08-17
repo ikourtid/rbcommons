@@ -1,12 +1,13 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.rb.nonbiz.json.JsonApiEnumDescriptor;
 import com.rb.nonbiz.jsonapi.JsonApiEnumDocumentation.JsonApiEnumDocumentationBuilder;
 import com.rb.nonbiz.testutils.RBTest;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.junit.Test;
 
-import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
-import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor.javaEnumJsonApiPropertyDescriptor;
+import static com.rb.nonbiz.json.JsonApiEnumDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
+import static com.rb.nonbiz.json.JsonApiEnumDescriptor.jsonApiEnumDescriptor;
 import static com.rb.nonbiz.jsonapi.JsonApiEnumDocumentationTest.jsonApiEnumDocumentationMatcher;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
@@ -17,18 +18,19 @@ public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocu
 
   @Test
   public void testTextGeneration() {
+    JsonApiEnumDescriptor<TestEnumXYZ> jsonApiEnumDescriptor = jsonApiEnumDescriptor(
+        TestEnumXYZ.class,
+        enumMapOf(
+            TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", label("explanation for x")),
+            TestEnumXYZ.Y, javaEnumSerializationAndExplanation("_y", label("explanation for y"))));
     assertThat(
         makeTestObject().generate(
             label("Summary for XYZ."),
             "Description for XYZ.",
-            javaEnumJsonApiPropertyDescriptor(
-                TestEnumXYZ.class,
-                enumMapOf(
-                    TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", label("explanation for x")),
-                    TestEnumXYZ.Y, javaEnumSerializationAndExplanation("_y", label("explanation for y"))))),
+            jsonApiEnumDescriptor),
         jsonApiEnumDocumentationMatcher(
             JsonApiEnumDocumentationBuilder.<TestEnumXYZ>jsonApiEnumDocumentationBuilder()
-                .setEnumClass(TestEnumXYZ.class)
+                .setJsonApiEnumDescriptor(jsonApiEnumDescriptor)
                 .setSingleLineSummary(label("Summary for XYZ."))
                 .setLongDocumentation(asSingleLine(
                     "<p> Description for XYZ. </p>\n",

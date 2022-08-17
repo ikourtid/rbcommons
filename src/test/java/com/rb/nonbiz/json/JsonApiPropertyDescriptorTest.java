@@ -2,7 +2,6 @@ package com.rb.nonbiz.json;
 
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.CollectionJsonApiPropertyDescriptor;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor;
-import com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaEnumJsonApiPropertyDescriptor;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.PseudoEnumJsonApiPropertyDescriptor;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.RBMapJsonApiPropertyDescriptor;
@@ -15,7 +14,6 @@ import org.hamcrest.TypeSafeMatcher;
 
 import static com.rb.nonbiz.json.CollectionJsonApiPropertyDescriptorTest.collectionJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.IidMapJsonApiPropertyDescriptorTest.iidMapJsonApiPropertyDescriptorMatcher;
-import static com.rb.nonbiz.json.JavaEnumJsonApiPropertyDescriptorTest.javaEnumJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.JavaGenericJsonApiPropertyDescriptorTest.javaGenericJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.PseudoEnumJsonApiPropertyDescriptorTest.pseudoEnumJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.RBMapJsonApiPropertyDescriptorTest.rbMapJsonApiPropertyDescriptorMatcher;
@@ -88,13 +86,6 @@ public class JsonApiPropertyDescriptorTest extends RBTestMatcher<JsonApiProperty
           PseudoEnumJsonApiPropertyDescriptor pseudoEnumJsonApiPropertyDescriptor) {
         return visitorMatchInfo(6, pseudoEnumJsonApiPropertyDescriptor,
             (MatcherGenerator<PseudoEnumJsonApiPropertyDescriptor>) f -> pseudoEnumJsonApiPropertyDescriptorMatcher(f));
-      }
-
-      @Override
-      public VisitorMatchInfo<JsonApiPropertyDescriptor> visitJavaEnumJsonApiPropertyDescriptor(
-          JavaEnumJsonApiPropertyDescriptor javaEnumJsonApiPropertyDescriptor) {
-        return visitorMatchInfo(7, javaEnumJsonApiPropertyDescriptor,
-            (MatcherGenerator<JavaEnumJsonApiPropertyDescriptor>) f -> javaEnumJsonApiPropertyDescriptorMatcher(f));
       }
     }));
   }
