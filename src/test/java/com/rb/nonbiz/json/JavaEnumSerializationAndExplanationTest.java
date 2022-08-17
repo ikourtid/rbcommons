@@ -12,6 +12,8 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
 import static com.rb.nonbiz.text.HumanReadableLabelTest.humanReadableLabelMatcher;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
@@ -21,7 +23,7 @@ public class JavaEnumSerializationAndExplanationTest extends RBTestMatcher<JavaE
   public void enumSerializationOrExplanationAreEmpty_throws() {
     BiFunction<String, String, JavaEnumSerializationAndExplanation> maker =
         (jsonSerialization, explanation) -> javaEnumSerializationAndExplanation(
-            jsonSerialization, label(explanation));
+            jsonSerialization, humanReadableDocumentation(explanation));
     assertIllegalArgumentException( () -> maker.apply("", ""));
     assertIllegalArgumentException( () -> maker.apply("x", ""));
     assertIllegalArgumentException( () -> maker.apply("", "x"));
@@ -32,18 +34,18 @@ public class JavaEnumSerializationAndExplanationTest extends RBTestMatcher<JavaE
 
   @Override
   public JavaEnumSerializationAndExplanation makeTrivialObject() {
-    return javaEnumSerializationAndExplanation("a", label("a"));
+    return javaEnumSerializationAndExplanation("a", humanReadableDocumentation("a"));
   }
 
   @Override
   public JavaEnumSerializationAndExplanation makeNontrivialObject() {
-    return javaEnumSerializationAndExplanation("someEnumValueAsJson", label("sample explanation"));
+    return javaEnumSerializationAndExplanation("someEnumValueAsJson", humanReadableDocumentation("sample explanation"));
   }
 
   @Override
   public JavaEnumSerializationAndExplanation makeMatchingNontrivialObject() {
     // Nothing to tweak here
-    return javaEnumSerializationAndExplanation("someEnumValueAsJson", label("sample explanation"));
+    return javaEnumSerializationAndExplanation("someEnumValueAsJson", humanReadableDocumentation("sample explanation"));
   }
 
   @Override
@@ -58,8 +60,9 @@ public class JavaEnumSerializationAndExplanationTest extends RBTestMatcher<JavaE
         // We almost never match HumanReadableLabel.
         // However, this rule applies to labels that are attached to various runtime objects
         // (e.g. daily time series) and which are intended for Rowboat developers to read.
-        // In this case here, the label is destined for 3rd party developers. So its contents matter.
-        match(           v -> v.getExplanation(), f -> humanReadableLabelMatcher(f)));
+        // In this case here, this is a HumanReadableDocumentation, which is intended for 3rd party developers.
+        // So its contents matter.
+        match(           v -> v.getExplanation(), f -> humanReadableDocumentationMatcher(f)));
   }
 
 }

@@ -20,14 +20,14 @@ public class JsonApiDocumentationForEnumGenerator {
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentationPrefix,
       JsonApiEnumDescriptor<E> jsonApiEnumDescriptor) {
-    StringBuilder sb = new StringBuilder(Strings.format("<p> %s </p>\n", longDocumentationPrefix));
+    StringBuilder sb = new StringBuilder(Strings.format("<p> %s </p>\n", longDocumentationPrefix.getAsString()));
     sb.append("<p> The following values are valid:\n<ul>");
     jsonApiEnumDescriptor.getValidValuesToExplanations()
         .values()
         .forEach(javaEnumSerializationAndExplanation ->
             sb.append(Strings.format("<li> <strong>%s</strong> : %s </li>\n",
                 javaEnumSerializationAndExplanation.getJsonSerialization(),
-                javaEnumSerializationAndExplanation.getExplanation())));
+                javaEnumSerializationAndExplanation.getExplanation().getAsString())));
     sb.append("</ul></p>\n");
     return JsonApiEnumDocumentationBuilder.<E>jsonApiEnumDocumentationBuilder()
         .setJsonApiEnumDescriptor(jsonApiEnumDescriptor)

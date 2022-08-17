@@ -9,6 +9,7 @@ import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSets;
+import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
@@ -24,6 +25,7 @@ import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
 
@@ -437,18 +439,18 @@ public abstract class JsonApiPropertyDescriptor {
 
     // This should be removed once we have human-readable descriptions for all instances where we use it.
     // The reason it exists is that it helps us avoid having fixmes in multiple places.
-    public static HumanReadableLabel undefinedPseudoEnumJsonApiPropertyDescription() {
-      return label("FIXME SWA JSONDOC");
+    public static HumanReadableDocumentation undefinedPseudoEnumJsonApiPropertyDescription() {
+      return humanReadableDocumentation("FIXME SWA JSONDOC");
     }
 
-    private final RBMap<String, HumanReadableLabel> validValuesToExplanations;
+    private final RBMap<String, HumanReadableDocumentation> validValuesToExplanations;
 
-    private PseudoEnumJsonApiPropertyDescriptor(RBMap<String, HumanReadableLabel> validValuesToExplanations) {
+    private PseudoEnumJsonApiPropertyDescriptor(RBMap<String, HumanReadableDocumentation> validValuesToExplanations) {
       this.validValuesToExplanations = validValuesToExplanations;
     }
 
     public static PseudoEnumJsonApiPropertyDescriptor pseudoEnumJsonApiPropertyDescriptor(
-        RBMap<String, HumanReadableLabel> validValuesToExplanations) {
+        RBMap<String, HumanReadableDocumentation> validValuesToExplanations) {
       // One reasonable question is:
       // The variable name is validValuesToExplanations, but is there a way to make sure the String keys are valid?
       // Or does this happen somewhere else?
@@ -465,14 +467,14 @@ public abstract class JsonApiPropertyDescriptor {
                 "No 'pseudo-enum' string key may be all whitespace (which includes the empty string): %s",
                 validValuesToExplanations);
             RBPreconditions.checkArgument(
-                !isAllWhiteSpace(explanationLabel.getLabelText()),
+                !isAllWhiteSpace(explanationLabel.getAsString()),
                 "No explanation may be all whitespace (which includes the empty string): %s",
                 validValuesToExplanations);
           });
       return new PseudoEnumJsonApiPropertyDescriptor(validValuesToExplanations);
     }
 
-    public RBMap<String, HumanReadableLabel> getValidValuesToExplanations() {
+    public RBMap<String, HumanReadableDocumentation> getValidValuesToExplanations() {
       return validValuesToExplanations;
     }
 

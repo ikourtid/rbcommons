@@ -13,6 +13,7 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
@@ -28,9 +29,9 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
             jsonApiEnumDescriptor(
                 TestEnumXYZ.class,
                 enumMapOf(
-                    TestEnumXYZ.X, javaEnumSerializationAndExplanation("X", label("test documentation for X")),
-                    TestEnumXYZ.Y, javaEnumSerializationAndExplanation("Y", label("test documentation for Y")),
-                    TestEnumXYZ.Z, javaEnumSerializationAndExplanation("Z", label("test documentation for Z"))))));
+                    TestEnumXYZ.X, javaEnumSerializationAndExplanation("X", humanReadableDocumentation("test documentation for X")),
+                    TestEnumXYZ.Y, javaEnumSerializationAndExplanation("Y", humanReadableDocumentation("test documentation for Y")),
+                    TestEnumXYZ.Z, javaEnumSerializationAndExplanation("Z", humanReadableDocumentation("test documentation for Z"))))));
   }
 
   @Override
@@ -38,7 +39,7 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
     return jsonApiEnumDescriptor(
         TestEnumXYZ.class,
         singletonEnumMap(
-            TestEnumXYZ.Y, javaEnumSerializationAndExplanation("_y", label("explanation for y"))));
+            TestEnumXYZ.Y, javaEnumSerializationAndExplanation("_y", humanReadableDocumentation("explanation for y"))));
   }
 
   @Override
@@ -46,8 +47,8 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
     return jsonApiEnumDescriptor(
         TestEnumXYZ.class,
         enumMapOf(
-            TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", label("explanation for x")),
-            TestEnumXYZ.Z, javaEnumSerializationAndExplanation("_z", label("explanation for z"))));
+            TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", humanReadableDocumentation("explanation for x")),
+            TestEnumXYZ.Z, javaEnumSerializationAndExplanation("_z", humanReadableDocumentation("explanation for z"))));
   }
 
   @Override
@@ -56,8 +57,8 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
     return jsonApiEnumDescriptor(
         TestEnumXYZ.class,
         enumMapOf(
-            TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", label("explanation for x")),
-            TestEnumXYZ.Z, javaEnumSerializationAndExplanation("_z", label("explanation for z"))));
+            TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", humanReadableDocumentation("explanation for x")),
+            TestEnumXYZ.Z, javaEnumSerializationAndExplanation("_z", humanReadableDocumentation("explanation for z"))));
   }
 
   @Override

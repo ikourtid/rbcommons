@@ -24,8 +24,8 @@ public class JsonApiDocumentationForPseudoEnumGeneratorTest extends RBTest<JsonA
             humanReadableDocumentation("One of several security types."),
             humanReadableDocumentation("This test only supports ETFs and stocks."),
             pseudoEnumJsonApiPropertyDescriptor(rbMapOf(
-                "is_etf",   label("Must also have 'etf' key with a `EtfInstrumentType` in its contents"),
-                "is_stock", label("Must also have 'stock' key with a `StockInstrumentType` in its contents")))),
+                "is_etf",   humanReadableDocumentation("Must also have 'etf' key with a `EtfInstrumentType` in its contents"),
+                "is_stock", humanReadableDocumentation("Must also have 'stock' key with a `StockInstrumentType` in its contents")))),
         jsonApiDocumentationMatcher(
             jsonApiClassDocumentationBuilder()
                 .setClass(InstrumentType.class)

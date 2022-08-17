@@ -22,8 +22,8 @@ public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocu
     JsonApiEnumDescriptor<TestEnumXYZ> jsonApiEnumDescriptor = jsonApiEnumDescriptor(
         TestEnumXYZ.class,
         enumMapOf(
-            TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", label("explanation for x")),
-            TestEnumXYZ.Y, javaEnumSerializationAndExplanation("_y", label("explanation for y"))));
+            TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", humanReadableDocumentation("explanation for x")),
+            TestEnumXYZ.Y, javaEnumSerializationAndExplanation("_y", humanReadableDocumentation("explanation for y"))));
     assertThat(
         makeTestObject().generate(
             humanReadableDocumentation("Summary for XYZ."),

@@ -23,10 +23,10 @@ public class JsonApiDocumentationForPseudoEnumGenerator {
     StringBuilder sb = new StringBuilder(Strings.format("<p> %s </p>\n", longDocumentationPrefix.getAsString()));
     sb.append("<p> The following values are valid:\n<ul>");
     pseudoEnumJsonApiPropertyDescriptor.getValidValuesToExplanations()
-        .forEachEntry( (key, explanationLabel) ->
+        .forEachEntry( (key, documentation) ->
             sb.append(Strings.format("<li> <strong>%s</strong> : %s </li>\n",
                 key,
-                explanationLabel.getLabelText())));
+                documentation.getAsString())));
     sb.append("</ul></p>\n");
     return jsonApiClassDocumentationBuilder()
         .setClass(clazz)
