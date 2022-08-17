@@ -1,16 +1,14 @@
-package com.rb.nonbiz.text.csv;
+package com.rb.nonbiz.text;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import org.junit.Test;
+import com.rb.nonbiz.text.HumanReadableDocumentation;
 
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
-import static com.rb.nonbiz.text.csv.HumanReadableDocumentation.emptyHumanReadableDocumentation;
-import static com.rb.nonbiz.text.csv.HumanReadableDocumentation.humanReadableDocumentation;
-import static org.junit.Assert.*;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.emptyHumanReadableDocumentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
 
 import org.hamcrest.TypeSafeMatcher;
 
-import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class HumanReadableDocumentationTest extends RBTestMatcher<HumanReadableDocumentation> {
