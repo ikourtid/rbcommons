@@ -20,6 +20,7 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_J
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getOptionalJsonPrimitive;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 /**
@@ -105,8 +106,8 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(Range.class)
-        .setSingleLineSummary(label("A range holds an optional lower bound and an optional upper bound."))
-        .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")
+        .setSingleLineSummary(humanReadableDocumentation("A range holds an optional lower bound and an optional upper bound."))
+        .setLongDocumentation(humanReadableDocumentation("FIXME IAK / FIXME SWA JSONDOC"))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()

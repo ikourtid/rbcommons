@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 
@@ -49,10 +50,10 @@ public class PreciseValueJsonApiConverter implements HasJsonApiDocumentation {
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(PreciseValue.class)
-        .setSingleLineSummary(label(asSingleLine(
+        .setSingleLineSummary(humanReadableDocumentation(asSingleLine(
             "A PreciseValue is the base class of many value classes in the code. ",
             "It exists to avoid rounding problems with doubles such as 9.9999999999.")))
-        .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")
+        .setLongDocumentation(humanReadableDocumentation("FIXME IAK / FIXME SWA JSONDOC"))
         .hasNoJsonValidationInstructions()
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()

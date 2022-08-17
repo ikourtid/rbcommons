@@ -24,6 +24,7 @@ import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 
@@ -103,10 +104,10 @@ public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonA
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(ImmutableDoubleIndexableArray2D.class)
-        .setSingleLineSummary(label(asSingleLine(
+        .setSingleLineSummary(humanReadableDocumentation(asSingleLine(
             "An indexable 2-D array is like a regular 2-D array, except that you can ",
             "also access it based on more meaningful keys - not just integer indices.")))
-        .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")
+        .setLongDocumentation(humanReadableDocumentation("FIXME IAK / FIXME SWA JSONDOC"))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
