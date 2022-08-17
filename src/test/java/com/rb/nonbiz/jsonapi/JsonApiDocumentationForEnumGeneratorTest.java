@@ -9,7 +9,7 @@ import org.junit.Test;
 import static com.rb.nonbiz.json.JsonApiEnumDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
 import static com.rb.nonbiz.json.JsonApiEnumDescriptor.jsonApiEnumDescriptor;
 import static com.rb.nonbiz.jsonapi.JsonApiEnumDocumentationTest.jsonApiEnumDocumentationMatcher;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,23 +21,23 @@ public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocu
     JsonApiEnumDescriptor<TestEnumXYZ> jsonApiEnumDescriptor = jsonApiEnumDescriptor(
         TestEnumXYZ.class,
         enumMapOf(
-            TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", label("explanation for x")),
-            TestEnumXYZ.Y, javaEnumSerializationAndExplanation("_y", label("explanation for y"))));
+            TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", documentation("explanation for x")),
+            TestEnumXYZ.Y, javaEnumSerializationAndExplanation("_y", documentation("explanation for y"))));
     assertThat(
         makeTestObject().generate(
-            label("Summary for XYZ."),
-            "Description for XYZ.",
+            documentation("Summary for XYZ."),
+            documentation("Description for XYZ."),
             jsonApiEnumDescriptor),
         jsonApiEnumDocumentationMatcher(
             JsonApiEnumDocumentationBuilder.<TestEnumXYZ>jsonApiEnumDocumentationBuilder()
                 .setJsonApiEnumDescriptor(jsonApiEnumDescriptor)
-                .setSingleLineSummary(label("Summary for XYZ."))
-                .setLongDocumentation(asSingleLine(
+                .setSingleLineSummary(documentation("Summary for XYZ."))
+                .setLongDocumentation(documentation(asSingleLine(
                     "<p> Description for XYZ. </p>\n",
                     "<p> The following values are valid:\n<ul>",
                     "<li> <strong>_x</strong> : explanation for x </li>\n",
                     "<li> <strong>_y</strong> : explanation for y </li>\n",
-                    "</ul></p>\n"))
+                    "</ul></p>\n")))
                 .build()));
   }
 

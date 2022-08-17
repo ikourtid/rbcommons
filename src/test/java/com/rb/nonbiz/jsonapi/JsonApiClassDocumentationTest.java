@@ -23,16 +23,16 @@ import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonElementMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
-import static com.rb.nonbiz.text.HumanReadableLabelTest.humanReadableLabelMatcher;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
 
 public class JsonApiClassDocumentationTest extends RBTestMatcher<JsonApiClassDocumentation> {
 
   public static JsonApiClassDocumentation testJsonApiClassDocumentationWithSeed(Class<?> clazz, String seed) {
     return jsonApiClassDocumentationBuilder()
         .setClass(clazz)
-        .setSingleLineSummary(label("summary" + seed))
-        .setLongDocumentation("documentation" + seed)
+        .setSingleLineSummary(documentation("summary" + seed))
+        .setLongDocumentation(documentation("documentation" + seed))
         .setJsonValidationInstructions(new JsonValidationInstructionsTest().makeNontrivialObject())
         .hasNoChildNodes() // hard to set this here
         .setTrivialSampleJson(singletonJsonObject(
@@ -55,8 +55,8 @@ public class JsonApiClassDocumentationTest extends RBTestMatcher<JsonApiClassDoc
   public JsonApiClassDocumentation makeTrivialObject() {
     return jsonApiClassDocumentationBuilder()
         .setClass(JsonTicker.class)
-        .setSingleLineSummary(label("x"))
-        .setLongDocumentation("y")
+        .setSingleLineSummary(documentation("x"))
+        .setLongDocumentation(documentation("y"))
         .hasNoJsonValidationInstructions()
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
@@ -84,8 +84,8 @@ public class JsonApiClassDocumentationTest extends RBTestMatcher<JsonApiClassDoc
       JsonApiClassDocumentation expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getClazz()),
-        match(           v -> v.getSingleLineSummary(),          f -> humanReadableLabelMatcher(f)),
-        matchUsingEquals(v -> v.getLongDocumentation()),
+        match(           v -> v.getSingleLineSummary(),          f -> humanReadableDocumentationMatcher(f)),
+        match(           v -> v.getLongDocumentation(),          f -> humanReadableDocumentationMatcher(f)),
         match(           v -> v.getJsonValidationInstructions(), f -> jsonValidationInstructionsMatcher(f)),
         matchList(       v -> v.getChildNodes(),                 f -> hasJsonApiDocumentationMatcher(f)),
         matchOptional(   v -> v.getTrivialSampleJson(),          f -> jsonElementMatcher(f, 1e-8)),

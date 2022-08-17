@@ -16,7 +16,7 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_J
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 
@@ -72,15 +72,15 @@ public class HardAndSoftRangeJsonApiConverter implements HasJsonApiDocumentation
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(HardAndSoftRange.class)
-        .setSingleLineSummary(label(asSingleLine(
+        .setSingleLineSummary(documentation(asSingleLine(
             "A combination of an outer 'hard' range that an optimization solution must observe ",
             "and an inner 'soft' range that the optimization should observe.")))
-        .setLongDocumentation(asSingleLine(
+        .setLongDocumentation(documentation(asSingleLine(
             "By 'should observe the soft limit', we mean ",
             "that if a value drifts outside the soft limit, it will not be allowed ",
             "to drift further, but will not be forced to immediate move in the other direction. ",
             "In contrast, if a value drifts outside a hard limit, the system will insist ",
-            "that it move back to the soft limit."))
+            "that it move back to the soft limit.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasChildNode(rangeJsonApiConverter)
         .noTrivialSampleJsonSupplied()

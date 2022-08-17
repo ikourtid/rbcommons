@@ -1,11 +1,10 @@
 package com.rb.nonbiz.text;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.text.HumanReadableDocumentation;
 
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.emptyHumanReadableDocumentation;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.emptyDocumentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 import org.hamcrest.TypeSafeMatcher;
 
@@ -15,18 +14,18 @@ public class HumanReadableDocumentationTest extends RBTestMatcher<HumanReadableD
 
   @Override
   public HumanReadableDocumentation makeTrivialObject() {
-    return emptyHumanReadableDocumentation();
+    return emptyDocumentation();
   }
 
   @Override
   public HumanReadableDocumentation makeNontrivialObject() {
-    return humanReadableDocumentation("some\ndocumentation");
+    return documentation("some\ndocumentation");
   }
 
   @Override
   public HumanReadableDocumentation makeMatchingNontrivialObject() {
     // Nothing to tweak here
-    return humanReadableDocumentation("some\ndocumentation");
+    return documentation("some\ndocumentation");
   }
 
   @Override

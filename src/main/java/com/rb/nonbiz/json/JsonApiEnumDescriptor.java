@@ -1,6 +1,7 @@
 package com.rb.nonbiz.json;
 
 import com.rb.nonbiz.text.HasHumanReadableDocumentation;
+import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -32,21 +33,21 @@ public class JsonApiEnumDescriptor<E extends Enum<E>> {
   public static class JavaEnumSerializationAndExplanation {
 
     private final String jsonSerialization;
-    private final HumanReadableLabel explanation;
+    private final HumanReadableDocumentation explanation;
 
-    private JavaEnumSerializationAndExplanation(String jsonSerialization, HumanReadableLabel explanation) {
+    private JavaEnumSerializationAndExplanation(String jsonSerialization, HumanReadableDocumentation explanation) {
       this.jsonSerialization = jsonSerialization;
       this.explanation = explanation;
     }
 
     public static JavaEnumSerializationAndExplanation javaEnumSerializationAndExplanation(
-        String jsonSerialization, HumanReadableLabel explanation) {
+        String jsonSerialization, HumanReadableDocumentation explanation) {
       RBPreconditions.checkArgument(
           !jsonSerialization.isEmpty(),
           "We can't use an empty string for serialization; explanation is: %s",
           explanation);
       RBPreconditions.checkArgument(
-          !explanation.getLabelText().isEmpty(),
+          !explanation.getAsString().isEmpty(),
           "Explanation can't be empty for enum value= %s",
           jsonSerialization);
       return new JavaEnumSerializationAndExplanation(jsonSerialization, explanation);
@@ -56,7 +57,7 @@ public class JsonApiEnumDescriptor<E extends Enum<E>> {
       return jsonSerialization;
     }
 
-    public HumanReadableLabel getExplanation() {
+    public HumanReadableDocumentation getExplanation() {
       return explanation;
     }
 
@@ -97,7 +98,7 @@ public class JsonApiEnumDescriptor<E extends Enum<E>> {
               "No Java enum serialized string representation in the API may be all whitespace (which includes the empty string): %s",
               validValuesToExplanations);
           RBPreconditions.checkArgument(
-              !isAllWhiteSpace(javaEnumSerializationAndExplanation.getExplanation().getLabelText()),
+              !isAllWhiteSpace(javaEnumSerializationAndExplanation.getExplanation().getAsString()),
               "No explanation may be all whitespace (which includes the empty string): %s",
               validValuesToExplanations);
         });
@@ -122,7 +123,7 @@ public class JsonApiEnumDescriptor<E extends Enum<E>> {
         enumClass,
         enumValue -> javaEnumSerializationAndExplanation(
             enumValue.name(),
-            label(enumValue.getDocumentation().getAsString()))));
+            enumValue.getDocumentation())));
   }
 
   public Class<E> getEnumClass() {

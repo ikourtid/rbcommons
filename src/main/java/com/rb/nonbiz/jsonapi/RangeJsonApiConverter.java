@@ -20,7 +20,7 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_J
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getOptionalJsonPrimitive;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 /**
  * Convert a {@link Range} back and forth to JSON for our public API.
@@ -105,8 +105,8 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(Range.class)
-        .setSingleLineSummary(label("A range holds an optional lower bound and an optional upper bound."))
-        .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")
+        .setSingleLineSummary(documentation("A range holds an optional lower bound and an optional upper bound."))
+        .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()

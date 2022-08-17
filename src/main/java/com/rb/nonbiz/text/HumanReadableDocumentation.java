@@ -15,12 +15,14 @@ public class HumanReadableDocumentation {
     this.asString = asString;
   }
 
-  public static HumanReadableDocumentation humanReadableDocumentation(String asString) {
+  // Our static constructors almost always have the same name as the class. However, just like with HumanReadableLabel,
+  // this appears in so many places where brevity matters that we'll just shorten it to just 'documentation'.
+  public static HumanReadableDocumentation documentation(String asString) {
     return new HumanReadableDocumentation(asString);
   }
 
-  public static HumanReadableDocumentation emptyHumanReadableDocumentation() {
-    return humanReadableDocumentation("");
+  public static HumanReadableDocumentation emptyDocumentation() {
+    return documentation("");
   }
 
   public String getAsString() {

@@ -2,8 +2,10 @@ package com.rb.nonbiz.jsonapi;
 
 import com.rb.nonbiz.json.JsonApiEnumDescriptor;
 import com.rb.nonbiz.jsonapi.JsonApiEnumDocumentation.JsonApiEnumDocumentationBuilder;
-import com.rb.nonbiz.text.HumanReadableLabel;
+import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.Strings;
+
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 
 /**
@@ -14,22 +16,22 @@ import com.rb.nonbiz.text.Strings;
 public class JsonApiDocumentationForEnumGenerator {
 
   public <E extends Enum<E>> JsonApiEnumDocumentation<E> generate(
-      HumanReadableLabel singleLineSummary,
-      String longDocumentationPrefix,
+      HumanReadableDocumentation singleLineSummary,
+      HumanReadableDocumentation longDocumentationPrefix,
       JsonApiEnumDescriptor<E> jsonApiEnumDescriptor) {
-    StringBuilder sb = new StringBuilder(Strings.format("<p> %s </p>\n", longDocumentationPrefix));
+    StringBuilder sb = new StringBuilder(Strings.format("<p> %s </p>\n", longDocumentationPrefix.getAsString()));
     sb.append("<p> The following values are valid:\n<ul>");
     jsonApiEnumDescriptor.getValidValuesToExplanations()
         .values()
         .forEach(javaEnumSerializationAndExplanation ->
             sb.append(Strings.format("<li> <strong>%s</strong> : %s </li>\n",
                 javaEnumSerializationAndExplanation.getJsonSerialization(),
-                javaEnumSerializationAndExplanation.getExplanation())));
+                javaEnumSerializationAndExplanation.getExplanation().getAsString())));
     sb.append("</ul></p>\n");
     return JsonApiEnumDocumentationBuilder.<E>jsonApiEnumDocumentationBuilder()
         .setJsonApiEnumDescriptor(jsonApiEnumDescriptor)
         .setSingleLineSummary(singleLineSummary)
-        .setLongDocumentation(sb.toString())
+        .setLongDocumentation(documentation(sb.toString()))
         .build();
   }
 

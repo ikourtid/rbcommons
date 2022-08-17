@@ -1,6 +1,7 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.rb.nonbiz.json.JsonApiEnumDescriptor;
+import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
@@ -15,13 +16,13 @@ import com.rb.nonbiz.util.RBPreconditions;
 public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocumentation {
 
   private final JsonApiEnumDescriptor<E> jsonApiEnumDescriptor;
-  private final HumanReadableLabel singleLineSummary;
-  private final String longDocumentation;
+  private final HumanReadableDocumentation singleLineSummary;
+  private final HumanReadableDocumentation longDocumentation;
 
   private JsonApiEnumDocumentation(
       JsonApiEnumDescriptor<E> jsonApiEnumDescriptor,
-      HumanReadableLabel singleLineSummary,
-      String longDocumentation) {
+      HumanReadableDocumentation singleLineSummary,
+      HumanReadableDocumentation longDocumentation) {
     this.jsonApiEnumDescriptor = jsonApiEnumDescriptor;
     this.singleLineSummary = singleLineSummary;
     this.longDocumentation = longDocumentation;
@@ -35,7 +36,7 @@ public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocument
    * A single-line summary for this enum.
    */
   @Override
-  public HumanReadableLabel getSingleLineSummary() {
+  public HumanReadableDocumentation getSingleLineSummary() {
     return singleLineSummary;
   }
   
@@ -43,7 +44,7 @@ public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocument
    * The human-readable documentation for this enum.
    */
   @Override
-  public String getLongDocumentation() {
+  public HumanReadableDocumentation getLongDocumentation() {
     return longDocumentation;
   }
 
@@ -71,8 +72,8 @@ public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocument
       implements RBBuilder<JsonApiEnumDocumentation<E>> {
 
     private JsonApiEnumDescriptor<E> jsonApiEnumDescriptor;
-    private HumanReadableLabel singleLineSummary;
-    private String longDocumentation;
+    private HumanReadableDocumentation singleLineSummary;
+    private HumanReadableDocumentation longDocumentation;
 
     private JsonApiEnumDocumentationBuilder() {}
 
@@ -85,12 +86,12 @@ public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocument
       return this;
     }
 
-    public JsonApiEnumDocumentationBuilder<E> setSingleLineSummary(HumanReadableLabel singleLineSummary) {
+    public JsonApiEnumDocumentationBuilder<E> setSingleLineSummary(HumanReadableDocumentation singleLineSummary) {
       this.singleLineSummary = checkNotAlreadySet(this.singleLineSummary, singleLineSummary);
       return this;
     }
 
-    public JsonApiEnumDocumentationBuilder<E> setLongDocumentation(String longDocumentation) {
+    public JsonApiEnumDocumentationBuilder<E> setLongDocumentation(HumanReadableDocumentation longDocumentation) {
       this.longDocumentation = checkNotAlreadySet(this.longDocumentation, longDocumentation);
       return this;
     }

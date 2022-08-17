@@ -2,7 +2,7 @@ package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonElement;
 import com.rb.nonbiz.json.JsonValidationInstructions;
-import com.rb.nonbiz.text.HumanReadableLabel;
+import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.json.JsonValidationInstructions.emptyJsonValidationInstructions;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatListInExistingOrder;
 import static com.rb.nonbiz.text.Strings.formatOptional;
 import static java.util.Collections.emptyList;
@@ -29,8 +29,8 @@ import static java.util.Collections.singletonList;
 public class JsonApiClassDocumentation extends JsonApiDocumentation {
 
   private final Class<?> clazz;
-  private final HumanReadableLabel singleLineSummary;
-  private final String longDocumentation;
+  private final HumanReadableDocumentation singleLineSummary;
+  private final HumanReadableDocumentation longDocumentation;
   private final JsonValidationInstructions jsonValidationInstructions;
   private final List<HasJsonApiDocumentation> childNodes;
   private final Optional<JsonElement> trivialSampleJson;
@@ -38,8 +38,8 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
 
   private JsonApiClassDocumentation(
       Class<?> clazz,
-      HumanReadableLabel singleLineSummary,
-      String longDocumentation,
+      HumanReadableDocumentation singleLineSummary,
+      HumanReadableDocumentation longDocumentation,
       List<HasJsonApiDocumentation> childNodes,
       JsonValidationInstructions jsonValidationInstructions,
       Optional<JsonElement> trivialSampleJson,
@@ -72,7 +72,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
    * A single-line summary for the class being converted to/from JSON by this JSON API converter.
    */
   @Override
-  public HumanReadableLabel getSingleLineSummary() {
+  public HumanReadableDocumentation getSingleLineSummary() {
     return singleLineSummary;
   }
 
@@ -112,7 +112,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
    * Returns the human-readable documentation for this JSON API object
    */
   @Override
-  public String getLongDocumentation() {
+  public HumanReadableDocumentation getLongDocumentation() {
     return longDocumentation;
   }
 
@@ -164,8 +164,8 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
   public static class JsonApiClassDocumentationBuilder implements RBBuilder<JsonApiClassDocumentation> {
 
     private Class<?> clazz;
-    private HumanReadableLabel singleLineSummary;
-    private String longDocumentation;
+    private HumanReadableDocumentation singleLineSummary;
+    private HumanReadableDocumentation longDocumentation;
     private JsonValidationInstructions jsonValidationInstructions;
     private List<HasJsonApiDocumentation> childNodes;
     private Optional<JsonElement> trivialSampleJson;
@@ -181,7 +181,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
     // and also update SingleObjectJsonApiDocumentationRawGenerator and SingleStringDocumentationFuser.
     public static JsonApiClassDocumentationBuilder intermediateJsonApiClassDocumentationBuilder() {
       return new JsonApiClassDocumentationBuilder()
-          .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")
+          .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
           .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied();
     }
@@ -202,8 +202,8 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
         HasJsonApiDocumentation ... items) {
       return jsonApiClassDocumentationBuilder()
           .setClass(clazz)
-          .setSingleLineSummary(label("FIXME IAK / FIXME SWA JSONDOC"))
-          .setLongDocumentation("FIXME IAK / FIXME SWA JSONDOC")
+          .setSingleLineSummary(documentation("FIXME IAK / FIXME SWA JSONDOC"))
+          .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
           .hasNoJsonValidationInstructions()
           .hasChildNodes(Arrays.asList(items))
           .noTrivialSampleJsonSupplied()
@@ -216,7 +216,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return this;
     }
 
-    public JsonApiClassDocumentationBuilder setSingleLineSummary(HumanReadableLabel singleLineSummary) {
+    public JsonApiClassDocumentationBuilder setSingleLineSummary(HumanReadableDocumentation singleLineSummary) {
       this.singleLineSummary = checkNotAlreadySet(this.singleLineSummary, singleLineSummary);
       return this;
     }
@@ -233,7 +233,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return setJsonValidationInstructions(emptyJsonValidationInstructions());
     }
 
-    public JsonApiClassDocumentationBuilder setLongDocumentation(String longDocumentation) {
+    public JsonApiClassDocumentationBuilder setLongDocumentation(HumanReadableDocumentation longDocumentation) {
       this.longDocumentation = checkNotAlreadySet(this.longDocumentation, longDocumentation);
       return this;
     }
