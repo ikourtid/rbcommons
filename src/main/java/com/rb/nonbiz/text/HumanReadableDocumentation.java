@@ -1,7 +1,4 @@
-package com.rb.nonbiz.text.csv;
-
-import com.rb.nonbiz.text.HumanReadableLabel;
-import com.rb.nonbiz.text.Strings;
+package com.rb.nonbiz.text;
 
 /**
  * <p> Just a thin wrapper around a Java {@link String}, with the additional semantics that this is just human-readable. </p>

@@ -1,9 +1,9 @@
 package com.rb.nonbiz.testutils;
 
 import com.rb.nonbiz.text.HasHumanReadableDocumentation;
-import com.rb.nonbiz.text.csv.HumanReadableDocumentation;
+import com.rb.nonbiz.text.HumanReadableDocumentation;
 
-import static com.rb.nonbiz.text.csv.HumanReadableDocumentation.humanReadableDocumentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
 
 /**
  * A test-only enum for cases where we want to test something out without relying on a specific enum.
