@@ -11,8 +11,7 @@ import static com.rb.nonbiz.collections.FlatSignedLinearCombination.flatSignedLi
 import static com.rb.nonbiz.json.RBJsonArrays.iteratorToJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 
 /**
@@ -59,12 +58,12 @@ public class FlatSignedLinearCombinationJsonApiConverter implements HasJsonApiDo
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(FlatSignedLinearCombination.class)
-        .setSingleLineSummary(humanReadableDocumentation(asSingleLine(
+        .setSingleLineSummary(documentation(asSingleLine(
             "A collection of weighted items, similar to FlatLinearCombination ",
             "except that it allows both positive and negative weights (but not zero).")))
         .hasNoJsonValidationInstructions()
         .hasChildNode(weightedBySignedFractionJsonApiConverter)
-        .setLongDocumentation(humanReadableDocumentation("FIXME IAK / FIXME SWA JSONDOC"))
+        .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
         .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()
         .build();

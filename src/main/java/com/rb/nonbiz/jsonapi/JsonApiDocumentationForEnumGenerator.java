@@ -3,10 +3,9 @@ package com.rb.nonbiz.jsonapi;
 import com.rb.nonbiz.json.JsonApiEnumDescriptor;
 import com.rb.nonbiz.jsonapi.JsonApiEnumDocumentation.JsonApiEnumDocumentationBuilder;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
-import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 
-import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 
 /**
@@ -32,7 +31,7 @@ public class JsonApiDocumentationForEnumGenerator {
     return JsonApiEnumDocumentationBuilder.<E>jsonApiEnumDocumentationBuilder()
         .setJsonApiEnumDescriptor(jsonApiEnumDescriptor)
         .setSingleLineSummary(singleLineSummary)
-        .setLongDocumentation(humanReadableDocumentation(sb.toString()))
+        .setLongDocumentation(documentation(sb.toString()))
         .build();
   }
 

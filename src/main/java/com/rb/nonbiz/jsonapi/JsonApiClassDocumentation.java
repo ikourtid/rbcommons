@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.json.JsonValidationInstructions.emptyJsonValidationInstructions;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatListInExistingOrder;
 import static com.rb.nonbiz.text.Strings.formatOptional;
 import static java.util.Collections.emptyList;
@@ -181,7 +181,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
     // and also update SingleObjectJsonApiDocumentationRawGenerator and SingleStringDocumentationFuser.
     public static JsonApiClassDocumentationBuilder intermediateJsonApiClassDocumentationBuilder() {
       return new JsonApiClassDocumentationBuilder()
-          .setLongDocumentation(humanReadableDocumentation("FIXME IAK / FIXME SWA JSONDOC"))
+          .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
           .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied();
     }
@@ -202,8 +202,8 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
         HasJsonApiDocumentation ... items) {
       return jsonApiClassDocumentationBuilder()
           .setClass(clazz)
-          .setSingleLineSummary(humanReadableDocumentation("FIXME IAK / FIXME SWA JSONDOC"))
-          .setLongDocumentation(humanReadableDocumentation("FIXME IAK / FIXME SWA JSONDOC"))
+          .setSingleLineSummary(documentation("FIXME IAK / FIXME SWA JSONDOC"))
+          .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
           .hasNoJsonValidationInstructions()
           .hasChildNodes(Arrays.asList(items))
           .noTrivialSampleJsonSupplied()

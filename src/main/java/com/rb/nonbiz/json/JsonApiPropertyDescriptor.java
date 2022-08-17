@@ -10,7 +10,6 @@ import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSets;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
-import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
 import com.rb.nonbiz.types.ImpreciseValue;
@@ -25,8 +24,7 @@ import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
 
 /**
@@ -440,7 +438,7 @@ public abstract class JsonApiPropertyDescriptor {
     // This should be removed once we have human-readable descriptions for all instances where we use it.
     // The reason it exists is that it helps us avoid having fixmes in multiple places.
     public static HumanReadableDocumentation undefinedPseudoEnumJsonApiPropertyDescription() {
-      return humanReadableDocumentation("FIXME SWA JSONDOC");
+      return documentation("FIXME SWA JSONDOC");
     }
 
     private final RBMap<String, HumanReadableDocumentation> validValuesToExplanations;

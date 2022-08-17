@@ -23,18 +23,16 @@ import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonElementMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
-import static com.rb.nonbiz.text.HumanReadableLabelTest.humanReadableLabelMatcher;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 public class JsonApiClassDocumentationTest extends RBTestMatcher<JsonApiClassDocumentation> {
 
   public static JsonApiClassDocumentation testJsonApiClassDocumentationWithSeed(Class<?> clazz, String seed) {
     return jsonApiClassDocumentationBuilder()
         .setClass(clazz)
-        .setSingleLineSummary(humanReadableDocumentation("summary" + seed))
-        .setLongDocumentation(humanReadableDocumentation("documentation" + seed))
+        .setSingleLineSummary(documentation("summary" + seed))
+        .setLongDocumentation(documentation("documentation" + seed))
         .setJsonValidationInstructions(new JsonValidationInstructionsTest().makeNontrivialObject())
         .hasNoChildNodes() // hard to set this here
         .setTrivialSampleJson(singletonJsonObject(
@@ -57,8 +55,8 @@ public class JsonApiClassDocumentationTest extends RBTestMatcher<JsonApiClassDoc
   public JsonApiClassDocumentation makeTrivialObject() {
     return jsonApiClassDocumentationBuilder()
         .setClass(JsonTicker.class)
-        .setSingleLineSummary(humanReadableDocumentation("x"))
-        .setLongDocumentation(humanReadableDocumentation("y"))
+        .setSingleLineSummary(documentation("x"))
+        .setLongDocumentation(documentation("y"))
         .hasNoJsonValidationInstructions()
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()

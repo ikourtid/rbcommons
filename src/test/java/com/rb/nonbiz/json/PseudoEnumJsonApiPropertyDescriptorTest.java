@@ -2,7 +2,6 @@ package com.rb.nonbiz.json;
 
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.PseudoEnumJsonApiPropertyDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.text.HumanReadableDocumentation;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -15,10 +14,8 @@ import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.PseudoEnumJsonApiProp
 import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
-import static com.rb.nonbiz.text.HumanReadableLabelTest.humanReadableLabelMatcher;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 public class PseudoEnumJsonApiPropertyDescriptorTest extends RBTestMatcher<PseudoEnumJsonApiPropertyDescriptor> {
 
@@ -26,13 +23,13 @@ public class PseudoEnumJsonApiPropertyDescriptorTest extends RBTestMatcher<Pseud
   public void mustHaveAtLeastOneItem() {
     assertIllegalArgumentException( () -> pseudoEnumJsonApiPropertyDescriptor(emptyRBMap()));
     PseudoEnumJsonApiPropertyDescriptor doesNotThrow = pseudoEnumJsonApiPropertyDescriptor(singletonRBMap(
-        "a", humanReadableDocumentation("x")));
+        "a", documentation("x")));
   }
 
   @Test
   public void mustHaveNonEmptyExplanations() {
     Function<String, PseudoEnumJsonApiPropertyDescriptor> maker = description -> pseudoEnumJsonApiPropertyDescriptor(singletonRBMap(
-        "a", humanReadableDocumentation(description)));
+        "a", documentation(description)));
 
     assertIllegalArgumentException( () -> maker.apply(""));
     PseudoEnumJsonApiPropertyDescriptor doesNotThrow = maker.apply("foo");
@@ -41,24 +38,24 @@ public class PseudoEnumJsonApiPropertyDescriptorTest extends RBTestMatcher<Pseud
   @Override
   public PseudoEnumJsonApiPropertyDescriptor makeTrivialObject() {
     return pseudoEnumJsonApiPropertyDescriptor(singletonRBMap(
-        "a", humanReadableDocumentation("x")));
+        "a", documentation("x")));
   }
 
   @Override
   public PseudoEnumJsonApiPropertyDescriptor makeNontrivialObject() {
     return pseudoEnumJsonApiPropertyDescriptor(rbMapOf(
-        "item1", humanReadableDocumentation("explanation 1"),
-        "item2", humanReadableDocumentation("explanation 2"),
-        "item3", humanReadableDocumentation("explanation 3")));
+        "item1", documentation("explanation 1"),
+        "item2", documentation("explanation 2"),
+        "item3", documentation("explanation 3")));
   }
 
   @Override
   public PseudoEnumJsonApiPropertyDescriptor makeMatchingNontrivialObject() {
     // Nothing to tweak here
     return pseudoEnumJsonApiPropertyDescriptor(rbMapOf(
-        "item1", humanReadableDocumentation("explanation 1"),
-        "item2", humanReadableDocumentation("explanation 2"),
-        "item3", humanReadableDocumentation("explanation 3")));
+        "item1", documentation("explanation 1"),
+        "item2", documentation("explanation 2"),
+        "item3", documentation("explanation 3")));
   }
 
   @Override

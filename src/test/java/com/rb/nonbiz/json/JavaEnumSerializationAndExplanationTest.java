@@ -12,10 +12,8 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
-import static com.rb.nonbiz.text.HumanReadableLabelTest.humanReadableLabelMatcher;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 public class JavaEnumSerializationAndExplanationTest extends RBTestMatcher<JavaEnumSerializationAndExplanation> {
 
@@ -23,7 +21,7 @@ public class JavaEnumSerializationAndExplanationTest extends RBTestMatcher<JavaE
   public void enumSerializationOrExplanationAreEmpty_throws() {
     BiFunction<String, String, JavaEnumSerializationAndExplanation> maker =
         (jsonSerialization, explanation) -> javaEnumSerializationAndExplanation(
-            jsonSerialization, humanReadableDocumentation(explanation));
+            jsonSerialization, documentation(explanation));
     assertIllegalArgumentException( () -> maker.apply("", ""));
     assertIllegalArgumentException( () -> maker.apply("x", ""));
     assertIllegalArgumentException( () -> maker.apply("", "x"));
@@ -34,18 +32,18 @@ public class JavaEnumSerializationAndExplanationTest extends RBTestMatcher<JavaE
 
   @Override
   public JavaEnumSerializationAndExplanation makeTrivialObject() {
-    return javaEnumSerializationAndExplanation("a", humanReadableDocumentation("a"));
+    return javaEnumSerializationAndExplanation("a", documentation("a"));
   }
 
   @Override
   public JavaEnumSerializationAndExplanation makeNontrivialObject() {
-    return javaEnumSerializationAndExplanation("someEnumValueAsJson", humanReadableDocumentation("sample explanation"));
+    return javaEnumSerializationAndExplanation("someEnumValueAsJson", documentation("sample explanation"));
   }
 
   @Override
   public JavaEnumSerializationAndExplanation makeMatchingNontrivialObject() {
     // Nothing to tweak here
-    return javaEnumSerializationAndExplanation("someEnumValueAsJson", humanReadableDocumentation("sample explanation"));
+    return javaEnumSerializationAndExplanation("someEnumValueAsJson", documentation("sample explanation"));
   }
 
   @Override

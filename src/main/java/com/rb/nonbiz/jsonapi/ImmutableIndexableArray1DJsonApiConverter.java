@@ -7,7 +7,6 @@ import com.rb.nonbiz.collections.ImmutableIndexableArray1D;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
 import com.rb.nonbiz.json.RBJsonObjectBuilder;
-import com.rb.nonbiz.text.HumanReadableDocumentation;
 
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -24,8 +23,7 @@ import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonArrayOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjects.jsonArrayToSimpleArrayIndexMapping;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 
 /**
@@ -86,10 +84,10 @@ public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocu
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(ImmutableIndexableArray1D.class)
-        .setSingleLineSummary(humanReadableDocumentation(asSingleLine(
+        .setSingleLineSummary(documentation(asSingleLine(
             "An indexable 1-D array is like a regular 1-D array, except that you can ",
             "also access it based on more meaningful keys - not just an integer index.")))
-        .setLongDocumentation(humanReadableDocumentation("FIXME IAK / FIXME SWA JSONDOC"))
+        .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()

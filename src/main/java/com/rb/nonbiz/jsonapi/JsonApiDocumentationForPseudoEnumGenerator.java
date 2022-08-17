@@ -2,11 +2,10 @@ package com.rb.nonbiz.jsonapi;
 
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.PseudoEnumJsonApiPropertyDescriptor;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
-import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.humanReadableDocumentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 /**
  * <p> Generates {@link JsonApiDocumentation} specifically in the case of {@link PseudoEnumJsonApiPropertyDescriptor}s.
@@ -31,7 +30,7 @@ public class JsonApiDocumentationForPseudoEnumGenerator {
     return jsonApiClassDocumentationBuilder()
         .setClass(clazz)
         .setSingleLineSummary(singleLineSummary)
-        .setLongDocumentation(humanReadableDocumentation(sb.toString()))
+        .setLongDocumentation(documentation(sb.toString()))
         // JsonValidationInstructions is for cases where there are properties, but n/a for a primitive such as Enum.
         .hasNoJsonValidationInstructions()
         // primitives such as Enum do not mention other entities under them that get serialized.
