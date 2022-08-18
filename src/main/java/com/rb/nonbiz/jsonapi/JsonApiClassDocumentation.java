@@ -180,7 +180,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
     // FIXME IAK / FIXME SWA JSONDOC: once all JSON API classes get documented, we should remove this,
     // and also update SingleObjectJsonApiDocumentationRawGenerator and SingleStringDocumentationFuser.
     public static JsonApiClassDocumentationBuilder intermediateJsonApiClassDocumentationBuilder() {
-      return new JsonApiClassDocumentationBuilder()
+      return jsonApiClassDocumentationBuilder()
           .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
           .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied();
@@ -190,7 +190,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
     // and also update SingleObjectJsonApiDocumentationRawGenerator and SingleStringDocumentationFuser.
     // Same as above, but doesn't call .setLongDocumentation()
     public static JsonApiClassDocumentationBuilder intermediate2JsonApiClassDocumentationBuilder() {
-      return new JsonApiClassDocumentationBuilder()
+      return jsonApiClassDocumentationBuilder()
           .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied();
     }
