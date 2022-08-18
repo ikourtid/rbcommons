@@ -23,7 +23,7 @@ import static com.rb.nonbiz.text.Strings.asSingleLine;
  * that mentions the relevant instrument - not just e.g.
  * "Attempt to construct a PositiveQuantity with -93 &le; 0" </p>
  */
-public class PreciseValueJsonApiConverter implements HasJsonApiDocumentation {
+public class PreciseValueJsonApiConverter {
 
   public <V extends PreciseValue<? super V>> V fromJsonBigDecimal(
       JsonElement valueAsJsonElementDouble,
@@ -43,21 +43,6 @@ public class PreciseValueJsonApiConverter implements HasJsonApiDocumentation {
           "Error converting known ticker %s (instrumentId %s ): %s",
               jsonTicker, instrumentId.get().asLong(), e.getMessage()));
     }
-  }
-
-  @Override
-  public JsonApiDocumentation getJsonApiDocumentation() {
-    return jsonApiClassDocumentationBuilder()
-        .setClass(PreciseValue.class)
-        .setSingleLineSummary(documentation(asSingleLine(
-            "A PreciseValue is the base class of many value classes in the code. ",
-            "It exists to avoid rounding problems with doubles such as 9.9999999999.")))
-        .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
-        .hasNoJsonValidationInstructions()
-        .hasNoChildNodes()
-        .noTrivialSampleJsonSupplied()
-        .noNontrivialSampleJsonSupplied()
-        .build();
   }
 
 }
