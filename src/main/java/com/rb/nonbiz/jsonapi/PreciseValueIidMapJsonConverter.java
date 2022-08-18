@@ -52,7 +52,7 @@ import static java.util.Comparator.comparing;
  * <p>... where 111 and 222 are the numeric values for the instrument IDs that are the
  * keys in the iid map. </p>
  */
-public class PreciseValueIidMapJsonConverter implements HasJsonApiDocumentation {
+public class PreciseValueIidMapJsonConverter {
 
   @Inject PreciseValueJsonApiConverter preciseValueJsonApiConverter;
 
@@ -82,21 +82,6 @@ public class PreciseValueIidMapJsonConverter implements HasJsonApiDocumentation 
       mutableMap.putAssumingAbsent(jsonTickerMap.getInstrumentIdOrThrow(jsonTicker), preciseValue);
     });
     return newIidMap(mutableMap);
-  }
-
-  @Override
-  public JsonApiDocumentation getJsonApiDocumentation() {
-    return jsonApiClassDocumentationBuilder()
-        .setClass(IidMap.class)
-        .setSingleLineSummary(documentation(asSingleLine(
-            "An IidMap of PreciseValues. That is, an RBMap with keys that are InstrumentIds ",
-            "and values that are PreciseValues.")))
-        .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
-        .hasNoJsonValidationInstructions()
-        .hasChildNode(preciseValueJsonApiConverter)
-        .noTrivialSampleJsonSupplied()
-        .noNontrivialSampleJsonSupplied()
-        .build();
   }
 
 }

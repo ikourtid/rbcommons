@@ -40,7 +40,7 @@ import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
  * </pre>
  *
  */
-public class PreciseValueRBMapJsonConverter implements HasJsonApiDocumentation {
+public class PreciseValueRBMapJsonConverter {
 
   public <K, V extends PreciseValue<? super V>> JsonObject toJsonObject(
       RBMap<K, V> map,
@@ -64,19 +64,6 @@ public class PreciseValueRBMapJsonConverter implements HasJsonApiDocumentation {
       mutableMap.putAssumingAbsent(keyConverter.apply(key), bigDecimalConverter.apply(value));
     });
     return newRBMap(mutableMap);
-  }
-
-  @Override
-  public JsonApiDocumentation getJsonApiDocumentation() {
-    return jsonApiClassDocumentationBuilder()
-        .setClass(RBMap.class)
-        .setSingleLineSummary(documentation("An RBMap whose values are PreciseValues."))
-        .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
-        .hasNoJsonValidationInstructions()
-        .hasNoChildNodes()
-        .noTrivialSampleJsonSupplied()
-        .noNontrivialSampleJsonSupplied()
-        .build();
   }
 
 }
