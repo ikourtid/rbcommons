@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.rb.biz.types.OnesBasedReturn;
 import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
+import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBMap;
@@ -57,6 +58,17 @@ public abstract class JsonApiPropertyDescriptor {
   }
 
 
+  /**
+   * <p> Per {@link JsonPropertySpecificDocumentation} documentation, it's used for cases where we want to attach
+   * context-specific documentation to a specific property of an object, vs. to the class. </p>
+   *
+   * <p> There are several cases where {@link JsonApiPropertyDescriptor}s are nested. Example: a
+   * {@link CollectionJsonApiPropertyDescriptor} of some other {@link JsonApiPropertyDescriptor}; e.g. a
+   * {@code List} of {@code ClosedRange}. Ideally, any extra {@link JsonPropertySpecificDocumentation} would only
+   * appear at the top level of this nesting (here, the {@code List}, and we shouldn't even be able to have
+   * more such {@link JsonPropertySpecificDocumentation} for the {@link JsonApiPropertyDescriptor}s below
+   * (here, the {@link ClosedRange}). We will have preconditions for that, but we can't enforce it at runtime. </p>
+   */
   public abstract Optional<JsonPropertySpecificDocumentation> getPropertySpecificDocumentation();
 
   public abstract <T> T visit(Visitor<T> visitor);
