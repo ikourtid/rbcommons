@@ -96,7 +96,8 @@ public abstract class JsonApiPropertyDescriptor {
           public Boolean visitIidMapJsonApiPropertyDescriptor(
               IidMapJsonApiPropertyDescriptor iidMapJsonApiPropertyDescriptor) {
             return !iidMapJsonApiPropertyDescriptor.getPropertySpecificDocumentation().isPresent()
-                && noPropertySpecificDocumentationPresent(Stream.of(iidMapJsonApiPropertyDescriptor));
+                && noPropertySpecificDocumentationPresent(Stream.of(
+                    iidMapJsonApiPropertyDescriptor.getValueClassDescriptor()));
           }
 
           @Override

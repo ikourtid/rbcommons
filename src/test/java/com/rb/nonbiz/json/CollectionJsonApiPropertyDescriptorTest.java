@@ -55,14 +55,24 @@ public class CollectionJsonApiPropertyDescriptorTest extends RBTestMatcher<Colle
 
   @Override
   public CollectionJsonApiPropertyDescriptor makeNontrivialObject() {
+    new JavaGenericJsonApiPropertyDescriptorTest();
+    // This is not a realistic example, because a ClosedRange only has 1 generic argument, not 2.
+    // However, there's no way to ever sanity-check that in the production code, because of Java type erasure.
+    // Let's use this here so that makeNontrivialObject represents a general case of multiple generic arguments.
     return collectionJsonApiPropertyDescriptor(
-        new JavaGenericJsonApiPropertyDescriptorTest().makeNontrivialObject());
+        javaGenericJsonApiPropertyDescriptor(
+            ClosedRange.class,
+            simpleClassJsonApiPropertyDescriptor(Double.class),
+            simpleClassJsonApiPropertyDescriptor(UnitFraction.class)));
   }
 
   @Override
   public CollectionJsonApiPropertyDescriptor makeMatchingNontrivialObject() {
     return collectionJsonApiPropertyDescriptor(
-        new JavaGenericJsonApiPropertyDescriptorTest().makeMatchingNontrivialObject());
+        javaGenericJsonApiPropertyDescriptor(
+            ClosedRange.class,
+            simpleClassJsonApiPropertyDescriptor(Double.class),
+            simpleClassJsonApiPropertyDescriptor(UnitFraction.class)));
   }
 
   @Override
