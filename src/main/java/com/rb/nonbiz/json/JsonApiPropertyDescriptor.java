@@ -26,6 +26,7 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
+import static com.rb.nonbiz.text.Strings.formatOptional;
 
 /**
  * <p> This is helpful in the JSON API documentation (OpenAPI / Swagger). It gives us type information for a property of a
@@ -53,6 +54,9 @@ public abstract class JsonApiPropertyDescriptor {
         PseudoEnumJsonApiPropertyDescriptor pseudoEnumJsonApiPropertyDescriptor);
 
   }
+
+
+  public abstract Optional<JsonPropertySpecificDocumentation> getPropertySpecificDocumentation();
 
   public abstract <T> T visit(Visitor<T> visitor);
 
@@ -96,12 +100,18 @@ public abstract class JsonApiPropertyDescriptor {
   public static class SimpleClassJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
     private final Class<?> clazz;
+    private final Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation;
 
-    private SimpleClassJsonApiPropertyDescriptor(Class<?> clazz) {
+    private SimpleClassJsonApiPropertyDescriptor(
+        Class<?> clazz,
+        Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
       this.clazz = clazz;
+      this.jsonPropertySpecificDocumentation  = jsonPropertySpecificDocumentation;
     }
 
-    public static SimpleClassJsonApiPropertyDescriptor simpleClassJsonApiPropertyDescriptor(Class<?> clazz) {
+    private static SimpleClassJsonApiPropertyDescriptor simpleClassJsonApiPropertyDescriptor(
+        Class<?> clazz,
+        Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
       RBSets.union(
               getInvalidJsonApiPropertyDescriptorClasses(),
               rbSetOf(
@@ -115,7 +125,17 @@ public abstract class JsonApiPropertyDescriptor {
                   !clazz.equals(badClass),
                   "SimpleClassJsonApiPropertyDescriptor has bad class %s",
                   clazz));
-      return new SimpleClassJsonApiPropertyDescriptor(clazz);
+      return new SimpleClassJsonApiPropertyDescriptor(clazz, jsonPropertySpecificDocumentation);
+    }
+
+    public static SimpleClassJsonApiPropertyDescriptor simpleClassJsonApiPropertyDescriptor(
+        Class<?> clazz) {
+      return simpleClassJsonApiPropertyDescriptor(clazz, Optional.empty());
+    }
+
+    public static SimpleClassJsonApiPropertyDescriptor simpleClassJsonApiPropertyDescriptor(
+        Class<?> clazz, JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
+      return simpleClassJsonApiPropertyDescriptor(clazz, Optional.of(jsonPropertySpecificDocumentation));
     }
 
     /**
@@ -123,7 +143,10 @@ public abstract class JsonApiPropertyDescriptor {
      */
     public static <E extends Enum<E>> SimpleClassJsonApiPropertyDescriptor enumJsonApiPropertyDescriptor(
         Class<E> enumClass) {
-      return simpleClassJsonApiPropertyDescriptor(enumClass);
+      // We can use Optional.empty() for the property-specific documentation, because enums only have
+      // class-specific documentation; they don't have properties. An *object* that has a property whose type
+      // is this enum *could* have its own documentation, but that's different.
+      return simpleClassJsonApiPropertyDescriptor(enumClass, Optional.empty());
     }
 
     /**
@@ -134,13 +157,19 @@ public abstract class JsonApiPropertyDescriptor {
     }
 
     @Override
+    public Optional<JsonPropertySpecificDocumentation> getPropertySpecificDocumentation() {
+      return jsonPropertySpecificDocumentation;
+    }
+
+    @Override
     public <T> T visit(Visitor<T> visitor) {
       return visitor.visitSimpleClassJsonApiPropertyDescriptor(this);
     }
 
     @Override
     public String toString() {
-      return Strings.format("[SCJAPD %s SCJAPD]", clazz);
+      return Strings.format("[SCJAPD %s %s SCJAPD]",
+          clazz, formatOptional(jsonPropertySpecificDocumentation));
     }
 
   }
@@ -156,13 +185,18 @@ public abstract class JsonApiPropertyDescriptor {
   public static class IidMapJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
     private final JsonApiPropertyDescriptor valueClassDescriptor;
+    private final Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation;
 
-    private IidMapJsonApiPropertyDescriptor(JsonApiPropertyDescriptor valueClassDescriptor) {
+    private IidMapJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor valueClassDescriptor,
+        Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
       this.valueClassDescriptor = valueClassDescriptor;
+      this.jsonPropertySpecificDocumentation  = jsonPropertySpecificDocumentation;
     }
 
-    public static IidMapJsonApiPropertyDescriptor iidMapJsonApiPropertyDescriptor(
-        JsonApiPropertyDescriptor valueClassDescriptor) {
+    private static IidMapJsonApiPropertyDescriptor iidMapJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor valueClassDescriptor,
+        Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
       getClassIfSimpleClassJsonApiPropertyDescriptor(valueClassDescriptor).ifPresent(valueClass ->
           RBSets.union(
                   getInvalidJsonApiPropertyDescriptorClasses(),
@@ -179,11 +213,27 @@ public abstract class JsonApiPropertyDescriptor {
                       !valueClass.equals(invalidClass),
                       "IidMapJsonApiPropertyDescriptor uses an invalid class of %s",
                       invalidClass)));
-      return new IidMapJsonApiPropertyDescriptor(valueClassDescriptor);
+      return new IidMapJsonApiPropertyDescriptor(valueClassDescriptor, jsonPropertySpecificDocumentation);
+    }
+
+    public static IidMapJsonApiPropertyDescriptor iidMapJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor valueClassDescriptor) {
+      return iidMapJsonApiPropertyDescriptor(valueClassDescriptor, Optional.empty());
+    }
+
+    public static IidMapJsonApiPropertyDescriptor iidMapJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor valueClassDescriptor,
+        JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
+      return iidMapJsonApiPropertyDescriptor(valueClassDescriptor, Optional.of(jsonPropertySpecificDocumentation));
     }
 
     public JsonApiPropertyDescriptor getValueClassDescriptor() {
       return valueClassDescriptor;
+    }
+
+    @Override
+    public Optional<JsonPropertySpecificDocumentation> getPropertySpecificDocumentation() {
+      return jsonPropertySpecificDocumentation;
     }
 
     @Override
@@ -193,7 +243,8 @@ public abstract class JsonApiPropertyDescriptor {
 
     @Override
     public String toString() {
-      return Strings.format("[IMJAPD %s IMJAPD]", valueClassDescriptor);
+      return Strings.format("[IMJAPD %s %s IMJAPD]",
+          valueClassDescriptor, formatOptional(jsonPropertySpecificDocumentation));
     }
 
   }
@@ -211,17 +262,21 @@ public abstract class JsonApiPropertyDescriptor {
 
     private final JsonApiPropertyDescriptor keyClassDescriptor;
     private final JsonApiPropertyDescriptor valueClassDescriptor;
+    private final Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation;
 
     private RBMapJsonApiPropertyDescriptor(
         JsonApiPropertyDescriptor keyClassDescriptor,
-        JsonApiPropertyDescriptor valueClassDescriptor) {
+        JsonApiPropertyDescriptor valueClassDescriptor,
+        Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
       this.keyClassDescriptor = keyClassDescriptor;
       this.valueClassDescriptor = valueClassDescriptor;
+      this.jsonPropertySpecificDocumentation  = jsonPropertySpecificDocumentation;
     }
 
-    public static RBMapJsonApiPropertyDescriptor rbMapJsonApiPropertyDescriptor(
+    private static RBMapJsonApiPropertyDescriptor rbMapJsonApiPropertyDescriptor(
         JsonApiPropertyDescriptor keyClassDescriptor,
-        JsonApiPropertyDescriptor valueClassDescriptor) {
+        JsonApiPropertyDescriptor valueClassDescriptor,
+        Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
       RBSet<Class<?>> invalidClasses = RBSets.union(
           getInvalidJsonApiPropertyDescriptorClasses(),
           rbSetOf(
@@ -243,7 +298,23 @@ public abstract class JsonApiPropertyDescriptor {
                       !valueClass.equals(invalidClass),
                       "RBMapJsonApiPropertyDescriptor for %s -> %s : invalid value class",
                       keyClassDescriptor, valueClassDescriptor)));
-      return new RBMapJsonApiPropertyDescriptor(keyClassDescriptor, valueClassDescriptor);
+      return new RBMapJsonApiPropertyDescriptor(
+          keyClassDescriptor, valueClassDescriptor, jsonPropertySpecificDocumentation);
+    }
+
+    public static RBMapJsonApiPropertyDescriptor rbMapJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor keyClassDescriptor,
+        JsonApiPropertyDescriptor valueClassDescriptor,
+        JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
+      return rbMapJsonApiPropertyDescriptor(
+          keyClassDescriptor, valueClassDescriptor, Optional.of(jsonPropertySpecificDocumentation));
+    }
+
+    public static RBMapJsonApiPropertyDescriptor rbMapJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor keyClassDescriptor,
+        JsonApiPropertyDescriptor valueClassDescriptor) {
+      return rbMapJsonApiPropertyDescriptor(
+          keyClassDescriptor, valueClassDescriptor, Optional.empty());
     }
 
     public JsonApiPropertyDescriptor getKeyClassDescriptor() {
@@ -255,13 +326,19 @@ public abstract class JsonApiPropertyDescriptor {
     }
 
     @Override
+    public Optional<JsonPropertySpecificDocumentation> getPropertySpecificDocumentation() {
+      return jsonPropertySpecificDocumentation;
+    }
+
+    @Override
     public <T> T visit(Visitor<T> visitor) {
       return visitor.visitRBMapJsonApiPropertyDescriptor(this);
     }
 
     @Override
     public String toString() {
-      return Strings.format("[RMJAPD %s -> %s RMJAPD]", keyClassDescriptor, valueClassDescriptor);
+      return Strings.format("[RMJAPD %s -> %s %s RMJAPD]",
+          keyClassDescriptor, valueClassDescriptor, formatOptional(jsonPropertySpecificDocumentation));
     }
 
   }
@@ -278,13 +355,18 @@ public abstract class JsonApiPropertyDescriptor {
   public static class CollectionJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
     private final JsonApiPropertyDescriptor collectionValueClassDescriptor;
+    private final Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation;
 
-    private CollectionJsonApiPropertyDescriptor(JsonApiPropertyDescriptor collectionValueClassDescriptor) {
+    private CollectionJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor collectionValueClassDescriptor,
+        Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
       this.collectionValueClassDescriptor = collectionValueClassDescriptor;
+      this.jsonPropertySpecificDocumentation  = jsonPropertySpecificDocumentation;
     }
 
-    public static CollectionJsonApiPropertyDescriptor collectionJsonApiPropertyDescriptor(
-        JsonApiPropertyDescriptor arrayValueClassDescriptor) {
+    private static CollectionJsonApiPropertyDescriptor collectionJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor arrayValueClassDescriptor,
+        Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
       RBSet<Class<?>> invalidClasses = RBSets.union(
           getInvalidJsonApiPropertyDescriptorClasses(),
           singletonRBSet(UniqueId.class));
@@ -295,11 +377,29 @@ public abstract class JsonApiPropertyDescriptor {
                       !arrayValueClass.equals(invalidClass),
                       "CollectionJsonApiPropertyDescriptor uses an invalid class of %s",
                       invalidClass)));
-      return new CollectionJsonApiPropertyDescriptor(arrayValueClassDescriptor);
+      return new CollectionJsonApiPropertyDescriptor(arrayValueClassDescriptor,jsonPropertySpecificDocumentation);
+    }
+
+    public static CollectionJsonApiPropertyDescriptor collectionJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor arrayValueClassDescriptor,
+        JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
+      return collectionJsonApiPropertyDescriptor(
+          arrayValueClassDescriptor, Optional.of(jsonPropertySpecificDocumentation));
+    }
+
+    public static CollectionJsonApiPropertyDescriptor collectionJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor arrayValueClassDescriptor) {
+      return collectionJsonApiPropertyDescriptor(
+          arrayValueClassDescriptor, Optional.empty());
     }
 
     public JsonApiPropertyDescriptor getCollectionValueClassDescriptor() {
       return collectionValueClassDescriptor;
+    }
+
+    @Override
+    public Optional<JsonPropertySpecificDocumentation> getPropertySpecificDocumentation() {
+      return jsonPropertySpecificDocumentation;
     }
 
     @Override
@@ -309,7 +409,8 @@ public abstract class JsonApiPropertyDescriptor {
 
     @Override
     public String toString() {
-      return Strings.format("[CJAPD %s CJAPD]", collectionValueClassDescriptor);
+      return Strings.format("[CJAPD %s %s CJAPD]",
+          collectionValueClassDescriptor, formatOptional(jsonPropertySpecificDocumentation));
     }
 
   }
@@ -332,17 +433,21 @@ public abstract class JsonApiPropertyDescriptor {
 
     private final Class<?> outerClass;
     private final List<JsonApiPropertyDescriptor> genericArgumentClassDescriptors;
+    private final Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation;
 
     private JavaGenericJsonApiPropertyDescriptor(
         Class<?> outerClass,
-        List<JsonApiPropertyDescriptor> genericArgumentClassDescriptors) {
+        List<JsonApiPropertyDescriptor> genericArgumentClassDescriptors,
+        Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
       this.outerClass = outerClass;
       this.genericArgumentClassDescriptors = genericArgumentClassDescriptors;
+      this.jsonPropertySpecificDocumentation  = jsonPropertySpecificDocumentation;
     }
 
     private static JavaGenericJsonApiPropertyDescriptor javaGenericJsonApiPropertyDescriptor(
         Class<?> outerClass,
-        List<JsonApiPropertyDescriptor> genericArgumentClassDescriptors) {
+        List<JsonApiPropertyDescriptor> genericArgumentClassDescriptors,
+        Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
       for (JsonApiPropertyDescriptor innerClassDescriptor : genericArgumentClassDescriptors) {
         getClassIfSimpleClassJsonApiPropertyDescriptor(innerClassDescriptor)
             .ifPresent(innerClass ->
@@ -374,7 +479,23 @@ public abstract class JsonApiPropertyDescriptor {
           !genericArgumentClassDescriptors.isEmpty(),
           "JavaGenericJsonApiPropertyDescriptor describes a generic class '%s' without generic arguments",
           outerClass);
-      return new JavaGenericJsonApiPropertyDescriptor(outerClass, genericArgumentClassDescriptors);
+      return new JavaGenericJsonApiPropertyDescriptor(
+          outerClass, genericArgumentClassDescriptors,jsonPropertySpecificDocumentation);
+    }
+
+    public static JavaGenericJsonApiPropertyDescriptor javaGenericJsonApiPropertyDescriptor(
+        Class<?> outerClass,
+        List<JsonApiPropertyDescriptor> genericArgumentClassDescriptors,
+        JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
+      return javaGenericJsonApiPropertyDescriptor(
+          outerClass, genericArgumentClassDescriptors, Optional.of(jsonPropertySpecificDocumentation));
+    }
+
+    public static JavaGenericJsonApiPropertyDescriptor javaGenericJsonApiPropertyDescriptor(
+        Class<?> outerClass,
+        List<JsonApiPropertyDescriptor> genericArgumentClassDescriptors) {
+      return javaGenericJsonApiPropertyDescriptor(
+          outerClass, genericArgumentClassDescriptors, Optional.empty());
     }
 
     /**
@@ -407,15 +528,21 @@ public abstract class JsonApiPropertyDescriptor {
     }
 
     @Override
+    public Optional<JsonPropertySpecificDocumentation> getPropertySpecificDocumentation() {
+      return jsonPropertySpecificDocumentation;
+    }
+
+    @Override
     public <T> T visit(Visitor<T> visitor) {
       return visitor.visitJavaGenericJsonApiPropertyDescriptor(this);
     }
 
     @Override
     public String toString() {
-      return Strings.format("[JGJAPD %s < %s > JGJAPD]",
+      return Strings.format("[JGJAPD %s < %s > %s JGJAPD]",
           outerClass,
-          Joiner.on(" , ").join(genericArgumentClassDescriptors));
+          Joiner.on(" , ").join(genericArgumentClassDescriptors),
+          formatOptional(jsonPropertySpecificDocumentation));
     }
 
   }
@@ -443,7 +570,8 @@ public abstract class JsonApiPropertyDescriptor {
 
     private final RBMap<String, HumanReadableDocumentation> validValuesToExplanations;
 
-    private PseudoEnumJsonApiPropertyDescriptor(RBMap<String, HumanReadableDocumentation> validValuesToExplanations) {
+    private PseudoEnumJsonApiPropertyDescriptor(
+        RBMap<String, HumanReadableDocumentation> validValuesToExplanations) {
       this.validValuesToExplanations = validValuesToExplanations;
     }
 
@@ -474,6 +602,17 @@ public abstract class JsonApiPropertyDescriptor {
 
     public RBMap<String, HumanReadableDocumentation> getValidValuesToExplanations() {
       return validValuesToExplanations;
+    }
+
+    /**
+     * Because properties described by {@link PseudoEnumJsonApiPropertyDescriptor} never refer to some other class
+     * that's defined elsewhere (and can therefore be linked to using $ref in the yaml file), there is no point
+     * in having additional per-property documentation. That is, there's no separate per-class documentation to
+     * distinguish from.
+     */
+    @Override
+    public Optional<JsonPropertySpecificDocumentation> getPropertySpecificDocumentation() {
+      return Optional.empty();
     }
 
     @Override
