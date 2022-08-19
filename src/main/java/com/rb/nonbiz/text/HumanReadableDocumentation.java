@@ -1,5 +1,10 @@
 package com.rb.nonbiz.text;
 
+import com.rb.nonbiz.util.RBPreconditions;
+import org.apache.commons.lang3.StringUtils;
+
+import static org.apache.commons.lang3.StringUtils.isWhitespace;
+
 /**
  * <p> Just a thin wrapper around a Java {@link String}, with the additional semantics that this is just human-readable. </p>
  *
@@ -18,11 +23,11 @@ public class HumanReadableDocumentation {
   // Our static constructors almost always have the same name as the class. However, just like with HumanReadableLabel,
   // this appears in so many places where brevity matters that we'll just shorten it to just 'documentation'.
   public static HumanReadableDocumentation documentation(String asString) {
+    RBPreconditions.checkArgument(
+        !isWhitespace(asString),
+        "HumanReadableDocumentation cannot be empty or all whitespace: '%s'",
+        asString);
     return new HumanReadableDocumentation(asString);
-  }
-
-  public static HumanReadableDocumentation emptyDocumentation() {
-    return documentation("");
   }
 
   public String getAsString() {
