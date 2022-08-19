@@ -27,6 +27,7 @@ import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
 import static com.rb.nonbiz.text.Strings.formatOptional;
+import static java.util.Collections.singletonList;
 
 /**
  * <p> This is helpful in the JSON API documentation (OpenAPI / Swagger). It gives us type information for a property of a
@@ -499,16 +500,34 @@ public abstract class JsonApiPropertyDescriptor {
     }
 
     /**
-     * Represents e.g. a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
-     * (2nd argument).
+     * <p> Represents a property of an object that's a Java generic.
+     * Example: a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
+     * (2nd argument). </p>
      *
-     * We normally use a builder when there can be two arguments of the same type, but this is meant to be used
+     * <p> We normally use a builder when there can be two arguments of the same type, but this is meant to be used
      * inline in the various definitions of JSON_VALIDATION_INSTRUCTIONS in the JSON API converter verb classes,
-     * so we want its invocation to look short.
+     * so we want its invocation to look short. </p>
      */
     public static JavaGenericJsonApiPropertyDescriptor javaGenericJsonApiPropertyDescriptor(
         Class<?> outerClass, JsonApiPropertyDescriptor first, JsonApiPropertyDescriptor... rest) {
       return javaGenericJsonApiPropertyDescriptor(outerClass, concatenateFirstAndRest(first, rest));
+    }
+
+    /**
+     * <p> Represents a property of an object that's a Java generic.
+     * Example: a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
+     * (2nd argument). </p>
+     *
+     * <p> We normally use a builder when there can be two arguments of the same type, but this is meant to be used
+     * inline in the various definitions of JSON_VALIDATION_INSTRUCTIONS in the JSON API converter verb classes,
+     * so we want its invocation to look short. </p>
+     */
+    public static JavaGenericJsonApiPropertyDescriptor javaGenericJsonApiPropertyDescriptor(
+        Class<?> outerClass,
+        JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation,
+        JsonApiPropertyDescriptor first, JsonApiPropertyDescriptor... rest) {
+      return javaGenericJsonApiPropertyDescriptor(
+          outerClass, concatenateFirstAndRest(first, rest), jsonPropertySpecificDocumentation);
     }
 
     /**
@@ -517,6 +536,16 @@ public abstract class JsonApiPropertyDescriptor {
     public static JavaGenericJsonApiPropertyDescriptor uniqueIdJsonApiPropertyDescriptor(
         JsonApiPropertyDescriptor innerClassDescriptor) {
       return javaGenericJsonApiPropertyDescriptor(UniqueId.class, innerClassDescriptor);
+    }
+
+    /**
+     * A shorthand for the case of {@link UniqueId}.
+     */
+    public static JavaGenericJsonApiPropertyDescriptor uniqueIdJsonApiPropertyDescriptor(
+        JsonApiPropertyDescriptor innerClassDescriptor,
+        JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
+      return javaGenericJsonApiPropertyDescriptor(
+          UniqueId.class, singletonList(innerClassDescriptor), jsonPropertySpecificDocumentation);
     }
 
     public Class<?> getOuterClass() {

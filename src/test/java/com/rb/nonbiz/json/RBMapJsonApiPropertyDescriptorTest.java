@@ -22,9 +22,13 @@ import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPro
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.RBMapJsonApiPropertyDescriptor.rbMapJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptorTest.dataClassJsonApiPropertyDescriptorMatcher;
+import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
+import static com.rb.nonbiz.json.JsonPropertySpecificDocumentationTest.jsonPropertySpecificDocumentationMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class RBMapJsonApiPropertyDescriptorTest extends RBTestMatcher<RBMapJsonApiPropertyDescriptor> {
 
@@ -80,14 +84,16 @@ public class RBMapJsonApiPropertyDescriptorTest extends RBTestMatcher<RBMapJsonA
   public RBMapJsonApiPropertyDescriptor makeNontrivialObject() {
     return rbMapJsonApiPropertyDescriptor(
         javaGenericJsonApiPropertyDescriptor(UniqueId.class, simpleClassJsonApiPropertyDescriptor(String.class)),
-        javaGenericJsonApiPropertyDescriptor(ClosedRange.class, simpleClassJsonApiPropertyDescriptor(Double.class)));
+        javaGenericJsonApiPropertyDescriptor(ClosedRange.class, simpleClassJsonApiPropertyDescriptor(Double.class)),
+        jsonPropertySpecificDocumentation(documentation("xyz")));
   }
 
   @Override
   public RBMapJsonApiPropertyDescriptor makeMatchingNontrivialObject() {
     return rbMapJsonApiPropertyDescriptor(
         javaGenericJsonApiPropertyDescriptor(UniqueId.class, simpleClassJsonApiPropertyDescriptor(String.class)),
-        javaGenericJsonApiPropertyDescriptor(ClosedRange.class, simpleClassJsonApiPropertyDescriptor(Double.class)));
+        javaGenericJsonApiPropertyDescriptor(ClosedRange.class, simpleClassJsonApiPropertyDescriptor(Double.class)),
+        jsonPropertySpecificDocumentation(documentation("xyz")));
   }
 
   @Override
@@ -95,10 +101,12 @@ public class RBMapJsonApiPropertyDescriptorTest extends RBTestMatcher<RBMapJsonA
     return rbMapJsonApiPropertyDescriptorMatcher(expected).matches(actual);
   }
 
-  public static TypeSafeMatcher<RBMapJsonApiPropertyDescriptor> rbMapJsonApiPropertyDescriptorMatcher(RBMapJsonApiPropertyDescriptor expected) {
+  public static TypeSafeMatcher<RBMapJsonApiPropertyDescriptor> rbMapJsonApiPropertyDescriptorMatcher(
+      RBMapJsonApiPropertyDescriptor expected) {
     return makeMatcher(expected,
-        match(v -> v.getKeyClassDescriptor(),   f -> dataClassJsonApiPropertyDescriptorMatcher(f)),
-        match(v -> v.getValueClassDescriptor(), f -> dataClassJsonApiPropertyDescriptorMatcher(f)));
+        match(           v -> v.getKeyClassDescriptor(),   f -> dataClassJsonApiPropertyDescriptorMatcher(f)),
+        match(           v -> v.getValueClassDescriptor(), f -> dataClassJsonApiPropertyDescriptorMatcher(f)),
+        matchOptional(   v -> v.getPropertySpecificDocumentation(), f -> jsonPropertySpecificDocumentationMatcher(f)));
   }
 
 }
