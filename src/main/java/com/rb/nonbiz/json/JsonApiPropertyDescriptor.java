@@ -207,7 +207,7 @@ public abstract class JsonApiPropertyDescriptor {
      */
     public static <E extends Enum<E>> SimpleClassJsonApiPropertyDescriptor enumJsonApiPropertyDescriptor(
         Class<E> enumClass) {
-      // We can use Optional.empty() for the property-specific documentation, because enums only have
+      // Optional.empty() is the right thing to use for the property-specific documentation, because enums only have
       // class-specific documentation; they don't have properties. An *object* that has a property whose type
       // is this enum *could* have its own documentation, but that's different.
       return simpleClassJsonApiPropertyDescriptor(enumClass, Optional.empty());
