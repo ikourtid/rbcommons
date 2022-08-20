@@ -11,6 +11,7 @@ import com.rb.nonbiz.collections.RBMapWithDefault;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
@@ -21,14 +22,19 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.CollectionJsonApiPropertyDescriptor.collectionJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor.iidMapJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor.javaGenericJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptorTest.dataClassJsonApiPropertyDescriptorMatcher;
+import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
+import static com.rb.nonbiz.json.JsonPropertySpecificDocumentationTest.jsonPropertySpecificDocumentationMatcher;
 import static com.rb.nonbiz.testmatchers.Match.matchList;
+import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<JavaGenericJsonApiPropertyDescriptor> {
 
@@ -61,14 +67,24 @@ public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<Java
 
   @Override
   public JavaGenericJsonApiPropertyDescriptor makeNontrivialObject() {
-    return javaGenericJsonApiPropertyDescriptor(ClosedRange.class,
-        iidMapJsonApiPropertyDescriptor(simpleClassJsonApiPropertyDescriptor(UnitFraction.class)));
+    // This is not a realistic example, because a ClosedRange only has 1 generic argument, not 2.
+    // However, there's no way to ever sanity-check that in the production code, because of Java type erasure.
+    // Let's use this here so that makeNontrivialObject represents a general case of multiple generic arguments.
+    return javaGenericJsonApiPropertyDescriptor(
+        ClosedRange.class,
+        jsonPropertySpecificDocumentation(documentation("xyz")),
+        simpleClassJsonApiPropertyDescriptor(Double.class),
+        simpleClassJsonApiPropertyDescriptor(UnitFraction.class));
   }
 
   @Override
   public JavaGenericJsonApiPropertyDescriptor makeMatchingNontrivialObject() {
-    return javaGenericJsonApiPropertyDescriptor(ClosedRange.class,
-        iidMapJsonApiPropertyDescriptor(simpleClassJsonApiPropertyDescriptor(UnitFraction.class)));
+    // Nothing to tweak here
+    return javaGenericJsonApiPropertyDescriptor(
+        ClosedRange.class,
+        jsonPropertySpecificDocumentation(documentation("xyz")),
+        simpleClassJsonApiPropertyDescriptor(Double.class),
+        simpleClassJsonApiPropertyDescriptor(UnitFraction.class));
   }
 
   @Override
@@ -80,7 +96,8 @@ public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<Java
       JavaGenericJsonApiPropertyDescriptor expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getOuterClass()),
-        matchList(       v -> v.getGenericArgumentClassDescriptors(), f -> dataClassJsonApiPropertyDescriptorMatcher(f)));
+        matchList(       v -> v.getGenericArgumentClassDescriptors(), f -> dataClassJsonApiPropertyDescriptorMatcher(f)),
+        matchOptional(   v -> v.getPropertySpecificDocumentation(),   f -> jsonPropertySpecificDocumentationMatcher(f)));
   }
 
 }

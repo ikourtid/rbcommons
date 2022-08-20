@@ -8,6 +8,7 @@ import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
 import com.rb.nonbiz.types.ImpreciseValue;
@@ -19,9 +20,13 @@ import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
+import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
+import static com.rb.nonbiz.json.JsonPropertySpecificDocumentationTest.jsonPropertySpecificDocumentationMatcher;
+import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class SimpleClassJsonApiPropertyDescriptorTest extends RBTestMatcher<SimpleClassJsonApiPropertyDescriptor> {
 
@@ -52,12 +57,14 @@ public class SimpleClassJsonApiPropertyDescriptorTest extends RBTestMatcher<Simp
 
   @Override
   public SimpleClassJsonApiPropertyDescriptor makeNontrivialObject() {
-    return simpleClassJsonApiPropertyDescriptor(ClosedRange.class);
+    return simpleClassJsonApiPropertyDescriptor(
+        ClosedRange.class, jsonPropertySpecificDocumentation(documentation("xyz")));
   }
 
   @Override
   public SimpleClassJsonApiPropertyDescriptor makeMatchingNontrivialObject() {
-    return simpleClassJsonApiPropertyDescriptor(ClosedRange.class);
+    return simpleClassJsonApiPropertyDescriptor(
+        ClosedRange.class, jsonPropertySpecificDocumentation(documentation("xyz")));
   }
 
   @Override
@@ -68,7 +75,8 @@ public class SimpleClassJsonApiPropertyDescriptorTest extends RBTestMatcher<Simp
   public static TypeSafeMatcher<SimpleClassJsonApiPropertyDescriptor> simpleClassJsonApiPropertyDescriptorMatcher(
       SimpleClassJsonApiPropertyDescriptor expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getClassBeingDescribed()));
+        matchUsingEquals(v -> v.getClassBeingDescribed()),
+        matchOptional(   v -> v.getPropertySpecificDocumentation(), f -> jsonPropertySpecificDocumentationMatcher(f)));
   }
 
 }

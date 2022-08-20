@@ -10,6 +10,7 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
+import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -20,9 +21,13 @@ import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.CollectionJsonApiProp
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor.javaGenericJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptorTest.dataClassJsonApiPropertyDescriptorMatcher;
+import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
+import static com.rb.nonbiz.json.JsonPropertySpecificDocumentationTest.jsonPropertySpecificDocumentationMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class CollectionJsonApiPropertyDescriptorTest extends RBTestMatcher<CollectionJsonApiPropertyDescriptor> {
 
@@ -50,14 +55,14 @@ public class CollectionJsonApiPropertyDescriptorTest extends RBTestMatcher<Colle
 
   @Override
   public CollectionJsonApiPropertyDescriptor makeNontrivialObject() {
-    return collectionJsonApiPropertyDescriptor(javaGenericJsonApiPropertyDescriptor(
-        ClosedRange.class, simpleClassJsonApiPropertyDescriptor(Double.class)));
+    return collectionJsonApiPropertyDescriptor(
+        new JavaGenericJsonApiPropertyDescriptorTest().makeNontrivialObject());
   }
 
   @Override
   public CollectionJsonApiPropertyDescriptor makeMatchingNontrivialObject() {
-    return collectionJsonApiPropertyDescriptor(javaGenericJsonApiPropertyDescriptor(
-        ClosedRange.class, simpleClassJsonApiPropertyDescriptor(Double.class)));
+    return collectionJsonApiPropertyDescriptor(
+        new JavaGenericJsonApiPropertyDescriptorTest().makeMatchingNontrivialObject());
   }
 
   @Override
@@ -68,7 +73,8 @@ public class CollectionJsonApiPropertyDescriptorTest extends RBTestMatcher<Colle
   public static TypeSafeMatcher<CollectionJsonApiPropertyDescriptor> collectionJsonApiPropertyDescriptorMatcher(
       CollectionJsonApiPropertyDescriptor expected) {
     return makeMatcher(expected,
-        match(v -> v.getCollectionValueClassDescriptor(), f -> dataClassJsonApiPropertyDescriptorMatcher(f)));
+        match(        v -> v.getCollectionValueClassDescriptor(), f -> dataClassJsonApiPropertyDescriptorMatcher(f)),
+        matchOptional(v -> v.getPropertySpecificDocumentation(),  f -> jsonPropertySpecificDocumentationMatcher(f)));
   }
 
 }
