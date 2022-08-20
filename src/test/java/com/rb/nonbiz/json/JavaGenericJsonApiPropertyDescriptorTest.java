@@ -21,8 +21,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
-import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.CollectionJsonApiPropertyDescriptor.collectionJsonApiPropertyDescriptor;
-import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor.iidMapJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor.javaGenericJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptorTest.dataClassJsonApiPropertyDescriptorMatcher;
@@ -33,6 +31,7 @@ import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<JavaGenericJsonApiPropertyDescriptor> {
@@ -57,6 +56,16 @@ public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<Java
           assertIllegalArgumentException( () -> javaGenericJsonApiPropertyDescriptor(badOuterClass, dummy, dummy));
         }
     );
+  }
+
+  @Test
+  public void genericArgumentClassHasPropertySpecificDocumentation_throws() {
+    assertIllegalArgumentException( () -> javaGenericJsonApiPropertyDescriptor(
+        ClosedRange.class,
+        simpleClassJsonApiPropertyDescriptor(Money.class, jsonPropertySpecificDocumentation(documentation(DUMMY_STRING)))));
+    JavaGenericJsonApiPropertyDescriptor doesNotThrow = javaGenericJsonApiPropertyDescriptor(
+        ClosedRange.class,
+        simpleClassJsonApiPropertyDescriptor(Money.class));
   }
 
   @Override

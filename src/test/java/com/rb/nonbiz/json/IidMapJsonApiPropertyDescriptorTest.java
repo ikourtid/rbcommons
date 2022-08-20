@@ -29,6 +29,7 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class IidMapJsonApiPropertyDescriptorTest extends RBTestMatcher<IidMapJsonApiPropertyDescriptor> {
@@ -53,6 +54,16 @@ public class IidMapJsonApiPropertyDescriptorTest extends RBTestMatcher<IidMapJso
         RBMap.class)
         .forEach(clazz ->
             assertIllegalArgumentException( () -> iidMapJsonApiPropertyDescriptor(simpleClassJsonApiPropertyDescriptor(clazz))));
+  }
+
+  @Test
+  public void valueClassContainsPropertySpecificDocumentation_throws() {
+    assertIllegalArgumentException( () -> iidMapJsonApiPropertyDescriptor(
+        simpleClassJsonApiPropertyDescriptor(
+            Money.class,
+            jsonPropertySpecificDocumentation(documentation(DUMMY_STRING)))));
+    IidMapJsonApiPropertyDescriptor doesNotThrow = iidMapJsonApiPropertyDescriptor(
+        simpleClassJsonApiPropertyDescriptor(Money.class));
   }
 
   @Override

@@ -1,11 +1,13 @@
 package com.rb.nonbiz.json;
 
+import com.rb.biz.types.Money;
 import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.RBMapJsonApiPropertyDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
@@ -18,6 +20,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor.iidMapJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor.javaGenericJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.RBMapJsonApiPropertyDescriptor.rbMapJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
@@ -28,6 +31,7 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class RBMapJsonApiPropertyDescriptorTest extends RBTestMatcher<RBMapJsonApiPropertyDescriptor> {
@@ -73,6 +77,35 @@ public class RBMapJsonApiPropertyDescriptorTest extends RBTestMatcher<RBMapJsonA
             // This way, it's clearer that what makes the test fail is the value class.
             assertIllegalArgumentException( () -> rbMapJsonApiPropertyDescriptor(
                 simpleClassJsonApiPropertyDescriptor(String.class), simpleClassJsonApiPropertyDescriptor(valueClass))));
+  }
+
+  @Test
+  public void keyOrValueClassContainPropertySpecificDocumentation_throws() {
+    assertIllegalArgumentException( () -> rbMapJsonApiPropertyDescriptor(
+        simpleClassJsonApiPropertyDescriptor(
+            String.class,
+            jsonPropertySpecificDocumentation(documentation(DUMMY_STRING))),
+        simpleClassJsonApiPropertyDescriptor(
+            Money.class,
+            jsonPropertySpecificDocumentation(documentation(DUMMY_STRING)))));
+
+    assertIllegalArgumentException( () -> rbMapJsonApiPropertyDescriptor(
+        simpleClassJsonApiPropertyDescriptor(
+            String.class,
+            jsonPropertySpecificDocumentation(documentation(DUMMY_STRING))),
+        simpleClassJsonApiPropertyDescriptor(
+            Money.class)));
+
+    assertIllegalArgumentException( () -> rbMapJsonApiPropertyDescriptor(
+        simpleClassJsonApiPropertyDescriptor(
+            String.class),
+        simpleClassJsonApiPropertyDescriptor(
+            Money.class,
+            jsonPropertySpecificDocumentation(documentation(DUMMY_STRING)))));
+
+    RBMapJsonApiPropertyDescriptor doesNotThrow = rbMapJsonApiPropertyDescriptor(
+        simpleClassJsonApiPropertyDescriptor(String.class),
+        simpleClassJsonApiPropertyDescriptor(Money.class));
   }
 
   @Override
