@@ -5,6 +5,8 @@ import com.rb.nonbiz.text.Strings;
 
 import java.time.LocalDateTime;
 
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
+
 /**
  * <p> A thin semantic wrapper for {@link HumanReadableDocumentation} that's mean to apply to a specific property,
  * vs. for an entire class. Example: a {@link LocalDateTime} (class) can be described as being in UTC format, etc. This is
@@ -26,6 +28,11 @@ public class JsonPropertySpecificDocumentation {
   public static JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation(
       HumanReadableDocumentation rawDocumentation) {
     return new JsonPropertySpecificDocumentation(rawDocumentation);
+  }
+
+  public static JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation(
+      String asString) {
+    return jsonPropertySpecificDocumentation(documentation(asString));
   }
 
   public HumanReadableDocumentation getRawDocumentation() {

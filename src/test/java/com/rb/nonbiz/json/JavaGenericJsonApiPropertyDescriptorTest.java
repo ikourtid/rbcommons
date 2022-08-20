@@ -11,7 +11,6 @@ import com.rb.nonbiz.collections.RBMapWithDefault;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
@@ -22,8 +21,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
-import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.CollectionJsonApiPropertyDescriptor.collectionJsonApiPropertyDescriptor;
-import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor.iidMapJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor.javaGenericJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptorTest.dataClassJsonApiPropertyDescriptorMatcher;
@@ -34,6 +31,7 @@ import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<JavaGenericJsonApiPropertyDescriptor> {
@@ -60,6 +58,16 @@ public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<Java
     );
   }
 
+  @Test
+  public void genericArgumentClassHasPropertySpecificDocumentation_throws() {
+    assertIllegalArgumentException( () -> javaGenericJsonApiPropertyDescriptor(
+        ClosedRange.class,
+        simpleClassJsonApiPropertyDescriptor(Money.class, jsonPropertySpecificDocumentation(DUMMY_STRING))));
+    JavaGenericJsonApiPropertyDescriptor doesNotThrow = javaGenericJsonApiPropertyDescriptor(
+        ClosedRange.class,
+        simpleClassJsonApiPropertyDescriptor(Money.class));
+  }
+
   @Override
   public JavaGenericJsonApiPropertyDescriptor makeTrivialObject() {
     return javaGenericJsonApiPropertyDescriptor(RBMapWithDefault.class, simpleClassJsonApiPropertyDescriptor(Money.class));
@@ -72,7 +80,7 @@ public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<Java
     // Let's use this here so that makeNontrivialObject represents a general case of multiple generic arguments.
     return javaGenericJsonApiPropertyDescriptor(
         ClosedRange.class,
-        jsonPropertySpecificDocumentation(documentation("xyz")),
+        jsonPropertySpecificDocumentation("xyz"),
         simpleClassJsonApiPropertyDescriptor(Double.class),
         simpleClassJsonApiPropertyDescriptor(UnitFraction.class));
   }
@@ -82,7 +90,7 @@ public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<Java
     // Nothing to tweak here
     return javaGenericJsonApiPropertyDescriptor(
         ClosedRange.class,
-        jsonPropertySpecificDocumentation(documentation("xyz")),
+        jsonPropertySpecificDocumentation("xyz"),
         simpleClassJsonApiPropertyDescriptor(Double.class),
         simpleClassJsonApiPropertyDescriptor(UnitFraction.class));
   }

@@ -1,5 +1,6 @@
 package com.rb.nonbiz.json;
 
+import com.rb.biz.types.Money;
 import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ClosedRange;
@@ -28,6 +29,7 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class RBMapJsonApiPropertyDescriptorTest extends RBTestMatcher<RBMapJsonApiPropertyDescriptor> {
@@ -75,6 +77,35 @@ public class RBMapJsonApiPropertyDescriptorTest extends RBTestMatcher<RBMapJsonA
                 simpleClassJsonApiPropertyDescriptor(String.class), simpleClassJsonApiPropertyDescriptor(valueClass))));
   }
 
+  @Test
+  public void keyOrValueClassContainPropertySpecificDocumentation_throws() {
+    assertIllegalArgumentException( () -> rbMapJsonApiPropertyDescriptor(
+        simpleClassJsonApiPropertyDescriptor(
+            String.class,
+            jsonPropertySpecificDocumentation(DUMMY_STRING)),
+        simpleClassJsonApiPropertyDescriptor(
+            Money.class,
+            jsonPropertySpecificDocumentation(DUMMY_STRING))));
+
+    assertIllegalArgumentException( () -> rbMapJsonApiPropertyDescriptor(
+        simpleClassJsonApiPropertyDescriptor(
+            String.class,
+            jsonPropertySpecificDocumentation(DUMMY_STRING)),
+        simpleClassJsonApiPropertyDescriptor(
+            Money.class)));
+
+    assertIllegalArgumentException( () -> rbMapJsonApiPropertyDescriptor(
+        simpleClassJsonApiPropertyDescriptor(
+            String.class),
+        simpleClassJsonApiPropertyDescriptor(
+            Money.class,
+            jsonPropertySpecificDocumentation(DUMMY_STRING))));
+
+    RBMapJsonApiPropertyDescriptor doesNotThrow = rbMapJsonApiPropertyDescriptor(
+        simpleClassJsonApiPropertyDescriptor(String.class),
+        simpleClassJsonApiPropertyDescriptor(Money.class));
+  }
+
   @Override
   public RBMapJsonApiPropertyDescriptor makeTrivialObject() {
     return rbMapJsonApiPropertyDescriptor(simpleClassJsonApiPropertyDescriptor(String.class), simpleClassJsonApiPropertyDescriptor(Double.class));
@@ -85,7 +116,7 @@ public class RBMapJsonApiPropertyDescriptorTest extends RBTestMatcher<RBMapJsonA
     return rbMapJsonApiPropertyDescriptor(
         javaGenericJsonApiPropertyDescriptor(UniqueId.class, simpleClassJsonApiPropertyDescriptor(String.class)),
         javaGenericJsonApiPropertyDescriptor(ClosedRange.class, simpleClassJsonApiPropertyDescriptor(Double.class)),
-        jsonPropertySpecificDocumentation(documentation("xyz")));
+        jsonPropertySpecificDocumentation("xyz"));
   }
 
   @Override
@@ -93,7 +124,7 @@ public class RBMapJsonApiPropertyDescriptorTest extends RBTestMatcher<RBMapJsonA
     return rbMapJsonApiPropertyDescriptor(
         javaGenericJsonApiPropertyDescriptor(UniqueId.class, simpleClassJsonApiPropertyDescriptor(String.class)),
         javaGenericJsonApiPropertyDescriptor(ClosedRange.class, simpleClassJsonApiPropertyDescriptor(Double.class)),
-        jsonPropertySpecificDocumentation(documentation("xyz")));
+        jsonPropertySpecificDocumentation("xyz"));
   }
 
   @Override

@@ -20,6 +20,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
@@ -80,6 +81,56 @@ public abstract class JsonApiPropertyDescriptor {
     return jsonApiPropertyDescriptor instanceof SimpleClassJsonApiPropertyDescriptor
         ? Optional.of( ((SimpleClassJsonApiPropertyDescriptor) jsonApiPropertyDescriptor).getClassBeingDescribed())
         : Optional.empty();
+  }
+
+  private static boolean noPropertySpecificDocumentationPresent(Stream<JsonApiPropertyDescriptor> stream) {
+    return stream
+        .allMatch(v -> v.visit(new Visitor<Boolean>() {
+          @Override
+          public Boolean visitSimpleClassJsonApiPropertyDescriptor(
+              SimpleClassJsonApiPropertyDescriptor simpleClassJsonApiPropertyDescriptor) {
+            return !simpleClassJsonApiPropertyDescriptor.getPropertySpecificDocumentation().isPresent();
+          }
+
+          @Override
+          public Boolean visitIidMapJsonApiPropertyDescriptor(
+              IidMapJsonApiPropertyDescriptor iidMapJsonApiPropertyDescriptor) {
+            return !iidMapJsonApiPropertyDescriptor.getPropertySpecificDocumentation().isPresent()
+                && noPropertySpecificDocumentationPresent(Stream.of(
+                    iidMapJsonApiPropertyDescriptor.getValueClassDescriptor()));
+          }
+
+          @Override
+          public Boolean visitRBMapJsonApiPropertyDescriptor(
+              RBMapJsonApiPropertyDescriptor rbMapJsonApiPropertyDescriptor) {
+            return !rbMapJsonApiPropertyDescriptor.getPropertySpecificDocumentation().isPresent()
+                && noPropertySpecificDocumentationPresent(Stream.of(
+                rbMapJsonApiPropertyDescriptor.getKeyClassDescriptor(),
+                rbMapJsonApiPropertyDescriptor.getValueClassDescriptor()));
+          }
+
+          @Override
+          public Boolean visitCollectionJsonApiPropertyDescriptor(
+              CollectionJsonApiPropertyDescriptor collectionJsonApiPropertyDescriptor) {
+            return !collectionJsonApiPropertyDescriptor.getPropertySpecificDocumentation().isPresent()
+                && noPropertySpecificDocumentationPresent(Stream.of(
+                collectionJsonApiPropertyDescriptor.getCollectionValueClassDescriptor()));
+          }
+
+          @Override
+          public Boolean visitJavaGenericJsonApiPropertyDescriptor(
+              JavaGenericJsonApiPropertyDescriptor javaGenericJsonApiPropertyDescriptor) {
+            return !javaGenericJsonApiPropertyDescriptor.getPropertySpecificDocumentation().isPresent()
+                && noPropertySpecificDocumentationPresent(
+                javaGenericJsonApiPropertyDescriptor.getGenericArgumentClassDescriptors().stream());
+          }
+
+          @Override
+          public Boolean visitPseudoEnumJsonApiPropertyDescriptor(
+              PseudoEnumJsonApiPropertyDescriptor pseudoEnumJsonApiPropertyDescriptor) {
+            return true; // There are no child nodes under PseudoEnumJsonApiPropertyDescriptor
+          }
+        }));
   }
 
   protected static RBSet<Class<?>> getInvalidJsonApiPropertyDescriptorClasses() {
@@ -156,7 +207,7 @@ public abstract class JsonApiPropertyDescriptor {
      */
     public static <E extends Enum<E>> SimpleClassJsonApiPropertyDescriptor enumJsonApiPropertyDescriptor(
         Class<E> enumClass) {
-      // We can use Optional.empty() for the property-specific documentation, because enums only have
+      // Optional.empty() is the right thing to use for the property-specific documentation, because enums only have
       // class-specific documentation; they don't have properties. An *object* that has a property whose type
       // is this enum *could* have its own documentation, but that's different.
       return simpleClassJsonApiPropertyDescriptor(enumClass, Optional.empty());
@@ -226,6 +277,10 @@ public abstract class JsonApiPropertyDescriptor {
                       !valueClass.equals(invalidClass),
                       "IidMapJsonApiPropertyDescriptor uses an invalid class of %s",
                       invalidClass)));
+      RBPreconditions.checkArgument(
+          noPropertySpecificDocumentationPresent(Stream.of(valueClassDescriptor)),
+          "Contained JsonApiPropertyDescriptor objects cannot have any property-specific documentation: %s",
+          valueClassDescriptor);
       return new IidMapJsonApiPropertyDescriptor(valueClassDescriptor, jsonPropertySpecificDocumentation);
     }
 
@@ -311,6 +366,11 @@ public abstract class JsonApiPropertyDescriptor {
                       !valueClass.equals(invalidClass),
                       "RBMapJsonApiPropertyDescriptor for %s -> %s : invalid value class",
                       keyClassDescriptor, valueClassDescriptor)));
+      RBPreconditions.checkArgument(
+          noPropertySpecificDocumentationPresent(Stream.of(keyClassDescriptor, valueClassDescriptor)),
+          "Contained JsonApiPropertyDescriptor objects cannot have any property-specific documentation: %s",
+          keyClassDescriptor, valueClassDescriptor);
+
       return new RBMapJsonApiPropertyDescriptor(
           keyClassDescriptor, valueClassDescriptor, jsonPropertySpecificDocumentation);
     }
@@ -390,6 +450,10 @@ public abstract class JsonApiPropertyDescriptor {
                       !arrayValueClass.equals(invalidClass),
                       "CollectionJsonApiPropertyDescriptor uses an invalid class of %s",
                       invalidClass)));
+      RBPreconditions.checkArgument(
+          noPropertySpecificDocumentationPresent(Stream.of(arrayValueClassDescriptor)),
+          "Contained JsonApiPropertyDescriptor objects cannot have any property-specific documentation: %s",
+          arrayValueClassDescriptor);
       return new CollectionJsonApiPropertyDescriptor(arrayValueClassDescriptor,jsonPropertySpecificDocumentation);
     }
 
@@ -492,6 +556,12 @@ public abstract class JsonApiPropertyDescriptor {
           !genericArgumentClassDescriptors.isEmpty(),
           "JavaGenericJsonApiPropertyDescriptor describes a generic class '%s' without generic arguments",
           outerClass);
+
+      RBPreconditions.checkArgument(
+          noPropertySpecificDocumentationPresent(genericArgumentClassDescriptors.stream()),
+          "Contained JsonApiPropertyDescriptor objects cannot have any property-specific documentation: %s",
+          genericArgumentClassDescriptors);
+
       return new JavaGenericJsonApiPropertyDescriptor(
           outerClass, genericArgumentClassDescriptors,jsonPropertySpecificDocumentation);
     }
