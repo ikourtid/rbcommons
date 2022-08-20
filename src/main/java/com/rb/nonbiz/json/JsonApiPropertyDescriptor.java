@@ -11,6 +11,7 @@ import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSets;
+import com.rb.nonbiz.jsonapi.JsonApiDocumentation;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
@@ -689,6 +690,18 @@ public abstract class JsonApiPropertyDescriptor {
    * <p> Note that this does not represent an actual enum; for that, see {@link JsonApiEnumDescriptor}. </p>
    */
   public static class PseudoEnumJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
+
+    /**
+     * <p> Empty class used in the various JSON API converters in certain cases. </p>
+     *
+     * <p> We sometimes need a JSON object to represent one of multiple types. In order to do that,
+     * our convention is to serialize a property (e.g. 'mode') as a string, whose contents tell us which subclass
+     * we should expect to read, and then another property (whose name may change, depending on subclass)
+     * that holds a JSON object that's the serialization of that subclass. So we're not dealing with fixed properties.
+     * This empty class is just used to denote those situations. In those cases, the code that builds the
+     * {@link JsonApiDocumentation} will just use its own {@link PseudoEnumJsonApiPropertyDescriptor}.</p>
+     */
+    public static class PseudoEnum {}
 
     // This should be removed once we have human-readable descriptions for all instances where we use it.
     // The reason it exists is that it helps us avoid having fixmes in multiple places.
