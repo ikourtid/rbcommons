@@ -22,7 +22,7 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor.iidMapJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor.javaGenericJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
-import static com.rb.nonbiz.json.JsonApiPropertyDescriptorTest.dataClassJsonApiPropertyDescriptorMatcher;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptorTest.jsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentationTest.jsonPropertySpecificDocumentationMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -30,7 +30,6 @@ import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class IidMapJsonApiPropertyDescriptorTest extends RBTestMatcher<IidMapJsonApiPropertyDescriptor> {
 
@@ -93,7 +92,7 @@ public class IidMapJsonApiPropertyDescriptorTest extends RBTestMatcher<IidMapJso
   public static TypeSafeMatcher<IidMapJsonApiPropertyDescriptor> iidMapJsonApiPropertyDescriptorMatcher(
       IidMapJsonApiPropertyDescriptor expected) {
     return makeMatcher(expected,
-        match(        v -> v.getValueClassDescriptor(),          f -> dataClassJsonApiPropertyDescriptorMatcher(f)),
+        match(        v -> v.getValueClassDescriptor(),          f -> jsonApiPropertyDescriptorMatcher(f)),
         matchOptional(v -> v.getPropertySpecificDocumentation(), f -> jsonPropertySpecificDocumentationMatcher(f)));
   }
 

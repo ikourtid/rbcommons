@@ -16,6 +16,8 @@ import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
+import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 import static com.rb.nonbiz.text.Strings.formatCollectionInOrder;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
 import static com.rb.nonbiz.text.Strings.formatOptionalPrintsInstruments;
@@ -162,6 +164,18 @@ public class StringsTest {
 
     assertEquals("(none)", formatOptionalPrintsInstruments(
         Optional.<InstrumentId>empty(), instrumentMaster, UNUSED_DATE));
+  }
+
+  @Test
+  public void testAsSingleLine() {
+    assertEquals("ab", asSingleLine("a", "b"));
+    assertEquals("abc", asSingleLine("a", "b", "c"));
+  }
+
+  @Test
+  public void testAsSingleLineWithNewlines() {
+    assertEquals("a\nb\n", asSingleLineWithNewlines("a", "b"));
+    assertEquals("a\nb\nc\n", asSingleLineWithNewlines("a", "b", "c"));
   }
 
 }

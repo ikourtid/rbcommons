@@ -411,6 +411,19 @@ public class Strings {
   }
 
   /**
+   * This is handy in situations where we need to create a multiline string,
+   * but want to avoid the ugliness of having plus signs in the Java code for concatenation,
+   * which messes up indentation.
+   */
+  public static String asSingleLineWithNewlines(String first, String... rest) {
+    StringBuilder sb = new StringBuilder(first).append('\n');
+    for (String s : rest) {
+      sb.append(s).append('\n');
+    }
+    return sb.toString();
+  }
+
+  /**
    * Returns a sentence with the conjunction of several items
    * in a way that reads well in English.
    */

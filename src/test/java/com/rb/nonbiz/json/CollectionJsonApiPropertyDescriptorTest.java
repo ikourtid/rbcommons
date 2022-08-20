@@ -20,7 +20,7 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.CollectionJsonApiPropertyDescriptor.collectionJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor.javaGenericJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
-import static com.rb.nonbiz.json.JsonApiPropertyDescriptorTest.dataClassJsonApiPropertyDescriptorMatcher;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptorTest.jsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentationTest.jsonPropertySpecificDocumentationMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -28,7 +28,6 @@ import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class CollectionJsonApiPropertyDescriptorTest extends RBTestMatcher<CollectionJsonApiPropertyDescriptor> {
 
@@ -94,7 +93,7 @@ public class CollectionJsonApiPropertyDescriptorTest extends RBTestMatcher<Colle
   public static TypeSafeMatcher<CollectionJsonApiPropertyDescriptor> collectionJsonApiPropertyDescriptorMatcher(
       CollectionJsonApiPropertyDescriptor expected) {
     return makeMatcher(expected,
-        match(        v -> v.getCollectionValueClassDescriptor(), f -> dataClassJsonApiPropertyDescriptorMatcher(f)),
+        match(        v -> v.getCollectionValueClassDescriptor(), f -> jsonApiPropertyDescriptorMatcher(f)),
         matchOptional(v -> v.getPropertySpecificDocumentation(),  f -> jsonPropertySpecificDocumentationMatcher(f)));
   }
 

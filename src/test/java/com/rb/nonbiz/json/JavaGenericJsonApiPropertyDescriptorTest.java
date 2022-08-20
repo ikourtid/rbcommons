@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor.javaGenericJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
-import static com.rb.nonbiz.json.JsonApiPropertyDescriptorTest.dataClassJsonApiPropertyDescriptorMatcher;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptorTest.jsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentationTest.jsonPropertySpecificDocumentationMatcher;
 import static com.rb.nonbiz.testmatchers.Match.matchList;
@@ -32,7 +32,6 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<JavaGenericJsonApiPropertyDescriptor> {
 
@@ -104,7 +103,7 @@ public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<Java
       JavaGenericJsonApiPropertyDescriptor expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getOuterClass()),
-        matchList(       v -> v.getGenericArgumentClassDescriptors(), f -> dataClassJsonApiPropertyDescriptorMatcher(f)),
+        matchList(       v -> v.getGenericArgumentClassDescriptors(), f -> jsonApiPropertyDescriptorMatcher(f)),
         matchOptional(   v -> v.getPropertySpecificDocumentation(),   f -> jsonPropertySpecificDocumentationMatcher(f)));
   }
 
