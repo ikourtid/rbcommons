@@ -1,20 +1,17 @@
 package com.rb.nonbiz.text;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
-
-import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.emptyDocumentation;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
-
 import org.hamcrest.TypeSafeMatcher;
 
+import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 public class HumanReadableDocumentationTest extends RBTestMatcher<HumanReadableDocumentation> {
 
   @Override
   public HumanReadableDocumentation makeTrivialObject() {
-    return emptyDocumentation();
+    return documentation("x");
   }
 
   @Override
