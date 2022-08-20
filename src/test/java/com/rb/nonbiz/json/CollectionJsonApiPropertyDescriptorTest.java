@@ -5,7 +5,6 @@ import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.CollectionJsonApiPropertyDescriptor;
-import com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.UniqueId;
@@ -19,7 +18,6 @@ import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.CollectionJsonApiPropertyDescriptor.collectionJsonApiPropertyDescriptor;
-import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor.iidMapJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.JavaGenericJsonApiPropertyDescriptor.javaGenericJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptorTest.dataClassJsonApiPropertyDescriptorMatcher;
@@ -56,7 +54,7 @@ public class CollectionJsonApiPropertyDescriptorTest extends RBTestMatcher<Colle
     assertIllegalArgumentException( () -> collectionJsonApiPropertyDescriptor(
         simpleClassJsonApiPropertyDescriptor(
             Money.class,
-            jsonPropertySpecificDocumentation(documentation(DUMMY_STRING)))));
+            jsonPropertySpecificDocumentation(DUMMY_STRING))));
     CollectionJsonApiPropertyDescriptor doesNotThrow = collectionJsonApiPropertyDescriptor(
         simpleClassJsonApiPropertyDescriptor(Money.class));
   }

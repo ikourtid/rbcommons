@@ -58,13 +58,13 @@ public class SimpleClassJsonApiPropertyDescriptorTest extends RBTestMatcher<Simp
   @Override
   public SimpleClassJsonApiPropertyDescriptor makeNontrivialObject() {
     return simpleClassJsonApiPropertyDescriptor(
-        ClosedRange.class, jsonPropertySpecificDocumentation(documentation("xyz")));
+        ClosedRange.class, jsonPropertySpecificDocumentation("xyz"));
   }
 
   @Override
   public SimpleClassJsonApiPropertyDescriptor makeMatchingNontrivialObject() {
     return simpleClassJsonApiPropertyDescriptor(
-        ClosedRange.class, jsonPropertySpecificDocumentation(documentation("xyz")));
+        ClosedRange.class, jsonPropertySpecificDocumentation("xyz"));
   }
 
   @Override

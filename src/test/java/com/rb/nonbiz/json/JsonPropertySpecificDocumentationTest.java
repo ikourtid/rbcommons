@@ -13,17 +13,17 @@ public class JsonPropertySpecificDocumentationTest extends RBTestMatcher<JsonPro
 
   @Override
   public JsonPropertySpecificDocumentation makeTrivialObject() {
-    return jsonPropertySpecificDocumentation(documentation("x"));
+    return jsonPropertySpecificDocumentation("x");
   }
 
   @Override
   public JsonPropertySpecificDocumentation makeNontrivialObject() {
-    return jsonPropertySpecificDocumentation(documentation("a b c"));
+    return jsonPropertySpecificDocumentation("a b c");
   }
 
   @Override
   public JsonPropertySpecificDocumentation makeMatchingNontrivialObject() {
-    return jsonPropertySpecificDocumentation(documentation("a b c"));
+    return jsonPropertySpecificDocumentation("a b c");
   }
 
   @Override

@@ -62,7 +62,7 @@ public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<Java
   public void genericArgumentClassHasPropertySpecificDocumentation_throws() {
     assertIllegalArgumentException( () -> javaGenericJsonApiPropertyDescriptor(
         ClosedRange.class,
-        simpleClassJsonApiPropertyDescriptor(Money.class, jsonPropertySpecificDocumentation(documentation(DUMMY_STRING)))));
+        simpleClassJsonApiPropertyDescriptor(Money.class, jsonPropertySpecificDocumentation(DUMMY_STRING))));
     JavaGenericJsonApiPropertyDescriptor doesNotThrow = javaGenericJsonApiPropertyDescriptor(
         ClosedRange.class,
         simpleClassJsonApiPropertyDescriptor(Money.class));
@@ -80,7 +80,7 @@ public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<Java
     // Let's use this here so that makeNontrivialObject represents a general case of multiple generic arguments.
     return javaGenericJsonApiPropertyDescriptor(
         ClosedRange.class,
-        jsonPropertySpecificDocumentation(documentation("xyz")),
+        jsonPropertySpecificDocumentation("xyz"),
         simpleClassJsonApiPropertyDescriptor(Double.class),
         simpleClassJsonApiPropertyDescriptor(UnitFraction.class));
   }
@@ -90,7 +90,7 @@ public class JavaGenericJsonApiPropertyDescriptorTest extends RBTestMatcher<Java
     // Nothing to tweak here
     return javaGenericJsonApiPropertyDescriptor(
         ClosedRange.class,
-        jsonPropertySpecificDocumentation(documentation("xyz")),
+        jsonPropertySpecificDocumentation("xyz"),
         simpleClassJsonApiPropertyDescriptor(Double.class),
         simpleClassJsonApiPropertyDescriptor(UnitFraction.class));
   }

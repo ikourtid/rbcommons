@@ -61,7 +61,7 @@ public class IidMapJsonApiPropertyDescriptorTest extends RBTestMatcher<IidMapJso
     assertIllegalArgumentException( () -> iidMapJsonApiPropertyDescriptor(
         simpleClassJsonApiPropertyDescriptor(
             Money.class,
-            jsonPropertySpecificDocumentation(documentation(DUMMY_STRING)))));
+            jsonPropertySpecificDocumentation(DUMMY_STRING))));
     IidMapJsonApiPropertyDescriptor doesNotThrow = iidMapJsonApiPropertyDescriptor(
         simpleClassJsonApiPropertyDescriptor(Money.class));
   }
@@ -75,14 +75,14 @@ public class IidMapJsonApiPropertyDescriptorTest extends RBTestMatcher<IidMapJso
   public IidMapJsonApiPropertyDescriptor makeNontrivialObject() {
     return iidMapJsonApiPropertyDescriptor(
         javaGenericJsonApiPropertyDescriptor(UniqueId.class, simpleClassJsonApiPropertyDescriptor(ClosedRange.class)),
-        jsonPropertySpecificDocumentation(documentation("xyz")));
+        jsonPropertySpecificDocumentation("xyz"));
   }
 
   @Override
   public IidMapJsonApiPropertyDescriptor makeMatchingNontrivialObject() {
     return iidMapJsonApiPropertyDescriptor(
         javaGenericJsonApiPropertyDescriptor(UniqueId.class, simpleClassJsonApiPropertyDescriptor(ClosedRange.class)),
-        jsonPropertySpecificDocumentation(documentation("xyz")));
+        jsonPropertySpecificDocumentation("xyz"));
   }
 
   @Override
