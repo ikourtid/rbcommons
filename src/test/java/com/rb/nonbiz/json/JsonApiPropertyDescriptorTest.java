@@ -40,11 +40,10 @@ public class JsonApiPropertyDescriptorTest extends RBTestMatcher<JsonApiProperty
 
   @Override
   protected boolean willMatch(JsonApiPropertyDescriptor expected, JsonApiPropertyDescriptor actual) {
-    return dataClassJsonApiPropertyDescriptorMatcher(expected).matches(actual);
+    return jsonApiPropertyDescriptorMatcher(expected).matches(actual);
   }
 
-  // FIXME IAK YAML rename this to jsonApiPropertyDescriptorMatcher
-  public static TypeSafeMatcher<JsonApiPropertyDescriptor> dataClassJsonApiPropertyDescriptorMatcher(
+  public static TypeSafeMatcher<JsonApiPropertyDescriptor> jsonApiPropertyDescriptorMatcher(
       JsonApiPropertyDescriptor expected) {
     return generalVisitorMatcher(expected, v -> v.visit(new Visitor<VisitorMatchInfo<JsonApiPropertyDescriptor>>() {
       @Override
