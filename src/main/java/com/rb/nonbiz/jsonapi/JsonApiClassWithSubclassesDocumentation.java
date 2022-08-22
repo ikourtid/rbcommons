@@ -25,10 +25,13 @@ import static java.util.Collections.singletonList;
  */
 public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentation {
 
+  // FIXME IAK YAML add the ability to specify what happens if empty
+
   private final Class<?> classBeingDocumented;
   private final HumanReadableDocumentation singleLineSummary;
   private final HumanReadableDocumentation longDocumentation;
   private final List<JsonApiSubclassInfo> jsonApiSubclassInfoList;
+  private final String discriminatorProperty;
   private final Optional<JsonElement> trivialSampleJson;
   private final Optional<JsonElement> nontrivialSampleJson;
 
@@ -37,12 +40,14 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentation,
       List<JsonApiSubclassInfo> jsonApiSubclassInfoList,
+      String discriminatorProperty,
       Optional<JsonElement> trivialSampleJson,
       Optional<JsonElement> nontrivialSampleJson) {
     this.classBeingDocumented = classBeingDocumented;
     this.singleLineSummary = singleLineSummary;
     this.longDocumentation = longDocumentation;
     this.jsonApiSubclassInfoList = jsonApiSubclassInfoList;
+    this.discriminatorProperty = discriminatorProperty;
     this.trivialSampleJson = trivialSampleJson;
     this.nontrivialSampleJson = nontrivialSampleJson;
   }
@@ -86,6 +91,16 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
     return jsonApiSubclassInfoList;
   }
 
+  /**
+   * This lets us determine what exact subclass is being shown here. See OpenAPI specification
+   * <a href="https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/">
+   *   here.
+   *   </a>
+   */
+  public String getDiscriminatorProperty() {
+    return discriminatorProperty;
+  }
+
   public Optional<JsonElement> getTrivialSampleJson() {
     return trivialSampleJson;
   }
@@ -101,11 +116,12 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
 
   @Override
   public String toString() {
-    return Strings.format("[JACWSD %s %s %s %s %s %s JACWSD]",
+    return Strings.format("[JACWSD %s %s %s %s %s %s %s JACWSD]",
         classBeingDocumented,
         singleLineSummary,
         longDocumentation,
         formatListInExistingOrder(jsonApiSubclassInfoList),
+        discriminatorProperty,
         formatOptional(trivialSampleJson),
         formatOptional(nontrivialSampleJson));
   }
@@ -118,6 +134,7 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
     private HumanReadableDocumentation singleLineSummary;
     private HumanReadableDocumentation longDocumentation;
     private List<JsonApiSubclassInfo> jsonApiSubclassInfoList;
+    private String discriminatorProperty;
     private Optional<JsonElement> trivialSampleJson;
     private Optional<JsonElement> nontrivialSampleJson;
 
@@ -148,6 +165,11 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
     public JsonApiClassWithSubclassesDocumentationBuilder setJsonApiInfoOnOnlySubclass(
         JsonApiSubclassInfo onlyItem) {
       this.jsonApiSubclassInfoList = checkNotAlreadySet(this.jsonApiSubclassInfoList, singletonList(onlyItem));
+      return this;
+    }
+
+    public JsonApiClassWithSubclassesDocumentationBuilder setDiscriminatorProperty(String discriminatorProperty) {
+      this.discriminatorProperty = checkNotAlreadySet(this.discriminatorProperty, discriminatorProperty);
       return this;
     }
 
@@ -198,13 +220,17 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
           jsonApiSubclassInfoList.stream().map(v -> v.getClassOfSubclass()),
           "We cannot repeat a Class object here: %s",
           jsonApiSubclassInfoList);
+
+      RBPreconditions.checkArgument(
+          !discriminatorProperty.isEmpty(),
+          "The discriminator property cannot be empty");
     }
 
     @Override
     public JsonApiClassWithSubclassesDocumentation buildWithoutPreconditions() {
       return new JsonApiClassWithSubclassesDocumentation(
           classBeingDocumented, singleLineSummary, longDocumentation,
-          jsonApiSubclassInfoList, trivialSampleJson, nontrivialSampleJson);
+          jsonApiSubclassInfoList, discriminatorProperty, trivialSampleJson, nontrivialSampleJson);
     }
 
   }
