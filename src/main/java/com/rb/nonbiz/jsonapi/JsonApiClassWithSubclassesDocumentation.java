@@ -1,24 +1,19 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonElement;
-import com.rb.nonbiz.json.JsonValidationInstructions;
+import com.rb.nonbiz.collections.RBLists;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
-import static com.rb.nonbiz.collections.RBLists.listConcatenation;
-import static com.rb.nonbiz.json.JsonValidationInstructions.emptyJsonValidationInstructions;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatListInExistingOrder;
 import static com.rb.nonbiz.text.Strings.formatOptional;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 /**
@@ -108,7 +103,8 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
   }
 
 
-  public static class JsonApiClassDocumentationBuilder implements RBBuilder<JsonApiClassWithSubclassesDocumentation> {
+  public static class JsonApiClassWithSubclassesDocumentationBuilder 
+      implements RBBuilder<JsonApiClassWithSubclassesDocumentation> {
 
     private Class<?> classBeingDocumented;
     private HumanReadableDocumentation singleLineSummary;
@@ -117,48 +113,57 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
     private Optional<JsonElement> trivialSampleJson;
     private Optional<JsonElement> nontrivialSampleJson;
 
-    private JsonApiClassDocumentationBuilder() {}
+    private JsonApiClassWithSubclassesDocumentationBuilder() {}
 
-    public static JsonApiClassDocumentationBuilder jsonApiClassDocumentationBuilder() {
-      return new JsonApiClassDocumentationBuilder();
+    public static JsonApiClassWithSubclassesDocumentationBuilder jsonApiClassWithSubclassesDocumentationBuilder() {
+      return new JsonApiClassWithSubclassesDocumentationBuilder();
     }
-    public JsonApiClassDocumentationBuilder setClassBeingDocumented(Class<?> classBeingDocumented) {
+    public JsonApiClassWithSubclassesDocumentationBuilder setClassBeingDocumented(Class<?> classBeingDocumented) {
       this.classBeingDocumented = checkNotAlreadySet(this.classBeingDocumented, classBeingDocumented);
       return this;
     }
 
-    public JsonApiClassDocumentationBuilder setSingleLineSummary(HumanReadableDocumentation singleLineSummary) {
+    public JsonApiClassWithSubclassesDocumentationBuilder setSingleLineSummary(HumanReadableDocumentation singleLineSummary) {
       this.singleLineSummary = checkNotAlreadySet(this.singleLineSummary, singleLineSummary);
       return this;
     }
 
-    public JsonApiClassDocumentationBuilder setJsonApiSubclassInfoList(
-        List<JsonApiSubclassInfo> jsonApiSubclassInfoList) {
-      this.jsonApiSubclassInfoList = checkNotAlreadySet(this.jsonApiSubclassInfoList, jsonApiSubclassInfoList);
+    public JsonApiClassWithSubclassesDocumentationBuilder setJsonApiInfoOnMultipleSubclasses(
+        JsonApiSubclassInfo first,
+        JsonApiSubclassInfo second,
+        JsonApiSubclassInfo ... rest) {
+      this.jsonApiSubclassInfoList = checkNotAlreadySet(this.jsonApiSubclassInfoList,
+          concatenateFirstSecondAndRest(first, second, rest));
       return this;
     }
 
-    public JsonApiClassDocumentationBuilder setLongDocumentation(HumanReadableDocumentation longDocumentation) {
+    public JsonApiClassWithSubclassesDocumentationBuilder setJsonApiInfoOnOnlySubclass(
+        JsonApiSubclassInfo onlyItem) {
+      this.jsonApiSubclassInfoList = checkNotAlreadySet(this.jsonApiSubclassInfoList, singletonList(onlyItem));
+      return this;
+    }
+
+    public JsonApiClassWithSubclassesDocumentationBuilder setLongDocumentation(HumanReadableDocumentation longDocumentation) {
       this.longDocumentation = checkNotAlreadySet(this.longDocumentation, longDocumentation);
       return this;
     }
 
-    public JsonApiClassDocumentationBuilder setTrivialSampleJson(JsonElement trivialSampleJson) {
+    public JsonApiClassWithSubclassesDocumentationBuilder setTrivialSampleJson(JsonElement trivialSampleJson) {
       this.trivialSampleJson = checkNotAlreadySet(this.trivialSampleJson, Optional.of(trivialSampleJson));
       return this;
     }
 
-    public JsonApiClassDocumentationBuilder noTrivialSampleJsonSupplied() {
+    public JsonApiClassWithSubclassesDocumentationBuilder noTrivialSampleJsonSupplied() {
       this.trivialSampleJson = checkNotAlreadySet(this.trivialSampleJson, Optional.empty());
       return this;
     }
 
-    public JsonApiClassDocumentationBuilder setNontrivialSampleJson(JsonElement nontrivialSampleJson) {
+    public JsonApiClassWithSubclassesDocumentationBuilder setNontrivialSampleJson(JsonElement nontrivialSampleJson) {
       this.nontrivialSampleJson = checkNotAlreadySet(this.nontrivialSampleJson, Optional.of(nontrivialSampleJson));
       return this;
     }
 
-    public JsonApiClassDocumentationBuilder noNontrivialSampleJsonSupplied() {
+    public JsonApiClassWithSubclassesDocumentationBuilder noNontrivialSampleJsonSupplied() {
       this.nontrivialSampleJson = checkNotAlreadySet(this.nontrivialSampleJson, Optional.empty());
       return this;
     }
@@ -176,6 +181,10 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
           !classBeingDocumented.isEnum(),
           "Class %s cannot be an enum! Use JsonApiEnumDocumentation for that case",
           classBeingDocumented);
+
+      RBPreconditions.checkArgument(
+          !jsonApiSubclassInfoList.isEmpty(),
+          "We must have at least one subclass here");
 
       RBPreconditions.checkUnique(
           jsonApiSubclassInfoList.stream().map(v -> v.getClassOfSubclass()),
