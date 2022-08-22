@@ -1,22 +1,16 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.rb.biz.types.asset.AssetId;
 import com.rb.biz.types.asset.CashId;
 import com.rb.biz.types.asset.InstrumentId;
-import com.rb.nonbiz.json.JsonPropertySpecificDocumentation;
-import com.rb.nonbiz.json.JsonPropertySpecificDocumentationTest;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import org.junit.Test;
 
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentationTest.jsonPropertySpecificDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTest.hasJsonApiDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentationTest.testJsonApiClassDocumentationWithSeed;
 import static com.rb.nonbiz.jsonapi.JsonApiSubclassInfo.jsonApiSubclassInfo;
-import static com.rb.nonbiz.testmatchers.Match.matchClass;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
-import static org.junit.Assert.*;
 
 import org.hamcrest.TypeSafeMatcher;
 
