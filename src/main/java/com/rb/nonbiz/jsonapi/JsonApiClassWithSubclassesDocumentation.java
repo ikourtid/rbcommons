@@ -86,9 +86,17 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
     return jsonApiSubclassInfoList;
   }
 
+  public Optional<JsonElement> getTrivialSampleJson() {
+    return trivialSampleJson;
+  }
+
+  public Optional<JsonElement> getNontrivialSampleJson() {
+    return nontrivialSampleJson;
+  }
+
   @Override
   public <T> T visit(Visitor<T> visitor) {
-    return visitor.visitJsonApiClassDocumentation(this);
+    return visitor.visitJsonApiClassWithSubclassesDocumentation(this);
   }
 
   @Override
