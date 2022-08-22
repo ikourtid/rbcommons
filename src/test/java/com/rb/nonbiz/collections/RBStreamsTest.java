@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.rb.nonbiz.functional.TriFunction;
+import com.rb.nonbiz.testmatchers.RBCollectionMatchers;
 import com.rb.nonbiz.text.Strings;
 import org.junit.Test;
 
@@ -423,6 +424,25 @@ public class RBStreamsTest {
     assertOptionalEquals("a", maker.apply(Stream.of("a")));
     assertIllegalArgumentException( () -> maker.apply(Stream.of("a", "b")));
     assertIllegalArgumentException( () -> maker.apply(Stream.of("a", "b", "c")));
+  }
+
+  @Test
+  public void testConcatenateStreams() {
+    assertEquals(
+        ImmutableList.of("a", "b", "c", "d", "e", "f"),
+        concatenateStreams(
+            Stream.of("a", "b"),
+            Stream.of("c", "d"),
+            Stream.of("e", "f"))
+            .collect(Collectors.toList()));
+    assertEquals(
+        ImmutableList.of(8, 7, 6, 5, 1, 2, 3, 4),
+        concatenateStreams(
+            Stream.of(8, 7),
+            Stream.of(6, 5),
+            Stream.of(1, 2),
+            Stream.of(3, 4))
+            .collect(Collectors.toList()));
   }
 
 }
