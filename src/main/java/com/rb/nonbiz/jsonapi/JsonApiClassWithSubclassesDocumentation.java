@@ -25,8 +25,6 @@ import static java.util.Collections.singletonList;
  */
 public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentation {
 
-  // FIXME IAK YAML add the ability to specify what happens if empty
-
   private final Class<?> classBeingDocumented;
   private final HumanReadableDocumentation singleLineSummary;
   private final HumanReadableDocumentation longDocumentation;
