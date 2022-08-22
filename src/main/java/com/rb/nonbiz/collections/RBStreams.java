@@ -183,12 +183,12 @@ public class RBStreams {
    */
   public static BigDecimal sumNonNegativeBigDecimals(Iterator<BigDecimal> iterator) {
     return sumBigDecimals(Iterators.transform(iterator, v -> {
-          RBPreconditions.checkArgument(
-              v.signum() >= 0,
-              "Negative value of %s is not allowed here",
-              v);
-          return v;
-        }));
+      RBPreconditions.checkArgument(
+          v.signum() >= 0,
+          "Negative value of %s is not allowed here",
+          v);
+      return v;
+    }));
   }
 
   public static <T extends PreciseValue<T>> double sumNonNegativePreciseValuesToDouble(Collection<T> collection) {
@@ -408,6 +408,22 @@ public class RBStreams {
         format,
         args);
     return Optional.of(onlyValue);
+  }
+
+  /**
+   * {@link Stream#concat(Stream, Stream)} only takes two arguments. You should still use it if you want to
+   * concatenate only 2 streams, but for 3 or more, the code will look unnecessarily nested with multiple calls to it.
+   * This solves that problem.
+   */
+  @SafeVarargs
+  public static <T> Stream<T> concatenateStreams(Stream<T> first, Stream<T> second, Stream<T> third, Stream<T> ... rest) {
+    return Stream.concat(
+        Stream.concat(
+            Stream.concat(
+                first,
+                second),
+            third),
+        Arrays.stream(rest).flatMap(v -> v));
   }
 
 }
