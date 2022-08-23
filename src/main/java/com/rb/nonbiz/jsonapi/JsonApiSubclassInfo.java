@@ -26,16 +26,19 @@ public class JsonApiSubclassInfo {
 
   private final Class<?> classOfSubclass;
   private final String discriminatorPropertyValue;
+  private final String propertyWithSubclassContents;
   private final HasJsonApiDocumentation jsonApiConverterForTraversing;
   private final Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation;
 
   private JsonApiSubclassInfo(
       Class<?> classOfSubclass,
       String discriminatorPropertyValue,
+      String propertyWithSubclassContents,
       HasJsonApiDocumentation jsonApiConverterForTraversing,
       Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
     this.classOfSubclass = classOfSubclass;
     this.discriminatorPropertyValue = discriminatorPropertyValue;
+    this.propertyWithSubclassContents = propertyWithSubclassContents;
     this.jsonApiConverterForTraversing = jsonApiConverterForTraversing;
     this.jsonPropertySpecificDocumentation = jsonPropertySpecificDocumentation;
   }
@@ -43,19 +46,26 @@ public class JsonApiSubclassInfo {
   public static JsonApiSubclassInfo jsonApiSubclassInfo(
       Class<?> classOfSubclass,
       String discriminatorPropertyValue,
+      String propertyWithSubclassContents,
       HasJsonApiDocumentation jsonApiConverterForTraversing) {
     return new JsonApiSubclassInfo(
-        classOfSubclass, discriminatorPropertyValue, jsonApiConverterForTraversing, Optional.empty());
+        classOfSubclass,
+        discriminatorPropertyValue,
+        propertyWithSubclassContents,
+        jsonApiConverterForTraversing,
+        Optional.empty());
   }
 
   public static JsonApiSubclassInfo jsonApiSubclassInfo(
       Class<?> classOfSubclass,
       String discriminatorPropertyValue,
+      String propertyWithSubclassContents,
       HasJsonApiDocumentation jsonApiConverterForTraversing,
       JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
     return new JsonApiSubclassInfo(
         classOfSubclass,
         discriminatorPropertyValue,
+        propertyWithSubclassContents,
         jsonApiConverterForTraversing,
         Optional.of(jsonPropertySpecificDocumentation));
   }
@@ -68,6 +78,10 @@ public class JsonApiSubclassInfo {
     return discriminatorPropertyValue;
   }
 
+  public String getPropertyWithSubclassContents() {
+    return propertyWithSubclassContents;
+  }
+
   public HasJsonApiDocumentation getJsonApiConverterForTraversing() {
     return jsonApiConverterForTraversing;
   }
@@ -78,9 +92,10 @@ public class JsonApiSubclassInfo {
 
   @Override
   public String toString() {
-    return Strings.format("[JASI %s %s %s %s JASI]",
+    return Strings.format("[JASI %s %s %s %s %s JASI]",
         classOfSubclass,
         discriminatorPropertyValue,
+        propertyWithSubclassContents,
         jsonApiConverterForTraversing,
         formatOptional(jsonPropertySpecificDocumentation));
   }
