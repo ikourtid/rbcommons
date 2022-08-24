@@ -24,6 +24,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
     return jsonApiSubclassInfo(
         CashId.class,
         "cash_id",
+        "cash_details",
         () -> testJsonApiClassDocumentationWithSeed(CashId.class, "a"));
   }
 
@@ -32,6 +33,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
     return jsonApiSubclassInfo(
         InstrumentId.class,
         "instrument_id",
+        "instrument_details",
         () -> testJsonApiClassDocumentationWithSeed(InstrumentId.class, "i"),
         jsonPropertySpecificDocumentation("xyz"));
   }
@@ -42,6 +44,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
     return jsonApiSubclassInfo(
         InstrumentId.class,
         "instrument_id",
+        "instrument_details",
         () -> testJsonApiClassDocumentationWithSeed(InstrumentId.class, "i"),
         jsonPropertySpecificDocumentation("xyz"));
   }
@@ -55,6 +58,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getClassOfSubclass()),
         matchUsingEquals(v -> v.getDiscriminatorPropertyValue()),
+        matchUsingEquals(v -> v.getPropertyWithSubclassContents()),
         match(           v -> v.getJsonApiConverterForTraversing(),     f -> hasJsonApiDocumentationMatcher(f)),
         matchOptional(   v -> v.getJsonPropertySpecificDocumentation(), f -> jsonPropertySpecificDocumentationMatcher(f)));
   }
