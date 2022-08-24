@@ -54,7 +54,15 @@ public class LinkedHashMaps {
     LinkedHashMap<K2, V2> linkedHashMap = newLinkedHashMapWithExpectedSize(map.size());
     map.forEachSortedEntry(
         (entry1, entry2) -> keysComparator.compare(entry1.getKey(), entry2.getKey()),
-        (key, value) -> linkedHashMap.put(keyTransformer.apply(key), valueTransformer.apply(value)));
+        (key, value) -> {
+          K2 transformedKey = keyTransformer.apply(key);
+          // There's no putAssumingAbsent like there is with RBMap; this is a LinkedHashMap. So we have to do it manually.
+          RBPreconditions.checkArgument(
+              !linkedHashMap.containsKey(transformedKey),
+              "Transformation of LinkedHashMap key %s results in the same key %s from before; map was %s",
+              key, transformedKey, map);
+          linkedHashMap.put(transformedKey, valueTransformer.apply(value));
+        });
     return linkedHashMap;
   }
 
@@ -78,6 +86,13 @@ public class LinkedHashMaps {
     concatenatedMap.putAll(map1);
     concatenatedMap.putAll(map2);
     return concatenatedMap;
+  }
+
+  public static <K, V> LinkedHashMap<K, V> singletonLinkedHashMap(
+      K key1, V value1) {
+    LinkedHashMap<K, V> mutableMap = new LinkedHashMap<>(1);
+    mutableMap.put(key1, value1);
+    return new LinkedHashMap<>(mutableMap);
   }
 
   public static <K, V> LinkedHashMap<K, V> linkedHashMapOf(

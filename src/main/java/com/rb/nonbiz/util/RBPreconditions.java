@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.RBIterators.getFirstNonUniqueIteratorItem;
 import static com.rb.nonbiz.collections.RBOptionals.findOnlyPresentOptional;
+import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 
 public class RBPreconditions {
 
@@ -120,7 +121,7 @@ public class RBPreconditions {
 
   @SafeVarargs
   public static <T> void checkUnique(T first, T second, T ... rest) {
-    checkUnique(RBStreams.concatenateFirstSecondAndRest(first, second, rest));
+    checkUnique(concatenateFirstSecondAndRest(first, second, rest));
   }
 
   public static <T> void checkUnique(List<T> list) {

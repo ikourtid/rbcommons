@@ -4,14 +4,14 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.LinkedHashMaps.concatenateMapsIntoLinkedHashMap;
 import static com.rb.nonbiz.collections.LinkedHashMaps.linkedHashMapOf;
+import static com.rb.nonbiz.collections.LinkedHashMaps.singletonLinkedHashMap;
 import static com.rb.nonbiz.collections.LinkedHashMaps.toSortedLinkedHashMap;
 import static com.rb.nonbiz.collections.LinkedHashMaps.toSortedLinkedHashMapWithTransformedKeys;
 import static com.rb.nonbiz.collections.LinkedHashMaps.toSortedLinkedHashMapWithTransformedKeysAndValues;
@@ -203,6 +203,47 @@ public class LinkedHashMapsTest {
         "f", DUMMY_STRING,
         "g", DUMMY_STRING,
         "a", DUMMY_STRING));
+  }
+
+  @Test
+  public void concatenateMapsIntoLinkedHashMap_throwsOnDuplicateKeys() {
+    assertIllegalArgumentException( () -> concatenateMapsIntoLinkedHashMap(
+        singletonLinkedHashMap("a", 1),
+        singletonLinkedHashMap("a", 2)));
+    assertIllegalArgumentException( () -> concatenateMapsIntoLinkedHashMap(
+        singletonLinkedHashMap("a", 1),
+        singletonLinkedHashMap("a", 1)));
+  }
+
+  @Test
+  public void toSortedLinkedHashMapWithTransformedKeysAndValues_throwsIfDuplicateKeysInConversion() {
+    Function<Function<String, String>, LinkedHashMap<String, Integer>> maker = keyTransformer ->
+        toSortedLinkedHashMapWithTransformedKeysAndValues(
+            rbMapOf(
+                "a", DUMMY_POSITIVE_INTEGER,
+                "b", DUMMY_POSITIVE_INTEGER),
+            String::compareTo,
+            keyTransformer,
+            v -> v);
+    LinkedHashMap<String, Integer> doesNotThrow;
+    doesNotThrow = maker.apply(key -> key);
+    doesNotThrow = maker.apply(key -> "_" + key); // keys are still unique
+    assertIllegalArgumentException( () -> maker.apply(key -> "same_key"));
+  }
+
+  @Test
+  public void toSortedLinkedHashMapWithTransformedKeys_throwsIfDuplicateKeysInConversion() {
+    Function<Function<String, String>, LinkedHashMap<String, Integer>> maker = keyTransformer ->
+        toSortedLinkedHashMapWithTransformedKeys(
+            rbMapOf(
+                "a", DUMMY_POSITIVE_INTEGER,
+                "b", DUMMY_POSITIVE_INTEGER),
+            String::compareTo,
+            keyTransformer);
+    LinkedHashMap<String, Integer> doesNotThrow;
+    doesNotThrow = maker.apply(key -> key);
+    doesNotThrow = maker.apply(key -> "_" + key); // keys are still unique
+    assertIllegalArgumentException( () -> maker.apply(key -> "same_key"));
   }
 
 }
