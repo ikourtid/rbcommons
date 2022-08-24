@@ -61,7 +61,7 @@ public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocument
 
   @Override
   public String toString() {
-    return Strings.format("[JACD %s %s %s JACD]",
+    return Strings.format("[JACDoc %s %s %s JACDoc]",
         jsonApiEnumDescriptor,
         singleLineSummary,
         longDocumentation);

@@ -18,17 +18,17 @@ import static com.rb.nonbiz.util.RBEnumMaps.enumMapCoveringAllEnumValues;
  * possibly looking different (e.g. JSON API tends to use camelcase instead of capitalized snake case in Java).
  * We have to do this, because if we ever rename the Java enum class or its enum values, we
  * don't want the API to change, as others may be relying on those specific strings.
- * <p>
- * For those JSON properties, we should be using this.
+ *
+ * <p> For those JSON properties, we should be using this. </p>
  */
 public class JsonApiEnumDescriptor<E extends Enum<E>> {
 
   /**
    * Not all enum values are guaranteed to be serializable. Ideally the API would support everything, but there are
    * sometimes old deprecated enum values that we expressly do not want to be part of the API.
-   * <p>
-   * For those enum values that get serialized, this will store the string value to use in the JSON API,
-   * as well as the human-readable explanation.
+   *
+   * <p> For those enum values that get serialized, this will store the string value to use in the JSON API,
+   * as well as the human-readable explanation. </p>
    */
   public static class JavaEnumSerializationAndExplanation {
 
@@ -63,7 +63,7 @@ public class JsonApiEnumDescriptor<E extends Enum<E>> {
 
     @Override
     public String toString() {
-      return Strings.format("[JESAPE %s %s JESAPE]", jsonSerialization, explanation);
+      return Strings.format("[JESAE %s %s JESAE]", jsonSerialization, explanation);
     }
 
   }
@@ -137,7 +137,7 @@ public class JsonApiEnumDescriptor<E extends Enum<E>> {
   @Override
   public String toString() {
     // Can't use formatMap because this is an EnumMap, not a RBMap.
-    return Strings.format("[JEJAPD %s %s JEJAPD]", enumClass, validValuesToExplanations);
+    return Strings.format("[JAEDesc %s %s JAEDesc]", enumClass, validValuesToExplanations);
   }
 
 }

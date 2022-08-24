@@ -15,11 +15,13 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
  * <p> Unlike the most widely used {@link JsonApiClassDocumentation}, there is no {@link JsonValidationInstructions}
  * here. That normally gets used for attaching type info to a property string key. However, in the case of
  * superclass / subclass, there will not be any additional properties in the representation. Typically, it will be
- * an object such as: {@code { "type" = "SubClass1", "value" = { the JSON object for the subclass instance}}}.
- * That is, there will only be two properties. </p>
+ * an object such as: {@code { "type" = "SubClass1", "value" = { the JSON object for the subclass instance }}}.
+ * That is, there will only be two properties. Using the terminology below, {@link #getDiscriminatorPropertyValue()}
+ * would be "SubClass1", and {@link #getPropertyWithSubclassContents()} would be "value" (the property name").
+ * The discriminator property name is "type", but that's not stored here. </p>
  *
  * <p> The corresponding JSON API converter is only stored here so that we can traverse the tree of objects
- * in the input & output classes of our API, which helps us gather a list of all JSON API entities that should
+ * in the input and output classes of our API, which helps us gather a list of all JSON API entities that should
  * make it into the documentation. </p>
  */
 public class JsonApiSubclassInfo {
