@@ -1,12 +1,17 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.nonbiz.util.RBPreconditions;
+import com.rb.nonbiz.util.RBSimilarityPreconditions;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static com.google.common.collect.Maps.newLinkedHashMapWithExpectedSize;
+import static com.rb.nonbiz.util.RBPreconditions.checkUnique;
 import static java.util.function.Function.identity;
 
 /**
@@ -65,6 +70,10 @@ public class LinkedHashMaps {
   public static <K, V> LinkedHashMap<K, V> concatenateMapsIntoLinkedHashMap(
       Map<K, V> map1,
       Map<K, V> map2) {
+    checkUnique(Stream.concat(
+        map1.keySet().stream(),
+        map2.keySet().stream()));
+
     LinkedHashMap<K, V> concatenatedMap = newLinkedHashMapWithExpectedSize(map1.size() + map2.size());
     concatenatedMap.putAll(map1);
     concatenatedMap.putAll(map2);
@@ -74,6 +83,7 @@ public class LinkedHashMaps {
   public static <K, V> LinkedHashMap<K, V> linkedHashMapOf(
       K key1, V value1,
       K key2, V value2) {
+    checkUnique(key1, key2);
     LinkedHashMap<K, V> mutableMap = new LinkedHashMap<>(2);
     mutableMap.put(key1, value1);
     mutableMap.put(key2, value2);
@@ -84,6 +94,7 @@ public class LinkedHashMaps {
       K key1, V value1,
       K key2, V value2,
       K key3, V value3) {
+    checkUnique(key1, key2, key3);
     LinkedHashMap<K, V> mutableMap = new LinkedHashMap<>(3);
     mutableMap.put(key1, value1);
     mutableMap.put(key2, value2);
@@ -96,6 +107,7 @@ public class LinkedHashMaps {
       K key2, V value2,
       K key3, V value3,
       K key4, V value4) {
+    checkUnique(key1, key2, key3, key4);
     LinkedHashMap<K, V> mutableMap = new LinkedHashMap<>(4);
     mutableMap.put(key1, value1);
     mutableMap.put(key2, value2);
@@ -110,6 +122,7 @@ public class LinkedHashMaps {
       K key3, V value3,
       K key4, V value4,
       K key5, V value5) {
+    checkUnique(key1, key2, key3, key4, key5);
     LinkedHashMap<K, V> mutableMap = new LinkedHashMap<>(5);
     mutableMap.put(key1, value1);
     mutableMap.put(key2, value2);
@@ -126,6 +139,7 @@ public class LinkedHashMaps {
       K key4, V value4,
       K key5, V value5,
       K key6, V value6) {
+    checkUnique(key1, key2, key3, key4, key5, key6);
     LinkedHashMap<K, V> mutableMap = new LinkedHashMap<>(6);
     mutableMap.put(key1, value1);
     mutableMap.put(key2, value2);
@@ -144,6 +158,7 @@ public class LinkedHashMaps {
       K key5, V value5,
       K key6, V value6,
       K key7, V value7) {
+    checkUnique(key1, key2, key3, key4, key5, key6, key7);
     LinkedHashMap<K, V> mutableMap = new LinkedHashMap<>(7);
     mutableMap.put(key1, value1);
     mutableMap.put(key2, value2);
@@ -164,6 +179,7 @@ public class LinkedHashMaps {
       K key6, V value6,
       K key7, V value7,
       K key8, V value8) {
+    checkUnique(key1, key2, key3, key4, key5, key6, key7, key8);
     LinkedHashMap<K, V> mutableMap = new LinkedHashMap<>(8);
     mutableMap.put(key1, value1);
     mutableMap.put(key2, value2);

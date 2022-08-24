@@ -145,16 +145,16 @@ public abstract class RBTest<T> extends RBCommonsTestConstants<T> {
       return;
     }
 
-    if (!HasJsonApiDocumentation.class.isAssignableFrom(testObject.getClass())) {
-      return;
-    }
-    // Just asserting that these methods do not throw; there's not much more we can do.
-    JsonApiDocumentation jsonApiDocumentation = ((HasJsonApiDocumentation) testObject).getJsonApiDocumentation();
-    Optional<RBSet<JsonApiDocumentation>> additionalJsonApiDocumentation =
-        ((HasJsonApiDocumentation) testObject).getAdditionalJsonApiDocumentation();
+    // Only if testObject implements HasJsonApiDocumentation, run this extra check.
+    if (HasJsonApiDocumentation.class.isAssignableFrom(testObject.getClass())) {
+      // Just asserting that these methods do not throw; there's not much more we can do.
+      JsonApiDocumentation doesNotThrow = ((HasJsonApiDocumentation) testObject).getJsonApiDocumentation();
+      Optional<RBSet<JsonApiDocumentation>> alsoDoesNotThrow =
+          ((HasJsonApiDocumentation) testObject).getAdditionalJsonApiDocumentation();
 
-    // We could additionally check that the various getters don't return null or throw an exception.
-    // However, that's the job of the JsonApiDocumentationBuilder.
+      // We could additionally check that the various getters don't return null or throw an exception.
+      // However, that's the job of the JsonApiDocumentationBuilder.
+    }
   }
 
 }

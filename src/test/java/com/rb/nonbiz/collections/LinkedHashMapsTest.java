@@ -20,7 +20,9 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.linkedHashMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -155,6 +157,52 @@ public class LinkedHashMapsTest {
         rbSetOf("b", "d", "f", "h"),
         // Comparing as set, so that ordering doesn't matter
         newRBSet(orderedKeysAsList.subList(4, 8)));
+  }
+
+  @Test
+  public void simpleConstructors_throwsOnDuplicateKeys() {
+    assertIllegalArgumentException( () -> linkedHashMapOf(
+        "a", DUMMY_STRING,
+        "a", DUMMY_STRING));
+    assertIllegalArgumentException( () -> linkedHashMapOf(
+        "a", DUMMY_STRING,
+        "b", DUMMY_STRING,
+        "a", DUMMY_STRING));
+    assertIllegalArgumentException( () -> linkedHashMapOf(
+        "a", DUMMY_STRING,
+        "b", DUMMY_STRING,
+        "c", DUMMY_STRING,
+        "a", DUMMY_STRING));
+    assertIllegalArgumentException( () -> linkedHashMapOf(
+        "a", DUMMY_STRING,
+        "b", DUMMY_STRING,
+        "c", DUMMY_STRING,
+        "d", DUMMY_STRING,
+        "a", DUMMY_STRING));
+    assertIllegalArgumentException( () -> linkedHashMapOf(
+        "a", DUMMY_STRING,
+        "b", DUMMY_STRING,
+        "c", DUMMY_STRING,
+        "d", DUMMY_STRING,
+        "e", DUMMY_STRING,
+        "a", DUMMY_STRING));
+    assertIllegalArgumentException( () -> linkedHashMapOf(
+        "a", DUMMY_STRING,
+        "b", DUMMY_STRING,
+        "c", DUMMY_STRING,
+        "d", DUMMY_STRING,
+        "e", DUMMY_STRING,
+        "f", DUMMY_STRING,
+        "a", DUMMY_STRING));
+    assertIllegalArgumentException( () -> linkedHashMapOf(
+        "a", DUMMY_STRING,
+        "b", DUMMY_STRING,
+        "c", DUMMY_STRING,
+        "d", DUMMY_STRING,
+        "e", DUMMY_STRING,
+        "f", DUMMY_STRING,
+        "g", DUMMY_STRING,
+        "a", DUMMY_STRING));
   }
 
 }

@@ -22,7 +22,7 @@ public class JsonApiDocumentationForPseudoEnumGeneratorTest extends RBTest<JsonA
             documentation("One of several security types."),
             documentation("This test only supports ETFs and stocks."),
             pseudoEnumJsonApiPropertyDescriptor(rbMapOf(
-                "is_etf",   documentation("Must also have 'etf' key with a `EtfInstrumentType` in its contents"),
+                "is_etf",   documentation("Must also have 'etf' key with an `EtfInstrumentType` in its contents"),
                 "is_stock", documentation("Must also have 'stock' key with a `StockInstrumentType` in its contents")))),
         jsonApiDocumentationMatcher(
             jsonApiClassDocumentationBuilder()
@@ -31,7 +31,7 @@ public class JsonApiDocumentationForPseudoEnumGeneratorTest extends RBTest<JsonA
                 .setLongDocumentation(documentation(asSingleLine(
                     "<p> This test only supports ETFs and stocks. </p>\n",
                     "<p> The following values are valid:\n<ul>",
-                    "<li> <strong>is_etf</strong> : Must also have 'etf' key with a `EtfInstrumentType` in its contents </li>\n",
+                    "<li> <strong>is_etf</strong> : Must also have 'etf' key with an `EtfInstrumentType` in its contents </li>\n",
                     "<li> <strong>is_stock</strong> : Must also have 'stock' key with a `StockInstrumentType` in its contents </li>\n",
                     "</ul></p>\n")))
                 .hasNoJsonValidationInstructions()

@@ -10,6 +10,8 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static org.junit.Assert.assertEquals;
 
 public class RBMapSimpleConstructorsTest {
@@ -84,6 +86,17 @@ public class RBMapSimpleConstructorsTest {
             rbMapOf("k1", 1, "k2", 2, "k3", 3, "k4", 4, "k5", 5, "k6", 6),
             rbMapOf("k7", 7, "k8", 8, "k9", 9, "k10", 10, "k11", 11, "k12", 12)),
         rbMap12);
+  }
+
+  @Test
+  public void rejectsDuplicateKeys() {
+    assertIllegalArgumentException( () -> rbMapOf(
+        "a", DUMMY_STRING,
+        "b", DUMMY_STRING,
+        "a", DUMMY_STRING));
+    assertIllegalArgumentException( () -> rbMapOf(
+        "a", DUMMY_STRING,
+        "a", DUMMY_STRING));
   }
 
 }

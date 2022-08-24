@@ -34,7 +34,7 @@ public class JsonPropertySpecificDocumentationTest extends RBTestMatcher<JsonPro
   public static TypeSafeMatcher<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentationMatcher(
       JsonPropertySpecificDocumentation expected) {
     return makeMatcher(expected,
-        match(v ->v.getRawDocumentation(), f -> humanReadableDocumentationMatcher(f)));
+        match(v -> v.getRawDocumentation(), f -> humanReadableDocumentationMatcher(f)));
   }
 
 }
