@@ -109,7 +109,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
   }
 
   /**
-   * Returns the human-readable documentation for this JSON API object
+   * Returns the human-readable documentation for this JSON API object.
    */
   @Override
   public HumanReadableDocumentation getLongDocumentation() {

@@ -76,7 +76,7 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
   }
 
   /**
-   * Returns the human-readable documentation for this JSON API object
+   * Returns the human-readable documentation for this JSON API object.
    */
   @Override
   public HumanReadableDocumentation getLongDocumentation() {
@@ -203,6 +203,7 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
       RBPreconditions.checkNotNull(singleLineSummary);
       RBPreconditions.checkNotNull(longDocumentation);
       RBPreconditions.checkNotNull(jsonApiSubclassInfoList);
+      RBPreconditions.checkNotNull(discriminatorProperty);
       RBPreconditions.checkNotNull(trivialSampleJson);
       RBPreconditions.checkNotNull(nontrivialSampleJson);
 

@@ -86,8 +86,10 @@ public abstract class JsonApiPropertyDescriptor {
   }
 
   /**
-   * A JSON API entity (object) may have property-specific documentation; see {@link JsonPropertySpecificDocumentation}
-   * for more. However, such property-specific documentation only makes sense at the top-level. For example, say we
+   * <p> A JSON API entity (object) may have property-specific documentation; see {@link JsonPropertySpecificDocumentation}
+   * for more. However, such property-specific documentation only makes sense at the top-level. </p>
+   *
+   * <p> For example, say we
    * want to have property-specific documentation for a property - i.e. relevant to this instance of the property,
    * not to the class of the contents of the property, which will normally be more general documentation.
    * Say the property is of type 'list of {@link JsonTicker}'. The property-specific documentation could be
@@ -95,11 +97,13 @@ public abstract class JsonApiPropertyDescriptor {
    * general documentation like 'this is a collection of instruments'. At the same time, it makes no sense to
    * have property-specific documentation on the JsonTicker itself (basically the InstrumentId, but we're talking about
    * the JSON API here). One could reasonably specify documentation to some other object's property whose value is a
-   * JsonTicker. For example, it could be 'this is the instrument that this set of factor loadings refers to'. That,
+   * JsonTicker. </p>
+   *
+   * <p> For example, it could be 'this is the instrument that this set of factor loadings refers to'. That,
    * again, is more general than a class-level description of what an {@link JsonTicker} is. However, there's nothing
    * more to say about the {@link JsonTicker}s that will appear inside the {@link List} in the original example;
    * the 'cannot buy' documentation applies to the property named e.g. 'washSaleDoNotBuyStocks', which is a list;
-   * not to the {@link JsonTicker}.
+   * not to the {@link JsonTicker}. </p>
    */
   private static boolean noPropertySpecificDocumentationPresent(Stream<JsonApiPropertyDescriptor> stream) {
     return stream
