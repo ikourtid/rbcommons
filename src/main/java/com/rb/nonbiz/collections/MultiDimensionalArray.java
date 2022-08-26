@@ -8,8 +8,8 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 /**
- * <p> Java allows multi-dimensional arrays, but it's hard to use them unless you know the number of dimensions ahead of time.
- * This is an implementation that allows you to use any number of dimensions. </p>
+ * Java allows multi-dimensional arrays, but it's hard to use them unless you know the number of dimensions ahead of time.
+ * This is an implementation that allows you to use any number of dimensions.
  *
  * <p> As elsewhere in the codebase, it is highly recommended that you use this immutable class instead of the mutable version,
  * {@link MutableMultiDimensionalArray}. The usual pattern is to create a {@link MutableMultiDimensionalArray} once,

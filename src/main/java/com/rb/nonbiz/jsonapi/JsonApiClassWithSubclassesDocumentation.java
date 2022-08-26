@@ -1,13 +1,11 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonElement;
-import com.rb.nonbiz.collections.RBLists;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
-import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,8 +16,8 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
 import static java.util.Collections.singletonList;
 
 /**
- * <p> This is (mostly) human-readable text that explains how a Java object (non-enum) of this type
- * will get converted to/from JSON. It's useful mostly to 3rd party developers. </p>
+ * This is (mostly) human-readable text that explains how a Java object (non-enum) of this type
+ * will get converted to/from JSON. It's useful mostly to 3rd party developers.
  *
  * <p> This is for the special case where an object can be one of many subclasses.
  * See also {@link JsonApiClassDocumentation} and {@link JsonApiEnumDocumentation}. </p>

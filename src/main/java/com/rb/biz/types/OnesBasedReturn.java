@@ -13,8 +13,8 @@ import static com.rb.biz.investing.quality.AnnuallyCompoundedAnnualizedReturn.an
 import static com.rb.nonbiz.math.RBBigDecimals.bigDecimalInvert;
 
 /**
- * <p> Returns expressed so that 1.0 means 'no increase or decrease', 1.02 means "+ 2%",
- * and 0.97 means "-3%". </p>
+ * Returns expressed so that 1.0 means 'no increase or decrease', 1.02 means "+ 2%",
+ * and 0.97 means "-3%".
  *
  * <p> Contrast this with zero-based returns (no such class exists as of Aug 2017),
  * where the respective values would have been 0, 0.02, -0.03, respectively. </p>

@@ -14,7 +14,7 @@ import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONT
 import static java.math.BigDecimal.TEN;
 
 /**
- * <p> A specification of how many digits of precision to use. </p>
+ * A specification of how many digits of precision to use.
  *
  * <p> For example, if x = 123.1234, then the effect of each
  * of the following rounding scales would be: </p>

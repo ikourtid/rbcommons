@@ -9,9 +9,8 @@ import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 
 /**
- * <p> Generates {@link JsonApiDocumentation} specifically in the case of {@link Enum}s.
+ * Generates {@link JsonApiDocumentation} specifically in the case of {@link Enum}s.
  * Centralizing the text generation into this location will standardize the documentation format of the various enums.
- * </p>
  */
 public class JsonApiDocumentationForEnumGenerator {
 

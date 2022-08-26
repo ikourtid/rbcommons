@@ -4,8 +4,8 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 /**
- * <p> Use this when you modify a value e.g. inside some inner method in a lambda.
- * We should never pass around an LongCounter, or store it. It's not meant to be a C++ pointer! </p>
+ * Use this when you modify a value e.g. inside some inner method in a lambda.
+ * We should never pass around an LongCounter, or store it. It's not meant to be a C++ pointer!
  *
  * <p> If you ever find yourself using a {@code Pointer<Integer>} or {@code Pointer<Long>},
  * chances are that this will be a better specialized version. </p>

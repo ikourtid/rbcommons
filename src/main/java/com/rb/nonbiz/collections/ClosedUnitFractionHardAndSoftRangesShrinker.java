@@ -8,8 +8,8 @@ import static com.rb.nonbiz.collections.ClosedUnitFractionHardAndSoftRanges.clos
 import static com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRange.closedUnitFractionHardAndPossiblySameSoftRange;
 
 /**
- * <p> Shrinks ranges by scaling them by a non-zero UnitFraction multiplier (i.e. &le; 1).
- * E.g. the range [0.2, 0.6] scaled by 0.5 becomes [0.1, 0.3]. </p>
+ * Shrinks ranges by scaling them by a non-zero UnitFraction multiplier (i.e. &le; 1).
+ * E.g. the range [0.2, 0.6] scaled by 0.5 becomes [0.1, 0.3].
  *
  * <p> Note that 'shrinking' here doesn't mean that the midpoint remains the same. Instead, each bound (lower &amp; upper)
  * gets multiplied by a number in (0, 1]. </p>

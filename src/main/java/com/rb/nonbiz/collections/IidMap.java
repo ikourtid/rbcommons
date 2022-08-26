@@ -36,7 +36,7 @@ import static com.rb.nonbiz.types.LongCounter.longCounter;
 import static java.util.Comparator.comparing;
 
 /**
- * <p> A specialized map for the cases where the key is an {@link InstrumentId}. </p>
+ * A specialized map for the cases where the key is an {@link InstrumentId}.
  *
  * <p> Note that this is not exactly like an {@link RBMap}, and has somewhat unorthodox ways to iterate over it
  * (unlike RBMap, which sort of looks like a java.util.Map). </p>

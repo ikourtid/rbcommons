@@ -2,7 +2,6 @@ package com.rb.nonbiz.json;
 
 import com.rb.nonbiz.text.HasHumanReadableDocumentation;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
-import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -10,7 +9,6 @@ import java.util.EnumMap;
 
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.nonbiz.json.JsonApiEnumDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
-import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.util.RBEnumMaps.enumMapCoveringAllEnumValues;
 
 /**
@@ -113,9 +111,9 @@ public class JsonApiEnumDescriptor<E extends Enum<E>> {
   }
 
   /**
-   * <p> Creates a {@link JsonApiEnumDescriptor} for the cases where our JSON API serialization uses the
+   * Creates a {@link JsonApiEnumDescriptor} for the cases where our JSON API serialization uses the
    * Java identifiers of the enum values, where the enum class itself specifies its own documentation, and when
-   * the JSON API semantics are such that we want to expose all enum values, not just a subset. </p>
+   * the JSON API semantics are such that we want to expose all enum values, not just a subset.
    */
   public static <E extends Enum<E> & HasHumanReadableDocumentation> JsonApiEnumDescriptor<E> simpleJsonApiEnumDescriptor(
       Class<E> enumClass) {

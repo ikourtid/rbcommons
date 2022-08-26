@@ -2,14 +2,13 @@ package com.rb.nonbiz.jsonapi;
 
 import com.rb.nonbiz.json.JsonApiEnumDescriptor;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
-import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
 /**
- * <p> This is (mostly) human-readable text that explains how a Java enum of this type
- * will get converted to/from JSON. It's useful mostly to 3rd party developers. </p>
+ * This is (mostly) human-readable text that explains how a Java enum of this type
+ * will get converted to/from JSON. It's useful mostly to 3rd party developers.
  *
  * <p> For non-enums, see {@link JsonApiClassDocumentation}. </p>
  */

@@ -6,7 +6,6 @@ import org.hamcrest.TypeSafeMatcher;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
 
 public class JsonPropertySpecificDocumentationTest extends RBTestMatcher<JsonPropertySpecificDocumentation> {

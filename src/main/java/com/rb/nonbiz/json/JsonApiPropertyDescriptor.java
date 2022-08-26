@@ -34,8 +34,8 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
 import static java.util.Collections.singletonList;
 
 /**
- * <p> This is helpful in the JSON API documentation (OpenAPI / Swagger). It gives us type information for a property of a
- * JSON object in the JSON API serialization. </p>
+ * This is helpful in the JSON API documentation (OpenAPI / Swagger). It gives us type information for a property of a
+ * JSON object in the JSON API serialization.
  *
  * <p> It is a bit like a generalization of the Java concept of a {@link Class} object, except tailored for
  * purposes of serialization and generating documentation. For example, it records information about generic classes,
@@ -62,8 +62,8 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * <p> Per {@link JsonPropertySpecificDocumentation} documentation, it's used for cases where we want to attach
-   * context-specific documentation to a specific property of an object, vs. to the class. </p>
+   * Per {@link JsonPropertySpecificDocumentation} documentation, it's used for cases where we want to attach
+   * context-specific documentation to a specific property of an object, vs. to the class.
    *
    * <p> There are several cases where {@link JsonApiPropertyDescriptor}s are nested. Example: a
    * {@link CollectionJsonApiPropertyDescriptor} of some other {@link JsonApiPropertyDescriptor}; e.g. a
@@ -86,8 +86,8 @@ public abstract class JsonApiPropertyDescriptor {
   }
 
   /**
-   * <p> A JSON API entity (object) may have property-specific documentation; see {@link JsonPropertySpecificDocumentation}
-   * for more. However, such property-specific documentation only makes sense at the top-level. </p>
+   * A JSON API entity (object) may have property-specific documentation; see {@link JsonPropertySpecificDocumentation}
+   * for more. However, such property-specific documentation only makes sense at the top-level.
    *
    * <p> For example, say we
    * want to have property-specific documentation for a property - i.e. relevant to this instance of the property,
@@ -180,8 +180,8 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * <p> Tells us the type of a property of a JsonObject in the JSON API, in the simplest case
-   * where it is a single JSON API data class (e.g. not some collection). </p>
+   * Tells us the type of a property of a JsonObject in the JSON API, in the simplest case
+   * where it is a single JSON API data class (e.g. not some collection).
    */
   public static class SimpleClassJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
@@ -262,8 +262,8 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * <p> Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of an IidMap of some Java data class. </p>
+   * Tells us the type of a property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of an IidMap of some Java data class.
    *
    * <p> Instead of just using a simple {@link Class} object, this stores a {@link JsonApiPropertyDescriptor},
    * which is more general, so that we can also represent things such as {@literal IidMap<List<Double>>}.</p>
@@ -341,8 +341,8 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * <p> Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of an RBMap of some Java data class. </p>
+   * Tells us the type of a property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of an RBMap of some Java data class.
    *
    * <p> Instead of just using simple {@link Class} objects, this stores {@link JsonApiPropertyDescriptor} objects,
    * which are more general, so that we can also represent things such as
@@ -440,8 +440,8 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * <p> Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of an collection (Set, List, or array) of some Java data class. </p>
+   * Tells us the type of a property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of an collection (Set, List, or array) of some Java data class.
    *
    * <p> We use a {@link JsonApiPropertyDescriptor} instead of just a raw {@link Class} so that we can represent
    * things such as {@literal List<UniqueId<NamedFactor>> }, i.e. where the value class inside the collection is not
@@ -516,8 +516,8 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * <p> Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of a java generic such as {@code Foo<T>}. </p>
+   * Tells us the type of a property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of a java generic such as {@code Foo<T>}.
    *
    * <p> It should only be used when T is an actual data class that has a JSON serialization. Example:
    * {@code UniqueId<NamedFactor>}. It should not be used for 'marker interface' classes, such as
@@ -604,9 +604,9 @@ public abstract class JsonApiPropertyDescriptor {
     }
 
     /**
-     * <p> Represents a property of an object that's a Java generic.
+     * Represents a property of an object that's a Java generic.
      * Example: a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
-     * (2nd argument). </p>
+     * (2nd argument).
      *
      * <p> We normally use a builder when there can be two arguments of the same type, but this is meant to be used
      * inline in the various definitions of JSON_VALIDATION_INSTRUCTIONS in the JSON API converter verb classes,
@@ -618,9 +618,9 @@ public abstract class JsonApiPropertyDescriptor {
     }
 
     /**
-     * <p> Represents a property of an object that's a Java generic.
+     * Represents a property of an object that's a Java generic.
      * Example: a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
-     * (2nd argument). </p>
+     * (2nd argument).
      *
      * <p> We normally use a builder when there can be two arguments of the same type, but this is meant to be used
      * inline in the various definitions of JSON_VALIDATION_INSTRUCTIONS in the JSON API converter verb classes,
@@ -682,12 +682,12 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * <p> We often serialize a base class with multiple subclasses by using a string key in the JSON to represent the
+   * We often serialize a base class with multiple subclasses by using a string key in the JSON to represent the
    * subclass's type. Example: NaiveSubObjectiveFormulationDetailsJsonApiConverter. The strings in the JSON may not
    * be exact matches to the Java class names - and anyway, they shouldn't be, because if we rename Java classes, we
    * don't want the API to change, as others may be relying on those specific strings.
    * Also, there are other cases where we use a special string in the JSON API
-   * to represent some special values (e.g. GlobalObjectiveThreshold where the threshold always passes). </p>
+   * to represent some special values (e.g. GlobalObjectiveThreshold where the threshold always passes).
    *
    * <p> For those JSON properties, we should be using this. </p>
    *
@@ -696,7 +696,7 @@ public abstract class JsonApiPropertyDescriptor {
   public static class PseudoEnumJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
     /**
-     * <p> Empty class used in the various JSON API converters in certain cases. </p>
+     * Empty class used in the various JSON API converters in certain cases.
      *
      * <p> We sometimes need a JSON object to represent one of multiple types. In order to do that,
      * our convention is to serialize a property (e.g. 'mode') as a string, whose contents tell us which subclass

@@ -14,7 +14,7 @@ import static com.rb.nonbiz.collections.MutableIndexableArray1D.mutableIndexable
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 
 /**
- * <p> Just like {@link MutableIndexableArray1D}, except immutable. </p>
+ * Just like {@link MutableIndexableArray1D}, except immutable.
  *
  * <p> Also, just like {@link ImmutableIndexableArray2D}, except this is 1D. </p>
  *

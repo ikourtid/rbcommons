@@ -8,7 +8,7 @@ import java.util.Iterator;
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 
 /**
- * <p> The share quantity to <i>sell</i> for a single instrument. </p>
+ * The share quantity to <i>sell</i> for a single instrument.
  *
  * <p> We use a separate class to represent a sell quantity
  * for better type safety throughout the code. </p>

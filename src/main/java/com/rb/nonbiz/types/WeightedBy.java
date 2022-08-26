@@ -3,7 +3,7 @@ package com.rb.nonbiz.types;
 import com.rb.nonbiz.text.Strings;
 
 /**
- * <p> An item with an {@link RBNumeric} weight. </p>
+ * An item with an {@link RBNumeric} weight.
  *
  * <p> This is useful for describing a term in a linear combination of items. </p>
  *

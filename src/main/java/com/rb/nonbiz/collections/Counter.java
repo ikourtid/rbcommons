@@ -12,7 +12,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 
 /**
- * <p> Helps us keep a track of the number of times we have seen set of items. </p>
+ * Helps us keep a track of the number of times we have seen set of items.
  *
  * <p> It is like a histogram. It's not like a general map of object to value.
  * We can only increment the counters of individual items and see their counts, but not overwrite the counts. </p>

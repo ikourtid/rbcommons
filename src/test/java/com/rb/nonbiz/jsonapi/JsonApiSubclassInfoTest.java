@@ -3,18 +3,16 @@ package com.rb.nonbiz.jsonapi;
 import com.rb.biz.types.asset.CashId;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import org.hamcrest.TypeSafeMatcher;
 
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentationTest.jsonPropertySpecificDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTest.hasJsonApiDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentationTest.testJsonApiClassDocumentationWithSeed;
 import static com.rb.nonbiz.jsonapi.JsonApiSubclassInfo.jsonApiSubclassInfo;
+import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
-
-import org.hamcrest.TypeSafeMatcher;
-
-import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> {

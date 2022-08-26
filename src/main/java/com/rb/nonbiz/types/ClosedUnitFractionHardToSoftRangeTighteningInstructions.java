@@ -6,10 +6,8 @@ import com.rb.nonbiz.util.RBPreconditions;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 
 /**
- * <p>
  * Typically, when we construct a {@link ClosedUnitFractionHardAndSoftRange}, instead of specifying both hard and
  * soft ranges independently, we only specify the hard range, and then further tighten it somewhat into a soft range.
- * </p>
  *
  * <p>
  * For instance, if AAPL has a target of 4% in the index, we may specify the hard range as [0.02, 0.06] (2 to 6%),

@@ -5,7 +5,7 @@ import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
 import static com.rb.nonbiz.types.RBDoubles.epsilonCompareDoubles;
 
 /**
- * <p> Various utilities pertaining to {@link ImpreciseValue} </p>
+ * Various utilities pertaining to {@link ImpreciseValue}.
  *
  * @see ImpreciseValue
  */
