@@ -35,4 +35,11 @@ public class StringFunctions {
     return VALID_JAVA_IDENTIFIER_PATTERN.matcher(identifier).matches();
   }
 
+  /**
+   * Although apparently 'foo$' is valid identifier, we never use that in our code. This checks for that.
+   */
+  public static boolean isValidRowboatJavaIdentifier(String identifier) {
+    return isValidJavaIdentifier(identifier) && !identifier.endsWith("$");
+  }
+
 }
