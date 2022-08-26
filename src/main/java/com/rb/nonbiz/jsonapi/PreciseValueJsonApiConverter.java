@@ -11,10 +11,6 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
-import static com.rb.nonbiz.text.Strings.asSingleLine;
-
 /**
  * Reads a {@link PreciseValue} from JSON for the case where it's the value of a JsonObject
  * that's keyed by instrument (JsonTicker, to be precise).

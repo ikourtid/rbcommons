@@ -3,7 +3,7 @@ package com.rb.nonbiz.types;
 import com.rb.nonbiz.text.Strings;
 
 /**
- * <p> An item with a {@link UnitFraction} weight. </p>
+ * An item with a {@link UnitFraction} weight.
  *
  * <p> This is useful for describing a term in a linear combination of items. </p>
  *

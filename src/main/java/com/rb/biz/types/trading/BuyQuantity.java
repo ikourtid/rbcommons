@@ -9,7 +9,7 @@ import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONT
 
 
 /**
- * <p> The share quantity to <i>buy</i> for a single instrument. </p>
+ * The share quantity to <i>buy</i> for a single instrument.
  *
  * <p> We use a separate class to represent a {@code BuyQuantity}
  * for better type safety throughout the code. </p>

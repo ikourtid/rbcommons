@@ -1,12 +1,11 @@
 package com.rb.nonbiz.text;
 
 import com.rb.nonbiz.util.RBPreconditions;
-import org.apache.commons.lang3.StringUtils;
 
 import static org.apache.commons.lang3.StringUtils.isWhitespace;
 
 /**
- * <p> Just a thin wrapper around a Java {@link String}, with the additional semantics that this is just human-readable. </p>
+ * Just a thin wrapper around a Java {@link String}, with the additional semantics that this is just human-readable.
  *
  * <p> It is a bit more specific than a {@link HumanReadableLabel}, which can be used for any human-readable text,
  * including descriptions that are intended for debugging and printing runtime objects. Also, unlike a

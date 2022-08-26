@@ -9,8 +9,7 @@ import java.util.Optional;
 import static com.rb.nonbiz.text.Strings.formatOptional;
 
 /**
- * <p> This is for the special case in the JSON API where we need to represent
- * one of many subclasses of a single class. </p>
+ * This is for the special case in the JSON API where we need to represent one of many subclasses of a single class.
  *
  * <p> Unlike the most widely used {@link JsonApiClassDocumentation}, there is no {@link JsonValidationInstructions}
  * here. That normally gets used for attaching type info to a property string key. However, in the case of

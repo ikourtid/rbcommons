@@ -1,7 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.util.RBPreconditions;
-import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -67,7 +66,7 @@ public class LinkedHashMaps {
   }
 
   /**
-   * <p> Concatenates two {@link Map}s into a single {@link LinkedHashMap}. </p>
+   * Concatenates two {@link Map}s into a single {@link LinkedHashMap}.
    *
    * <p> If one of these maps is a {@link LinkedHashMap}, or some other map that guarantees ordering,
    * then the final map will have all sorted entries from the first map, then those of the second map.

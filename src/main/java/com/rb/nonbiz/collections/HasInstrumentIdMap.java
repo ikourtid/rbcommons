@@ -17,7 +17,7 @@ import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpect
 import static com.rb.nonbiz.collections.Pair.pair;
 
 /**
- * <p> A map of {@link HasInstrumentId} to some type V. </p>
+ * A map of {@link HasInstrumentId} to some type V.
  *
  * <p> Upside: it uses the instrument-id-specific optimized maps (using GNU Trove). </p>
  *
@@ -48,9 +48,9 @@ public class HasInstrumentIdMap<T extends HasInstrumentId, V> extends HasLongMap
   }
 
   /**
-   * <p> We could have exposed an {@code entrySet()} (to fit with map conventions)
+   * We could have exposed an {@code entrySet()} (to fit with map conventions)
    * but that would need to expose the {@code Pair<T, V>}, and it would be confusing since the key in the map
-   * is still the instrument ID, not the entire {@link HasInstrumentId} itself. </p>
+   * is still the instrument ID, not the entire {@link HasInstrumentId} itself.
    *
    * <p> By only exposing a stream of the contents of this map after each entry is transformed,
    * we can avoid that. There's no mention of a pair below. </p>

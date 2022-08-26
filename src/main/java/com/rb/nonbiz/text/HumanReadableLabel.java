@@ -3,8 +3,8 @@ package com.rb.nonbiz.text;
 import com.rb.nonbiz.util.RBPreconditions;
 
 /**
- * <p> Just a String, except with clear semantics that it's meant for human consumption only
- * and not for basing any decision logic on. </p>
+ * Just a String, except with clear semantics that it's meant for human consumption only
+ * and not for basing any decision logic on.
  *
  * <p> A corollary is that we should (almost) never check the value of this (including in test)
  * and only use it for printing stuff to logs etc. </p>

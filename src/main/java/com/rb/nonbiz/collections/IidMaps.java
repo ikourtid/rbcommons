@@ -17,9 +17,9 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 public class IidMaps {
 
   /**
-   * <p> Use this when you have a mutable map where the values themselves are mutable maps,
+   * Use this when you have a mutable map where the values themselves are mutable maps,
    * and you want to 'lock' the values (i.e. go from {@link MutableHasLongMap} to {@link IidMap})
-   * so that you end up with an {@link IidMap} where the values are immutable RBMaps. </p>
+   * so that you end up with an {@link IidMap} where the values are immutable RBMaps.
    *
    * <p> We could also have a version that results in an {@code IidMap<IidMap<V>>} but the need hasn't arisen yet. </p>
    */
@@ -54,9 +54,9 @@ public class IidMaps {
   }
 
   /**
-   * <p> If all maps are empty, returns an empty map.
+   * If all maps are empty, returns an empty map.
    * If only one is non-empty, returns the non-empty one.
-   * Otherwise returns Optional.empty(). </p>
+   * Otherwise returns Optional.empty().
    *
    * <p> This is useful for set unions; if this returns a non-empty optional, it means it's a valid result of a set union.
    * It can speed up set union calculations in those special cases. </p>

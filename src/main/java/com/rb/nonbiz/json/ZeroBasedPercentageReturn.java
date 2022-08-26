@@ -1,7 +1,7 @@
 package com.rb.nonbiz.json;
 
 /**
- * <p> Represent the serialization type of a return, used in the JSON API documentation only.</p>
+ * Represents the serialization type of a return, used in the JSON API documentation only.
  *
  * <p> The JSON API represents returns as zero-based, and as percentages.
  * For example, onesBasedReturn(1.02) will be '2' in the JSON API, and onesBasedReturn(0.97) will be '-3'.
