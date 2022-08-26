@@ -29,7 +29,7 @@ public class CaseInsensitiveStringFilter {
     // The following is simpler, but it will not catch cases where a string appears with multiple capitalizations
     // within the set - e.g. "xyz" and "xYz".
     // return new CaseInsensitiveStringFilter(strings.transform(v -> v.toUpperCase()));
-    return new CaseInsensitiveStringFilter(strings.transformAssumingUnique(v -> v.toUpperCase()));
+    return new CaseInsensitiveStringFilter(strings.transform(v -> v.toUpperCase()));
   }
 
   public static CaseInsensitiveStringFilter emptyCaseInsensitiveStringFilter() {

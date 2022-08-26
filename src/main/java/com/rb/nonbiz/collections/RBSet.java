@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableSet;
+import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -228,15 +229,31 @@ public class RBSet<T> implements Iterable<T> {
     return rawImmutableSet.stream();
   }
 
+  /**
+   * Transform a set, but throw an exception if the transformed values aren't all unique.
+   *
+   * <p> For example, if we transform an {@link RBSet} of ints, and the transformer is i -> "x", meaning we always
+   * map to a constant string, then running this method on a set of 2 or more items will always result in
+   * an exception. </p>
+   */
   public <T1> RBSet<T1> transform(Function<T, T1> transformer) {
-    return new RBSet<>(this.stream().map(transformer).collect(Collectors.toSet()));
+    Set<T1> transformedSet = this.stream().map(transformer).collect(Collectors.toSet());
+    RBPreconditions.checkArgument(
+        this.size() == transformedSet.size(),
+        "This method does not let us put duplicates in the set; transformAllowingDuplicates does. Set was: %s",
+        this);
+    return new RBSet<>(transformedSet);
   }
 
   /**
-   * Transform a set, but throw an exception if the transformed values aren't all unique.
+   * Transform a set, and don't throw if two or more of the original values map to the same transformed value.
+   *
+   * <p> For example, if we transform an {@link RBSet} of ints, and the transformer is i -> "x", meaning we always
+   * map to a constant string, then running this method on a set of 1 or more items will result in the
+   * singleton set "x", and there will be no exception. </p>
    */
-  public <T1> RBSet<T1> transformAssumingUnique(Function<T, T1> transformer) {
-    return newRBSet(this.stream().map(transformer));
+  public <T1> RBSet<T1> transformAllowingDuplicates(Function<T, T1> transformer) {
+    return new RBSet<>(this.stream().map(transformer).collect(Collectors.toSet()));
   }
 
   /**
