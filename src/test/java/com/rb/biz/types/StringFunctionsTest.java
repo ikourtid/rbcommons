@@ -1,10 +1,12 @@
 package com.rb.biz.types;
 
+import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.biz.types.StringFunctions.isTrimmed;
 import static com.rb.biz.types.StringFunctions.isValidJavaIdentifier;
+import static com.rb.biz.types.StringFunctions.isValidRowboatJavaIdentifier;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -81,6 +83,23 @@ public class StringFunctionsTest {
         .forEach(v -> assertFalse(
             v + " must be an invalid identifier",
             isValidJavaIdentifier(v)));
+  }
+
+  @Test
+  public void testIsValidRowboatJavaIdentifier() {
+    ImmutableList.of(
+            "foo", "foo1", "foo123", "_foo", "foo_", "fooBar", "foo_bar",
+            "Foo", "Foo1", "Foo123", "_Foo", "Foo_", "FooBar", "Foo_bar")
+        .forEach(v -> assertTrue(isValidRowboatJavaIdentifier(v)));
+
+    // Strangely, and I didn't know this, foo$ is a valid identifier in Java.
+    // But isValidRowboatJavaIdentifier intentionally prohibits it.
+    ImmutableList.of(
+            "foo ", " foo", "1foo", "123foo", "foo*", "foo-bar", "foo$",
+            "Foo ", " Foo", "1Foo", "123Foo", "Foo*", "Foo-bar", "Foo$")
+        .forEach(v -> assertFalse(
+            v + " must be an invalid identifier",
+            isValidRowboatJavaIdentifier(v)));
   }
 
 }
