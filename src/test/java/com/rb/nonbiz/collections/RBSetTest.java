@@ -32,26 +32,31 @@ public class RBSetTest {
     assertEquals(
         rbSetOf("11", "22"),
         rbSetOf(11, 22).transform(v -> v.toString()));
+    // Throws an exception, because the transformed set will have duplicates, since both 7 and 8 map to the same
+    // string "xyz".
+    assertIllegalArgumentException( () -> rbSetOf(7, 8).transform(i -> "xyz"));
   }
 
   @Test
-  public void testTransformAssumingUnique() {
+  public void testTransform2() {
     assertEquals(
         RBSet.<String>emptyRBSet(),
-        RBSet.<String>emptyRBSet().transformAssumingUnique(v -> v.toUpperCase()));
+        RBSet.<String>emptyRBSet().transform(v -> v.toUpperCase()));
+
     assertEquals(
         rbSetOf("AB", "CD", "EF", "GH", "IJ"),
-        rbSetOf("ab", "cd", "EF", "gH", "Ij").transformAssumingUnique(v -> v.toUpperCase()));
+        rbSetOf("ab", "cd", "EF", "gH", "Ij").transform(v -> v.toUpperCase()));
 
-    assertIllegalArgumentException( () -> rbSetOf("abc", "ABC").transformAssumingUnique(v -> v.toUpperCase()));
-    assertIllegalArgumentException( () -> rbSetOf("abc", "Abc").transformAssumingUnique(v -> v.toUpperCase()));
-    assertIllegalArgumentException( () -> rbSetOf("AbC", "aBC").transformAssumingUnique(v -> v.toUpperCase()));
+    // plain 'transform' disallows attempting to put duplicates in the transformed set, so it will throw.
+    assertIllegalArgumentException( () -> rbSetOf("abc", "ABC").transform(v -> v.toUpperCase()));
+    assertIllegalArgumentException( () -> rbSetOf("abc", "Abc").transform(v -> v.toUpperCase()));
+    assertIllegalArgumentException( () -> rbSetOf("AbC", "aBC").transform(v -> v.toUpperCase()));
 
-    // however, plain 'transform' does not throw
+    // however, transformAllowingDuplicates does not throw
     RBSet<String> doesNotThrow;
-    doesNotThrow = rbSetOf("abc", "ABC").transform(v -> v.toUpperCase());
-    doesNotThrow = rbSetOf("abc", "Abc").transform(v -> v.toUpperCase());
-    doesNotThrow = rbSetOf("AbC", "aBC").transform(v -> v.toUpperCase());
+    doesNotThrow = rbSetOf("abc", "ABC").transformAllowingDuplicates(v -> v.toUpperCase());
+    doesNotThrow = rbSetOf("abc", "Abc").transformAllowingDuplicates(v -> v.toUpperCase());
+    doesNotThrow = rbSetOf("AbC", "aBC").transformAllowingDuplicates(v -> v.toUpperCase());
   }
 
   @Test
