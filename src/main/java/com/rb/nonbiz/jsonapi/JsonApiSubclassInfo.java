@@ -30,14 +30,14 @@ public class JsonApiSubclassInfo {
   private final Class<?> classOfSubclass;
   private final String discriminatorPropertyValue;
   private final String propertyWithSubclassContents;
-  private final HasJsonApiDocumentation jsonApiConverterForTraversing;
+  private final Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing;
   private final Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation;
 
   private JsonApiSubclassInfo(
       Class<?> classOfSubclass,
       String discriminatorPropertyValue,
       String propertyWithSubclassContents,
-      HasJsonApiDocumentation jsonApiConverterForTraversing,
+      Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing,
       Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
     this.classOfSubclass = classOfSubclass;
     this.discriminatorPropertyValue = discriminatorPropertyValue;
@@ -71,14 +71,17 @@ public class JsonApiSubclassInfo {
   }
 
   /**
-   * In practice, this stores the JSON API converter (verb class) that's responsible for converting objects of this
+   * <p> In practice, this stores the JSON API converter (verb class) that's responsible for converting objects of this
    * type back and forth from/to JSON. We store it here, and this method has the word 'traversing' in its name,
    * because it is convenient (see AllObjectsWithJsonApiDocumentationRawLister in rbengine) to start with the
    * top-level input and output objects, and traverse them to enumerate all the JSON API converters, which all
    * implement {@link HasJsonApiDocumentation}. This is better than having some top-level list of
-   * {@link JsonApiDocumentation}, which would have hundreds of items and wouldn't have any logical structure.
+   * {@link JsonApiDocumentation}, which would have hundreds of items and wouldn't have any logical structure. </p>
+   *
+   * <p> The reason it is optional is that some JSON API converter verb classes may convert certain objects
+   * (usually trivial ones) without delegating to a separate JSON API converter. In those cases, this will be empty. </p>
    */
-  public HasJsonApiDocumentation getJsonApiConverterForTraversing() {
+  public Optional<HasJsonApiDocumentation> getJsonApiConverterForTraversing() {
     return jsonApiConverterForTraversing;
   }
 
@@ -97,7 +100,7 @@ public class JsonApiSubclassInfo {
         classOfSubclass,
         discriminatorPropertyValue,
         propertyWithSubclassContents,
-        jsonApiConverterForTraversing,
+        formatOptional(jsonApiConverterForTraversing),
         formatOptional(jsonPropertySpecificDocumentation));
   }
 
@@ -110,7 +113,7 @@ public class JsonApiSubclassInfo {
     private Class<?> classOfSubclass;
     private String discriminatorPropertyValue;
     private String propertyWithSubclassContents;
-    private HasJsonApiDocumentation jsonApiConverterForTraversing;
+    private Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing;
     private Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation;
 
     private JsonApiSubclassInfoBuilder() {}
@@ -139,7 +142,13 @@ public class JsonApiSubclassInfo {
     public JsonApiSubclassInfoBuilder setJsonApiConverterForTraversing(
         HasJsonApiDocumentation jsonApiConverterForTraversing) {
       this.jsonApiConverterForTraversing = checkNotAlreadySet(
-          this.jsonApiConverterForTraversing, jsonApiConverterForTraversing);
+          this.jsonApiConverterForTraversing, Optional.of(jsonApiConverterForTraversing));
+      return this;
+    }
+
+    public JsonApiSubclassInfoBuilder hasNoSeparateJsonApiConverterForTraversing() {
+      this.jsonApiConverterForTraversing = checkNotAlreadySet(
+          this.jsonApiConverterForTraversing, Optional.empty());
       return this;
     }
 
