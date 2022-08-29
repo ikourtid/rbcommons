@@ -50,18 +50,43 @@ public class JsonApiSubclassInfo {
     return classOfSubclass;
   }
 
+  /**
+   * A typical way to represent a class with multiple subclasses in the JSON API is this:
+   * { type: 'subclass2', value: { property2A: foo, property2B: bar } }. Here, 'type' is the 'discriminator property',
+   * 'subclass2' is {@link #getDiscriminatorPropertyValue()}, and 'value' is
+   * {@link #getPropertyWithSubclassContents()}.
+   */
   public String getDiscriminatorPropertyValue() {
     return discriminatorPropertyValue;
   }
 
+  /**
+   * A typical way to represent a class with multiple subclasses in the JSON API is this:
+   * { type: 'subclass2', value: { property2A: foo, property2B: bar } }. Here, 'type' is the 'discriminator property',
+   * 'subclass2' is {@link #getDiscriminatorPropertyValue()}, and 'value' is
+   * {@link #getPropertyWithSubclassContents()}.
+   */
   public String getPropertyWithSubclassContents() {
     return propertyWithSubclassContents;
   }
 
+  /**
+   * In practice, this stores the JSON API converter (verb class) that's responsible for converting objects of this
+   * type back and forth from/to JSON. We store it here, and this method has the word 'traversing' in its name,
+   * because it is convenient (see AllObjectsWithJsonApiDocumentationRawLister in rbengine) to start with the
+   * top-level input and output objects, and traverse them to enumerate all the JSON API converters, which all
+   * implement {@link HasJsonApiDocumentation}. This is better than having some top-level list of
+   * {@link JsonApiDocumentation}, which would have hundreds of items and wouldn't have any logical structure.
+   */
   public HasJsonApiDocumentation getJsonApiConverterForTraversing() {
     return jsonApiConverterForTraversing;
   }
 
+  /**
+   * We always have documentation for classes (JSON API entities) in the API. Since every JSON object property
+   * will store an object of some class, there's always some documentation. This is for cases where we
+   * want additional documentation to a specific property, beyond the documentation in its class.
+   */
   public Optional<JsonPropertySpecificDocumentation> getJsonPropertySpecificDocumentation() {
     return jsonPropertySpecificDocumentation;
   }
