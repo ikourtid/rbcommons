@@ -29,14 +29,14 @@ public class JsonApiSubclassInfo {
 
   private final Class<?> classOfSubclass;
   private final String discriminatorPropertyValue;
-  private final String propertyWithSubclassContents;
+  private final Optional<String> propertyWithSubclassContents;
   private final Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing;
   private final Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation;
 
   private JsonApiSubclassInfo(
       Class<?> classOfSubclass,
       String discriminatorPropertyValue,
-      String propertyWithSubclassContents,
+      Optional<String> propertyWithSubclassContents,
       Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing,
       Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
     this.classOfSubclass = classOfSubclass;
@@ -65,8 +65,12 @@ public class JsonApiSubclassInfo {
    * { type: 'subclass2', value: { property2A: foo, property2B: bar } }. Here, 'type' is the 'discriminator property',
    * 'subclass2' is {@link #getDiscriminatorPropertyValue()}, and 'value' is
    * {@link #getPropertyWithSubclassContents()}.
+   *
+   * It is optional because in certain simple cases, the class is trivial and has no data, in which case there is no
+   * property in the JSON object that will point to the subclass's data. One such example is
+   * OptimizationWasStaticallyInfeasible (in rbengine).
    */
-  public String getPropertyWithSubclassContents() {
+  public Optional<String> getPropertyWithSubclassContents() {
     return propertyWithSubclassContents;
   }
 
@@ -112,7 +116,7 @@ public class JsonApiSubclassInfo {
 
     private Class<?> classOfSubclass;
     private String discriminatorPropertyValue;
-    private String propertyWithSubclassContents;
+    private Optional<String> propertyWithSubclassContents;
     private Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing;
     private Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation;
 
@@ -135,7 +139,13 @@ public class JsonApiSubclassInfo {
 
     public JsonApiSubclassInfoBuilder setPropertyWithSubclassContents(String propertyWithSubclassContents) {
       this.propertyWithSubclassContents = checkNotAlreadySet(
-          this.propertyWithSubclassContents, propertyWithSubclassContents);
+          this.propertyWithSubclassContents, Optional.of(propertyWithSubclassContents));
+      return this;
+    }
+
+    public JsonApiSubclassInfoBuilder hasNoPropertyWithSubclassContents() {
+      this.propertyWithSubclassContents = checkNotAlreadySet(
+          this.propertyWithSubclassContents, Optional.empty());
       return this;
     }
 
