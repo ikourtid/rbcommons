@@ -23,7 +23,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
         .setClassOfSubclass(CashId.class)
         .setDiscriminatorPropertyValue("cash_id")
         .setPropertyWithSubclassContents("cash_details")
-        .setJsonApiConverterForTraversing( () -> testJsonApiClassDocumentationWithSeed(CashId.class, "a"))
+        .hasNoSeparateJsonApiConverterForTraversing()
         .hasNoJsonPropertySpecificDocumentation()
         .build();
   }
@@ -61,7 +61,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
         matchUsingEquals(v -> v.getClassOfSubclass()),
         matchUsingEquals(v -> v.getDiscriminatorPropertyValue()),
         matchUsingEquals(v -> v.getPropertyWithSubclassContents()),
-        match(           v -> v.getJsonApiConverterForTraversing(),     f -> hasJsonApiDocumentationMatcher(f)),
+        matchOptional(   v -> v.getJsonApiConverterForTraversing(),     f -> hasJsonApiDocumentationMatcher(f)),
         matchOptional(   v -> v.getJsonPropertySpecificDocumentation(), f -> jsonPropertySpecificDocumentationMatcher(f)));
   }
 
