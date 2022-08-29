@@ -12,6 +12,7 @@ import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentationTest.testJsonApiCla
 import static com.rb.nonbiz.jsonapi.JsonApiSubclassInfo.JsonApiSubclassInfoBuilder.jsonApiSubclassInfoBuilder;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
+import static com.rb.nonbiz.testmatchers.Match.matchOptionalUsingEquals;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
@@ -22,7 +23,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
     return jsonApiSubclassInfoBuilder()
         .setClassOfSubclass(CashId.class)
         .setDiscriminatorPropertyValue("cash_id")
-        .setPropertyWithSubclassContents("cash_details")
+        .hasNoPropertyWithSubclassContents()
         .hasNoSeparateJsonApiConverterForTraversing()
         .hasNoJsonPropertySpecificDocumentation()
         .build();
@@ -58,11 +59,11 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
 
   public static TypeSafeMatcher<JsonApiSubclassInfo> jsonApiSubclassInfoMatcher(JsonApiSubclassInfo expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getClassOfSubclass()),
-        matchUsingEquals(v -> v.getDiscriminatorPropertyValue()),
-        matchUsingEquals(v -> v.getPropertyWithSubclassContents()),
-        matchOptional(   v -> v.getJsonApiConverterForTraversing(),     f -> hasJsonApiDocumentationMatcher(f)),
-        matchOptional(   v -> v.getJsonPropertySpecificDocumentation(), f -> jsonPropertySpecificDocumentationMatcher(f)));
+        matchUsingEquals(        v -> v.getClassOfSubclass()),
+        matchUsingEquals(        v -> v.getDiscriminatorPropertyValue()),
+        matchOptionalUsingEquals(v -> v.getPropertyWithSubclassContents()),
+        matchOptional(           v -> v.getJsonApiConverterForTraversing(),     f -> hasJsonApiDocumentationMatcher(f)),
+        matchOptional(           v -> v.getJsonPropertySpecificDocumentation(), f -> jsonPropertySpecificDocumentationMatcher(f)));
   }
 
 }
