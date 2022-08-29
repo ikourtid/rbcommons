@@ -9,7 +9,7 @@ import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertyS
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentationTest.jsonPropertySpecificDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTest.hasJsonApiDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentationTest.testJsonApiClassDocumentationWithSeed;
-import static com.rb.nonbiz.jsonapi.JsonApiSubclassInfo.jsonApiSubclassInfo;
+import static com.rb.nonbiz.jsonapi.JsonApiSubclassInfo.JsonApiSubclassInfoBuilder.jsonApiSubclassInfoBuilder;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
@@ -19,32 +19,36 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
 
   @Override
   public JsonApiSubclassInfo makeTrivialObject() {
-    return jsonApiSubclassInfo(
-        CashId.class,
-        "cash_id",
-        "cash_details",
-        () -> testJsonApiClassDocumentationWithSeed(CashId.class, "a"));
+    return jsonApiSubclassInfoBuilder()
+        .setClassOfSubclass(CashId.class)
+        .setDiscriminatorPropertyValue("cash_id")
+        .setPropertyWithSubclassContents("cash_details")
+        .setJsonApiConverterForTraversing( () -> testJsonApiClassDocumentationWithSeed(CashId.class, "a"))
+        .hasNoJsonPropertySpecificDocumentation()
+        .build();
   }
 
   @Override
   public JsonApiSubclassInfo makeNontrivialObject() {
-    return jsonApiSubclassInfo(
-        InstrumentId.class,
-        "instrument_id",
-        "instrument_details",
-        () -> testJsonApiClassDocumentationWithSeed(InstrumentId.class, "i"),
-        jsonPropertySpecificDocumentation("xyz"));
+    return jsonApiSubclassInfoBuilder()
+        .setClassOfSubclass(InstrumentId.class)
+        .setDiscriminatorPropertyValue("instrument_id")
+        .setPropertyWithSubclassContents("instrument_details")
+        .setJsonApiConverterForTraversing( () -> testJsonApiClassDocumentationWithSeed(InstrumentId.class, "i"))
+        .setJsonPropertySpecificDocumentation(jsonPropertySpecificDocumentation("xyz"))
+        .build();
   }
 
   @Override
   public JsonApiSubclassInfo makeMatchingNontrivialObject() {
     // Nothing to tweak here
-    return jsonApiSubclassInfo(
-        InstrumentId.class,
-        "instrument_id",
-        "instrument_details",
-        () -> testJsonApiClassDocumentationWithSeed(InstrumentId.class, "i"),
-        jsonPropertySpecificDocumentation("xyz"));
+    return jsonApiSubclassInfoBuilder()
+        .setClassOfSubclass(InstrumentId.class)
+        .setDiscriminatorPropertyValue("instrument_id")
+        .setPropertyWithSubclassContents("instrument_details")
+        .setJsonApiConverterForTraversing( () -> testJsonApiClassDocumentationWithSeed(InstrumentId.class, "i"))
+        .setJsonPropertySpecificDocumentation(jsonPropertySpecificDocumentation("xyz"))
+        .build();
   }
 
   @Override
