@@ -42,4 +42,23 @@ public class StringFunctions {
     return isValidJavaIdentifier(identifier) && !identifier.endsWith("$");
   }
 
+  public static String[] intuitiveStringSplit(String str, char delimiter) {
+    int numInstances = Math.toIntExact(str.chars().filter(c -> c == delimiter).count());
+    String[] components = new String[numInstances];
+    int currentComponent = 0;
+
+    int indexOfDelimiter = str.indexOf(delimiter);
+    components[currentComponent++] = str.substring(0, indexOfDelimiter - 1);
+
+    while (true) {
+      int startingIndex = indexOfDelimiter;
+      indexOfDelimiter = str.indexOf(indexOfDelimiter); // find next delimiter
+      if (indexOfDelimiter < 0) {
+        break;
+      }
+      components[currentComponent++] = str.substring(startingIndex, indexOfDelimiter);
+    }
+    return components;
+  }
+
 }

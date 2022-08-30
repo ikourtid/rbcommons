@@ -3,11 +3,16 @@ package com.rb.biz.types;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
+import java.util.function.BiConsumer;
+
+import static com.rb.biz.types.StringFunctions.intuitiveStringSplit;
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.biz.types.StringFunctions.isTrimmed;
 import static com.rb.biz.types.StringFunctions.isValidJavaIdentifier;
 import static com.rb.biz.types.StringFunctions.isValidRowboatJavaIdentifier;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.testmatchers.RBArrayMatchers.arrayEqualityMatcher;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -100,6 +105,40 @@ public class StringFunctionsTest {
         .forEach(v -> assertFalse(
             v + " must be an invalid identifier",
             isValidRowboatJavaIdentifier(v)));
+  }
+
+  @Test
+  public void testIntuitiveStringSplit() {
+    BiConsumer<String, String[]> asserter = (inputString, expectedResult) ->
+        assertThat(
+            intuitiveStringSplit(inputString, '`'),
+            arrayEqualityMatcher(expectedResult));
+
+    asserter.accept("", new String[] { "" });
+
+    asserter.accept("`",                 new String[] { "", "" });
+    asserter.accept("`ClassA",           new String[] { "", "ClassA" });
+    asserter.accept( "ClassA`",          new String[] { "ClassA", "" });
+    asserter.accept("`ClassA`",          new String[] { "", "ClassA", "" });
+    asserter.accept("`ClassA` `ClassB",  new String[] { "", "ClassA", " ", "ClassB" });
+    asserter.accept("`ClassA` `ClassB`", new String[] { "", "ClassA", " ", "ClassB", "" });
+
+    // Same test, but with a leading space
+    asserter.accept(" `",                 new String[] { " ", "" });
+    asserter.accept(" `ClassA",           new String[] { " ", "ClassA" });
+    asserter.accept( " ClassA`",          new String[] { " ClassA", "" });
+    asserter.accept(" `ClassA`",          new String[] { " ", "ClassA", "" });
+    asserter.accept(" `ClassA` `ClassB",  new String[] { " ", "ClassA", " ", "ClassB" });
+    asserter.accept(" `ClassA` `ClassB`", new String[] { " ", "ClassA", " ", "ClassB", "" });
+
+    // Same, but with a trailing space
+    asserter.accept("` ",                 new String[] { "", " " });
+    asserter.accept("`ClassA ",           new String[] { "", "ClassA " });
+    asserter.accept( "ClassA` ",          new String[] { "ClassA", " " });
+    asserter.accept("`ClassA` ",          new String[] { "", "ClassA", " " });
+    asserter.accept("`ClassA` `ClassB ",  new String[] { "", "ClassA", " ", "ClassB " });
+    asserter.accept("`ClassA` `ClassB` ", new String[] { "", "ClassA", " ", "ClassB", " " });
+
   }
 
 }
