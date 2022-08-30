@@ -23,9 +23,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
     return jsonApiSubclassInfoBuilder()
         .setClassOfSubclass(CashId.class)
         .setDiscriminatorPropertyValue("cash_id")
-        .hasNoPropertyWithSubclassContents()
         .hasNoSeparateJsonApiConverterForTraversing()
-        .hasNoJsonPropertySpecificDocumentation()
         .build();
   }
 
@@ -34,9 +32,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
     return jsonApiSubclassInfoBuilder()
         .setClassOfSubclass(InstrumentId.class)
         .setDiscriminatorPropertyValue("instrument_id")
-        .setPropertyWithSubclassContents("instrument_details")
         .setJsonApiConverterForTraversing( () -> testJsonApiClassDocumentationWithSeed(InstrumentId.class, "i"))
-        .setJsonPropertySpecificDocumentation(jsonPropertySpecificDocumentation("xyz"))
         .build();
   }
 
@@ -46,9 +42,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
     return jsonApiSubclassInfoBuilder()
         .setClassOfSubclass(InstrumentId.class)
         .setDiscriminatorPropertyValue("instrument_id")
-        .setPropertyWithSubclassContents("instrument_details")
         .setJsonApiConverterForTraversing( () -> testJsonApiClassDocumentationWithSeed(InstrumentId.class, "i"))
-        .setJsonPropertySpecificDocumentation(jsonPropertySpecificDocumentation("xyz"))
         .build();
   }
 
@@ -61,9 +55,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
     return makeMatcher(expected,
         matchUsingEquals(        v -> v.getClassOfSubclass()),
         matchUsingEquals(        v -> v.getDiscriminatorPropertyValue()),
-        matchOptionalUsingEquals(v -> v.getPropertyWithSubclassContents()),
-        matchOptional(           v -> v.getJsonApiConverterForTraversing(),     f -> hasJsonApiDocumentationMatcher(f)),
-        matchOptional(           v -> v.getJsonPropertySpecificDocumentation(), f -> jsonPropertySpecificDocumentationMatcher(f)));
+        matchOptional(           v -> v.getJsonApiConverterForTraversing(),     f -> hasJsonApiDocumentationMatcher(f)));
   }
 
 }
