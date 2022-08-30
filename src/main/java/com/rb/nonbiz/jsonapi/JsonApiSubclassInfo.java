@@ -1,6 +1,5 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.rb.nonbiz.json.JsonPropertySpecificDocumentation;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
@@ -16,9 +15,8 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
  * <p> Unlike the most widely used {@link JsonApiClassDocumentation}, there is no {@link JsonValidationInstructions}
  * here. That normally gets used for attaching type info to a property string key. However, in the case of
  * superclass / subclass, there will not be any additional properties in the representation. Typically, it will be
- * an object such as: {@code { "type" = "SubClass1", "value" = { the JSON object for the subclass instance }}}.
- * That is, there will only be two properties. Using the terminology below, {@link #getDiscriminatorPropertyValue()}
- * would be "SubClass1", and {@link #getPropertyWithSubclassContents()} would be "value" (the property name").
+ * an object such as: {@code { "type" = "SubClass1", "subclassProperty1" = "foo", "subclassProperty2" = "bar" } }.
+ * Using the terminology below, {@link #getDiscriminatorPropertyValue()} would be "SubClass1".
  * The discriminator property name is "type", but that's not stored here. </p>
  *
  * <p> The corresponding JSON API converter is only stored here so that we can traverse the tree of objects
@@ -29,21 +27,15 @@ public class JsonApiSubclassInfo {
 
   private final Class<?> classOfSubclass;
   private final String discriminatorPropertyValue;
-  private final Optional<String> propertyWithSubclassContents;
   private final Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing;
-  private final Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation;
 
   private JsonApiSubclassInfo(
       Class<?> classOfSubclass,
       String discriminatorPropertyValue,
-      Optional<String> propertyWithSubclassContents,
-      Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing,
-      Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation) {
+      Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing) {
     this.classOfSubclass = classOfSubclass;
     this.discriminatorPropertyValue = discriminatorPropertyValue;
-    this.propertyWithSubclassContents = propertyWithSubclassContents;
     this.jsonApiConverterForTraversing = jsonApiConverterForTraversing;
-    this.jsonPropertySpecificDocumentation = jsonPropertySpecificDocumentation;
   }
 
   public Class<?> getClassOfSubclass() {
@@ -52,26 +44,11 @@ public class JsonApiSubclassInfo {
 
   /**
    * A typical way to represent a class with multiple subclasses in the JSON API is this:
-   * { type: 'subclass2', value: { property2A: foo, property2B: bar } }. Here, 'type' is the 'discriminator property',
-   * 'subclass2' is {@link #getDiscriminatorPropertyValue()}, and 'value' is
-   * {@link #getPropertyWithSubclassContents()}.
+   * {@literal  type: 'subclass2', property2A: foo, property2B: bar }. Here, 'type' is the 'discriminator property',
+   * and 'subclass2' is {@link #getDiscriminatorPropertyValue()}.
    */
   public String getDiscriminatorPropertyValue() {
     return discriminatorPropertyValue;
-  }
-
-  /**
-   * A typical way to represent a class with multiple subclasses in the JSON API is this:
-   * { type: 'subclass2', value: { property2A: foo, property2B: bar } }. Here, 'type' is the 'discriminator property',
-   * 'subclass2' is {@link #getDiscriminatorPropertyValue()}, and 'value' is
-   * {@link #getPropertyWithSubclassContents()}.
-   *
-   * It is optional because in certain simple cases, the class is trivial and has no data, in which case there is no
-   * property in the JSON object that will point to the subclass's data. One such example is
-   * OptimizationWasStaticallyInfeasible (in rbengine).
-   */
-  public Optional<String> getPropertyWithSubclassContents() {
-    return propertyWithSubclassContents;
   }
 
   /**
@@ -89,23 +66,12 @@ public class JsonApiSubclassInfo {
     return jsonApiConverterForTraversing;
   }
 
-  /**
-   * We always have documentation for classes (JSON API entities) in the API. Since every JSON object property
-   * will store an object of some class, there's always some documentation. This is for cases where we
-   * want additional documentation to a specific property, beyond the documentation in its class.
-   */
-  public Optional<JsonPropertySpecificDocumentation> getJsonPropertySpecificDocumentation() {
-    return jsonPropertySpecificDocumentation;
-  }
-
   @Override
   public String toString() {
-    return Strings.format("[JASI %s %s %s %s %s JASI]",
+    return Strings.format("[JASI %s %s %s JASI]",
         classOfSubclass,
         discriminatorPropertyValue,
-        propertyWithSubclassContents,
-        formatOptional(jsonApiConverterForTraversing),
-        formatOptional(jsonPropertySpecificDocumentation));
+        formatOptional(jsonApiConverterForTraversing));
   }
 
 
@@ -116,9 +82,7 @@ public class JsonApiSubclassInfo {
 
     private Class<?> classOfSubclass;
     private String discriminatorPropertyValue;
-    private Optional<String> propertyWithSubclassContents;
     private Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing;
-    private Optional<JsonPropertySpecificDocumentation> jsonPropertySpecificDocumentation;
 
     private JsonApiSubclassInfoBuilder() {}
     
@@ -137,18 +101,6 @@ public class JsonApiSubclassInfo {
       return this;
     }
 
-    public JsonApiSubclassInfoBuilder setPropertyWithSubclassContents(String propertyWithSubclassContents) {
-      this.propertyWithSubclassContents = checkNotAlreadySet(
-          this.propertyWithSubclassContents, Optional.of(propertyWithSubclassContents));
-      return this;
-    }
-
-    public JsonApiSubclassInfoBuilder hasNoPropertyWithSubclassContents() {
-      this.propertyWithSubclassContents = checkNotAlreadySet(
-          this.propertyWithSubclassContents, Optional.empty());
-      return this;
-    }
-
     public JsonApiSubclassInfoBuilder setJsonApiConverterForTraversing(
         HasJsonApiDocumentation jsonApiConverterForTraversing) {
       this.jsonApiConverterForTraversing = checkNotAlreadySet(
@@ -162,29 +114,11 @@ public class JsonApiSubclassInfo {
       return this;
     }
 
-    public JsonApiSubclassInfoBuilder setJsonPropertySpecificDocumentation(
-        JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
-      this.jsonPropertySpecificDocumentation = checkNotAlreadySet(
-          this.jsonPropertySpecificDocumentation, Optional.of(jsonPropertySpecificDocumentation));
-      return this;
-    }
-
-    public JsonApiSubclassInfoBuilder hasNoJsonPropertySpecificDocumentation() {
-      this.jsonPropertySpecificDocumentation = checkNotAlreadySet(
-          this.jsonPropertySpecificDocumentation, Optional.empty());
-      return this;
-    }
-
     @Override
     public void sanityCheckContents() {
       RBPreconditions.checkNotNull(classOfSubclass);
       RBPreconditions.checkNotNull(discriminatorPropertyValue);
-      RBPreconditions.checkNotNull(propertyWithSubclassContents);
       RBPreconditions.checkNotNull(jsonApiConverterForTraversing);
-      RBPreconditions.checkNotNull(jsonPropertySpecificDocumentation);
-
-      RBPreconditions.checkNotNull(discriminatorPropertyValue);
-      RBPreconditions.checkNotNull(propertyWithSubclassContents);
     }
 
     @Override
@@ -192,9 +126,7 @@ public class JsonApiSubclassInfo {
       return new JsonApiSubclassInfo(
           classOfSubclass,
           discriminatorPropertyValue,
-          propertyWithSubclassContents,
-          jsonApiConverterForTraversing,
-          jsonPropertySpecificDocumentation);
+          jsonApiConverterForTraversing);
     }
 
   }
