@@ -114,6 +114,8 @@ public class StringFunctionsTest {
             intuitiveStringSplit(inputString, '`'),
             arrayEqualityMatcher(expectedResult));
 
+    asserter.accept("`ClassA` `ClassB`", new String[] { "", "ClassA", " ", "ClassB", "" });
+
     asserter.accept("", new String[] { "" });
 
     asserter.accept("`",                 new String[] { "", "" });

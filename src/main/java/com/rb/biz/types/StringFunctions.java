@@ -42,22 +42,30 @@ public class StringFunctions {
     return isValidJavaIdentifier(identifier) && !identifier.endsWith("$");
   }
 
+  /**
+   * Similar to {@link String#split(String)}, but it doesn't special-case situations where the delimiter is the
+   * first or last character.
+   *
+   * <p> We need this because {@link String#split(String)} does not have intuitive behavior (in our opinion)
+   * in those special cases, hence the 'intuitive' in the name here. The tests are much better at explaining this
+   * behavior. </p>
+   */
   public static String[] intuitiveStringSplit(String str, char delimiter) {
     int numInstances = Math.toIntExact(str.chars().filter(c -> c == delimiter).count());
-    String[] components = new String[numInstances];
+    String[] components = new String[numInstances + 1];
     int currentComponent = 0;
-
-    int indexOfDelimiter = str.indexOf(delimiter);
-    components[currentComponent++] = str.substring(0, indexOfDelimiter - 1);
+    int currentPositionInString = 0;
 
     while (true) {
-      int startingIndex = indexOfDelimiter;
-      indexOfDelimiter = str.indexOf(indexOfDelimiter); // find next delimiter
-      if (indexOfDelimiter < 0) {
+      int nextIndexOfDelimiter = str.indexOf(delimiter, currentPositionInString); // find next delimiter
+      if (nextIndexOfDelimiter < 0) {
         break;
       }
-      components[currentComponent++] = str.substring(startingIndex, indexOfDelimiter);
+
+      components[currentComponent++] = str.substring(currentPositionInString, nextIndexOfDelimiter);
+      currentPositionInString = nextIndexOfDelimiter + 1;
     }
+    components[currentComponent] = str.substring(currentPositionInString);
     return components;
   }
 
