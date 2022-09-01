@@ -253,7 +253,7 @@ public abstract class JsonApiPropertyDescriptor {
         String discriminatorProperty,
         String expectedDiscriminatorValue) {
       RBPreconditions.checkArgument(
-          getJsonStringOrThrow(jsonObject, discriminatorProperty).equals("optimizerIsTurnedOff"),
+          getJsonStringOrThrow(jsonObject, discriminatorProperty).equals(expectedDiscriminatorValue),
           "Property '%s' must always have the value '%s'; JSON was: %s",
           discriminatorProperty, expectedDiscriminatorValue, jsonObject);
     }
