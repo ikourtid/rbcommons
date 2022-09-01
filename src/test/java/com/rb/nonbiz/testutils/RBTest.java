@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.util.Optional;
 
 import static com.rb.nonbiz.testutils.RBMockeries.imposterizingMockery;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Most of your 'verb' classes should extend {@code RBTest<>}.
@@ -147,10 +148,9 @@ public abstract class RBTest<T> extends RBCommonsTestConstants<T> {
 
     // Only if testObject implements HasJsonApiDocumentation, run this extra check.
     if (HasJsonApiDocumentation.class.isAssignableFrom(testObject.getClass())) {
-      // Just asserting that these methods do not throw; there's not much more we can do.
-      JsonApiDocumentation doesNotThrow = ((HasJsonApiDocumentation) testObject).getJsonApiDocumentation();
-      Optional<RBSet<JsonApiDocumentation>> alsoDoesNotThrow =
-          ((HasJsonApiDocumentation) testObject).getAdditionalJsonApiDocumentation();
+      // Just asserting that these methods do not throw, and the returned value is not null; there's not much more we can do.
+      assertNotNull( ((HasJsonApiDocumentation) testObject).getJsonApiDocumentation());
+      assertNotNull( ((HasJsonApiDocumentation) testObject).getAdditionalJsonApiDocumentation());
 
       // We could additionally check that the various getters don't return null or throw an exception.
       // However, that's the job of the JsonApiDocumentationBuilder.
