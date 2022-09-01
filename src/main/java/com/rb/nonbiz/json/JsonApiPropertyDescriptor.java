@@ -28,6 +28,7 @@ import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
+import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
 import static com.rb.nonbiz.text.Strings.formatOptional;
@@ -222,6 +223,20 @@ public abstract class JsonApiPropertyDescriptor {
     public static SimpleClassJsonApiPropertyDescriptor simpleClassJsonApiPropertyDescriptor(
         Class<?> clazz, JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
       return simpleClassJsonApiPropertyDescriptor(clazz, Optional.of(jsonPropertySpecificDocumentation));
+    }
+
+    /**
+     * You may wonder - if this must always have the same value, why bother specifying it?
+     * It's because we have to conform to the OpenAPI / Swagger way of representing
+     * multiple subclasses that can appear in the same position in JSON. See Issue #1292.
+     * This centralizes that logic.
+     */
+    public static SimpleClassJsonApiPropertyDescriptor subclassDiscriminatorPropertyDescriptor(
+        String onlyAllowableValue) {
+      return simpleClassJsonApiPropertyDescriptor(
+          String.class,
+          Optional.of(jsonPropertySpecificDocumentation(
+              Strings.format("The value must always be '%s'", onlyAllowableValue))));
     }
 
     /**
