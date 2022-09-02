@@ -8,14 +8,18 @@ import java.time.LocalDateTime;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 /**
- * A thin semantic wrapper for {@link HumanReadableDocumentation} that's mean to apply to a specific property,
- * vs. for an entire class. Example: a {@link LocalDateTime} (class) can be described as being in UTC format, etc. This is
+ * A thin semantic wrapper for {@link HumanReadableDocumentation} that's meant to apply to a specific property,
+ * vs. for an entire class.
+ *
+ * <p> Example: a {@link LocalDateTime} (class) can be described as being in UTC format, etc. This is
  * specific to the {@link LocalDateTime} itself, not to one particular usage of it. On the other hand, if a property
  * of Trade is 'tradeTime', then that's not just any old {@link LocalDateTime}; it needs further documentation, e.g.
  * "the trade time as reported by the exchange" - which, in this case is property-specific.
  *
  * <p> This is meant to be read as "(JSON property)-specific documentation,
- * not JSON (property-specific) documentation. </p>
+ * not JSON (property-specific) documentation". </p>
+ *
+ * @see HumanReadableDocumentation
  */
 public class JsonPropertySpecificDocumentation {
 
