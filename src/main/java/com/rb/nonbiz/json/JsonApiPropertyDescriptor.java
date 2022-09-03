@@ -238,7 +238,7 @@ public abstract class JsonApiPropertyDescriptor {
       return simpleClassJsonApiPropertyDescriptor(
           String.class,
           Optional.of(jsonPropertySpecificDocumentation(
-              Strings.format("The value must always be '%s'", onlyAllowableValue))));
+              Strings.format("The value must always be '%s'.", onlyAllowableValue))));
     }
 
     /**
