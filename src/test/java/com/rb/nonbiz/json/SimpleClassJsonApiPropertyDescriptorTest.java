@@ -37,7 +37,7 @@ public class SimpleClassJsonApiPropertyDescriptorTest extends RBTestMatcher<Simp
         simpleClassJsonApiPropertyDescriptorMatcher(
             simpleClassJsonApiPropertyDescriptor(
                 String.class,
-                jsonPropertySpecificDocumentation("The value must always be 'fooBar'"))));
+                jsonPropertySpecificDocumentation("The value must always be 'fooBar'."))));
   }
 
   @Test
