@@ -5,6 +5,7 @@ import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.json.JsonValidationInstructions.emptyJsonValidationInstructions;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatListInExistingOrder;
 import static com.rb.nonbiz.text.Strings.formatOptional;
@@ -304,6 +306,72 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return new JsonApiClassDocumentation(
           clazz, singleLineSummary, longDocumentation, childNodes, jsonValidationInstructions,
           trivialSampleJson, nontrivialSampleJson);
+    }
+
+  }
+
+
+  /**
+   * Use this for creating {@link JsonApiDocumentation} for simple primitives that are simple wrappers
+   * around {@link RBNumeric}. The #nontrivialSampleJson is not optional here; it's small enough in the case of
+   * numeric wrappers that it should always be specified.
+   */
+  public static class JsonApiRbNumericWrapperDocumentationBuilder implements RBBuilder<JsonApiClassDocumentation> {
+
+    private Class<?> classBeingDocumented;
+    private HumanReadableDocumentation singleLineSummary;
+    private HumanReadableDocumentation longDocumentation;
+    private JsonElement nontrivialSampleJson;
+
+    private JsonApiRbNumericWrapperDocumentationBuilder() {}
+
+    public static JsonApiRbNumericWrapperDocumentationBuilder jsonApiRbNumericWrapperDocumentationBuilder() {
+      return new JsonApiRbNumericWrapperDocumentationBuilder();
+    }
+
+    public JsonApiRbNumericWrapperDocumentationBuilder setClassBeingDocumented(Class<?> classBeingDocumented) {
+      this.classBeingDocumented = checkNotAlreadySet(this.classBeingDocumented, classBeingDocumented);
+      return this;
+    }
+
+    public JsonApiRbNumericWrapperDocumentationBuilder setSingleLineSummary(HumanReadableDocumentation singleLineSummary) {
+      this.singleLineSummary = checkNotAlreadySet(this.singleLineSummary, singleLineSummary);
+      return this;
+    }
+
+    public JsonApiRbNumericWrapperDocumentationBuilder setLongDocumentation(HumanReadableDocumentation longDocumentation) {
+      this.longDocumentation = checkNotAlreadySet(this.longDocumentation, longDocumentation);
+      return this;
+    }
+
+    public JsonApiRbNumericWrapperDocumentationBuilder setNontrivialSampleJson(JsonElement nontrivialSampleJson) {
+      this.nontrivialSampleJson = checkNotAlreadySet(this.nontrivialSampleJson, nontrivialSampleJson);
+      return this;
+    }
+
+    @Override
+    public void sanityCheckContents() {
+      RBPreconditions.checkNotNull(classBeingDocumented);
+      RBPreconditions.checkNotNull(singleLineSummary);
+      RBPreconditions.checkNotNull(longDocumentation);
+      RBPreconditions.checkNotNull(nontrivialSampleJson);
+    }
+
+    @Override
+    public JsonApiClassDocumentation buildWithoutPreconditions() {
+      return jsonApiClassDocumentationBuilder()
+          .setClass(classBeingDocumented)
+          .setSingleLineSummary(singleLineSummary)
+          .setLongDocumentation(longDocumentation)
+          // JsonValidationInstructions is for cases where there are properties, but this is n/a for a primitive.
+          .hasNoJsonValidationInstructions()
+          // primitives do not mention other entities under them that get serialized.
+          .hasNoChildNodes()
+          .noTrivialSampleJsonSupplied()
+          // Currently (Aug 2022), there's only room for one of the two sample JSON values in the resulting Swagger
+          // documentation, and it's the 'nontrivial' that gets chosen to be shown. So let's use that one here.
+          .setNontrivialSampleJson(nontrivialSampleJson)
+          .build();
     }
 
   }
