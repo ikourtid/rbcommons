@@ -16,6 +16,7 @@ import static com.rb.nonbiz.jsonapi.JsonApiSubclassInfoTest.jsonApiSubclassInfoM
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchList;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
+import static com.rb.nonbiz.testmatchers.Match.matchOptionalUsingEquals;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonElementMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -59,7 +60,7 @@ public class JsonApiClassWithSubclassesDocumentationTest extends RBTestMatcher<J
         .setSingleLineSummary(documentation("x"))
         .setLongDocumentation(documentation("y"))
         .setJsonApiInfoOnOnlySubclass(new JsonApiSubclassInfoTest().makeTrivialObject())
-        .setDiscriminatorProperty("t")
+        .hasNoDiscriminatorProperty()
         .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()
         .build();
@@ -86,13 +87,13 @@ public class JsonApiClassWithSubclassesDocumentationTest extends RBTestMatcher<J
   public static TypeSafeMatcher<JsonApiClassWithSubclassesDocumentation> jsonApiClassWithSubclassesDocumentationMatcher(
       JsonApiClassWithSubclassesDocumentation expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getClassBeingDocumented()),
-        match(           v -> v.getSingleLineSummary(),          f -> humanReadableDocumentationMatcher(f)),
-        match(           v -> v.getLongDocumentation(),          f -> humanReadableDocumentationMatcher(f)),
-        matchList(       v -> v.getJsonApiSubclassInfoList(),    f -> jsonApiSubclassInfoMatcher(f)),
-        matchUsingEquals(v -> v.getDiscriminatorProperty()),
-        matchOptional(   v -> v.getTrivialSampleJson(),          f -> jsonElementMatcher(f, 1e-8)),
-        matchOptional(   v -> v.getNontrivialSampleJson(),       f -> jsonElementMatcher(f, 1e-8)));
+        matchUsingEquals(        v -> v.getClassBeingDocumented()),
+        match(                   v -> v.getSingleLineSummary(),          f -> humanReadableDocumentationMatcher(f)),
+        match(                   v -> v.getLongDocumentation(),          f -> humanReadableDocumentationMatcher(f)),
+        matchList(               v -> v.getJsonApiSubclassInfoList(),    f -> jsonApiSubclassInfoMatcher(f)),
+        matchOptionalUsingEquals(v -> v.getDiscriminatorProperty()),
+        matchOptional(           v -> v.getTrivialSampleJson(),          f -> jsonElementMatcher(f, 1e-8)),
+        matchOptional(           v -> v.getNontrivialSampleJson(),       f -> jsonElementMatcher(f, 1e-8)));
   }
 
 }
