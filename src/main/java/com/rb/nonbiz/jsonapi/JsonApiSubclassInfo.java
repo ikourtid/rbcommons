@@ -27,12 +27,12 @@ import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional
 public class JsonApiSubclassInfo {
 
   private final Class<?> classOfSubclass;
-  private final String discriminatorPropertyValue;
+  private final Optional<String> discriminatorPropertyValue;
   private final Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing;
 
   private JsonApiSubclassInfo(
       Class<?> classOfSubclass,
-      String discriminatorPropertyValue,
+      Optional<String> discriminatorPropertyValue,
       Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing) {
     this.classOfSubclass = classOfSubclass;
     this.discriminatorPropertyValue = discriminatorPropertyValue;
@@ -48,7 +48,7 @@ public class JsonApiSubclassInfo {
    * {@literal  type: 'subclass2', property2A: foo, property2B: bar }. Here, 'type' is the 'discriminator property',
    * and 'subclass2' is {@link #getDiscriminatorPropertyValue()}.
    */
-  public String getDiscriminatorPropertyValue() {
+  public Optional<String> getDiscriminatorPropertyValue() {
     return discriminatorPropertyValue;
   }
 
@@ -85,7 +85,7 @@ public class JsonApiSubclassInfo {
   public static class JsonApiSubclassInfoBuilder implements RBBuilder<JsonApiSubclassInfo> {
 
     private Class<?> classOfSubclass;
-    private String discriminatorPropertyValue;
+    private Optional<String> discriminatorPropertyValue;
     private Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing;
 
     private JsonApiSubclassInfoBuilder() {}
@@ -101,7 +101,13 @@ public class JsonApiSubclassInfo {
 
     public JsonApiSubclassInfoBuilder setDiscriminatorPropertyValue(String discriminatorPropertyValue) {
       this.discriminatorPropertyValue = checkNotAlreadySet(
-          this.discriminatorPropertyValue, discriminatorPropertyValue);
+          this.discriminatorPropertyValue, Optional.of(discriminatorPropertyValue));
+      return this;
+    }
+
+    public JsonApiSubclassInfoBuilder hasNoDiscriminatorPropertyAndThereforeNoValue() {
+      this.discriminatorPropertyValue = checkNotAlreadySet(
+          this.discriminatorPropertyValue, Optional.empty());
       return this;
     }
 
