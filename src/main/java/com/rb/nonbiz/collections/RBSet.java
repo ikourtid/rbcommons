@@ -11,8 +11,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
-import java.util.function.LongFunction;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -253,9 +251,8 @@ public class RBSet<T> implements Iterable<T> {
    * Transform a set, but throw an exception if the transformed values aren't all unique. Uniqueness is determined by
    * the equals & hashCode methods passed.
    *
-   * <p> For example, if we transform an {@link RBSet} of ints, and the transformer is i -> "x", meaning we always
-   * map to a constant string, then running this method on a set of 2 or more items will always result in
-   * an exception. </p>
+   * <p> For example, say we transform an {@link RBSet} of Foo, where Foo is an object that does not implement
+   * hashCode or equals - which is common in our codebase. FIXME IAK expand on comment. </p>
    */
   public <T1> RBSet<T1> transformAllowingDuplicates(
       Function<T, T1> transformer,
@@ -266,7 +263,10 @@ public class RBSet<T> implements Iterable<T> {
       T1 transformedValue = transformer.apply(originalValue);
       Pair<T1, Object> pairWithWrappedValue = pair(transformedValue, new Object() {
 
-        // FIXME IAK remove yellowness
+        // The IDE gives us a warning about #equals not checking the type of obj, but we don't have access to
+        // the class of T1 at runtime (due to Java type erasure), and passing that in is overkill; we don't
+        // really need to check here, because this temporary object is internal to this method.
+        @SuppressWarnings({ "EqualsWhichDoesntCheckParameterClass", "unchecked" })
         @Override
         public boolean equals(Object obj) {
           return equalsImplementation.test( (T1) obj, transformedValue);
