@@ -18,7 +18,6 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
-import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.text.Strings.sizePrefix;
 
@@ -258,30 +257,34 @@ public class RBSet<T> implements Iterable<T> {
       Function<T, T1> transformer,
       BiPredicate<T1, T1> equalsImplementation,
       Function<T1, Integer> hashCodeImplementation) {
-    MutableRBSet<Pair<T1, Object>> temporarySet = newMutableRBSetWithExpectedSize(this.size());
-    forEach(originalValue -> {
-      T1 transformedValue = transformer.apply(originalValue);
-      Pair<T1, Object> pairWithWrappedValue = pair(transformedValue, new Object() {
+    class WrapperObject {
+      final T1 transformedValue;
 
-        // The IDE gives us a warning about #equals not checking the type of obj, but we don't have access to
-        // the class of T1 at runtime (due to Java type erasure), and passing that in is overkill; we don't
-        // really need to check here, because this temporary object is internal to this method.
-        @SuppressWarnings({ "EqualsWhichDoesntCheckParameterClass", "unchecked" })
-        @Override
-        public boolean equals(Object obj) {
-          return equalsImplementation.test( (T1) obj, transformedValue);
-        }
+      WrapperObject(T1 transformedValue) {
+        this.transformedValue = transformedValue;
+      }
 
-        @Override
-        public int hashCode() {
-          return hashCodeImplementation.apply(transformedValue);
-        }
-      });
-      // Not using addAssumingAbsent; duplicates are allowed here (duplicates subject to the
-      // equalsImplementation and hashCodeImplementation passed in).
-      temporarySet.add(pairWithWrappedValue);
-    });
-    return newRBSet(temporarySet).transform(pair -> pair.getLeft());
+      @Override
+      public int hashCode() {
+        return hashCodeImplementation.apply(transformedValue);
+      }
+
+      // The IDE gives us a warning about #equals not checking the type of obj, but we don't have access to
+      // the class of T1 at runtime (due to Java type erasure), and passing that in is overkill; we don't
+      // really need to check here, because this temporary object is internal to this method.
+      @SuppressWarnings({ "EqualsWhichDoesntCheckParameterClass", "unchecked" })
+      @Override
+      public boolean equals(Object obj) {
+        return equalsImplementation.test( ((WrapperObject) obj).transformedValue, transformedValue);
+      }
+    }
+
+    MutableRBSet<WrapperObject> temporarySet = newMutableRBSetWithExpectedSize(this.size());
+    // Not using addAssumingAbsent; duplicates are allowed here (duplicates subject to the
+    // equalsImplementation and hashCodeImplementation passed in).
+    forEach(originalValue -> temporarySet.add(new WrapperObject(transformer.apply(originalValue))));
+
+    return newRBSet(temporarySet).transform(wrapperObject -> wrapperObject.transformedValue);
   }
 
   /**

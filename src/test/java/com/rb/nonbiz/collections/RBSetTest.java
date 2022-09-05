@@ -221,6 +221,7 @@ public class RBSetTest {
     };
     NoComparison obj1 = new NoComparison("abc");
     NoComparison obj2 = new NoComparison("abc");
+
     assertNotEquals(
         "These objects are not equal per the default #equals and #hashCode that we inherit from Object",
         obj1, obj2);
