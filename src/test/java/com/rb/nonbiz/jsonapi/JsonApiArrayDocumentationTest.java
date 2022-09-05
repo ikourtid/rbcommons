@@ -1,11 +1,7 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.rb.nonbiz.collections.ClosedRange;
-import com.rb.nonbiz.jsonapi.JsonApiArrayDocumentation.JsonApiArrayDocumentationBuilder;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.text.HumanReadableDocumentation;
-import com.rb.nonbiz.text.HumanReadableDocumentationTest;
-import org.junit.Test;
 
 import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTest.hasJsonApiDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiArrayDocumentation.JsonApiArrayDocumentationBuilder.jsonApiArrayDocumentationBuilder;
@@ -14,8 +10,8 @@ import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
-import static org.junit.Assert.*;
 
+import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.math.BigDecimal;
@@ -28,7 +24,8 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
   @Override
   public JsonApiArrayDocumentation makeTrivialObject() {
     return jsonApiArrayDocumentationBuilder()
-        .setClassContainingArray(ClosedRange.class)
+        .setTopLevelClass(ClosedRange.class)
+        .setClassOfArrayItems(UnitFraction.class)
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
         .hasNoChildNode()
@@ -40,7 +37,8 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
     // Except for the documentation, the fields below are not realistic, but rbcommons does not have access
     // to rbbizinfra, where a lot of our business logic classes lie, so it's hard to make this realistic.
     return jsonApiArrayDocumentationBuilder()
-        .setClassContainingArray(ClosedRange.class)
+        .setTopLevelClass(ClosedRange.class)
+        .setClassOfArrayItems(UnitFraction.class)
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
         .hasChildNode( () -> testJsonApiClassDocumentationWithSeed(BigDecimal.class, ""))
@@ -51,7 +49,8 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
   public JsonApiArrayDocumentation makeMatchingNontrivialObject() {
     // Nothing to tweak here
     return jsonApiArrayDocumentationBuilder()
-        .setClassContainingArray(ClosedRange.class)
+        .setTopLevelClass(ClosedRange.class)
+        .setClassOfArrayItems(UnitFraction.class)
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
         .hasChildNode( () -> testJsonApiClassDocumentationWithSeed(BigDecimal.class, ""))
@@ -66,7 +65,8 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
   public static TypeSafeMatcher<JsonApiArrayDocumentation> jsonApiArrayDocumentationMatcher(
       JsonApiArrayDocumentation expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getClassBeingDocumented()),
+        matchUsingEquals(v -> v.getTopLevelClass()),
+        matchUsingEquals(v -> v.getClassOfArrayItems()),
         match(           v -> v.getSingleLineSummary(),     f -> humanReadableDocumentationMatcher(f)),
         match(           v -> v.getLongDocumentation(),     f -> humanReadableDocumentationMatcher(f)),
         matchOptional(   v -> v.getChildNode(),             f -> hasJsonApiDocumentationMatcher(f)));

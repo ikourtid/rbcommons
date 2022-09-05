@@ -1,26 +1,16 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.google.gson.JsonElement;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
-import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
+import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
-import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
-import static com.rb.nonbiz.json.JsonValidationInstructions.emptyJsonValidationInstructions;
-import static com.rb.nonbiz.jsonapi.JsonApiArrayDocumentation.JsonApiArrayDocumentationBuilder.jsonApiArrayDocumentationBuilder;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
-import static com.rb.nonbiz.text.Strings.formatListInExistingOrder;
 import static com.rb.nonbiz.text.Strings.formatOptional;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 
 /**
  * This is (mostly) human-readable text that explains how a Java object (non-enum) of this type
@@ -39,17 +29,20 @@ import static java.util.Collections.singletonList;
  */
 public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
-  private final Class<?> classContainingArray;
+  private final Class<?> topLevelClass;
+  private final Class<?> classOfArrayItems;
   private final HumanReadableDocumentation singleLineSummary;
   private final HumanReadableDocumentation longDocumentation;
   private final Optional<HasJsonApiDocumentation> childNode;
 
   private JsonApiArrayDocumentation(
-      Class<?> classContainingArray,
+      Class<?> topLevelClass,
+      Class<?> classOfArrayItems,
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentation,
       Optional<HasJsonApiDocumentation> childNode) {
-    this.classContainingArray = classContainingArray;
+    this.topLevelClass = topLevelClass;
+    this.classOfArrayItems = classOfArrayItems;
     this.singleLineSummary = singleLineSummary;
     this.longDocumentation = longDocumentation;
     this.childNode = childNode;
@@ -69,8 +62,12 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
    *
    * <p> This is similar to what we do for instantiating {@link RBLog}. </p>
    */
-  public Class<?> getClassContainingArray() {
-    return classContainingArray;
+  public Class<?> getTopLevelClass() {
+    return topLevelClass;
+  }
+
+  public Class<?> getClassOfArrayItems() {
+    return classOfArrayItems;
   }
 
   /**
@@ -113,13 +110,14 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
   @Override
   public Class<?> getClassBeingDocumented() {
-    return getClassContainingArray();
+    return getTopLevelClass();
   }
 
   @Override
   public String toString() {
-    return Strings.format("[JAAD %s %s %s %s JACD]",
-        classContainingArray,
+    return Strings.format("[JAAD %s %s %s %s %s JACD]",
+        topLevelClass,
+        classOfArrayItems,
         singleLineSummary,
         longDocumentation,
         formatOptional(childNode));
@@ -128,7 +126,8 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
   public static class JsonApiArrayDocumentationBuilder implements RBBuilder<JsonApiArrayDocumentation> {
 
-    private Class<?> classContainingArray;
+    private Class<?> topLevelClass;
+    private Class<?> classOfArrayItems;
     private HumanReadableDocumentation singleLineSummary;
     private HumanReadableDocumentation longDocumentation;
     private Optional<HasJsonApiDocumentation> childNode;
@@ -139,8 +138,13 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
       return new JsonApiArrayDocumentationBuilder();
     }
 
-    public JsonApiArrayDocumentationBuilder setClassContainingArray(Class<?> classContainingArray) {
-      this.classContainingArray = checkNotAlreadySet(this.classContainingArray, classContainingArray);
+    public JsonApiArrayDocumentationBuilder setTopLevelClass(Class<?> topLevelClass) {
+      this.topLevelClass = checkNotAlreadySet(this.topLevelClass, topLevelClass);
+      return this;
+    }
+
+    public JsonApiArrayDocumentationBuilder setClassOfArrayItems(Class<?> classOfArrayItems) {
+      this.classOfArrayItems = checkNotAlreadySet(this.classOfArrayItems, classOfArrayItems);
       return this;
     }
 
@@ -166,20 +170,27 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
     @Override
     public void sanityCheckContents() {
-      RBPreconditions.checkNotNull(classContainingArray);
+      RBPreconditions.checkNotNull(topLevelClass);
+      RBPreconditions.checkNotNull(classOfArrayItems);
       RBPreconditions.checkNotNull(singleLineSummary);
       RBPreconditions.checkNotNull(longDocumentation);
       RBPreconditions.checkNotNull(childNode);
 
       RBPreconditions.checkArgument(
-          !classContainingArray.isEnum(),
+          !topLevelClass.isEnum(),
           "Class %s cannot be an enum! Use JsonApiEnumDocumentation for that case",
-          classContainingArray);
+          topLevelClass);
+
+      RBPreconditions.checkArgument(
+          !topLevelClass.equals(classOfArrayItems),
+          "Both the top-level class and the class of the array items are equal: %s",
+          topLevelClass);
     }
 
     @Override
     public JsonApiArrayDocumentation buildWithoutPreconditions() {
-      return new JsonApiArrayDocumentation(classContainingArray, singleLineSummary, longDocumentation, childNode);
+      return new JsonApiArrayDocumentation(
+          topLevelClass, classOfArrayItems, singleLineSummary, longDocumentation, childNode);
     }
 
   }
