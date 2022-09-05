@@ -9,7 +9,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.LongFunction;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,6 +20,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
+import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.text.Strings.sizePrefix;
 
@@ -243,6 +247,41 @@ public class RBSet<T> implements Iterable<T> {
         "This method does not let us put duplicates in the set; transformAllowingDuplicates does. Set was: %s",
         this);
     return new RBSet<>(transformedSet);
+  }
+
+  /**
+   * Transform a set, but throw an exception if the transformed values aren't all unique. Uniqueness is determined by
+   * the equals & hashCode methods passed.
+   *
+   * <p> For example, if we transform an {@link RBSet} of ints, and the transformer is i -> "x", meaning we always
+   * map to a constant string, then running this method on a set of 2 or more items will always result in
+   * an exception. </p>
+   */
+  public <T1> RBSet<T1> transformAllowingDuplicates(
+      Function<T, T1> transformer,
+      BiPredicate<T1, T1> equalsImplementation,
+      Function<T1, Integer> hashCodeImplementation) {
+    MutableRBSet<Pair<T1, Object>> temporarySet = newMutableRBSetWithExpectedSize(this.size());
+    forEach(originalValue -> {
+      T1 transformedValue = transformer.apply(originalValue);
+      Pair<T1, Object> pairWithWrappedValue = pair(transformedValue, new Object() {
+
+        // FIXME IAK remove yellowness
+        @Override
+        public boolean equals(Object obj) {
+          return equalsImplementation.test( (T1) obj, transformedValue);
+        }
+
+        @Override
+        public int hashCode() {
+          return hashCodeImplementation.apply(transformedValue);
+        }
+      });
+      // Not using addAssumingAbsent; duplicates are allowed here (duplicates subject to the
+      // equalsImplementation and hashCodeImplementation passed in).
+      temporarySet.add(pairWithWrappedValue);
+    });
+    return newRBSet(temporarySet).transform(pair -> pair.getLeft());
   }
 
   /**
