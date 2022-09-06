@@ -14,10 +14,14 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
+import static com.rb.nonbiz.json.RBGson.jsonDouble;
+import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonBigDecimalOrThrow;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFraction;
 
@@ -25,11 +29,13 @@ import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFract
  * Converts a {@link WeightedBySignedFraction} back and forth to JSON for our public API.
  *
  * <p> Note that this converts a WeightedBySignedFraction to a JSON object that contains
- * a double keyed by "weight" and a JsonElement keyed by "item". That is, the "item" can
+ * a double keyed by "weight" and a JsonElement keyed by "item". That is, the "item"
  * is a JSON element and can be of any JSON type: boolean, String, double, Object, or Array. </p>
  *
  * <p> This does not implement JsonRoundTripConverter because we need to supply serializers
  * and deserializers. </p>
+ *
+ * @see SignedFraction
  */
 public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocumentation{
 
@@ -73,12 +79,16 @@ public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocum
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(WeightedBySignedFraction.class)
-        .setSingleLineSummary(documentation("A single item with a SignedFraction weight."))
-        .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
+        .setSingleLineSummary(documentation("A single item with a `SignedFraction` weight."))
+        .setLongDocumentation(documentation(asSingleLine(
+            "The 'weight' can be any number, either positive, negative, or zero, ",
+            "and of any magnitude.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
-        .noNontrivialSampleJsonSupplied()
+        .setNontrivialSampleJson(jsonObject(
+            "weight", jsonDouble(0.123),
+            "item",   jsonString("sample item")))
         .build();
   }
 
