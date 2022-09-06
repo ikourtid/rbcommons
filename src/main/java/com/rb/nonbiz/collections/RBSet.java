@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -250,13 +251,33 @@ public class RBSet<T> implements Iterable<T> {
    * Transform a set, but throw an exception if the transformed values aren't all unique. Uniqueness is determined by
    * the equals & hashCode methods passed.
    *
-   * <p> For example, say we transform an {@link RBSet} of Foo, where Foo is an object that does not implement
-   * hashCode or equals - which is common in our codebase. FIXME IAK expand on comment. </p>
+   * <p> This is useful for situations where we want a partial equality (i.e. not compare every member),
+   * or where there's no equality operation that's well-defined enough to add as a method in the data class,
+   * which is something we usually avoid to do. One rare example is if the data class stores verb classes in it,
+   * which cannot really be compared, except for their {@link Class} object.</p>
+   *
+   * <p> Example: T1 is a string filepath, and - for the transformed strings - we only want to compare the
+   * last component ('basename' in UNIX command line terms). In this case, not only can we not modify the
+   * equals/hashCode on the String class (it's standard Java), but even if it's a class we have control over,
+   * we don't want to have such a custom equals method just for this type of comparison. What if we want to
+   * compare the full string in other contexts? </p>
+   *
+   * <p> This is a bit inelegant. An RBSet is supposed to denote two things: that the order is irrelevant,
+   * and that all items inside it are equal, per Object#hashCode() and {@link Object#equals(Object)}.
+   * This methods assumes only that the order is irrelevant. The problem is that there is no existing data class that
+   * fits here: {@link RBSet} makes both assumptions, and {@link List} makes neither assumption. We could add a data
+   * class for that case, with a name like UnorderedCollectionAllowingDuplicates or something.
+   * However, it's not worth the complication, because there aren't enough uses currently
+   * (Sep 2022). So we have to stretch the semantics of the {@link RBSet} a bit in the cases where we use this method,
+   * so that we can expect items that are not equal in the intuitive sense (i.e. where object comparison is just the
+   * default pointer comparison you get from Java), but are equal if we were to use the {@link BiPredicate} passed in.
+   * </p>
    */
   public <T1> RBSet<T1> transformAllowingDuplicates(
       Function<T, T1> transformer,
       BiPredicate<T1, T1> equalsImplementation,
       Function<T1, Integer> hashCodeImplementation) {
+    // Uncommon, but we need to create a class inside this method, which we only use in here.
     class WrapperObject {
       final T1 transformedValue;
 
@@ -280,10 +301,15 @@ public class RBSet<T> implements Iterable<T> {
     }
 
     MutableRBSet<WrapperObject> temporarySet = newMutableRBSetWithExpectedSize(this.size());
-    // Not using addAssumingAbsent; duplicates are allowed here (duplicates subject to the
-    // equalsImplementation and hashCodeImplementation passed in).
+    // Not using addAssumingAbsent; adding a duplicate will not cause an exception here (that is, duplicates
+    // subject to the equalsImplementation and hashCodeImplementation passed in).
+    // Because the underlying MutableRBSet will not store two WrapperObjects with the same equals/hashCode,
+    // adding a duplicate (again, duplicate per equalsImplementation & hashCodeImplementation) will just
+    // replace the previous one, but we don't care, because it's a duplicate anyway.
+    // This way, when we're done with all this, all objects will be unique/non-duplicate.
     forEach(originalValue -> temporarySet.add(new WrapperObject(transformer.apply(originalValue))));
 
+    // Finally, we have to remove this wrapper and return a set of the transformed value inside the wrapper.
     return newRBSet(temporarySet).transform(wrapperObject -> wrapperObject.transformedValue);
   }
 
