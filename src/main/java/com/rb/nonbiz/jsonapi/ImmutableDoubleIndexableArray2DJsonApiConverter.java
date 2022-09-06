@@ -111,7 +111,7 @@ public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonA
             "also access it based on more meaningful keys - not just integer indices.")))
         .setLongDocumentation(documentation(asSingleLine(
             "In addition to accessing the array data by row and column indices, you ",
-            "can use row and column variables. E.g. ",
+            "can use row and column values. E.g. ",
             "<p> <code> double d = array.get(rowValue, columnValue) </code> </p>")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
