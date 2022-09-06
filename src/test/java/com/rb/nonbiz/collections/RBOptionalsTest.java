@@ -15,6 +15,7 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -83,6 +84,26 @@ public class RBOptionalsTest {
     assertFalse(optionalsEqual(Optional.of("a"), Optional.empty()));
     assertFalse(optionalsEqual(Optional.empty(), Optional.of("b")));
     assertFalse(optionalsEqual(Optional.of("a"), Optional.of(123)));
+  }
+
+  @Test
+  public void testOptionalsEqual_usingSuppliedEquality() {
+    // Contrast with previous test #testOptionalsEqual()
+    BiPredicate<String, String> sameFirstLetter = (str1, str2) ->
+        str1.substring(0, 1).equals(str2.substring(0, 1));
+
+    // Same as in the previous test, except that the type has to be the same.
+    assertTrue(optionalsEqual(Optional.empty(), Optional.empty(), sameFirstLetter));
+    assertTrue(optionalsEqual(Optional.of("a"), Optional.of("a"), sameFirstLetter));
+    assertFalse(optionalsEqual(Optional.of("a"), Optional.of("b"), sameFirstLetter));
+    assertFalse(optionalsEqual(Optional.of("a"), Optional.empty(), sameFirstLetter));
+    assertFalse(optionalsEqual(Optional.empty(), Optional.of("b"), sameFirstLetter));
+
+    // ... but also true if the two optionals are present and both start with the same letter.
+    assertTrue(optionalsEqual(Optional.of("aX"), Optional.of("aY"), sameFirstLetter));
+    assertFalse(optionalsEqual(Optional.of("aX"), Optional.of("bY"), sameFirstLetter));
+    assertFalse(optionalsEqual(Optional.of("a"), Optional.empty(), sameFirstLetter));
+    assertFalse(optionalsEqual(Optional.empty(), Optional.of("b"), sameFirstLetter));
   }
 
   @Test

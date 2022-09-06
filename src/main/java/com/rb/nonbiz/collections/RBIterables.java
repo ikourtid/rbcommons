@@ -116,7 +116,7 @@ public class RBIterables {
   }
 
   /**
-   * Returns true if each pair of values in 2 iterables matches the supplied {@link BiPredicate}.
+   * Returns true if each pair of values in 2 iterables returns true for the supplied {@link BiPredicate}.
    *
    * The two iterables which must be of the same size.
    *

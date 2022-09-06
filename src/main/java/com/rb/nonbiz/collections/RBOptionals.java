@@ -65,7 +65,12 @@ public class RBOptionals {
 
   /**
    * Similar to the 2-argument method, except that, instead of relying on #equals and #hashCode,
-   * an arbitrary equality operator can be passed in. FIXME IAK test this
+   * an arbitrary equality operator can be passed in.
+   *
+   * <p> This is useful for situations where we want a partial equality (i.e. not compare every member),
+   * or where there's no equality operation that's well-defined enough to add as a method in the data class,
+   * which is something we usually avoid to do. One rare example is if the data class stores verb classes in it,
+   * which cannot really be compared, except for their {@link Class} object.</p>
    */
   public static <A, B> boolean optionalsEqual(Optional<A> o1, Optional<B> o2, BiPredicate<A, B> equalityPredicate) {
     if (!o1.isPresent()) {

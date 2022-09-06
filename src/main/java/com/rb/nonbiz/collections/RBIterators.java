@@ -163,8 +163,7 @@ public class RBIterators {
   }
 
   /**
-   * This 'pastes' (in the unix utility sense) 2 iterators (assumed to have the same # of elements)
-   * and returns true if all pairs match the supplied {@link BiPredicate}.
+   * Returns true if each pair of values in 2 iterators returns true for the supplied {@link BiPredicate}.
    *
    * It will also have a precondition that they have the same number of items.
    *
@@ -176,7 +175,8 @@ public class RBIterators {
     while (iter1.hasNext() && iter2.hasNext()) {
       if (!biPredicate.test(iter1.next(), iter2.next())) {
         allTrue = false;
-        // We will not exit the loop here, because we want to get to the final precondition.
+        // We will not exit the loop here, because we want to get to the final precondition and allow it to throw
+        // if the two iterators do not have the same number of items.
       }
     }
     RBPreconditions.checkArgument(!iter1.hasNext() && !iter2.hasNext());
