@@ -25,6 +25,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
+import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
 /**
  * Convert a {@link Range} back and forth to JSON for our public API.
@@ -110,12 +111,13 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
     return jsonApiClassDocumentationBuilder()
         .setClass(Range.class)
         .setSingleLineSummary(documentation("A range holds an optional lower bound and an optional upper bound."))
-        .setLongDocumentation(documentation(asSingleLine(
-            "This only supports 'closed' ranges for which either endpoint, if present, is part of the range. ",
-            "That is, the closed range [1, 10] is supported, but the semi-open range (1, 10] is not. ",
-            "Omit the 'min' property to signify a range extending down to -inf, and omit the 'max' property to ",
-            "signfigy a range extending up to +inf. ",
-            "Both endpoints can be omitted to specify an unlimited range.")))
+        .setLongDocumentation(documentation(asSingleLineWithNewlines(
+            "<p> This only supports 'closed' ranges for which either endpoint, if present, is part of the range.",
+            "That is, the closed range [1, 10] is supported, but the semi-open range (1, 10] (which excludes the point 1)",
+            "is not. </p>",
+            "<p> Omit the 'min' property to signify a range extending down to -inf, and omit the 'max' property to ",
+            "signify a range extending up to +inf. </p> ",
+            "<p> Both 'min' and 'max' can be omitted to specify an unlimited range. </p>")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .setTrivialSampleJson(emptyJsonObject())
