@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -162,6 +163,27 @@ public class RBIterators {
   }
 
   /**
+   * This 'pastes' (in the unix utility sense) 2 iterators (assumed to have the same # of elements)
+   * and returns true if all pairs match the supplied {@link BiPredicate}.
+   *
+   * It will also have a precondition that they have the same number of items.
+   *
+   * The name parallels {@link java.util.stream.Stream#allMatch(Predicate)}.
+   * FIXME IAK YAML test this
+   */
+  public static <T1, T2> boolean allPairsMatch(Iterator<T1> iter1, Iterator<T2> iter2, BiPredicate<T1, T2> biPredicate) {
+    boolean allTrue = true;
+    while (iter1.hasNext() && iter2.hasNext()) {
+      if (!biPredicate.test(iter1.next(), iter2.next())) {
+        allTrue = false;
+        // We will not exit the loop here, because we want to get to the final precondition.
+      }
+    }
+    RBPreconditions.checkArgument(!iter1.hasNext() && !iter2.hasNext());
+    return allTrue;
+  }
+
+  /**
    * Transforms 2 iterators into a new iterator, based on a supplied function.
    * If the iterators have unequal # of items, this will iterator will throw when we're done iterating over it.
    * Of course, we'll only find out at runtime, since we can't consume the 2 input iterators in this method
@@ -197,8 +219,8 @@ public class RBIterators {
       @Override
       public boolean hasNext() {
         int numHasNext = (iter1.hasNext() ? 1 : 0)
-                       + (iter2.hasNext() ? 1 : 0)
-                       + (iter3.hasNext() ? 1 : 0);
+            + (iter2.hasNext() ? 1 : 0)
+            + (iter3.hasNext() ? 1 : 0);
         if (numHasNext == 0) {
           return false;
         } else if (numHasNext == 3) {

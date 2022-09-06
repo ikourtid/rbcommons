@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -112,6 +113,19 @@ public class RBIterables {
    */
   public static <T1, T2> void forEachPair(Iterable<T1> iter1, Iterable<T2> iter2, BiConsumer<T1, T2> biConsumer) {
     RBIterators.forEachPair(iter1.iterator(), iter2.iterator(), biConsumer);
+  }
+
+  /**
+   * Returns true if each pair of values in 2 iterables matches the supplied {@link BiPredicate}.
+   *
+   * The two iterables which must be of the same size.
+   *
+   * The name parallels {@link java.util.stream.Stream#allMatch(Predicate)}.
+   *
+   * FIXME IAK YAML test this
+   */
+  public static <T1, T2> boolean allPairsMatch(Iterable<T1> iter1, Iterable<T2> iter2, BiPredicate<T1, T2> biPredicate) {
+    return RBIterators.allPairsMatch(iter1.iterator(), iter2.iterator(), biPredicate);
   }
 
   /**
