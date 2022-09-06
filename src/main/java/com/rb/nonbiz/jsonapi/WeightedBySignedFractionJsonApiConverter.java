@@ -81,13 +81,13 @@ public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocum
         .setClass(WeightedBySignedFraction.class)
         .setSingleLineSummary(documentation("A single item with a `SignedFraction` weight."))
         .setLongDocumentation(documentation(asSingleLine(
-            "The 'weight' can be any number, either positive, negative, or zero, ",
+            "The 'weight' is a `SignedFraction`, that is, any number, either positive, negative, or zero, ",
             "and of any magnitude.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
         .setNontrivialSampleJson(jsonObject(
-            "weight", jsonDouble(0.123),
+            "weight", jsonDouble(-123.45),
             "item",   jsonString("sample item")))
         .build();
   }
