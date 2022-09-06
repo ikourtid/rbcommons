@@ -168,8 +168,8 @@ public class RBIterators {
    *
    * It will also have a precondition that they have the same number of items.
    *
-   * The name parallels {@link java.util.stream.Stream#allMatch(Predicate)}.
-   * FIXME IAK YAML test this
+   * The name parallels {@link java.util.stream.Stream#allMatch(Predicate)}. That is, this is unrelated to the
+   * test hamcrest matchers.
    */
   public static <T1, T2> boolean allPairsMatch(Iterator<T1> iter1, Iterator<T2> iter2, BiPredicate<T1, T2> biPredicate) {
     boolean allTrue = true;

@@ -120,9 +120,8 @@ public class RBIterables {
    *
    * The two iterables which must be of the same size.
    *
-   * The name parallels {@link java.util.stream.Stream#allMatch(Predicate)}.
-   *
-   * FIXME IAK YAML test this
+   * The name parallels {@link java.util.stream.Stream#allMatch(Predicate)}. That is, this is unrelated to the
+   * test hamcrest matchers.
    */
   public static <T1, T2> boolean allPairsMatch(Iterable<T1> iter1, Iterable<T2> iter2, BiPredicate<T1, T2> biPredicate) {
     return RBIterators.allPairsMatch(iter1.iterator(), iter2.iterator(), biPredicate);

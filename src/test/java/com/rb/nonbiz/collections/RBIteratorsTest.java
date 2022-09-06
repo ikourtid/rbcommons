@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 import com.rb.biz.types.Money;
+import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -351,9 +352,9 @@ public class RBIteratorsTest {
             1e-8));
     assertThat(
         transformToDoubleIterator(ImmutableList.of(
-            zScore(1.1),
-            zScore(2.2),
-            zScore(3.3))
+                zScore(1.1),
+                zScore(2.2),
+                zScore(3.3))
             .iterator()),
         doubleIteratorMatcher(
             ImmutableList.of(1.1, 2.2, 3.3).iterator(),
@@ -614,6 +615,30 @@ public class RBIteratorsTest {
     assertEquals("a", getOnlyElementOrThrow(singletonIterator("a"), DUMMY_STRING));
     assertIllegalArgumentException( () -> getOnlyElementOrThrow(emptyIterator(), DUMMY_STRING));
     assertIllegalArgumentException( () -> getOnlyElementOrThrow(ImmutableList.of("a", "b").iterator(), DUMMY_STRING));
+  }
+
+  @Test
+  public void test_allPairsMatch() {
+    BiFunction<List<String>, List<String>, Boolean> matchChecker = (list1, list2) ->
+            allPairsMatch(
+                list1.iterator(),
+                list2.iterator(),
+                // True if both strings start with the same character.
+                (str1, str2) -> str1.substring(0, 1).equals(str2.substring(0, 1)));
+
+    assertTrue(matchChecker.apply(emptyList(), emptyList()));
+    assertTrue(matchChecker.apply(singletonList("a"), singletonList("a")));
+    assertTrue(matchChecker.apply(singletonList("ax"), singletonList("ay"))); // in this test, we only check the first letter
+    assertTrue(matchChecker.apply(
+        ImmutableList.of("ax", "bx"),
+        ImmutableList.of("ay", "by")));
+
+    assertIllegalArgumentException( () -> matchChecker.apply(
+        singletonList(DUMMY_STRING),
+        emptyList()));
+    assertIllegalArgumentException( () -> matchChecker.apply(
+        singletonList(DUMMY_STRING),
+        ImmutableList.of(DUMMY_STRING, DUMMY_STRING)));
   }
 
   private int getOnlyIndexWithB(String...values) {

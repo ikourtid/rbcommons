@@ -6,12 +6,14 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
+import static com.rb.nonbiz.collections.RBIterables.allPairsMatch;
 import static com.rb.nonbiz.collections.RBIterables.consecutiveNonOverlappingPairs;
 import static com.rb.nonbiz.collections.RBIterables.consecutivePairs;
 import static com.rb.nonbiz.collections.RBIterables.dotProduct;
@@ -25,9 +27,11 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrowsAnyException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class RBIterablesTest {
 
@@ -185,6 +189,30 @@ public class RBIterablesTest {
     assertEquals(
         ImmutableList.of("ab", "ac", "ba", "bc", "ca", "cb"),
         result);
+  }
+
+  @Test
+  public void test_allPairsMatch() {
+    BiFunction<List<String>, List<String>, Boolean> matchChecker = (list1, list2) ->
+        allPairsMatch(
+            list1,
+            list2,
+            // True if both strings start with the same character.
+            (str1, str2) -> str1.substring(0, 1).equals(str2.substring(0, 1)));
+
+    assertTrue(matchChecker.apply(emptyList(), emptyList()));
+    assertTrue(matchChecker.apply(singletonList("a"), singletonList("a")));
+    assertTrue(matchChecker.apply(singletonList("ax"), singletonList("ay"))); // in this test, we only check the first letter
+    assertTrue(matchChecker.apply(
+        ImmutableList.of("ax", "bx"),
+        ImmutableList.of("ay", "by")));
+
+    assertIllegalArgumentException( () -> matchChecker.apply(
+        singletonList(DUMMY_STRING),
+        emptyList()));
+    assertIllegalArgumentException( () -> matchChecker.apply(
+        singletonList(DUMMY_STRING),
+        ImmutableList.of(DUMMY_STRING, DUMMY_STRING)));
   }
 
   private int getOnlyIndexWithB(String...values) {
