@@ -22,7 +22,10 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstru
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
+import static com.rb.nonbiz.json.RBJsonArrays.jsonDoubleArray;
+import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
@@ -106,11 +109,20 @@ public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonA
         .setSingleLineSummary(documentation(asSingleLine(
             "An indexable 2-D array is like a regular 2-D array, except that you can ",
             "also access it based on more meaningful keys - not just integer indices.")))
-        .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
+        .setLongDocumentation(documentation(asSingleLine(
+            "In addition to accessing the array data by row and column indices, you ",
+            "can use row and column variables. E.g. ",
+            "<p> <code> double d = array.get(rowValue, columnValue) </code> </p>")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
-        .noNontrivialSampleJsonSupplied()
+        .setNontrivialSampleJson(jsonObject(
+            "rowKeys",    jsonStringArray("a", "b", "c"),
+            "columnKeys", jsonStringArray("100", "200"),
+            "data", jsonArray(
+                jsonDoubleArray(7.1, 7.2),
+                jsonDoubleArray(8.1, 8.2),
+                jsonDoubleArray(9.1, 9.2))))
         .build();
   }
 
