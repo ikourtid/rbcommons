@@ -102,4 +102,5 @@ public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocu
             "data", jsonLongArray(100L, 200L, 300L)))
         .build();
   }
+
 }
