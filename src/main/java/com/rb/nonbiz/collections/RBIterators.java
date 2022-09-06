@@ -165,10 +165,15 @@ public class RBIterators {
   /**
    * Returns true if each pair of values in 2 iterators returns true for the supplied {@link BiPredicate}.
    *
-   * It will also have a precondition that they have the same number of items.
+   * <p> It will also have a precondition that they have the same number of items. </p>
    *
-   * The name parallels {@link java.util.stream.Stream#allMatch(Predicate)}. That is, this is unrelated to the
-   * test hamcrest matchers.
+   * <p> This is useful for situations where we want a partial equality (i.e. not compare every member),
+   * or where there's no equality operation that's well-defined enough to add as a method in the data class,
+   * which is something we usually avoid to do. One rare example is if the data class stores verb classes in it,
+   * which cannot really be compared, except for their {@link Class} object.</p>
+   *
+   * <p> The name parallels {@link java.util.stream.Stream#allMatch(Predicate)}. That is, this is unrelated to the
+   * test hamcrest matchers. </p>
    */
   public static <T1, T2> boolean allPairsMatch(Iterator<T1> iter1, Iterator<T2> iter2, BiPredicate<T1, T2> biPredicate) {
     boolean allTrue = true;
