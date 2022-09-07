@@ -27,7 +27,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjects.jsonArrayToSimpleArrayIndexMapping;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
-import static com.rb.nonbiz.text.Strings.asSingleLine;
+import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
 /**
  * Converts an {@link ImmutableIndexableArray1D} back and forth to JSON for our public API.
@@ -87,13 +87,11 @@ public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocu
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(ImmutableIndexableArray1D.class)
-        .setSingleLineSummary(documentation(asSingleLine(
-            "An indexable 1-D array is like a regular 1-D array, except that you can ",
+        .setSingleLineSummary(documentation(asSingleLineWithNewlines(
+            "An indexable 1-D array is like a regular 1-D array, except that you can",
             "also access it based on more meaningful keys - not just an integer index.")))
-        .setLongDocumentation(documentation(asSingleLine(
-            "In addition to accessing the array data by an index, you ",
-            "can use key values. E.g. ",
-            "<p> <code> ArrayValue v = array.get(keyValue) </code> </p>")))
+        .setLongDocumentation(documentation(
+            "The key values must be unique."))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
