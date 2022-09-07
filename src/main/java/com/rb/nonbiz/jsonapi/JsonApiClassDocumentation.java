@@ -253,7 +253,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return hasChildJsonApiConverters(concatenateFirstSecondAndRest(first, second, rest));
     }
 
-    public JsonApiClassDocumentationBuilder hasSingleJsonApiConverter(HasJsonApiDocumentation onlyItem) {
+    public JsonApiClassDocumentationBuilder hasSingleChildJsonApiConverter(HasJsonApiDocumentation onlyItem) {
       return hasChildJsonApiConverters(singletonList(onlyItem));
     }
 
