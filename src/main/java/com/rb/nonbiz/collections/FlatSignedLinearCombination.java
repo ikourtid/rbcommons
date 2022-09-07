@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.SignedFraction;
+import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.types.WeightedBySignedFraction;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -21,7 +22,8 @@ import static java.util.Collections.singletonList;
  * A collection of weighted items, similar to {@link FlatLinearCombination},
  * except that it allows both positive and negative weights (but not zero).
  *
- * <p> Also, the weights are SignedFractions, which are not constrained to be &le; 1, as UnitFractions are. </p>
+ * <p> Also, the weights are {@link SignedFraction}s, which are not constrained to be &le; 1, as
+ * {@link UnitFraction}s are. </p>
  *
  * @see FlatLinearCombination
  * @see Partition

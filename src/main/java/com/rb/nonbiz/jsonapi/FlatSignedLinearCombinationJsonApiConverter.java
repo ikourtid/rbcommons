@@ -8,8 +8,12 @@ import com.rb.nonbiz.collections.FlatSignedLinearCombination;
 import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.FlatSignedLinearCombination.flatSignedLinearCombination;
+import static com.rb.nonbiz.json.RBGson.jsonDouble;
+import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.iteratorToJsonArray;
+import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
@@ -63,9 +67,18 @@ public class FlatSignedLinearCombinationJsonApiConverter implements HasJsonApiDo
             "except that it allows both positive and negative weights (but not zero).")))
         .hasNoJsonValidationInstructions()
         .hasSingleChildJsonApiConverter(weightedBySignedFractionJsonApiConverter)
-        .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
+        .setLongDocumentation(documentation("The items are all of the same (arbitrary) type."))
         .noTrivialSampleJsonSupplied()
-        .noNontrivialSampleJsonSupplied()
+        .setNontrivialSampleJson(jsonArray(
+            jsonObject(
+                "weight", jsonDouble(-0.111),
+                "item",   jsonString("aaa")),
+            jsonObject(
+                "weight", jsonDouble( 0.222),
+                "item",   jsonString("bbb")),
+            jsonObject(
+                "weight", jsonDouble( 333.0),
+                "item",   jsonString("ccc"))))
         .build();
   }
 
