@@ -85,7 +85,7 @@ public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocum
             "The 'weight' is a `SignedFraction`, that is, any number, either positive, negative, or zero,",
             "and of any magnitude.",
             "<p> `SignedFraction`s are used in similar contexts to `UnitFraction`s, which are constrainded to be in",
-            "the range [0.0, 1.0]. `SignedFraction`s, however, are allowed to go outside those bounds. </p>")))
+            "the range [0.0, 1.0]. `SignedFraction`s, however, are allowed to go outside of those bounds. </p>")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
