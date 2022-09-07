@@ -110,9 +110,7 @@ public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonA
             "An indexable 2-D array is like a regular 2-D array, except that you can ",
             "also access it based on more meaningful keys - not just integer indices.")))
         .setLongDocumentation(documentation(asSingleLine(
-            "In addition to accessing the array data by row and column indices, you ",
-            "can use row and column values. E.g. ",
-            "<p> <code> double d = array.get(rowValue, columnValue) </code> </p>")))
+            "Column keys must be unique amongst themselves; similarly for row keys.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
