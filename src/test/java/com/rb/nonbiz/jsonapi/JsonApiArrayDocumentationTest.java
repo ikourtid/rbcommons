@@ -28,7 +28,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
         .setClassOfArrayItems(UnitFraction.class)
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
-        .hasNoChildNode()
+        .hasNoJsonApiConverter()
         .build();
   }
 
@@ -41,7 +41,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
         .setClassOfArrayItems(UnitFraction.class)
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
-        .hasChildNode( () -> testJsonApiClassDocumentationWithSeed(BigDecimal.class, ""))
+        .hasJsonApiConverter( () -> testJsonApiClassDocumentationWithSeed(BigDecimal.class, ""))
         .build();
   }
 
@@ -53,7 +53,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
         .setClassOfArrayItems(UnitFraction.class)
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
-        .hasChildNode( () -> testJsonApiClassDocumentationWithSeed(BigDecimal.class, ""))
+        .hasJsonApiConverter( () -> testJsonApiClassDocumentationWithSeed(BigDecimal.class, ""))
         .build();
   }
 
@@ -69,7 +69,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
         matchUsingEquals(v -> v.getClassOfArrayItems()),
         match(           v -> v.getSingleLineSummary(),     f -> humanReadableDocumentationMatcher(f)),
         match(           v -> v.getLongDocumentation(),     f -> humanReadableDocumentationMatcher(f)),
-        matchOptional(   v -> v.getChildNode(),             f -> hasJsonApiDocumentationMatcher(f)));
+        matchOptional(   v -> v.getChildJsonApiConverter(), f -> hasJsonApiDocumentationMatcher(f)));
   }
 
 }

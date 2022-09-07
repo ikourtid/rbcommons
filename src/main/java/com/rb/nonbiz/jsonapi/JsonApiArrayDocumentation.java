@@ -6,7 +6,6 @@ import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
-import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.Optional;
 
@@ -33,19 +32,19 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
   private final Class<?> classOfArrayItems;
   private final HumanReadableDocumentation singleLineSummary;
   private final HumanReadableDocumentation longDocumentation;
-  private final Optional<HasJsonApiDocumentation> childNode;
+  private final Optional<HasJsonApiDocumentation> childJsonApiConverter;
 
   private JsonApiArrayDocumentation(
       Class<?> topLevelClass,
       Class<?> classOfArrayItems,
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentation,
-      Optional<HasJsonApiDocumentation> childNode) {
+      Optional<HasJsonApiDocumentation> childJsonApiConverter) {
     this.topLevelClass = topLevelClass;
     this.classOfArrayItems = classOfArrayItems;
     this.singleLineSummary = singleLineSummary;
     this.longDocumentation = longDocumentation;
-    this.childNode = childNode;
+    this.childJsonApiConverter = childJsonApiConverter;
   }
 
   /**
@@ -89,9 +88,14 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
    * (essentially JSON API converters), which can have multiple JSON API converters in it. Here, however, we can only
    * have 1 (if there exists a separate JSON API converter for the items in the array) or 0 (if those items are
    * converted by the 'whole array' JSON API converter and don't have a separate converter). </p>
+   *
+   * <p> There is no strict concept of a JSON API converter. These are verb classes that are similar in terms of
+   * what they do (convert a Java object back and forth to JSON), but they don't all implement any shared interface
+   * other than {@link HasJsonApiDocumentation}. Using 'JSON API converter' in the name of this is a bit less
+   * correct, but it is much clearer. </p>
    */
-  public Optional<HasJsonApiDocumentation> getChildNode() {
-    return childNode;
+  public Optional<HasJsonApiDocumentation> getChildJsonApiConverter() {
+    return childJsonApiConverter;
   }
 
   /**
@@ -120,7 +124,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
         classOfArrayItems,
         singleLineSummary,
         longDocumentation,
-        formatOptional(childNode));
+        formatOptional(childJsonApiConverter));
   }
 
 
@@ -130,7 +134,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
     private Class<?> classOfArrayItems;
     private HumanReadableDocumentation singleLineSummary;
     private HumanReadableDocumentation longDocumentation;
-    private Optional<HasJsonApiDocumentation> childNode;
+    private Optional<HasJsonApiDocumentation> childJsonApiConverter;
 
     private JsonApiArrayDocumentationBuilder() {}
 
@@ -158,13 +162,13 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
       return this;
     }
 
-    public JsonApiArrayDocumentationBuilder hasChildNode(HasJsonApiDocumentation childNode) {
-      this.childNode = checkNotAlreadySet(this.childNode, Optional.of(childNode));
+    public JsonApiArrayDocumentationBuilder hasJsonApiConverter(HasJsonApiDocumentation childJsonApiConverter) {
+      this.childJsonApiConverter = checkNotAlreadySet(this.childJsonApiConverter, Optional.of(childJsonApiConverter));
       return this;
     }
 
-    public JsonApiArrayDocumentationBuilder hasNoChildNode() {
-      this.childNode = checkNotAlreadySet(this.childNode, Optional.empty());
+    public JsonApiArrayDocumentationBuilder hasNoJsonApiConverter() {
+      this.childJsonApiConverter = checkNotAlreadySet(this.childJsonApiConverter, Optional.empty());
       return this;
     }
 
@@ -174,7 +178,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
       RBPreconditions.checkNotNull(classOfArrayItems);
       RBPreconditions.checkNotNull(singleLineSummary);
       RBPreconditions.checkNotNull(longDocumentation);
-      RBPreconditions.checkNotNull(childNode);
+      RBPreconditions.checkNotNull(childJsonApiConverter);
 
       RBPreconditions.checkArgument(
           !topLevelClass.isEnum(),
@@ -190,7 +194,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
     @Override
     public JsonApiArrayDocumentation buildWithoutPreconditions() {
       return new JsonApiArrayDocumentation(
-          topLevelClass, classOfArrayItems, singleLineSummary, longDocumentation, childNode);
+          topLevelClass, classOfArrayItems, singleLineSummary, longDocumentation, childJsonApiConverter);
     }
 
   }

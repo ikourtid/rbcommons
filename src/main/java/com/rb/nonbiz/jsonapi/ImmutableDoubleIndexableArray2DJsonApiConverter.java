@@ -112,7 +112,7 @@ public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonA
         .setLongDocumentation(documentation(asSingleLine(
             "Column keys must be unique amongst themselves; similarly for row keys.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
-        .hasNoChildNodes()
+        .hasNoChildJsonApiConverters()
         .noTrivialSampleJsonSupplied()
         .setNontrivialSampleJson(jsonObject(
             "rowKeys",    jsonStringArray("a", "b", "c"),

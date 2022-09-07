@@ -66,7 +66,7 @@ public class FlatSignedLinearCombinationJsonApiConverter implements HasJsonApiDo
             "A collection of weighted items, similar to FlatLinearCombination ",
             "except that it allows both positive and negative weights (but not zero).")))
         .hasNoJsonValidationInstructions()
-        .hasChildNode(weightedBySignedFractionJsonApiConverter)
+        .hasSingleChildJsonApiConverter(weightedBySignedFractionJsonApiConverter)
         .setLongDocumentation(documentation("The items are all of the same (arbitrary) type."))
         .noTrivialSampleJsonSupplied()
         .setNontrivialSampleJson(jsonArray(
