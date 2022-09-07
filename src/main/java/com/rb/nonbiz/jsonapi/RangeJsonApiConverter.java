@@ -112,7 +112,7 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
         .setClass(Range.class)
         .setSingleLineSummary(documentation("A range holds an optional lower bound and an optional upper bound."))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
-            "<p> This only supports 'closed' ranges for which either endpoint, if present, is part of the range.",
+            "<p> This only supports ranges for which either endpoint, if present, is part of the range.",
             "That is, the closed range [1, 10] is supported, but the semi-open range (1, 10] (which excludes the point 1)",
             "is not. </p>",
             "<p> Omit the 'min' property to signify a range extending down to -inf, and omit the 'max' property to ",
@@ -122,8 +122,8 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
         .hasNoChildNodes()
         .setTrivialSampleJson(emptyJsonObject())
         .setNontrivialSampleJson(jsonObject(
-            "min", jsonDouble(1.1),
-            "max", jsonDouble(9.9)))
+            "min", jsonDouble(-1.1),
+            "max", jsonDouble( 9.9)))
         .build();
   }
 

@@ -22,13 +22,14 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
+import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFraction;
 
 /**
  * Converts a {@link WeightedBySignedFraction} back and forth to JSON for our public API.
  *
- * <p> Note that this converts a WeightedBySignedFraction to a JSON object that contains
+ * <p> Note that this converts a {@link WeightedBySignedFraction} to a JSON object that contains
  * a double keyed by "weight" and a JsonElement keyed by "item". That is, the "item"
  * is a JSON element and can be of any JSON type: boolean, String, double, Object, or Array. </p>
  *
@@ -80,9 +81,11 @@ public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocum
     return jsonApiClassDocumentationBuilder()
         .setClass(WeightedBySignedFraction.class)
         .setSingleLineSummary(documentation("A single item with a `SignedFraction` weight."))
-        .setLongDocumentation(documentation(asSingleLine(
-            "The 'weight' is a `SignedFraction`, that is, any number, either positive, negative, or zero, ",
-            "and of any magnitude.")))
+        .setLongDocumentation(documentation(asSingleLineWithNewlines(
+            "The 'weight' is a `SignedFraction`, that is, any number, either positive, negative, or zero,",
+            "and of any magnitude.",
+            "<p> `SignedFraction`s are used in similar contexts to `UnitFraction`s, which are constrainded to be in",
+            "the range [0.0, 1.0]. `SignedFraction`s, however, are allowed to go outside those bounds. </p>")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildNodes()
         .noTrivialSampleJsonSupplied()
