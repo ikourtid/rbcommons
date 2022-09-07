@@ -87,7 +87,7 @@ public class JsonApiClassDocumentationTest extends RBTestMatcher<JsonApiClassDoc
         match(           v -> v.getSingleLineSummary(),          f -> humanReadableDocumentationMatcher(f)),
         match(           v -> v.getLongDocumentation(),          f -> humanReadableDocumentationMatcher(f)),
         match(           v -> v.getJsonValidationInstructions(), f -> jsonValidationInstructionsMatcher(f)),
-        matchList(       v -> v.getChildJsonApiConverters(), f -> hasJsonApiDocumentationMatcher(f)),
+        matchList(       v -> v.getChildJsonApiConverters(),     f -> hasJsonApiDocumentationMatcher(f)),
         matchOptional(   v -> v.getTrivialSampleJson(),          f -> jsonElementMatcher(f, 1e-8)),
         matchOptional(   v -> v.getNontrivialSampleJson(),       f -> jsonElementMatcher(f, 1e-8)));
   }
