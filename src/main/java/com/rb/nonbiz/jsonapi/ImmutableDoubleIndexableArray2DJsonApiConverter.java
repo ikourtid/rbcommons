@@ -108,7 +108,7 @@ public class ImmutableDoubleIndexableArray2DJsonApiConverter implements HasJsonA
             "also access it based on more meaningful keys - not just integer indices.")))
         .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
-        .hasNoChildNodes()
+        .hasNoChildJsonApiConverters()
         .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()
         .build();

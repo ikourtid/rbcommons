@@ -108,7 +108,7 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
         .setSingleLineSummary(documentation("A range holds an optional lower bound and an optional upper bound."))
         .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
-        .hasNoChildNodes()
+        .hasNoChildJsonApiConverters()
         .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()
         .build();

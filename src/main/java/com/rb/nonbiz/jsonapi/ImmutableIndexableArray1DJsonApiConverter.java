@@ -89,7 +89,7 @@ public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocu
             "also access it based on more meaningful keys - not just an integer index.")))
         .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
-        .hasNoChildNodes()
+        .hasNoChildJsonApiConverters()
         .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()
         .build();
