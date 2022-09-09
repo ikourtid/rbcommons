@@ -113,7 +113,8 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
 
   @Override
   public String toString() {
-    return Strings.format("[JACWSD %s %s %s %s %s %s %s JACWSD]",
+    return Strings.format(
+        "[JACWSD %s %s %s %s discriminatorProperty= %s ; trivialSampleJson= %s ; nontrivialSampleJson= %s JACWSD]",
         classBeingDocumented,
         singleLineSummary,
         longDocumentation,
@@ -226,7 +227,7 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
 
       discriminatorProperty.ifPresent(v -> RBPreconditions.checkArgument(
           !v.isEmpty(),
-          "The discriminator property cannot be empty"));
+          "If the optional discriminator property is present, it cannot be the empty string."));
     }
 
     @Override
