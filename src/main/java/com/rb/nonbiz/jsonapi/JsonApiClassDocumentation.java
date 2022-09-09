@@ -316,6 +316,9 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
    * Use this for creating {@link JsonApiDocumentation} for simple primitives that are simple wrappers
    * around {@link RBNumeric}. The #nontrivialSampleJson is not optional here; it's small enough in the case of
    * numeric wrappers that it should always be specified.
+   *
+   * Numeric wrapper does not necessarily mean that it extends {@link RBNumeric}. It could be that it's a class
+   * that only includes an {@link RBNumeric} inside it (i.e. object composition instead of inheritance.
    */
   public static class JsonApiRbNumericWrapperDocumentationBuilder implements RBBuilder<JsonApiClassDocumentation> {
 
@@ -330,8 +333,10 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return new JsonApiRbNumericWrapperDocumentationBuilder();
     }
 
-    public <T extends RBNumeric<? extends T>> JsonApiRbNumericWrapperDocumentationBuilder
-    setClassBeingDocumented(Class<T> classBeingDocumented) {
+    // This cannot be <T extends RBNumeric<? extends T>>, because there are classes that are simple wrappers
+    // around a RbNumericWrapper, but use object composition instead of inheritance. See this builder's class javadoc.
+    public JsonApiRbNumericWrapperDocumentationBuilder
+    setClassBeingDocumented(Class<?> classBeingDocumented) {
       this.classBeingDocumented = checkNotAlreadySet(this.classBeingDocumented, classBeingDocumented);
       return this;
     }
