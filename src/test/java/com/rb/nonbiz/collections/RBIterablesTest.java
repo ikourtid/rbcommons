@@ -31,6 +31,7 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class RBIterablesTest {
@@ -206,6 +207,10 @@ public class RBIterablesTest {
     assertTrue(matchChecker.apply(
         ImmutableList.of("ax", "bx"),
         ImmutableList.of("ay", "by")));
+
+    assertFalse(matchChecker.apply(
+        ImmutableList.of("xa", "xb"),
+        ImmutableList.of("ya", "yb")));
 
     assertIllegalArgumentException( () -> matchChecker.apply(
         singletonList(DUMMY_STRING),
