@@ -228,11 +228,11 @@ public abstract class JsonApiPropertyDescriptor {
       return simpleClassJsonApiPropertyDescriptor(clazz, Optional.of(jsonPropertySpecificDocumentation));
     }
 
-    public static SimpleClassJsonApiPropertyDescriptor simpleClassJsonApiPropertyDescriptor(
-        String documentationString) {
+    public static SimpleClassJsonApiPropertyDescriptor simpleUnknownClassJsonApiPropertyDescriptor(
+        JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
       return simpleClassJsonApiPropertyDescriptor(
           UNKNOWN_CLASS_OF_JSON_PROPERTY,
-          Optional.of(jsonPropertySpecificDocumentation(documentationString)));
+          Optional.of(jsonPropertySpecificDocumentation));
     }
 
     /**
