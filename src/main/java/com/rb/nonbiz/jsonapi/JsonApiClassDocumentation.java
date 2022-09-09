@@ -330,7 +330,8 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return new JsonApiRbNumericWrapperDocumentationBuilder();
     }
 
-    public JsonApiRbNumericWrapperDocumentationBuilder setClassBeingDocumented(Class<?> classBeingDocumented) {
+    public <T extends RBNumeric<? extends T>> JsonApiRbNumericWrapperDocumentationBuilder
+    setClassBeingDocumented(Class<T> classBeingDocumented) {
       this.classBeingDocumented = checkNotAlreadySet(this.classBeingDocumented, classBeingDocumented);
       return this;
     }
