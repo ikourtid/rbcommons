@@ -16,15 +16,7 @@ import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
-import static com.rb.nonbiz.text.Strings.asSingleLine;
-import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
-import static com.rb.nonbiz.text.Strings.firstCharacterIsWhitespace;
-import static com.rb.nonbiz.text.Strings.formatCollectionInOrder;
-import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
-import static com.rb.nonbiz.text.Strings.formatOptionalPrintsInstruments;
-import static com.rb.nonbiz.text.Strings.joinWithHarvardComma;
-import static com.rb.nonbiz.text.Strings.lastCharacterIsWhitespace;
-import static com.rb.nonbiz.text.Strings.toTrimmedStandaloneSentence;
+import static com.rb.nonbiz.text.Strings.*;
 import static com.rb.nonbiz.types.PreciseValue.formatWithoutCommas;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.reverseOrder;
@@ -206,20 +198,20 @@ public class StringsTest {
 
   @Test
   public void testFirstCharacterIsWhitespace() {
-    rbSetOf(" ", "  ", " x", " x ", "\t", "\tx")
-        .forEach(startsWithWhitespace -> assertTrue(firstCharacterIsWhitespace(startsWithWhitespace)));
+    rbSetOf("", " ", "!", "\t", "9", " x", "!x", "\tx", "9x")
+        .forEach(v -> assertFalse("Problem with " + v, firstCharacterIsAlphabetic(v)));
 
-    rbSetOf("", "x", "x ", "x y")
-        .forEach(doesNotStartWithWhitespace -> assertFalse(firstCharacterIsWhitespace(doesNotStartWithWhitespace)));
+    rbSetOf("x", "x ", "x!", "xy")
+        .forEach(v -> assertTrue("Problem with " + v, firstCharacterIsAlphabetic(v)));
   }
 
   @Test
   public void testLastCharacterIsWhitespace() {
-    rbSetOf(" ", "  ", "x ", " x ", "\t", "x\t")
-        .forEach(startsWithWhitespace -> assertTrue(lastCharacterIsWhitespace(startsWithWhitespace)));
+    rbSetOf("", " ", "!", "\t", "9", " x", "!x", "\tx", "9x")
+        .forEach(v -> assertFalse("Problem with " + v, lastCharacterIsAlphabetic(v)));
 
-    rbSetOf("", "x", " x", "x y")
-        .forEach(doesNotStartWithWhitespace -> assertFalse(lastCharacterIsWhitespace(doesNotStartWithWhitespace)));
+    rbSetOf("x", "x ", "x!", "xy")
+        .forEach(v -> assertTrue("Problem with " + v, lastCharacterIsAlphabetic(v)));
   }
 
 }
