@@ -207,10 +207,10 @@ public class StringsTest {
 
   @Test
   public void testLastCharacterIsWhitespace() {
-    rbSetOf("", " ", "!", "\t", "9", " x", "!x", "\tx", "9x")
+    rbSetOf("", " ", "!", "\t", "9", "x ", "x!", "x\t", "x9")
         .forEach(v -> assertFalse("Problem with " + v, lastCharacterIsAlphabetic(v)));
 
-    rbSetOf("x", "x ", "x!", "xy")
+    rbSetOf("x", " x", "!x", "xy")
         .forEach(v -> assertTrue("Problem with " + v, lastCharacterIsAlphabetic(v)));
   }
 
