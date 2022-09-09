@@ -30,6 +30,7 @@ import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonStringOrThrow;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
@@ -225,6 +226,13 @@ public abstract class JsonApiPropertyDescriptor {
     public static SimpleClassJsonApiPropertyDescriptor simpleClassJsonApiPropertyDescriptor(
         Class<?> clazz, JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
       return simpleClassJsonApiPropertyDescriptor(clazz, Optional.of(jsonPropertySpecificDocumentation));
+    }
+
+    public static SimpleClassJsonApiPropertyDescriptor simpleUnknownClassJsonApiPropertyDescriptor(
+        JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
+      return simpleClassJsonApiPropertyDescriptor(
+          UNKNOWN_CLASS_OF_JSON_PROPERTY,
+          Optional.of(jsonPropertySpecificDocumentation));
     }
 
     /**

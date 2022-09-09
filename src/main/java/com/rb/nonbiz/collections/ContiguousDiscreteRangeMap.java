@@ -41,7 +41,8 @@ public class ContiguousDiscreteRangeMap<K extends Comparable<? super K>, V> {
         nonContiguousMap.getRawRangeMap().asDescendingMapOfRanges().keySet(),
         // Inverted order (range2, range1) is intentional; it effectively reverses the order of asDescendingMapOfRanges.
         (range2, range1) -> (nextItemGenerator.apply(range1.upperEndpoint()).equals(range2.lowerEndpoint())),
-        "The %s ranges specified are not contiguous");
+        "The %s ranges specified are not contiguous.",
+        nonContiguousMap.getRawRangeMap().asDescendingMapOfRanges().size());
     return new ContiguousDiscreteRangeMap<K, V>(nonContiguousMap);
   }
 
