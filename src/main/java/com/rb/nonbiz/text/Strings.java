@@ -13,8 +13,10 @@ import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.ImmutableIndexableArray1D;
 import com.rb.nonbiz.collections.NonZeroDeviations;
 import com.rb.nonbiz.collections.Partition;
+import com.rb.nonbiz.collections.RBIterators;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.types.UnitFraction;
+import org.checkerframework.checker.units.qual.C;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -31,6 +33,7 @@ import static com.rb.biz.marketdata.instrumentmaster.InstrumentMasters.displaySy
 import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_INSTRUMENT_MASTER;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 import static java.lang.Character.isUpperCase;
+import static java.lang.Character.isWhitespace;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
 import static java.util.Map.Entry.comparingByKey;
@@ -401,13 +404,50 @@ public class Strings {
    * This is handy in situations where we need to create a multiline string,
    * but want to avoid the ugliness of having plus signs in the Java code for concatenation,
    * which messes up indentation.
+   *
+   * <p> This also adds a space between any pair of consecutive lines, in the event that concatenating them
+   * would result in concatenating two words. This method is used for human-readable text, so if the code author
+   * forgot to add spaces between lines, we don't want </p>
    */
-  public static String asSingleLine(String first, String... rest) {
+  public static String asSingleLine(String first, String ... rest) {
     StringBuilder sb = new StringBuilder(first);
-    for (String s : rest) {
+    if (!lastCharacterIsWhitespace(first) && rest.length > 0 && !firstCharacterIsWhitespace(rest[0])) {
+      // concatenating the first two lines ('first' and 'rest[0]') might end up joining two words and making the
+      // text illegible, so let's add a space, although ideally the caller would avoid that in the first place.
+      sb.append(' ');
+    }
+    for (int i = 0; i < rest.length; i++) {
+      String s = rest[i];
       sb.append(s);
+      // Similar to previous comment. If the current line doesn't end in whitespace, and there's another line after
+      // it, and that next line doesn't start with a whitespace, add a space between the two lines.
+      if (!lastCharacterIsWhitespace(s) && i < rest.length - 1 && !firstCharacterIsWhitespace(rest[i + 1])) {
+        sb.append(' ');
+      }
     }
     return sb.toString();
+  }
+
+  /**
+   * Returns true if the last character of the string is a whitespace character (space, tab, newline, etc.)
+   * Returns false for an empty string, since an empty string doesn't have a last character.
+   */
+  public static boolean lastCharacterIsWhitespace(String s) {
+    if (s.isEmpty()) {
+      return false;
+    }
+    return isWhitespace(s.charAt(s.length() - 1));
+  }
+
+  /**
+   * Returns true if the last character of the string is a whitespace character (space, tab, newline, etc.)
+   * Returns false for an empty string, since an empty string doesn't have a last character.
+   */
+  public static boolean firstCharacterIsWhitespace(String s) {
+    if (s.isEmpty()) {
+      return false;
+    }
+    return isWhitespace(s.charAt(0));
   }
 
   /**
