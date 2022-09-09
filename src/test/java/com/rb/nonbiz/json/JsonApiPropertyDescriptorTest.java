@@ -17,6 +17,7 @@ import static com.rb.nonbiz.json.CollectionJsonApiPropertyDescriptorTest.collect
 import static com.rb.nonbiz.json.IidMapJsonApiPropertyDescriptorTest.iidMapJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.JavaGenericJsonApiPropertyDescriptorTest.javaGenericJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleUnknownClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.subclassDiscriminatorPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
@@ -32,7 +33,7 @@ public class JsonApiPropertyDescriptorTest extends RBTestMatcher<JsonApiProperty
   @Test
   public void simpleClassJsonApiProperty_alternateConstructors() {
     assertThat(
-        simpleClassJsonApiPropertyDescriptor("document a property"),
+        simpleUnknownClassJsonApiPropertyDescriptor(jsonPropertySpecificDocumentation("document a property")),
         jsonApiPropertyDescriptorMatcher(
             simpleClassJsonApiPropertyDescriptor(
                 UNKNOWN_CLASS_OF_JSON_PROPERTY,
