@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.rb.biz.jsonapi.JsonSerializedEnumStringMap;
+import com.rb.nonbiz.collections.RBOptionalTransformers;
+import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;
@@ -376,7 +378,7 @@ public class RBJsonObjectGetters {
   public static JsonObject getNestedJsonObjectOrThrow(
       JsonObject jsonObject,
       String firstProperty,
-      String...restOfProperties) {
+      String ... restOfProperties) {
     // get the first level nested object
     JsonObject innerJsonObject = getJsonObjectOrThrow(jsonObject, firstProperty);
     if (restOfProperties.length == 0) {
@@ -387,6 +389,33 @@ public class RBJsonObjectGetters {
     // not innermost? call recursively...
     String[] restExceptFirst = Arrays.copyOfRange(restOfProperties, 1, restOfProperties.length);
     return getNestedJsonObjectOrThrow(innerJsonObject, restOfProperties[0], restExceptFirst);
+  }
+
+  /**
+   * Extracts a nested / inner {@link JsonObject} when all the properties in its
+   * 'path' are present, if you think of the consecutive properties as folders in a filesystem.
+   *
+   * <p> Returns empty optional if the 'path' is not valid.
+   * If the path is valid, but the last {@link JsonElement} is not a {@link JsonObject}, this throws an exception. </p>
+   */
+  public static Optional<JsonObject> getOptionalNestedJsonObject(
+      JsonObject jsonObject,
+      String firstProperty,
+      String ... restOfProperties) {
+    return transformOptional2(
+        getOptionalJsonObject(jsonObject, firstProperty),
+        // if the first subobject is not there, transformOptional2 won't evaluate the code below, and just return empty.
+        firstInnerJsonObject -> {
+          JsonObject foo = firstInnerJsonObject;
+          if (restOfProperties.length == 0) {
+            // innermost nesting; return
+            return Optional.of(firstInnerJsonObject);
+          }
+
+          // not innermost? call recursively...
+          String[] restExceptFirst = Arrays.copyOfRange(restOfProperties, 1, restOfProperties.length);
+          return getOptionalNestedJsonObject(firstInnerJsonObject, restOfProperties[0], restExceptFirst);
+        });
   }
 
   /**
