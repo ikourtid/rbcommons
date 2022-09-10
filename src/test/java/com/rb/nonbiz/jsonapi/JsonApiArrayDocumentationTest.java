@@ -23,6 +23,11 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
 
   @Override
   public JsonApiArrayDocumentation makeTrivialObject() {
+    // Except for the documentation, the fields below are not realistic, but rbcommons does not have access
+    // to rbbizinfra, where a lot of our business logic classes lie, so it's hard to make this realistic.
+    // The realistic example would have been
+    //   .setClassBeingDocumented(SingleInstrumentOrderedTaxLots.class)
+    //   .setClassOfArrayItems(TaxLot.class)
     return jsonApiArrayDocumentationBuilder()
         .setClassBeingDocumented(ClosedRange.class)
         .setClassOfArrayItems(UnitFraction.class)
@@ -36,6 +41,9 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
   public JsonApiArrayDocumentation makeNontrivialObject() {
     // Except for the documentation, the fields below are not realistic, but rbcommons does not have access
     // to rbbizinfra, where a lot of our business logic classes lie, so it's hard to make this realistic.
+    // The realistic example would have been
+    //   .setClassBeingDocumented(SingleInstrumentOrderedTaxLots.class)
+    //   .setClassOfArrayItems(TaxLot.class)
     return jsonApiArrayDocumentationBuilder()
         .setClassBeingDocumented(ClosedRange.class)
         .setClassOfArrayItems(UnitFraction.class)
