@@ -86,7 +86,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
    * <p> For example, we want the page that describes MarketInfo to also have links to
    * CurrentMarketInfo and DailyMarketInfo. </p>
    *
-   * <p> Other implementers of {@link JsonApiDocumentation} have a list of {@link HasJsonApiDocumentation}
+   * <p> Other implementers of {@link JsonApiDocumentation} each have a list of {@link HasJsonApiDocumentation}
    * (essentially JSON API converters), which can have multiple JSON API converters in it. Here, however, we can only
    * have 1 (if there exists a separate JSON API converter for the items in the array) or 0 (if those items are
    * converted by the 'whole array' JSON API converter and don't have a separate converter). </p>
@@ -184,7 +184,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
       RBPreconditions.checkArgument(
           !classBeingDocumented.equals(classOfArrayItems),
-          "Both the class being documented and the class of the array items are equal: %s",
+          "Both the class being documented and the class of its array items are equal: %s",
           classBeingDocumented);
     }
 
