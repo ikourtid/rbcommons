@@ -20,7 +20,8 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
  * <p> Note that the other implementers of {@link JsonApiDocumentation} store a {@link JsonValidationInstructions}
  * to allow us to validate that a JSON object has correct properties. An array, however, does not have any properties.
  * So we can't validate anything, other than the fact that the items inside the array are valid.
- * However, that gets validated by the (separate) JSON API converter that converts the items inside the array. </p>
+ * However, the validation of a single array item is performed by the (separate) JSON API converter
+ * that converts the items inside the array. </p>
  *
  * <p> Also, those other implementers of {@link JsonApiDocumentation} have sample JSON in them. However,
  * since this is an array, there's no need for sample JSON for the entire array; some sample JSON for the array items
@@ -28,19 +29,19 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
  */
 public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
-  private final Class<?> topLevelClass;
+  private final Class<?> classBeingDocumented;
   private final Class<?> classOfArrayItems;
   private final HumanReadableDocumentation singleLineSummary;
   private final HumanReadableDocumentation longDocumentation;
   private final Optional<HasJsonApiDocumentation> childJsonApiConverter;
 
   private JsonApiArrayDocumentation(
-      Class<?> topLevelClass,
+      Class<?> classBeingDocumented,
       Class<?> classOfArrayItems,
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentation,
       Optional<HasJsonApiDocumentation> childJsonApiConverter) {
-    this.topLevelClass = topLevelClass;
+    this.classBeingDocumented = classBeingDocumented;
     this.classOfArrayItems = classOfArrayItems;
     this.singleLineSummary = singleLineSummary;
     this.longDocumentation = longDocumentation;
@@ -61,8 +62,9 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
    *
    * <p> This is similar to what we do for instantiating {@link RBLog}. </p>
    */
-  public Class<?> getTopLevelClass() {
-    return topLevelClass;
+  @Override
+  public Class<?> getClassBeingDocumented() {
+    return classBeingDocumented;
   }
 
   public Class<?> getClassOfArrayItems() {
@@ -113,14 +115,9 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
   }
 
   @Override
-  public Class<?> getClassBeingDocumented() {
-    return getTopLevelClass();
-  }
-
-  @Override
   public String toString() {
     return Strings.format("[JAAD %s %s %s %s %s JACD]",
-        topLevelClass,
+        classBeingDocumented,
         classOfArrayItems,
         singleLineSummary,
         longDocumentation,
@@ -130,7 +127,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
   public static class JsonApiArrayDocumentationBuilder implements RBBuilder<JsonApiArrayDocumentation> {
 
-    private Class<?> topLevelClass;
+    private Class<?> classBeingDocumented;
     private Class<?> classOfArrayItems;
     private HumanReadableDocumentation singleLineSummary;
     private HumanReadableDocumentation longDocumentation;
@@ -142,8 +139,8 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
       return new JsonApiArrayDocumentationBuilder();
     }
 
-    public JsonApiArrayDocumentationBuilder setTopLevelClass(Class<?> topLevelClass) {
-      this.topLevelClass = checkNotAlreadySet(this.topLevelClass, topLevelClass);
+    public JsonApiArrayDocumentationBuilder setClassBeingDocumented(Class<?> classBeingDocumented) {
+      this.classBeingDocumented = checkNotAlreadySet(this.classBeingDocumented, classBeingDocumented);
       return this;
     }
 
@@ -174,27 +171,27 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
     @Override
     public void sanityCheckContents() {
-      RBPreconditions.checkNotNull(topLevelClass);
+      RBPreconditions.checkNotNull(classBeingDocumented);
       RBPreconditions.checkNotNull(classOfArrayItems);
       RBPreconditions.checkNotNull(singleLineSummary);
       RBPreconditions.checkNotNull(longDocumentation);
       RBPreconditions.checkNotNull(childJsonApiConverter);
 
       RBPreconditions.checkArgument(
-          !topLevelClass.isEnum(),
+          !classBeingDocumented.isEnum(),
           "Class %s cannot be an enum! Use JsonApiEnumDocumentation for that case",
-          topLevelClass);
+          classBeingDocumented);
 
       RBPreconditions.checkArgument(
-          !topLevelClass.equals(classOfArrayItems),
-          "Both the top-level class and the class of the array items are equal: %s",
-          topLevelClass);
+          !classBeingDocumented.equals(classOfArrayItems),
+          "Both the class being documented and the class of the array items are equal: %s",
+          classBeingDocumented);
     }
 
     @Override
     public JsonApiArrayDocumentation buildWithoutPreconditions() {
       return new JsonApiArrayDocumentation(
-          topLevelClass, classOfArrayItems, singleLineSummary, longDocumentation, childJsonApiConverter);
+          classBeingDocumented, classOfArrayItems, singleLineSummary, longDocumentation, childJsonApiConverter);
     }
 
   }
