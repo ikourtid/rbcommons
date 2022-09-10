@@ -24,7 +24,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
   @Override
   public JsonApiArrayDocumentation makeTrivialObject() {
     return jsonApiArrayDocumentationBuilder()
-        .setTopLevelClass(ClosedRange.class)
+        .setClassBeingDocumented(ClosedRange.class)
         .setClassOfArrayItems(UnitFraction.class)
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
@@ -37,7 +37,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
     // Except for the documentation, the fields below are not realistic, but rbcommons does not have access
     // to rbbizinfra, where a lot of our business logic classes lie, so it's hard to make this realistic.
     return jsonApiArrayDocumentationBuilder()
-        .setTopLevelClass(ClosedRange.class)
+        .setClassBeingDocumented(ClosedRange.class)
         .setClassOfArrayItems(UnitFraction.class)
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
@@ -49,7 +49,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
   public JsonApiArrayDocumentation makeMatchingNontrivialObject() {
     // Nothing to tweak here
     return jsonApiArrayDocumentationBuilder()
-        .setTopLevelClass(ClosedRange.class)
+        .setClassBeingDocumented(ClosedRange.class)
         .setClassOfArrayItems(UnitFraction.class)
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
@@ -65,7 +65,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
   public static TypeSafeMatcher<JsonApiArrayDocumentation> jsonApiArrayDocumentationMatcher(
       JsonApiArrayDocumentation expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getTopLevelClass()),
+        matchUsingEquals(v -> v.getClassBeingDocumented()),
         matchUsingEquals(v -> v.getClassOfArrayItems()),
         match(           v -> v.getSingleLineSummary(),     f -> humanReadableDocumentationMatcher(f)),
         match(           v -> v.getLongDocumentation(),     f -> humanReadableDocumentationMatcher(f)),
