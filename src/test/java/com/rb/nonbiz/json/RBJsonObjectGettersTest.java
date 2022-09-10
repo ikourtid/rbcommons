@@ -29,15 +29,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
-import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
-import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.Asserters.assertOptionalDoubleAlmostEquals;
-import static com.rb.nonbiz.testutils.Asserters.assertOptionalDoubleEmpty;
-import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
-import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
-import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEmpty;
-import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEquals;
-import static com.rb.nonbiz.testutils.Asserters.assertThrowsAnyException;
+import static com.rb.nonbiz.testutils.Asserters.*;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_PRICE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static junit.framework.TestCase.assertEquals;
@@ -552,6 +544,55 @@ public class RBJsonObjectGettersTest {
     assertIllegalArgumentException( () -> getNestedJsonObjectOrThrow(jsonObject0, "missingProperty", "key1", "key2"));
   }
 
+  @Test
+  public void test_getOptionalNestedJsonObject() {
+    // similar to previous test
+    JsonObject jsonObject4 = singletonJsonObject(
+        "n4",   jsonInteger(4));
+    JsonObject jsonObject3 = jsonObject(
+        "key3",  jsonObject4,
+        "n3",    jsonInteger(3),
+        "text3", jsonString("level3"));
+    JsonObject jsonObject2 = jsonObject(
+        "key2",  jsonObject3,
+        "n2",    jsonInteger(2),
+        "text2", jsonString("level2"));
+    JsonObject jsonObject1 = jsonObject(
+        "key1", jsonObject2,
+        "n1",   jsonInteger(1),
+        "text1", jsonString("level1"));
+    JsonObject jsonObject0 = jsonObject(
+        "key0", jsonObject1,
+        "n0",   jsonInteger(0));
+
+    assertOptionalNonEmpty(
+        getOptionalNestedJsonObject(jsonObject0, "key0"),
+        jsonObjectEpsilonMatcher(jsonObject1));
+    // nested versions for lower levels:
+    assertOptionalNonEmpty(
+        getOptionalNestedJsonObject(jsonObject0, "key0", "key1"),
+        jsonObjectEpsilonMatcher(jsonObject2));
+    assertOptionalNonEmpty(
+        getOptionalNestedJsonObject(jsonObject0, "key0", "key1", "key2"),
+        jsonObjectEpsilonMatcher(jsonObject3));
+    assertOptionalNonEmpty(
+        getOptionalNestedJsonObject(jsonObject0, "key0", "key1", "key2", "key3"),
+        jsonObjectEpsilonMatcher(jsonObject4));
+    assertEquals(
+        4,
+        getOptionalNestedJsonObject(jsonObject0, "key0", "key1", "key2", "key3").get().get("n4").getAsInt());
+
+    // wrong order of nesting
+    assertOptionalEmpty(getOptionalNestedJsonObject(jsonObject0, "key1", "key0"));
+
+    // missing properties
+    assertOptionalEmpty(getOptionalNestedJsonObject(jsonObject0, "key0", "missingProperty"));
+    assertOptionalEmpty(getOptionalNestedJsonObject(jsonObject0, "key0", "key1", "missingProperty"));
+    assertOptionalEmpty(getOptionalNestedJsonObject(jsonObject0, "key0", "key1", "key2", "missingProperty"));
+    assertOptionalEmpty(getOptionalNestedJsonObject(jsonObject0, "key0", "key1", "key2", "key3", "missingProperty"));
+    assertOptionalEmpty(getOptionalNestedJsonObject(jsonObject0, "missingProperty", "key1", "key2"));
+  }
+  
   @Test
   public void test_getJsonObjectOrDefault() {
     JsonObject jsonObject = singletonJsonObject("a", singletonJsonObject("xyz", jsonString("123")));
