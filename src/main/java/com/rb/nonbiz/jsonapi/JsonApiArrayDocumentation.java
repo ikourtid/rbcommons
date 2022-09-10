@@ -20,7 +20,8 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
  * <p> Note that the other implementers of {@link JsonApiDocumentation} store a {@link JsonValidationInstructions}
  * to allow us to validate that a JSON object has correct properties. An array, however, does not have any properties.
  * So we can't validate anything, other than the fact that the items inside the array are valid.
- * However, that gets validated by the (separate) JSON API converter that converts the items inside the array. </p>
+ * However, the validation of a single array item is performed by the (separate) JSON API converter
+ * that converts the items inside the array. </p>
  *
  * <p> Also, those other implementers of {@link JsonApiDocumentation} have sample JSON in them. However,
  * since this is an array, there's no need for sample JSON for the entire array; some sample JSON for the array items
