@@ -284,7 +284,11 @@ public class RBJsonObjects {
   public static <C extends Comparable<? super C>> Range<C> jsonObjectToRange(
       JsonObject jsonObject,
       Function<JsonElement, C> valueDeserializer) {
-    JsonValidator.staticValidate(jsonObject, jsonValidationInstructionsForRange());
+    JsonValidator.staticValidate(
+        jsonObject,
+        jsonValidationInstructionsForRange(
+            UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR,
+            UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR));
     return constructRange(
         transformOptional(getOptionalJsonElement(jsonObject, "min"), valueDeserializer), BoundType.CLOSED,
         transformOptional(getOptionalJsonElement(jsonObject, "max"), valueDeserializer), BoundType.CLOSED);
@@ -296,12 +300,14 @@ public class RBJsonObjects {
    * Therefore, we'll expose these for any other JSON API converter that converts an object that's a simple
    * wrapper around a Range.
    */
-  public static JsonValidationInstructions jsonValidationInstructionsForRange() {
+  public static JsonValidationInstructions jsonValidationInstructionsForRange(
+      JsonApiPropertyDescriptor jsonApiPropertyDescriptorForMin,
+      JsonApiPropertyDescriptor jsonApiPropertyDescriptorForMax) {
     return jsonValidationInstructionsBuilder()
         .hasNoRequiredProperties()
         .setOptionalProperties(rbMapOf(
-            "min", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR,
-            "max", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR))
+            "min", jsonApiPropertyDescriptorForMin,
+            "max", jsonApiPropertyDescriptorForMax))
         .build();
   }
 
