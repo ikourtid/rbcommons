@@ -290,6 +290,12 @@ public class RBJsonObjects {
         transformOptional(getOptionalJsonElement(jsonObject, "max"), valueDeserializer), BoundType.CLOSED);
   }
 
+  /**
+   * Typically, {@link JsonValidationInstructions} will be associated with a JSON API converter verb class.
+   * However, the {@link Range} gets converted using static methods and doesn't follow our usual paradigm.
+   * Therefore, we'll expose these for any other JSON API converter that converts an object that's a simple
+   * wrapper around a Range.
+   */
   public static JsonValidationInstructions jsonValidationInstructionsForRange() {
     return jsonValidationInstructionsBuilder()
         .hasNoRequiredProperties()
