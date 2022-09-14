@@ -406,7 +406,6 @@ public class RBJsonObjectGetters {
         getOptionalJsonObject(jsonObject, firstProperty),
         // if the first subobject is not there, transformOptional2 won't evaluate the code below, and just return empty.
         firstInnerJsonObject -> {
-          JsonObject foo = firstInnerJsonObject;
           if (restOfProperties.length == 0) {
             // innermost nesting; return
             return Optional.of(firstInnerJsonObject);

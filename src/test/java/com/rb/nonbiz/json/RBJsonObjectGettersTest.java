@@ -2,6 +2,7 @@ package com.rb.nonbiz.json;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
@@ -30,6 +31,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testutils.Asserters.*;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_PRICE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static junit.framework.TestCase.assertEquals;
@@ -591,6 +593,29 @@ public class RBJsonObjectGettersTest {
     assertOptionalEmpty(getOptionalNestedJsonObject(jsonObject0, "key0", "key1", "key2", "missingProperty"));
     assertOptionalEmpty(getOptionalNestedJsonObject(jsonObject0, "key0", "key1", "key2", "key3", "missingProperty"));
     assertOptionalEmpty(getOptionalNestedJsonObject(jsonObject0, "missingProperty", "key1", "key2"));
+  }
+
+  @Test
+  public void getNestedJsonObject_pathExistsButValueIsNotJsonObject_throws() {
+    Function<JsonElement, JsonObject> maker = jsonElement -> singletonJsonObject(
+        "key0", singletonJsonObject(
+            "key1", jsonElement));
+
+    assertIllegalArgumentException( () ->
+        getNestedJsonObjectOrThrow(maker.apply(jsonString(DUMMY_STRING)), "key0", "key1"));
+    assertIllegalArgumentException( () ->
+        getOptionalNestedJsonObject(maker.apply(jsonString(DUMMY_STRING)), "key0", "key1"));
+
+    JsonObject doesNotThrow1;
+    doesNotThrow1 = getNestedJsonObjectOrThrow(
+        maker.apply(emptyJsonObject()), "key0", "key1");
+    doesNotThrow1 = getNestedJsonObjectOrThrow(
+        maker.apply(singletonJsonObject(DUMMY_STRING, jsonInteger(DUMMY_POSITIVE_INTEGER))), "key0", "key1");
+    Optional<JsonObject> doesNotThrow2;
+    doesNotThrow2 = getOptionalNestedJsonObject(
+        maker.apply(emptyJsonObject()), "key0", "key1");
+    doesNotThrow2 = getOptionalNestedJsonObject(
+        maker.apply(singletonJsonObject(DUMMY_STRING, jsonInteger(DUMMY_POSITIVE_INTEGER))), "key0", "key1");
   }
   
   @Test
