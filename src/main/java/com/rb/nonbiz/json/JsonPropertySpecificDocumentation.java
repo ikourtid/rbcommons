@@ -45,7 +45,7 @@ public class JsonPropertySpecificDocumentation {
 
   @Override
   public String toString() {
-    return Strings.format("[JPSD %s JPSD]");
+    return Strings.format("[JPSD %s JPSD]", rawDocumentation);
   }
 
 }

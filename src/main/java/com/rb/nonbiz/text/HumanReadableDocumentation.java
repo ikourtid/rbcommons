@@ -2,6 +2,8 @@ package com.rb.nonbiz.text;
 
 import com.rb.nonbiz.util.RBPreconditions;
 
+import java.util.Objects;
+
 import static org.apache.commons.lang3.StringUtils.isWhitespace;
 
 /**
@@ -36,6 +38,21 @@ public class HumanReadableDocumentation {
   @Override
   public String toString() {
     return Strings.format("[HRD %s HRD]", asString);
+  }
+
+  // IDE-generated. We don't normally implement this, but in this case some other code relies on this.
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    HumanReadableDocumentation that = (HumanReadableDocumentation) o;
+    return asString.equals(that.asString);
+  }
+
+  // IDE-generated. We don't normally implement this, but in this case some other code relies on this.
+  @Override
+  public int hashCode() {
+    return Objects.hash(asString);
   }
 
 }

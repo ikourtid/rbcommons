@@ -28,7 +28,7 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
   private final HumanReadableDocumentation singleLineSummary;
   private final HumanReadableDocumentation longDocumentation;
   private final List<JsonApiSubclassInfo> jsonApiSubclassInfoList;
-  private final String discriminatorProperty;
+  private final Optional<String> discriminatorProperty;
   private final Optional<JsonElement> trivialSampleJson;
   private final Optional<JsonElement> nontrivialSampleJson;
 
@@ -37,7 +37,7 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentation,
       List<JsonApiSubclassInfo> jsonApiSubclassInfoList,
-      String discriminatorProperty,
+      Optional<String> discriminatorProperty,
       Optional<JsonElement> trivialSampleJson,
       Optional<JsonElement> nontrivialSampleJson) {
     this.classBeingDocumented = classBeingDocumented;
@@ -94,7 +94,7 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
    *   here.
    *   </a>
    */
-  public String getDiscriminatorProperty() {
+  public Optional<String> getDiscriminatorProperty() {
     return discriminatorProperty;
   }
 
@@ -113,25 +113,26 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
 
   @Override
   public String toString() {
-    return Strings.format("[JACWSD %s %s %s %s %s %s %s JACWSD]",
+    return Strings.format(
+        "[JACWSD %s %s %s %s discriminatorProperty= %s ; trivialSampleJson= %s ; nontrivialSampleJson= %s JACWSD]",
         classBeingDocumented,
         singleLineSummary,
         longDocumentation,
         formatListInExistingOrder(jsonApiSubclassInfoList),
-        discriminatorProperty,
+        formatOptional(discriminatorProperty),
         formatOptional(trivialSampleJson),
         formatOptional(nontrivialSampleJson));
   }
 
 
-  public static class JsonApiClassWithSubclassesDocumentationBuilder 
+  public static class JsonApiClassWithSubclassesDocumentationBuilder
       implements RBBuilder<JsonApiClassWithSubclassesDocumentation> {
 
     private Class<?> classBeingDocumented;
     private HumanReadableDocumentation singleLineSummary;
     private HumanReadableDocumentation longDocumentation;
     private List<JsonApiSubclassInfo> jsonApiSubclassInfoList;
-    private String discriminatorProperty;
+    private Optional<String> discriminatorProperty;
     private Optional<JsonElement> trivialSampleJson;
     private Optional<JsonElement> nontrivialSampleJson;
 
@@ -166,7 +167,12 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
     }
 
     public JsonApiClassWithSubclassesDocumentationBuilder setDiscriminatorProperty(String discriminatorProperty) {
-      this.discriminatorProperty = checkNotAlreadySet(this.discriminatorProperty, discriminatorProperty);
+      this.discriminatorProperty = checkNotAlreadySet(this.discriminatorProperty, Optional.of(discriminatorProperty));
+      return this;
+    }
+
+    public JsonApiClassWithSubclassesDocumentationBuilder hasNoDiscriminatorProperty() {
+      this.discriminatorProperty = checkNotAlreadySet(this.discriminatorProperty, Optional.empty());
       return this;
     }
 
@@ -219,9 +225,9 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
           "We cannot repeat a Class object here: %s",
           jsonApiSubclassInfoList);
 
-      RBPreconditions.checkArgument(
-          !discriminatorProperty.isEmpty(),
-          "The discriminator property cannot be empty");
+      discriminatorProperty.ifPresent(v -> RBPreconditions.checkArgument(
+          !v.isEmpty(),
+          "If the optional discriminator property is present, it cannot be the empty string."));
     }
 
     @Override

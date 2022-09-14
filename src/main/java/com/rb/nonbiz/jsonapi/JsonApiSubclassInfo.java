@@ -7,7 +7,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Optional;
 
-import static com.rb.nonbiz.text.Strings.formatOptional;
+import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 
 /**
  * This is for the special case in the JSON API where we need to represent one of many subclasses of a single class.
@@ -21,17 +21,18 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
  *
  * <p> The corresponding JSON API converter is only stored here so that we can traverse the tree of objects
  * in the input and output classes of our API, which helps us gather a list of all JSON API entities that should
- * make it into the documentation. </p>
+ * make it into the documentation. This is goes against our convention of never using 'verb classes' as objects
+ * to pass around, but this exception is necessary here. </p>
  */
 public class JsonApiSubclassInfo {
 
   private final Class<?> classOfSubclass;
-  private final String discriminatorPropertyValue;
+  private final Optional<String> discriminatorPropertyValue;
   private final Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing;
 
   private JsonApiSubclassInfo(
       Class<?> classOfSubclass,
-      String discriminatorPropertyValue,
+      Optional<String> discriminatorPropertyValue,
       Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing) {
     this.classOfSubclass = classOfSubclass;
     this.discriminatorPropertyValue = discriminatorPropertyValue;
@@ -47,7 +48,7 @@ public class JsonApiSubclassInfo {
    * {@literal  type: 'subclass2', property2A: foo, property2B: bar }. Here, 'type' is the 'discriminator property',
    * and 'subclass2' is {@link #getDiscriminatorPropertyValue()}.
    */
-  public String getDiscriminatorPropertyValue() {
+  public Optional<String> getDiscriminatorPropertyValue() {
     return discriminatorPropertyValue;
   }
 
@@ -68,10 +69,13 @@ public class JsonApiSubclassInfo {
 
   @Override
   public String toString() {
-    return Strings.format("[JASI %s %s %s JASI]",
+    return Strings.format("[JASI class= %s ; discrValue= %s ; jsonApiConverterForTraversing= %s JASI]",
         classOfSubclass,
         discriminatorPropertyValue,
-        formatOptional(jsonApiConverterForTraversing));
+        transformOptional(
+            jsonApiConverterForTraversing,
+            v -> v.getClass().getSimpleName())
+            .orElse("<no HasJsonApiDocumentation>"));
   }
 
 
@@ -81,11 +85,11 @@ public class JsonApiSubclassInfo {
   public static class JsonApiSubclassInfoBuilder implements RBBuilder<JsonApiSubclassInfo> {
 
     private Class<?> classOfSubclass;
-    private String discriminatorPropertyValue;
+    private Optional<String> discriminatorPropertyValue;
     private Optional<HasJsonApiDocumentation> jsonApiConverterForTraversing;
 
     private JsonApiSubclassInfoBuilder() {}
-    
+
     public static JsonApiSubclassInfoBuilder jsonApiSubclassInfoBuilder() {
       return new JsonApiSubclassInfoBuilder();
     }
@@ -97,7 +101,13 @@ public class JsonApiSubclassInfo {
 
     public JsonApiSubclassInfoBuilder setDiscriminatorPropertyValue(String discriminatorPropertyValue) {
       this.discriminatorPropertyValue = checkNotAlreadySet(
-          this.discriminatorPropertyValue, discriminatorPropertyValue);
+          this.discriminatorPropertyValue, Optional.of(discriminatorPropertyValue));
+      return this;
+    }
+
+    public JsonApiSubclassInfoBuilder hasNoDiscriminatorPropertyAndThereforeNoValue() {
+      this.discriminatorPropertyValue = checkNotAlreadySet(
+          this.discriminatorPropertyValue, Optional.empty());
       return this;
     }
 

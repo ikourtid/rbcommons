@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -59,6 +60,19 @@ public class RBOptionals {
    * The two types A and B may be the same - or not.
    */
   public static <A, B> boolean optionalsEqual(Optional<A> o1, Optional<B> o2) {
+    return optionalsEqual(o1, o2, (v1, v2) -> v1.equals(v2));
+  }
+
+  /**
+   * Similar to the 2-argument method, except that, instead of relying on #equals and #hashCode,
+   * an arbitrary equality operator can be passed in.
+   *
+   * <p> This is useful for situations where we want a partial equality (i.e. not compare every member),
+   * or where there's no equality operation that's well-defined enough to add as a method in the data class,
+   * which is something we usually avoid to do. One rare example is if the data class stores verb classes in it,
+   * which cannot really be compared, except for their {@link Class} object. </p>
+   */
+  public static <A, B> boolean optionalsEqual(Optional<A> o1, Optional<B> o2, BiPredicate<A, B> equalityPredicate) {
     if (!o1.isPresent()) {
       return !o2.isPresent();
     }
@@ -67,7 +81,7 @@ public class RBOptionals {
     }
     A v1 = o1.get();
     B v2 = o2.get();
-    return v1.equals(v2);
+    return equalityPredicate.test(v1, v2);
   }
 
   public static boolean allOptionalsPresent(

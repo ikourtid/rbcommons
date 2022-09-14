@@ -21,6 +21,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class RBSetTest {
 
@@ -207,6 +208,44 @@ public class RBSetTest {
 
     // duplicate keys not allowed
     assertIllegalArgumentException( () -> abc.toRBMapWithTransformedKeys(key -> "allKeysTheSame", value -> value));
+  }
+
+  @Test
+  public void test_transformAllowingDuplicates_usingSuppiedEqualityOperators() {
+    class NoComparison {
+      private final String stringContents;
+
+      private NoComparison(String stringContents) {
+        this.stringContents = stringContents;
+      }
+    };
+    NoComparison obj1 = new NoComparison("abc");
+    NoComparison obj2 = new NoComparison("abc");
+
+    assertNotEquals(
+        "These objects are not equal per the default #equals and #hashCode that we inherit from Object",
+        obj1, obj2);
+
+    assertEquals(
+        "Because the objects are not equal, an RBSet will not eliminate one of the two",
+        2, rbSetOf(obj1, obj2).size());
+
+    assertEquals(
+        "As above - because the objects are not equal, the transformed RBSet will not eliminate one of the two",
+        2, rbSetOf(obj1, obj2).transform(v -> v).size());
+
+    assertEquals(
+        "As above - because the objects are not equal, the transformAllowingDuplicates RBSet will not eliminate one of the two",
+        2, rbSetOf(obj1, obj2).transformAllowingDuplicates(v -> v).size());
+
+    assertEquals(
+        1,
+        rbSetOf(obj1, obj2)
+            .transformAllowingDuplicates(
+                v -> v,
+                (v1, v2) -> v1.stringContents.equals(v2.stringContents),
+                v -> v.stringContents.hashCode())
+            .size());
   }
 
 }

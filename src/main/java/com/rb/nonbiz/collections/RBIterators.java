@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -162,6 +163,32 @@ public class RBIterators {
   }
 
   /**
+   * Returns true if each pair of values in 2 iterators returns true for the supplied {@link BiPredicate}.
+   *
+   * <p> It will also have a precondition that they have the same number of items. </p>
+   *
+   * <p> This is useful for situations where we want a partial equality (i.e. not compare every member),
+   * or where there's no equality operation that's well-defined enough to add as a method in the data class,
+   * which is something we usually avoid to do. One rare example is if the data class stores verb classes in it,
+   * which cannot really be compared, except for their {@link Class} object.</p>
+   *
+   * <p> The name parallels {@link java.util.stream.Stream#allMatch(Predicate)}. That is, this is unrelated to the
+   * test hamcrest matchers. </p>
+   */
+  public static <T1, T2> boolean allPairsMatch(Iterator<T1> iter1, Iterator<T2> iter2, BiPredicate<T1, T2> biPredicate) {
+    boolean allTrue = true;
+    while (iter1.hasNext() && iter2.hasNext()) {
+      if (!biPredicate.test(iter1.next(), iter2.next())) {
+        allTrue = false;
+        // We will not exit the loop here, because we want to get to the final precondition and allow it to throw
+        // if the two iterators do not have the same number of items.
+      }
+    }
+    RBPreconditions.checkArgument(!iter1.hasNext() && !iter2.hasNext());
+    return allTrue;
+  }
+
+  /**
    * Transforms 2 iterators into a new iterator, based on a supplied function.
    * If the iterators have unequal # of items, this will iterator will throw when we're done iterating over it.
    * Of course, we'll only find out at runtime, since we can't consume the 2 input iterators in this method
@@ -197,8 +224,8 @@ public class RBIterators {
       @Override
       public boolean hasNext() {
         int numHasNext = (iter1.hasNext() ? 1 : 0)
-                       + (iter2.hasNext() ? 1 : 0)
-                       + (iter3.hasNext() ? 1 : 0);
+            + (iter2.hasNext() ? 1 : 0)
+            + (iter3.hasNext() ? 1 : 0);
         if (numHasNext == 0) {
           return false;
         } else if (numHasNext == 3) {

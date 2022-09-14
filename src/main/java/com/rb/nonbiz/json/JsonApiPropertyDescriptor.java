@@ -1,6 +1,7 @@
 package com.rb.nonbiz.json;
 
 import com.google.common.base.Joiner;
+import com.google.gson.JsonObject;
 import com.rb.biz.jsonapi.JsonTicker;
 import com.rb.biz.types.OnesBasedReturn;
 import com.rb.biz.types.Symbol;
@@ -28,6 +29,9 @@ import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
+import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
+import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonStringOrThrow;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
 import static com.rb.nonbiz.text.Strings.formatOptional;
@@ -119,7 +123,7 @@ public abstract class JsonApiPropertyDescriptor {
               IidMapJsonApiPropertyDescriptor iidMapJsonApiPropertyDescriptor) {
             return !iidMapJsonApiPropertyDescriptor.getPropertySpecificDocumentation().isPresent()
                 && noPropertySpecificDocumentationPresent(Stream.of(
-                    iidMapJsonApiPropertyDescriptor.getValueClassDescriptor()));
+                iidMapJsonApiPropertyDescriptor.getValueClassDescriptor()));
           }
 
           @Override
@@ -222,6 +226,44 @@ public abstract class JsonApiPropertyDescriptor {
     public static SimpleClassJsonApiPropertyDescriptor simpleClassJsonApiPropertyDescriptor(
         Class<?> clazz, JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
       return simpleClassJsonApiPropertyDescriptor(clazz, Optional.of(jsonPropertySpecificDocumentation));
+    }
+
+    public static SimpleClassJsonApiPropertyDescriptor simpleUnknownClassJsonApiPropertyDescriptor(
+        JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
+      return simpleClassJsonApiPropertyDescriptor(
+          UNKNOWN_CLASS_OF_JSON_PROPERTY,
+          Optional.of(jsonPropertySpecificDocumentation));
+    }
+
+    /**
+     * You may wonder - if this must always have the same value, why bother specifying it?
+     * It's because we have to conform to the OpenAPI / Swagger way of representing
+     * multiple subclasses that can appear in the same position in JSON. See Issue #1292.
+     * This centralizes that logic.
+     */
+    public static SimpleClassJsonApiPropertyDescriptor subclassDiscriminatorPropertyDescriptor(
+        String onlyAllowableValue) {
+      return simpleClassJsonApiPropertyDescriptor(
+          String.class,
+          Optional.of(jsonPropertySpecificDocumentation(
+              Strings.format("The value must always be '%s'.", onlyAllowableValue))));
+    }
+
+    /**
+     * In order to conform to the OpenAPI / Swagger spec (see Issue #1292), subclasses all have a 'discriminator'
+     * property (its name may vary), and for any given subclass, the value of that property must be a fixed string.
+     * This method centralizes the code for a precondition that checks for that.
+     * This is an odd place to put this, but there's no better place; it's too specialized to go under
+     * {@link RBPreconditions} or any of the similar locations.
+     */
+    public static void checkDiscriminatorValue(
+        JsonObject jsonObject,
+        String discriminatorProperty,
+        String expectedDiscriminatorValue) {
+      RBPreconditions.checkArgument(
+          getJsonStringOrThrow(jsonObject, discriminatorProperty).equals(expectedDiscriminatorValue),
+          "Property '%s' must always have the value '%s'; JSON was: %s",
+          discriminatorProperty, expectedDiscriminatorValue, jsonObject);
     }
 
     /**

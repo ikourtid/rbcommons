@@ -22,7 +22,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
   public JsonApiSubclassInfo makeTrivialObject() {
     return jsonApiSubclassInfoBuilder()
         .setClassOfSubclass(CashId.class)
-        .setDiscriminatorPropertyValue("cash_id")
+        .hasNoDiscriminatorPropertyAndThereforeNoValue()
         .hasNoSeparateJsonApiConverterForTraversing()
         .build();
   }
@@ -54,7 +54,7 @@ public class JsonApiSubclassInfoTest extends RBTestMatcher<JsonApiSubclassInfo> 
   public static TypeSafeMatcher<JsonApiSubclassInfo> jsonApiSubclassInfoMatcher(JsonApiSubclassInfo expected) {
     return makeMatcher(expected,
         matchUsingEquals(        v -> v.getClassOfSubclass()),
-        matchUsingEquals(        v -> v.getDiscriminatorPropertyValue()),
+        matchOptionalUsingEquals(v -> v.getDiscriminatorPropertyValue()),
         matchOptional(           v -> v.getJsonApiConverterForTraversing(),     f -> hasJsonApiDocumentationMatcher(f)));
   }
 

@@ -17,10 +17,15 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBRanges.hasEitherBoundOpen;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
+import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getOptionalJsonPrimitive;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
+import static com.rb.nonbiz.text.Strings.asSingleLine;
+import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
 /**
  * Convert a {@link Range} back and forth to JSON for our public API.
@@ -106,11 +111,19 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
     return jsonApiClassDocumentationBuilder()
         .setClass(Range.class)
         .setSingleLineSummary(documentation("A range holds an optional lower bound and an optional upper bound."))
-        .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
+        .setLongDocumentation(documentation(asSingleLineWithNewlines(
+            "<p> This only supports ranges for which either endpoint, if present, is part of the range.",
+            "That is, the closed range [1, 10] is supported, but the semi-open range (1, 10] (which excludes the point 1)",
+            "is not. </p>",
+            "<p> Omit the 'min' property to signify a range extending down to -inf, and omit the 'max' property to ",
+            "signify a range extending up to +inf. </p> ",
+            "<p> Both 'min' and 'max' can be omitted to specify an unlimited range. </p>")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
-        .hasNoChildNodes()
-        .noTrivialSampleJsonSupplied()
-        .noNontrivialSampleJsonSupplied()
+        .hasNoChildJsonApiConverters()
+        .setTrivialSampleJson(emptyJsonObject())
+        .setNontrivialSampleJson(jsonObject(
+            "min", jsonDouble(-1.1),
+            "max", jsonDouble( 9.9)))
         .build();
   }
 

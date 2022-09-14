@@ -2,6 +2,7 @@ package com.rb.nonbiz.json;
 
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
+import com.rb.biz.types.Money;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.text.Strings;
@@ -55,14 +56,15 @@ public class JsonValidationInstructions {
 
   /**
    * Some JSON properties, such as the data under YearlyTimeSeries, have a Java object that's generic.
-   * If we know ahead of time that the generic type parameter will be e.g. Money, then we can represent that with
+   * If we know ahead of time that the generic type parameter will be e.g. {@link Money}, then we can represent that with
    * javaGenericJsonApiPropertyDescriptor(YearlyTimeSeries.class, Money.class).
-   * However, in many cases we do not know at compilation time.
-   * For example, many JSON API converters have a private static final JsonValidationInstructions.
-   * Because that's static and gets created once, there's no way to know the type of the property at that time.
-   * ContiguousDiscreteRangeMapJsonApiConverter is one example; there are more.
    *
-   * Therefore, we will use the below object in those situations.
+   * <p> However, in many cases we do not know at compilation time.
+   * For example, many JSON API converters have a private static final {@link JsonValidationInstructions}.
+   * Because that's static and gets created once, there's no way to know the type of the property at that time.
+   * ContiguousDiscreteRangeMapJsonApiConverter is one example; there are more. </p>
+   *
+   * <p> Therefore, we will use the below object in those situations. </p>
    */
   public static final JsonApiPropertyDescriptor UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR =
       simpleClassJsonApiPropertyDescriptor(UNKNOWN_CLASS_OF_JSON_PROPERTY);

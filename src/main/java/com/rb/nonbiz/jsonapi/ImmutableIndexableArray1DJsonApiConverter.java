@@ -18,13 +18,16 @@ import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPro
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
+import static com.rb.nonbiz.json.RBJsonArrays.jsonLongArray;
+import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
 import static com.rb.nonbiz.json.RBJsonArrays.listToJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonArrayOrThrow;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjects.jsonArrayToSimpleArrayIndexMapping;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
-import static com.rb.nonbiz.text.Strings.asSingleLine;
+import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
 /**
  * Converts an {@link ImmutableIndexableArray1D} back and forth to JSON for our public API.
@@ -84,14 +87,18 @@ public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocu
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(ImmutableIndexableArray1D.class)
-        .setSingleLineSummary(documentation(asSingleLine(
-            "An indexable 1-D array is like a regular 1-D array, except that you can ",
+        .setSingleLineSummary(documentation(asSingleLineWithNewlines(
+            "An indexable 1-D array is like a regular 1-D array, except that you can",
             "also access it based on more meaningful keys - not just an integer index.")))
-        .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
+        .setLongDocumentation(documentation(
+            "The key values must be unique."))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
-        .hasNoChildNodes()
+        .hasNoChildJsonApiConverters()
         .noTrivialSampleJsonSupplied()
-        .noNontrivialSampleJsonSupplied()
+        .setNontrivialSampleJson(jsonObject(
+            "keys", jsonStringArray("a", "b", "c"),
+            "data", jsonLongArray(100L, 200L, 300L)))
         .build();
   }
+
 }

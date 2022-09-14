@@ -19,14 +19,26 @@ import java.math.BigDecimal;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.subclassDiscriminatorPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentationTest.jsonPropertySpecificDocumentationMatcher;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SimpleClassJsonApiPropertyDescriptorTest extends RBTestMatcher<SimpleClassJsonApiPropertyDescriptor> {
+
+  @Test
+  public void testSpecialCaseConstructor_subclassDiscriminatorPropertyDescriptor() {
+    assertThat(
+        subclassDiscriminatorPropertyDescriptor("fooBar"),
+        simpleClassJsonApiPropertyDescriptorMatcher(
+            simpleClassJsonApiPropertyDescriptor(
+                String.class,
+                jsonPropertySpecificDocumentation("The value must always be 'fooBar'."))));
+  }
 
   @Test
   public void prohibitsCertainTypes() {
