@@ -627,9 +627,9 @@ public abstract class JsonApiPropertyDescriptor {
           genericArgumentClassDescriptors);
 
       return new JavaGenericJsonApiPropertyDescriptor(
-          outerClass, genericArgumentClassDescriptors,jsonPropertySpecificDocumentation);
+          outerClass, genericArgumentClassDescriptors, jsonPropertySpecificDocumentation);
     }
-
+    
     public static JavaGenericJsonApiPropertyDescriptor javaGenericJsonApiPropertyDescriptor(
         Class<?> outerClass,
         List<JsonApiPropertyDescriptor> genericArgumentClassDescriptors,
@@ -647,8 +647,9 @@ public abstract class JsonApiPropertyDescriptor {
 
     /**
      * Represents a property of an object that's a Java generic.
-     * Example: a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
-     * (2nd argument).
+     *
+     * <p> Example: a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
+     * (2nd argument). </p>
      *
      * <p> We normally use a builder when there can be two arguments of the same type, but this is meant to be used
      * inline in the various definitions of JSON_VALIDATION_INSTRUCTIONS in the JSON API converter verb classes,
@@ -661,8 +662,9 @@ public abstract class JsonApiPropertyDescriptor {
 
     /**
      * Represents a property of an object that's a Java generic.
-     * Example: a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
-     * (2nd argument).
+     *
+     * <p> Example: a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
+     * (2nd argument). </p>
      *
      * <p> We normally use a builder when there can be two arguments of the same type, but this is meant to be used
      * inline in the various definitions of JSON_VALIDATION_INSTRUCTIONS in the JSON API converter verb classes,
