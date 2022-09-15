@@ -591,7 +591,7 @@ public class Strings {
 
   public static <T> String formatListInExistingOrder(List<T> list, Function<T, String> valueTransformer) {
     return sizePrefix(list.size()) +
-        Joiner.on(' ').join(list.stream().map(v -> valueTransformer.apply(v)).iterator());
+        Joiner.on(' ').join(list.stream().map(valueTransformer).iterator());
   }
 
   public static <T extends PrintsInstruments> String formatListOfPrintsInstrumentsInExistingOrder(
