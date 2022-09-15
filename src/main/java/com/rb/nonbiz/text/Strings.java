@@ -586,8 +586,12 @@ public class Strings {
   }
 
   public static <T> String formatListInExistingOrder(List<T> list) {
+    return formatListInExistingOrder(list, v -> v.toString());
+  }
+
+  public static <T> String formatListInExistingOrder(List<T> list, Function<T, String> valueTransformer) {
     return sizePrefix(list.size()) +
-        Joiner.on(' ').join(list.stream().iterator());
+        Joiner.on(' ').join(list.stream().map(v -> valueTransformer.apply(v)).iterator());
   }
 
   public static <T extends PrintsInstruments> String formatListOfPrintsInstrumentsInExistingOrder(
