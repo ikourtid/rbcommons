@@ -115,7 +115,7 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
   public String toString() {
     return Strings.format(
         "[JACWSD %s %s %s %s discriminatorProperty= %s ; trivialSampleJson= %s ; nontrivialSampleJson= %s JACWSD]",
-        classBeingDocumented,
+        classBeingDocumented.getSimpleName(),
         singleLineSummary,
         longDocumentation,
         formatListInExistingOrder(jsonApiSubclassInfoList),
