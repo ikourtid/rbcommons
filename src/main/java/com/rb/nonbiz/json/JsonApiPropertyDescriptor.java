@@ -296,8 +296,8 @@ public abstract class JsonApiPropertyDescriptor {
 
     @Override
     public String toString() {
-      return Strings.format("[SCJAPD %s %s SCJAPD]",
-          clazz, formatOptional(jsonPropertySpecificDocumentation));
+      return Strings.format("[SCJAPD %s ; doc: %s SCJAPD]",
+          clazz.getSimpleName(), formatOptional(jsonPropertySpecificDocumentation));
     }
 
   }
@@ -375,7 +375,7 @@ public abstract class JsonApiPropertyDescriptor {
 
     @Override
     public String toString() {
-      return Strings.format("[IMJAPD %s %s IMJAPD]",
+      return Strings.format("[IMJAPD %s ; doc: %s IMJAPD]",
           valueClassDescriptor, formatOptional(jsonPropertySpecificDocumentation));
     }
 
@@ -717,7 +717,7 @@ public abstract class JsonApiPropertyDescriptor {
     @Override
     public String toString() {
       return Strings.format("[JGJAPD %s < %s > %s JGJAPD]",
-          outerClass,
+          outerClass.getSimpleName(),
           Joiner.on(" , ").join(genericArgumentClassDescriptors),
           formatOptional(jsonPropertySpecificDocumentation));
     }
