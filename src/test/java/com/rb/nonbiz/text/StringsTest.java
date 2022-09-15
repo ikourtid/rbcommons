@@ -98,6 +98,22 @@ public class StringsTest {
   }
 
   @Test
+  public void testFormatListInExistingOrder() {
+    assertEquals(
+        "10 : 0 5 1 6 2 7 3 8 4 9",
+        formatListInExistingOrder(ImmutableList.of("0", "5", "1", "6", "2", "7", "3", "8", "4", "9")));
+  }
+
+  @Test
+  public void testFormatListInExistingOrderWithTransformer() {
+    assertEquals(
+        "10 : 0x 5x 1x 6x 2x 7x 3x 8x 4x 9x",
+        formatListInExistingOrder(
+            ImmutableList.of("0", "5", "1", "6", "2", "7", "3", "8", "4", "9"),
+            v -> v + "x"));
+  }
+
+  @Test
   public void testFormatMapInKeyOrder() {
     RBMap<String, Integer> rbMap = rbMapOf(
         "D", 1,
