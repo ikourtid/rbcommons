@@ -157,7 +157,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
         singleLineSummary,
         longDocumentation,
         jsonValidationInstructions,
-        formatListInExistingOrder(childJsonApiConverters),
+        formatListInExistingOrder(childJsonApiConverters, v -> v.getClass().getSimpleName()),
         formatOptional(trivialSampleJson),
         formatOptional(nontrivialSampleJson));
   }
