@@ -102,9 +102,15 @@ public class JsonValidationInstructions {
     return optionalProperties.sortedKeys(Ordering.natural());
   }
 
+  public boolean isEmpty() {
+    return requiredProperties.isEmpty() && optionalProperties.isEmpty();
+  }
+
   @Override
   public String toString() {
-    return Strings.format("[JVI %s required: %s ; %s optional: %s JVI]",
+    return isEmpty()
+        ? "[JVI]"
+        : Strings.format("[JVI %s required: %s ; %s optional: %s JVI]",
         requiredProperties.size(), requiredProperties,
         optionalProperties.size(), optionalProperties);
   }

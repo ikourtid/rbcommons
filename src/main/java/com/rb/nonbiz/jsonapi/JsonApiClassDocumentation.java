@@ -152,12 +152,12 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
 
   @Override
   public String toString() {
-    return Strings.format("[JACD %s %s %s %s %s %s %s JACD]",
-        clazz,
+    return Strings.format("[JACD %s %s %s %s ; childConverters: %s ; trivialJson: %s ; nonTrivialJson: %s JACD]",
+        clazz.getSimpleName(),
         singleLineSummary,
         longDocumentation,
         jsonValidationInstructions,
-        formatListInExistingOrder(childJsonApiConverters),
+        formatListInExistingOrder(childJsonApiConverters, v -> v.getClass().getSimpleName()),
         formatOptional(trivialSampleJson),
         formatOptional(nontrivialSampleJson));
   }

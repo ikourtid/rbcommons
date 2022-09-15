@@ -116,12 +116,12 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
   @Override
   public String toString() {
-    return Strings.format("[JAAD %s %s %s %s %s JACD]",
-        classBeingDocumented,
-        classOfArrayItems,
+    return Strings.format("[JAAD %s ; arrayClass: %s ; summary: %s ; longDoc: %s ; childConverter: %s JAAD]",
+        classBeingDocumented.getSimpleName(),
+        classOfArrayItems.getSimpleName(),
         singleLineSummary,
         longDocumentation,
-        formatOptional(childJsonApiConverter));
+        formatOptional(childJsonApiConverter, v -> v.getClass().getSimpleName()));
   }
 
 
