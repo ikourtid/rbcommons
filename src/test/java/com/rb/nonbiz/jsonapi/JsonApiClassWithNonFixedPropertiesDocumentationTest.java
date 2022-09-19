@@ -28,7 +28,7 @@ public class JsonApiClassWithNonFixedPropertiesDocumentationTest
     extends RBTestMatcher<JsonApiClassWithNonFixedPropertiesDocumentation> {
 
   public static JsonApiClassWithNonFixedPropertiesDocumentation testJsonApiClassWithNonFixedPropertiesDocumentationWithSeed(
-      Class<?> classBeingDocumented, Class<?> keyClass, Class<?> valueClass,    String seed) {
+      Class<?> classBeingDocumented, Class<?> keyClass, Class<?> valueClass, String seed) {
     return jsonApiClassWithNonFixedPropertiesDocumentationBuilder()
         .setClassBeingDocumented(classBeingDocumented)
         .setKeyClass(keyClass)
