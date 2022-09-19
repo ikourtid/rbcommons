@@ -35,7 +35,6 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
   private final HumanReadableDocumentation longDocumentation;
   private final JsonValidationInstructions jsonValidationInstructions;
   private final List<HasJsonApiDocumentation> childJsonApiConverters;
-  private final Optional<JsonElement> trivialSampleJson;
   private final Optional<JsonElement> nontrivialSampleJson;
 
   private JsonApiClassDocumentation(
@@ -44,14 +43,12 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       HumanReadableDocumentation longDocumentation,
       List<HasJsonApiDocumentation> childJsonApiConverters,
       JsonValidationInstructions jsonValidationInstructions,
-      Optional<JsonElement> trivialSampleJson,
       Optional<JsonElement> nontrivialSampleJson) {
     this.clazz = clazz;
     this.singleLineSummary = singleLineSummary;
     this.longDocumentation = longDocumentation;
     this.jsonValidationInstructions = jsonValidationInstructions;
     this.childJsonApiConverters = childJsonApiConverters;
-    this.trivialSampleJson = trivialSampleJson;
     this.nontrivialSampleJson = nontrivialSampleJson;
   }
 
@@ -127,13 +124,6 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
   }
 
   /**
-   * Returns some trivial (i.e. minimal) sample JSON.
-   */
-  public Optional<JsonElement> getTrivialSampleJson() {
-    return trivialSampleJson;
-  }
-
-  /**
    * Returns some non-trivial (i.e. not minimal) sample JSON.
    */
   public Optional<JsonElement> getNontrivialSampleJson() {
@@ -152,13 +142,12 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
 
   @Override
   public String toString() {
-    return Strings.format("[JACD %s %s %s %s ; childConverters: %s ; trivialJson: %s ; nonTrivialJson: %s JACD]",
+    return Strings.format("[JACD %s %s %s %s ; childConverters: %s ; nonTrivialJson: %s JACD]",
         clazz.getSimpleName(),
         singleLineSummary,
         longDocumentation,
         jsonValidationInstructions,
         formatListInExistingOrder(childJsonApiConverters, v -> v.getClass().getSimpleName()),
-        formatOptional(trivialSampleJson),
         formatOptional(nontrivialSampleJson));
   }
 
@@ -170,7 +159,6 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
     private HumanReadableDocumentation longDocumentation;
     private JsonValidationInstructions jsonValidationInstructions;
     private List<HasJsonApiDocumentation> childJsonApiConverters;
-    private Optional<JsonElement> trivialSampleJson;
     private Optional<JsonElement> nontrivialSampleJson;
 
     private JsonApiClassDocumentationBuilder() {}
@@ -184,7 +172,6 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
     public static JsonApiClassDocumentationBuilder intermediateJsonApiClassDocumentationBuilder() {
       return jsonApiClassDocumentationBuilder()
           .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
-          .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied();
     }
 
@@ -193,7 +180,6 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
     // Same as above, but doesn't call .setLongDocumentation()
     public static JsonApiClassDocumentationBuilder intermediate2JsonApiClassDocumentationBuilder() {
       return jsonApiClassDocumentationBuilder()
-          .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied();
     }
 
@@ -208,7 +194,6 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
           .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
           .hasNoJsonValidationInstructions()
           .hasChildJsonApiConverters(Arrays.asList(items))
-          .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied()
           .build();
     }
@@ -261,16 +246,6 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return hasChildJsonApiConverters(emptyList());
     }
 
-    public JsonApiClassDocumentationBuilder setTrivialSampleJson(JsonElement trivialSampleJson) {
-      this.trivialSampleJson = checkNotAlreadySet(this.trivialSampleJson, Optional.of(trivialSampleJson));
-      return this;
-    }
-
-    public JsonApiClassDocumentationBuilder noTrivialSampleJsonSupplied() {
-      this.trivialSampleJson = checkNotAlreadySet(this.trivialSampleJson, Optional.empty());
-      return this;
-    }
-
     public JsonApiClassDocumentationBuilder setNontrivialSampleJson(JsonElement nontrivialSampleJson) {
       this.nontrivialSampleJson = checkNotAlreadySet(this.nontrivialSampleJson, Optional.of(nontrivialSampleJson));
       return this;
@@ -288,7 +263,6 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       RBPreconditions.checkNotNull(longDocumentation);
       RBPreconditions.checkNotNull(jsonValidationInstructions);
       RBPreconditions.checkNotNull(childJsonApiConverters);
-      RBPreconditions.checkNotNull(trivialSampleJson);
       RBPreconditions.checkNotNull(nontrivialSampleJson);
 
       RBPreconditions.checkArgument(
@@ -306,7 +280,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
     public JsonApiClassDocumentation buildWithoutPreconditions() {
       return new JsonApiClassDocumentation(
           clazz, singleLineSummary, longDocumentation, childJsonApiConverters, jsonValidationInstructions,
-          trivialSampleJson, nontrivialSampleJson);
+          nontrivialSampleJson);
     }
 
   }
@@ -374,9 +348,12 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
           .hasNoJsonValidationInstructions()
           // primitives do not mention other entities under them that get serialized.
           .hasNoChildJsonApiConverters()
-          .noTrivialSampleJsonSupplied()
-          // Currently (Aug 2022), there's only room for one of the two sample JSON values in the resulting Swagger
-          // documentation, and it's the 'nontrivial' that gets chosen to be shown. So let's use that one here.
+          // Our Java class tests usually have a trivial and a nontrivial class. However, currently (Aug 2022)
+          // there's only room for one sample JSON in the resulting Swagger documentation.
+          // So if we can only store only one, we'll use the 'nontrivial', which is more descriptive.
+          // Of course, there's no programmatic - or even subjective - criterion of what counts as the JSON version
+          // of a trivial class. But the high-level semantics is that we should have a complicated enough object
+          // being described here, to cover the most cases.
           .setNontrivialSampleJson(nontrivialSampleJson)
           .build();
     }

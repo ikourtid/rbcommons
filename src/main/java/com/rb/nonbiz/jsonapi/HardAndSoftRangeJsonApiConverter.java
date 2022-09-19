@@ -83,7 +83,6 @@ public class HardAndSoftRangeJsonApiConverter implements HasJsonApiDocumentation
             "that it move back to the soft limit.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasSingleChildJsonApiConverter(rangeJsonApiConverter)
-        .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()
         .build();
   }

@@ -68,7 +68,6 @@ public class FlatSignedLinearCombinationJsonApiConverter implements HasJsonApiDo
         .hasNoJsonValidationInstructions()
         .hasSingleChildJsonApiConverter(weightedBySignedFractionJsonApiConverter)
         .setLongDocumentation(documentation("The items are all of the same (arbitrary) type."))
-        .noTrivialSampleJsonSupplied()
         .setNontrivialSampleJson(jsonArray(
             jsonObject(
                 "weight", jsonDouble(-0.111),

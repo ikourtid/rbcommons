@@ -94,7 +94,6 @@ public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocu
             "The key values must be unique."))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
-        .noTrivialSampleJsonSupplied()
         .setNontrivialSampleJson(jsonObject(
             "keys", jsonStringArray("a", "b", "c"),
             "data", jsonLongArray(100L, 200L, 300L)))

@@ -37,8 +37,6 @@ public class JsonApiClassWithSubclassesDocumentationTest extends RBTestMatcher<J
             new JsonApiSubclassInfoTest().makeTrivialObject(),
             new JsonApiSubclassInfoTest().makeNontrivialObject())
         .setDiscriminatorProperty("discr" + seed)
-        .setTrivialSampleJson(singletonJsonObject(
-            "key" + seed, "value" + seed))
         .setNontrivialSampleJson(jsonObject(
             "key1" + seed, jsonString("value1" + seed),
             "key2" + seed, jsonString("value2" + seed)))
@@ -61,7 +59,6 @@ public class JsonApiClassWithSubclassesDocumentationTest extends RBTestMatcher<J
         .setLongDocumentation(documentation("y"))
         .setJsonApiInfoOnOnlySubclass(new JsonApiSubclassInfoTest().makeTrivialObject())
         .hasNoDiscriminatorProperty()
-        .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()
         .build();
   }
@@ -92,7 +89,6 @@ public class JsonApiClassWithSubclassesDocumentationTest extends RBTestMatcher<J
         match(                   v -> v.getLongDocumentation(),          f -> humanReadableDocumentationMatcher(f)),
         matchList(               v -> v.getJsonApiSubclassInfoList(),    f -> jsonApiSubclassInfoMatcher(f)),
         matchOptionalUsingEquals(v -> v.getDiscriminatorProperty()),
-        matchOptional(           v -> v.getTrivialSampleJson(),          f -> jsonElementMatcher(f, 1e-8)),
         matchOptional(           v -> v.getNontrivialSampleJson(),       f -> jsonElementMatcher(f, 1e-8)));
   }
 

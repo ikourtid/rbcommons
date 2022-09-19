@@ -120,7 +120,6 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
             "<p> Both 'min' and 'max' can be omitted to specify an unlimited range. </p>")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
-        .setTrivialSampleJson(emptyJsonObject())
         .setNontrivialSampleJson(jsonObject(
             "min", jsonDouble(-1.1),
             "max", jsonDouble( 9.9)))
