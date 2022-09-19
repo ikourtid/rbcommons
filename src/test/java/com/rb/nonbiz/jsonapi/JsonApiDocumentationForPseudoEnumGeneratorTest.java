@@ -36,7 +36,6 @@ public class JsonApiDocumentationForPseudoEnumGeneratorTest extends RBTest<JsonA
                     "</ul></p>\n")))
                 .hasNoJsonValidationInstructions()
                 .hasNoChildJsonApiConverters()
-                .noTrivialSampleJsonSupplied()
                 .noNontrivialSampleJsonSupplied()
                 .build()));
   }

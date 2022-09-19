@@ -12,7 +12,6 @@ import org.junit.Test;
 import static com.rb.nonbiz.json.JsonValidationInstructionsTest.jsonValidationInstructionsMatcher;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
-import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTest.hasJsonApiDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -35,8 +34,6 @@ public class JsonApiClassDocumentationTest extends RBTestMatcher<JsonApiClassDoc
         .setLongDocumentation(documentation("documentation" + seed))
         .setJsonValidationInstructions(new JsonValidationInstructionsTest().makeNontrivialObject())
         .hasNoChildJsonApiConverters() // hard to set this here
-        .setTrivialSampleJson(singletonJsonObject(
-            "key" + seed, "value" + seed))
         .setNontrivialSampleJson(jsonObject(
             "key1" + seed, jsonString("value1" + seed),
             "key2" + seed, jsonString("value2" + seed)))
@@ -59,7 +56,6 @@ public class JsonApiClassDocumentationTest extends RBTestMatcher<JsonApiClassDoc
         .setLongDocumentation(documentation("y"))
         .hasNoJsonValidationInstructions()
         .hasNoChildJsonApiConverters()
-        .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()
         .build();
   }
@@ -88,7 +84,6 @@ public class JsonApiClassDocumentationTest extends RBTestMatcher<JsonApiClassDoc
         match(           v -> v.getLongDocumentation(),          f -> humanReadableDocumentationMatcher(f)),
         match(           v -> v.getJsonValidationInstructions(), f -> jsonValidationInstructionsMatcher(f)),
         matchList(       v -> v.getChildJsonApiConverters(),     f -> hasJsonApiDocumentationMatcher(f)),
-        matchOptional(   v -> v.getTrivialSampleJson(),          f -> jsonElementMatcher(f, 1e-8)),
         matchOptional(   v -> v.getNontrivialSampleJson(),       f -> jsonElementMatcher(f, 1e-8)));
   }
 

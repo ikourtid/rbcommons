@@ -34,7 +34,6 @@ public class JsonApiDocumentationForPseudoEnumGenerator {
         .hasNoJsonValidationInstructions()
         // primitives such as Enum do not mention other entities under them that get serialized.
         .hasNoChildJsonApiConverters()
-        .noTrivialSampleJsonSupplied()
         .noNontrivialSampleJsonSupplied()
         .build();
   }

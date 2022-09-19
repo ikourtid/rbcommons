@@ -29,7 +29,6 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
   private final HumanReadableDocumentation longDocumentation;
   private final List<JsonApiSubclassInfo> jsonApiSubclassInfoList;
   private final Optional<String> discriminatorProperty;
-  private final Optional<JsonElement> trivialSampleJson;
   private final Optional<JsonElement> nontrivialSampleJson;
 
   private JsonApiClassWithSubclassesDocumentation(
@@ -38,14 +37,12 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
       HumanReadableDocumentation longDocumentation,
       List<JsonApiSubclassInfo> jsonApiSubclassInfoList,
       Optional<String> discriminatorProperty,
-      Optional<JsonElement> trivialSampleJson,
       Optional<JsonElement> nontrivialSampleJson) {
     this.classBeingDocumented = classBeingDocumented;
     this.singleLineSummary = singleLineSummary;
     this.longDocumentation = longDocumentation;
     this.jsonApiSubclassInfoList = jsonApiSubclassInfoList;
     this.discriminatorProperty = discriminatorProperty;
-    this.trivialSampleJson = trivialSampleJson;
     this.nontrivialSampleJson = nontrivialSampleJson;
   }
 
@@ -98,10 +95,6 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
     return discriminatorProperty;
   }
 
-  public Optional<JsonElement> getTrivialSampleJson() {
-    return trivialSampleJson;
-  }
-
   public Optional<JsonElement> getNontrivialSampleJson() {
     return nontrivialSampleJson;
   }
@@ -114,13 +107,12 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
   @Override
   public String toString() {
     return Strings.format(
-        "[JACWSD %s %s %s ; subClasses: %s ; discriminatorProperty= %s ; trivialSampleJson= %s ; nontrivialSampleJson= %s JACWSD]",
+        "[JACWSD %s %s %s ; subClasses: %s ; discriminatorProperty= %s ; nontrivialSampleJson= %s JACWSD]",
         classBeingDocumented.getSimpleName(),
         singleLineSummary,
         longDocumentation,
         formatListInExistingOrder(jsonApiSubclassInfoList, v -> v.getClassOfSubclass().getSimpleName()),
         formatOptional(discriminatorProperty),
-        formatOptional(trivialSampleJson),
         formatOptional(nontrivialSampleJson));
   }
 
@@ -133,7 +125,6 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
     private HumanReadableDocumentation longDocumentation;
     private List<JsonApiSubclassInfo> jsonApiSubclassInfoList;
     private Optional<String> discriminatorProperty;
-    private Optional<JsonElement> trivialSampleJson;
     private Optional<JsonElement> nontrivialSampleJson;
 
     private JsonApiClassWithSubclassesDocumentationBuilder() {}
@@ -181,16 +172,6 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
       return this;
     }
 
-    public JsonApiClassWithSubclassesDocumentationBuilder setTrivialSampleJson(JsonElement trivialSampleJson) {
-      this.trivialSampleJson = checkNotAlreadySet(this.trivialSampleJson, Optional.of(trivialSampleJson));
-      return this;
-    }
-
-    public JsonApiClassWithSubclassesDocumentationBuilder noTrivialSampleJsonSupplied() {
-      this.trivialSampleJson = checkNotAlreadySet(this.trivialSampleJson, Optional.empty());
-      return this;
-    }
-
     public JsonApiClassWithSubclassesDocumentationBuilder setNontrivialSampleJson(JsonElement nontrivialSampleJson) {
       this.nontrivialSampleJson = checkNotAlreadySet(this.nontrivialSampleJson, Optional.of(nontrivialSampleJson));
       return this;
@@ -208,7 +189,6 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
       RBPreconditions.checkNotNull(longDocumentation);
       RBPreconditions.checkNotNull(jsonApiSubclassInfoList);
       RBPreconditions.checkNotNull(discriminatorProperty);
-      RBPreconditions.checkNotNull(trivialSampleJson);
       RBPreconditions.checkNotNull(nontrivialSampleJson);
 
       RBPreconditions.checkArgument(
@@ -234,7 +214,7 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
     public JsonApiClassWithSubclassesDocumentation buildWithoutPreconditions() {
       return new JsonApiClassWithSubclassesDocumentation(
           classBeingDocumented, singleLineSummary, longDocumentation,
-          jsonApiSubclassInfoList, discriminatorProperty, trivialSampleJson, nontrivialSampleJson);
+          jsonApiSubclassInfoList, discriminatorProperty, nontrivialSampleJson);
     }
 
   }

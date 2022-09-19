@@ -88,7 +88,6 @@ public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocum
             "the range [0.0, 1.0]. `SignedFraction`s, however, are allowed to go outside of those bounds. </p>")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
-        .noTrivialSampleJsonSupplied()
         .setNontrivialSampleJson(jsonObject(
             "weight", jsonDouble(-123.45),
             "item",   jsonString("sample item")))
