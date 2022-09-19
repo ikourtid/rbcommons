@@ -1,6 +1,10 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonElement;
+import com.rb.biz.jsonapi.JsonTicker;
+import com.rb.nonbiz.collections.ClosedRange;
+import com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor;
+import com.rb.nonbiz.json.JsonApiPropertyDescriptor.RBMapJsonApiPropertyDescriptor;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
@@ -20,7 +24,20 @@ import static java.util.Collections.singletonList;
  * This is (mostly) human-readable text that explains how a Java object (non-enum) of this type
  * will get converted to/from JSON. It's useful mostly to 3rd party developers.
  *
- * <p> For the case of enums, see {@link JsonApiEnumDocumentation}. </p>
+ * <p> The most common type of JSON object has fixed properties that correspond to members of the corresponding
+ * Java class. For example, the JSON representation for {@link ClosedRange} has a 'min' and a 'max' property.
+ * However, sometimes a JSON object is the representation of a single map, where they keys are not
+ * fixed. Examples are maps keyed by {@link JsonTicker}. This lets us expressed in a structured manner
+ * what they types are for the keys and values, as opposed to writing it out in free-form text in the documentation. </p>
+ *
+ * <p> At first, this may look similar to {@link IidMapJsonApiPropertyDescriptor} and
+ * {@link RBMapJsonApiPropertyDescriptor}. However, those are for cases where a JSON object has a (fixed) property whose
+ * type is a map. Those apply to the property of a JSON object, not to the entire JSON object.
+ * Instead, {@link JsonApiClassWithNonFixedPropertiesDocumentation} applies to the entire JSON object. </p>
+ *
+ * <p> We currently (Sep 2022) never have any JSON objects in our JSON API representations that have both fixed and
+ * non-fixed properties. This is because we may not be able to guarantee that a non-fixed property will not collide
+ * with a fixed property. </p>
  */
 public class JsonApiClassWithNonFixedPropertiesDocumentation extends JsonApiDocumentation {
 
