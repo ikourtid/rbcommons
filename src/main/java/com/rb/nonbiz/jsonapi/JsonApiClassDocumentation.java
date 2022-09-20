@@ -216,6 +216,8 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return this;
     }
 
+    // FIXME IAK YAML this should go away because if a JSON object does not have fixed properties,
+    // we should be using JsonApiClassWithNonFixedPropertiesDocumentation instead of JsonApiClassDocumentation.
     public JsonApiClassDocumentationBuilder hasNoJsonValidationInstructions() {
       return setJsonValidationInstructions(emptyJsonValidationInstructions());
     }
