@@ -2,17 +2,24 @@ package com.rb.nonbiz.reflection;
 
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
+import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.collections.RBSets;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import static com.rb.nonbiz.collections.RBSet.newRBSet;
+import static com.rb.nonbiz.collections.RBSet.newRBSetFromPossibleDuplicates;
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.reflection.RBClass.rbClass;
 import static com.rb.nonbiz.reflection.RBClass.shallowGenericRbClass;
 import static com.rb.nonbiz.reflection.RBClass.nonGenericRbClass;
 import static com.rb.nonbiz.testmatchers.Match.matchList;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -32,6 +39,39 @@ public class RBClassTest extends RBTestMatcher<RBClass<?>> {
                 IidMap.class,
                 UnitFraction.class))
             .toString());
+  }
+
+  @Test
+  public void testEquals() {
+    assertEquals(makeTrivialObject(),            makeTrivialObject());
+    assertEquals(makeNontrivialObject(),         makeNontrivialObject());
+    assertEquals(makeMatchingNontrivialObject(), makeMatchingNontrivialObject());
+  }
+
+  @Test
+  public void testGetAllClassesAsStream() {
+    assertThat(
+        newRBSet(rbClass(
+            RBMap.class,
+            nonGenericRbClass(String.class),
+            shallowGenericRbClass(
+                IidMap.class,
+                UnitFraction.class))
+            .getAllClassesAsStream()),
+        rbSetEqualsMatcher(
+            rbSetOf(RBMap.class, String.class, IidMap.class, UnitFraction.class)));
+
+    // Does not throw if there are duplicate classes, in this case IidMap,
+    // as the below represents an IidMap<IidMap<UnitFraction>>.
+    assertThat(
+        newRBSetFromPossibleDuplicates(rbClass(
+            IidMap.class,
+            shallowGenericRbClass(
+                IidMap.class,
+                UnitFraction.class))
+            .getAllClassesAsStream()),
+        rbSetEqualsMatcher(
+            rbSetOf(IidMap.class, UnitFraction.class)));
   }
 
   @Override

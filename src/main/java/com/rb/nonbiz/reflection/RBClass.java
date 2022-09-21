@@ -5,7 +5,9 @@ import com.rb.nonbiz.collections.RBStreams;
 import com.rb.nonbiz.text.Strings;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static java.util.Collections.emptyList;
@@ -68,6 +70,14 @@ public class RBClass<T> {
     return innerClassRBClasses;
   }
 
+  public Stream<Class<?>> getAllClassesAsStream() {
+    return Stream.concat(
+        Stream.of(outerClass),
+        innerClassRBClasses
+            .stream()
+            .flatMap(v -> v.getAllClassesAsStream()));
+  }
+
   // We do this trick to avoid nesting our usual toString 'tags' (here, "CDAG").
   public String toStringWithoutTags() {
     return innerClassRBClasses.isEmpty()
@@ -90,6 +100,22 @@ public class RBClass<T> {
         ? Strings.format("[CDAG %s CDAG]", outerClass.getSimpleName())
         : Strings.format("[CDAG %s < %s > CDAG]", outerClass.getSimpleName(), Joiner.on(" , ").join(
             innerClassRBClasses.stream().map(v -> v.toStringWithoutTags()).iterator()));
+  }
+
+  // IDE-generated. We don't normally implement equals & hashCode, but RBClass can reasonably be used as a key
+  // in a map, so it should have non-trivial implementation for those methods.
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    RBClass<?> rbClass = (RBClass<?>) o;
+    return outerClass.equals(rbClass.outerClass) && innerClassRBClasses.equals(rbClass.innerClassRBClasses);
+  }
+
+  // IDE-generated; see #equals above.
+  @Override
+  public int hashCode() {
+    return Objects.hash(outerClass, innerClassRBClasses);
   }
 
 }
