@@ -3,6 +3,7 @@ package com.rb.nonbiz.reflection;
 import com.google.common.base.Joiner;
 import com.rb.nonbiz.collections.RBStreams;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.text.UniqueId;
 
 import java.util.List;
 import java.util.Objects;
@@ -11,6 +12,7 @@ import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 /**
  * A generalization of {@link Class} that also gives the class information for the classes 'inside the angle brackets'
@@ -57,7 +59,27 @@ public class RBClass<T> {
         .collect(Collectors.toList()));
   }
 
-  public static <T> RBClass<T> nonGenericRbClass(
+  /**
+   * Represents e.g. a {@code UniqueId<Partition<AssetClass>>} or some other situation where the class inside the
+   * {@link UniqueId} is also generic (in addition to {@link UniqueId}, which is generic).
+   */
+  // Unfortunately, we ned this convoluted code to cast to a Class<UniqueId<T>>.
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public static <T> RBClass<UniqueId<T>> uniqueIdRbClass(RBClass<T> classOfUniqueId) {
+    return new RBClass<UniqueId<T>>(
+        (Class) UniqueId.class,
+        singletonList(classOfUniqueId));
+  }
+
+  /**
+   * Represents e.g. a {@code UniqueId<NamedFactor>} or some other situation where the class inside the
+   * {@link UniqueId} is not itself generic (even though obviously {@link UniqueId} is).
+   */
+  public static <T> RBClass<UniqueId<T>> uniqueIdRbClass(Class<T> classOfUniqueId) {
+    return uniqueIdRbClass(nonGenericRbClass(classOfUniqueId));
+  }
+
+    public static <T> RBClass<T> nonGenericRbClass(
       Class<T> outerClass) {
     return new RBClass<>(outerClass, emptyList());
   }
@@ -80,10 +102,14 @@ public class RBClass<T> {
 
   // We do this trick to avoid nesting our usual toString 'tags' (here, "CDAG").
   public String toStringWithoutTags() {
-    return innerClassRBClasses.isEmpty()
+    return !isGeneric()
         ? outerClass.getSimpleName()
         : Strings.format("%s < %s >", outerClass.getSimpleName(), Joiner.on(" , ").join(
             innerClassRBClasses.stream().map(v -> v.toStringWithoutTags()).iterator()));
+  }
+
+  public boolean isGeneric() {
+    return !innerClassRBClasses.isEmpty();
   }
 
   @Override
@@ -96,7 +122,7 @@ public class RBClass<T> {
     // RBMap<String, IidMap<UnitFraction>>
     // However, we have a convention to use spaces in generated strings around any item that is variable, i.e. not
     // part of the fixed text in the first string argument of String#format.
-    return innerClassRBClasses.isEmpty()
+    return !isGeneric()
         ? Strings.format("[CDAG %s CDAG]", outerClass.getSimpleName())
         : Strings.format("[CDAG %s < %s > CDAG]", outerClass.getSimpleName(), Joiner.on(" , ").join(
             innerClassRBClasses.stream().map(v -> v.toStringWithoutTags()).iterator()));
