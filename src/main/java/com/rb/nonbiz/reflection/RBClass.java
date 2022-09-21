@@ -69,7 +69,7 @@ public class RBClass<T> {
   }
 
   // We do this trick to avoid nesting our usual toString 'tags' (here, "CDAG").
-  private String toStringWithoutTags() {
+  public String toStringWithoutTags() {
     return innerClassRBClasses.isEmpty()
         ? outerClass.getSimpleName()
         : Strings.format("%s < %s >", outerClass.getSimpleName(), Joiner.on(" , ").join(

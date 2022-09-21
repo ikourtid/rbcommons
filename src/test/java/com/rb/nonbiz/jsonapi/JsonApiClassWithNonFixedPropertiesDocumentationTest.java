@@ -3,8 +3,11 @@ package com.rb.nonbiz.jsonapi;
 import com.rb.biz.jsonapi.JsonTicker;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.Partition;
+import com.rb.nonbiz.reflection.RBClass;
+import com.rb.nonbiz.reflection.RBClassTest;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
+import com.rb.nonbiz.text.UniqueId;
 import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -13,6 +16,9 @@ import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTest.hasJsonApiDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiClassWithNonFixedPropertiesDocumentation.JsonApiClassWithNonFixedPropertiesDocumentationBuilder.jsonApiClassWithNonFixedPropertiesDocumentationBuilder;
+import static com.rb.nonbiz.reflection.RBClass.nonGenericRbClass;
+import static com.rb.nonbiz.reflection.RBClass.shallowGenericRbClass;
+import static com.rb.nonbiz.reflection.RBClassTest.rbClassMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchList;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
@@ -28,7 +34,7 @@ public class JsonApiClassWithNonFixedPropertiesDocumentationTest
     extends RBTestMatcher<JsonApiClassWithNonFixedPropertiesDocumentation> {
 
   public static JsonApiClassWithNonFixedPropertiesDocumentation testJsonApiClassWithNonFixedPropertiesDocumentationWithSeed(
-      Class<?> classBeingDocumented, Class<?> keyClass, Class<?> valueClass, String seed) {
+      Class<?> classBeingDocumented, RBClass<?> keyClass, RBClass<?> valueClass, String seed) {
     return jsonApiClassWithNonFixedPropertiesDocumentationBuilder()
         .setClassBeingDocumented(classBeingDocumented)
         .setKeyClass(keyClass)
@@ -45,8 +51,8 @@ public class JsonApiClassWithNonFixedPropertiesDocumentationTest
   @Test
   public void classIsEnum_mustUseJsonApiEnumDocumentationInstead_throws() {
     // JsonTicker and UnitFraction are dummy classes.
-    Class<JsonTicker> dummyKeyClass = JsonTicker.class;
-    Class<UnitFraction> dummyValueClass = UnitFraction.class;
+    RBClass<JsonTicker> dummyKeyClass = nonGenericRbClass(JsonTicker.class);
+    RBClass<UnitFraction> dummyValueClass = nonGenericRbClass(UnitFraction.class);
 
     assertIllegalArgumentException( () ->
         testJsonApiClassWithNonFixedPropertiesDocumentationWithSeed(
@@ -74,14 +80,20 @@ public class JsonApiClassWithNonFixedPropertiesDocumentationTest
   @Override
   public JsonApiClassWithNonFixedPropertiesDocumentation makeNontrivialObject() {
     return testJsonApiClassWithNonFixedPropertiesDocumentationWithSeed(
-        Partition.class, JsonTicker.class, UnitFraction.class, "");
+        Partition.class,
+        shallowGenericRbClass(UniqueId.class, JsonTicker.class),
+        shallowGenericRbClass(ClosedRange.class, Double.class),
+        "");
   }
 
   @Override
   public JsonApiClassWithNonFixedPropertiesDocumentation makeMatchingNontrivialObject() {
     // Nothing to tweak here
     return testJsonApiClassWithNonFixedPropertiesDocumentationWithSeed(
-        Partition.class, JsonTicker.class, UnitFraction.class, "");
+        Partition.class,
+        shallowGenericRbClass(UniqueId.class, JsonTicker.class),
+        shallowGenericRbClass(ClosedRange.class, Double.class),
+        "");
   }
 
   @Override
@@ -95,8 +107,8 @@ public class JsonApiClassWithNonFixedPropertiesDocumentationTest
       JsonApiClassWithNonFixedPropertiesDocumentation expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getClassBeingDocumented()),
-        matchUsingEquals(v -> v.getKeyClass()),
-        matchUsingEquals(v -> v.getValueClass()),
+        match(           v -> v.getKeyClass(),                   f -> rbClassMatcher(f)),
+        match(           v -> v.getValueClass(),                 f -> rbClassMatcher(f)),
         match(           v -> v.getSingleLineSummary(),          f -> humanReadableDocumentationMatcher(f)),
         match(           v -> v.getLongDocumentation(),          f -> humanReadableDocumentationMatcher(f)),
         matchList(       v -> v.getChildJsonApiConverters(),     f -> hasJsonApiDocumentationMatcher(f)),

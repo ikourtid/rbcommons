@@ -5,6 +5,7 @@ import com.rb.biz.jsonapi.JsonTicker;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.RBMapJsonApiPropertyDescriptor;
+import com.rb.nonbiz.reflection.RBClass;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
+import static com.rb.nonbiz.reflection.RBClass.nonGenericRbClass;
 import static com.rb.nonbiz.text.Strings.formatListInExistingOrder;
 import static com.rb.nonbiz.text.Strings.formatOptional;
 import static java.util.Collections.emptyList;
@@ -42,8 +44,8 @@ import static java.util.Collections.singletonList;
 public class JsonApiClassWithNonFixedPropertiesDocumentation extends JsonApiDocumentation {
 
   private final Class<?> classBeingDocumented;
-  private final Class<?> keyClass;
-  private final Class<?> valueClass;
+  private final RBClass<?> keyClass;
+  private final RBClass<?> valueClass;
   private final HumanReadableDocumentation singleLineSummary;
   private final HumanReadableDocumentation longDocumentation;
   private final List<HasJsonApiDocumentation> childJsonApiConverters;
@@ -51,8 +53,8 @@ public class JsonApiClassWithNonFixedPropertiesDocumentation extends JsonApiDocu
 
   private JsonApiClassWithNonFixedPropertiesDocumentation(
       Class<?> classBeingDocumented,
-      Class<?> keyClass,
-      Class<?> valueClass,
+      RBClass<?> keyClass,
+      RBClass<?> valueClass,
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentation,
       List<HasJsonApiDocumentation> childJsonApiConverters,
@@ -82,11 +84,11 @@ public class JsonApiClassWithNonFixedPropertiesDocumentation extends JsonApiDocu
     return classBeingDocumented;
   }
 
-  public Class<?> getKeyClass() {
+  public RBClass<?> getKeyClass() {
     return keyClass;
   }
 
-  public Class<?> getValueClass() {
+  public RBClass<?> getValueClass() {
     return valueClass;
   }
 
@@ -141,8 +143,8 @@ public class JsonApiClassWithNonFixedPropertiesDocumentation extends JsonApiDocu
   public String toString() {
     return Strings.format("[JACD %s ( %s -> %s ) %s %s %s ; childConverters: %s ; nonTrivialJson: %s JACD]",
         classBeingDocumented.getSimpleName(),
-        keyClass.getSimpleName(),
-        valueClass.getSimpleName(),
+        keyClass.toStringWithoutTags(),
+        valueClass.toStringWithoutTags(),
         singleLineSummary,
         longDocumentation,
         formatListInExistingOrder(childJsonApiConverters, v -> v.getClass().getSimpleName()),
@@ -154,8 +156,8 @@ public class JsonApiClassWithNonFixedPropertiesDocumentation extends JsonApiDocu
       implements RBBuilder<JsonApiClassWithNonFixedPropertiesDocumentation> {
 
     private Class<?> classBeingDocumented;
-    private Class<?> keyClass;
-    private Class<?> valueClass;
+    private RBClass<?> keyClass;
+    private RBClass<?> valueClass;
     private HumanReadableDocumentation singleLineSummary;
     private HumanReadableDocumentation longDocumentation;
     private List<HasJsonApiDocumentation> childJsonApiConverters;
@@ -172,14 +174,22 @@ public class JsonApiClassWithNonFixedPropertiesDocumentation extends JsonApiDocu
       return this;
     }
 
-    public JsonApiClassWithNonFixedPropertiesDocumentationBuilder setKeyClass(Class<?> keyClass) {
+    public JsonApiClassWithNonFixedPropertiesDocumentationBuilder setKeyClass(RBClass<?> keyClass) {
       this.keyClass = checkNotAlreadySet(this.keyClass, keyClass);
       return this;
     }
 
-    public JsonApiClassWithNonFixedPropertiesDocumentationBuilder setValueClass(Class<?> valueClass) {
+    public JsonApiClassWithNonFixedPropertiesDocumentationBuilder setKeyClass(Class<?> keyClass) {
+      return setKeyClass(nonGenericRbClass(keyClass));
+    }
+
+    public JsonApiClassWithNonFixedPropertiesDocumentationBuilder setValueClass(RBClass<?> valueClass) {
       this.valueClass = checkNotAlreadySet(this.valueClass, valueClass);
       return this;
+    }
+
+    public JsonApiClassWithNonFixedPropertiesDocumentationBuilder setValueClass(Class<?> valueClass) {
+      return setValueClass(nonGenericRbClass(valueClass));
     }
 
     public JsonApiClassWithNonFixedPropertiesDocumentationBuilder setSingleLineSummary(HumanReadableDocumentation singleLineSummary) {
