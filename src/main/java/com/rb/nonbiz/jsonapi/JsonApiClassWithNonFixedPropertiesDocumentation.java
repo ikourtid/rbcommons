@@ -2,7 +2,9 @@ package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonElement;
 import com.rb.biz.jsonapi.JsonTicker;
+import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ClosedRange;
+import com.rb.nonbiz.collections.Partition;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.RBMapJsonApiPropertyDescriptor;
 import com.rb.nonbiz.reflection.RBClass;
@@ -78,6 +80,10 @@ public class JsonApiClassWithNonFixedPropertiesDocumentation extends JsonApiDocu
    * so let's just use the {@link Class#getSimpleName()} for that purpose. </p>
    *
    * <p> This is similar to what we do for instantiating {@link RBLog}. </p>
+   *
+   * <p> Note that, unlike {@link #getKeyClass()} and {@link #getValueClass()}, this is a plain {@link Class},
+   * not an {@link RBClass}. That's because the JSON API documentation will have a single documentation entry for e.g.
+   * {@link Partition}, but not for a {@link Partition} of {@link InstrumentId} or any other specific generic flavor. </p>
    */
   @Override
   public Class<?> getClassBeingDocumented() {
