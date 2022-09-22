@@ -1,5 +1,7 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.RBLog;
@@ -23,9 +25,11 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
  * However, the validation of a single array item is performed by the (separate) JSON API converter
  * that converts the items inside the array. </p>
  *
- * <p> Also, those other implementers of {@link JsonApiDocumentation} have sample JSON in them. However,
- * since this is an array, there's no need for sample JSON for the entire array; some sample JSON for the array items
- * would suffice. That JSON would live in that array item's JSON API converter, however. </p>
+ * <p> Also, those other implementers of {@link JsonApiDocumentation} have sample JSON in them. Since this is an array,
+ * you could argue that there's no need for sample JSON for the entire array, and that some sample JSON for the array
+ * <em> items </em> would suffice. That JSON would live in that array item's JSON API converter.
+ * However, sometimes it's clearer to have sample JSON even for an entire array, in addition to sample JSON just
+ * for the array items. So we will still keep a sample JSON property here. </p>
  */
 public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
@@ -34,18 +38,21 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
   private final HumanReadableDocumentation singleLineSummary;
   private final HumanReadableDocumentation longDocumentation;
   private final Optional<HasJsonApiDocumentation> childJsonApiConverter;
+  private final Optional<JsonArray> nontrivialSampleJson;
 
   private JsonApiArrayDocumentation(
       Class<?> classBeingDocumented,
       Class<?> classOfArrayItems,
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentation,
-      Optional<HasJsonApiDocumentation> childJsonApiConverter) {
+      Optional<HasJsonApiDocumentation> childJsonApiConverter,
+      Optional<JsonArray> nontrivialSampleJson) {
     this.classBeingDocumented = classBeingDocumented;
     this.classOfArrayItems = classOfArrayItems;
     this.singleLineSummary = singleLineSummary;
     this.longDocumentation = longDocumentation;
     this.childJsonApiConverter = childJsonApiConverter;
+    this.nontrivialSampleJson = nontrivialSampleJson;
   }
 
   /**
@@ -108,6 +115,12 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
     return longDocumentation;
   }
 
+  /**
+   * Returns {@link JsonArray} that can be used as an example inside the documentation.
+   */
+  public Optional<JsonArray> getNontrivialSampleJson() {
+    return nontrivialSampleJson;
+  }
 
   @Override
   public <T> T visit(Visitor<T> visitor) {
@@ -116,12 +129,14 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
   @Override
   public String toString() {
-    return Strings.format("[JAAD %s ; arrayClass: %s ; summary: %s ; longDoc: %s ; childConverter: %s JAAD]",
+    return Strings.format(
+        "[JAAD %s ; arrayClass: %s ; summary: %s ; longDoc: %s ; childConverter: %s ; nontrivialJson: %s JAAD]",
         classBeingDocumented.getSimpleName(),
         classOfArrayItems.getSimpleName(),
         singleLineSummary,
         longDocumentation,
-        formatOptional(childJsonApiConverter, v -> v.getClass().getSimpleName()));
+        formatOptional(childJsonApiConverter, v -> v.getClass().getSimpleName()),
+        formatOptional(nontrivialSampleJson));
   }
 
 
@@ -132,6 +147,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
     private HumanReadableDocumentation singleLineSummary;
     private HumanReadableDocumentation longDocumentation;
     private Optional<HasJsonApiDocumentation> childJsonApiConverter;
+    private Optional<JsonArray> nontrivialSampleJson;
 
     private JsonApiArrayDocumentationBuilder() {}
 
@@ -169,6 +185,16 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
       return this;
     }
 
+    public JsonApiArrayDocumentationBuilder setNontrivialSampleJson(JsonArray nontrivialSampleJson) {
+      this.nontrivialSampleJson = checkNotAlreadySet(this.nontrivialSampleJson, Optional.of(nontrivialSampleJson));
+      return this;
+    }
+
+    public JsonApiArrayDocumentationBuilder hasNoNontrivialSampleJson() {
+      this.nontrivialSampleJson = checkNotAlreadySet(this.nontrivialSampleJson, Optional.empty());
+      return this;
+    }
+
     @Override
     public void sanityCheckContents() {
       RBPreconditions.checkNotNull(classBeingDocumented);
@@ -176,6 +202,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
       RBPreconditions.checkNotNull(singleLineSummary);
       RBPreconditions.checkNotNull(longDocumentation);
       RBPreconditions.checkNotNull(childJsonApiConverter);
+      RBPreconditions.checkNotNull(nontrivialSampleJson);
 
       RBPreconditions.checkArgument(
           !classBeingDocumented.isEnum(),
@@ -186,12 +213,22 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
           !classBeingDocumented.equals(classOfArrayItems),
           "Both the class being documented and the class of its array items are equal: %s",
           classBeingDocumented);
+
+      nontrivialSampleJson.ifPresent(v -> RBPreconditions.checkArgument(
+          v.size() > 0,
+          "The sample JSON array is empty: %s",
+          v));
     }
 
     @Override
     public JsonApiArrayDocumentation buildWithoutPreconditions() {
       return new JsonApiArrayDocumentation(
-          classBeingDocumented, classOfArrayItems, singleLineSummary, longDocumentation, childJsonApiConverter);
+          classBeingDocumented,
+          classOfArrayItems,
+          singleLineSummary,
+          longDocumentation,
+          childJsonApiConverter,
+          nontrivialSampleJson);
     }
 
   }

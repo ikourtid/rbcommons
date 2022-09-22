@@ -1,13 +1,17 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.rb.nonbiz.collections.ClosedRange;
+import com.rb.nonbiz.json.RBJsonArrays;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 
+import static com.rb.nonbiz.json.RBJsonArrays.jsonDoubleArray;
+import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
 import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTest.hasJsonApiDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiArrayDocumentation.JsonApiArrayDocumentationBuilder.jsonApiArrayDocumentationBuilder;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentationTest.testJsonApiClassDocumentationWithSeed;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
+import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayMatcher;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
 
@@ -34,6 +38,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
         .hasNoJsonApiConverter()
+        .hasNoNontrivialSampleJson()
         .build();
   }
 
@@ -50,18 +55,24 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
         .hasJsonApiConverter( () -> testJsonApiClassDocumentationWithSeed(BigDecimal.class, ""))
+        .setNontrivialSampleJson(jsonStringArray("a", "b"))
         .build();
   }
 
   @Override
   public JsonApiArrayDocumentation makeMatchingNontrivialObject() {
-    // Nothing to tweak here
+    // Nothing to tweak here.
     return jsonApiArrayDocumentationBuilder()
         .setClassBeingDocumented(ClosedRange.class)
         .setClassOfArrayItems(UnitFraction.class)
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
         .hasJsonApiConverter( () -> testJsonApiClassDocumentationWithSeed(BigDecimal.class, ""))
+        // Typically, we epsilon-match anything that involves numbers. So we could have used a double array to be
+        // more general, and epsilon-compare the doubles in it. However, this is human-generated sample content for
+        // the documentation. It's not the result of some calculation that can result in epsilon differences.
+        // So it's OK to take the stricter approach and only consider exact equality as a match for testing purposes.
+        .setNontrivialSampleJson(jsonStringArray("a", "b"))
         .build();
   }
 
@@ -77,7 +88,9 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
         matchUsingEquals(v -> v.getClassOfArrayItems()),
         match(           v -> v.getSingleLineSummary(),     f -> humanReadableDocumentationMatcher(f)),
         match(           v -> v.getLongDocumentation(),     f -> humanReadableDocumentationMatcher(f)),
-        matchOptional(   v -> v.getChildJsonApiConverter(), f -> hasJsonApiDocumentationMatcher(f)));
+        matchOptional(   v -> v.getChildJsonApiConverter(), f -> hasJsonApiDocumentationMatcher(f)),
+        // See comment in makeMatchingNontrivialObject on why we use a zero epsilon.
+        matchOptional(   v -> v.getNontrivialSampleJson(),  f -> jsonArrayMatcher(f, 0.0)));
   }
 
 }
