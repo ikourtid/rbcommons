@@ -11,6 +11,8 @@ import com.rb.nonbiz.util.RBPreconditions;
  * will get converted to/from JSON. It's useful mostly to 3rd party developers.
  *
  * <p> For non-enums, see {@link JsonApiClassDocumentation}. </p>
+ *
+ * @see JsonApiDocumentation
  */
 public class JsonApiEnumDocumentation<E extends Enum<E>> extends JsonApiDocumentation {
 

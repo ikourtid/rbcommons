@@ -30,6 +30,8 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
  * <em> items </em> would suffice. That JSON would live in that array item's JSON API converter.
  * However, sometimes it's clearer to have sample JSON even for an entire array, in addition to sample JSON just
  * for the array items. So we will still keep a sample JSON property here. </p>
+ *
+ * @see JsonApiClassDocumentation
  */
 public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
