@@ -12,9 +12,9 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 /**
  * This is effectively a {@code Range<Double>} except that:
  * <ul>
- *   <li> it is bounded on both ends </li>
- *   <li> it is at most [0, 1], which is convenient because we use 'unitFraction of total portfolio'
- *      a lot in our LP formulations. </li>
+ *   <li> It is bounded on both ends. </li>
+ *   <li> It is at most [0, 1], which is convenient because we use '{@link UnitFraction}
+ *        of total portfolio' a lot in our LP formulations. </li>
  * </ul>
  */
 public class ClosedUnitFractionRange {
