@@ -232,12 +232,16 @@ public class ClosedUnitFractionRange {
 
   @Override
   public String toString() {
-    return Strings.format("[CUFR [%s..%s] CUFR]",
+    return isUnrestricted()
+        ? "[CUFR]"
+        : Strings.format("[CUFR [%s..%s] CUFR]",
         rawRange.lowerEndpoint(), rawRange.upperEndpoint());
   }
 
   public String toString(int maxPrecision) {
-    return Strings.format("[CUFR [%s..%s] CUFR]",
+    return isUnrestricted()
+        ? "[CURF]"
+        : Strings.format("[CUFR [%s..%s] CUFR]",
         rawRange.lowerEndpoint().toPercentString(maxPrecision), rawRange.upperEndpoint().toPercentString(maxPrecision));
   }
 
