@@ -178,7 +178,7 @@ public class JsonApiClassWithNonFixedPropertiesDocumentation extends JsonApiDocu
 
     /**
      * A convenience constructor for the common case where the 'keyClass' is {@link JsonTicker}, which
-     * is used for converting {@link IidMap}s to JSON.
+     * is used when converting {@link IidMap}s to JSON.
      */
     public static JsonApiClassWithNonFixedPropertiesDocumentationBuilder iidJsonApiClassDocumentationBuilder() {
       return jsonApiClassWithNonFixedPropertiesDocumentationBuilder()
