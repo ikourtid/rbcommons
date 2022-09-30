@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.inject.Inject;
 import com.rb.nonbiz.collections.FlatSignedLinearCombination;
+import com.rb.nonbiz.types.WeightedBySignedFraction;
 
 import java.util.function.Function;
 
@@ -14,9 +15,11 @@ import static com.rb.nonbiz.json.RBJsonArrays.iteratorToJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.jsonapi.JsonApiArrayDocumentation.JsonApiArrayDocumentationBuilder.jsonApiArrayDocumentationBuilder;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
+import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
 /**
  * Converts a {@link FlatSignedLinearCombination} back and forth to a JSON array for our public API.
@@ -26,7 +29,7 @@ import static com.rb.nonbiz.text.Strings.asSingleLine;
  * {@code List<WeightedBySignedFraction<T>>}, and lists are more naturally represented by arrays.
  * Furthermore, if we were to create a JsonObject, it's not clear what the keys would be. </p>
  *
- * <p> This does not implement JsonRoundTripConverter because we need to supply serializers
+ * <p> This does not implement JsonArrayRoundTripConverter because we need to supply serializers
  * and deserializers. </p>
  */
 public class FlatSignedLinearCombinationJsonApiConverter implements HasJsonApiDocumentation {
@@ -60,14 +63,14 @@ public class FlatSignedLinearCombinationJsonApiConverter implements HasJsonApiDo
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return jsonApiClassDocumentationBuilder()
-        .setClass(FlatSignedLinearCombination.class)
-        .setSingleLineSummary(documentation(asSingleLine(
-            "A collection of weighted items, similar to FlatLinearCombination ",
+    return jsonApiArrayDocumentationBuilder()
+        .setClassBeingDocumented(FlatSignedLinearCombination.class)
+        .setClassOfArrayItems(WeightedBySignedFraction.class)
+        .setSingleLineSummary(documentation(asSingleLineWithNewlines(
+            "A collection of weighted items, similar to FlatLinearCombination",
             "except that it allows both positive and negative weights (but not zero).")))
-        .hasNoJsonValidationInstructions()
-        .hasSingleChildJsonApiConverter(weightedBySignedFractionJsonApiConverter)
         .setLongDocumentation(documentation("The items are all of the same (arbitrary) type."))
+        .hasJsonApiConverter(weightedBySignedFractionJsonApiConverter)
         .setNontrivialSampleJson(jsonArray(
             jsonObject(
                 "weight", jsonDouble(-0.111),
