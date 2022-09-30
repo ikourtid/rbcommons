@@ -63,7 +63,7 @@ public class RBClass<T> {
    * Represents e.g. a {@code UniqueId<Partition<AssetClass>>} or some other situation where the class inside the
    * {@link UniqueId} is also generic (in addition to {@link UniqueId}, which is generic).
    */
-  // Unfortunately, we ned this convoluted code to cast to a Class<UniqueId<T>>.
+  // Unfortunately, we need this convoluted code to cast to a Class<UniqueId<T>>.
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public static <T> RBClass<UniqueId<T>> uniqueIdRbClass(RBClass<T> classOfUniqueId) {
     return new RBClass<UniqueId<T>>(
