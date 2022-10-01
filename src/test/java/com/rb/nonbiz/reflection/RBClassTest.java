@@ -32,17 +32,25 @@ public class RBClassTest extends RBTestMatcher<RBClass<?>> {
   @Test
   public void variousToStringTests() {
     // We don't normally test the toString output, but this helps us understand what the class represents
-    // in the most general case.
+    // in the most general case where we have the generic of a generic.
     // See toString about the (possibly unexpected) spaces below.
+    RBClass<?> rbClass = rbClass(
+        RBMap.class,
+        nonGenericRbClass(String.class),
+        shallowGenericRbClass(
+            IidMap.class,
+            UnitFraction.class));
     assertEquals(
         "[CDAG RBMap < String , IidMap < UnitFraction > > CDAG]",
-        rbClass(
-            RBMap.class,
-            nonGenericRbClass(String.class),
-            shallowGenericRbClass(
-                IidMap.class,
-                UnitFraction.class))
-            .toString());
+        rbClass.toString());
+
+    assertEquals(
+        "RBMap < String , IidMap < UnitFraction > >",
+        rbClass.toStringWithoutTags());
+
+    assertEquals(
+        "RBMap<String, IidMap<UnitFraction>>",
+        rbClass.toStringInJavaGenericNotation());
   }
 
   @Test
