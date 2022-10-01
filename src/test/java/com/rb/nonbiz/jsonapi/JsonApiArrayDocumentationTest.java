@@ -1,14 +1,14 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.rb.nonbiz.collections.ClosedRange;
-import com.rb.nonbiz.json.RBJsonArrays;
+import com.rb.nonbiz.reflection.RBClassTest;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 
-import static com.rb.nonbiz.json.RBJsonArrays.jsonDoubleArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
 import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTest.hasJsonApiDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiArrayDocumentation.JsonApiArrayDocumentationBuilder.jsonApiArrayDocumentationBuilder;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentationTest.testJsonApiClassDocumentationWithSeed;
+import static com.rb.nonbiz.reflection.RBClassTest.rbClassMatcher;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayMatcher;
@@ -51,7 +51,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
     //   .setClassOfArrayItems(TaxLot.class)
     return jsonApiArrayDocumentationBuilder()
         .setClassBeingDocumented(ClosedRange.class)
-        .setClassOfArrayItems(UnitFraction.class)
+        .setRBClassOfArrayItems(new RBClassTest().makeNontrivialObject())
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
         .hasJsonApiConverter( () -> testJsonApiClassDocumentationWithSeed(BigDecimal.class, ""))
@@ -64,7 +64,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
     // Nothing to tweak here.
     return jsonApiArrayDocumentationBuilder()
         .setClassBeingDocumented(ClosedRange.class)
-        .setClassOfArrayItems(UnitFraction.class)
+        .setRBClassOfArrayItems(new RBClassTest().makeMatchingNontrivialObject())
         .setSingleLineSummary(documentation("s"))
         .setLongDocumentation(documentation("l"))
         .hasJsonApiConverter( () -> testJsonApiClassDocumentationWithSeed(BigDecimal.class, ""))
@@ -85,7 +85,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
       JsonApiArrayDocumentation expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getClassBeingDocumented()),
-        matchUsingEquals(v -> v.getClassOfArrayItems()),
+        match(           v -> v.getRbClassOfArrayItems(),   f -> rbClassMatcher(f)),
         match(           v -> v.getSingleLineSummary(),     f -> humanReadableDocumentationMatcher(f)),
         match(           v -> v.getLongDocumentation(),     f -> humanReadableDocumentationMatcher(f)),
         matchOptional(   v -> v.getChildJsonApiConverter(), f -> hasJsonApiDocumentationMatcher(f)),
