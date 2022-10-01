@@ -1,8 +1,8 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.rb.nonbiz.json.JsonValidationInstructions;
+import com.rb.nonbiz.reflection.RBClass;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
@@ -11,6 +11,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Optional;
 
+import static com.rb.nonbiz.reflection.RBClass.nonGenericRbClass;
 import static com.rb.nonbiz.text.Strings.formatOptional;
 
 /**
@@ -34,7 +35,7 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
 public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
   private final Class<?> classBeingDocumented;
-  private final Class<?> classOfArrayItems;
+  private final RBClass<?> rbClassOfArrayItems;
   private final HumanReadableDocumentation singleLineSummary;
   private final HumanReadableDocumentation longDocumentation;
   private final Optional<HasJsonApiDocumentation> childJsonApiConverter;
@@ -42,13 +43,13 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
   private JsonApiArrayDocumentation(
       Class<?> classBeingDocumented,
-      Class<?> classOfArrayItems,
+      RBClass<?> rbClassOfArrayItems,
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentation,
       Optional<HasJsonApiDocumentation> childJsonApiConverter,
       Optional<JsonArray> nontrivialSampleJson) {
     this.classBeingDocumented = classBeingDocumented;
-    this.classOfArrayItems = classOfArrayItems;
+    this.rbClassOfArrayItems = rbClassOfArrayItems;
     this.singleLineSummary = singleLineSummary;
     this.longDocumentation = longDocumentation;
     this.childJsonApiConverter = childJsonApiConverter;
@@ -74,8 +75,8 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
     return classBeingDocumented;
   }
 
-  public Class<?> getClassOfArrayItems() {
-    return classOfArrayItems;
+  public RBClass<?> getRbClassOfArrayItems() {
+    return rbClassOfArrayItems;
   }
 
   /**
@@ -132,7 +133,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
     return Strings.format(
         "[JAAD %s ; arrayClass: %s ; summary: %s ; longDoc: %s ; childConverter: %s ; nontrivialJson: %s JAAD]",
         classBeingDocumented.getSimpleName(),
-        classOfArrayItems.getSimpleName(),
+        rbClassOfArrayItems,
         singleLineSummary,
         longDocumentation,
         formatOptional(childJsonApiConverter, v -> v.getClass().getSimpleName()),
@@ -143,7 +144,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
   public static class JsonApiArrayDocumentationBuilder implements RBBuilder<JsonApiArrayDocumentation> {
 
     private Class<?> classBeingDocumented;
-    private Class<?> classOfArrayItems;
+    private RBClass<?> rbClassOfArrayItems;
     private HumanReadableDocumentation singleLineSummary;
     private HumanReadableDocumentation longDocumentation;
     private Optional<HasJsonApiDocumentation> childJsonApiConverter;
@@ -160,9 +161,13 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
       return this;
     }
 
-    public JsonApiArrayDocumentationBuilder setClassOfArrayItems(Class<?> classOfArrayItems) {
-      this.classOfArrayItems = checkNotAlreadySet(this.classOfArrayItems, classOfArrayItems);
+    public JsonApiArrayDocumentationBuilder setRBClassOfArrayItems(RBClass<?> rbClassOfArrayItems) {
+      this.rbClassOfArrayItems = checkNotAlreadySet(this.rbClassOfArrayItems, rbClassOfArrayItems);
       return this;
+    }
+
+    public JsonApiArrayDocumentationBuilder setClassOfArrayItems(Class<?> classOfArrayItems) {
+      return setRBClassOfArrayItems(nonGenericRbClass(classOfArrayItems));
     }
 
     public JsonApiArrayDocumentationBuilder setSingleLineSummary(HumanReadableDocumentation singleLineSummary) {
@@ -198,7 +203,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
     @Override
     public void sanityCheckContents() {
       RBPreconditions.checkNotNull(classBeingDocumented);
-      RBPreconditions.checkNotNull(classOfArrayItems);
+      RBPreconditions.checkNotNull(rbClassOfArrayItems);
       RBPreconditions.checkNotNull(singleLineSummary);
       RBPreconditions.checkNotNull(longDocumentation);
       RBPreconditions.checkNotNull(childJsonApiConverter);
@@ -210,7 +215,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
           classBeingDocumented);
 
       RBPreconditions.checkArgument(
-          !classBeingDocumented.equals(classOfArrayItems),
+          !classBeingDocumented.equals(rbClassOfArrayItems.getOuterClass()),
           "Both the class being documented and the class of its array items are equal: %s",
           classBeingDocumented);
 
@@ -224,7 +229,7 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
     public JsonApiArrayDocumentation buildWithoutPreconditions() {
       return new JsonApiArrayDocumentation(
           classBeingDocumented,
-          classOfArrayItems,
+          rbClassOfArrayItems,
           singleLineSummary,
           longDocumentation,
           childJsonApiConverter,
