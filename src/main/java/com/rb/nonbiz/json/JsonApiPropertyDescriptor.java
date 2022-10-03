@@ -304,11 +304,13 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of an IidMap of some Java data class.
+   * Tells us the type of property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of an {@link IidMap} of some Java data class.
    *
    * <p> Instead of just using a simple {@link Class} object, this stores a {@link JsonApiPropertyDescriptor},
    * which is more general, so that we can also represent things such as {@literal IidMap<List<Double>>}.</p>
+   *
+   * @see JsonApiPropertyDescriptor
    */
   public static class IidMapJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
@@ -482,8 +484,8 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of an collection (Set, List, or array) of some Java data class.
+   * Tells us the type of property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of a collection (Set, List, or array) of some Java data class.
    *
    * <p> We use a {@link JsonApiPropertyDescriptor} instead of just a raw {@link Class} so that we can represent
    * things such as {@literal List<UniqueId<NamedFactor>> }, i.e. where the value class inside the collection is not
@@ -558,7 +560,7 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the case
+   * Tells us the type of property of a JsonObject in the JSON API, in the case
    * where it is the JSON representation of a java generic such as {@code Foo<T>}.
    *
    * <p> It should only be used when T is an actual data class that has a JSON serialization. Example:
