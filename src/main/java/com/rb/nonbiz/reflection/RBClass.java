@@ -108,6 +108,14 @@ public class RBClass<T> {
             innerClassRBClasses.stream().map(v -> v.toStringWithoutTags()).iterator()));
   }
 
+  // We do this trick to avoid nesting our usual toString 'tags' (here, "CDAG").
+  public String toStringInJavaGenericNotation() {
+    return !isGeneric()
+        ? outerClass.getSimpleName()
+        : Strings.format("%s<%s>", outerClass.getSimpleName(), Joiner.on(", ").join(
+        innerClassRBClasses.stream().map(v -> v.toStringInJavaGenericNotation()).iterator()));
+  }
+
   public boolean isGeneric() {
     return !innerClassRBClasses.isEmpty();
   }

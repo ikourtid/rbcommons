@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.rb.biz.jsonapi.JsonTicker;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ClosedRange;
+import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.Partition;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.IidMapJsonApiPropertyDescriptor;
 import com.rb.nonbiz.json.JsonApiPropertyDescriptor.RBMapJsonApiPropertyDescriptor;
@@ -175,6 +176,15 @@ public class JsonApiClassWithNonFixedPropertiesDocumentation extends JsonApiDocu
 
     public static JsonApiClassWithNonFixedPropertiesDocumentationBuilder jsonApiClassWithNonFixedPropertiesDocumentationBuilder() {
       return new JsonApiClassWithNonFixedPropertiesDocumentationBuilder();
+    }
+
+    /**
+     * A convenience constructor for the common case where the 'keyClass' is {@link JsonTicker}, which
+     * is used when converting {@link IidMap}s to JSON.
+     */
+    public static JsonApiClassWithNonFixedPropertiesDocumentationBuilder iidJsonApiClassDocumentationBuilder() {
+      return jsonApiClassWithNonFixedPropertiesDocumentationBuilder()
+          .setKeyClass(JsonTicker.class);
     }
 
     public JsonApiClassWithNonFixedPropertiesDocumentationBuilder setClassBeingDocumented(Class<?> classBeingDocumented) {
