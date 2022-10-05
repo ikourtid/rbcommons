@@ -239,12 +239,16 @@ public class RBSet<T> implements Iterable<T> {
    * an exception. </p>
    */
   public <T1> RBSet<T1> transform(Function<T, T1> transformer) {
-    Set<T1> transformedSet = this.stream().map(transformer).collect(Collectors.toSet());
-    RBPreconditions.checkArgument(
-        this.size() == transformedSet.size(),
-        "This method does not let us put duplicates in the set; transformAllowingDuplicates does. Set was: %s",
-        this);
-    return new RBSet<>(transformedSet);
+    MutableRBSet<T1> transformedSet = newMutableRBSetWithExpectedSize(this.size());
+    this.stream().forEach(originalItem -> {
+      T1 transformedItem = transformer.apply(originalItem);
+      RBPreconditions.checkArgument(
+          !transformedSet.contains(transformedItem),
+          "This transformation is not one-to-one; this transformed item appears twice: %s",
+          transformedItem);
+      transformedSet.add(transformedItem);
+    });
+    return newRBSet(transformedSet);
   }
 
   /**

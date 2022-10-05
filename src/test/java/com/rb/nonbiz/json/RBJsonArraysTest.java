@@ -217,6 +217,41 @@ public class RBJsonArraysTest {
   }
 
   @Test
+  public void rbSetToJsonArray_sortedVersion() {
+    BiConsumer<JsonArray, RBSet<String>> asserter = (jsonArray, rbSet) -> {
+      assertThat(
+          jsonArrayToRBSet(
+              jsonArray,
+              jsonElement -> jsonElement.getAsString().substring(2, 3)),
+          rbSetEqualsMatcher(
+              rbSet));
+      assertThat(
+          rbSetToJsonArray(
+              rbSet,
+              String::compareTo,
+              v -> jsonString(Strings.format("_ %s", v))),
+          jsonArrayExactMatcher(jsonArray));
+    };
+    asserter.accept(
+        jsonArray(
+            jsonString("_ 1"),
+            jsonString("_ 2"),
+            jsonString("_ 3"),
+            jsonString("_ 4"),
+            jsonString("_ 5"),
+            jsonString("_ 6"),
+            jsonString("_ 7"),
+            jsonString("_ 8"),
+            jsonString("_ 9")),
+        // I'm rearranging the strings a bit so they're not sorted, so that it's very unlikely that the array
+        // ends up in sorted order due to iterating over the rbset in an unspecifiedorder.
+        rbSetOf("1", "3", "5", "7", "9", "2", "4", "6", "8"));
+    asserter.accept(
+        emptyJsonArray(),
+        emptyRBSet());
+  }
+
+  @Test
   public void test_ifHasJsonArrayProperty() {
     StringBuilder sb = new StringBuilder();
     JsonObject jsonObject = singletonJsonObject("a", jsonStringArray("111", "222"));

@@ -13,6 +13,7 @@ import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -223,6 +224,16 @@ public class RBJsonArrays {
     return jsonArray(
         rbSet.size(),
         rbSet.stream().map(serializer));
+  }
+
+  public static <V> JsonArray rbSetToJsonArray(
+      RBSet<V> rbSet,
+      Comparator<V> comparator,
+      Function<V, JsonElement> serializer) {
+    return streamToJsonArray(
+        rbSet.size(),
+        rbSet.stream().sorted(comparator),
+        serializer);
   }
 
   public static void ifHasJsonArrayProperty(
