@@ -184,8 +184,10 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the simplest case
+   * Tells us the type of property of a JsonObject in the JSON API, in the simplest case
    * where it is a single JSON API data class (e.g. not some collection).
+   *
+   * @see JsonApiPropertyDescriptor
    */
   public static class SimpleClassJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
@@ -308,7 +310,7 @@ public abstract class JsonApiPropertyDescriptor {
    * where it is the JSON representation of an {@link IidMap} of some Java data class.
    *
    * <p> Instead of just using a simple {@link Class} object, this stores a {@link JsonApiPropertyDescriptor},
-   * which is more general, so that we can also represent things such as {@literal IidMap<List<Double>>}.</p>
+   * which is more general, so that we can also represent things such as {@literal IidMap<List<Double>>}. </p>
    *
    * @see JsonApiPropertyDescriptor
    */
@@ -385,12 +387,15 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of an RBMap of some Java data class.
+   * Tells us the type of property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of an {@link RBMap} of some Java data class.
    *
    * <p> Instead of just using simple {@link Class} objects, this stores {@link JsonApiPropertyDescriptor} objects,
    * which are more general, so that we can also represent things such as
    * {@literal RBMap<UniqueId<NamedFactor>, List<Double>>}.</p>
+   *
+   * @see RBMap
+   * @see JsonApiPropertyDescriptor
    */
   public static class RBMapJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
@@ -490,6 +495,8 @@ public abstract class JsonApiPropertyDescriptor {
    * <p> We use a {@link JsonApiPropertyDescriptor} instead of just a raw {@link Class} so that we can represent
    * things such as {@literal List<UniqueId<NamedFactor>> }, i.e. where the value class inside the collection is not
    * a simple class and is instead a generic, a map, etc. </p>
+   *
+   * @see JsonApiPropertyDescriptor
    */
   public static class CollectionJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
@@ -563,14 +570,16 @@ public abstract class JsonApiPropertyDescriptor {
    * Tells us the type of property of a JsonObject in the JSON API, in the case
    * where it is the JSON representation of a java generic such as {@code Foo<T>}.
    *
-   * <p> It should only be used when T is an actual data class that has a JSON serialization. Example:
+   * <p> It should only be used when <i>T</i> is an actual data class that has a JSON serialization. Example:
    * {@code UniqueId<NamedFactor>}. It should not be used for 'marker interface' classes, such as
    * {@code Portfolio<HeldByUs>}. This makes sense, because HeldByUs is not something that gets serialized. </p>
    *
    * <p> For the inner classes, we use the more general {@link JsonApiPropertyDescriptor} instead of a raw
    * {@link Class}. This allows us to support things like {@code UniqueId<List<Double>>}, i.e. situations
    * where the generic argument class is not a 'simple' class. (This is an unrealistic example, as we'd never
-   * really need a unique ID of a list, but it should illustrate the point. </p>
+   * really need a unique ID of a list, but it should illustrate the point.) </p>
+   *
+   * @see JsonApiPropertyDescriptor
    */
   public static class JavaGenericJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
@@ -631,7 +640,7 @@ public abstract class JsonApiPropertyDescriptor {
       return new JavaGenericJsonApiPropertyDescriptor(
           outerClass, genericArgumentClassDescriptors, jsonPropertySpecificDocumentation);
     }
-    
+
     public static JavaGenericJsonApiPropertyDescriptor javaGenericJsonApiPropertyDescriptor(
         Class<?> outerClass,
         List<JsonApiPropertyDescriptor> genericArgumentClassDescriptors,
@@ -729,15 +738,19 @@ public abstract class JsonApiPropertyDescriptor {
 
   /**
    * We often serialize a base class with multiple subclasses by using a string key in the JSON to represent the
-   * subclass's type. Example: NaiveSubObjectiveFormulationDetailsJsonApiConverter. The strings in the JSON may not
+   * subclass's type. Example: NaiveSubObjectiveFormulationDetailsJsonApiConverter.
+   *
+   * <p> The strings in the JSON may not
    * be exact matches to the Java class names - and anyway, they shouldn't be, because if we rename Java classes, we
    * don't want the API to change, as others may be relying on those specific strings.
    * Also, there are other cases where we use a special string in the JSON API
-   * to represent some special values (e.g. GlobalObjectiveThreshold where the threshold always passes).
+   * to represent some special values (e.g. GlobalObjectiveThreshold where the threshold always passes). </p>
    *
    * <p> For those JSON properties, we should be using this. </p>
    *
    * <p> Note that this does not represent an actual enum; for that, see {@link JsonApiEnumDescriptor}. </p>
+   *
+   * @see JsonApiPropertyDescriptor
    */
   public static class PseudoEnumJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
