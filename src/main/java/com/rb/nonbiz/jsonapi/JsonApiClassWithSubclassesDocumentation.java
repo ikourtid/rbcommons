@@ -132,6 +132,7 @@ public class JsonApiClassWithSubclassesDocumentation extends JsonApiDocumentatio
     public static JsonApiClassWithSubclassesDocumentationBuilder jsonApiClassWithSubclassesDocumentationBuilder() {
       return new JsonApiClassWithSubclassesDocumentationBuilder();
     }
+
     public JsonApiClassWithSubclassesDocumentationBuilder setClassBeingDocumented(Class<?> classBeingDocumented) {
       this.classBeingDocumented = checkNotAlreadySet(this.classBeingDocumented, classBeingDocumented);
       return this;

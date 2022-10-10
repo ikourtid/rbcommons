@@ -12,9 +12,9 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 /**
  * This is effectively a {@code Range<Double>} except that:
  * <ul>
- *   <li> it is bounded on both ends </li>
- *   <li> it is at most [0, 1], which is convenient because we use 'unitFraction of total portfolio'
- *      a lot in our LP formulations. </li>
+ *   <li> It is bounded on both ends. </li>
+ *   <li> It is at most [0, 1], which is convenient because we use '{@link UnitFraction}
+ *        of total portfolio' a lot in our LP formulations. </li>
  * </ul>
  */
 public class ClosedUnitFractionRange {
@@ -53,6 +53,9 @@ public class ClosedUnitFractionRange {
     }
   }
 
+  /**
+   * 'Unrestricted' means [0, 1] in this context, since {@link UnitFraction}s must be in [0, 1].
+   */
   public static ClosedUnitFractionRange unrestrictedClosedUnitFractionRange() {
     return WIDEST_POSSIBLE_CLOSED_UNIT_FRACTION_RANGE;
   }
@@ -94,11 +97,12 @@ public class ClosedUnitFractionRange {
    * 'hard range' is somehow more restrictive than the 'soft range'.
    * If you think about the cases when that should be valid, it gives you an idea of what this returns.
    *
-   * We want to allow hard = soft = [0%, 100%] (i.e. both unrestricted)
+   * <p> We want to allow hard = soft = [0%, 100%] (i.e. both unrestricted)
    * but not hard = soft = [40%, 100%]
-   * or hard = soft = [0%, 70%].
-   * That is, if we bothered to specify one endpoint of the range (0% and 100% don't count),
-   * then that endpoint has to be strictly looser in the hard range vs. the soft range.
+   * or hard = soft = [0%, 70%]. </p>
+   *
+   * <p> That is, if we bothered to specify one endpoint of the range (0% and 100% don't count),
+   * then that endpoint has to be strictly looser in the hard range vs. the soft range. </p>
    */
   public boolean isStrictlyLooser(ClosedUnitFractionRange other) {
     // I am using compareTo once per bound, so as to avoid recomputation.
@@ -127,13 +131,17 @@ public class ClosedUnitFractionRange {
   }
 
   /**
-   * As in isStrictlyLooser() above,
+   * As in {@link #isStrictlyLooser} above,
    * but allow the range to match either (or both) endpoint of 'other'.
-   * E.g. we want to allow all of
+   *
+   * <p> E.g. we want to allow all of: </p>
+   *
+   * <pre>
    * hard = soft = [ 0%, 100%]
    * hard = soft = [ 0%,  60%]
    * hard = soft = [40%, 100%]
    * hard = soft = [40%,  60%]
+   * </pre>
    */
   public boolean isSameOrLooser(ClosedUnitFractionRange other) {
     int lowerComparison = rawRange.lowerEndpoint().compareTo(other.lowerEndpoint());
@@ -169,7 +177,7 @@ public class ClosedUnitFractionRange {
   }
 
   /**
-   * Like 'contains', but returns false if the point that we're passing in
+   * Like {@link #contains}, but returns false if the point that we're passing in
    * is the same as either the lower or upper endpoint of the range.
    */
   public boolean containsInteriorPoint(UnitFraction point) {
@@ -224,12 +232,16 @@ public class ClosedUnitFractionRange {
 
   @Override
   public String toString() {
-    return Strings.format("[CUFR [%s..%s] CUFR]",
+    return isUnrestricted()
+        ? "[CUFR]"
+        : Strings.format("[CUFR [%s..%s] CUFR]",
         rawRange.lowerEndpoint(), rawRange.upperEndpoint());
   }
 
   public String toString(int maxPrecision) {
-    return Strings.format("[CUFR [%s..%s] CUFR]",
+    return isUnrestricted()
+        ? "[CURF]"
+        : Strings.format("[CUFR [%s..%s] CUFR]",
         rawRange.lowerEndpoint().toPercentString(maxPrecision), rawRange.upperEndpoint().toPercentString(maxPrecision));
   }
 

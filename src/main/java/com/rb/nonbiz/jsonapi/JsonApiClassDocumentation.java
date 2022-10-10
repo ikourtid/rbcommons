@@ -27,6 +27,8 @@ import static java.util.Collections.singletonList;
  * will get converted to/from JSON. It's useful mostly to 3rd party developers.
  *
  * <p> For the case of enums, see {@link JsonApiEnumDocumentation}. </p>
+ *
+ * @see JsonApiDocumentation
  */
 public class JsonApiClassDocumentation extends JsonApiDocumentation {
 

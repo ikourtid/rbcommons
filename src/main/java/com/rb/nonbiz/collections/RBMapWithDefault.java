@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.text.Strings;
 
 import java.util.stream.Stream;
@@ -7,8 +8,10 @@ import java.util.stream.Stream;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 
 /**
- * Basically just an RBMap, but it also stores a default value, with the semantics that the default value applies
+ * Basically just an {@link RBMap}, but it also stores a default value, with the semantics that the default value applies
  * when a value for a given key (K) is missing.
+ *
+ * <p> If the keys are {@link InstrumentId}s, use the specialized version {@link IidMapWithDefault} instead. </p>
  *
  * @see RBMap
  * @see RBCategoryMap

@@ -15,12 +15,12 @@ import static com.rb.nonbiz.text.Strings.formatMap;
 import static java.util.Comparator.comparing;
 
 /**
- * A set of items (of the same type V) that implement {@code HasUniqueId<V>},
- * which can be retrieved just by their UniqueId.
+ * A set of items (of the same type {@code <V>}) that implement {@code HasUniqueId<V>},
+ * which can be retrieved just by their {@link UniqueId}.
  *
- * This is useful in cases where the values have unique IDs, and we want to key things off of those IDs.
+ * <p> This is useful in cases where the values have unique IDs, and we want to key things off of those IDs.
  * It is particularly useful when the items (V) themselves do not implement equals (which we normally like to avoid)
- * and are thus not indexable in any way other than plain pointers.
+ * and are thus not indexable in any way other than plain pointers. </p>
  */
 public class RBSetOfHasUniqueId<V extends HasUniqueId<V>> {
 

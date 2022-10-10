@@ -43,6 +43,8 @@ import static java.util.Collections.singletonList;
  * <p> We currently (Sep 2022) never have any JSON objects in our JSON API representations that have both fixed and
  * non-fixed properties. This is because we may not be able to guarantee that a non-fixed property will not collide
  * with a fixed property. </p>
+ *
+ * @see JsonApiDocumentation
  */
 public class JsonApiClassWithNonFixedPropertiesDocumentation extends JsonApiDocumentation {
 
@@ -148,7 +150,7 @@ public class JsonApiClassWithNonFixedPropertiesDocumentation extends JsonApiDocu
 
   @Override
   public String toString() {
-    return Strings.format("[JACD %s ( %s -> %s ) %s %s %s ; childConverters: %s ; nonTrivialJson: %s JACD]",
+    return Strings.format("[JACWNFPD %s ( %s -> %s ) %s %s %s ; childConverters: %s ; nonTrivialJson: %s JACWNFPD]",
         classBeingDocumented.getSimpleName(),
         keyClass.toStringWithoutTags(),
         valueClass.toStringWithoutTags(),

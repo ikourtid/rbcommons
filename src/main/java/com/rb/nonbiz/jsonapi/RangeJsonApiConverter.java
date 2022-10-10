@@ -116,7 +116,7 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
             "That is, the closed range [1, 10] is supported, but the semi-open range (1, 10] (which excludes the point 1)",
             "is not. </p>",
             "<p> Omit the 'min' property to signify a range extending down to -inf, and omit the 'max' property to ",
-            "signify a range extending up to +inf. </p> ",
+            "signify a range extending up to +inf. </p>",
             "<p> Both 'min' and 'max' can be omitted to specify an unlimited range. </p>")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()

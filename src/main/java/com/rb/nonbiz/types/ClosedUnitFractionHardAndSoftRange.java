@@ -54,32 +54,42 @@ public class ClosedUnitFractionHardAndSoftRange {
   /**
    * Returns a {@link ClosedUnitFractionRange} using the following rules:
    *
-   * If the point is outside the hard range, then return the soft range.
-   * If the point is within the soft range, then return the soft range.
-   * If the point is between the soft and hard range, return the soft range expanded to include the point.
+   * <p> If the point is outside the hard range, then return the soft range. </p>
    *
-   * The business case is the following. Assume a soft range of [14%, 26%] and a hard range of [10%, 30%].
+   * <p> If the point is within the soft range, then return the soft range. </p>
    *
-   * If the current position is e.g. 32%, we want to sell it all the way to 26%, not to 30%.
+   * <p>If the point is between the soft and hard range, return the soft range expanded to include the point. </p>
    *
-   * - if the current position is too high, and above the hard limit (e.g. 35%), then we want to sell it down to be
-   *   within the soft range, so no more than 26%. The reason why we don't sell just to within the hard range
-   *   (i.e. down to 30%) is that, if we were to do that, then the next time we consider trading, this position could go
-   *   above 30% due to market drift, even if we don't trade, and we wouldn't want to sell yet again.
-   *   In other words, we want to slightly over-shoot the hard limit,
-   *   so we won't have to immediately trade again due to price fluctuations.
-   * - if the current position is within the soft range (e.g. 22%), then we will return the soft range. We don't want
-   *   it to go above 26%, so we'll use that as a max since the returned range will be [14%, 26%].
-   * - if the current position is outside the soft range BUT within the hard range (e.g. 27%), then we don't want to
-   *   buy more and increase it, but we don't necessarily want to sell.
+   * <p> The business case is the following. Assume a soft range of [14%, 26%] and a hard range of [10%, 30%]. </p>
    *
-   * The above discussion is for cases where pointToInclude is above the upper bounds of one or both of the ranges,
-   * but the same applies (symmetrically) for the case where pointToInclude is below the lower bound.
+   * <p> If the current position is e.g. 32%, we want to sell it all the way to 26%, not to 30%. </p>
    *
-   * In that case, effectively the semantics are
-   * "sell a lot if very misallocated; do not buy more if somewhat overweight; buy up to soft max otherwise".
+   * <ul>
+   *  <li>
+   *    If the current position is too high, and above the hard limit (e.g. 35%), then we want to sell it down to be
+   *    within the soft range, so no more than 26%. The reason why we don't sell just to within the hard range
+   *    (i.e. down to 30%) is that, if we were to do that, then the next time we consider trading, this position could go
+   *    above 30% due to market drift, even if we don't trade, and we wouldn't want to sell yet again.
+   *    In other words, we want to slightly over-shoot the hard limit,
+   *    so we won't have to immediately trade again due to price fluctuations.
+   *   </li>
+   *   <li>
+   *     If the current position is within the soft range (e.g. 22%), then we will return the soft range. We don't want
+   *     it to go above 26%, so we'll use that as a max since the returned range will be [14%, 26%].
+   *   </li>
+   *   <li>
+   *     If the current position is outside the soft range BUT within the hard range (e.g. 27%), then we don't want to
+   *     buy more and increase it, but we don't necessarily want to sell.
+   *   </li>
+   * </ul>
    *
-   * This may make more sense in the tests.
+   * <p> The above discussion is for cases where pointToInclude is above the upper bounds of one or both of the ranges,
+   * but the same applies (symmetrically) for the case where pointToInclude is below the lower bound. </p>
+   *
+   * <p> In that case, effectively the semantics are
+   * "sell a lot if very misallocated; do not buy more if somewhat overweight; buy up to soft max otherwise". </p>
+   *
+   * <p> This may make more sense in the tests. </p>
    */
   public ClosedUnitFractionRange tightenToSoftOrCurrent(UnitFraction pointToInclude) {
     if (softRange.contains(pointToInclude)) {

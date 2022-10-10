@@ -46,10 +46,10 @@ public class ClosedUnitFractionHardAndSoftRangeTest extends RBTestMatcher<Closed
         closedUnitFractionHardAndSoftRange(
             closedUnitFractionRange(unitFraction(0.4), unitFraction(0.6)),
             softRange);
-    assertIllegalArgumentException( () -> maker.apply(closedUnitFractionRange(unitFraction(0.4), unitFraction(0.6)))); // same range
+    assertIllegalArgumentException( () -> maker.apply(closedUnitFractionRange(unitFraction(0.4),  unitFraction(0.6))));  // same range
     assertIllegalArgumentException( () -> maker.apply(closedUnitFractionRange(unitFraction(0.39), unitFraction(0.61)))); // soft range is wider
-    assertIllegalArgumentException( () -> maker.apply(closedUnitFractionRange(unitFraction(0.4), unitFraction(0.59)))); // same on left
-    assertIllegalArgumentException( () -> maker.apply(closedUnitFractionRange(unitFraction(0.41), unitFraction(0.6)))); // same on right
+    assertIllegalArgumentException( () -> maker.apply(closedUnitFractionRange(unitFraction(0.4),  unitFraction(0.59)))); // same on left
+    assertIllegalArgumentException( () -> maker.apply(closedUnitFractionRange(unitFraction(0.41), unitFraction(0.60)))); // same on right
     ClosedUnitFractionHardAndSoftRange doesNotThrow =
         maker.apply(closedUnitFractionRange(unitFraction(0.41), unitFraction(0.59))); // soft range is narrower
   }

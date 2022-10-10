@@ -6,9 +6,10 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.Objects;
 
 /**
- * A simple wrapper around a Range that ensures that the range is closed.
- * There are many places in the code where we want to pass around a closed range, so instead of passing a Range
- * and asserting at the callee that it is a closed range, it is clearer to use a ClosedRange.
+ * A simple wrapper around a {@link Range} that ensures that the range is closed.
+ *
+ * <p> There are many places in the code where we want to pass around a closed range, so instead of passing a Range
+ * and asserting at the callee that it is a closed range, it is clearer to use a ClosedRange. </p>
  */
 public class ClosedRange<T extends Comparable<? super T>> {
 
@@ -21,7 +22,7 @@ public class ClosedRange<T extends Comparable<? super T>> {
   public static <T extends Comparable<? super T>> ClosedRange<T> closedRange(Range<T> range) {
     RBPreconditions.checkArgument(
         RBRanges.rangeIsClosed(range),
-        "For a ClosedRange, the range passed in must be closed, but I got %s",
+        "For a ClosedRange, the range passed in must be closed, but found: %s",
         range);
     return new ClosedRange<>(range);
   }
