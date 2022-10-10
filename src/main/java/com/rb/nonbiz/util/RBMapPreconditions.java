@@ -12,10 +12,11 @@ import java.util.function.Function;
 public class RBMapPreconditions {
 
   /**
-   * Throws if the instrument ID doesn't match between the key and the value (which implements HasInstrumentId).
+   * Throws if the {@link InstrumentId} doesn't match between the key and the value (which implements
+   * {@link HasInstrumentId}).
    *
-   * E.g. in a map of InstrumentId to BuyOrder (where BuyOrder implements HasInstrumentId),
-   * the instrumentId in the key must match the one that the value has.
+   * <p> E.g. in a map of InstrumentId to BuyOrder (where BuyOrder implements HasInstrumentId),
+   * the instrumentId in the key must match the one that the value has. </p>
    */
   public static <T extends HasInstrumentId> IidMap<T> checkMatchingMapInstrumentIds(IidMap<T> map) {
     return checkIidMapKeysMatchValues(map, v -> v.getInstrumentId());
