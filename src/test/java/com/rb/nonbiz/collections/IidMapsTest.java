@@ -1014,6 +1014,10 @@ public class IidMapsTest {
     asserter.accept(iidMap1, iidMap2);
     asserter.accept(iidMap2, iidMap1);
 
+    // any overlap in InstrumentId throws
+    assertIllegalArgumentException( () -> asserter.accept(
+        iidMap1, singletonIidMap(instrumentId(1), "NEW_STRING")));
+
     // merging empty maps yields empty
     assertThat(
         mergeIidMapsAssumingNoOverlap(
@@ -1062,7 +1066,7 @@ public class IidMapsTest {
     asserter.accept(iidMap3, iidMap2, iidMap1);
     asserter.accept(iidMap2, iidMap3, iidMap1);
 
-    // any overlap throws
+    // any overlap in InstrumentId throws
     assertIllegalArgumentException( () -> asserter.accept(
         iidMap1, iidMap2, singletonIidMap(instrumentId(1), "NEW_STRING")));
 
