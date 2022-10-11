@@ -73,22 +73,25 @@ public class IidMaps {
   }
 
   /**
-   * Merge additional {@link IidMap}s and return the result as a new {@Link IidMap}.
+   * Merge at least 3 {@link IidMap}s and return the result as a new {@Link IidMap}.
    */
   @SafeVarargs
   public static <V> IidMap<V> mergeIidMapsAssumingNoOverlap(
       IidMap<V> first,
       IidMap<V> second,
+      IidMap<V> third,
       IidMap<V>...rest) {
     // allocate the total expected size
-    int sizeRest = Arrays.stream(rest).map(additionalIidMap -> additionalIidMap.size()).reduce(Integer::sum).orElse(0);
-    MutableIidMap<V> mutableIidMap = newMutableIidMapWithExpectedSize(first.size() + second.size() + sizeRest);
+    int sizeOfRest = Arrays.stream(rest).map(additionalIidMap -> additionalIidMap.size()).reduce(Integer::sum).orElse(0);
+    MutableIidMap<V> mutableIidMap = newMutableIidMapWithExpectedSize(
+        first.size() + second.size() + third.size() + sizeOfRest);
 
     // don't need 'AssumingNoOverlap' for the first IidMap
     first.forEachEntry( (instrumentId, value) -> mutableIidMap.put(instrumentId, value));
 
-    // merge the second
+    // merge the second and third
     addAllAssumingNoOverlap(mutableIidMap, second);
+    addAllAssumingNoOverlap(mutableIidMap, third);
     // merge the rest
     Arrays.stream(rest).forEach(
         additionalIidMap -> addAllAssumingNoOverlap(mutableIidMap, additionalIidMap));
