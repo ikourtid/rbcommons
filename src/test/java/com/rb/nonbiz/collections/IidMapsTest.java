@@ -1013,6 +1013,9 @@ public class IidMapsTest {
     // order doesn't matter
     asserter.accept(iidMap1, iidMap2);
     asserter.accept(iidMap2, iidMap1);
+    // merging a non-empty map and an empty map doesn't change the non-empty map
+    asserter.accept(expectedMergedMap, emptyIidMap());
+    asserter.accept(emptyIidMap(), expectedMergedMap);
 
     // any overlap in InstrumentId throws
     assertIllegalArgumentException( () -> asserter.accept(
@@ -1029,6 +1032,7 @@ public class IidMapsTest {
             IidMapSimpleConstructors.<String>emptyIidMap()),
         iidMapEqualityMatcher(emptyIidMap()));
 
+    // merging an empty map and a non-empty map yields the non-empty
     assertThat(
         mergeIidMapsAssumingNoOverlap(
             iidMap1,
@@ -1076,6 +1080,9 @@ public class IidMapsTest {
     asserter.accept(iidMap2, iidMap4, iidMap3, iidMap1);
     asserter.accept(iidMap3, iidMap4, iidMap2, iidMap1);
 
+    // merging one non-empty and several empty maps doesn't change the non-empty map
+    asserter.accept(expectedMergedMap, emptyIidMap(), emptyIidMap(), emptyIidMap());
+
     // any overlap in InstrumentId throws
     assertIllegalArgumentException( () -> asserter.accept(
         iidMap1, iidMap2, iidMap3, singletonIidMap(instrumentId(1), "NEW_STRING")));
@@ -1093,7 +1100,7 @@ public class IidMapsTest {
             emptyIidMap()),
         iidMapEqualityMatcher(emptyIidMap()));
 
-    // merging empty maps yield empty
+    // merging empty maps to a non-empty yields the non-empty
     assertThat(
         mergeIidMapsAssumingNoOverlap(
             iidMap1,
