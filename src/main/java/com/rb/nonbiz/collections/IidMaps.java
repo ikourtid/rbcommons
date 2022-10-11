@@ -73,7 +73,7 @@ public class IidMaps {
   }
 
   /**
-   * Merge at least 3 {@link IidMap}s and return the result as a new {@Link IidMap}.
+   * Merge at least 3 {@link IidMap}s and return the result as a new {@link IidMap}.
    */
   @SafeVarargs
   public static <V> IidMap<V> mergeIidMapsAssumingNoOverlap(
