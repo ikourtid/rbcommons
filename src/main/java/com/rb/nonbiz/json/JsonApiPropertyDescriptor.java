@@ -269,7 +269,7 @@ public abstract class JsonApiPropertyDescriptor {
     }
 
     /**
-     * This is just a typesafe & explicit wrapper for the case of enums, which is just a special case.
+     * This is just a typesafe and explicit wrapper for the case of enums, which is just a special case.
      */
     public static <E extends Enum<E>> SimpleClassJsonApiPropertyDescriptor enumJsonApiPropertyDescriptor(
         Class<E> enumClass) {
