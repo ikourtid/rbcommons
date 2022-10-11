@@ -5,6 +5,7 @@ import com.google.inject.Provider;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidMapVisitors.PairOfIidSetAndIidMapVisitor;
 import com.rb.nonbiz.collections.IidMapVisitors.TwoIidMapsVisitor;
+import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.text.Strings;
 import org.hamcrest.MatcherAssert;
@@ -40,6 +41,7 @@ import static com.rb.nonbiz.collections.IidMaps.filterForPresentValuesAndTransfo
 import static com.rb.nonbiz.collections.IidMaps.getWhenAtMostOneIidMapIsNonEmpty;
 import static com.rb.nonbiz.collections.IidMaps.invertMapOfDisjointIidSets;
 import static com.rb.nonbiz.collections.IidMaps.lockValues;
+import static com.rb.nonbiz.collections.IidMaps.mergeIidMapsAssumingNoOverlap;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.emptyIidSet;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.iidSetOf;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.singletonIidSet;
@@ -324,7 +326,7 @@ public class IidMapsTest {
                     STOCK_B1, 33),
                 "C", emptyIidMap()),
             f -> iidMapEqualityMatcher(f)));
-     }
+  }
 
   @Test
   public void testMergeIidMapsDisallowingOverlap() {
@@ -983,6 +985,102 @@ public class IidMapsTest {
     assertEquals(
         rbSetOf("2.B_22", "3.C_33"),
         newRBSet(mutableSet));
+  }
+
+  @Test
+  public void testCopyMergeAssumingNoOverlap() {
+    IidMap<String> iidMap1 = iidMapOf(
+        instrumentId(1), "A",
+        instrumentId(2), "B",
+        instrumentId(3), "C");
+
+    IidMap<String> iidMap2 = iidMapOf(
+        instrumentId(4), "D",
+        instrumentId(5), "E");
+
+    IidMap<String> expectedMergedMap = iidMapOf(
+        instrumentId(1), "A",
+        instrumentId(2), "B",
+        instrumentId(3), "C",
+        instrumentId(4), "D",
+        instrumentId(5), "E");
+
+    BiConsumer<IidMap<String>, IidMap<String>> asserter = (map1, map2) ->
+        assertThat(
+            mergeIidMapsAssumingNoOverlap(map1, map2),
+            iidMapEqualityMatcher(expectedMergedMap));
+
+    // order doesn't matter
+    asserter.accept(iidMap1, iidMap2);
+    asserter.accept(iidMap2, iidMap1);
+
+    // merging empty maps yields empty
+    assertThat(
+        mergeIidMapsAssumingNoOverlap(
+            IidMapSimpleConstructors.<String>emptyIidMap(),
+            IidMapSimpleConstructors.<String>emptyIidMap()),
+        iidMapEqualityMatcher(emptyIidMap()));
+
+    assertThat(
+        mergeIidMapsAssumingNoOverlap(
+            iidMap1,
+            emptyIidMap()),
+        iidMapEqualityMatcher(iidMap1));
+  }
+
+  @Test
+  public void testCopyMergeAllAssumingNoOverlap() {
+    IidMap<String> iidMap1 = iidMapOf(
+        instrumentId(1), "A",
+        instrumentId(2), "B",
+        instrumentId(3), "C");
+
+    IidMap<String> iidMap2 = iidMapOf(
+        instrumentId(4), "D",
+        instrumentId(5), "E");
+
+    IidMap<String> iidMap3 = iidMapOf(
+        instrumentId(6), "F",
+        instrumentId(7), "G");
+
+    IidMap<String> expectedMergedMap = iidMapOf(
+        instrumentId(1), "A",
+        instrumentId(2), "B",
+        instrumentId(3), "C",
+        instrumentId(4), "D",
+        instrumentId(5), "E",
+        instrumentId(6), "F",
+        instrumentId(7), "G");
+
+    TriConsumer<IidMap<String>, IidMap<String>, IidMap<String>> asserter = (map1, map2, map3) ->
+        assertThat(
+            IidMaps.mergeIidMapsAssumingNoOverlap(map1, map2, map3),
+            iidMapEqualityMatcher(expectedMergedMap));
+
+    // order doesn't matter
+    asserter.accept(iidMap1, iidMap2, iidMap3);
+    asserter.accept(iidMap3, iidMap2, iidMap1);
+    asserter.accept(iidMap2, iidMap3, iidMap1);
+
+    // any overlap throws
+    assertIllegalArgumentException( () -> asserter.accept(
+        iidMap1, iidMap2, singletonIidMap(instrumentId(1), "NEW_STRING")));
+
+    // merging empty maps yield empty
+    assertThat(
+        IidMaps.mergeIidMapsAssumingNoOverlap(
+            IidMapSimpleConstructors.<String>emptyIidMap(),
+            IidMapSimpleConstructors.<String>emptyIidMap(),
+            IidMapSimpleConstructors.<String>emptyIidMap()),
+        iidMapEqualityMatcher(IidMapSimpleConstructors.<String>emptyIidMap()));
+
+    // merging empty maps yield empty
+    assertThat(
+        IidMaps.mergeIidMapsAssumingNoOverlap(
+            iidMap1,
+            emptyIidMap(),
+            emptyIidMap()),
+        iidMapEqualityMatcher(iidMap1));
   }
 
   @Test

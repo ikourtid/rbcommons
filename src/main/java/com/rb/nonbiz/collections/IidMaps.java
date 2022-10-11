@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.rb.biz.types.asset.InstrumentId;
 
+import java.util.Arrays;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
@@ -9,6 +10,7 @@ import java.util.function.Function;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
+import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
@@ -54,9 +56,51 @@ public class IidMaps {
   }
 
   /**
+   * Merge two {@link IidMap}s and return the result as a new {@link IidMap}.
+   */
+  public static <V> IidMap<V> mergeIidMapsAssumingNoOverlap(
+      IidMap<V> iidMap1,
+      IidMap<V> iidMap2) {
+    MutableIidMap<V> mutableIidMap = newMutableIidMapWithExpectedSize(iidMap1.size() + iidMap2.size());
+
+    // don't need 'AssumingNoOverlap' for iidMap1
+    iidMap1.forEachEntry(
+        (instrumentId, value) -> mutableIidMap.put(instrumentId, value));
+
+    // merge iidMap2
+    addAllAssumingNoOverlap(mutableIidMap, iidMap2);
+
+    return newIidMap(mutableIidMap);
+  }
+
+  /**
+   * Merge additional {@link IidMap}s and return the result as a new {@Link IidMap}.
+   */
+  @SafeVarargs
+  public static <V> IidMap<V> mergeIidMapsAssumingNoOverlap(
+      IidMap<V> first,
+      IidMap<V> second,
+      IidMap<V>...rest) {
+    // allocate the total expected size
+    int sizeRest = Arrays.stream(rest).map(additionalIidMap -> additionalIidMap.size()).reduce(Integer::sum).orElse(0);
+    MutableIidMap<V> mutableIidMap = newMutableIidMapWithExpectedSize(first.size() + second.size() + sizeRest);
+
+    // don't need 'AssumingNoOverlap' for the first IidMap
+    first.forEachEntry( (instrumentId, value) -> mutableIidMap.put(instrumentId, value));
+
+    // merge the second
+    addAllAssumingNoOverlap(mutableIidMap, second);
+    // merge the rest
+    Arrays.stream(rest).forEach(
+        additionalIidMap -> addAllAssumingNoOverlap(mutableIidMap, additionalIidMap));
+
+    return newIidMap(mutableIidMap);
+  }
+
+  /**
    * If all maps are empty, returns an empty map.
    * If only one is non-empty, returns the non-empty one.
-   * Otherwise returns Optional.empty().
+   * Otherwise, returns Optional.empty().
    *
    * <p> This is useful for set unions; if this returns a non-empty optional, it means it's a valid result of a set union.
    * It can speed up set union calculations in those special cases. </p>
