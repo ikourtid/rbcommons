@@ -1019,11 +1019,13 @@ public class IidMapsTest {
 
     // any overlap in InstrumentId throws
     assertIllegalArgumentException( () -> asserter.accept(
+        iidMap1, singletonIidMap(instrumentId(1), "A")));     // iidMap1 also has key instrumentId(1)
+    assertIllegalArgumentException( () -> asserter.accept(    // changing the value of an existing key still throws
         iidMap1, singletonIidMap(instrumentId(1), "NEW_STRING")));
 
     // overlapping values are fine
     IidMap<String> doesNotThrow = mergeIidMapsAssumingNoOverlap(
-        iidMap1, singletonIidMap(instrumentId(999), "A"));   // "A" already a key of instrumentId(1)
+        iidMap1, singletonIidMap(instrumentId(999), "A"));   // "A" already a value of instrumentId(1)
 
     // merging empty maps yields empty
     assertThat(
@@ -1085,11 +1087,13 @@ public class IidMapsTest {
 
     // any overlap in InstrumentId throws
     assertIllegalArgumentException( () -> asserter.accept(
-        iidMap1, iidMap2, iidMap3, singletonIidMap(instrumentId(1), "NEW_STRING")));
+        iidMap1, iidMap2, iidMap3, singletonIidMap(instrumentId(1), "A")));          // iidMap1 has key instrumentId(1)
+    assertIllegalArgumentException( () -> asserter.accept(
+        iidMap1, iidMap2, iidMap3, singletonIidMap(instrumentId(1), "NEW_STRING"))); // changing the value still throws
 
     // overlapping values are fine
     IidMap<String> doesNotThrow = mergeIidMapsAssumingNoOverlap(
-        iidMap1, iidMap2, iidMap3, singletonIidMap(instrumentId(999), "A"));  // "A" already a key of instrumentId(1)
+        iidMap1, iidMap2, iidMap3, singletonIidMap(instrumentId(999), "A"));  // "A" already a value of instrumentId(1)
 
     // merging empty maps yield empty
     assertThat(
