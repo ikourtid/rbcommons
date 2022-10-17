@@ -95,7 +95,7 @@ public class FlatSignedLinearCombinationJsonApiConverterTest
         maybeSampleJsonArray,
         "Internal error - there should be sample JSON");
 
-    // check that the sample JSON can be successfully processed by fromJsonObject()
+    // check that the sample JSON can be successfully processed by fromJsonArray()
     FlatSignedLinearCombination<String> doesNotThrow = makeTestObject().fromJsonArray(
         maybeSampleJsonArray.get(),
         jsonElement -> jsonElement.getAsString());
