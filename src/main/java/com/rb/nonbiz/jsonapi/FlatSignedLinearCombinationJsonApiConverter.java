@@ -16,9 +16,7 @@ import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToList;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiArrayDocumentation.JsonApiArrayDocumentationBuilder.jsonApiArrayDocumentationBuilder;
-import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
-import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
 /**
