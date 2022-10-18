@@ -10,7 +10,6 @@ import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTest;
 import org.junit.Test;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 import static com.rb.biz.types.Money.money;
@@ -174,15 +173,14 @@ public class RangeJsonApiConverterTest extends RBTest<RangeJsonApiConverter> {
   public void testValidSampleJson() {
     RangeJsonApiConverter realObject = makeRealObject(RangeJsonApiConverter.class);
 
-    Optional<JsonElement> maybeSampleJson =
+    JsonElement sampleJson = RBOptionals.getOrThrow(
         // have to cast because not all JsonApiDocumentation classes have NontrivialSampleJson
-        ((JsonApiClassDocumentation) realObject.getJsonApiDocumentation()).getNontrivialSampleJson();
-    RBOptionals.getOrThrow(
-        maybeSampleJson,
+        ((JsonApiClassDocumentation) realObject.getJsonApiDocumentation()).getNontrivialSampleJson(),
         "Internal error - should have a sample JSON");
 
+    // Check that the sample JSON can be successfully processed by fromJsonObject().
     Range<Double> doesNotThrow = realObject.fromJsonObject(
-        maybeSampleJson.get().getAsJsonObject(),
+        sampleJson.getAsJsonObject(),
         v -> v.getAsDouble());
   }
 
