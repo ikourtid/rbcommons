@@ -1,12 +1,15 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.google.common.collect.Range;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.rb.biz.types.Money;
+import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.testutils.RBTest;
 import com.rb.nonbiz.types.HardAndSoftRange;
 import com.rb.nonbiz.types.RBNumeric;
+import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
 
 import java.util.function.Function;
@@ -21,6 +24,7 @@ import static com.rb.nonbiz.types.Correlation.correlation;
 import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 import static com.rb.nonbiz.types.HardAndSoftRangeTest.hardAndSoftRangeMatcher;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
+import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class HardAndSoftRangeJsonApiConverterTest extends RBTest<HardAndSoftRangeJsonApiConverter> {
@@ -122,6 +126,24 @@ public class HardAndSoftRangeJsonApiConverterTest extends RBTest<HardAndSoftRang
             jsonPrimitive -> deserializer.apply(jsonPrimitive)),
         hardAndSoftRangeMatcher(
             hardAndSoftRange));
+  }
+
+  @Test
+  public void testValidSampleJson() {
+    HardAndSoftRangeJsonApiConverter realObject =
+        makeRealObject(HardAndSoftRangeJsonApiConverter.class);
+
+    JsonElement sampleJson = RBOptionals.getOrThrow(
+        // Cast to JsonApiClassDocumentation because not all implementers of HasJsonApiDocumentation
+        // have optional sample JSON.
+        ((JsonApiClassDocumentation) realObject.getJsonApiDocumentation())
+            .getNontrivialSampleJson(),
+        "Internal error - there should be sample JSON");
+
+    // check that the sample JSON can be successfully processed by fromJsonObject()
+    HardAndSoftRange<UnitFraction> doesNotThrow = realObject.fromJsonObject(
+        sampleJson.getAsJsonObject(),
+        jsonPrimitive -> unitFraction(jsonPrimitive.getAsDouble()));
   }
 
   @Override
