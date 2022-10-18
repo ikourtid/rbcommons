@@ -1,6 +1,8 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.testutils.RBTest;
 import com.rb.nonbiz.types.WeightedBySignedFraction;
 import org.junit.Test;
@@ -77,6 +79,24 @@ public class WeightedBySignedFractionJsonApiConverterTest
         weightedBySignedFractionMatcher(
             weightedBySignedFraction,
             v -> typeSafeEqualTo(v)));
+  }
+
+  @Test
+  public void testValidSampleJson() {
+    WeightedBySignedFractionJsonApiConverter realObject =
+        makeRealObject(WeightedBySignedFractionJsonApiConverter.class);
+
+    JsonElement sampleJson = RBOptionals.getOrThrow(
+        // Cast to JsonApiClassDocumentation because not all implementers of HasJsonApiDocumentation
+        // have optional sample JSON.
+        ((JsonApiClassDocumentation) realObject.getJsonApiDocumentation())
+            .getNontrivialSampleJson(),
+        "Internal error - there should be sample JSON");
+
+    // check that the sample JSON can be successfully processed by fromJsonArray()
+    WeightedBySignedFraction<String> doesNotThrow = realObject.fromJsonObject(
+        sampleJson.getAsJsonObject(),
+        jsonElement -> jsonElement.getAsString());
   }
 
   @Override
