@@ -93,7 +93,7 @@ public class WeightedBySignedFractionJsonApiConverterTest
             .getNontrivialSampleJson(),
         "Internal error - there should be sample JSON");
 
-    // check that the sample JSON can be successfully processed by fromJsonArray()
+    // check that the sample JSON can be successfully processed by fromJsonObject()
     WeightedBySignedFraction<String> doesNotThrow = realObject.fromJsonObject(
         sampleJson.getAsJsonObject(),
         jsonElement -> jsonElement.getAsString());

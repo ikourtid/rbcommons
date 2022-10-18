@@ -140,7 +140,7 @@ public class HardAndSoftRangeJsonApiConverterTest extends RBTest<HardAndSoftRang
             .getNontrivialSampleJson(),
         "Internal error - there should be sample JSON");
 
-    // check that the sample JSON can be successfully processed by fromJsonArray()
+    // check that the sample JSON can be successfully processed by fromJsonObject()
     HardAndSoftRange<UnitFraction> doesNotThrow = realObject.fromJsonObject(
         sampleJson.getAsJsonObject(),
         jsonPrimitive -> unitFraction(jsonPrimitive.getAsDouble()));
