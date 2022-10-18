@@ -1,13 +1,16 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.google.common.collect.Range;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.rb.biz.types.Money;
+import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTest;
 import org.junit.Test;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import static com.rb.biz.types.Money.money;
@@ -165,6 +168,22 @@ public class RangeJsonApiConverterTest extends RBTest<RangeJsonApiConverter> {
         rangeMatcher(
             range,
             matcherGenerator));
+  }
+
+  @Test
+  public void testValidSampleJson() {
+    RangeJsonApiConverter realObject = makeRealObject(RangeJsonApiConverter.class);
+
+    Optional<JsonElement> maybeSampleJson =
+        // have to cast because not all JsonApiDocumentation classes have NontrivialSampleJson
+        ((JsonApiClassDocumentation) realObject.getJsonApiDocumentation()).getNontrivialSampleJson();
+    RBOptionals.getOrThrow(
+        maybeSampleJson,
+        "Internal error - should have a sample JSON");
+
+    Range<Double> doesNotThrow = realObject.fromJsonObject(
+        maybeSampleJson.get().getAsJsonObject(),
+        v -> v.getAsDouble());
   }
 
   @Override
