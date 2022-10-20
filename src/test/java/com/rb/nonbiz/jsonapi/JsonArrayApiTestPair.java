@@ -4,7 +4,8 @@ import com.google.gson.JsonArray;
 
 /**
  * Represents a Java object and its corresponding JSON array representation.
- * The unit tests will check that conversions in both directions produce the right result.
+ *
+ * <p> The unit tests will check that conversions in both directions produce the right results. </p>
  */
 public class JsonArrayApiTestPair<T> {
 
