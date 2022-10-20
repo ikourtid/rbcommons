@@ -23,7 +23,7 @@ public class JsonArrayApiTestData<T> {
   }
 
   @SafeVarargs
-  public static <T> JsonArrayApiTestData<T> jsonApiTestData(
+  public static <T> JsonArrayApiTestData<T> jsonArrayApiTestData(
       MatcherGenerator<T> matcherGenerator,
       JsonArrayApiTestPair<T> first,
       JsonArrayApiTestPair<T> ... rest) {
