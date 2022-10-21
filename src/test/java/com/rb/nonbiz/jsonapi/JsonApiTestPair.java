@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 /**
  * Represents a Java object and its corresponding JSON object representation.
  *
- * <p> The unit tests will check that conversions in both directions produce the right results. </p>
+ * <p> The unit tests will check that conversions in both directions produce the correct results. </p>
  */
 public class JsonApiTestPair<T> {
 
