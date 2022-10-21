@@ -7,8 +7,10 @@ import java.util.List;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 
 /**
- * A collection of pairs of JSON and the corresponding Java objects,
+ * A collection of pairs of JSON objects and their corresponding Java objects,
  * so we can make sure that back-and-forth conversions are correct.
+ *
+ * @see JsonApiTestPair
  */
 public class JsonApiTestData<T> {
 
