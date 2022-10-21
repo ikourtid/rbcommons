@@ -65,7 +65,7 @@ public class FlatSignedLinearCombinationJsonApiConverter implements HasJsonApiDo
         .setClassBeingDocumented(FlatSignedLinearCombination.class)
         .setClassOfArrayItems(WeightedBySignedFraction.class)
         .setSingleLineSummary(documentation(asSingleLineWithNewlines(
-            "A collection of weighted items, similar to FlatLinearCombination",
+            "A collection of weighted items, similar to `FlatLinearCombination`",
             "except that it allows both positive and negative weights (but not zero).")))
         .setLongDocumentation(documentation("The items are all of the same (arbitrary) type."))
         .hasJsonApiConverter(weightedBySignedFractionJsonApiConverter)
