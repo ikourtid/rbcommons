@@ -2,6 +2,9 @@ package com.rb.nonbiz.collections;
 
 import com.rb.biz.types.asset.HasInstrumentId;
 
+import java.util.stream.Stream;
+
+import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromStream;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 
 
@@ -15,6 +18,11 @@ public class HasInstrumentIdSets {
   public static <T extends HasInstrumentId> HasInstrumentIdSet<T> newHasInstrumentIdSet(
       MutableIidMap<T> mutableMap) {
     return new HasInstrumentIdSet<>(mutableMap.getRawMap());
+  }
+
+  public static <T extends HasInstrumentId> HasInstrumentIdSet<T> newHasInstrumentIdSet(Stream<T> stream) {
+    return newHasInstrumentIdSet(iidMapFromStream(
+        stream, v -> v.getInstrumentId(), v -> v));
   }
 
   /**

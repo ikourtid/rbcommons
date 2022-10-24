@@ -19,7 +19,7 @@ import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
-import static com.rb.nonbiz.text.Strings.asSingleLine;
+import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 
 /**
@@ -74,10 +74,10 @@ public class HardAndSoftRangeJsonApiConverter implements HasJsonApiDocumentation
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(HardAndSoftRange.class)
-        .setSingleLineSummary(documentation(asSingleLine(
+        .setSingleLineSummary(documentation(asSingleLineWithNewlines(
             "A combination of an outer 'hard' range that an optimization solution must observe ",
             "and an inner 'soft' range that the optimization should observe.")))
-        .setLongDocumentation(documentation(asSingleLine(
+        .setLongDocumentation(documentation(asSingleLineWithNewlines(
             "By 'should observe the soft limit', we mean ",
             "that if a value drifts outside the soft limit, it will not be allowed ",
             "to drift further, but will not be forced to immediate move in the other direction. <p />",
