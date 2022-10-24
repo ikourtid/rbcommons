@@ -35,8 +35,7 @@ public class JsonApiDocumentationForPseudoEnumGeneratorTest extends RBTest<JsonA
                     "<li> <strong>is_stock</strong> : Must also have 'stock' key with a `StockInstrumentType` in its contents </li>\n",
                     "</ul></p>\n")))
                 .hasNoJsonValidationInstructions()
-                .hasNoChildNodes()
-                .noTrivialSampleJsonSupplied()
+                .hasNoChildJsonApiConverters()
                 .noNontrivialSampleJsonSupplied()
                 .build()));
   }

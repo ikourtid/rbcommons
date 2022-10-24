@@ -8,6 +8,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.Optional;
 
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
+import static com.rb.nonbiz.text.Strings.formatOptional;
 
 /**
  * This is for the special case in the JSON API where we need to represent one of many subclasses of a single class.
@@ -70,8 +71,8 @@ public class JsonApiSubclassInfo {
   @Override
   public String toString() {
     return Strings.format("[JASI class= %s ; discrValue= %s ; jsonApiConverterForTraversing= %s JASI]",
-        classOfSubclass,
-        discriminatorPropertyValue,
+        classOfSubclass.getSimpleName(),
+        formatOptional(discriminatorPropertyValue),
         transformOptional(
             jsonApiConverterForTraversing,
             v -> v.getClass().getSimpleName())

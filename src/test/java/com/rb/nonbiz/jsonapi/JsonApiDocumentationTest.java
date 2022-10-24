@@ -8,6 +8,7 @@ import org.hamcrest.TypeSafeMatcher;
 
 import static com.rb.nonbiz.jsonapi.JsonApiArrayDocumentationTest.jsonApiArrayDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentationTest.jsonApiClassDocumentationMatcher;
+import static com.rb.nonbiz.jsonapi.JsonApiClassWithNonFixedPropertiesDocumentationTest.jsonApiClassWithNonFixedPropertiesDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiClassWithSubclassesDocumentationTest.jsonApiClassWithSubclassesDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiEnumDocumentationTest.jsonApiEnumDocumentationMatcher;
 import static com.rb.nonbiz.testmatchers.RBVisitorMatchers.VisitorMatchInfo.visitorMatchInfo;
@@ -68,6 +69,13 @@ public class JsonApiDocumentationTest extends RBTestMatcher<JsonApiDocumentation
                 f -> jsonApiArrayDocumentationMatcher(f));
       }
 
+      @Override
+      public VisitorMatchInfo<JsonApiDocumentation> visitJsonApiClassWithNonFixedPropertiesDocumentation(
+          JsonApiClassWithNonFixedPropertiesDocumentation jsonApiClassWithNonFixedPropertiesDocumentation) {
+        return visitorMatchInfo(5, jsonApiClassWithNonFixedPropertiesDocumentation,
+            (MatcherGenerator<JsonApiClassWithNonFixedPropertiesDocumentation>)
+                f -> jsonApiClassWithNonFixedPropertiesDocumentationMatcher(f));
+      }
     }));
   }
 

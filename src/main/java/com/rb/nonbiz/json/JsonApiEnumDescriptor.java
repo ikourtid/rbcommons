@@ -135,7 +135,8 @@ public class JsonApiEnumDescriptor<E extends Enum<E>> {
   @Override
   public String toString() {
     // Can't use formatMap because this is an EnumMap, not a RBMap.
-    return Strings.format("[JAEDesc %s %s JAEDesc]", enumClass, validValuesToExplanations);
+    return Strings.format("[JAEDesc %s %s JAEDesc]",
+        enumClass.getSimpleName(), validValuesToExplanations);
   }
 
 }

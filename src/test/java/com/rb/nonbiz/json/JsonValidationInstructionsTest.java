@@ -13,11 +13,19 @@ import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertNullPointerException;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidationInstructions> {
 
   // This does not have to be shared across all tests in this file, but doing so simplifies the tests.
   private static final Class<?> SHARED_CLASS = String.class;
+
+  @Test
+  public void testIsEmpty() {
+    assertTrue( makeTrivialObject().isEmpty());
+    assertFalse(makeNontrivialObject().isEmpty());
+  }
 
   @Test
   public void mustSpecifyEmptyRequiredOrOptionalSetsExplicitly_orThrows() {

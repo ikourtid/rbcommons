@@ -20,11 +20,9 @@ import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_J
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getOptionalJsonPrimitive;
-import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
-import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
 /**
@@ -116,11 +114,10 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
             "That is, the closed range [1, 10] is supported, but the semi-open range (1, 10] (which excludes the point 1)",
             "is not. </p>",
             "<p> Omit the 'min' property to signify a range extending down to -inf, and omit the 'max' property to ",
-            "signify a range extending up to +inf. </p> ",
+            "signify a range extending up to +inf. </p>",
             "<p> Both 'min' and 'max' can be omitted to specify an unlimited range. </p>")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
-        .hasNoChildNodes()
-        .setTrivialSampleJson(emptyJsonObject())
+        .hasNoChildJsonApiConverters()
         .setNontrivialSampleJson(jsonObject(
             "min", jsonDouble(-1.1),
             "max", jsonDouble( 9.9)))

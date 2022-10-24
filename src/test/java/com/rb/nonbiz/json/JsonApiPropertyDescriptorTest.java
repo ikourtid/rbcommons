@@ -11,17 +11,41 @@ import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testmatchers.RBVisitorMatchers.VisitorMatchInfo;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Test;
 
 import static com.rb.nonbiz.json.CollectionJsonApiPropertyDescriptorTest.collectionJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.IidMapJsonApiPropertyDescriptorTest.iidMapJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.JavaGenericJsonApiPropertyDescriptorTest.javaGenericJsonApiPropertyDescriptorMatcher;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleUnknownClassJsonApiPropertyDescriptor;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.subclassDiscriminatorPropertyDescriptor;
+import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
 import static com.rb.nonbiz.json.PseudoEnumJsonApiPropertyDescriptorTest.pseudoEnumJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.RBMapJsonApiPropertyDescriptorTest.rbMapJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.json.SimpleClassJsonApiPropertyDescriptorTest.simpleClassJsonApiPropertyDescriptorMatcher;
 import static com.rb.nonbiz.testmatchers.RBVisitorMatchers.VisitorMatchInfo.visitorMatchInfo;
 import static com.rb.nonbiz.testmatchers.RBVisitorMatchers.generalVisitorMatcher;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class JsonApiPropertyDescriptorTest extends RBTestMatcher<JsonApiPropertyDescriptor> {
+
+  @Test
+  public void simpleClassJsonApiProperty_alternateConstructors() {
+    assertThat(
+        simpleUnknownClassJsonApiPropertyDescriptor(jsonPropertySpecificDocumentation("document a property")),
+        jsonApiPropertyDescriptorMatcher(
+            simpleClassJsonApiPropertyDescriptor(
+                UNKNOWN_CLASS_OF_JSON_PROPERTY,
+                jsonPropertySpecificDocumentation("document a property"))));
+
+    assertThat(
+        subclassDiscriminatorPropertyDescriptor("XYZ"),
+        jsonApiPropertyDescriptorMatcher(
+            simpleClassJsonApiPropertyDescriptor(
+                String.class,
+                jsonPropertySpecificDocumentation("The value must always be 'XYZ'."))));
+  }
 
   @Override
   public JsonApiPropertyDescriptor makeTrivialObject() {

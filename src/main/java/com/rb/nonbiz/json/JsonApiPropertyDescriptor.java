@@ -30,6 +30,7 @@ import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonStringOrThrow;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
@@ -183,8 +184,10 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the simplest case
+   * Tells us the type of property of a JsonObject in the JSON API, in the simplest case
    * where it is a single JSON API data class (e.g. not some collection).
+   *
+   * @see JsonApiPropertyDescriptor
    */
   public static class SimpleClassJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
@@ -227,6 +230,13 @@ public abstract class JsonApiPropertyDescriptor {
       return simpleClassJsonApiPropertyDescriptor(clazz, Optional.of(jsonPropertySpecificDocumentation));
     }
 
+    public static SimpleClassJsonApiPropertyDescriptor simpleUnknownClassJsonApiPropertyDescriptor(
+        JsonPropertySpecificDocumentation jsonPropertySpecificDocumentation) {
+      return simpleClassJsonApiPropertyDescriptor(
+          UNKNOWN_CLASS_OF_JSON_PROPERTY,
+          Optional.of(jsonPropertySpecificDocumentation));
+    }
+
     /**
      * You may wonder - if this must always have the same value, why bother specifying it?
      * It's because we have to conform to the OpenAPI / Swagger way of representing
@@ -259,7 +269,7 @@ public abstract class JsonApiPropertyDescriptor {
     }
 
     /**
-     * This is just a typesafe & explicit wrapper for the case of enums, which is just a special case.
+     * This is just a typesafe and explicit wrapper for the case of enums, which is just a special case.
      */
     public static <E extends Enum<E>> SimpleClassJsonApiPropertyDescriptor enumJsonApiPropertyDescriptor(
         Class<E> enumClass) {
@@ -288,19 +298,21 @@ public abstract class JsonApiPropertyDescriptor {
 
     @Override
     public String toString() {
-      return Strings.format("[SCJAPD %s %s SCJAPD]",
-          clazz, formatOptional(jsonPropertySpecificDocumentation));
+      return Strings.format("[SCJAPD %s ; doc: %s SCJAPD]",
+          clazz.getSimpleName(), formatOptional(jsonPropertySpecificDocumentation));
     }
 
   }
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of an IidMap of some Java data class.
+   * Tells us the type of property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of an {@link IidMap} of some Java data class.
    *
    * <p> Instead of just using a simple {@link Class} object, this stores a {@link JsonApiPropertyDescriptor},
-   * which is more general, so that we can also represent things such as {@literal IidMap<List<Double>>}.</p>
+   * which is more general, so that we can also represent things such as {@literal IidMap<List<Double>>}. </p>
+   *
+   * @see JsonApiPropertyDescriptor
    */
   public static class IidMapJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
@@ -367,7 +379,7 @@ public abstract class JsonApiPropertyDescriptor {
 
     @Override
     public String toString() {
-      return Strings.format("[IMJAPD %s %s IMJAPD]",
+      return Strings.format("[IMJAPD %s ; doc: %s IMJAPD]",
           valueClassDescriptor, formatOptional(jsonPropertySpecificDocumentation));
     }
 
@@ -375,12 +387,15 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of an RBMap of some Java data class.
+   * Tells us the type of property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of an {@link RBMap} of some Java data class.
    *
    * <p> Instead of just using simple {@link Class} objects, this stores {@link JsonApiPropertyDescriptor} objects,
    * which are more general, so that we can also represent things such as
    * {@literal RBMap<UniqueId<NamedFactor>, List<Double>>}.</p>
+   *
+   * @see RBMap
+   * @see JsonApiPropertyDescriptor
    */
   public static class RBMapJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
@@ -474,12 +489,14 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the case
-   * where it is the JSON representation of an collection (Set, List, or array) of some Java data class.
+   * Tells us the type of property of a JsonObject in the JSON API, in the case
+   * where it is the JSON representation of a collection (Set, List, or array) of some Java data class.
    *
    * <p> We use a {@link JsonApiPropertyDescriptor} instead of just a raw {@link Class} so that we can represent
    * things such as {@literal List<UniqueId<NamedFactor>> }, i.e. where the value class inside the collection is not
    * a simple class and is instead a generic, a map, etc. </p>
+   *
+   * @see JsonApiPropertyDescriptor
    */
   public static class CollectionJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
@@ -550,17 +567,19 @@ public abstract class JsonApiPropertyDescriptor {
 
 
   /**
-   * Tells us the type of a property of a JsonObject in the JSON API, in the case
+   * Tells us the type of property of a JsonObject in the JSON API, in the case
    * where it is the JSON representation of a java generic such as {@code Foo<T>}.
    *
-   * <p> It should only be used when T is an actual data class that has a JSON serialization. Example:
+   * <p> It should only be used when <i>T</i> is an actual data class that has a JSON serialization. Example:
    * {@code UniqueId<NamedFactor>}. It should not be used for 'marker interface' classes, such as
    * {@code Portfolio<HeldByUs>}. This makes sense, because HeldByUs is not something that gets serialized. </p>
    *
    * <p> For the inner classes, we use the more general {@link JsonApiPropertyDescriptor} instead of a raw
    * {@link Class}. This allows us to support things like {@code UniqueId<List<Double>>}, i.e. situations
    * where the generic argument class is not a 'simple' class. (This is an unrealistic example, as we'd never
-   * really need a unique ID of a list, but it should illustrate the point. </p>
+   * really need a unique ID of a list, but it should illustrate the point.) </p>
+   *
+   * @see JsonApiPropertyDescriptor
    */
   public static class JavaGenericJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 
@@ -619,7 +638,7 @@ public abstract class JsonApiPropertyDescriptor {
           genericArgumentClassDescriptors);
 
       return new JavaGenericJsonApiPropertyDescriptor(
-          outerClass, genericArgumentClassDescriptors,jsonPropertySpecificDocumentation);
+          outerClass, genericArgumentClassDescriptors, jsonPropertySpecificDocumentation);
     }
 
     public static JavaGenericJsonApiPropertyDescriptor javaGenericJsonApiPropertyDescriptor(
@@ -639,8 +658,9 @@ public abstract class JsonApiPropertyDescriptor {
 
     /**
      * Represents a property of an object that's a Java generic.
-     * Example: a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
-     * (2nd argument).
+     *
+     * <p> Example: a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
+     * (2nd argument). </p>
      *
      * <p> We normally use a builder when there can be two arguments of the same type, but this is meant to be used
      * inline in the various definitions of JSON_VALIDATION_INSTRUCTIONS in the JSON API converter verb classes,
@@ -653,8 +673,9 @@ public abstract class JsonApiPropertyDescriptor {
 
     /**
      * Represents a property of an object that's a Java generic.
-     * Example: a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
-     * (2nd argument).
+     *
+     * <p> Example: a {@code NetGain<LongTerm>}, where NetGain is the outer class, and LongTerm is the inner class
+     * (2nd argument). </p>
      *
      * <p> We normally use a builder when there can be two arguments of the same type, but this is meant to be used
      * inline in the various definitions of JSON_VALIDATION_INSTRUCTIONS in the JSON API converter verb classes,
@@ -707,7 +728,7 @@ public abstract class JsonApiPropertyDescriptor {
     @Override
     public String toString() {
       return Strings.format("[JGJAPD %s < %s > %s JGJAPD]",
-          outerClass,
+          outerClass.getSimpleName(),
           Joiner.on(" , ").join(genericArgumentClassDescriptors),
           formatOptional(jsonPropertySpecificDocumentation));
     }
@@ -717,15 +738,19 @@ public abstract class JsonApiPropertyDescriptor {
 
   /**
    * We often serialize a base class with multiple subclasses by using a string key in the JSON to represent the
-   * subclass's type. Example: NaiveSubObjectiveFormulationDetailsJsonApiConverter. The strings in the JSON may not
+   * subclass's type. Example: NaiveSubObjectiveFormulationDetailsJsonApiConverter.
+   *
+   * <p> The strings in the JSON may not
    * be exact matches to the Java class names - and anyway, they shouldn't be, because if we rename Java classes, we
    * don't want the API to change, as others may be relying on those specific strings.
    * Also, there are other cases where we use a special string in the JSON API
-   * to represent some special values (e.g. GlobalObjectiveThreshold where the threshold always passes).
+   * to represent some special values (e.g. GlobalObjectiveThreshold where the threshold always passes). </p>
    *
    * <p> For those JSON properties, we should be using this. </p>
    *
    * <p> Note that this does not represent an actual enum; for that, see {@link JsonApiEnumDescriptor}. </p>
+   *
+   * @see JsonApiPropertyDescriptor
    */
   public static class PseudoEnumJsonApiPropertyDescriptor extends JsonApiPropertyDescriptor {
 

@@ -35,16 +35,20 @@ import static java.util.Comparator.comparing;
 /**
  * Similar to java.util.Map. However, it is meant to be immutable.
  *
- * Always prefer RBMap to a java.util.Map, especially on an interface, but even inside a method's body, when possible.
+ * <p>Always prefer RBMap to a java.util.Map, especially on an interface, but even inside a method's body, when possible.
+ * </p>
  *
- * Guava ImmutableMap implements the Map interface, but its put() method will throw at runtime.
- * However, RBMap intentionally has NO methods to modify it. That offers compile-time safety.
+ * <p> Guava ImmutableMap implements the Map interface, but its put() method will throw at runtime.
+ * However, RBMap intentionally has NO methods to modify it. That offers compile-time safety. </p>
  *
- * Another advantage: #get on a regular Map returns null if the value is not there. We don't like nulls in the codebase,
- * plus that behavior is confusing to someone new to Java.
- * Instead, RBMap has:
- * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
- * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
+ * <p> Another advantage: #get on a regular Map returns null if the value is not there. We don't like nulls in the codebase,
+ * plus that behavior is confusing to someone new to Java. </p>
+ *
+ * <p> Instead, RBMap has: </p>
+ * <ol>
+ *   <li> #getOptional (which will return an Optional.empty() if there is no value for the specified key). </li>
+ *   <li> #getOrThrow, which assumes the value is there, and returns {@link Optional}.of(...). </li>
+ * </ol>
  *
  * @see RBMaps for some handy static methods.
  * @see MutableRBMap for a class that helps you initialize an RBMap.
@@ -61,8 +65,8 @@ public class RBMap<K, V> {
    * Use this if you want the standard java.util.Map interface, e.g. to use it in some library that
    * can manipulate maps.
    *
-   * Be careful with this, because you are exposing the guts of the RBMap, and you have no guarantee that the
-   * caller won't modify the map, which would break the convention that RBMap is immutable.
+   * <p> Be careful with this, because you are exposing the guts of the RBMap, and you have no guarantee that the
+   * caller won't modify the map, which would break the convention that RBMap is immutable. </p>
    */
   public Map<K, V> asMap() {
     return rawMap;

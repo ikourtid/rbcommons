@@ -14,6 +14,7 @@ public abstract class JsonApiDocumentation {
     T visitJsonApiEnumDocumentation(JsonApiEnumDocumentation<? extends Enum<?>> jsonApiEnumDocumentation);
     T visitJsonApiClassWithSubclassesDocumentation(JsonApiClassWithSubclassesDocumentation jsonApiClassWithSubclassesDocumentation);
     T visitJsonApiArrayDocumentation(JsonApiArrayDocumentation jsonApiArrayDocumentation);
+    T visitJsonApiClassWithNonFixedPropertiesDocumentation(JsonApiClassWithNonFixedPropertiesDocumentation jsonApiClassWithNonFixedPropertiesDocumentation);
 
   }
 

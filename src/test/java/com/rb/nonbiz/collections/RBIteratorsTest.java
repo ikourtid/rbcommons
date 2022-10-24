@@ -633,6 +633,10 @@ public class RBIteratorsTest {
         ImmutableList.of("ax", "bx"),
         ImmutableList.of("ay", "by")));
 
+    assertFalse(matchChecker.apply(
+        ImmutableList.of("xa", "xb"),
+        ImmutableList.of("ya", "yb")));
+
     assertIllegalArgumentException( () -> matchChecker.apply(
         singletonList(DUMMY_STRING),
         emptyList()));

@@ -284,15 +284,31 @@ public class RBJsonObjects {
   public static <C extends Comparable<? super C>> Range<C> jsonObjectToRange(
       JsonObject jsonObject,
       Function<JsonElement, C> valueDeserializer) {
-    JsonValidator.staticValidate(jsonObject, jsonValidationInstructionsBuilder()
-        .hasNoRequiredProperties()
-        .setOptionalProperties(rbMapOf(
-            "min", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR,
-            "max", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR))
-        .build());
+    JsonValidator.staticValidate(
+        jsonObject,
+        jsonValidationInstructionsForRange(
+            UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR,
+            UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR));
     return constructRange(
         transformOptional(getOptionalJsonElement(jsonObject, "min"), valueDeserializer), BoundType.CLOSED,
         transformOptional(getOptionalJsonElement(jsonObject, "max"), valueDeserializer), BoundType.CLOSED);
+  }
+
+  /**
+   * Typically, {@link JsonValidationInstructions} will be associated with a JSON API converter verb class.
+   * However, the {@link Range} gets converted using static methods and doesn't follow our usual paradigm.
+   * Therefore, we'll expose these for any other JSON API converter that converts an object that's a simple
+   * wrapper around a Range.
+   */
+  public static JsonValidationInstructions jsonValidationInstructionsForRange(
+      JsonApiPropertyDescriptor jsonApiPropertyDescriptorForMin,
+      JsonApiPropertyDescriptor jsonApiPropertyDescriptorForMax) {
+    return jsonValidationInstructionsBuilder()
+        .hasNoRequiredProperties()
+        .setOptionalProperties(rbMapOf(
+            "min", jsonApiPropertyDescriptorForMin,
+            "max", jsonApiPropertyDescriptorForMax))
+        .build();
   }
 
   public static <C extends Comparable<? super C>> ClosedRange<C> jsonObjectToClosedRange(

@@ -33,8 +33,7 @@ public class JsonApiDocumentationForPseudoEnumGenerator {
         // JsonValidationInstructions is for cases where there are properties, but n/a for a primitive such as Enum.
         .hasNoJsonValidationInstructions()
         // primitives such as Enum do not mention other entities under them that get serialized.
-        .hasNoChildNodes()
-        .noTrivialSampleJsonSupplied()
+        .hasNoChildJsonApiConverters()
         .noNontrivialSampleJsonSupplied()
         .build();
   }

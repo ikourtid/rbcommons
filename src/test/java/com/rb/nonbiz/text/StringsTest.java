@@ -16,18 +16,14 @@ import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
-import static com.rb.nonbiz.text.Strings.asSingleLine;
-import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
-import static com.rb.nonbiz.text.Strings.formatCollectionInOrder;
-import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
-import static com.rb.nonbiz.text.Strings.formatOptionalPrintsInstruments;
-import static com.rb.nonbiz.text.Strings.joinWithHarvardComma;
-import static com.rb.nonbiz.text.Strings.toTrimmedStandaloneSentence;
+import static com.rb.nonbiz.text.Strings.*;
 import static com.rb.nonbiz.types.PreciseValue.formatWithoutCommas;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.reverseOrder;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class StringsTest {
 
@@ -102,6 +98,22 @@ public class StringsTest {
   }
 
   @Test
+  public void testFormatListInExistingOrder() {
+    assertEquals(
+        "10 : 0 5 1 6 2 7 3 8 4 9",
+        formatListInExistingOrder(ImmutableList.of("0", "5", "1", "6", "2", "7", "3", "8", "4", "9")));
+  }
+
+  @Test
+  public void testFormatListInExistingOrderWithTransformer() {
+    assertEquals(
+        "10 : 0x 5x 1x 6x 2x 7x 3x 8x 4x 9x",
+        formatListInExistingOrder(
+            ImmutableList.of("0", "5", "1", "6", "2", "7", "3", "8", "4", "9"),
+            v -> v + "x"));
+  }
+
+  @Test
   public void testFormatMapInKeyOrder() {
     RBMap<String, Integer> rbMap = rbMapOf(
         "D", 1,
@@ -168,14 +180,54 @@ public class StringsTest {
 
   @Test
   public void testAsSingleLine() {
-    assertEquals("ab", asSingleLine("a", "b"));
-    assertEquals("abc", asSingleLine("a", "b", "c"));
+    // Simple cases, where we don't need to add a space between lines
+
+    // You would think that we should disallow this by changing the method signature to take 2 non-varargs arguments
+    // (String first, String second, String ... rest), but that doesn't work, because there are places where we
+    // don't know for sure if we have more than 1 string.
+    assertEquals("a",      asSingleLine("a"));
+
+    assertEquals("a b",    asSingleLine("a ", "b"));
+    assertEquals("a\tb",   asSingleLine("a\t", "b"));
+    assertEquals("a b",    asSingleLine("a", " b"));
+    assertEquals("a\tb",   asSingleLine("a", "\tb"));
+    assertEquals("a  b",   asSingleLine("a ", " b"));
+    assertEquals("a\t\tb", asSingleLine("a\t", "\tb"));
+
+    assertEquals("a b c",    asSingleLine("a ", "b", " c"));
+    assertEquals("a\tb c",   asSingleLine("a\t", "b", " c"));
+    assertEquals("a b c",    asSingleLine("a", " b", " c"));
+    assertEquals("a\tb c",   asSingleLine("a", "\tb", " c"));
+    assertEquals("a  b c",   asSingleLine("a ", " b", " c"));
+    assertEquals("a\t\tb c", asSingleLine("a\t", "\tb", " c"));
+
+    // In the following cases, the method adds a space, in order to avoid concatenating two words into a single one.
+    assertEquals("a b", asSingleLine("a", "b"));
+    assertEquals("a b c", asSingleLine("a", "b", "c"));
   }
 
   @Test
   public void testAsSingleLineWithNewlines() {
     assertEquals("a\nb\n", asSingleLineWithNewlines("a", "b"));
     assertEquals("a\nb\nc\n", asSingleLineWithNewlines("a", "b", "c"));
+  }
+
+  @Test
+  public void testFirstCharacterIsWhitespace() {
+    rbSetOf("", " ", "!", "\t", "9", " x", "!x", "\tx", "9x")
+        .forEach(v -> assertFalse("Problem with " + v, firstCharacterIsAlphabetic(v)));
+
+    rbSetOf("x", "x ", "x!", "xy")
+        .forEach(v -> assertTrue("Problem with " + v, firstCharacterIsAlphabetic(v)));
+  }
+
+  @Test
+  public void testLastCharacterIsWhitespace() {
+    rbSetOf("", " ", "!", "\t", "9", "x ", "x!", "x\t", "x9")
+        .forEach(v -> assertFalse("Problem with " + v, lastCharacterIsAlphabetic(v)));
+
+    rbSetOf("x", " x", "!x", "xy")
+        .forEach(v -> assertTrue("Problem with " + v, lastCharacterIsAlphabetic(v)));
   }
 
 }

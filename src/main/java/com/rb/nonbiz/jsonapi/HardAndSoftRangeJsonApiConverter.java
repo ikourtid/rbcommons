@@ -13,8 +13,10 @@ import java.util.function.Function;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
+import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
@@ -78,13 +80,18 @@ public class HardAndSoftRangeJsonApiConverter implements HasJsonApiDocumentation
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
             "By 'should observe the soft limit', we mean ",
             "that if a value drifts outside the soft limit, it will not be allowed ",
-            "to drift further, but will not be forced to immediate move in the other direction. ",
+            "to drift further, but will not be forced to immediate move in the other direction. <p />",
             "In contrast, if a value drifts outside a hard limit, the system will insist ",
             "that it move back to the soft limit.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
-        .hasChildNode(rangeJsonApiConverter)
-        .noTrivialSampleJsonSupplied()
-        .noNontrivialSampleJsonSupplied()
+        .hasSingleChildJsonApiConverter(rangeJsonApiConverter)
+        .setNontrivialSampleJson(jsonObject(
+            "hardRange", jsonObject(
+                "min", jsonDouble(0.111),
+                "max", jsonDouble(0.444)),
+            "softRange", jsonObject(
+                "min", jsonDouble(0.222),
+                "max", jsonDouble(0.333))))
         .build();
   }
 

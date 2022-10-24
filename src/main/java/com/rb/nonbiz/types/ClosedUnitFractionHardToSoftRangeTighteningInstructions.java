@@ -9,16 +9,12 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
  * Typically, when we construct a {@link ClosedUnitFractionHardAndSoftRange}, instead of specifying both hard and
  * soft ranges independently, we only specify the hard range, and then further tighten it somewhat into a soft range.
  *
- * <p>
- * For instance, if AAPL has a target of 4% in the index, we may specify the hard range as [0.02, 0.06] (2 to 6%),
- * and if this multiplier is 0.9, then the soft range will be [0.022, 0.058].
- * </p>
+ * <p> For instance, if AAPL has a target of 4% in the index, we may specify the hard range as [0.02, 0.06] (2% to 6%),
+ * and if this multiplier is 0.9, then the soft range will be [0.022, 0.058]. </p>
  *
- * <p>
- *   The reason we're using a class and calling it 'instructions' instead of just subclassing from {@link ImpreciseValue}
- *   is that the concept is more general than a simple multiplier, even though that's all this represents right now.
- *   This is really a general function, which could operate as a*x+b or anything else.
- * </p>
+ * <p> The reason we're using a class and calling it 'instructions' instead of just subclassing from {@link ImpreciseValue}
+ * is that the concept is more general than a simple multiplier, even though that's all this represents right now.
+ * This is really a general function, which could operate as <code>a*x + b</code> or anything else. </p>
  */
 public class ClosedUnitFractionHardToSoftRangeTighteningInstructions {
 

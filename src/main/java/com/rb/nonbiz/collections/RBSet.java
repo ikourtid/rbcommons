@@ -239,17 +239,21 @@ public class RBSet<T> implements Iterable<T> {
    * an exception. </p>
    */
   public <T1> RBSet<T1> transform(Function<T, T1> transformer) {
-    Set<T1> transformedSet = this.stream().map(transformer).collect(Collectors.toSet());
-    RBPreconditions.checkArgument(
-        this.size() == transformedSet.size(),
-        "This method does not let us put duplicates in the set; transformAllowingDuplicates does. Set was: %s",
-        this);
-    return new RBSet<>(transformedSet);
+    MutableRBSet<T1> transformedSet = newMutableRBSetWithExpectedSize(this.size());
+    this.stream().forEach(originalItem -> {
+      T1 transformedItem = transformer.apply(originalItem);
+      RBPreconditions.checkArgument(
+          !transformedSet.contains(transformedItem),
+          "This transformation is not one-to-one; this transformed item appears twice: %s",
+          transformedItem);
+      transformedSet.add(transformedItem);
+    });
+    return newRBSet(transformedSet);
   }
 
   /**
    * Transform a set, but throw an exception if the transformed values aren't all unique. Uniqueness is determined by
-   * the equals & hashCode methods passed.
+   * the equals and hashCode methods passed.
    *
    * <p> This is useful for situations where we want a partial equality (i.e. not compare every member),
    * or where there's no equality operation that's well-defined enough to add as a method in the data class,
@@ -263,7 +267,7 @@ public class RBSet<T> implements Iterable<T> {
    * compare the full string in other contexts? </p>
    *
    * <p> This is a bit inelegant. An RBSet is supposed to denote two things: that the order is irrelevant,
-   * and that all items inside it are equal, per Object#hashCode() and {@link Object#equals(Object)}.
+   * and that all items inside it are not equal, per Object#hashCode() and {@link Object#equals(Object)}.
    * This methods assumes only that the order is irrelevant. The problem is that there is no existing data class that
    * fits here: {@link RBSet} makes both assumptions, and {@link List} makes neither assumption. We could add a data
    * class for that case, with a name like UnorderedCollectionAllowingDuplicates or something.

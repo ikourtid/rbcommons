@@ -27,6 +27,8 @@ import static java.util.Collections.singletonList;
  * will get converted to/from JSON. It's useful mostly to 3rd party developers.
  *
  * <p> For the case of enums, see {@link JsonApiEnumDocumentation}. </p>
+ *
+ * @see JsonApiDocumentation
  */
 public class JsonApiClassDocumentation extends JsonApiDocumentation {
 
@@ -34,24 +36,21 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
   private final HumanReadableDocumentation singleLineSummary;
   private final HumanReadableDocumentation longDocumentation;
   private final JsonValidationInstructions jsonValidationInstructions;
-  private final List<HasJsonApiDocumentation> childNodes;
-  private final Optional<JsonElement> trivialSampleJson;
+  private final List<HasJsonApiDocumentation> childJsonApiConverters;
   private final Optional<JsonElement> nontrivialSampleJson;
 
   private JsonApiClassDocumentation(
       Class<?> clazz,
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentation,
-      List<HasJsonApiDocumentation> childNodes,
+      List<HasJsonApiDocumentation> childJsonApiConverters,
       JsonValidationInstructions jsonValidationInstructions,
-      Optional<JsonElement> trivialSampleJson,
       Optional<JsonElement> nontrivialSampleJson) {
     this.clazz = clazz;
     this.singleLineSummary = singleLineSummary;
     this.longDocumentation = longDocumentation;
     this.jsonValidationInstructions = jsonValidationInstructions;
-    this.childNodes = childNodes;
-    this.trivialSampleJson = trivialSampleJson;
+    this.childJsonApiConverters = childJsonApiConverters;
     this.nontrivialSampleJson = nontrivialSampleJson;
   }
 
@@ -106,8 +105,8 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
    * <p> For example, we want the page that describes MarketInfo to also have links to
    * CurrentMarketInfo and DailyMarketInfo. </p>
    */
-  public List<HasJsonApiDocumentation> getChildNodes() {
-    return childNodes;
+  public List<HasJsonApiDocumentation> getChildJsonApiConverters() {
+    return childJsonApiConverters;
   }
 
   /**
@@ -123,14 +122,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
    * in them. This will tell us information about all contained objects.
    */
   public List<HasJsonApiDocumentation> getJsonApiConvertersForContainedObjects() {
-    return childNodes;
-  }
-
-  /**
-   * Returns some trivial (i.e. minimal) sample JSON.
-   */
-  public Optional<JsonElement> getTrivialSampleJson() {
-    return trivialSampleJson;
+    return childJsonApiConverters;
   }
 
   /**
@@ -152,13 +144,12 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
 
   @Override
   public String toString() {
-    return Strings.format("[JACD %s %s %s %s %s %s %s JACD]",
-        clazz,
+    return Strings.format("[JACD %s %s %s %s ; childConverters: %s ; nonTrivialJson: %s JACD]",
+        clazz.getSimpleName(),
         singleLineSummary,
         longDocumentation,
         jsonValidationInstructions,
-        formatListInExistingOrder(childNodes),
-        formatOptional(trivialSampleJson),
+        formatListInExistingOrder(childJsonApiConverters, v -> v.getClass().getSimpleName()),
         formatOptional(nontrivialSampleJson));
   }
 
@@ -169,8 +160,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
     private HumanReadableDocumentation singleLineSummary;
     private HumanReadableDocumentation longDocumentation;
     private JsonValidationInstructions jsonValidationInstructions;
-    private List<HasJsonApiDocumentation> childNodes;
-    private Optional<JsonElement> trivialSampleJson;
+    private List<HasJsonApiDocumentation> childJsonApiConverters;
     private Optional<JsonElement> nontrivialSampleJson;
 
     private JsonApiClassDocumentationBuilder() {}
@@ -184,7 +174,6 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
     public static JsonApiClassDocumentationBuilder intermediateJsonApiClassDocumentationBuilder() {
       return jsonApiClassDocumentationBuilder()
           .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
-          .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied();
     }
 
@@ -193,7 +182,6 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
     // Same as above, but doesn't call .setLongDocumentation()
     public static JsonApiClassDocumentationBuilder intermediate2JsonApiClassDocumentationBuilder() {
       return jsonApiClassDocumentationBuilder()
-          .noTrivialSampleJsonSupplied()
           .noNontrivialSampleJsonSupplied();
     }
 
@@ -207,8 +195,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
           .setSingleLineSummary(documentation("FIXME IAK / FIXME SWA JSONDOC"))
           .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
           .hasNoJsonValidationInstructions()
-          .hasChildNodes(Arrays.asList(items))
-          .noTrivialSampleJsonSupplied()
+          .hasChildJsonApiConverters(Arrays.asList(items))
           .noNontrivialSampleJsonSupplied()
           .build();
     }
@@ -231,6 +218,8 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return this;
     }
 
+    // FIXME IAK YAML this should go away because if a JSON object does not have fixed properties,
+    // we should be using JsonApiClassWithNonFixedPropertiesDocumentation instead of JsonApiClassDocumentation.
     public JsonApiClassDocumentationBuilder hasNoJsonValidationInstructions() {
       return setJsonValidationInstructions(emptyJsonValidationInstructions());
     }
@@ -240,34 +229,25 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return this;
     }
 
-    public JsonApiClassDocumentationBuilder hasChildNodes(List<HasJsonApiDocumentation> childNodes) {
-      this.childNodes = checkNotAlreadySet(this.childNodes, childNodes);
+    public JsonApiClassDocumentationBuilder hasChildJsonApiConverters(
+        List<HasJsonApiDocumentation> childJsonApiConverters) {
+      this.childJsonApiConverters = checkNotAlreadySet(this.childJsonApiConverters, childJsonApiConverters);
       return this;
     }
 
-    public JsonApiClassDocumentationBuilder hasChildNodes(
+    public JsonApiClassDocumentationBuilder hasChildJsonApiConverters(
         HasJsonApiDocumentation first,
         HasJsonApiDocumentation second,
         HasJsonApiDocumentation ... rest) {
-      return hasChildNodes(concatenateFirstSecondAndRest(first, second, rest));
+      return hasChildJsonApiConverters(concatenateFirstSecondAndRest(first, second, rest));
     }
 
-    public JsonApiClassDocumentationBuilder hasChildNode(HasJsonApiDocumentation onlyItem) {
-      return hasChildNodes(singletonList(onlyItem));
+    public JsonApiClassDocumentationBuilder hasSingleChildJsonApiConverter(HasJsonApiDocumentation onlyItem) {
+      return hasChildJsonApiConverters(singletonList(onlyItem));
     }
 
-    public JsonApiClassDocumentationBuilder hasNoChildNodes() {
-      return hasChildNodes(emptyList());
-    }
-
-    public JsonApiClassDocumentationBuilder setTrivialSampleJson(JsonElement trivialSampleJson) {
-      this.trivialSampleJson = checkNotAlreadySet(this.trivialSampleJson, Optional.of(trivialSampleJson));
-      return this;
-    }
-
-    public JsonApiClassDocumentationBuilder noTrivialSampleJsonSupplied() {
-      this.trivialSampleJson = checkNotAlreadySet(this.trivialSampleJson, Optional.empty());
-      return this;
+    public JsonApiClassDocumentationBuilder hasNoChildJsonApiConverters() {
+      return hasChildJsonApiConverters(emptyList());
     }
 
     public JsonApiClassDocumentationBuilder setNontrivialSampleJson(JsonElement nontrivialSampleJson) {
@@ -286,8 +266,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       RBPreconditions.checkNotNull(singleLineSummary);
       RBPreconditions.checkNotNull(longDocumentation);
       RBPreconditions.checkNotNull(jsonValidationInstructions);
-      RBPreconditions.checkNotNull(childNodes);
-      RBPreconditions.checkNotNull(trivialSampleJson);
+      RBPreconditions.checkNotNull(childJsonApiConverters);
       RBPreconditions.checkNotNull(nontrivialSampleJson);
 
       RBPreconditions.checkArgument(
@@ -298,14 +277,14 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       // Since the child nodes are 'verb classes', which never implement equals/hashCode (we rarely even do this with
       // data classes), this will check using simple pointer equality. We have it here to prevent mistakes where a
       // JSON API converter Class<?> specifies the same 'child JSON API converter' more than once.
-      RBPreconditions.checkUnique(childNodes);
+      RBPreconditions.checkUnique(childJsonApiConverters);
     }
 
     @Override
     public JsonApiClassDocumentation buildWithoutPreconditions() {
       return new JsonApiClassDocumentation(
-          clazz, singleLineSummary, longDocumentation, childNodes, jsonValidationInstructions,
-          trivialSampleJson, nontrivialSampleJson);
+          clazz, singleLineSummary, longDocumentation, childJsonApiConverters, jsonValidationInstructions,
+          nontrivialSampleJson);
     }
 
   }
@@ -315,6 +294,9 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
    * Use this for creating {@link JsonApiDocumentation} for simple primitives that are simple wrappers
    * around {@link RBNumeric}. The #nontrivialSampleJson is not optional here; it's small enough in the case of
    * numeric wrappers that it should always be specified.
+   *
+   * Numeric wrapper does not necessarily mean that it extends {@link RBNumeric}. It could be that it's a class
+   * that only includes an {@link RBNumeric} inside it (i.e. object composition instead of inheritance.
    */
   public static class JsonApiRbNumericWrapperDocumentationBuilder implements RBBuilder<JsonApiClassDocumentation> {
 
@@ -329,7 +311,10 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return new JsonApiRbNumericWrapperDocumentationBuilder();
     }
 
-    public JsonApiRbNumericWrapperDocumentationBuilder setClassBeingDocumented(Class<?> classBeingDocumented) {
+    // This cannot be <T extends RBNumeric<? extends T>>, because there are classes that are simple wrappers
+    // around a RbNumericWrapper, but use object composition instead of inheritance. See this builder's class javadoc.
+    public JsonApiRbNumericWrapperDocumentationBuilder
+    setClassBeingDocumented(Class<?> classBeingDocumented) {
       this.classBeingDocumented = checkNotAlreadySet(this.classBeingDocumented, classBeingDocumented);
       return this;
     }
@@ -366,10 +351,13 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
           // JsonValidationInstructions is for cases where there are properties, but this is n/a for a primitive.
           .hasNoJsonValidationInstructions()
           // primitives do not mention other entities under them that get serialized.
-          .hasNoChildNodes()
-          .noTrivialSampleJsonSupplied()
-          // Currently (Aug 2022), there's only room for one of the two sample JSON values in the resulting Swagger
-          // documentation, and it's the 'nontrivial' that gets chosen to be shown. So let's use that one here.
+          .hasNoChildJsonApiConverters()
+          // Our Java class tests usually have a trivial and a nontrivial class. However, currently (Aug 2022)
+          // there's only room for one sample JSON in the resulting Swagger documentation.
+          // So if we can only store only one, we'll use the 'nontrivial', which is more descriptive.
+          // Of course, there's no programmatic - or even subjective - criterion of what counts as the JSON version
+          // of a trivial class. But the high-level semantics is that we should have a complicated enough object
+          // being described here, to cover the most cases.
           .setNontrivialSampleJson(nontrivialSampleJson)
           .build();
     }

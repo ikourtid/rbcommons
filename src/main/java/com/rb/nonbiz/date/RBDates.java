@@ -180,7 +180,7 @@ public class RBDates {
   public static Year checkYearIsReasonable(Year year) {
     RBPreconditions.checkArgument(
         1_800 <= year.getValue() && year.getValue() <= 2_200,
-        "%s is a valid year in history, but it's too far in the past or future; you probably have an error somewhere",
+        "%s is a valid year in history, but it's too far in the past or future; you probably have an error somewhere.",
         year);
     return year;
   }

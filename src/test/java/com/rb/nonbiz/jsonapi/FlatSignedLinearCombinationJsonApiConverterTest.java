@@ -3,6 +3,7 @@ package com.rb.nonbiz.jsonapi;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.rb.nonbiz.collections.FlatSignedLinearCombination;
+import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.testutils.RBTest;
 import org.junit.Test;
 
@@ -80,6 +81,21 @@ public class FlatSignedLinearCombinationJsonApiConverterTest
             jsonElement -> jsonElement.getAsString()),
         flatSignedLinearCombinationMatcher(
             flatSignedLinearCombination, f -> typeSafeEqualTo(f)));
+  }
+
+  @Test
+  public void testValidSampleJson() {
+    JsonArray sampleJsonArray = RBOptionals.getOrThrow(
+        // Cast to JsonApiArrayDocumentation because not all implementers of HasJsonApiDocumentation
+        // have optional sample JSON. JsonApiArrayDocumentation does.
+        ((JsonApiArrayDocumentation) makeTestObject().getJsonApiDocumentation())
+            .getNontrivialSampleJson(),
+        "Internal error - there should be sample JSON");
+
+    // check that the sample JSON can be successfully processed by fromJsonArray()
+    FlatSignedLinearCombination<String> doesNotThrow = makeTestObject().fromJsonArray(
+        sampleJsonArray,
+        jsonElement -> jsonElement.getAsString());
   }
 
   @Override

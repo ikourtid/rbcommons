@@ -1,15 +1,17 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.google.gson.JsonArray;
 import com.rb.nonbiz.json.JsonValidationInstructions;
+import com.rb.nonbiz.reflection.RBClass;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
-import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.Optional;
 
+import static com.rb.nonbiz.reflection.RBClass.nonGenericRbClass;
 import static com.rb.nonbiz.text.Strings.formatOptional;
 
 /**
@@ -21,31 +23,39 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
  * <p> Note that the other implementers of {@link JsonApiDocumentation} store a {@link JsonValidationInstructions}
  * to allow us to validate that a JSON object has correct properties. An array, however, does not have any properties.
  * So we can't validate anything, other than the fact that the items inside the array are valid.
- * However, that gets validated by the (separate) JSON API converter that converts the items inside the array. </p>
+ * However, the validation of a single array item is performed by the (separate) JSON API converter
+ * that converts the items inside the array. </p>
  *
- * <p> Also, those other implementers of {@link JsonApiDocumentation} have sample JSON in them. However,
- * since this is an array, there's no need for sample JSON for the entire array; some sample JSON for the array items
- * would suffice. That JSON would live in that array item's JSON API converter, however. </p>
+ * <p> Also, those other implementers of {@link JsonApiDocumentation} have sample JSON in them. Since this is an array,
+ * you could argue that there's no need for sample JSON for the entire array, and that some sample JSON for the array
+ * <em> items </em> would suffice. That JSON would live in that array item's JSON API converter.
+ * However, sometimes it's clearer to have sample JSON even for an entire array, in addition to sample JSON just
+ * for the array items. So we will still keep a sample JSON property here. </p>
+ *
+ * @see JsonApiClassDocumentation
  */
 public class JsonApiArrayDocumentation extends JsonApiDocumentation {
 
-  private final Class<?> topLevelClass;
-  private final Class<?> classOfArrayItems;
+  private final Class<?> classBeingDocumented;
+  private final RBClass<?> rbClassOfArrayItems;
   private final HumanReadableDocumentation singleLineSummary;
   private final HumanReadableDocumentation longDocumentation;
-  private final Optional<HasJsonApiDocumentation> childNode;
+  private final Optional<HasJsonApiDocumentation> childJsonApiConverter;
+  private final Optional<JsonArray> nontrivialSampleJson;
 
   private JsonApiArrayDocumentation(
-      Class<?> topLevelClass,
-      Class<?> classOfArrayItems,
+      Class<?> classBeingDocumented,
+      RBClass<?> rbClassOfArrayItems,
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentation,
-      Optional<HasJsonApiDocumentation> childNode) {
-    this.topLevelClass = topLevelClass;
-    this.classOfArrayItems = classOfArrayItems;
+      Optional<HasJsonApiDocumentation> childJsonApiConverter,
+      Optional<JsonArray> nontrivialSampleJson) {
+    this.classBeingDocumented = classBeingDocumented;
+    this.rbClassOfArrayItems = rbClassOfArrayItems;
     this.singleLineSummary = singleLineSummary;
     this.longDocumentation = longDocumentation;
-    this.childNode = childNode;
+    this.childJsonApiConverter = childJsonApiConverter;
+    this.nontrivialSampleJson = nontrivialSampleJson;
   }
 
   /**
@@ -62,12 +72,13 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
    *
    * <p> This is similar to what we do for instantiating {@link RBLog}. </p>
    */
-  public Class<?> getTopLevelClass() {
-    return topLevelClass;
+  @Override
+  public Class<?> getClassBeingDocumented() {
+    return classBeingDocumented;
   }
 
-  public Class<?> getClassOfArrayItems() {
-    return classOfArrayItems;
+  public RBClass<?> getRbClassOfArrayItems() {
+    return rbClassOfArrayItems;
   }
 
   /**
@@ -85,13 +96,18 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
    * <p> For example, we want the page that describes MarketInfo to also have links to
    * CurrentMarketInfo and DailyMarketInfo. </p>
    *
-   * <p> Other implementers of {@link JsonApiDocumentation} have a list of {@link HasJsonApiDocumentation}
+   * <p> Other implementers of {@link JsonApiDocumentation} each have a list of {@link HasJsonApiDocumentation}
    * (essentially JSON API converters), which can have multiple JSON API converters in it. Here, however, we can only
    * have 1 (if there exists a separate JSON API converter for the items in the array) or 0 (if those items are
    * converted by the 'whole array' JSON API converter and don't have a separate converter). </p>
+   *
+   * <p> There is no strict concept of a JSON API converter. These are verb classes that are similar in terms of
+   * what they do (convert a Java object back and forth to JSON), but they don't all implement any shared interface
+   * other than {@link HasJsonApiDocumentation}. Using 'JSON API converter' in the name of this is a bit less
+   * correct, but it is much clearer. </p>
    */
-  public Optional<HasJsonApiDocumentation> getChildNode() {
-    return childNode;
+  public Optional<HasJsonApiDocumentation> getChildJsonApiConverter() {
+    return childJsonApiConverter;
   }
 
   /**
@@ -102,6 +118,12 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
     return longDocumentation;
   }
 
+  /**
+   * Returns {@link JsonArray} that can be used as an example inside the documentation.
+   */
+  public Optional<JsonArray> getNontrivialSampleJson() {
+    return nontrivialSampleJson;
+  }
 
   @Override
   public <T> T visit(Visitor<T> visitor) {
@@ -109,28 +131,26 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
   }
 
   @Override
-  public Class<?> getClassBeingDocumented() {
-    return getTopLevelClass();
-  }
-
-  @Override
   public String toString() {
-    return Strings.format("[JAAD %s %s %s %s %s JACD]",
-        topLevelClass,
-        classOfArrayItems,
+    return Strings.format(
+        "[JAAD %s ; arrayClass: %s ; summary: %s ; longDoc: %s ; childConverter: %s ; nontrivialJson: %s JAAD]",
+        classBeingDocumented.getSimpleName(),
+        rbClassOfArrayItems,
         singleLineSummary,
         longDocumentation,
-        formatOptional(childNode));
+        formatOptional(childJsonApiConverter, v -> v.getClass().getSimpleName()),
+        formatOptional(nontrivialSampleJson));
   }
 
 
   public static class JsonApiArrayDocumentationBuilder implements RBBuilder<JsonApiArrayDocumentation> {
 
-    private Class<?> topLevelClass;
-    private Class<?> classOfArrayItems;
+    private Class<?> classBeingDocumented;
+    private RBClass<?> rbClassOfArrayItems;
     private HumanReadableDocumentation singleLineSummary;
     private HumanReadableDocumentation longDocumentation;
-    private Optional<HasJsonApiDocumentation> childNode;
+    private Optional<HasJsonApiDocumentation> childJsonApiConverter;
+    private Optional<JsonArray> nontrivialSampleJson;
 
     private JsonApiArrayDocumentationBuilder() {}
 
@@ -138,14 +158,18 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
       return new JsonApiArrayDocumentationBuilder();
     }
 
-    public JsonApiArrayDocumentationBuilder setTopLevelClass(Class<?> topLevelClass) {
-      this.topLevelClass = checkNotAlreadySet(this.topLevelClass, topLevelClass);
+    public JsonApiArrayDocumentationBuilder setClassBeingDocumented(Class<?> classBeingDocumented) {
+      this.classBeingDocumented = checkNotAlreadySet(this.classBeingDocumented, classBeingDocumented);
+      return this;
+    }
+
+    public JsonApiArrayDocumentationBuilder setRBClassOfArrayItems(RBClass<?> rbClassOfArrayItems) {
+      this.rbClassOfArrayItems = checkNotAlreadySet(this.rbClassOfArrayItems, rbClassOfArrayItems);
       return this;
     }
 
     public JsonApiArrayDocumentationBuilder setClassOfArrayItems(Class<?> classOfArrayItems) {
-      this.classOfArrayItems = checkNotAlreadySet(this.classOfArrayItems, classOfArrayItems);
-      return this;
+      return setRBClassOfArrayItems(nonGenericRbClass(classOfArrayItems));
     }
 
     public JsonApiArrayDocumentationBuilder setSingleLineSummary(HumanReadableDocumentation singleLineSummary) {
@@ -158,39 +182,60 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
       return this;
     }
 
-    public JsonApiArrayDocumentationBuilder hasChildNode(HasJsonApiDocumentation childNode) {
-      this.childNode = checkNotAlreadySet(this.childNode, Optional.of(childNode));
+    public JsonApiArrayDocumentationBuilder hasJsonApiConverter(HasJsonApiDocumentation childJsonApiConverter) {
+      this.childJsonApiConverter = checkNotAlreadySet(this.childJsonApiConverter, Optional.of(childJsonApiConverter));
       return this;
     }
 
-    public JsonApiArrayDocumentationBuilder hasNoChildNode() {
-      this.childNode = checkNotAlreadySet(this.childNode, Optional.empty());
+    public JsonApiArrayDocumentationBuilder hasNoJsonApiConverter() {
+      this.childJsonApiConverter = checkNotAlreadySet(this.childJsonApiConverter, Optional.empty());
+      return this;
+    }
+
+    public JsonApiArrayDocumentationBuilder setNontrivialSampleJson(JsonArray nontrivialSampleJson) {
+      this.nontrivialSampleJson = checkNotAlreadySet(this.nontrivialSampleJson, Optional.of(nontrivialSampleJson));
+      return this;
+    }
+
+    public JsonApiArrayDocumentationBuilder hasNoNontrivialSampleJson() {
+      this.nontrivialSampleJson = checkNotAlreadySet(this.nontrivialSampleJson, Optional.empty());
       return this;
     }
 
     @Override
     public void sanityCheckContents() {
-      RBPreconditions.checkNotNull(topLevelClass);
-      RBPreconditions.checkNotNull(classOfArrayItems);
+      RBPreconditions.checkNotNull(classBeingDocumented);
+      RBPreconditions.checkNotNull(rbClassOfArrayItems);
       RBPreconditions.checkNotNull(singleLineSummary);
       RBPreconditions.checkNotNull(longDocumentation);
-      RBPreconditions.checkNotNull(childNode);
+      RBPreconditions.checkNotNull(childJsonApiConverter);
+      RBPreconditions.checkNotNull(nontrivialSampleJson);
 
       RBPreconditions.checkArgument(
-          !topLevelClass.isEnum(),
+          !classBeingDocumented.isEnum(),
           "Class %s cannot be an enum! Use JsonApiEnumDocumentation for that case",
-          topLevelClass);
+          classBeingDocumented);
 
       RBPreconditions.checkArgument(
-          !topLevelClass.equals(classOfArrayItems),
-          "Both the top-level class and the class of the array items are equal: %s",
-          topLevelClass);
+          !classBeingDocumented.equals(rbClassOfArrayItems.getOuterClass()),
+          "Both the class being documented and the class of its array items are equal: %s",
+          classBeingDocumented);
+
+      nontrivialSampleJson.ifPresent(v -> RBPreconditions.checkArgument(
+          v.size() > 0,
+          "The sample JSON array is empty: %s",
+          v));
     }
 
     @Override
     public JsonApiArrayDocumentation buildWithoutPreconditions() {
       return new JsonApiArrayDocumentation(
-          topLevelClass, classOfArrayItems, singleLineSummary, longDocumentation, childNode);
+          classBeingDocumented,
+          rbClassOfArrayItems,
+          singleLineSummary,
+          longDocumentation,
+          childJsonApiConverter,
+          nontrivialSampleJson);
     }
 
   }
