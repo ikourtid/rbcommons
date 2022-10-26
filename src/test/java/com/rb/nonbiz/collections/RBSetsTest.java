@@ -277,9 +277,9 @@ public class RBSetsTest {
 
   @Test
   public void testRBSetDifference() {
-    RBSet abcde = rbSetOf(STOCK_A, STOCK_B, STOCK_C, STOCK_D, STOCK_E);
-    RBSet abc   = rbSetOf(STOCK_A, STOCK_B, STOCK_C);
-    RBSet de    = rbSetOf(STOCK_D, STOCK_E);
+    RBSet<InstrumentId> abcde = rbSetOf(STOCK_A, STOCK_B, STOCK_C, STOCK_D, STOCK_E);
+    RBSet<InstrumentId> abc   = rbSetOf(STOCK_A, STOCK_B, STOCK_C);
+    RBSet<InstrumentId> de    = rbSetOf(STOCK_D, STOCK_E);
 
     assertEquals(abc, difference(abcde, de));
     assertEquals(de,  difference(abcde, abc));
@@ -296,9 +296,9 @@ public class RBSetsTest {
 
   @Test
   public void testRBSetDifferenceOverloads() {
-    RBSet abcde = rbSetOf(STOCK_A, STOCK_B, STOCK_C, STOCK_D, STOCK_E);
-    RBSet abc   = rbSetOf(STOCK_A, STOCK_B, STOCK_C);
-    RBSet de    = rbSetOf(STOCK_D, STOCK_E);
+    RBSet<InstrumentId> abcde = rbSetOf(STOCK_A, STOCK_B, STOCK_C, STOCK_D, STOCK_E);
+    RBSet<InstrumentId> abc   = rbSetOf(STOCK_A, STOCK_B, STOCK_C);
+    RBSet<InstrumentId> de    = rbSetOf(STOCK_D, STOCK_E);
 
     Set<InstrumentId> abcdeSet = ImmutableSet.of(STOCK_A, STOCK_B, STOCK_C, STOCK_D, STOCK_E);
     Set<InstrumentId> abcSet   = ImmutableSet.of(STOCK_A, STOCK_B, STOCK_C);
