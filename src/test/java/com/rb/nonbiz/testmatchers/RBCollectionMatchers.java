@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.intArrayMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -171,6 +172,10 @@ public class RBCollectionMatchers {
 
   public static TypeSafeMatcher<List<Double>> doubleListMatcher(List<Double> expected, double epsilon) {
     return orderedListMatcher(expected, d -> doubleAlmostEqualsMatcher(d, epsilon));
+  }
+
+  public static TypeSafeMatcher<List<String>> stringListMatcher(List<String> expected) {
+    return orderedListEqualityMatcher(expected);
   }
 
   public static <V extends PreciseValue<? super V>> TypeSafeMatcher<List<V>> preciseValueListMatcher(List<V> expected, double epsilon) {
