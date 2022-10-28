@@ -63,11 +63,6 @@ public class JsonValidationInstructionsTest extends RBTestMatcher<JsonValidation
             instructions.getRequiredPropertiesAsSortedList()));
 
     assertThat(
-        ImmutableList.of("required1", "required2"),
-        stringListMatcher(
-            instructions.getRequiredPropertiesAsSortedList()));
-
-    assertThat(
         ImmutableList.of("optional1", "optional2"),
         stringListMatcher(
             instructions.getOptionalPropertiesAsSortedList()));
