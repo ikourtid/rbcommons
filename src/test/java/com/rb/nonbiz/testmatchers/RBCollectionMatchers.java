@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.testmatchers.Match.match;
-import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.intArrayMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
