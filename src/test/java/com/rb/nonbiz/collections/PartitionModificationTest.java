@@ -15,9 +15,29 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapPreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 public class PartitionModificationTest extends RBTestMatcher<PartitionModification<String>> {
+
+  // Unlike other test*WithSeed methods, this is less useful, because it only works for String keys.
+  public static PartitionModification<String> testStringPartitionModificationWithSeed(double seed) {
+    return PartitionModificationBuilder.<String>partitionModificationBuilder()
+        .setKeysToAdd(rbMapOf(
+            "a1", unitFraction(0.01 + seed),
+            "a2", unitFraction(0.02 + seed)))
+        .setKeysToIncrease(rbMapOf(
+            "i1", unitFraction(0.07 + seed),
+            "i2", unitFraction(0.08 + seed)))
+        .setKeysToRemove(rbMapOf(
+            "r1", unitFraction(0.03 + seed),
+            "r2", unitFraction(0.04 + seed)))
+        .setKeysToDecrease(rbMapOf(
+            "d1", unitFraction(0.05 + seed),
+            "d2", unitFraction(0.06 + seed)))
+        .build();
+  }
 
   @Test
   public void totalToIncreaseMustEqualTotalToDecrease() {
@@ -44,15 +64,15 @@ public class PartitionModificationTest extends RBTestMatcher<PartitionModificati
     QuadriFunction<String, String, String, String, PartitionModification<String>> maker =
         (keyToAdd, keyToIncrease, keyToRemove, keyToDecrease) ->
             PartitionModificationBuilder.<String>partitionModificationBuilder()
-        .setKeysToAdd(singletonRBMap(
-            keyToAdd, unitFraction(0.1)))
-        .setKeysToIncrease(singletonRBMap(
-            keyToIncrease, unitFraction(0.7)))
-        .setKeysToRemove(singletonRBMap(
-            keyToRemove, unitFraction(0.2)))
-        .setKeysToDecrease(singletonRBMap(
-            keyToDecrease, unitFraction(0.6)))
-        .build();
+                .setKeysToAdd(singletonRBMap(
+                    keyToAdd, unitFraction(0.1)))
+                .setKeysToIncrease(singletonRBMap(
+                    keyToIncrease, unitFraction(0.7)))
+                .setKeysToRemove(singletonRBMap(
+                    keyToRemove, unitFraction(0.2)))
+                .setKeysToDecrease(singletonRBMap(
+                    keyToDecrease, unitFraction(0.6)))
+                .build();
 
     // Some of these cases are not unique, but it's clearer this way.
     PartitionModification<String> doesNotThrow = maker.apply("a", "i", "r", "d");
@@ -103,39 +123,12 @@ public class PartitionModificationTest extends RBTestMatcher<PartitionModificati
 
   @Override
   public PartitionModification<String> makeNontrivialObject() {
-    return PartitionModificationBuilder.<String>partitionModificationBuilder()
-        .setKeysToAdd(rbMapOf(
-            "a1", unitFraction(0.01),
-            "a2", unitFraction(0.02)))
-        .setKeysToIncrease(rbMapOf(
-            "i1", unitFraction(0.07),
-            "i2", unitFraction(0.08)))
-        .setKeysToRemove(rbMapOf(
-            "r1", unitFraction(0.03),
-            "r2", unitFraction(0.04)))
-        .setKeysToDecrease(rbMapOf(
-            "d1", unitFraction(0.05),
-            "d2", unitFraction(0.06)))
-        .build();
+    return testStringPartitionModificationWithSeed(ZERO_SEED);
   }
 
   @Override
   public PartitionModification<String> makeMatchingNontrivialObject() {
-    double e = 1e-9; // epsilon
-    return PartitionModificationBuilder.<String>partitionModificationBuilder()
-        .setKeysToAdd(rbMapOf(
-            "a1", unitFraction(0.01 + e),
-            "a2", unitFraction(0.02 + e)))
-        .setKeysToIncrease(rbMapOf(
-            "i1", unitFraction(0.07 + e),
-            "i2", unitFraction(0.08 + e)))
-        .setKeysToRemove(rbMapOf(
-            "r1", unitFraction(0.03 + e),
-            "r2", unitFraction(0.04 + e)))
-        .setKeysToDecrease(rbMapOf(
-            "d1", unitFraction(0.05 + e),
-            "d2", unitFraction(0.06 + e)))
-        .build();
+    return testStringPartitionModificationWithSeed(EPSILON_SEED);
   }
 
   @Override

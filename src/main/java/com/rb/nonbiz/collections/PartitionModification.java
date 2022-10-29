@@ -23,8 +23,7 @@ import static java.util.Map.Entry.comparingByValue;
 
 /**
  * This is a set of changes that can be applied to a {@link Partition} to result in a new partition.
- *
- * <p> The semantics of how these can be applied to the original partition (call it <em>P></em>) are as follows:
+ * The semantics of how these can be applied to the original partition (call it <em>P</em>) are as follows:
  *   <ul>
  *      <li> {@link #getKeysToAdd()} :
  *      assert these don't exist in the original partition; use the new weights. </li>
@@ -35,7 +34,6 @@ import static java.util.Map.Entry.comparingByValue;
  *      <li> {@link #getKeysToDecrease()} :
  *      assert these exist in the original partition; subtract the supplied weights from the existing ones. </li>
  *   </ul>
- * </p>
  */
 public class PartitionModification<K> {
 
