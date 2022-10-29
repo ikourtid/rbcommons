@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -172,25 +173,16 @@ public class PartitionModification<K> {
           "We can't have a total decrease (of increase) by more than 100% (%s); there's no partition it could get applied to",
           totalAdditions);
 
-      RBPreconditions.checkArgument(
-          keysToAdd.values().stream().noneMatch(fractionToAdd -> fractionToAdd.isAlmostZero(1e-8)),
-          "keysToAdd must not have any 0 differences implied: %s",
-          keysToAdd);
+      BiConsumer<RBMap<K, UnitFraction>, String> singleChecker = (map, mapName) ->
+          RBPreconditions.checkArgument(
+              map.values().stream().noneMatch(fractionToAdd -> fractionToAdd.isAlmostZero(1e-8)),
+              "%s must not have any 0 differences implied: %s",
+              mapName, map);
 
-      RBPreconditions.checkArgument(
-          keysToIncrease.values().stream().noneMatch(fractionToIncreaseBy -> fractionToIncreaseBy.isAlmostZero(1e-8)),
-          "keysToIncrease must not have any 0 differences implied: %s",
-          keysToIncrease);
-
-      RBPreconditions.checkArgument(
-          keysToDecrease.values().stream().noneMatch(fractionToDecreaseBy -> fractionToDecreaseBy.isAlmostZero(1e-8)),
-          "keysToDecrease must not have any 0 differences implied: %s",
-          keysToDecrease);
-
-      RBPreconditions.checkArgument(
-          keysToRemove.values().stream().noneMatch(fractionToRemove -> fractionToRemove.isAlmostZero(1e-8)),
-          "keysToRemove must not have any 0 differences implied: %s",
-          keysToRemove);
+      singleChecker.accept(keysToAdd,      "keysToAdd");
+      singleChecker.accept(keysToIncrease, "keysToIncrease");
+      singleChecker.accept(keysToDecrease, "keysToDecrease");
+      singleChecker.accept(keysToRemove,   "keysToRemove");
 
       RBPreconditions.checkArgument(
           noSharedItems(
@@ -198,8 +190,8 @@ public class PartitionModification<K> {
               newRBSet(keysToIncrease.keySet()),
               newRBSet(keysToRemove.keySet()),
               newRBSet(keysToDecrease.keySet())),
-          "We cannot have keys that are meant to both increase and decrease: %s vs. %s",
-          keysToIncrease, keysToDecrease);
+          "We cannot have keys in more than one category: add= %s ; increase= %s ; remove= %s ; decrease= %s",
+          keysToAdd, keysToIncrease, keysToRemove, keysToDecrease);
     }
 
     @Override
