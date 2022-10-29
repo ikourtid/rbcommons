@@ -27,7 +27,7 @@ public class MultiplePartitionModificationApplierTest extends RBTest<MultiplePar
 
     expectSingleApplication(someOriginalPartition,           someModification1, somePartitionAfterModification1);
     expectSingleApplication(somePartitionAfterModification1, someModification2, somePartitionAfterModification2);
-    expectSingleApplication(somePartitionAfterModification2, someModification2, somePartitionAfterModification3);
+    expectSingleApplication(somePartitionAfterModification2, someModification3, somePartitionAfterModification3);
 
     assertThat(
         makeTestObject().apply(
