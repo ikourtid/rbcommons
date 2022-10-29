@@ -9,10 +9,10 @@ import static com.rb.nonbiz.collections.PartitionModificationTest.testStringPart
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jmock.AbstractExpectations.same;
 
-public class MultiplePartitionModificationApplierTest extends RBTest<MultiplePartitionModificationApplier> {
+public class MultiplePartitionModificationsApplierTest extends RBTest<MultiplePartitionModificationsApplier> {
 
-  PartitionModificationApplier partitionModificationApplier =
-      mockery.mock(PartitionModificationApplier.class);
+  SinglePartitionModificationApplier singlePartitionModificationApplier =
+      mockery.mock(SinglePartitionModificationApplier.class);
 
   @Test
   public void generalCase_makesConsecutivePartitionModifications() {
@@ -43,7 +43,7 @@ public class MultiplePartitionModificationApplierTest extends RBTest<MultiplePar
       PartitionModification<String> somePartitionModification,
       Partition<String> someExpectedPartition) {
     mockery.checking(new Expectations() {{
-      oneOf(partitionModificationApplier).apply(
+      oneOf(singlePartitionModificationApplier).apply(
           with(same(someOriginalPartition)),
           with(same(somePartitionModification)));
       will(returnValue(someExpectedPartition));
@@ -51,9 +51,9 @@ public class MultiplePartitionModificationApplierTest extends RBTest<MultiplePar
   }
 
   @Override
-  protected MultiplePartitionModificationApplier makeTestObject() {
-    MultiplePartitionModificationApplier testObject = new MultiplePartitionModificationApplier();
-    testObject.partitionModificationApplier = partitionModificationApplier;
+  protected MultiplePartitionModificationsApplier makeTestObject() {
+    MultiplePartitionModificationsApplier testObject = new MultiplePartitionModificationsApplier();
+    testObject.singlePartitionModificationApplier = singlePartitionModificationApplier;
     return testObject;
   }
 

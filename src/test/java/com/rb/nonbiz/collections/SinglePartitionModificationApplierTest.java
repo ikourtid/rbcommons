@@ -2,7 +2,6 @@ package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.collections.PartitionModification.PartitionModificationBuilder;
 import com.rb.nonbiz.testutils.RBTest;
-import org.checkerframework.checker.units.qual.K;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.Partition.partition;
@@ -13,7 +12,7 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PartitionModificationApplierTest extends RBTest<PartitionModificationApplier> {
+public class SinglePartitionModificationApplierTest extends RBTest<SinglePartitionModificationApplier> {
 
   @Test
   public void generalCase_addsIncreasesRemovesAndSubtracts() {
@@ -45,8 +44,8 @@ public class PartitionModificationApplierTest extends RBTest<PartitionModificati
   }
 
   @Override
-  protected PartitionModificationApplier makeTestObject() {
-    return new PartitionModificationApplier();
+  protected SinglePartitionModificationApplier makeTestObject() {
+    return new SinglePartitionModificationApplier();
   }
   
 }

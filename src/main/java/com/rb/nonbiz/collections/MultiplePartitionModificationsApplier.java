@@ -7,12 +7,12 @@ import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 /**
  * Applies a series of {@link PartitionModification}s to an original {@link Partition}.
  *
- * <p> Just like {@link PartitionModificationApplier}, except that it can apply multiple modifications
+ * <p> Just like {@link SinglePartitionModificationApplier}, except that it can apply multiple modifications
  * in a row. </p>
  */
-public class MultiplePartitionModificationApplier {
+public class MultiplePartitionModificationsApplier {
 
-  @Inject PartitionModificationApplier partitionModificationApplier;
+  @Inject SinglePartitionModificationApplier singlePartitionModificationApplier;
 
   @SafeVarargs
   public final <K> Partition<K> apply(
@@ -28,7 +28,7 @@ public class MultiplePartitionModificationApplier {
         originalPartition,
 
         // the body of the iteration
-        (partition, partitionModification) -> partitionModificationApplier.apply(partition, partitionModification));
+        (partition, partitionModification) -> singlePartitionModificationApplier.apply(partition, partitionModification));
   }
 
 }
