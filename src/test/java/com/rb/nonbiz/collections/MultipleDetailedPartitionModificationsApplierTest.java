@@ -5,20 +5,20 @@ import org.jmock.Expectations;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.Partition.singletonPartition;
-import static com.rb.nonbiz.collections.PartitionModificationTest.testStringPartitionModificationWithSeed;
+import static com.rb.nonbiz.collections.DetailedPartitionModificationTest.testDetailedStringPartitionModificationWithSeed;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jmock.AbstractExpectations.same;
 
-public class MultiplePartitionModificationsApplierTest extends RBTest<MultiplePartitionModificationsApplier> {
+public class MultipleDetailedPartitionModificationsApplierTest extends RBTest<MultiplePartitionModificationsApplier> {
 
   SinglePartitionModificationApplier singlePartitionModificationApplier =
       mockery.mock(SinglePartitionModificationApplier.class);
 
   @Test
   public void generalCase_makesConsecutivePartitionModifications() {
-    PartitionModification<String> someModification1 = testStringPartitionModificationWithSeed(0.001);
-    PartitionModification<String> someModification2 = testStringPartitionModificationWithSeed(0.002);
-    PartitionModification<String> someModification3 = testStringPartitionModificationWithSeed(0.003);
+    DetailedPartitionModification<String> someModification1 = testDetailedStringPartitionModificationWithSeed(0.001);
+    DetailedPartitionModification<String> someModification2 = testDetailedStringPartitionModificationWithSeed(0.002);
+    DetailedPartitionModification<String> someModification3 = testDetailedStringPartitionModificationWithSeed(0.003);
 
     Partition<String> someOriginalPartition = singletonPartition("o");
     Partition<String> somePartitionAfterModification1 = singletonPartition("p1");
@@ -40,12 +40,12 @@ public class MultiplePartitionModificationsApplierTest extends RBTest<MultiplePa
 
   private void expectSingleApplication(
       Partition<String> someOriginalPartition,
-      PartitionModification<String> somePartitionModification,
+      DetailedPartitionModification<String> someDetailedPartitionModification,
       Partition<String> someExpectedPartition) {
     mockery.checking(new Expectations() {{
       oneOf(singlePartitionModificationApplier).apply(
           with(same(someOriginalPartition)),
-          with(same(somePartitionModification)));
+          with(same(someDetailedPartitionModification)));
       will(returnValue(someExpectedPartition));
     }});
   }

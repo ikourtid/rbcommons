@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 
 /**
- * Applies a series of {@link PartitionModification}s to an original {@link Partition}.
+ * Applies a series of {@link DetailedPartitionModification}s to an original {@link Partition}.
  *
  * <p> Just like {@link SinglePartitionModificationApplier}, except that it can apply multiple modifications
  * in a row. </p>
@@ -17,9 +17,9 @@ public class MultiplePartitionModificationsApplier {
   @SafeVarargs
   public final <K> Partition<K> apply(
       Partition<K> originalPartition,
-      PartitionModification<K> first,
-      PartitionModification<K> second,
-      PartitionModification<K> ... rest) {
+      DetailedPartitionModification<K> first,
+      DetailedPartitionModification<K> second,
+      DetailedPartitionModification<K>... rest) {
     return RBIterators.forEach(
         // the iterator
         concatenateFirstSecondAndRest(first, second, rest).iterator(),

@@ -1,6 +1,6 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.collections.PartitionModification.PartitionModificationBuilder;
+import com.rb.nonbiz.collections.DetailedPartitionModification.DetailedPartitionModificationBuilder;
 import com.rb.nonbiz.functional.QuadriFunction;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
@@ -8,7 +8,7 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import static com.rb.nonbiz.collections.PartitionModification.emptyPartitionModification;
+import static com.rb.nonbiz.collections.DetailedPartitionModification.emptyDetailedPartitionModification;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -19,11 +19,11 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
-public class PartitionModificationTest extends RBTestMatcher<PartitionModification<String>> {
+public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPartitionModification<String>> {
 
   // Unlike other test*WithSeed methods, this is less useful, because it only works for String keys.
-  public static PartitionModification<String> testStringPartitionModificationWithSeed(double seed) {
-    return PartitionModificationBuilder.<String>partitionModificationBuilder()
+  public static DetailedPartitionModification<String> testDetailedStringPartitionModificationWithSeed(double seed) {
+    return DetailedPartitionModificationBuilder.<String>detailedPartitionModificationBuilder()
         .setKeysToAdd(rbMapOf(
             "a1", unitFraction(0.01 + seed),
             "a2", unitFraction(0.02 + seed)))
@@ -41,7 +41,7 @@ public class PartitionModificationTest extends RBTestMatcher<PartitionModificati
 
   @Test
   public void totalToIncreaseMustEqualTotalToDecrease() {
-    PartitionModification<String> doesNotThrow;
+    DetailedPartitionModification<String> doesNotThrow;
     // Below, 0.1 + 0.7 = 0.2 + 0.6
     assertIllegalArgumentException( () -> makeUsingAddIncreaseRemoveDecrease(0.1, 0.7, 0.2, 0.6 - 1e-7));
     doesNotThrow                        = makeUsingAddIncreaseRemoveDecrease(0.1, 0.7, 0.2, 0.6 - 1e-9);
@@ -61,9 +61,9 @@ public class PartitionModificationTest extends RBTestMatcher<PartitionModificati
 
   @Test
   public void cannotRepeatKeys() {
-    QuadriFunction<String, String, String, String, PartitionModification<String>> maker =
+    QuadriFunction<String, String, String, String, DetailedPartitionModification<String>> maker =
         (keyToAdd, keyToIncrease, keyToRemove, keyToDecrease) ->
-            PartitionModificationBuilder.<String>partitionModificationBuilder()
+            DetailedPartitionModificationBuilder.<String>detailedPartitionModificationBuilder()
                 .setKeysToAdd(singletonRBMap(
                     keyToAdd, unitFraction(0.1)))
                 .setKeysToIncrease(singletonRBMap(
@@ -75,7 +75,7 @@ public class PartitionModificationTest extends RBTestMatcher<PartitionModificati
                 .build();
 
     // Some of these cases are not unique, but it's clearer this way.
-    PartitionModification<String> doesNotThrow = maker.apply("a", "i", "r", "d");
+    DetailedPartitionModification<String> doesNotThrow = maker.apply("a", "i", "r", "d");
     assertIllegalArgumentException( () -> maker.apply("a", "a", "r", "d"));
     assertIllegalArgumentException( () -> maker.apply("a", "i", "a", "d"));
     assertIllegalArgumentException( () -> maker.apply("a", "i", "r", "a"));
@@ -96,15 +96,15 @@ public class PartitionModificationTest extends RBTestMatcher<PartitionModificati
   @Test
   public void totalIncreaseOrDecreaseCannotIncrease100pct() {
     // Increasing by 0.1 + 0.7; decreasing by 0.2 + 0.6
-    PartitionModification<String> doesNotThrow = makeUsingAddIncreaseRemoveDecrease(0.1, 0.7, 0.2, 0.6);
+    DetailedPartitionModification<String> doesNotThrow = makeUsingAddIncreaseRemoveDecrease(0.1, 0.7, 0.2, 0.6);
     // 0.1 + 0.33 + 0.7 > 1 = 100%, so this is invalid.
     // Likewise for 0.2 + 0.33 + 0.6.
     assertIllegalArgumentException( () -> makeUsingAddIncreaseRemoveDecrease(0.1 + 0.33, 0.7, 0.2 + 0.33, 0.6));
   }
 
-  private PartitionModification<String> makeUsingAddIncreaseRemoveDecrease(
+  private DetailedPartitionModification<String> makeUsingAddIncreaseRemoveDecrease(
       double toAdd, double toIncrease, double toRemove, double toDecrease) {
-    return PartitionModificationBuilder.<String>partitionModificationBuilder()
+    return DetailedPartitionModificationBuilder.<String>detailedPartitionModificationBuilder()
         .setKeysToAdd(singletonRBMap(
             "a", unitFraction(toAdd)))
         .setKeysToIncrease(singletonRBMap(
@@ -117,37 +117,37 @@ public class PartitionModificationTest extends RBTestMatcher<PartitionModificati
   }
 
   @Override
-  public PartitionModification<String> makeTrivialObject() {
-    return emptyPartitionModification();
+  public DetailedPartitionModification<String> makeTrivialObject() {
+    return emptyDetailedPartitionModification();
   }
 
   @Override
-  public PartitionModification<String> makeNontrivialObject() {
-    return testStringPartitionModificationWithSeed(ZERO_SEED);
+  public DetailedPartitionModification<String> makeNontrivialObject() {
+    return testDetailedStringPartitionModificationWithSeed(ZERO_SEED);
   }
 
   @Override
-  public PartitionModification<String> makeMatchingNontrivialObject() {
-    return testStringPartitionModificationWithSeed(EPSILON_SEED);
+  public DetailedPartitionModification<String> makeMatchingNontrivialObject() {
+    return testDetailedStringPartitionModificationWithSeed(EPSILON_SEED);
   }
 
   @Override
-  protected boolean willMatch(PartitionModification<String> expected, PartitionModification<String> actual) {
-    return partitionModificationMatcher(expected).matches(actual);
+  protected boolean willMatch(DetailedPartitionModification<String> expected, DetailedPartitionModification<String> actual) {
+    return detailedPartitionModificationMatcher(expected).matches(actual);
   }
 
-  public static <T> TypeSafeMatcher<PartitionModification<T>> partitionModificationMatcher(
-      PartitionModification<T> expected) {
-    return epsilonPartitionModificationMatcher(expected, 1e-8);
+  public static <T> TypeSafeMatcher<DetailedPartitionModification<T>> detailedPartitionModificationMatcher(
+      DetailedPartitionModification<T> expected) {
+    return epsilonDetailedPartitionModificationMatcher(expected, 1e-8);
   }
 
-  public static <T> TypeSafeMatcher<PartitionModification<T>> epsilonPartitionModificationMatcher(
-      PartitionModification<T> expected, double epsilon) {
+  public static <T> TypeSafeMatcher<DetailedPartitionModification<T>> epsilonDetailedPartitionModificationMatcher(
+      DetailedPartitionModification<T> expected, double epsilon) {
     // Here, we won't use the usual makeMatcher approach, because we want to be able to print the partitionModification
     // fraction at a high precision, whereas the default toString() only prints round percentages.
-    return new TypeSafeMatcher<PartitionModification<T>>() {
+    return new TypeSafeMatcher<DetailedPartitionModification<T>>() {
       @Override
-      protected boolean matchesSafely(PartitionModification<T> actual) {
+      protected boolean matchesSafely(DetailedPartitionModification<T> actual) {
         return makeMatcher(expected,
             match(v -> v.getKeysToAdd(),      f -> rbMapPreciseValueMatcher(f, epsilon)),
             match(v -> v.getKeysToIncrease(), f -> rbMapPreciseValueMatcher(f, epsilon)),
@@ -158,7 +158,7 @@ public class PartitionModificationTest extends RBTestMatcher<PartitionModificati
 
       @Override
       public void describeTo(Description description) {
-        description.appendText(Strings.format("Expected partitionModification: %s", expected.toString(8)));
+        description.appendText(Strings.format("Expected DetailedPartitionModification: %s", expected.toString(8)));
       }
     };
   }
