@@ -36,14 +36,14 @@ import static java.util.Map.Entry.comparingByValue;
  *      assert these exist in the original partition; subtract the supplied weights from the existing ones. </li>
  *   </ul>
  */
-public class PartitionModification<K> {
+public class DetailedPartitionModification<K> {
 
   private final RBMap<K, UnitFraction> keysToAdd;
   private final RBMap<K, UnitFraction> keysToIncrease;
   private final RBMap<K, UnitFraction> keysToRemove;
   private final RBMap<K, UnitFraction> keysToDecrease;
 
-  private PartitionModification(
+  private DetailedPartitionModification(
       RBMap<K, UnitFraction> keysToAdd,
       RBMap<K, UnitFraction> keysToIncrease,
       RBMap<K, UnitFraction> keysToRemove,
@@ -54,8 +54,8 @@ public class PartitionModification<K> {
     this.keysToDecrease = keysToDecrease;
   }
 
-  public static <K> PartitionModification<K> emptyPartitionModification() {
-    return PartitionModificationBuilder.<K>partitionModificationBuilder()
+  public static <K> DetailedPartitionModification<K> emptyDetailedPartitionModification() {
+    return DetailedPartitionModificationBuilder.<K>detailedPartitionModificationBuilder()
         .setKeysToAdd(emptyRBMap())
         .setKeysToIncrease(emptyRBMap())
         .setKeysToRemove(emptyRBMap())
@@ -107,7 +107,7 @@ public class PartitionModification<K> {
             .sorted(comparator)
             .map(e -> String.format("%s %s", e.getValue().toPercentString(precision), keyToObject.apply(e.getKey())))
             .collect(Collectors.toList());
-    return Strings.format("toAdd: %s ; toIncrease: %s ; toRemove: %s ; toDecrease: %s",
+    return Strings.format("[DPM toAdd: %s ; toIncrease: %s ; toRemove: %s ; toDecrease: %s DPM]",
         formatCollectionInDefaultOrder(componentsMaker.apply(keysToAdd)),
         formatCollectionInDefaultOrder(componentsMaker.apply(keysToIncrease)),
         formatCollectionInDefaultOrder(componentsMaker.apply(keysToRemove)),
@@ -115,35 +115,35 @@ public class PartitionModification<K> {
   }
 
 
-  public static class PartitionModificationBuilder<K> implements RBBuilder<PartitionModification<K>> {
+  public static class DetailedPartitionModificationBuilder<K> implements RBBuilder<DetailedPartitionModification<K>> {
 
     private RBMap<K, UnitFraction> keysToAdd;
     private RBMap<K, UnitFraction> keysToIncrease;
     private RBMap<K, UnitFraction> keysToRemove;
     private RBMap<K, UnitFraction> keysToDecrease;
 
-    private PartitionModificationBuilder() {}
+    private DetailedPartitionModificationBuilder() {}
 
-    public static <K> PartitionModificationBuilder<K> partitionModificationBuilder() {
-      return new PartitionModificationBuilder<>();
+    public static <K> DetailedPartitionModificationBuilder<K> detailedPartitionModificationBuilder() {
+      return new DetailedPartitionModificationBuilder<>();
     }
 
-    public PartitionModificationBuilder<K> setKeysToAdd(RBMap<K, UnitFraction> keysToAdd) {
+    public DetailedPartitionModificationBuilder<K> setKeysToAdd(RBMap<K, UnitFraction> keysToAdd) {
       this.keysToAdd = checkNotAlreadySet(this.keysToAdd, keysToAdd);
       return this;
     }
 
-    public PartitionModificationBuilder<K> setKeysToIncrease(RBMap<K, UnitFraction> keysToIncrease) {
+    public DetailedPartitionModificationBuilder<K> setKeysToIncrease(RBMap<K, UnitFraction> keysToIncrease) {
       this.keysToIncrease = checkNotAlreadySet(this.keysToIncrease, keysToIncrease);
       return this;
     }
 
-    public PartitionModificationBuilder<K> setKeysToRemove(RBMap<K, UnitFraction> keysToRemove) {
+    public DetailedPartitionModificationBuilder<K> setKeysToRemove(RBMap<K, UnitFraction> keysToRemove) {
       this.keysToRemove = checkNotAlreadySet(this.keysToRemove, keysToRemove);
       return this;
     }
 
-    public PartitionModificationBuilder<K> setKeysToDecrease(RBMap<K, UnitFraction> keysToDecrease) {
+    public DetailedPartitionModificationBuilder<K> setKeysToDecrease(RBMap<K, UnitFraction> keysToDecrease) {
       this.keysToDecrease = checkNotAlreadySet(this.keysToDecrease, keysToDecrease);
       return this;
     }
@@ -195,8 +195,8 @@ public class PartitionModification<K> {
     }
 
     @Override
-    public PartitionModification<K> buildWithoutPreconditions() {
-      return new PartitionModification<>(keysToAdd, keysToIncrease, keysToRemove, keysToDecrease);
+    public DetailedPartitionModification<K> buildWithoutPreconditions() {
+      return new DetailedPartitionModification<>(keysToAdd, keysToIncrease, keysToRemove, keysToDecrease);
     }
 
   }

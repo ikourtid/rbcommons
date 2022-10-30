@@ -1,6 +1,6 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.collections.PartitionModification.PartitionModificationBuilder;
+import com.rb.nonbiz.collections.DetailedPartitionModification.DetailedPartitionModificationBuilder;
 import com.rb.nonbiz.testutils.RBTest;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class SinglePartitionModificationApplierTest extends RBTest<SinglePartitionModificationApplier> {
+public class SingleDetailedPartitionModificationApplierTest extends RBTest<SinglePartitionModificationApplier> {
 
   @Test
   public void generalCase_addsIncreasesRemovesAndSubtracts() {
@@ -23,7 +23,7 @@ public class SinglePartitionModificationApplierTest extends RBTest<SinglePartiti
                 "k2", unitFraction(0.2),
                 "k3", unitFraction(0.3),
                 "k4", unitFraction(0.4))),
-            PartitionModificationBuilder.<String>partitionModificationBuilder()
+            DetailedPartitionModificationBuilder.<String>detailedPartitionModificationBuilder()
                 .setKeysToAdd(singletonRBMap(
                     "x", unitFraction(0.04)))
                 .setKeysToIncrease(singletonRBMap(

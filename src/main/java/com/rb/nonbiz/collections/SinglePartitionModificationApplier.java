@@ -8,20 +8,20 @@ import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 
 /**
- * Applies a modification ({@link PartitionModification}) to a {@link Partition}, resulting in a new, modified
- * partition. For the semantics here, please see the tests for this class, as well as {@link PartitionModification}.
+ * Applies a modification ({@link DetailedPartitionModification}) to a {@link Partition}, resulting in a new, modified
+ * partition. For the semantics here, please see the tests for this class, as well as {@link DetailedPartitionModification}.
  */
 public class SinglePartitionModificationApplier {
 
   public <T> Partition<T> apply(
       Partition<T> originalPartition,
-      PartitionModification<T> partitionModification) {
+      DetailedPartitionModification<T> detailedPartitionModification) {
     MutableRBMap<T, UnitFraction> mutableMap = newMutableRBMapWithExpectedSize(
         originalPartition.size()
-            + partitionModification.getKeysToAdd().size()
-            - partitionModification.getKeysToRemove().size());
+            + detailedPartitionModification.getKeysToAdd().size()
+            - detailedPartitionModification.getKeysToRemove().size());
 
-    partitionModification.getKeysToAdd().forEachEntry( (key, newFraction) -> {
+    detailedPartitionModification.getKeysToAdd().forEachEntry( (key, newFraction) -> {
       RBPreconditions.checkArgument(
           !originalPartition.containsKey(key),
           "Key %s was meant to be added with a fraction of %s , but it already exists in the original partition: %s",
@@ -29,7 +29,7 @@ public class SinglePartitionModificationApplier {
       mutableMap.putAssumingAbsent(key, newFraction);
     });
 
-    partitionModification.getKeysToIncrease().forEachEntry( (key, additionalFraction) ->
+    detailedPartitionModification.getKeysToIncrease().forEachEntry( (key, additionalFraction) ->
         mutableMap.putAssumingAbsent(
             key, UnitFraction.sum(
                 additionalFraction,
@@ -38,7 +38,7 @@ public class SinglePartitionModificationApplier {
                     "Key %s was meant to be increased by %s , but it does not exist in the original partition: %s",
                     key, additionalFraction, originalPartition))));
 
-    partitionModification.getKeysToRemove().forEachEntry( (key, expectedOriginalUnitFraction) -> {
+    detailedPartitionModification.getKeysToRemove().forEachEntry( (key, expectedOriginalUnitFraction) -> {
       UnitFraction actualOriginalUnitFraction = originalPartition.getRawFractionsMap().getOrThrow(
           key,
           "Key %s was meant to be removed, but it does not exist in the original partition: %s",
@@ -50,7 +50,7 @@ public class SinglePartitionModificationApplier {
       // Nothing else to do here; we just won't put an entry for this key in the final weights.
     });
 
-    partitionModification.getKeysToDecrease().forEachEntry( (key, fractionDecrease) ->
+    detailedPartitionModification.getKeysToDecrease().forEachEntry( (key, fractionDecrease) ->
       mutableMap.putAssumingAbsent(key,
           originalPartition.getRawFractionsMap().getOrThrow(
                   key,
@@ -62,7 +62,7 @@ public class SinglePartitionModificationApplier {
     // and also not intended for deletion, copy its contents over to the final partition. That item was not meant to
     // be changed.
     originalPartition.getRawFractionsMap().forEachEntry( (key, originalFraction) -> {
-      if (!mutableMap.containsKey(key) && !partitionModification.getKeysToRemove().containsKey(key)) {
+      if (!mutableMap.containsKey(key) && !detailedPartitionModification.getKeysToRemove().containsKey(key)) {
         mutableMap.putAssumingAbsent(key, originalFraction);
       }
     });
