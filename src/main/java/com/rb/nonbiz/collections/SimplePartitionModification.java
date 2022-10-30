@@ -49,8 +49,8 @@ public class SimplePartitionModification<K> {
 
   public static <K> SimplePartitionModification<K> emptySimplePartitionModification() {
     return SimplePartitionModificationBuilder.<K>simplePartitionModificationBuilder()
-        .setKeysToAddOrIncrease(emptyRBMap())
-        .setKeysToRemoveOrDecrease(emptyRBMap())
+        .noKeysToAddOrIncrease()
+        .noKeysToRemoveOrDecrease()
         .build();
   }
 
