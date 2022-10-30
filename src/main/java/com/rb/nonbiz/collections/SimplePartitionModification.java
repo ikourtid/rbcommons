@@ -122,7 +122,6 @@ public class SimplePartitionModification<K> {
       RBPreconditions.checkNotNull(keysToAddOrIncrease);
       RBPreconditions.checkNotNull(keysToRemoveOrDecrease);
 
-      // Note that
       BigDecimal totalAdditions = sumToBigDecimal(keysToAddOrIncrease.values());
       BigDecimal totalSubtractions = sumToBigDecimal(keysToRemoveOrDecrease.values());
 
