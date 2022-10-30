@@ -56,10 +56,10 @@ public class DetailedPartitionModification<K> {
 
   public static <K> DetailedPartitionModification<K> emptyDetailedPartitionModification() {
     return DetailedPartitionModificationBuilder.<K>detailedPartitionModificationBuilder()
-        .setKeysToAdd(emptyRBMap())
-        .setKeysToIncrease(emptyRBMap())
-        .setKeysToRemove(emptyRBMap())
-        .setKeysToDecrease(emptyRBMap())
+        .noKeysToAdd()
+        .noKeysToIncrease()
+        .noKeysToRemove()
+        .noKeysToDecrease()
         .build();
   }
 
@@ -133,9 +133,17 @@ public class DetailedPartitionModification<K> {
       return this;
     }
 
+    public DetailedPartitionModificationBuilder<K> noKeysToAdd() {
+      return setKeysToAdd(emptyRBMap());
+    }
+
     public DetailedPartitionModificationBuilder<K> setKeysToIncrease(RBMap<K, UnitFraction> keysToIncrease) {
       this.keysToIncrease = checkNotAlreadySet(this.keysToIncrease, keysToIncrease);
       return this;
+    }
+
+    public DetailedPartitionModificationBuilder<K> noKeysToIncrease() {
+      return setKeysToIncrease(emptyRBMap());
     }
 
     public DetailedPartitionModificationBuilder<K> setKeysToRemove(RBMap<K, UnitFraction> keysToRemove) {
@@ -143,9 +151,17 @@ public class DetailedPartitionModification<K> {
       return this;
     }
 
+    public DetailedPartitionModificationBuilder<K> noKeysToRemove() {
+      return setKeysToRemove(emptyRBMap());
+    }
+
     public DetailedPartitionModificationBuilder<K> setKeysToDecrease(RBMap<K, UnitFraction> keysToDecrease) {
       this.keysToDecrease = checkNotAlreadySet(this.keysToDecrease, keysToDecrease);
       return this;
+    }
+
+    public DetailedPartitionModificationBuilder<K> noKeysToDecrease() {
+      return setKeysToDecrease(emptyRBMap());
     }
 
     @Override

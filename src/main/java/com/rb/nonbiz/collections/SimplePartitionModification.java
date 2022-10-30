@@ -49,8 +49,8 @@ public class SimplePartitionModification<K> {
 
   public static <K> SimplePartitionModification<K> emptySimplePartitionModification() {
     return SimplePartitionModificationBuilder.<K>simplePartitionModificationBuilder()
-        .setKeysToAddOrIncrease(emptyRBMap())
-        .setKeysToRemoveOrDecrease(emptyRBMap())
+        .noKeysToAddOrIncrease()
+        .noKeysToRemoveOrDecrease()
         .build();
   }
 
@@ -112,9 +112,17 @@ public class SimplePartitionModification<K> {
       return this;
     }
 
+    public SimplePartitionModificationBuilder<K> noKeysToAddOrIncrease() {
+      return setKeysToAddOrIncrease(emptyRBMap());
+    }
+
     public SimplePartitionModificationBuilder<K> setKeysToRemoveOrDecrease(RBMap<K, UnitFraction> keysToRemoveOrDecrease) {
       this.keysToRemoveOrDecrease = checkNotAlreadySet(this.keysToRemoveOrDecrease, keysToRemoveOrDecrease);
       return this;
+    }
+
+    public SimplePartitionModificationBuilder<K> noKeysToRemoveOrDecrease() {
+      return setKeysToRemoveOrDecrease(emptyRBMap());
     }
 
     @Override
