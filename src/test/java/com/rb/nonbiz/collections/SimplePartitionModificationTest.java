@@ -1,7 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.collections.SimplePartitionModification.SimplePartitionModificationBuilder;
-import com.rb.nonbiz.functional.QuadriFunction;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.UnitFraction;
@@ -9,7 +8,6 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.SimplePartitionModification.emptySimplePartitionModification;
@@ -26,7 +24,7 @@ import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 public class SimplePartitionModificationTest extends RBTestMatcher<SimplePartitionModification<String>> {
 
   // Unlike other test*WithSeed methods, this is less useful, because it only works for String keys.
-  public static SimplePartitionModification<String> testDetailedStringPartitionModificationWithSeed(double seed) {
+  public static SimplePartitionModification<String> testSimpleStringPartitionModificationWithSeed(double seed) {
     return SimplePartitionModificationBuilder.<String>simplePartitionModificationBuilder()
         .setKeysToAddOrIncrease(rbMapOf(
             "a1", unitFraction(0.01 + seed),
@@ -116,12 +114,12 @@ public class SimplePartitionModificationTest extends RBTestMatcher<SimplePartiti
 
   @Override
   public SimplePartitionModification<String> makeNontrivialObject() {
-    return testDetailedStringPartitionModificationWithSeed(ZERO_SEED);
+    return testSimpleStringPartitionModificationWithSeed(ZERO_SEED);
   }
 
   @Override
   public SimplePartitionModification<String> makeMatchingNontrivialObject() {
-    return testDetailedStringPartitionModificationWithSeed(EPSILON_SEED);
+    return testSimpleStringPartitionModificationWithSeed(EPSILON_SEED);
   }
 
   @Override

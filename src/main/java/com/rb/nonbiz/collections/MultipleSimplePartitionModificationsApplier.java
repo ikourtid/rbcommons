@@ -5,21 +5,21 @@ import com.google.inject.Inject;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 
 /**
- * Applies a series of {@link DetailedPartitionModification}s to an original {@link Partition}.
+ * Applies a series of {@link SimplePartitionModification}s to an original {@link Partition}.
  *
- * <p> Just like {@link SingleDetailedPartitionModificationApplier}, except that it can apply multiple modifications
+ * <p> Just like {@link SingleSimplePartitionModificationApplier}, except that it can apply multiple modifications
  * in a row. </p>
  */
-public class MultipleDetailedPartitionModificationsApplier {
+public class MultipleSimplePartitionModificationsApplier {
 
-  @Inject SingleDetailedPartitionModificationApplier singleDetailedPartitionModificationApplier;
+  @Inject SingleSimplePartitionModificationApplier singleSimplePartitionModificationApplier;
 
   @SafeVarargs
   public final <K> Partition<K> apply(
       Partition<K> originalPartition,
-      DetailedPartitionModification<K> first,
-      DetailedPartitionModification<K> second,
-      DetailedPartitionModification<K>... rest) {
+      SimplePartitionModification<K> first,
+      SimplePartitionModification<K> second,
+      SimplePartitionModification<K>... rest) {
     return RBIterators.forEach(
         // the iterator
         concatenateFirstSecondAndRest(first, second, rest).iterator(),
@@ -29,7 +29,7 @@ public class MultipleDetailedPartitionModificationsApplier {
 
         // the body of the iteration
         (partition, partitionModification) ->
-            singleDetailedPartitionModificationApplier.apply(partition, partitionModification));
+            singleSimplePartitionModificationApplier.apply(partition, partitionModification));
   }
 
 }
