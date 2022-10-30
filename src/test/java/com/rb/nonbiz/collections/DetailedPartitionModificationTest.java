@@ -143,7 +143,7 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
 
   public static <T> TypeSafeMatcher<DetailedPartitionModification<T>> epsilonDetailedPartitionModificationMatcher(
       DetailedPartitionModification<T> expected, double epsilon) {
-    // Here, we won't use the usual makeMatcher approach, because we want to be able to print the partitionModification
+    // Here, we won't use the usual makeMatcher approach, because we want to be able to print the partition modification
     // fraction at a high precision, whereas the default toString() only prints round percentages.
     return new TypeSafeMatcher<DetailedPartitionModification<T>>() {
       @Override
