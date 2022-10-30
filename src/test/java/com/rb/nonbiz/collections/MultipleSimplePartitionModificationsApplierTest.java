@@ -4,22 +4,22 @@ import com.rb.nonbiz.testutils.RBTest;
 import org.jmock.Expectations;
 import org.junit.Test;
 
+import static com.rb.nonbiz.collections.SimplePartitionModificationTest.testSimpleStringPartitionModificationWithSeed;
 import static com.rb.nonbiz.collections.Partition.singletonPartition;
-import static com.rb.nonbiz.collections.DetailedPartitionModificationTest.testDetailedStringPartitionModificationWithSeed;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jmock.AbstractExpectations.same;
 
-public class MultipleDetailedPartitionModificationsApplierTest
-    extends RBTest<MultipleDetailedPartitionModificationsApplier> {
+public class MultipleSimplePartitionModificationsApplierTest
+    extends RBTest<MultipleSimplePartitionModificationsApplier> {
 
-  SingleDetailedPartitionModificationApplier singleDetailedPartitionModificationApplier =
-      mockery.mock(SingleDetailedPartitionModificationApplier.class);
+  SingleSimplePartitionModificationApplier singleSimplePartitionModificationApplier =
+      mockery.mock(SingleSimplePartitionModificationApplier.class);
 
   @Test
   public void generalCase_makesConsecutivePartitionModifications() {
-    DetailedPartitionModification<String> someModification1 = testDetailedStringPartitionModificationWithSeed(0.001);
-    DetailedPartitionModification<String> someModification2 = testDetailedStringPartitionModificationWithSeed(0.002);
-    DetailedPartitionModification<String> someModification3 = testDetailedStringPartitionModificationWithSeed(0.003);
+    SimplePartitionModification<String> someModification1 = testSimpleStringPartitionModificationWithSeed(0.001);
+    SimplePartitionModification<String> someModification2 = testSimpleStringPartitionModificationWithSeed(0.002);
+    SimplePartitionModification<String> someModification3 = testSimpleStringPartitionModificationWithSeed(0.003);
 
     Partition<String> someOriginalPartition = singletonPartition("o");
     Partition<String> somePartitionAfterModification1 = singletonPartition("p1");
@@ -41,20 +41,20 @@ public class MultipleDetailedPartitionModificationsApplierTest
 
   private void expectSingleApplication(
       Partition<String> someOriginalPartition,
-      DetailedPartitionModification<String> someDetailedPartitionModification,
+      SimplePartitionModification<String> someSimplePartitionModification,
       Partition<String> someExpectedPartition) {
     mockery.checking(new Expectations() {{
-      oneOf(singleDetailedPartitionModificationApplier).apply(
+      oneOf(singleSimplePartitionModificationApplier).apply(
           with(same(someOriginalPartition)),
-          with(same(someDetailedPartitionModification)));
+          with(same(someSimplePartitionModification)));
       will(returnValue(someExpectedPartition));
     }});
   }
 
   @Override
-  protected MultipleDetailedPartitionModificationsApplier makeTestObject() {
-    MultipleDetailedPartitionModificationsApplier testObject = new MultipleDetailedPartitionModificationsApplier();
-    testObject.singleDetailedPartitionModificationApplier = singleDetailedPartitionModificationApplier;
+  protected MultipleSimplePartitionModificationsApplier makeTestObject() {
+    MultipleSimplePartitionModificationsApplier testObject = new MultipleSimplePartitionModificationsApplier();
+    testObject.singleSimplePartitionModificationApplier = singleSimplePartitionModificationApplier;
     return testObject;
   }
 

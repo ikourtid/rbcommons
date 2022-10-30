@@ -12,7 +12,7 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class SingleDetailedPartitionModificationApplierTest extends RBTest<SinglePartitionModificationApplier> {
+public class SingleDetailedPartitionModificationApplierTest extends RBTest<SingleDetailedPartitionModificationApplier> {
 
   @Test
   public void generalCase_addsIncreasesRemovesAndSubtracts() {
@@ -44,8 +44,8 @@ public class SingleDetailedPartitionModificationApplierTest extends RBTest<Singl
   }
 
   @Override
-  protected SinglePartitionModificationApplier makeTestObject() {
-    return new SinglePartitionModificationApplier();
+  protected SingleDetailedPartitionModificationApplier makeTestObject() {
+    return new SingleDetailedPartitionModificationApplier();
   }
   
 }
