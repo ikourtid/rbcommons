@@ -9,10 +9,11 @@ import static com.rb.nonbiz.collections.DetailedPartitionModificationTest.testDe
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jmock.AbstractExpectations.same;
 
-public class MultipleDetailedPartitionModificationsApplierTest extends RBTest<MultiplePartitionModificationsApplier> {
+public class MultipleDetailedPartitionModificationsApplierTest
+    extends RBTest<MultipleDetailedPartitionModificationsApplier> {
 
-  SinglePartitionModificationApplier singlePartitionModificationApplier =
-      mockery.mock(SinglePartitionModificationApplier.class);
+  SingleDetailedPartitionModificationApplier singleDetailedPartitionModificationApplier =
+      mockery.mock(SingleDetailedPartitionModificationApplier.class);
 
   @Test
   public void generalCase_makesConsecutivePartitionModifications() {
@@ -43,7 +44,7 @@ public class MultipleDetailedPartitionModificationsApplierTest extends RBTest<Mu
       DetailedPartitionModification<String> someDetailedPartitionModification,
       Partition<String> someExpectedPartition) {
     mockery.checking(new Expectations() {{
-      oneOf(singlePartitionModificationApplier).apply(
+      oneOf(singleDetailedPartitionModificationApplier).apply(
           with(same(someOriginalPartition)),
           with(same(someDetailedPartitionModification)));
       will(returnValue(someExpectedPartition));
@@ -51,9 +52,9 @@ public class MultipleDetailedPartitionModificationsApplierTest extends RBTest<Mu
   }
 
   @Override
-  protected MultiplePartitionModificationsApplier makeTestObject() {
-    MultiplePartitionModificationsApplier testObject = new MultiplePartitionModificationsApplier();
-    testObject.singlePartitionModificationApplier = singlePartitionModificationApplier;
+  protected MultipleDetailedPartitionModificationsApplier makeTestObject() {
+    MultipleDetailedPartitionModificationsApplier testObject = new MultipleDetailedPartitionModificationsApplier();
+    testObject.singleDetailedPartitionModificationApplier = singleDetailedPartitionModificationApplier;
     return testObject;
   }
 

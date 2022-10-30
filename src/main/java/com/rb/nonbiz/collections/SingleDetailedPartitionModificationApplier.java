@@ -11,7 +11,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
  * Applies a modification ({@link DetailedPartitionModification}) to a {@link Partition}, resulting in a new, modified
  * partition. For the semantics here, please see the tests for this class, as well as {@link DetailedPartitionModification}.
  */
-public class SinglePartitionModificationApplier {
+public class SingleDetailedPartitionModificationApplier {
 
   public <T> Partition<T> apply(
       Partition<T> originalPartition,
