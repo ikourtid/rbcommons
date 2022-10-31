@@ -70,8 +70,12 @@ public class SingleDetailedPartitionModificationApplier {
     });
 
     // See comments in getEpsilonForNetAdditionSanityCheck on why we need this. In short, there are some cases
-    // (often in test code) where the additions/increases aren't exactly the same as the deletions/removals,
+    // (often in test code) where the additions/increases aren't exactly the same as the deletions/removals
+    // (using an epsilon of detailedPartitionModification.getEpsilonForNetAdditionSanityCheck())
     // which would cause the final partition fractions to sum up to a number slightly away from 100%.
+    // partitionFromPositiveWeightsWhichMayNotSumTo1 renormalizes the weights to sum to 100%.
+    // It can't hurt to do it always, but we only want to do it if it's needed, both for performance reasons (secondary)
+    // and to use the preconditions inside Partition#partition that check that the sum is (almost exactly) 100%.
     return detailedPartitionModification.getEpsilonForNetAdditionSanityCheck().isPresent()
         ? partitionFromPositiveWeightsWhichMayNotSumTo1(newRBMap(mutableMap))
         : partition(newRBMap(mutableMap));
