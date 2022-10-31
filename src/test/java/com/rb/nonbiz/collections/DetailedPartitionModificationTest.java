@@ -4,6 +4,7 @@ import com.rb.nonbiz.collections.DetailedPartitionModification.DetailedPartition
 import com.rb.nonbiz.functional.QuadriFunction;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import static com.rb.nonbiz.collections.DetailedPartitionModification.emptyDetai
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.Match.matchUsingAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapPreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -36,6 +38,7 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
         .setKeysToDecrease(rbMapOf(
             "d1", unitFraction(0.05 + seed),
             "d2", unitFraction(0.06 + seed)))
+        .setEpsilonForRemovalSanityChecks(unitFraction(seed))
         .build();
   }
 
@@ -72,6 +75,7 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
                     keyToRemove, unitFraction(0.2)))
                 .setKeysToDecrease(singletonRBMap(
                     keyToDecrease, unitFraction(0.6)))
+                .useStandardEpsilonForRemovalSanityChecks()
                 .build();
 
     // Some of these cases are not unique, but it's clearer this way.
@@ -113,6 +117,7 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
             "r", unitFraction(toRemove)))
         .setKeysToDecrease(singletonRBMap(
             "d", unitFraction(toDecrease)))
+        .useStandardEpsilonForRemovalSanityChecks()
         .build();
   }
 
@@ -149,10 +154,11 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
       @Override
       protected boolean matchesSafely(DetailedPartitionModification<T> actual) {
         return makeMatcher(expected,
-            match(v -> v.getKeysToAdd(),      f -> rbMapPreciseValueMatcher(f, epsilon)),
-            match(v -> v.getKeysToIncrease(), f -> rbMapPreciseValueMatcher(f, epsilon)),
-            match(v -> v.getKeysToRemove(),   f -> rbMapPreciseValueMatcher(f, epsilon)),
-            match(v -> v.getKeysToDecrease(), f -> rbMapPreciseValueMatcher(f, epsilon)))
+            match(                 v -> v.getKeysToAdd(),      f -> rbMapPreciseValueMatcher(f, epsilon)),
+            match(                 v -> v.getKeysToIncrease(), f -> rbMapPreciseValueMatcher(f, epsilon)),
+            match(                 v -> v.getKeysToRemove(),   f -> rbMapPreciseValueMatcher(f, epsilon)),
+            match(                 v -> v.getKeysToDecrease(), f -> rbMapPreciseValueMatcher(f, epsilon)),
+            matchUsingAlmostEquals(v -> v.getEpsilonForRemovalSanityChecks(), 1e-8))
             .matches(actual);
       }
 

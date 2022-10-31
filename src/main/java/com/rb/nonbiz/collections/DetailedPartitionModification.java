@@ -19,6 +19,7 @@ import static com.rb.nonbiz.collections.RBSets.noSharedItems;
 import static com.rb.nonbiz.text.Strings.formatCollectionInDefaultOrder;
 import static com.rb.nonbiz.types.PreciseValue.sumToBigDecimal;
 import static com.rb.nonbiz.types.UnitFraction.isValidUnitFraction;
+import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static java.util.Comparator.reverseOrder;
 import static java.util.Map.Entry.comparingByValue;
 
@@ -42,16 +43,19 @@ public class DetailedPartitionModification<K> {
   private final RBMap<K, UnitFraction> keysToIncrease;
   private final RBMap<K, UnitFraction> keysToRemove;
   private final RBMap<K, UnitFraction> keysToDecrease;
+  private final UnitFraction epsilonForRemovalSanityChecks;
 
   private DetailedPartitionModification(
       RBMap<K, UnitFraction> keysToAdd,
       RBMap<K, UnitFraction> keysToIncrease,
       RBMap<K, UnitFraction> keysToRemove,
-      RBMap<K, UnitFraction> keysToDecrease) {
+      RBMap<K, UnitFraction> keysToDecrease,
+      UnitFraction epsilonForRemovalSanityChecks) {
     this.keysToAdd = keysToAdd;
     this.keysToIncrease = keysToIncrease;
     this.keysToRemove = keysToRemove;
     this.keysToDecrease = keysToDecrease;
+    this.epsilonForRemovalSanityChecks = epsilonForRemovalSanityChecks;
   }
 
   public static <K> DetailedPartitionModification<K> emptyDetailedPartitionModification() {
@@ -60,6 +64,7 @@ public class DetailedPartitionModification<K> {
         .noKeysToIncrease()
         .noKeysToRemove()
         .noKeysToDecrease()
+        .useStandardEpsilonForRemovalSanityChecks()
         .build();
   }
 
@@ -77,6 +82,10 @@ public class DetailedPartitionModification<K> {
 
   public RBMap<K, UnitFraction> getKeysToDecrease() {
     return keysToDecrease;
+  }
+
+  public UnitFraction getEpsilonForRemovalSanityChecks() {
+    return epsilonForRemovalSanityChecks;
   }
 
   @Override
@@ -107,11 +116,13 @@ public class DetailedPartitionModification<K> {
             .sorted(comparator)
             .map(e -> String.format("%s %s", e.getValue().toPercentString(precision), keyToObject.apply(e.getKey())))
             .collect(Collectors.toList());
-    return Strings.format("[DPM toAdd: %s ; toIncrease: %s ; toRemove: %s ; toDecrease: %s DPM]",
+    return Strings.format(
+        "[DPM toAdd= %s ; toIncrease= %s ; toRemove= %s ; toDecrease= %s ; epsilonForRemovalSanityChecks= %s DPM]",
         formatCollectionInDefaultOrder(componentsMaker.apply(keysToAdd)),
         formatCollectionInDefaultOrder(componentsMaker.apply(keysToIncrease)),
         formatCollectionInDefaultOrder(componentsMaker.apply(keysToRemove)),
-        formatCollectionInDefaultOrder(componentsMaker.apply(keysToDecrease)));
+        formatCollectionInDefaultOrder(componentsMaker.apply(keysToDecrease)),
+        epsilonForRemovalSanityChecks);
   }
 
 
@@ -121,6 +132,7 @@ public class DetailedPartitionModification<K> {
     private RBMap<K, UnitFraction> keysToIncrease;
     private RBMap<K, UnitFraction> keysToRemove;
     private RBMap<K, UnitFraction> keysToDecrease;
+    private UnitFraction epsilonForRemovalSanityChecks;
 
     private DetailedPartitionModificationBuilder() {}
 
@@ -164,12 +176,24 @@ public class DetailedPartitionModification<K> {
       return setKeysToDecrease(emptyRBMap());
     }
 
+    public DetailedPartitionModificationBuilder<K> setEpsilonForRemovalSanityChecks(
+        UnitFraction epsilonForRemovalSanityChecks) {
+      this.epsilonForRemovalSanityChecks = checkNotAlreadySet(
+          this.epsilonForRemovalSanityChecks, epsilonForRemovalSanityChecks);
+      return this;
+    }
+
+    public DetailedPartitionModificationBuilder<K> useStandardEpsilonForRemovalSanityChecks() {
+      return setEpsilonForRemovalSanityChecks(unitFraction(1e-8));
+    }
+
     @Override
     public void sanityCheckContents() {
       RBPreconditions.checkNotNull(keysToAdd);
       RBPreconditions.checkNotNull(keysToIncrease);
       RBPreconditions.checkNotNull(keysToRemove);
       RBPreconditions.checkNotNull(keysToDecrease);
+      RBPreconditions.checkNotNull(epsilonForRemovalSanityChecks);
 
       // Note that
       BigDecimal totalAdditions = sumToBigDecimal(keysToIncrease.values())
@@ -212,7 +236,8 @@ public class DetailedPartitionModification<K> {
 
     @Override
     public DetailedPartitionModification<K> buildWithoutPreconditions() {
-      return new DetailedPartitionModification<>(keysToAdd, keysToIncrease, keysToRemove, keysToDecrease);
+      return new DetailedPartitionModification<>(
+          keysToAdd, keysToIncrease, keysToRemove, keysToDecrease, epsilonForRemovalSanityChecks);
     }
 
   }

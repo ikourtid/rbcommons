@@ -32,6 +32,7 @@ public class SingleDetailedPartitionModificationApplierTest extends RBTest<Singl
                     "k1", unitFraction(0.1))) // 0.1 is the original weight, used for sanity checking purposes
                 .setKeysToDecrease(singletonRBMap(
                     "k3", unitFraction(0.01)))
+                .useStandardEpsilonForRemovalSanityChecks()
                 .build()),
         epsilonPartitionMatcher(
             partition(rbMapOf(
