@@ -29,6 +29,7 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
+import static java.util.Map.Entry.comparingByValue;
 
 /**
  * Use this whenever you want to represent having <i>N</i> items with proportions that sum to 1,
@@ -260,10 +261,13 @@ public class Partition<K> {
   }
 
   public String toStringInDecreasingMembershipOrder(int precision, Function<K, String> keyToObject) {
-    return toStringInOrder(precision, comparing(e -> e.getValue(), reverseOrder()), keyToObject);
+    return toStringInOrder(precision, comparingByValue(reverseOrder()), keyToObject);
   }
 
-  public String toStringInOrder(int precision, Comparator<Entry<K, UnitFraction>> comparator, Function<K, String> keyToObject) {
+  public String toStringInOrder(
+      int precision,
+      Comparator<Entry<K, UnitFraction>> comparator,
+      Function<K, String> keyToObject) {
     Iterator<String> components = fractions.entrySet()
         .stream()
         .sorted(comparator)

@@ -44,7 +44,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class PartitionTest extends RBTestMatcher<Partition> {
+public class PartitionTest extends RBTestMatcher<Partition<String>> {
 
   @Test
   public void testContainsOnlyKey() {
@@ -457,26 +457,26 @@ public class PartitionTest extends RBTestMatcher<Partition> {
   }
 
   @Override
-  public Partition makeTrivialObject() {
+  public Partition<String> makeTrivialObject() {
     return singletonPartition("a");
   }
 
   @Override
-  public Partition makeNontrivialObject() {
+  public Partition<String> makeNontrivialObject() {
     return partition(rbMapOf(
         "a", unitFraction(0.4),
         "b", unitFraction(0.6)));
   }
 
   @Override
-  public Partition makeMatchingNontrivialObject() {
+  public Partition<String> makeMatchingNontrivialObject() {
     return partition(rbMapOf(
         "b", unitFraction(0.60000000001),
         "a", unitFraction(0.39999999999)));
   }
 
   @Override
-  protected boolean willMatch(Partition expected, Partition actual) {
+  protected boolean willMatch(Partition<String> expected, Partition<String> actual) {
     return partitionMatcher(expected).matches(actual);
   }
 
