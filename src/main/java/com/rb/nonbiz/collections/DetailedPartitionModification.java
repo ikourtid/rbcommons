@@ -40,17 +40,6 @@ import static java.util.Map.Entry.comparingByValue;
  *      <li> {@link #getKeysToDecrease()} :
  *      assert these exist in the original partition; subtract the supplied weights from the existing ones. </li>
  *   </ul>
- *
- *   <p>
- *      There is a precondition that the total fractions to add or increase must equal the total fractions
- *      to subtract or increase. This makes sense, so that the total of everything still remains at 100%.
- *      However, in some cases such as tests (where we want to avoid too much precision because it clutters up the
- *      test results), the difference may be larger than the usual epsilon of 1e-8. In such cases,
- *      {@link #getEpsilonForNetAdditionSanityCheck()} allow us to specify a larger (and possibly also smaller)
- *      epsilon. The reason it is optional is that if it is present, then the
- *      {@link SingleDetailedPartitionModificationApplier} will know about it so that it can normalize the weights
- *      to add up to exactly 100%.
- *   </p>
  */
 public class DetailedPartitionModification<K> {
 
@@ -107,6 +96,16 @@ public class DetailedPartitionModification<K> {
     return epsilonForRemovalSanityChecks;
   }
 
+  /**
+   * There is a precondition that the total fractions to add or increase must equal the total fractions
+   * to subtract or increase. This makes sense, so that the total of everything still remains at 100%.
+   * However, in some cases such as tests (where we want to avoid too much precision because it clutters up the
+   * test results), the difference may be larger than the usual epsilon of 1e-8. In such cases,
+   * {@link #getEpsilonForNetAdditionSanityCheck()} allow us to specify a larger (and possibly also smaller)
+   * epsilon. The reason it is optional is that if it is present, then the
+   * {@link SingleDetailedPartitionModificationApplier} will know about it so that it can normalize the weights
+   * to add up to exactly 100%.
+   */
   public Optional<UnitFraction> getEpsilonForNetAdditionSanityCheck() {
     return epsilonForNetAdditionSanityCheck;
   }
