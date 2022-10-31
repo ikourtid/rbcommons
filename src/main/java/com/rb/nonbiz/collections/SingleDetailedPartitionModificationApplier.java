@@ -44,7 +44,8 @@ public class SingleDetailedPartitionModificationApplier {
           "Key %s was meant to be removed, but it does not exist in the original partition: %s",
           key, originalPartition);
       RBPreconditions.checkArgument(
-          actualOriginalUnitFraction.almostEquals(expectedOriginalUnitFraction, 1e-8),
+          actualOriginalUnitFraction.almostEquals(expectedOriginalUnitFraction,
+              detailedPartitionModification.getEpsilonForRemovalSanityChecks().doubleValue()),
           "Key %s to be removed from the original partition was supposed to have a weight of %s , but was %s ; partition: %s",
           key, expectedOriginalUnitFraction, actualOriginalUnitFraction, originalPartition);
       // Nothing else to do here; we just won't put an entry for this key in the final weights.

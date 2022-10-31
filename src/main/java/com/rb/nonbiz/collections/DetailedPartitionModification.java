@@ -9,14 +9,17 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
+import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSets.noSharedItems;
 import static com.rb.nonbiz.text.Strings.formatCollectionInDefaultOrder;
+import static com.rb.nonbiz.text.Strings.formatOptional;
 import static com.rb.nonbiz.types.PreciseValue.sumToBigDecimal;
 import static com.rb.nonbiz.types.UnitFraction.isValidUnitFraction;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -44,18 +47,21 @@ public class DetailedPartitionModification<K> {
   private final RBMap<K, UnitFraction> keysToRemove;
   private final RBMap<K, UnitFraction> keysToDecrease;
   private final UnitFraction epsilonForRemovalSanityChecks;
+  private final Optional<UnitFraction> epsilonForNetAdditionSanityCheck;
 
   private DetailedPartitionModification(
       RBMap<K, UnitFraction> keysToAdd,
       RBMap<K, UnitFraction> keysToIncrease,
       RBMap<K, UnitFraction> keysToRemove,
       RBMap<K, UnitFraction> keysToDecrease,
-      UnitFraction epsilonForRemovalSanityChecks) {
+      UnitFraction epsilonForRemovalSanityChecks,
+      Optional<UnitFraction> epsilonForNetAdditionSanityCheck) {
     this.keysToAdd = keysToAdd;
     this.keysToIncrease = keysToIncrease;
     this.keysToRemove = keysToRemove;
     this.keysToDecrease = keysToDecrease;
     this.epsilonForRemovalSanityChecks = epsilonForRemovalSanityChecks;
+    this.epsilonForNetAdditionSanityCheck = epsilonForNetAdditionSanityCheck;
   }
 
   public static <K> DetailedPartitionModification<K> emptyDetailedPartitionModification() {
@@ -65,6 +71,7 @@ public class DetailedPartitionModification<K> {
         .noKeysToRemove()
         .noKeysToDecrease()
         .useStandardEpsilonForRemovalSanityChecks()
+        .useStandardEpsilonForNetAdditionSanityCheck()
         .build();
   }
 
@@ -86,6 +93,10 @@ public class DetailedPartitionModification<K> {
 
   public UnitFraction getEpsilonForRemovalSanityChecks() {
     return epsilonForRemovalSanityChecks;
+  }
+
+  public Optional<UnitFraction> getEpsilonForNetAdditionSanityCheck() {
+    return epsilonForNetAdditionSanityCheck;
   }
 
   @Override
@@ -117,12 +128,14 @@ public class DetailedPartitionModification<K> {
             .map(e -> String.format("%s %s", e.getValue().toPercentString(precision), keyToObject.apply(e.getKey())))
             .collect(Collectors.toList());
     return Strings.format(
-        "[DPM toAdd= %s ; toIncrease= %s ; toRemove= %s ; toDecrease= %s ; epsilonForRemovalSanityChecks= %s DPM]",
+        "[DPM toAdd= %s ; toIncrease= %s ; toRemove= %s ; toDecrease= %s ; "
+        + "epsilonForRemovalSanityChecks= %s ; epsilonForNetAdditionSanityCheck= %s DPM]",
         formatCollectionInDefaultOrder(componentsMaker.apply(keysToAdd)),
         formatCollectionInDefaultOrder(componentsMaker.apply(keysToIncrease)),
         formatCollectionInDefaultOrder(componentsMaker.apply(keysToRemove)),
         formatCollectionInDefaultOrder(componentsMaker.apply(keysToDecrease)),
-        epsilonForRemovalSanityChecks);
+        epsilonForRemovalSanityChecks,
+        formatOptional(epsilonForNetAdditionSanityCheck));
   }
 
 
@@ -133,6 +146,7 @@ public class DetailedPartitionModification<K> {
     private RBMap<K, UnitFraction> keysToRemove;
     private RBMap<K, UnitFraction> keysToDecrease;
     private UnitFraction epsilonForRemovalSanityChecks;
+    private Optional<UnitFraction> epsilonForNetAdditionSanityCheck;
 
     private DetailedPartitionModificationBuilder() {}
 
@@ -187,6 +201,19 @@ public class DetailedPartitionModification<K> {
       return setEpsilonForRemovalSanityChecks(unitFraction(1e-8));
     }
 
+    public DetailedPartitionModificationBuilder<K> setEpsilonForNetAdditionSanityCheck(
+        UnitFraction epsilonForNetAdditionSanityCheck) {
+      this.epsilonForNetAdditionSanityCheck = checkNotAlreadySet(
+          this.epsilonForNetAdditionSanityCheck, Optional.of(epsilonForNetAdditionSanityCheck));
+      return this;
+    }
+
+    public DetailedPartitionModificationBuilder<K> useStandardEpsilonForNetAdditionSanityCheck() {
+      this.epsilonForNetAdditionSanityCheck = checkNotAlreadySet(
+          this.epsilonForNetAdditionSanityCheck, Optional.empty());
+      return this;
+    }
+
     @Override
     public void sanityCheckContents() {
       RBPreconditions.checkNotNull(keysToAdd);
@@ -194,15 +221,16 @@ public class DetailedPartitionModification<K> {
       RBPreconditions.checkNotNull(keysToRemove);
       RBPreconditions.checkNotNull(keysToDecrease);
       RBPreconditions.checkNotNull(epsilonForRemovalSanityChecks);
+      RBPreconditions.checkNotNull(epsilonForNetAdditionSanityCheck);
 
-      // Note that
       BigDecimal totalAdditions = sumToBigDecimal(keysToIncrease.values())
           .add(sumToBigDecimal(keysToAdd.values()));
       BigDecimal totalSubtractions = sumToBigDecimal(keysToDecrease.values())
           .add(sumToBigDecimal(keysToRemove.values()));
 
       RBPreconditions.checkArgument(
-          Math.abs(totalAdditions.subtract(totalSubtractions).doubleValue()) < 1e-8,
+          Math.abs(totalAdditions.subtract(totalSubtractions).doubleValue())
+              < transformOptional(epsilonForNetAdditionSanityCheck, v -> v.doubleValue()).orElse(1e-8),
           "The net total amounts to increase %s (minus decrease %s) must be zero or almost zero",
           totalAdditions, totalSubtractions);
 
@@ -237,7 +265,8 @@ public class DetailedPartitionModification<K> {
     @Override
     public DetailedPartitionModification<K> buildWithoutPreconditions() {
       return new DetailedPartitionModification<>(
-          keysToAdd, keysToIncrease, keysToRemove, keysToDecrease, epsilonForRemovalSanityChecks);
+          keysToAdd, keysToIncrease, keysToRemove, keysToDecrease,
+          epsilonForRemovalSanityChecks, epsilonForNetAdditionSanityCheck);
     }
 
   }

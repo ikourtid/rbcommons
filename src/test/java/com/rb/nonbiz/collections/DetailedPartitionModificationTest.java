@@ -13,6 +13,7 @@ import static com.rb.nonbiz.collections.DetailedPartitionModification.emptyDetai
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.Match.matchOptionalPreciseValue;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapPreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -38,7 +39,9 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
         .setKeysToDecrease(rbMapOf(
             "d1", unitFraction(0.05 + seed),
             "d2", unitFraction(0.06 + seed)))
-        .setEpsilonForRemovalSanityChecks(unitFraction(seed))
+        // We start with 1e-8 so that a seed of 0 will still result in a valid object.
+        .setEpsilonForRemovalSanityChecks(unitFraction(1e-8 + seed))
+        .setEpsilonForNetAdditionSanityCheck(unitFraction(1e-8 + seed))
         .build();
   }
 
@@ -76,6 +79,7 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
                 .setKeysToDecrease(singletonRBMap(
                     keyToDecrease, unitFraction(0.6)))
                 .useStandardEpsilonForRemovalSanityChecks()
+                .useStandardEpsilonForNetAdditionSanityCheck()
                 .build();
 
     // Some of these cases are not unique, but it's clearer this way.
@@ -118,6 +122,7 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
         .setKeysToDecrease(singletonRBMap(
             "d", unitFraction(toDecrease)))
         .useStandardEpsilonForRemovalSanityChecks()
+        .useStandardEpsilonForNetAdditionSanityCheck()
         .build();
   }
 
@@ -158,7 +163,8 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
             match(                 v -> v.getKeysToIncrease(), f -> rbMapPreciseValueMatcher(f, epsilon)),
             match(                 v -> v.getKeysToRemove(),   f -> rbMapPreciseValueMatcher(f, epsilon)),
             match(                 v -> v.getKeysToDecrease(), f -> rbMapPreciseValueMatcher(f, epsilon)),
-            matchUsingAlmostEquals(v -> v.getEpsilonForRemovalSanityChecks(), 1e-8))
+            matchUsingAlmostEquals(   v -> v.getEpsilonForRemovalSanityChecks(),    1e-8),
+            matchOptionalPreciseValue(v -> v.getEpsilonForNetAdditionSanityCheck(), 1e-8))
             .matches(actual);
       }
 
