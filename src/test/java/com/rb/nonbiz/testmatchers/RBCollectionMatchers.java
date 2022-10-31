@@ -173,6 +173,10 @@ public class RBCollectionMatchers {
     return orderedListMatcher(expected, d -> doubleAlmostEqualsMatcher(d, epsilon));
   }
 
+  public static TypeSafeMatcher<List<String>> stringListMatcher(List<String> expected) {
+    return orderedListEqualityMatcher(expected);
+  }
+
   public static <V extends PreciseValue<? super V>> TypeSafeMatcher<List<V>> preciseValueListMatcher(List<V> expected, double epsilon) {
     return orderedListMatcher(expected, v -> preciseValueMatcher(v, epsilon));
   }
