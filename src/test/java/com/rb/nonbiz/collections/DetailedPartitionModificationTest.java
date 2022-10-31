@@ -138,7 +138,9 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
 
   @Override
   public DetailedPartitionModification<String> makeMatchingNontrivialObject() {
-    return testDetailedStringPartitionModificationWithSeed(EPSILON_SEED);
+    // This is a special case; please see comments inside epsilonDetailedPartitionModificationMatcher on why
+    // we do not use the usual EPSILON_SEED of 1e-9.
+    return testDetailedStringPartitionModificationWithSeed(1e-15);
   }
 
   @Override
@@ -163,8 +165,15 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
             match(                 v -> v.getKeysToIncrease(), f -> rbMapPreciseValueMatcher(f, epsilon)),
             match(                 v -> v.getKeysToRemove(),   f -> rbMapPreciseValueMatcher(f, epsilon)),
             match(                 v -> v.getKeysToDecrease(), f -> rbMapPreciseValueMatcher(f, epsilon)),
-            matchUsingAlmostEquals(   v -> v.getEpsilonForRemovalSanityChecks(),    1e-8),
-            matchOptionalPreciseValue(v -> v.getEpsilonForNetAdditionSanityCheck(), 1e-8))
+            // The epsilons themselves should be compared down to a much smaller epsilon, because they are small
+            // themselves (1e-8 by default), so we can't use such a large epsilon to compare them; it will be too
+            // permissive. Note also that epsilons are specified explicitly in the code, i.e. they appear as double
+            // numberic literals; they are almost never the result of some computation that can be off by a tiny bit.
+            // So in theory we could even use a double equality comparison, although we avoid that everywhere in the
+            // code because it's rarely correct - even if in this case it actually is correct. It's just a bad habit
+            // to get into.
+            matchUsingAlmostEquals(   v -> v.getEpsilonForRemovalSanityChecks(),    1e-14),
+            matchOptionalPreciseValue(v -> v.getEpsilonForNetAdditionSanityCheck(), 1e-14))
             .matches(actual);
       }
 

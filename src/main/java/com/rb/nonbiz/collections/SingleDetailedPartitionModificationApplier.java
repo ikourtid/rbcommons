@@ -56,7 +56,7 @@ public class SingleDetailedPartitionModificationApplier {
       mutableMap.putAssumingAbsent(key,
           originalPartition.getRawFractionsMap().getOrThrow(
                   key,
-                  "Key %s was meant to be increased by %s , but it does not exist in the original partition: %s",
+                  "Key %s was meant to be decreased by %s , but it does not exist in the original partition: %s",
                   key, fractionDecrease, originalPartition)
               .subtract(fractionDecrease)));
 
