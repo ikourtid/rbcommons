@@ -81,9 +81,38 @@ public class SingleDetailedPartitionModificationApplierTest extends RBTest<Singl
     doesNotThrow = maker.apply(unitFraction(1e-1));
   }
 
+  @Test
+  public void normalizesPartitionWeightsIfWeightsAreOffFrom100pctAndEpsilonForNetAdditionSanityCheckExists() {
+    UnitFraction hugeEpsilon = unitFraction(0.888);
+    assertThat(
+        makeTestObject().apply(
+            partition(rbMapOf(
+                "k1", unitFraction(0.1),
+                "k4", unitFraction(0.4),
+                "k5", unitFraction(0.5))),
+            DetailedPartitionModificationBuilder.<String>detailedPartitionModificationBuilder()
+                .noKeysToAdd()
+                // As it stands, we'd have 40% k4, 80% (0.5 + 0.3) k5 - obviously an extreme scenario, because typically
+                // the differences between additions/increases and removals/decreases should be small,
+                // off due to rounding usually.
+                .setKeysToIncrease(singletonRBMap(
+                    "k5", unitFraction(0.3)))
+                .setKeysToRemove(singletonRBMap(
+                    "k1", unitFraction(0.1)))
+                .noKeysToDecrease()
+                .setEpsilonForRemovalSanityChecks(hugeEpsilon)
+                .setEpsilonForNetAdditionSanityCheck(hugeEpsilon)
+                .build()),
+        epsilonPartitionMatcher(
+            partition(rbMapOf(
+                "k4", unitFraction(doubleExplained(0.333333333, 0.4 / (0.4 + (0.3 + 0.5)))),
+                "k5", unitFraction(doubleExplained(0.666666666, 0.8 / (0.4 + (0.3 + 0.5)))))),
+            1e-8));
+  }
+
   @Override
   protected SingleDetailedPartitionModificationApplier makeTestObject() {
     return new SingleDetailedPartitionModificationApplier();
   }
-  
+
 }
