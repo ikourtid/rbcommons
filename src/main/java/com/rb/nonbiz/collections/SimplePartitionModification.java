@@ -27,7 +27,7 @@ import static java.util.Map.Entry.comparingByValue;
  * The semantics of how these can be applied to the original partition (call it <em>P</em>) are as follows:
  *   <ul>
  *      <li> {@link #getKeysToAddOrIncrease()} :
- *      if a key don't exist in the original partition, use the new weight, otherwise
+ *      if a key doesn't exist in the original partition, use the new weight, otherwise
  *      add the supplied weight to the existing ones. </li>
  *      <li> {@link #getKeysToRemoveOrDecrease()} :
  *      assert all keys here exist in the original partition. Reduce their original weights by the
