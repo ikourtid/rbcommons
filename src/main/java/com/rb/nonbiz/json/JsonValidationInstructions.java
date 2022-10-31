@@ -15,6 +15,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
+import static com.rb.nonbiz.collections.RBSets.unionOfPlainSets;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 
@@ -100,6 +101,12 @@ public class JsonValidationInstructions {
 
   public List<String> getOptionalPropertiesAsSortedList() {
     return optionalProperties.sortedKeys(Ordering.natural());
+  }
+
+  public RBSet<String> getAllProperties() {
+    return unionOfPlainSets(
+        requiredProperties.keySet(),
+        optionalProperties.keySet());
   }
 
   public boolean isEmpty() {
