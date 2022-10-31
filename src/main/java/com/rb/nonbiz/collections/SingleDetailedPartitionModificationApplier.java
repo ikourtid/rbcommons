@@ -5,6 +5,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.Partition.partition;
+import static com.rb.nonbiz.collections.Partition.partitionFromPositiveWeightsWhichMayNotSumTo1;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 
 /**
@@ -68,7 +69,12 @@ public class SingleDetailedPartitionModificationApplier {
       }
     });
 
-    return partition(newRBMap(mutableMap));
+    // See comments in getEpsilonForNetAdditionSanityCheck on why we need this. In short, there are some cases
+    // (often in test code) where the additions/increases aren't exactly the same as the deletions/removals,
+    // which would cause the final partition fractions to sum up to a number slightly away from 100%.
+    return detailedPartitionModification.getEpsilonForNetAdditionSanityCheck().isPresent()
+        ? partitionFromPositiveWeightsWhichMayNotSumTo1(newRBMap(mutableMap))
+        : partition(newRBMap(mutableMap));
   }
 
 }
