@@ -1,12 +1,16 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.Range;
 import com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBPreconditions;
+import org.checkerframework.checker.units.qual.C;
 
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
+import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
 import static com.rb.nonbiz.types.InterpolationPreference.preferSuppliedValueBy;
 import static com.rb.nonbiz.types.Interpolator.interpolateUsingPreference;
@@ -104,6 +108,17 @@ public class ClosedUnitFractionRangeUtilities {
       return closedUnitFractionRange(initialRange.lowerEndpoint(), pointToContain);
     }
     return initialRange;
+  }
+
+  /**
+   * Returns Optional.empty() if the two ranges have nothing in common; otherwise, returns the intersection.
+   */
+  public static Optional<ClosedUnitFractionRange> optionalIntersection(
+      ClosedUnitFractionRange range1,
+      ClosedUnitFractionRange range2) {
+    return transformOptional(
+        ClosedRange.optionalIntersection(range1.asClosedRangeOfUnitFraction(), range2.asClosedRangeOfUnitFraction()),
+        v -> closedUnitFractionRange(v));
   }
 
 }
