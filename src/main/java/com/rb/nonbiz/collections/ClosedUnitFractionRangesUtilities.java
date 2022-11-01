@@ -1,10 +1,13 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import com.rb.nonbiz.types.UnitFraction;
 
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.tightenClosedUnitFractionRangeAround;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.closedUnitFractionRanges;
 import static com.rb.nonbiz.collections.RBMapMergers.mergeRBMapsByTransformedValue;
+import static com.rb.nonbiz.collections.RBMapMergers.mergeRBMapsByValue;
+import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 
 /**
  * Various static functions pertaining to {@link ClosedUnitFractionRanges} objects.
@@ -35,6 +38,23 @@ public class ClosedUnitFractionRangesUtilities {
 
             initialRanges.getRawMap(),
             centersOfRanges));
+  }
+
+  /**
+   * Merges the two {@link ClosedUnitFractionRanges} by using the set intersection for any two keys that have
+   * a {@link ClosedUnitFractionRange} in both arguments (or throwing an exception if no valid intersection exists).
+   * Keys that appear in only one of the two input arguments will just get copied over into the returned value.
+   */
+  public static <K> ClosedUnitFractionRanges<K> intersectionOrThrow(
+      ClosedUnitFractionRanges<K> ranges1,
+      ClosedUnitFractionRanges<K> ranges2) {
+    return closedUnitFractionRanges(mergeRBMapsByValue(
+        (v1, v2) -> getOrThrow(
+            ClosedUnitFractionRangeUtilities.optionalIntersection(v1, v2),
+            "ClosedUnitFractionRange objects %s and %s do not have a valid intersection.",
+            v1, v2),
+        ranges1.getRawMap(),
+        ranges2.getRawMap()));
   }
 
 }

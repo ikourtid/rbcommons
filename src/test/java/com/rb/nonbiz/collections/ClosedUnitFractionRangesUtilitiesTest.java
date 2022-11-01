@@ -11,6 +11,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
+import static com.rb.nonbiz.types.ClosedUnitFractionRange.unitFractionFixedTo;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.unrestrictedClosedUnitFractionRange;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -66,6 +67,25 @@ public class ClosedUnitFractionRangesUtilitiesTest {
                 "b", closedUnitFractionRange(
                     unitFraction(doubleExplained(0.05, 0 + 0.1 * (0.5 - 0.0))),
                     unitFraction(doubleExplained(0.95, 1 - 0.1 * (1.0 - 0.5))))))));
+  }
+
+  @Test
+  public void testIntersectionOrThrow() {
+    assertThat(
+        ClosedUnitFractionRangesUtilities.intersectionOrThrow(
+            closedUnitFractionRanges(rbMapOf(
+                "a1", unitFractionFixedTo(unitFraction(0.11)),
+                "a2", closedUnitFractionRange(unitFraction(0.27), unitFraction(0.57)))),
+            closedUnitFractionRanges(rbMapOf(
+                "a2", closedUnitFractionRange(unitFraction(0.28), unitFraction(0.58)),
+                "a3", unitFractionFixedTo(unitFraction(0.33))))),
+        closedUnitFractionRangesMatcher(
+            closedUnitFractionRanges(rbMapOf(
+                "a1", unitFractionFixedTo(unitFraction(0.11)),
+                "a2", closedUnitFractionRange(
+                    unitFraction(doubleExplained(0.28, Double.max(0.27, 0.28))),
+                    unitFraction(doubleExplained(0.57, Double.min(0.57, 0.58)))),
+                "a3", unitFractionFixedTo(unitFraction(0.33))))));
   }
 
 }
