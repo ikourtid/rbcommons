@@ -36,10 +36,16 @@ import static java.util.Map.Entry.comparingByValue;
  *      assert these exist in the original partition; add the supplied weights to the existing ones. </li>
  *      <li> {@link #getKeysToRemove()} :
  *      assert these exist in the original partition with a weight equal to the supplied one (subject to
- *      {@link #getEpsilonForRemovalSanityChecks()} ); do not add them to the new one. </li>
+ *      {@link #getEpsilonForRemovalSanityChecks()} ); these keys will not appear in the modified partition. </li>
  *      <li> {@link #getKeysToDecrease()} :
  *      assert these exist in the original partition; subtract the supplied weights from the existing ones. </li>
  *   </ul>
+ *
+ *   <p> See the getters for explanations on the epsilons. They are not the same, intentionally. If, for example,
+ *   each individual item to be removed has precision in the single bps (e.g. due to rounding), i.e. it is
+ *   imprecise to 0.5 bps, then it's possible that many such < 0.5 bps deviations (assuming they don't cancel out)
+ *   add up to much more than 1 bps, in which case {@link #getEpsilonForNetAdditionSanityCheck()} should be larger
+ *   than {@link #getEpsilonForRemovalSanityChecks()}. </p>
  */
 public class DetailedPartitionModification<K> {
 
@@ -84,6 +90,15 @@ public class DetailedPartitionModification<K> {
     return keysToIncrease;
   }
 
+  /**
+   * Items to remove, together with their existing weights, which will be used for sanity checking purposes.
+   *
+   * <p> This could have been a plain {@link RBSet}, since the original / existing weights aren't really needed
+   * for determining the final partition. However, specifying the existing weights is useful for having
+   * construction preconditions that confirm that the total additions add up to the same percentage as
+   * deletions. Also, in scenarios where this is used in tests to convey expected behavior, specifying the
+   * existing weights will add extra clarity to the tests. </p>
+   */
   public RBMap<K, UnitFraction> getKeysToRemove() {
     return keysToRemove;
   }
@@ -254,7 +269,7 @@ public class DetailedPartitionModification<K> {
 
       BiConsumer<RBMap<K, UnitFraction>, String> singleChecker = (map, mapName) ->
           RBPreconditions.checkArgument(
-              map.values().stream().noneMatch(fractionToAdd -> fractionToAdd.isAlmostZero(1e-8)),
+              map.values().stream().noneMatch(changeFraction -> changeFraction.isAlmostZero(1e-8)),
               "%s must not have any 0 differences implied: %s",
               mapName, map);
 

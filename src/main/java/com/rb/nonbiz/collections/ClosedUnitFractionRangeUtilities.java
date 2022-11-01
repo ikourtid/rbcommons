@@ -5,8 +5,11 @@ import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
+import static com.rb.nonbiz.collections.ClosedRange.optionalClosedRangeIntersection;
+import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
 import static com.rb.nonbiz.types.InterpolationPreference.preferSuppliedValueBy;
 import static com.rb.nonbiz.types.Interpolator.interpolateUsingPreference;
@@ -104,6 +107,17 @@ public class ClosedUnitFractionRangeUtilities {
       return closedUnitFractionRange(initialRange.lowerEndpoint(), pointToContain);
     }
     return initialRange;
+  }
+
+  /**
+   * Returns Optional.empty() if the two ranges have nothing in common; otherwise, returns the intersection.
+   */
+  public static Optional<ClosedUnitFractionRange> optionalClosedUnitFractionRangeIntersection(
+      ClosedUnitFractionRange range1,
+      ClosedUnitFractionRange range2) {
+    return transformOptional(
+        optionalClosedRangeIntersection(range1.asClosedRangeOfUnitFraction(), range2.asClosedRangeOfUnitFraction()),
+        v -> closedUnitFractionRange(v));
   }
 
 }

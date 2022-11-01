@@ -9,21 +9,26 @@ import java.math.BigDecimal;
 import java.util.function.BiConsumer;
 
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.loosenClosedUnitFractionRangeByFixedAmount;
+import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.optionalClosedUnitFractionRangeIntersection;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.possiblyLoosenToContainPoint;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.tightenClosedUnitFractionRangeAround;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.tightenClosedUnitFractionRangeProportionally;
 import static com.rb.nonbiz.collections.RBRanges.transformRange;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.closedUnitFractionHardToSoftRangeTighteningInstructions;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.setClosedUnitFractionSoftRangeToSameAsHard;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.unitFractionAtMost;
+import static com.rb.nonbiz.types.ClosedUnitFractionRange.unitFractionFixedTo;
 import static com.rb.nonbiz.types.ClosedUnitFractionRangeTest.closedUnitFractionRangeMatcher;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static com.rb.nonbiz.types.UnitFraction.unitFractionInBps;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ClosedUnitFractionRangeUtilitiesTest {
@@ -194,6 +199,71 @@ public class ClosedUnitFractionRangeUtilitiesTest {
     assertThat(
         tightenClosedUnitFractionRangeProportionally(range, setClosedUnitFractionSoftRangeToSameAsHard()),
         closedUnitFractionRangeMatcher(range));
+  }
+
+  @Test
+  public void testOptionalIntersection() {
+    assertOptionalEmpty(optionalClosedUnitFractionRangeIntersection(
+        closedUnitFractionRange(unitFractionInBps(1), unitFractionInBps(3)),
+        closedUnitFractionRange(unitFractionInBps(5), unitFractionInBps(7))));
+    assertOptionalEmpty(optionalClosedUnitFractionRangeIntersection(
+        closedUnitFractionRange(unitFractionInBps(5), unitFractionInBps(7)),
+        closedUnitFractionRange(unitFractionInBps(1), unitFractionInBps(3))));
+  }
+
+  @Test
+  public void testOptionalIntersection_intersectionIsNotSingleton_returnsNonEmptyIntersection() {
+    assertOptionalNonEmpty(
+        optionalClosedUnitFractionRangeIntersection(
+            closedUnitFractionRange(unitFractionInBps(1.1), unitFractionInBps(3.3)),
+            closedUnitFractionRange(unitFractionInBps(2.2), unitFractionInBps(4.4))),
+        closedUnitFractionRangeMatcher(
+            closedUnitFractionRange(unitFractionInBps(2.2), unitFractionInBps(3.3))));
+    assertOptionalNonEmpty(
+        optionalClosedUnitFractionRangeIntersection(
+            closedUnitFractionRange(unitFractionInBps(2.2), unitFractionInBps(4.4)),
+            closedUnitFractionRange(unitFractionInBps(1.1), unitFractionInBps(3.3))),
+        closedUnitFractionRangeMatcher(
+            closedUnitFractionRange(unitFractionInBps(2.2), unitFractionInBps(3.3))));
+  }
+
+  @Test
+  public void testOptionalIntersection_intersectionResultIsSingleton_returnsNonEmptyIntersection() {
+    assertOptionalNonEmpty(
+        optionalClosedUnitFractionRangeIntersection(
+            unitFractionFixedTo(unitFractionInBps(1.1)),
+            closedUnitFractionRange(unitFractionInBps(1.1), unitFractionInBps(3.3))),
+        closedUnitFractionRangeMatcher(
+            unitFractionFixedTo(unitFractionInBps(1.1))));
+    assertOptionalNonEmpty(
+        optionalClosedUnitFractionRangeIntersection(
+            closedUnitFractionRange(unitFractionInBps(1.1), unitFractionInBps(3.3)),
+            unitFractionFixedTo(unitFractionInBps(1.1))),
+        closedUnitFractionRangeMatcher(
+            unitFractionFixedTo(unitFractionInBps(1.1))));
+
+    assertOptionalNonEmpty(
+        optionalClosedUnitFractionRangeIntersection(
+            closedUnitFractionRange(unitFractionInBps(1.1), unitFractionInBps(3.3)),
+            closedUnitFractionRange(unitFractionInBps(3.3), unitFractionInBps(5.5))),
+        closedUnitFractionRangeMatcher(
+            unitFractionFixedTo(unitFractionInBps(3.3))));
+    assertOptionalNonEmpty(
+        optionalClosedUnitFractionRangeIntersection(
+            closedUnitFractionRange(unitFractionInBps(3.3), unitFractionInBps(5.5)),
+            closedUnitFractionRange(unitFractionInBps(1.1), unitFractionInBps(3.3))),
+        closedUnitFractionRangeMatcher(
+            unitFractionFixedTo(unitFractionInBps(3.3))));
+  }
+
+  @Test
+  public void testOptionalIntersection_intersectionOfTwoSingletons_returnsNonEmptyIntersection() {
+    assertOptionalNonEmpty(
+        optionalClosedUnitFractionRangeIntersection(
+            unitFractionFixedTo(unitFractionInBps(1.1)),
+            unitFractionFixedTo(unitFractionInBps(1.1))),
+        closedUnitFractionRangeMatcher(
+            unitFractionFixedTo(unitFractionInBps(1.1))));
   }
 
 }

@@ -4,6 +4,9 @@ import com.google.common.collect.Range;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Objects;
+import java.util.Optional;
+
+import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 
 /**
  * A simple wrapper around a {@link Range} that ensures that the range is closed.
@@ -38,6 +41,16 @@ public class ClosedRange<T extends Comparable<? super T>> {
 
   public static <T extends Comparable<? super T>> ClosedRange<T> singletonClosedRange(T singleValue) {
     return new ClosedRange<>(Range.singleton(singleValue));
+  }
+
+  /**
+   * Returns Optional.empty() if the two ranges have nothing in common; otherwise, returns the intersection.
+   */
+  public static <T extends Comparable<? super T>> Optional<ClosedRange<T>> optionalClosedRangeIntersection(
+      ClosedRange<T> range1, ClosedRange<T> range2) {
+    return transformOptional(
+        RBRanges.optionalIntersection(range1.asRange(), range2.asRange()),
+        v -> closedRange(v));
   }
 
   public Range<T> asRange() {

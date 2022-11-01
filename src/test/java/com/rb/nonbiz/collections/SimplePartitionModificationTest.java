@@ -26,6 +26,8 @@ public class SimplePartitionModificationTest extends RBTestMatcher<SimplePartiti
   // Unlike other test*WithSeed methods, this is less useful, because it only works for String keys.
   public static SimplePartitionModification<String> testSimpleStringPartitionModificationWithSeed(double seed) {
     return SimplePartitionModificationBuilder.<String>simplePartitionModificationBuilder()
+        // Note that 0.01 + 0.02 + 0.07 + 0.08 = 0.03 + 0.04 + 0.05 + 0.06, i.e. total to add / increase
+        // equals total to remove / decrease. There's a precondition that checks for that.
         .setKeysToAddOrIncrease(rbMapOf(
             "a1", unitFraction(0.01 + seed),
             "a2", unitFraction(0.02 + seed),
