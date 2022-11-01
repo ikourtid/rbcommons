@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.closedUnitFractionRanges;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangesTest.closedUnitFractionRangesMatcher;
+import static com.rb.nonbiz.collections.ClosedUnitFractionRangesUtilities.closedUnitFractionRangesIntersectionOrThrow;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangesUtilities.tightenClosedUnitFractionRangesAround;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
@@ -72,7 +73,7 @@ public class ClosedUnitFractionRangesUtilitiesTest {
   @Test
   public void testIntersectionOrThrow() {
     assertThat(
-        ClosedUnitFractionRangesUtilities.intersectionOrThrow(
+        closedUnitFractionRangesIntersectionOrThrow(
             closedUnitFractionRanges(rbMapOf(
                 "a1", unitFractionFixedTo(unitFraction(0.11)),
                 "a2", closedUnitFractionRange(unitFraction(0.27), unitFraction(0.57)))),

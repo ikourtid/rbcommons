@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.time.Year;
 
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
-import static com.rb.nonbiz.collections.ClosedRange.optionalIntersection;
+import static com.rb.nonbiz.collections.ClosedRange.optionalClosedRangeIntersection;
 import static com.rb.nonbiz.collections.ClosedRange.singletonClosedRange;
 import static com.rb.nonbiz.collections.RBRangesTest.allNonClosedRanges;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -38,42 +38,42 @@ public class ClosedRangeTest extends RBTestMatcher<ClosedRange<Year>> {
 
   @Test
   public void testOptionalIntersection() {
-    assertOptionalEmpty(optionalIntersection(closedRange(1, 3), closedRange(5, 7)));
-    assertOptionalEmpty(optionalIntersection(closedRange(5, 7), closedRange(1, 3)));
+    assertOptionalEmpty(optionalClosedRangeIntersection(closedRange(1, 3), closedRange(5, 7)));
+    assertOptionalEmpty(optionalClosedRangeIntersection(closedRange(5, 7), closedRange(1, 3)));
   }
 
   @Test
   public void testOptionalIntersection_intersectionIsNotSingleton_returnsNonEmptyIntersection() {
     assertOptionalEquals(
         closedRange(2.2, 3.3),
-        optionalIntersection(closedRange(1.1, 3.3), closedRange(2.2, 4.4)));
+        optionalClosedRangeIntersection(closedRange(1.1, 3.3), closedRange(2.2, 4.4)));
     assertOptionalEquals(
         closedRange(2.2, 3.3),
-        optionalIntersection(closedRange(2.2, 4.4), closedRange(1.1, 3.3)));
+        optionalClosedRangeIntersection(closedRange(2.2, 4.4), closedRange(1.1, 3.3)));
   }
 
   @Test
   public void testOptionalIntersection_intersectionResultIsSingleton_returnsNonEmptyIntersection() {
     assertOptionalEquals(
         closedRange(1.1, 1.1),
-        optionalIntersection(closedRange(1.1, 1.1), closedRange(1.1, 3.3)));
+        optionalClosedRangeIntersection(closedRange(1.1, 1.1), closedRange(1.1, 3.3)));
     assertOptionalEquals(
         closedRange(1.1, 1.1),
-        optionalIntersection(closedRange(1.1, 3.3), closedRange(1.1, 1.1)));
+        optionalClosedRangeIntersection(closedRange(1.1, 3.3), closedRange(1.1, 1.1)));
 
     assertOptionalEquals(
         closedRange(3.3, 3.3),
-        optionalIntersection(closedRange(1.1, 3.3), closedRange(3.3, 5.5)));
+        optionalClosedRangeIntersection(closedRange(1.1, 3.3), closedRange(3.3, 5.5)));
     assertOptionalEquals(
         closedRange(3.3, 3.3),
-        optionalIntersection(closedRange(3.3, 5.5), closedRange(1.1, 3.3)));
+        optionalClosedRangeIntersection(closedRange(3.3, 5.5), closedRange(1.1, 3.3)));
   }
 
   @Test
   public void testOptionalIntersection_intersectionOfTwoSingletons_returnsNonEmptyIntersection() {
     assertOptionalEquals(
         closedRange(1.1, 1.1),
-        optionalIntersection(closedRange(1.1, 1.1), closedRange(1.1, 1.1)));
+        optionalClosedRangeIntersection(closedRange(1.1, 1.1), closedRange(1.1, 1.1)));
   }
 
   @Override
