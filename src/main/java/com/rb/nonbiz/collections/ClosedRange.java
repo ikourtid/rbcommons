@@ -46,7 +46,7 @@ public class ClosedRange<T extends Comparable<? super T>> {
   /**
    * Returns Optional.empty() if the two ranges have nothing in common; otherwise, returns the intersection.
    */
-  public static <T extends Comparable<? super T>> Optional<ClosedRange<T>> optionalIntersection(
+  public static <T extends Comparable<? super T>> Optional<ClosedRange<T>> optionalClosedRangeIntersection(
       ClosedRange<T> range1, ClosedRange<T> range2) {
     return transformOptional(
         RBRanges.optionalIntersection(range1.asRange(), range2.asRange()),

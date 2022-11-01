@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.function.BiConsumer;
 
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.loosenClosedUnitFractionRangeByFixedAmount;
-import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.optionalIntersection;
+import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.optionalClosedUnitFractionRangeIntersection;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.possiblyLoosenToContainPoint;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.tightenClosedUnitFractionRangeAround;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.tightenClosedUnitFractionRangeProportionally;
@@ -203,10 +203,10 @@ public class ClosedUnitFractionRangeUtilitiesTest {
 
   @Test
   public void testOptionalIntersection() {
-    assertOptionalEmpty(optionalIntersection(
+    assertOptionalEmpty(optionalClosedUnitFractionRangeIntersection(
         closedUnitFractionRange(unitFractionInBps(1), unitFractionInBps(3)),
         closedUnitFractionRange(unitFractionInBps(5), unitFractionInBps(7))));
-    assertOptionalEmpty(optionalIntersection(
+    assertOptionalEmpty(optionalClosedUnitFractionRangeIntersection(
         closedUnitFractionRange(unitFractionInBps(5), unitFractionInBps(7)),
         closedUnitFractionRange(unitFractionInBps(1), unitFractionInBps(3))));
   }
@@ -214,13 +214,13 @@ public class ClosedUnitFractionRangeUtilitiesTest {
   @Test
   public void testOptionalIntersection_intersectionIsNotSingleton_returnsNonEmptyIntersection() {
     assertOptionalNonEmpty(
-        optionalIntersection(
+        optionalClosedUnitFractionRangeIntersection(
             closedUnitFractionRange(unitFractionInBps(1.1), unitFractionInBps(3.3)),
             closedUnitFractionRange(unitFractionInBps(2.2), unitFractionInBps(4.4))),
         closedUnitFractionRangeMatcher(
             closedUnitFractionRange(unitFractionInBps(2.2), unitFractionInBps(3.3))));
     assertOptionalNonEmpty(
-        optionalIntersection(
+        optionalClosedUnitFractionRangeIntersection(
             closedUnitFractionRange(unitFractionInBps(2.2), unitFractionInBps(4.4)),
             closedUnitFractionRange(unitFractionInBps(1.1), unitFractionInBps(3.3))),
         closedUnitFractionRangeMatcher(
@@ -230,26 +230,26 @@ public class ClosedUnitFractionRangeUtilitiesTest {
   @Test
   public void testOptionalIntersection_intersectionResultIsSingleton_returnsNonEmptyIntersection() {
     assertOptionalNonEmpty(
-        optionalIntersection(
+        optionalClosedUnitFractionRangeIntersection(
             unitFractionFixedTo(unitFractionInBps(1.1)),
             closedUnitFractionRange(unitFractionInBps(1.1), unitFractionInBps(3.3))),
         closedUnitFractionRangeMatcher(
             unitFractionFixedTo(unitFractionInBps(1.1))));
     assertOptionalNonEmpty(
-        optionalIntersection(
+        optionalClosedUnitFractionRangeIntersection(
             closedUnitFractionRange(unitFractionInBps(1.1), unitFractionInBps(3.3)),
             unitFractionFixedTo(unitFractionInBps(1.1))),
         closedUnitFractionRangeMatcher(
             unitFractionFixedTo(unitFractionInBps(1.1))));
 
     assertOptionalNonEmpty(
-        optionalIntersection(
+        optionalClosedUnitFractionRangeIntersection(
             closedUnitFractionRange(unitFractionInBps(1.1), unitFractionInBps(3.3)),
             closedUnitFractionRange(unitFractionInBps(3.3), unitFractionInBps(5.5))),
         closedUnitFractionRangeMatcher(
             unitFractionFixedTo(unitFractionInBps(3.3))));
     assertOptionalNonEmpty(
-        optionalIntersection(
+        optionalClosedUnitFractionRangeIntersection(
             closedUnitFractionRange(unitFractionInBps(3.3), unitFractionInBps(5.5)),
             closedUnitFractionRange(unitFractionInBps(1.1), unitFractionInBps(3.3))),
         closedUnitFractionRangeMatcher(
@@ -259,7 +259,7 @@ public class ClosedUnitFractionRangeUtilitiesTest {
   @Test
   public void testOptionalIntersection_intersectionOfTwoSingletons_returnsNonEmptyIntersection() {
     assertOptionalNonEmpty(
-        optionalIntersection(
+        optionalClosedUnitFractionRangeIntersection(
             unitFractionFixedTo(unitFractionInBps(1.1)),
             unitFractionFixedTo(unitFractionInBps(1.1))),
         closedUnitFractionRangeMatcher(
