@@ -3,6 +3,9 @@ package com.rb.nonbiz.collections;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import com.rb.nonbiz.types.UnitFraction;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.optionalClosedUnitFractionRangeIntersection;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.tightenClosedUnitFractionRangeAround;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.closedUnitFractionRanges;
@@ -56,6 +59,19 @@ public class ClosedUnitFractionRangesUtilities {
             v1, v2),
         ranges1.getRawMap(),
         ranges2.getRawMap()));
+  }
+
+  // FIXME IAK NASDAQ test this
+  public static <K> ClosedUnitFractionRanges<K> closedUnitFractionRangesIntersectionOrThrow(
+      List<ClosedUnitFractionRanges<K>> listOfClosedUnitFractionRanges) {
+    return closedUnitFractionRanges(mergeRBMapsByValue(
+        (v1, v2) -> getOrThrow(
+            optionalClosedUnitFractionRangeIntersection(v1, v2),
+            "We cannot intersect %s with %s",
+            v1, v2),
+        listOfClosedUnitFractionRanges
+            .stream()
+            .map(v -> v.getRawMap())));
   }
 
 }
