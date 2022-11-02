@@ -1,9 +1,14 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.ImmutableList;
+import com.rb.nonbiz.collections.ClosedUnitFractionRanges;
+import com.rb.nonbiz.collections.RBMap;
+import com.rb.nonbiz.types.RBDoubles;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.closedUnitFractionRanges;
+import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.emptyClosedUnitFractionRanges;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangesTest.closedUnitFractionRangesMatcher;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangesUtilities.closedUnitFractionRangesIntersectionOrThrow;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangesUtilities.tightenClosedUnitFractionRangesAround;
@@ -15,6 +20,8 @@ import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRang
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.unitFractionFixedTo;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.unrestrictedClosedUnitFractionRange;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ClosedUnitFractionRangesUtilitiesTest {
@@ -71,7 +78,7 @@ public class ClosedUnitFractionRangesUtilitiesTest {
   }
 
   @Test
-  public void testIntersectionOrThrow() {
+  public void testClosedUnitFractionRangesIntersectionOrThrow_twoAtATime() {
     assertThat(
         closedUnitFractionRangesIntersectionOrThrow(
             closedUnitFractionRanges(rbMapOf(
@@ -87,6 +94,65 @@ public class ClosedUnitFractionRangesUtilitiesTest {
                     unitFraction(doubleExplained(0.28, Double.max(0.27, 0.28))),
                     unitFraction(doubleExplained(0.57, Double.min(0.57, 0.58)))),
                 "a3", unitFractionFixedTo(unitFraction(0.33))))));
+  }
+
+  @Test
+  public void testClosedUnitFractionRangesIntersectionOrThrow_listOverload_twoOrFewerItems() {
+    // This is just like the previous test, except that it uses the overload that takes a list.
+    assertThat(
+        closedUnitFractionRangesIntersectionOrThrow(
+            ImmutableList.of(
+                closedUnitFractionRanges(rbMapOf(
+                    "a1", unitFractionFixedTo(unitFraction(0.11)),
+                    "a2", closedUnitFractionRange(unitFraction(0.27), unitFraction(0.57)))),
+                closedUnitFractionRanges(rbMapOf(
+                    "a2", closedUnitFractionRange(unitFraction(0.28), unitFraction(0.58)),
+                    "a3", unitFractionFixedTo(unitFraction(0.33)))))),
+        closedUnitFractionRangesMatcher(
+            closedUnitFractionRanges(rbMapOf(
+                "a1", unitFractionFixedTo(unitFraction(0.11)),
+                "a2", closedUnitFractionRange(
+                    unitFraction(doubleExplained(0.28, Double.max(0.27, 0.28))),
+                    unitFraction(doubleExplained(0.57, Double.min(0.57, 0.58)))),
+                "a3", unitFractionFixedTo(unitFraction(0.33))))));
+
+    // 1 item only; returns same
+    assertThat(
+        closedUnitFractionRangesIntersectionOrThrow(
+            singletonList(
+                closedUnitFractionRanges(rbMapOf(
+                    "a1", unitFractionFixedTo(unitFraction(0.11)),
+                    "a2", closedUnitFractionRange(unitFraction(0.27), unitFraction(0.57)))))),
+        closedUnitFractionRangesMatcher(
+            closedUnitFractionRanges(rbMapOf(
+                "a1", unitFractionFixedTo(unitFraction(0.11)),
+                "a2", closedUnitFractionRange(unitFraction(0.27), unitFraction(0.57))))));
+
+    // 0 items; returns empty
+    assertThat(
+        closedUnitFractionRangesIntersectionOrThrow(emptyList()),
+        closedUnitFractionRangesMatcher(
+            emptyClosedUnitFractionRanges()));
+
+    // Finally, using 3 items
+    assertThat(
+        closedUnitFractionRangesIntersectionOrThrow(
+            ImmutableList.of(
+                closedUnitFractionRanges(singletonRBMap(
+                    "a1", closedUnitFractionRange(unitFraction(0.51), unitFraction(0.61)))),
+                closedUnitFractionRanges(singletonRBMap(
+                    "a1", closedUnitFractionRange(unitFraction(0.52), unitFraction(0.62)))),
+                closedUnitFractionRanges(rbMapOf(
+                    "a1", closedUnitFractionRange(unitFraction(0.53), unitFraction(0.63)),
+                    "a2", closedUnitFractionRange(unitFraction(0.54), unitFraction(0.64)),
+                    "a3", closedUnitFractionRange(unitFraction(0.55), unitFraction(0.65)))))),
+        closedUnitFractionRangesMatcher(
+            closedUnitFractionRanges(rbMapOf(
+                "a1", closedUnitFractionRange(
+                    unitFraction(0.53),  // max of 0.51, 0.52, 0.53, from all 3 mentions of a1
+                    unitFraction(0.61)), // min of 0.61, 0.62, 0.63, from all 3 mentions of a1
+                "a2", closedUnitFractionRange(unitFraction(0.54), unitFraction(0.64)),
+                "a3", closedUnitFractionRange(unitFraction(0.55), unitFraction(0.65))))));
   }
 
 }

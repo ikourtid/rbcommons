@@ -3,6 +3,9 @@ package com.rb.nonbiz.collections;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import com.rb.nonbiz.types.UnitFraction;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.optionalClosedUnitFractionRangeIntersection;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.tightenClosedUnitFractionRangeAround;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.closedUnitFractionRanges;
@@ -56,6 +59,24 @@ public class ClosedUnitFractionRangesUtilities {
             v1, v2),
         ranges1.getRawMap(),
         ranges2.getRawMap()));
+  }
+
+  /**
+   * Merges multiple {@link ClosedUnitFractionRanges} (could be 0, 1, 2, or more)
+   * by using the set intersection for any two keys that have
+   * a {@link ClosedUnitFractionRange} in both arguments (or throwing an exception if no valid intersection exists).
+   * Keys that appear in only one of the two input arguments will just get copied over into the returned value.
+   */
+  public static <K> ClosedUnitFractionRanges<K> closedUnitFractionRangesIntersectionOrThrow(
+      List<ClosedUnitFractionRanges<K>> listOfClosedUnitFractionRanges) {
+    return closedUnitFractionRanges(mergeRBMapsByValue(
+        (v1, v2) -> getOrThrow(
+            optionalClosedUnitFractionRangeIntersection(v1, v2),
+            "We cannot intersect %s with %s",
+            v1, v2),
+        listOfClosedUnitFractionRanges
+            .stream()
+            .map(v -> v.getRawMap())));
   }
 
 }
