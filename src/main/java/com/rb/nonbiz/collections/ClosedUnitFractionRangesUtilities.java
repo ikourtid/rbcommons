@@ -61,7 +61,12 @@ public class ClosedUnitFractionRangesUtilities {
         ranges2.getRawMap()));
   }
 
-  // FIXME IAK NASDAQ test this
+  /**
+   * Merges multiple {@link ClosedUnitFractionRanges} (could be 0, 1, 2, or more)
+   * by using the set intersection for any two keys that have
+   * a {@link ClosedUnitFractionRange} in both arguments (or throwing an exception if no valid intersection exists).
+   * Keys that appear in only one of the two input arguments will just get copied over into the returned value.
+   */
   public static <K> ClosedUnitFractionRanges<K> closedUnitFractionRangesIntersectionOrThrow(
       List<ClosedUnitFractionRanges<K>> listOfClosedUnitFractionRanges) {
     return closedUnitFractionRanges(mergeRBMapsByValue(
