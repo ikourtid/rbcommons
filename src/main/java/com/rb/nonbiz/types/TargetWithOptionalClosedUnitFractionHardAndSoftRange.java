@@ -25,21 +25,27 @@ public class TargetWithOptionalClosedUnitFractionHardAndSoftRange {
     this.closedUnitFractionHardAndSoftRange = closedUnitFractionHardAndSoftRange;
   }
 
+  public static TargetWithOptionalClosedUnitFractionHardAndSoftRange targetWithOptionalClosedUnitFractionHardAndSoftRange(
+      UnitFraction target,
+      Optional<ClosedUnitFractionHardAndSoftRange> closedUnitFractionHardAndSoftRange) {
+    closedUnitFractionHardAndSoftRange.ifPresent(v ->
+        RBPreconditions.checkArgument(
+            v.getSoftRange().contains(target),
+            "Target %s must be contained within range %s",
+            target, v));
+    return new TargetWithOptionalClosedUnitFractionHardAndSoftRange(target, closedUnitFractionHardAndSoftRange);
+  }
+
   public static TargetWithOptionalClosedUnitFractionHardAndSoftRange targetWithClosedUnitFractionHardAndSoftRange(
       UnitFraction target,
       ClosedUnitFractionHardAndSoftRange closedUnitFractionHardAndSoftRange) {
-    RBPreconditions.checkArgument(
-        closedUnitFractionHardAndSoftRange.getSoftRange().contains(target),
-        "Target %s must be contained within range %s",
-        target, closedUnitFractionHardAndSoftRange);
-    return new TargetWithOptionalClosedUnitFractionHardAndSoftRange(
+    return targetWithOptionalClosedUnitFractionHardAndSoftRange(
         target, Optional.of(closedUnitFractionHardAndSoftRange));
   }
 
   public static TargetWithOptionalClosedUnitFractionHardAndSoftRange targetWithoutClosedUnitFractionHardAndSoftRange(
       UnitFraction target) {
-    return new TargetWithOptionalClosedUnitFractionHardAndSoftRange(
-        target, Optional.empty());
+    return targetWithOptionalClosedUnitFractionHardAndSoftRange(target, Optional.empty());
   }
 
   public UnitFraction getTarget() {
