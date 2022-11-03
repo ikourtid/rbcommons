@@ -9,7 +9,8 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
 
 /**
  * A {@link UnitFraction} (whose semantics is that it is a target within that range that we want to get to)
- * together with an optional {@link ClosedUnitFractionHardAndSoftRange}. The value must be inside the ranges.
+ * together with an optional {@link ClosedUnitFractionHardAndSoftRange}; if that is present, then the value must be
+ * inside the soft range.
  *
  * <p> Despite the very basic nature of this data class, it is not used extensively currently (Nov 2022). </p>
  */
@@ -31,7 +32,7 @@ public class TargetWithOptionalClosedUnitFractionHardAndSoftRange {
     closedUnitFractionHardAndSoftRange.ifPresent(v ->
         RBPreconditions.checkArgument(
             v.getSoftRange().contains(target),
-            "Target %s must be contained within range %s",
+            "Target %s must be contained within the soft range of %s",
             target, v));
     return new TargetWithOptionalClosedUnitFractionHardAndSoftRange(target, closedUnitFractionHardAndSoftRange);
   }
