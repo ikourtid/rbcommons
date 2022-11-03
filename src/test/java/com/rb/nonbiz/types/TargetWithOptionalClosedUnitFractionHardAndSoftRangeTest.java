@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import java.util.function.Function;
 
-import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -15,7 +14,6 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRange.closedUnitFractionHardAndSoftRange;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRangeTest.closedUnitFractionHardAndSoftRangeMatcher;
-import static com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRangeTest.unrestrictedClosedUnitFractionHardAndSoftRange;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
 import static com.rb.nonbiz.types.TargetWithOptionalClosedUnitFractionHardAndSoftRange.targetWithClosedUnitFractionHardAndSoftRange;
 import static com.rb.nonbiz.types.TargetWithOptionalClosedUnitFractionHardAndSoftRange.targetWithoutClosedUnitFractionHardAndSoftRange;
@@ -35,7 +33,7 @@ public class TargetWithOptionalClosedUnitFractionHardAndSoftRangeTest
   }
 
   @Test
-  public void targetMustBeInsideRange() {
+  public void targetMustBeInsideSoftRange() {
     Function<UnitFraction, TargetWithOptionalClosedUnitFractionHardAndSoftRange> maker = target ->
         targetWithClosedUnitFractionHardAndSoftRange(
             target,
