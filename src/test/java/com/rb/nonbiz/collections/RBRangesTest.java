@@ -259,30 +259,59 @@ public class RBRangesTest {
   }
 
   @Test
-  public void doubleRangeContainsWellWithinBounds_fewerThanTwoEndpointsArePresent() {
+  public void doubleRangeContainsWellWithinBounds_fewerThanTwoEndpointsArePresent_usingDefaultEpsilon() {
+    // These tests use the default epsilon of 1e-8
     rbSetOf(
         Range.atLeast(7.0),
         Range.greaterThan(7.0))
         .forEach(doubleRange -> {
-          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 - 1e-7));
-          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 - 1e-9));
-          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7));
-          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 + 1e-9));
-          assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 + 1e-7));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0 - 1e-7));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0 - 1e-9));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0 + 1e-9));
+          assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7.0 + 1e-7));
         });
     rbSetOf(
         Range.atMost(7.0),
         Range.lessThan(7.0))
         .forEach(doubleRange -> {
-          assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 - 1e-7));
-          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 - 1e-9));
-          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7));
-          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 + 1e-9));
-          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 + 1e-7));
+          assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7 - 1e-7));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 - 1e-9));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 + 1e-9));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 + 1e-7));
         });
     assertTrue(doubleRangeContainsWellWithinBounds(Range.all(), -12.3));
     assertTrue(doubleRangeContainsWellWithinBounds(Range.all(),   0.0));
     assertTrue(doubleRangeContainsWellWithinBounds(Range.all(), +12.3));
+  }
+
+  @Test
+  public void doubleRangeContainsWellWithinBounds_fewerThanTwoEndpointsArePresent_usingLargerEpsilon() {
+    double eps = 1e-4; // epsilon used in this test, instead of the default 1e-8
+    rbSetOf(
+        Range.atLeast(7.0),
+        Range.greaterThan(7.0))
+        .forEach(doubleRange -> {
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0 - 1e-3, eps));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0 - 1e-5, eps));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0,        eps));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0 + 1e-5, eps));
+          assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7.0 + 1e-3, eps));
+        });
+    rbSetOf(
+        Range.atMost(7.0),
+        Range.lessThan(7.0))
+        .forEach(doubleRange -> {
+          assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7 - 1e-3, eps));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 - 1e-5, eps));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7,        eps));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 + 1e-5, eps));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 + 1e-3, eps));
+        });
+    assertTrue(doubleRangeContainsWellWithinBounds(Range.all(), -12.3, eps));
+    assertTrue(doubleRangeContainsWellWithinBounds(Range.all(),   0.0, eps));
+    assertTrue(doubleRangeContainsWellWithinBounds(Range.all(), +12.3, eps));
   }
 
   @Test
