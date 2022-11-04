@@ -87,6 +87,16 @@ public class RBRangesTest {
   }
 
   /**
+   * Return a List of all the types of ranges that have both endpoints present.
+   */
+  public static <V extends Comparable<? super V>> List<Range<V>> allRangesWithBothEndpoints(V min, V max) {
+    return ImmutableList.of(
+        Range.open(min, max),
+        Range.openClosed(min, max),
+        Range.closedOpen(min, max),
+        Range.closed(min, max));
+  }
+  /**
    * Return a List of all the types of ranges that have at least one exclusive bound. That is, ranges
    * for which at least one boundary point is itself not part of the range. In terms of the Range class,
    * a range with at least one boundary of type BoundType.OPEN.
@@ -140,7 +150,7 @@ public class RBRangesTest {
   }
 
   @Test
-  public void testClosedDoubleRangeContainsFarFromBounds_zeroEpsilon() {
+  public void testClosedDoubleRangeContainsWellWithinBounds_zeroEpsilon() {
     double e = 0; // epsilon
     assertFalse(closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 7 - 1e-9, e));
     assertTrue( closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 7, e));
@@ -149,12 +159,25 @@ public class RBRangesTest {
     assertFalse(closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 8 + 1e-9, e));
 
     assertFalse(closedDoubleRangeContainsWellWithinBounds(singletonClosedRange(6.0), 6 - 1e-9, e));
-    assertTrue(closedDoubleRangeContainsWellWithinBounds(singletonClosedRange(6.0), 6, e));
+    assertTrue( closedDoubleRangeContainsWellWithinBounds(singletonClosedRange(6.0), 6, e));
     assertFalse(closedDoubleRangeContainsWellWithinBounds(singletonClosedRange(6.0), 6 + 1e-9, e));
+    
+    // These are the same as above, but using a plain Range that has both endpoints present, not a ClosedRange object.
+    allRangesWithBothEndpoints(7.0, 8.0).forEach(doubleRange -> {
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 - 1e-9, e));
+      assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7, e));
+      assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7.5, e));
+      assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 8, e));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 8 + 1e-9, e));
+    });
+
+    assertFalse(doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6 - 1e-9, e));
+    assertTrue( doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6, e));
+    assertFalse(doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6 + 1e-9, e));
   }
 
   @Test
-  public void testClosedDoubleRangeFarFromBounds_usualEpsilon() {
+  public void testClosedDoubleRangeWellWithinBounds_usualEpsilon() {
     double e = 1e-8; // epsilon
     assertFalse(closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 7 - 1e-7, e));
     assertFalse(closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 7 - 1e-9, e));
@@ -172,10 +195,30 @@ public class RBRangesTest {
     assertFalse(closedDoubleRangeContainsWellWithinBounds(singletonClosedRange(6.0), 6, e));
     assertFalse(closedDoubleRangeContainsWellWithinBounds(singletonClosedRange(6.0), 6 + 1e-9, e));
     assertFalse(closedDoubleRangeContainsWellWithinBounds(singletonClosedRange(6.0), 6 + 1e-7, e));
+
+    // These are the same as above, but using a plain Range that has both endpoints present, not a ClosedRange object.
+    allRangesWithBothEndpoints(7.0, 8.0).forEach(doubleRange -> {
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 - 1e-7, e));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 - 1e-9, e));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7, e));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 + 1e-9, e));
+      assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7 + 1e-7, e));
+      assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7.5, e));
+      assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 8 - 1e-7, e));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 8 - 1e-9, e));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 8, e));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 8 + 1e-9, e));
+    });
+
+    assertFalse(doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6 - 1e-7, e));
+    assertFalse(doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6 - 1e-9, e));
+    assertFalse(doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6, e));
+    assertFalse(doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6 + 1e-9, e));
+    assertFalse(doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6 + 1e-7, e));
   }
 
   @Test
-  public void testClosedDoubleRangeFarFromBounds_defaultEpsilon() {
+  public void testClosedDoubleRangeWellWithinBounds_defaultEpsilon() {
     // this overload uses the default epsilon of 1e-8
     assertFalse(closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 7 - 1e-7));
     assertFalse(closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 7 - 1e-9));
@@ -193,6 +236,67 @@ public class RBRangesTest {
     assertFalse(closedDoubleRangeContainsWellWithinBounds(singletonClosedRange(6.0), 6));
     assertFalse(closedDoubleRangeContainsWellWithinBounds(singletonClosedRange(6.0), 6 + 1e-9));
     assertFalse(closedDoubleRangeContainsWellWithinBounds(singletonClosedRange(6.0), 6 + 1e-7));
+
+    // These are the same as above, but using a plain Range that has both endpoints present, not a ClosedRange object.
+    allRangesWithBothEndpoints(7.0, 8.0).forEach(doubleRange -> {
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 - 1e-7));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 - 1e-9));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7 + 1e-9));
+      assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7 + 1e-7));
+      assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7.5));
+      assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 8 - 1e-7));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 8 - 1e-9));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 8));
+      assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 8 + 1e-9));
+    });
+
+    assertFalse(doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6 - 1e-7));
+    assertFalse(doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6 - 1e-9));
+    assertFalse(doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6));
+    assertFalse(doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6 + 1e-9));
+    assertFalse(doubleRangeContainsWellWithinBounds(Range.singleton(6.0), 6 + 1e-7));
+  }
+
+  @Test
+  public void doubleRangeContainsWellWithinBounds_fewerThanTwoEndpointsArePresent() {
+    rbSetOf(
+        Range.atLeast(7.0),
+        Range.greaterThan(7.0))
+        .forEach(doubleRange -> {
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 - 1e-7));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 - 1e-9));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 + 1e-9));
+          assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 + 1e-7));
+        });
+    rbSetOf(
+        Range.atMost(7.0),
+        Range.lessThan(7.0))
+        .forEach(doubleRange -> {
+          assertTrue( doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 - 1e-7));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 - 1e-9));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 + 1e-9));
+          assertFalse(doubleRangeContainsWellWithinBounds(doubleRange, 7.0, 7 + 1e-7));
+        });
+    assertTrue(doubleRangeContainsWellWithinBounds(Range.all(), -12.3));
+    assertTrue(doubleRangeContainsWellWithinBounds(Range.all(),   0.0));
+    assertTrue(doubleRangeContainsWellWithinBounds(Range.all(), +12.3));
+  }
+
+  @Test
+  public void testDoubleRangeEpsilonContains_zeroEpsilon_rangeIsClosed() {
+    double e = 0; // epsilon
+    assertFalse(closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7 - 1e-9, e));
+    assertTrue( closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7, e));
+    assertTrue( closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7.5, e));
+    assertTrue( closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 8, e));
+    assertFalse(closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 8 + 1e-9, e));
+
+    assertFalse(closedDoubleRangeEpsilonContains(singletonClosedRange(6.0), 6 - 1e-9, e));
+    assertTrue( closedDoubleRangeEpsilonContains(singletonClosedRange(6.0), 6, e));
+    assertFalse(closedDoubleRangeEpsilonContains(singletonClosedRange(6.0), 6 + 1e-9, e));
   }
 
   @Test

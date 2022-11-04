@@ -47,7 +47,16 @@ public class RBRanges {
   }
 
   public static boolean closedDoubleRangeContainsWellWithinBounds(ClosedRange<Double> range, double value, double epsilon) {
-    return range.lowerEndpoint() + epsilon <= value && value <= range.upperEndpoint() - epsilon;
+    return doubleRangeContainsWellWithinBounds(range.asRange(), value, epsilon);
+  }
+
+  public static boolean doubleRangeContainsWellWithinBounds(Range<Double> range, double value) {
+    return doubleRangeContainsWellWithinBounds(range, value, 1e-8);
+  }
+
+  public static boolean doubleRangeContainsWellWithinBounds(Range<Double> range, double value, double epsilon) {
+    return (!range.hasLowerBound() || range.lowerEndpoint() + epsilon <= value)
+        && (!range.hasUpperBound() || value <= range.upperEndpoint() - epsilon);
   }
 
   public static <P extends PreciseValue<? super P>> boolean preciseValueRangeEpsilonContains(Range<P> range, P value) {
