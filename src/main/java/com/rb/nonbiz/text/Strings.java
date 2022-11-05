@@ -36,6 +36,7 @@ import static java.lang.Character.isWhitespace;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
 import static java.util.Map.Entry.comparingByKey;
+import static java.util.Map.Entry.comparingByValue;
 
 /**
  * Various versions of Java's {@link String#format} methods, with the advantage that {@link Strings#format}
@@ -137,6 +138,17 @@ public class Strings {
         map,
         key -> key.toString(),
         value -> value.toString(instrumentMaster, date));
+  }
+
+  public static <K extends PrintsInstruments, V> String formatMapWhereKeysPrintInstruments(
+      RBMap<K, V> map, String separator, Comparator<V> valuesComparator, InstrumentMaster instrumentMaster, LocalDate date) {
+    return sizePrefix(map.size()) + Joiner.on(separator).join(map.entrySet()
+        .stream()
+        .sorted(comparingByValue(valuesComparator))
+        .map(entry -> Strings.format("%s = %s",
+            entry.getKey().toString(instrumentMaster, date),
+            entry.getValue().toString()))
+        .iterator());
   }
 
   public static <K extends Comparable<? super K>, V extends PrintsInstruments> String

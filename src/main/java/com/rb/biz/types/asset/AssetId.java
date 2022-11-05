@@ -1,6 +1,7 @@
 package com.rb.biz.types.asset;
 
 import com.rb.nonbiz.math.eigen.Investable;
+import com.rb.nonbiz.text.PrintsInstruments;
 
 /**
  * The base class for both {@link CashId} and {@link InstrumentId}.
@@ -14,7 +15,7 @@ import com.rb.nonbiz.math.eigen.Investable;
  * @see CashId
  * @see InstrumentId
  */
-public abstract class AssetId implements Investable {
+public abstract class AssetId implements Investable, PrintsInstruments {
 
   public interface AssetIdVisitor<T> {
 
