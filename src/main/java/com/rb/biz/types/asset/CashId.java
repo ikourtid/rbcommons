@@ -1,6 +1,9 @@
 package com.rb.biz.types.asset;
 
+import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.biz.types.Symbol;
+
+import java.time.LocalDate;
 
 import static com.rb.biz.types.Symbol.symbol;
 
@@ -41,6 +44,14 @@ public class CashId extends AssetId {
   @Override
   public String toString() {
     return "CASH";
+  }
+
+  @Override
+  public String toString(InstrumentMaster ignoredInstrumentMaster, LocalDate ignoredDate) {
+    // CashId extends AssetId, so it has to implement PrintsInstruments. Obviously, in the case of cash,
+    // this is trivial. However, it's expedient to have CashId implement PrintsInstruments, so that if we ever want
+    // to log some object such as a partition of AssetId, we can utilize methods such as Strings#format* ones.
+    return toString();
   }
 
 }
