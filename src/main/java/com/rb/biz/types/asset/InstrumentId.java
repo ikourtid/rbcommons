@@ -26,7 +26,7 @@ import static java.util.Collections.emptyList;
  * @see AssetId
  * @see CashId
  */
-public class InstrumentId extends AssetId implements PrintsInstruments {
+public class InstrumentId extends AssetId {
 
   public static final RBSet<InstrumentId> EMPTY_INSTRUMENT_ID_SET = emptyRBSet();
   public static final List<InstrumentId> EMPTY_INSTRUMENT_ID_LIST = emptyList();
