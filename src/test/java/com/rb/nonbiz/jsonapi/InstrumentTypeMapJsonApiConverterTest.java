@@ -16,8 +16,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class InstrumentTypeMapJsonApiConverterTest
-    extends RBTest<InstrumentTypeMapJsonApiConverter> {
+public class InstrumentTypeMapJsonApiConverterTest extends RBTest<InstrumentTypeMapJsonApiConverter> {
 
   private final InstrumentTypeMap<Double> INSTRUMENT_TYPE_MAP = InstrumentTypeMapBuilder.<Double>instrumentTypeMapBuilder()
       .setValueForEtfs(              1.1)
@@ -74,18 +73,18 @@ public class InstrumentTypeMapJsonApiConverterTest
     assertThat(
         makeTestObject().fromJsonObject(
             jsonObject(
+                "etf",               jsonDouble(1.1),
+                // no "stock"      entry
                 // no "mutualFund" entry
-                // no "structuredProduct entry
-                "etf",   jsonDouble(1.1),
-                "stock", jsonDouble(2.2)),
+                "structuredProduct", jsonDouble(4.4)),
             jsonElement -> jsonElement.getAsDouble(),
             valueIfMissing),
         instrumentTypeMapMatcher(
             InstrumentTypeMapBuilder.<Double>instrumentTypeMapBuilder()
                 .setValueForEtfs(              1.1)
-                .setValueForStocks(            2.2)
+                .setValueForStocks(            valueIfMissing)
                 .setValueForMutualFunds(       valueIfMissing)
-                .setValueForStructuredProducts(valueIfMissing)
+                .setValueForStructuredProducts(4.4)
                 .build(),
             f -> typeSafeEqualTo(f)));
   }
