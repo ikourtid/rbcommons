@@ -5,10 +5,12 @@ import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.rb.biz.types.asset.InstrumentTypeMap;
 import com.rb.biz.types.asset.InstrumentTypeMap.InstrumentTypeMapBuilder;
+import com.rb.nonbiz.collections.IidMapWithDefaultsByInstrumentType;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
@@ -41,13 +43,14 @@ public class InstrumentTypeMapJsonApiConverter implements HasJsonApiDocumentatio
 
   public <T> JsonObject toJsonObject(
       InstrumentTypeMap<T> instrumentTypeMap,
+      Predicate<T> onlyIncludeIf,
       Function<T, JsonElement> serializer) {
     return jsonValidator.validate(
         rbJsonObjectBuilder()
-            .setJsonElement("etf",               serializer.apply(instrumentTypeMap.getValueForEtfs()))
-            .setJsonElement("stock",             serializer.apply(instrumentTypeMap.getValueForStocks()))
-            .setJsonElement("mutualFund",        serializer.apply(instrumentTypeMap.getValueForMutualFunds()))
-            .setJsonElement("structuredProduct", serializer.apply(instrumentTypeMap.getValueForStructuredProducts()))
+            .setIf("etf",               instrumentTypeMap.getValueForEtfs(),               onlyIncludeIf, serializer)
+            .setIf("stock",             instrumentTypeMap.getValueForStocks(),             onlyIncludeIf, serializer)
+            .setIf("mutualFund",        instrumentTypeMap.getValueForMutualFunds(),        onlyIncludeIf, serializer)
+            .setIf("structuredProduct", instrumentTypeMap.getValueForStructuredProducts(), onlyIncludeIf, serializer)
             .build(),
         JSON_VALIDATION_INSTRUCTIONS);
   }
