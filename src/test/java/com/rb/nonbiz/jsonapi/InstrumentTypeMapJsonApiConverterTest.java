@@ -1,6 +1,5 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.google.common.collect.Range;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.rb.biz.types.asset.InstrumentTypeMap;
@@ -9,7 +8,6 @@ import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.testutils.RBTest;
 import org.junit.Test;
 
-import static com.rb.biz.types.asset.InstrumentTypeMap.InstrumentTypeMapBuilder.instrumentTypeMapBuilder;
 import static com.rb.biz.types.asset.InstrumentTypeMapTest.instrumentTypeMapMatcher;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
@@ -21,36 +19,73 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class InstrumentTypeMapJsonApiConverterTest
     extends RBTest<InstrumentTypeMapJsonApiConverter> {
 
+  private final InstrumentTypeMap<Double> INSTRUMENT_TYPE_MAP = InstrumentTypeMapBuilder.<Double>instrumentTypeMapBuilder()
+      .setValueForEtfs(              1.1)
+      .setValueForStocks(            2.2)
+      .setValueForMutualFunds(       3.3)
+      .setValueForStructuredProducts(4.4)
+      .build();
+
+  private final JsonObject JSON_OBJECT = jsonObject(
+      "etf",               jsonDouble(1.1),
+      "stock",             jsonDouble(2.2),
+      "mutualFund",        jsonDouble(3.3),
+      "structuredProduct", jsonDouble(4.4));
+
   @Test
-  public void testRoundTrip1() {
-    InstrumentTypeMap<Double> instrumentTypeMap = InstrumentTypeMapBuilder.<Double>instrumentTypeMapBuilder()
-        .setValueForEtfs(              1.1)
-        .setValueForStocks(            2.2)
-        .setValueForMutualFunds(       3.3)
-        .setValueForStructuredProducts(4.4)
-        .build();
-
-    JsonObject jsonObject = jsonObject(
-        "etf",               jsonDouble(1.1),
-        "stock",             jsonDouble(2.2),
-        "mutualFund",        jsonDouble(3.3),
-        "structuredProduct", jsonDouble(4.4));
-
+  public void testRoundTrip_nothingFilteredOut() {
     assertThat(
         makeTestObject().toJsonObject(
-            instrumentTypeMap,
+            INSTRUMENT_TYPE_MAP,
             v -> v > 0,
             d -> jsonDouble(d)),
         jsonObjectMatcher(
-            jsonObject,
+            JSON_OBJECT,
             1e-8));
 
     assertThat(
         makeTestObject().fromJsonObject(
-            jsonObject,
+            JSON_OBJECT,
             jsonElement -> jsonElement.getAsDouble(),
-            0.0),
-        instrumentTypeMapMatcher(instrumentTypeMap, f -> typeSafeEqualTo(f)));
+            DUMMY_DOUBLE),           // the default value is not needed; no missing values
+        instrumentTypeMapMatcher(
+            INSTRUMENT_TYPE_MAP, f -> typeSafeEqualTo(f)));
+  }
+
+  @Test
+  public void testRoundTrip_someFilteredOut() {
+    assertThat(
+        makeTestObject().toJsonObject(
+            INSTRUMENT_TYPE_MAP,
+            v -> v > 2.5,
+            d -> jsonDouble(d)),
+        jsonObjectMatcher(
+            jsonObject(
+                // entry for 'etf'   is filtered out; value = 1.1 < 2.5
+                // entry for 'stock' is filtered out; value = 2.2 < 2.5
+                "mutualFund",        jsonDouble(3.3),
+                "structuredProduct", jsonDouble(4.4)),
+            1e-8));
+  }
+
+  @Test
+  public void testRoundTrip_useDefault() {
+    double valueIfMissing = -123.45;
+    assertThat(
+        makeTestObject().fromJsonObject(
+            jsonObject(
+                "etf",               jsonDouble(1.1),
+                "stock",             jsonDouble(2.2)),
+            jsonElement -> jsonElement.getAsDouble(),
+            valueIfMissing),
+        instrumentTypeMapMatcher(
+            InstrumentTypeMapBuilder.<Double>instrumentTypeMapBuilder()
+                .setValueForEtfs(              1.1)
+                .setValueForStocks(            2.2)
+                .setValueForMutualFunds(       valueIfMissing)
+                .setValueForStructuredProducts(valueIfMissing)
+                .build(),
+            f -> typeSafeEqualTo(f)));
   }
 
   @Test
@@ -66,7 +101,7 @@ public class InstrumentTypeMapJsonApiConverterTest
     InstrumentTypeMap<Double> doesNotThrow = realObject.fromJsonObject(
         sampleJson.getAsJsonObject(),
         v -> v.getAsDouble(),
-        0.0);
+        DUMMY_DOUBLE);
   }
 
   @Override
