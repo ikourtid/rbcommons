@@ -77,7 +77,8 @@ public class InstrumentTypeMapJsonApiConverter implements HasJsonApiDocumentatio
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
             "The currently supported instrument types are",
             "<b>stock</b>, <b>etf</b>, <b>mutualFund</b>,",
-            "and <b>structuredProduct</b>.")))
+            "and <b>structuredProduct</b>. <p />",
+            "The objects for each all be of the same type.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
         .setNontrivialSampleJson(jsonObject(

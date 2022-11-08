@@ -74,8 +74,10 @@ public class InstrumentTypeMapJsonApiConverterTest
     assertThat(
         makeTestObject().fromJsonObject(
             jsonObject(
-                "etf",               jsonDouble(1.1),
-                "stock",             jsonDouble(2.2)),
+                // no "mutualFund" entry
+                // no "structuredProduct entry
+                "etf",   jsonDouble(1.1),
+                "stock", jsonDouble(2.2)),
             jsonElement -> jsonElement.getAsDouble(),
             valueIfMissing),
         instrumentTypeMapMatcher(
