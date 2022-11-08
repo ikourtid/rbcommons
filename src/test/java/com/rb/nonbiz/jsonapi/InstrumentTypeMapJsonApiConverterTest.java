@@ -57,12 +57,12 @@ public class InstrumentTypeMapJsonApiConverterTest
     assertThat(
         makeTestObject().toJsonObject(
             INSTRUMENT_TYPE_MAP,
-            v -> v > 2.5,
+            v -> v >= 3,        // only include type values if they're greater than 3
             d -> jsonDouble(d)),
         jsonObjectMatcher(
             jsonObject(
-                // entry for 'etf'   is filtered out; value = 1.1 < 2.5
-                // entry for 'stock' is filtered out; value = 2.2 < 2.5
+                // entry for 'etf'   is filtered out; value = 1.1 < 3
+                // entry for 'stock' is filtered out; value = 2.2 < 3
                 "mutualFund",        jsonDouble(3.3),
                 "structuredProduct", jsonDouble(4.4)),
             1e-8));

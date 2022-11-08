@@ -44,27 +44,27 @@ public class InstrumentTypeMapJsonApiConverter implements HasJsonApiDocumentatio
   public <T> JsonObject toJsonObject(
       InstrumentTypeMap<T> instrumentTypeMap,
       Predicate<T> onlyIncludeIf,
-      Function<T, JsonElement> valueSerializer) {
+      Function<T, JsonElement> serializer) {
     return jsonValidator.validate(
         rbJsonObjectBuilder()
-            .setIf("etf",               instrumentTypeMap.getValueForEtfs(),               onlyIncludeIf, valueSerializer)
-            .setIf("stock",             instrumentTypeMap.getValueForStocks(),             onlyIncludeIf, valueSerializer)
-            .setIf("mutualFund",        instrumentTypeMap.getValueForMutualFunds(),        onlyIncludeIf, valueSerializer)
-            .setIf("structuredProduct", instrumentTypeMap.getValueForStructuredProducts(), onlyIncludeIf, valueSerializer)
+            .setIf("etf",               instrumentTypeMap.getValueForEtfs(),               onlyIncludeIf, serializer)
+            .setIf("stock",             instrumentTypeMap.getValueForStocks(),             onlyIncludeIf, serializer)
+            .setIf("mutualFund",        instrumentTypeMap.getValueForMutualFunds(),        onlyIncludeIf, serializer)
+            .setIf("structuredProduct", instrumentTypeMap.getValueForStructuredProducts(), onlyIncludeIf, serializer)
             .build(),
         JSON_VALIDATION_INSTRUCTIONS);
   }
 
   public <T> InstrumentTypeMap<T> fromJsonObject(
       JsonObject jsonObject,
-      Function<JsonElement, T> ifPresent,
+      Function<JsonElement, T> deserializer,
       T valueIfMissing) {
     jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
     return InstrumentTypeMapBuilder.<T>instrumentTypeMapBuilder()
-        .setValueForEtfs(              getJsonElementOrDefault(jsonObject, "etf",               ifPresent, valueIfMissing))
-        .setValueForStocks(            getJsonElementOrDefault(jsonObject, "stock",             ifPresent, valueIfMissing))
-        .setValueForMutualFunds(       getJsonElementOrDefault(jsonObject, "mutualFund",        ifPresent, valueIfMissing))
-        .setValueForStructuredProducts(getJsonElementOrDefault(jsonObject, "structuredProduct", ifPresent, valueIfMissing))
+        .setValueForEtfs(              getJsonElementOrDefault(jsonObject, "etf",               deserializer, valueIfMissing))
+        .setValueForStocks(            getJsonElementOrDefault(jsonObject, "stock",             deserializer, valueIfMissing))
+        .setValueForMutualFunds(       getJsonElementOrDefault(jsonObject, "mutualFund",        deserializer, valueIfMissing))
+        .setValueForStructuredProducts(getJsonElementOrDefault(jsonObject, "structuredProduct", deserializer, valueIfMissing))
         .build();
   }
 
