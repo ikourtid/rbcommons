@@ -19,25 +19,24 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class InstrumentTypeMapJsonApiConverterTest
     extends RBTest<InstrumentTypeMapJsonApiConverter> {
 
-  private final InstrumentTypeMap<Double> INSTRUMENT_TYPE_MAP = InstrumentTypeMapBuilder.<Double>instrumentTypeMapBuilder()
-      .setValueForEtfs(              1.1)
-      .setValueForStocks(            2.2)
-      .setValueForMutualFunds(       3.3)
-      .setValueForStructuredProducts(4.4)
-      .build();
-
-  private final JsonObject JSON_OBJECT = jsonObject(
-      "etf",               jsonDouble(1.1),
-      "stock",             jsonDouble(2.2),
-      "mutualFund",        jsonDouble(3.3),
-      "structuredProduct", jsonDouble(4.4));
-
   @Test
-  public void testRoundTrip_nothingFilteredOut() {
+  public void testRoundTrip_noDefaultValuesNeeded() {
+    InstrumentTypeMap<Double> instrumentTypeMap = InstrumentTypeMapBuilder.<Double>instrumentTypeMapBuilder()
+        .setValueForEtfs(              1.1)
+        .setValueForStocks(            2.2)
+        .setValueForMutualFunds(       3.3)
+        .setValueForStructuredProducts(4.4)
+        .build();
+
+    JsonObject JSON_OBJECT = jsonObject(
+        "etf",               jsonDouble(1.1),
+        "stock",             jsonDouble(2.2),
+        "mutualFund",        jsonDouble(3.3),
+        "structuredProduct", jsonDouble(4.4));
+
     assertThat(
         makeTestObject().toJsonObject(
-            INSTRUMENT_TYPE_MAP,
-            v -> v > 0,
+            instrumentTypeMap,
             d -> jsonDouble(d)),
         jsonObjectMatcher(
             JSON_OBJECT,
@@ -49,23 +48,7 @@ public class InstrumentTypeMapJsonApiConverterTest
             jsonElement -> jsonElement.getAsDouble(),
             DUMMY_DOUBLE),           // the default value is not needed; no missing values
         instrumentTypeMapMatcher(
-            INSTRUMENT_TYPE_MAP, f -> typeSafeEqualTo(f)));
-  }
-
-  @Test
-  public void testRoundTrip_someFilteredOut() {
-    assertThat(
-        makeTestObject().toJsonObject(
-            INSTRUMENT_TYPE_MAP,
-            v -> v >= 3,        // only include type values if they're greater than 3
-            d -> jsonDouble(d)),
-        jsonObjectMatcher(
-            jsonObject(
-                // entry for 'etf'   is filtered out; value = 1.1 < 3
-                // entry for 'stock' is filtered out; value = 2.2 < 3
-                "mutualFund",        jsonDouble(3.3),
-                "structuredProduct", jsonDouble(4.4)),
-            1e-8));
+            instrumentTypeMap, f -> typeSafeEqualTo(f)));
   }
 
   @Test
@@ -74,18 +57,18 @@ public class InstrumentTypeMapJsonApiConverterTest
     assertThat(
         makeTestObject().fromJsonObject(
             jsonObject(
+                "etf",               jsonDouble(1.1),
+                // no "stock" entry
                 // no "mutualFund" entry
-                // no "structuredProduct entry
-                "etf",   jsonDouble(1.1),
-                "stock", jsonDouble(2.2)),
+                "structuredProduct", jsonDouble(4.4)),
             jsonElement -> jsonElement.getAsDouble(),
             valueIfMissing),
         instrumentTypeMapMatcher(
             InstrumentTypeMapBuilder.<Double>instrumentTypeMapBuilder()
                 .setValueForEtfs(              1.1)
-                .setValueForStocks(            2.2)
+                .setValueForStocks(            valueIfMissing)
                 .setValueForMutualFunds(       valueIfMissing)
-                .setValueForStructuredProducts(valueIfMissing)
+                .setValueForStructuredProducts(4.4)
                 .build(),
             f -> typeSafeEqualTo(f)));
   }
