@@ -73,7 +73,7 @@ public class InstrumentTypeMapJsonApiConverter implements HasJsonApiDocumentatio
     return jsonApiClassDocumentationBuilder()
         .setClass(InstrumentTypeMap.class)
         .setSingleLineSummary(documentation(asSingleLine(
-            "A set of objects, one for each of the 4 supported instrument type.")))
+            "A set of objects, one for each of the 4 supported instrument types.")))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
             "The currently supported instrument types are:",
             "<b>stock</b>, <b>etf</b>, <b>mutualFund</b>,",
