@@ -12,8 +12,9 @@ import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
+import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
-import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
@@ -21,7 +22,6 @@ import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonBigDecimalOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
-import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFraction;
@@ -42,8 +42,12 @@ public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocum
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties(rbMapOf(
-          "item",   UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR,
-          "weight", simpleClassJsonApiPropertyDescriptor(SignedFraction.class)))
+          "item",   simpleClassJsonApiPropertyDescriptor(
+              UNKNOWN_CLASS_OF_JSON_PROPERTY,
+              jsonPropertySpecificDocumentation(documentation("The item whose weight is specified."))),
+          "weight", simpleClassJsonApiPropertyDescriptor(
+              SignedFraction.class,
+              jsonPropertySpecificDocumentation(documentation("The (signed) item weight.")))))
       .hasNoOptionalProperties()
       .build();
 
@@ -80,11 +84,11 @@ public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocum
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(WeightedBySignedFraction.class)
-        .setSingleLineSummary(documentation("A single item with a `SignedFraction` weight."))
+        .setSingleLineSummary(documentation("A single <b>item</b> with a `SignedFraction` weight."))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
-            "The 'weight' is a `SignedFraction`, that is, any number, either positive, negative, or zero,",
+            "The <b>weight</b> is a `SignedFraction`, that is, any number, either positive, negative, or zero,",
             "and of any magnitude. <p />",
-            "`SignedFraction`s are used in similar contexts to `UnitFraction`s, which are constrainded to be in",
+            "`SignedFraction`s are used in similar contexts to `UnitFraction`s, which are constrained to be in",
             "the range [0.0, 1.0]. `SignedFraction`s, however, are allowed to go outside of those bounds.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
