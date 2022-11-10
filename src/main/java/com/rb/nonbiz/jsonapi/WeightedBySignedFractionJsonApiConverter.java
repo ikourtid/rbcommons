@@ -44,10 +44,10 @@ public class WeightedBySignedFractionJsonApiConverter implements HasJsonApiDocum
       .setRequiredProperties(rbMapOf(
           "item",   simpleClassJsonApiPropertyDescriptor(
               UNKNOWN_CLASS_OF_JSON_PROPERTY,
-              jsonPropertySpecificDocumentation(documentation("The item whose weight is specified."))),
+              jsonPropertySpecificDocumentation("The item whose weight is specified.")),
           "weight", simpleClassJsonApiPropertyDescriptor(
               SignedFraction.class,
-              jsonPropertySpecificDocumentation(documentation("The (signed) item weight.")))))
+              jsonPropertySpecificDocumentation("The (signed) item weight."))))
       .hasNoOptionalProperties()
       .build();
 
