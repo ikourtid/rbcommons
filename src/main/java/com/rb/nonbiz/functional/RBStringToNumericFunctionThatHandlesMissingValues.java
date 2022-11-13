@@ -21,9 +21,10 @@ import static com.rb.nonbiz.text.Strings.formatMap;
 /**
  * A function that maps a string to a RBNumeric,
  * and either also allows a 'missing string' case (which maps to a constant RBNumeric),
- * or returns empty if a missing string is encountered..
+ * or returns empty if a missing string is encountered.
  *
- * A sample use case for this is ESG string-valued attributes, where an empty string means a special 'missing' value.
+ * <p> A sample use case for this is ESG string-valued attributes, where an empty string
+ * means a special 'missing' value. </p>
  */
 public class RBStringToNumericFunctionThatHandlesMissingValues<Y extends RBNumeric<? super Y>>
     implements Function<AllowsMissingValues<String>, Optional<Y>>, HasHumanReadableLabel {
