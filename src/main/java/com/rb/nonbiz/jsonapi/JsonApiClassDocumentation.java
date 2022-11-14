@@ -169,21 +169,6 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return new JsonApiClassDocumentationBuilder();
     }
 
-    // FIXME IAK / FIXME SWA JSONDOC: once all JSON API classes get documented, we should remove this,
-    // and also update SingleObjectJsonApiDocumentationRawGenerator and SingleStringDocumentationFuser.
-    public static JsonApiClassDocumentation intermediateJsonApiClassDocumentationWithFixme(
-        Class<?> clazz,
-        HasJsonApiDocumentation ... items) {
-      return jsonApiClassDocumentationBuilder()
-          .setClass(clazz)
-          .setSingleLineSummary(documentation("FIXME IAK / FIXME SWA JSONDOC"))
-          .setLongDocumentation(documentation("FIXME IAK / FIXME SWA JSONDOC"))
-          .hasNoJsonValidationInstructions()
-          .hasChildJsonApiConverters(Arrays.asList(items))
-          .noNontrivialSampleJsonSupplied()
-          .build();
-    }
-
     public JsonApiClassDocumentationBuilder setClass(Class<?> clazz) {
       this.clazz = checkNotAlreadySet(this.clazz, clazz);
       return this;
@@ -202,8 +187,7 @@ public class JsonApiClassDocumentation extends JsonApiDocumentation {
       return this;
     }
 
-    // FIXME IAK YAML this should go away because if a JSON object does not have fixed properties,
-    // we should be using JsonApiClassWithNonFixedPropertiesDocumentation instead of JsonApiClassDocumentation.
+    // There are a few cases where a JSON API entity does not have fixed properties, such as an enum.
     public JsonApiClassDocumentationBuilder hasNoJsonValidationInstructions() {
       return setJsonValidationInstructions(emptyJsonValidationInstructions());
     }
