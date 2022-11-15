@@ -21,7 +21,8 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  *   <li> maxY for x in [maxX, +inf) </li>
  * </ol>
  *
- * <p> Note that <i>minY</i> is the y-value at <i>minX</i> and <i>maxY</i> is the y-value at <i>maxX</i>.
+ * <p> Note that <i>minY</i> is the y-value at <i>minX</i> (or below) and
+ * <i>maxY</i> is the y-value at <i>maxX</i> (or above).
  * As such, <i>minY</i> could be less than, equal to, or greater than <i>maxY</i>. </p>
  *
  * <p> There is nothing preventing you from calling the setters out of order, but if you call them in the order they appear
@@ -94,6 +95,8 @@ public class LinearCollaredRBNumericFunctionBuilder<X extends Number, Y extends 
     return label;
   }
 
+  // We wouldn't need these getters if we were just evaluating the function.
+  // However, we need them in order to convert the function to/from JSON.
   public X getMinX() {
     return minX;
   }
