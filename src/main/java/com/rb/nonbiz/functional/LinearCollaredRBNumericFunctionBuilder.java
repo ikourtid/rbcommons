@@ -14,8 +14,19 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 /**
  * This lets us build a linear function with a collar on its Y values (min + max) in a slightly more legible fashion.
  *
- * There is nothing preventing you from calling the setters out of order, but if you call them in the order they appear
- * then the resulting code will read a bit like an English sentence.
+ * <p> The function has <i>y</i>-values = </p>
+ * <ol>
+ *   <li> minY for x in (-inf, minX] </li>
+ *   <li> minY + [(x - minX) / (maxX - minX)] * (maxY - minY)  for x in [minX, maxX] </li>
+ *   <li> maxY for x in [maxX, +inf) </li>
+ * </ol>
+ *
+ * <p> Note that <i>minY</i> is the y-value at <i>minX</i> (or below) and
+ * <i>maxY</i> is the y-value at <i>maxX</i> (or above).
+ * As such, <i>minY</i> could be less than, equal to, or greater than <i>maxY</i>. </p>
+ *
+ * <p> There is nothing preventing you from calling the setters out of order, but if you call them in the order they appear
+ * then the resulting code will read a bit like an English sentence. </p>
  */
 public class LinearCollaredRBNumericFunctionBuilder<X extends Number, Y extends RBNumeric<? super Y>>
     implements RBBuilder<RBNumericFunction<X, Y>> {
@@ -78,6 +89,28 @@ public class LinearCollaredRBNumericFunctionBuilder<X extends Number, Y extends 
   private String generateAutoLabel() {
     return Strings.format("Linear between (X, Y) points ( %s , %s ) and ( %s, %s ); flat below minX and above maxX",
         minX, maxX, minY, maxY);
+  }
+
+  public HumanReadableLabel getLabel() {
+    return label;
+  }
+
+  // We wouldn't need these getters if we were just evaluating the function.
+  // However, we need them in order to convert the function to/from JSON.
+  public X getMinX() {
+    return minX;
+  }
+
+  public X getMaxX() {
+    return maxX;
+  }
+
+  public Y getMinY() {
+    return minY;
+  }
+
+  public Y getMaxY() {
+    return maxY;
   }
 
   @Override
