@@ -21,6 +21,17 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  *   <li> maxY for x in [maxX, +inf) </li>
  * </ol>
  *
+ * <p> In ASCII art: </p>
+ * <pre>
+ *           (maxX, maxY)
+ *                 *----------->
+ *                /
+ *               /
+ *              /
+ * <-----------*
+ *       (minX, minY)
+ * </pre>
+ *
  * <p> Note that <i>minY</i> is the y-value at <i>minX</i> (or below) and
  * <i>maxY</i> is the y-value at <i>maxX</i> (or above).
  * As such, <i>minY</i> could be less than, equal to, or greater than <i>maxY</i>. </p>
@@ -126,7 +137,7 @@ public class LinearCollaredRBNumericFunctionBuilder<X extends Number, Y extends 
     // depending on whether the slope is upwards or downwards, respectively.
     RBPreconditions.checkArgument(
         maxX.doubleValue() > minX.doubleValue(),
-        "%s : max must be bigger than min in the collar, but min= %s and max= %s",
+        "%s : maxX must be bigger than minX in the collar, but minX= %s and maxX= %s",
         label, minX, maxX);
     RBPreconditions.checkArgument(
         maxX.doubleValue() - minX.doubleValue() > 1e-8,
