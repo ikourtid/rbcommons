@@ -17,13 +17,15 @@ import java.util.function.Function;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 import static com.rb.nonbiz.text.Strings.formatMap;
+import static com.rb.nonbiz.text.Strings.formatOptional;
 
 /**
- * A function that maps a string to a RBNumeric,
+ * A function that maps a string to an {@link RBNumeric},
  * and either also allows a 'missing string' case (which maps to a constant RBNumeric),
- * or returns empty if a missing string is encountered..
+ * or returns empty if a missing string is encountered.
  *
- * A sample use case for this is ESG string-valued attributes, where an empty string means a special 'missing' value.
+ * <p> A sample use case for this is ESG string-valued attributes, where an empty
+ * string means a special 'missing' value. </p>
  */
 public class RBStringToNumericFunctionThatHandlesMissingValues<Y extends RBNumeric<? super Y>>
     implements Function<AllowsMissingValues<String>, Optional<Y>>, HasHumanReadableLabel {
@@ -89,8 +91,10 @@ public class RBStringToNumericFunctionThatHandlesMissingValues<Y extends RBNumer
 
   @Override
   public String toString() {
-    return Strings.format("[RBSTNFTHMV %s : %s %s %s RBSTNFTHMV]",
-        label, formatMap(stringToValueMap, " ; "), valueForUnknownString, valueForMissingString);
+    return Strings.format("[RBSTNFTHMV %s : %s ; forUnknown= %s ; forMissing= %s RBSTNFTHMV]",
+        label, formatMap(stringToValueMap, " ; "),
+        formatOptional(valueForUnknownString),
+        formatOptional(valueForMissingString));
   }
 
 

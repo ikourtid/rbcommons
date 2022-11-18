@@ -1,5 +1,6 @@
 package com.rb.nonbiz.functional;
 
+import com.rb.biz.types.Money;
 import com.rb.nonbiz.text.Strings;
 
 import java.util.Iterator;
@@ -9,10 +10,12 @@ import java.util.function.BinaryOperator;
  * An addition function (which, in general, may apply to non-scalars, such as TotalByPortfolioType),
  * a subtraction function, and an identity element.
  *
- * Note that T can be a datatype such that subtraction is not always defined, e.g. Money, where it has to be positive.
- * We'll just have to
+ * <p> Note that <i>T</i> can be a datatype such that subtraction is not always defined,
+ * e.g. {@link Money}, where it has to be positive. </p>
+ *
+ * <p> We'll just have to
  * make sure we only use this functionality in a situation that will not cause an exception - e.g. trying to subtract
- * money(10).subtract(money(11)).
+ * money(10).subtract(money(11)). </p>
  */
 public class AdditionSubtractionAndIdentityElement<T> {
 

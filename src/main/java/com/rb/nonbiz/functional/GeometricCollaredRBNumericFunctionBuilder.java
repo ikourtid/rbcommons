@@ -16,11 +16,11 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  * I don't know if there's a term for 'geometric interpolation', but one way to think about this intuitively is what
  * happens in the middle of the x range, i.e. (minX + maxX) / 2:
  *
- * With linear interpolation, the value in the middle is (minY + maxY) / 2, i.e. the arithmetic average of the Y range.
- * With geometric interpolation, the value in the middle is sqrt(minY * maxY), i.e. the geometric average of the Y range.
+ * <p> With linear interpolation, the value in the middle is (minY + maxY) / 2, i.e. the arithmetic average of the Y range.
+ * With geometric interpolation, the value in the middle is sqrt(minY * maxY), i.e. the geometric average of the Y range. </p>
  *
- * There is nothing preventing you from calling the setters out of order, but if you call them in the order they appear
- * then the resulting code will read a bit like an English sentence.
+ * <p> There is nothing preventing you from calling the setters out of order, but if you call them in the order they appear
+ * then the resulting code will read a bit like an English sentence. </p>
  *
  * @see GeometricCollaredRBNumericFunctionBuilder
  */
