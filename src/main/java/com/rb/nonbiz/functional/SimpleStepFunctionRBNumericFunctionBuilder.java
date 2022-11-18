@@ -34,9 +34,9 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  * </pre>
  *
  * <p> Note that the lower point is denoted with an open circle ("O") while the upper point
- * uses an asterix ("*"). This denotes that the y-value for x exactly at x0 will be y1, not y0. </p>
+ * uses an asterix ("*"). This denotes that for x = x0, y = y1, not y0. </p>
  *
- * <p> This class can also model the opposite choice: y = y0 for x <= x0 ; y = y1 for x > x0. </p>
+ * <p> This class can also model the opposite choice for y exactly at x0: </p>
  * <ul>
  *   <li> y = y0 for x <= x0. </li>
  *   <li> y = y1 for x >  x0. </li>
