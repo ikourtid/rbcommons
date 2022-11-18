@@ -24,8 +24,8 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
  * and either also allows a 'missing string' case (which maps to a constant RBNumeric),
  * or returns empty if a missing string is encountered.
  *
- * <p> A sample use case for this is ESG string-valued attributes, where an empty string
- * means a special 'missing' value. </p>
+ * <p> A sample use case for this is ESG string-valued attributes, where an empty
+ * string means a special 'missing' value. </p>
  */
 public class RBStringToNumericFunctionThatHandlesMissingValues<Y extends RBNumeric<? super Y>>
     implements Function<AllowsMissingValues<String>, Optional<Y>>, HasHumanReadableLabel {
@@ -91,10 +91,15 @@ public class RBStringToNumericFunctionThatHandlesMissingValues<Y extends RBNumer
 
   @Override
   public String toString() {
+<<<<<<< Updated upstream
     return Strings.format("[RBSTNFTHMV %s : %s ; forUnknown = %s ; forMissing= %s RBSTNFTHMV]",
         label, formatMap(stringToValueMap, " ; "),
         formatOptional(valueForUnknownString),
         formatOptional(valueForMissingString));
+=======
+    return Strings.format("[RBSTNFTHMV %s : %s ; forUnknown= %s ; forMissing= %s RBSTNFTHMV]",
+        label, formatMap(stringToValueMap, " ; "), valueForUnknownString, valueForMissingString);
+>>>>>>> Stashed changes
   }
 
 
