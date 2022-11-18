@@ -14,8 +14,10 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 /**
  * This lets us build a linear function with a collar on its Y values (min + max) in a slightly more legible fashion.
  *
- * There is nothing preventing you from calling the setters out of order, but if you call them in the order they appear
- * then the resulting code will read a bit like an English sentence.
+ * <p> There is nothing preventing you from calling the setters out of order, but if you call them in the order they appear
+ * then the resulting code will read a bit like an English sentence. </p>
+ *
+ * @see RBNumericFunction
  */
 public class LinearCollaredRBNumericFunctionBuilder<X extends Number, Y extends RBNumeric<? super Y>>
     implements RBBuilder<RBNumericFunction<X, Y>> {
