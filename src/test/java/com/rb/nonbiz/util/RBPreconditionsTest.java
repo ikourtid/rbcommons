@@ -25,6 +25,7 @@ import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
 public class RBPreconditionsTest {
 
@@ -237,6 +238,16 @@ public class RBPreconditionsTest {
     assertIllegalArgumentException( () -> runner.accept(ImmutableList.of(new Super(), new Sub1())));
     assertIllegalArgumentException( () -> runner.accept(ImmutableList.of(new Super(), new Sub1(), new Sub2())));
     assertIllegalArgumentException( () -> runner.accept(ImmutableList.of(new Super(), new Sub1(), new Sub1())));
+  }
+
+  @Test
+  public void testCheckThrows() {
+    fail("FIXME CDM please fill in some tests here; I (Iraklis) think it would be a good early coding rampup task");
+  }
+
+  @Test
+  public void testCheckThrowsAnyException() {
+    fail("FIXME CDM please fill in some tests here; I (Iraklis) think it would be a good early coding rampup task");
   }
 
 }

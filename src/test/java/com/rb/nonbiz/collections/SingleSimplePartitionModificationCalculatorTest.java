@@ -29,15 +29,15 @@ public class SingleSimplePartitionModificationCalculatorTest
                 "b", unitFraction(doubleExplained(0.22, 0.2 + 0.02)),  // increased by 0.02 from before
                 "c", unitFraction(doubleExplained(0.28, 0.3 - 0.02)),  // decreased by 0.02 from before
                 "d", unitFraction(0.4)))), // unchanged
-            simplePartitionModificationMatcher(
-                simplePartitionModificationBuilder()
-                    .setKeysToAddOrIncrease(rbMapOf(
-                        "x", unitFraction(0.1),
-                        "b", unitFraction(0.02)))
-                    .setKeysToRemoveOrDecrease(rbMapOf(
-                        "a", unitFraction(0.1),
-                        "c", unitFraction(0.02)))
-                    .build()));
+        simplePartitionModificationMatcher(
+            simplePartitionModificationBuilder()
+                .setKeysToAddOrIncrease(rbMapOf(
+                    "x", unitFraction(0.1),
+                    "b", unitFraction(0.02)))
+                .setKeysToRemoveOrDecrease(rbMapOf(
+                    "a", unitFraction(0.1),
+                    "c", unitFraction(0.02)))
+                .build()));
   }
 
   @Test

@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -227,6 +228,38 @@ public class RBPreconditions {
    */
   public static <T> void checkDoesNotThrow(T expression) {
     ; // intentionally does nothing; see method comment.
+  }
+
+  /**
+   * Throws if the {@link Runnable} does not throw an exception of the specified type.
+   * Does nothing otherwise.
+   */
+  public static <E extends Exception> void checkThrowsThisException(
+      Runnable runnable, Class<E> exceptionClass, String format, Object ... errorMessageArgs) {
+    try {
+      runnable.run();
+    } catch (Exception e) {
+      if (!e.getClass().isAssignableFrom(exceptionClass)) { // isAssignableFrom means 'is superclass of'
+        String originalMessage = Strings.format(format, errorMessageArgs);
+        throw new IllegalArgumentException(Strings.format(
+            "Expected an exception of type %s , but got one of type %s ; original error message is: %s",
+            exceptionClass, e.getClass(), originalMessage));
+      }
+      // OK, all good; we got an exception, and it was of a proper type.
+      return;
+    }
+    // If we got to this point, then it means that the runnable that was passed in
+    // didn't throw an exception as expected (whether of the type we expected, or another exception type),
+    // so that's wrong. Let's throw our own exception to indicate that.
+    throw new IllegalArgumentException(Strings.format(format, errorMessageArgs));
+  }
+
+  /**
+   * Throws if the {@link Runnable} does not throw an exception of the specified type.
+   * Does nothing otherwise.
+   */
+  public static void checkThrows(Runnable runnable, String format, Object ... errorMessageArgs) {
+    checkThrowsThisException(runnable, Exception.class, format, errorMessageArgs);
   }
 
 }
