@@ -23,19 +23,31 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  *
  * <p> In ASCII art: </p>
  * <pre>
- *           (maxX, maxY)
- *                 *----------->
- *                /
- *               /
- *              /
- * <-----------*
- *       (minX, minY)
+ *                 (maxX, maxY)
+ *                      *--------------->
+ *                     /
+ *                    /
+ *                   /
+ * <----------------*
+ *             (minX, minY)
  * </pre>
  *
- * <p> Note that <i>minY</i> is the y-value at <i>minX</i> (or below) and
- * <i>maxY</i> is the y-value at <i>maxX</i> (or above).
- * As such, <i>minY</i> could be less than, equal to, or greater than <i>maxY</i>. </p>
+ * <p> Note that the names 'minY' and 'maxY' are misleading.
+ * <i>minY</i> is the y-value at <i>x = minX</i> (or below) and
+ * <i>maxY</i> is the y-value at <i>x = maxX</i> (or above).
+ * As such, <i>minY</i> can be less than, equal to, or greater than <i>maxY</i>. </p>
  *
+ * <p> If <i>minY</i> > <i>maxY</i>, the upwardly-slanted line drawn above would slant downwards: </p>
+ * <pre>
+ *            (minX, minY)
+ * <---------------*
+ *                  \
+ *                   \
+ *                    \
+ *                     *--------------->
+ *                (maxX, maxY)
+ * </pre>
+
  * <p> There is nothing preventing you from calling the setters out of order, but if you call them in the order they appear
  * then the resulting code will read a bit like an English sentence. </p>
  */
@@ -158,8 +170,8 @@ public class LinearCollaredRBNumericFunctionBuilder<X extends Number, Y extends 
         label,
         x ->
             x <= minX.doubleValue() ? minY.doubleValue() :
-            x >= maxX.doubleValue() ? maxY.doubleValue() :
-                 minY.doubleValue() + slope * (x - minX.doubleValue()),
+                x >= maxX.doubleValue() ? maxY.doubleValue() :
+                    minY.doubleValue() + slope * (x - minX.doubleValue()),
         instantiator);
   }
 
