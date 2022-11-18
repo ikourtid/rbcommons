@@ -21,6 +21,18 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  *   <li> maxY for x in [maxX, +inf) </li>
  * </ol>
  *
+ * <p> In ASCII art: </p>
+ * <pre>
+ *                 (maxX, maxY)
+ *                      *--------------->
+ *                     /
+ *                    /
+ *                   /
+ * <----------------*
+ *             (minX, minY)
+ * </pre>
+ *
+ *
  * <p> Note that <i>minY</i> is the y-value at <i>minX</i> (or below) and
  * <i>maxY</i> is the y-value at <i>maxX</i> (or above).
  * As such, <i>minY</i> could be less than, equal to, or greater than <i>maxY</i>. </p>
