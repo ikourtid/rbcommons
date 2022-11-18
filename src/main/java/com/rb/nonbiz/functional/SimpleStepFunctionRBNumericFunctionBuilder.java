@@ -132,26 +132,19 @@ public class SimpleStepFunctionRBNumericFunctionBuilder<X extends Number, Y exte
         y0, x0, y1, yForXEqualsX0);
   }
 
-  // do not use this; it's here to help the test matcher
-  @VisibleForTesting
+  // The getters are here both for testing and for JSON API conversions
   public X getX0() {
     return x0;
   }
 
-  // do not use this; it's here to help the test matcher
-  @VisibleForTesting
   public Y getY0() {
     return y0;
   }
 
-  // do not use this; it's here to help the test matcher
-  @VisibleForTesting
   public Y getY1() {
     return y1;
   }
 
-  // do not use this; it's here to help the test matcher
-  @VisibleForTesting
   public Y getYForXEqualsX0() {
     return yForXEqualsX0;
   }
