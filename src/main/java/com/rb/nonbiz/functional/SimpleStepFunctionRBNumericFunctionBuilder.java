@@ -132,7 +132,7 @@ public class SimpleStepFunctionRBNumericFunctionBuilder<X extends Number, Y exte
         y0, x0, y1, yForXEqualsX0);
   }
 
-  // The getters are here both for testing and for JSON API conversions
+  // The getters are both for testing and for JSON API conversions.
   public X getX0() {
     return x0;
   }
