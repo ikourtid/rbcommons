@@ -149,7 +149,7 @@ public class LinearCollaredRBNumericFunctionBuilder<X extends Number, Y extends 
     // depending on whether the slope is upwards or downwards, respectively.
     RBPreconditions.checkArgument(
         maxX.doubleValue() > minX.doubleValue(),
-        "%s : max must be bigger than min in the collar, but min= %s and max= %s",
+        "%s : maxX must be bigger than minX in the collar, but minX= %s and maxX= %s",
         label, minX, maxX);
     RBPreconditions.checkArgument(
         maxX.doubleValue() - minX.doubleValue() > 1e-8,
@@ -170,8 +170,8 @@ public class LinearCollaredRBNumericFunctionBuilder<X extends Number, Y extends 
         label,
         x ->
             x <= minX.doubleValue() ? minY.doubleValue() :
-            x >= maxX.doubleValue() ? maxY.doubleValue() :
-                 minY.doubleValue() + slope * (x - minX.doubleValue()),
+                x >= maxX.doubleValue() ? maxY.doubleValue() :
+                    minY.doubleValue() + slope * (x - minX.doubleValue()),
         instantiator);
   }
 
