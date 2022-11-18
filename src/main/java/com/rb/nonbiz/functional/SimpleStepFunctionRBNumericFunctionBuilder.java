@@ -15,7 +15,42 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 /**
  * This lets you build a simple step function with one y-value Y0 below a specified X0, and another
- * value Y1 above.
+ * value Y1 at X0 or above:
+ * <ul>
+ *   <li> y = y0 for x <  x0. </li>
+ *   <li> y = y1 for x >= x0. </li>
+ * </ul>
+
+ *
+ * <p> In ASCII art: </p>
+ * <pre>
+ *               (x0, y1)
+ *                *-------------->
+ *                |
+ *                |
+ *                |
+ * <--------------O
+ *             (x0, y0)
+ * </pre>
+ *
+ * <p> Note that the lower point is denoted with an open circle ("O") while the upper point
+ * uses an asterix ("*"). This denotes that the y-value for x exactly at x0 will be y1, not y0. </p>
+ *
+ * <p> This class can also model the opposite choice: y = y0 for x <= x0 ; y = y1 for x > x0. </p>
+ * <ul>
+ *   <li> y = y0 for x <= x0. </li>
+ *   <li> y = y1 for x >  x0. </li>
+ * </ul>
+ *
+ * <pre>
+ *               (x0, y0)
+ * <--------------*
+ *                |
+ *                |
+ *                |
+ *                O-------------->
+ *             (x0, y1)
+ * </pre>
  *
  * <p> This is called "simple" because there is only a single step. In general, a step function could
  * have many regions of constant y-values {Y0, Y1, Y2, ...} separated by x-values {X0, X1, X2 ....}. </p>
