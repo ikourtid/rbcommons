@@ -11,7 +11,7 @@ import java.util.function.BinaryOperator;
  * a subtraction function, and an identity element.
  *
  * <p> Note that <i>T</i> can be a datatype such that subtraction is not always defined,
- * e.g. {@link Money}, where it has to be positive.
+ * e.g. {@link Money}, where it has to be positive. </p>
  *
  * <p> We'll just have to
  * make sure we only use this functionality in a situation that will not cause an exception - e.g. trying to subtract
