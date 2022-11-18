@@ -248,7 +248,8 @@ public class RBPreconditions {
       // OK, all good; we got an exception, and it was of a proper type.
       return;
     }
-    // The runnable didn't throw an exception as expected (whether of the type we expected, or another exception type),
+    // If we got to this point, then it means that the runnable that was passed in
+    // didn't throw an exception as expected (whether of the type we expected, or another exception type),
     // so that's wrong. Let's throw our own exception to indicate that.
     throw new IllegalArgumentException(Strings.format(format, errorMessageArgs));
   }
