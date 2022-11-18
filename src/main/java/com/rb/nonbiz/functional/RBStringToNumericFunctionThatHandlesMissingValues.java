@@ -91,15 +91,10 @@ public class RBStringToNumericFunctionThatHandlesMissingValues<Y extends RBNumer
 
   @Override
   public String toString() {
-<<<<<<< Updated upstream
-    return Strings.format("[RBSTNFTHMV %s : %s ; forUnknown = %s ; forMissing= %s RBSTNFTHMV]",
+    return Strings.format("[RBSTNFTHMV %s : %s ; forUnknown= %s ; forMissing= %s RBSTNFTHMV]",
         label, formatMap(stringToValueMap, " ; "),
         formatOptional(valueForUnknownString),
         formatOptional(valueForMissingString));
-=======
-    return Strings.format("[RBSTNFTHMV %s : %s ; forUnknown= %s ; forMissing= %s RBSTNFTHMV]",
-        label, formatMap(stringToValueMap, " ; "), valueForUnknownString, valueForMissingString);
->>>>>>> Stashed changes
   }
 
 
