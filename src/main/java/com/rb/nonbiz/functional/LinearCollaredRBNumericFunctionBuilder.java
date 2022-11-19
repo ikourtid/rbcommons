@@ -119,7 +119,7 @@ public class LinearCollaredRBNumericFunctionBuilder<X extends Number, Y extends 
   }
 
   // We wouldn't need these getters if we were just evaluating the function.
-  // However, we need them in order to convert the function to/from JSON.
+  // However, we need them in order to convert the function's parameters to/from JSON.
   public X getMinX() {
     return minX;
   }
