@@ -252,14 +252,15 @@ public class RBPreconditionsTest {
      // Easy case...no exception
     RBPreconditions.checkDoesNotThrow(runWithoutThrow);
 
-    // Check we catch specific exception type
+    // Check we catch that any exception is thrown
     RBPreconditions.checkThrows(runAndThrowList, "%s");
-    // Index out of bounds...check both throw that specific exception type, or general type
+    // Index out of bounds...check both catching that specific exception type, or general type
     RBPreconditions.checkThrowsThisException(runAndThrowList, IndexOutOfBoundsException.class, "%s");
     RBPreconditions.checkThrowsThisException(runAndThrowList, Exception.class, "%s");
 
-    // Check divide by zero...specific and general
+    // Check divide by zero throws an exception
     RBPreconditions.checkThrows(runAndThrowDivZero, "%s");
+    // CHeck the specific type of exception thrown, comparing vs. the general exception class and the arithmatic exception
     RBPreconditions.checkThrowsThisException(runAndThrowDivZero, ArithmeticException.class, "%s");
     RBPreconditions.checkThrowsThisException(runAndThrowDivZero, Exception.class, "%s");
 
