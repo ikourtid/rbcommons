@@ -2,9 +2,12 @@ package com.rb.nonbiz.util;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.collections.Pair;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
@@ -241,13 +244,59 @@ public class RBPreconditionsTest {
   }
 
   @Test
-  public void testCheckThrows() {
-    fail("FIXME CDM please fill in some tests here; I (Iraklis) think it would be a good early coding rampup task");
+  public void testCheckThrows(){
+    Runnable runWithoutThrow = () -> System.out.println("I will not raise an exception");
+    Runnable runAndThrowList = () -> {List<Integer> myList = new ArrayList(); Integer i = myList.get(2);};
+    Runnable runAndThrowDivZero = () -> {int i = 2 / 0;};
+
+     // Easy case...no exception
+    RBPreconditions.checkDoesNotThrow(runWithoutThrow);
+
+    // Check we catch specific exception type
+    RBPreconditions.checkThrows(runAndThrowList, "%s");
+    // Index out of bounds...check both throw that specific exception type, or general type
+    RBPreconditions.checkThrowsThisException(runAndThrowList, IndexOutOfBoundsException.class, "%s");
+    RBPreconditions.checkThrowsThisException(runAndThrowList, Exception.class, "%s");
+
+    // Check divide by zero...specific and general
+    RBPreconditions.checkThrows(runAndThrowDivZero, "%s");
+    RBPreconditions.checkThrowsThisException(runAndThrowDivZero, ArithmeticException.class, "%s");
+    RBPreconditions.checkThrowsThisException(runAndThrowDivZero, Exception.class, "%s");
+
+    // Here the precondition should fail because the wrong exception type is thrown...so we should throw an exception
+    // What better way to check we throw an exception than...rbPreconditionCHeckThrows
+    Runnable isntThisMeta = () -> RBPreconditions.checkThrowsThisException(runAndThrowDivZero, IndexOutOfBoundsException.class, "%s");
+    RBPreconditions.checkThrows(isntThisMeta, "%s");
+    // In case we want to be super picky, and not use the code we're testing to test the code we're testing, I'll do it again
+    boolean didThrow = false;
+    try {
+      RBPreconditions.checkThrowsThisException(runAndThrowDivZero, IndexOutOfBoundsException.class, "%s");
+    } catch(Exception e){
+      didThrow = true;
+    }
+    assert(didThrow);
+
   }
 
   @Test
   public void testCheckThrowsAnyException() {
-    fail("FIXME CDM please fill in some tests here; I (Iraklis) think it would be a good early coding rampup task");
-  }
+    // This one is easy using some cut copy from above
+    // I already did a robust checkThrow above
+    Runnable runWithoutThrow = () -> System.out.println("I will not raise an exception");
+    Runnable runAndThrowList = () -> {List<Integer> myList = new ArrayList(); Integer i = myList.get(2);};
+    RBPreconditions.checkThrows(runAndThrowList, "%s");
 
+    // Make sure we throw if the runnable doesn't throw
+    Runnable isntThisMeta = () -> RBPreconditions.checkThrows(runWithoutThrow, "%s");
+    RBPreconditions.checkThrows(isntThisMeta, "%s");
+    // Again, to be uber picky, we can check the code without using the code we're checking
+    boolean didThrow = false;
+    try{
+      RBPreconditions.checkThrows(runWithoutThrow, "%s");
+    }
+    catch(Exception e){
+      didThrow = true;
+    }
+    assert(didThrow);
+  }
 }

@@ -239,7 +239,11 @@ public class RBPreconditions {
     try {
       runnable.run();
     } catch (Exception e) {
-      if (!e.getClass().isAssignableFrom(exceptionClass)) { // isAssignableFrom means 'is superclass of'
+      // The exception type thrown (e) should be the same as or a sub-class of the exception type we expect
+      // Previous version was opposite
+      boolean isCorrectExceptionType = exceptionClass.isAssignableFrom(e.getClass());// isAssignableFrom means 'is superclass of'
+
+      if (!isCorrectExceptionType) {
         String originalMessage = Strings.format(format, errorMessageArgs);
         throw new IllegalArgumentException(Strings.format(
             "Expected an exception of type %s , but got one of type %s ; original error message is: %s",
