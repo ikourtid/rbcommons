@@ -5,13 +5,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.Pair;
+import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.text.Strings;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -23,6 +26,7 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairTest.pairEqualityMatcher;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.json.RBGson.jsonBoolean;
@@ -47,6 +51,8 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.nCopies;
+import static java.util.Map.Entry.comparingByKey;
+import static java.util.Map.Entry.comparingByValue;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -249,6 +255,42 @@ public class RBJsonArraysTest {
     asserter.accept(
         emptyJsonArray(),
         emptyRBSet());
+  }
+
+  @Test
+  public void test_rbMapToJsonArray() {
+    RBMap<String, Integer> rbMap = rbMapOf(
+        "a", 4,
+        "b", 3,
+        "c", 2,
+        "d", 1);
+
+    BiConsumer<Comparator<Entry<String, Integer>>, JsonArray> asserter = (comparator, expectedArray) ->
+        assertThat(
+            rbMapToJsonArray(
+                rbMap,
+                comparator,
+                (key, value) -> jsonString(String.format("%s_%s", key, value))),
+            jsonArrayExactMatcher(
+                expectedArray));
+
+    // sort by key
+    asserter.accept(
+        comparingByKey(),
+        jsonArray(
+            jsonString("a_4"),
+            jsonString("b_3"),
+            jsonString("c_2"),
+            jsonString("d_1")));
+
+    // sort by value
+    asserter.accept(
+        comparingByValue(),
+        jsonArray(
+            jsonString("d_1"),
+            jsonString("c_2"),
+            jsonString("b_3"),
+            jsonString("a_4")));
   }
 
   @Test
