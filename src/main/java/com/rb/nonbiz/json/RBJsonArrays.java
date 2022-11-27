@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.MutableRBSet;
+import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBStreams;
 import com.rb.nonbiz.types.ImpreciseValue;
@@ -16,7 +17,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
@@ -234,6 +237,18 @@ public class RBJsonArrays {
         rbSet.size(),
         rbSet.stream().sorted(comparator),
         serializer);
+  }
+
+  public static <K, V> JsonArray rbMapToJsonArray(
+      RBMap<K, V> rbMap,
+      Comparator<Entry<K, V>> comparator,
+      BiFunction<K, V, JsonElement> serializer) {
+    return streamToJsonArray(
+        rbMap.size(),
+        rbMap.entrySet()
+            .stream()
+            .sorted(comparator),
+        entry -> serializer.apply(entry.getKey(), entry.getValue()));
   }
 
   public static void ifHasJsonArrayProperty(
