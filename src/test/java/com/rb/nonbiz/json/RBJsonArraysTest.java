@@ -270,7 +270,7 @@ public class RBJsonArraysTest {
         assertThat(
             rbMapToJsonArray(rbMap,
                 comparator,
-                (key, value) -> jsonString(String.format("%s_%s", key, value))),
+                entry -> jsonString(String.format("%s_%s", entry.getKey(), entry.getValue()))),
             jsonArrayExactMatcher(
                 expectedArray));
 

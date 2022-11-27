@@ -242,13 +242,13 @@ public class RBJsonArrays {
   public static <K, V> JsonArray rbMapToJsonArray(
       RBMap<K, V> rbMap,
       Comparator<Entry<K, V>> comparator,
-      BiFunction<K, V, JsonElement> serializer) {
+      Function<Entry<K, V>, JsonElement> serializer) {
     return streamToJsonArray(
         rbMap.size(),
         rbMap.entrySet()
             .stream()
             .sorted(comparator),
-        entry -> serializer.apply(entry.getKey(), entry.getValue()));
+        entry -> serializer.apply(entry));
   }
 
   public static void ifHasJsonArrayProperty(
