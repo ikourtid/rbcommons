@@ -51,7 +51,6 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.nCopies;
-import static java.util.Comparator.comparing;
 import static java.util.Map.Entry.comparingByKey;
 import static java.util.Map.Entry.comparingByValue;
 import static junit.framework.TestCase.assertEquals;
@@ -268,9 +267,10 @@ public class RBJsonArraysTest {
 
     BiConsumer<Comparator<Entry<String, Integer>>, JsonArray> asserter = (comparator, expectedArray) ->
         assertThat(
-            rbMapToJsonArray(rbMap,
+            rbMapToJsonArray(
+                rbMap,
                 comparator,
-                entry -> jsonString(String.format("%s_%s", entry.getKey(), entry.getValue()))),
+                (key, value) -> jsonString(String.format("%s_%s", key, value))),
             jsonArrayExactMatcher(
                 expectedArray));
 
