@@ -283,7 +283,6 @@ public class RBJsonArraysTest {
             jsonString("c_2"),
             jsonString("d_1")));
 
-
     // sort by value
     asserter.accept(
         comparingByValue(),
