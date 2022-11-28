@@ -152,6 +152,9 @@ public class PriceTest {
     assertAlmostEquals(medium.multiply(signedQuantity(0.5)),  signedMoney(3.5),  1e-8);
     assertAlmostEquals(medium.multiply(signedQuantity(1)),    signedMoney(7),    1e-8);
     assertAlmostEquals(medium.multiply(signedQuantity(2)),    signedMoney(14),   1e-8);
+
+    // Test multiplying by a plain old double
+    assertAlmostEquals(medium.multiply(2.0), price(14), 1e-8);
   }
 
   @Test
@@ -165,6 +168,19 @@ public class PriceTest {
     assertAlmostEquals(medium.divide(halfMedium),  onesBasedReturn(2),   1e-8);
     assertAlmostEquals(medium.divide(medium),      FLAT_RETURN,          1e-8);
     assertAlmostEquals(medium.divide(twiceMedium), onesBasedReturn(0.5), 1e-8);
+
+    assertAlmostEquals(medium.divide(2.0), price(3.5), 1e-8);
+  }
+
+  @Test
+  public void testAveragePrice() {
+    assertAlmostEquals(price(20.0), Price.averagePrice(price(10.0), price(30.0)), 1e-8);
+    assertAlmostEquals(price(31.0), Price.averagePrice(price(1.0), price(61.0)), 1e-8);
+  }
+
+  @Test
+  public void testToString(){
+    assertEquals(price(20.0).toString(2), "20.00");
   }
 
   @Test
