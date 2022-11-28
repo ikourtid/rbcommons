@@ -4,9 +4,12 @@ import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.text.Strings;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -208,6 +211,48 @@ public class RBSetTest {
 
     // duplicate keys not allowed
     assertIllegalArgumentException( () -> abc.toRBMapWithTransformedKeys(key -> "allKeysTheSame", value -> value));
+  }
+
+  @Test
+  public void testConstructors()
+  {
+    /* Start of by testing a set of empty constructors*/
+    RBSet<Integer> empty1 =newRBSet();
+    assertEquals(empty1.size(), 0);
+    assertEquals(empty1.isEmpty(), true);
+    // Create empty set from collection
+    ArrayList<Integer> emptyList = new ArrayList<Integer>();
+    RBSet<Integer> empty2 = newRBSet(emptyList);
+    assertEquals(empty2.size(), 0);
+    // Create java set from RB Set
+    Set<Integer> javaSet = empty1.asSet();
+    assertEquals(javaSet.size(), 0);
+
+    // Create empty set from iterator
+    RBSet<Integer> empty3 = newRBSet(emptyList.iterator());
+    assertEquals(empty3.size(),0);
+
+    /* Next create objects with 2 items*/
+    ArrayList<Integer> numbersList = new ArrayList<Integer>();
+    numbersList.add(1);
+    numbersList.add(7);
+    ArrayList<Integer> differentNumbersList = new ArrayList<Integer>();
+    differentNumbersList.add(1);
+    differentNumbersList.add(10);
+    RBSet<Integer> numbersSet1 = newRBSet(numbersList.iterator());
+    RBSet<Integer> numbersSet2 = newRBSet(numbersList);
+    ArrayList<RBSet<Integer>> sets = new ArrayList<RBSet<Integer>>();
+    sets.add(numbersSet1);
+    sets.add(numbersSet2);
+    for(RBSet<Integer> rbSet : sets) {
+      assertEquals(rbSet.size(), 2);
+      assertEquals(rbSet.contains(1), true);
+      assertEquals(rbSet.contains(6), false);
+      assertEquals(rbSet.contains(7), true);
+      assertEquals(rbSet.containsAll(numbersList), true);
+      assertEquals(rbSet.containsAll(numbersList), true);
+      assertEquals(rbSet.containsAll(differentNumbersList), false);
+    };
   }
 
   @Test
