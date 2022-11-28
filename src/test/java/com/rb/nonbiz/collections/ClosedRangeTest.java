@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
+import com.rb.nonbiz.testutils.Epsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -18,6 +19,8 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
+import static org.apache.commons.math3.distribution.PoissonDistribution.DEFAULT_EPSILON;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class ClosedRangeTest extends RBTestMatcher<ClosedRange<Year>> {
@@ -40,6 +43,19 @@ public class ClosedRangeTest extends RBTestMatcher<ClosedRange<Year>> {
   public void testOptionalIntersection() {
     assertOptionalEmpty(optionalClosedRangeIntersection(closedRange(1, 3), closedRange(5, 7)));
     assertOptionalEmpty(optionalClosedRangeIntersection(closedRange(5, 7), closedRange(1, 3)));
+
+    // Intersection is empty by only EPSILON
+    assertOptionalEmpty(optionalClosedRangeIntersection(closedRange(13.0, 15.0), closedRange(15.0 + DEFAULT_EPSILON, 17.0)));
+    assertOptionalEmpty(optionalClosedRangeIntersection(closedRange(1.0, 2.0 - DEFAULT_EPSILON), closedRange(2.0, 6.0)));
+
+    // Intersection is non-empty because both end points contain the same double value
+    assertOptionalNonEmpty(optionalClosedRangeIntersection(closedRange(13.0, 15.0), closedRange(15.0, 17.0)));
+    assertOptionalNonEmpty(optionalClosedRangeIntersection(closedRange(1.0, 2.0), closedRange(2.0, 6.0)));
+    assertOptionalNonEmpty(optionalClosedRangeIntersection(closedRange(-10.0, -2.0), closedRange(-2.0, 6.0)));
+
+    // Intersection is non-empty because both end points contain the same integer
+    assertOptionalNonEmpty(optionalClosedRangeIntersection(closedRange(21, 22), closedRange(22, 26)));
+    assertOptionalNonEmpty(optionalClosedRangeIntersection(closedRange(-21, -19), closedRange(-19, -2)));
   }
 
   @Test
