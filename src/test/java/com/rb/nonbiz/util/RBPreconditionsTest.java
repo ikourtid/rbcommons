@@ -28,6 +28,7 @@ import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class RBPreconditionsTest {
@@ -253,51 +254,49 @@ public class RBPreconditionsTest {
     RBPreconditions.checkDoesNotThrow(runWithoutThrow);
 
     // Check we catch that any exception is thrown
-    RBPreconditions.checkThrows(runAndThrowList, "%s");
+    RBPreconditions.checkThrows(runAndThrowList, "");
     // Index out of bounds...check both catching that specific exception type, or general type
-    RBPreconditions.checkThrowsThisException(runAndThrowList, IndexOutOfBoundsException.class, "%s");
-    RBPreconditions.checkThrowsThisException(runAndThrowList, Exception.class, "%s");
+    RBPreconditions.checkThrowsThisException(runAndThrowList, IndexOutOfBoundsException.class, "");
+    RBPreconditions.checkThrowsThisException(runAndThrowList, Exception.class, "");
 
     // Check divide by zero throws an exception
-    RBPreconditions.checkThrows(runAndThrowDivZero, "%s");
-    // CHeck the specific type of exception thrown, comparing vs. the general exception class and the arithmatic exception
-    RBPreconditions.checkThrowsThisException(runAndThrowDivZero, ArithmeticException.class, "%s");
-    RBPreconditions.checkThrowsThisException(runAndThrowDivZero, Exception.class, "%s");
+    RBPreconditions.checkThrows(runAndThrowDivZero, "");
+    // Check the specific type of exception thrown, comparing vs. the general exception class and the arithmatic exception
+    RBPreconditions.checkThrowsThisException(runAndThrowDivZero, ArithmeticException.class, "");
+    RBPreconditions.checkThrowsThisException(runAndThrowDivZero, Exception.class, "");
 
     // Here the precondition should fail because the wrong exception type is thrown...so we should throw an exception
-    // What better way to check we throw an exception than...rbPreconditionCHeckThrows
-    Runnable isntThisMeta = () -> RBPreconditions.checkThrowsThisException(runAndThrowDivZero, IndexOutOfBoundsException.class, "%s");
-    RBPreconditions.checkThrows(isntThisMeta, "%s");
-    // In case we want to be super picky, and not use the code we're testing to test the code we're testing, I'll do it again
+    // First we use rbPreconditionCheckThrows to check that we threw the exception
+    Runnable shouldThrowBecauseWrongExceptionType = () -> RBPreconditions.checkThrowsThisException(runAndThrowDivZero, IndexOutOfBoundsException.class, "");
+    RBPreconditions.checkThrows(shouldThrowBecauseWrongExceptionType, "");
+    // Check the same code, but not use the code we're testing to test the code we're testing.
     boolean didThrow = false;
     try {
-      RBPreconditions.checkThrowsThisException(runAndThrowDivZero, IndexOutOfBoundsException.class, "%s");
+      RBPreconditions.checkThrowsThisException(runAndThrowDivZero, IndexOutOfBoundsException.class, "");
     } catch(Exception e){
       didThrow = true;
     }
-    assert(didThrow);
-
+    assertTrue(didThrow);
   }
 
   @Test
   public void testCheckThrowsAnyException() {
-    // This one is easy using some cut copy from above
-    // I already did a robust checkThrow above
+    // This one is easy using some cut copy from testCheckThrows, since these were more general
     Runnable runWithoutThrow = () -> System.out.println("I will not raise an exception");
     Runnable runAndThrowList = () -> {List<Integer> myList = new ArrayList(); Integer i = myList.get(2);};
-    RBPreconditions.checkThrows(runAndThrowList, "%s");
+    RBPreconditions.checkThrows(runAndThrowList, "");
 
     // Make sure we throw if the runnable doesn't throw
-    Runnable isntThisMeta = () -> RBPreconditions.checkThrows(runWithoutThrow, "%s");
-    RBPreconditions.checkThrows(isntThisMeta, "%s");
-    // Again, to be uber picky, we can check the code without using the code we're checking
+    Runnable isntThisMeta = () -> RBPreconditions.checkThrows(runWithoutThrow, "");
+    RBPreconditions.checkThrows(isntThisMeta, "");
+    // Again, to be robust, we can check the code without using the code we're checking
     boolean didThrow = false;
     try{
-      RBPreconditions.checkThrows(runWithoutThrow, "%s");
+      RBPreconditions.checkThrows(runWithoutThrow, "");
     }
     catch(Exception e){
       didThrow = true;
     }
-    assert(didThrow);
+    assertTrue(didThrow);
   }
 }

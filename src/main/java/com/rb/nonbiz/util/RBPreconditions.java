@@ -265,5 +265,4 @@ public class RBPreconditions {
   public static void checkThrows(Runnable runnable, String format, Object ... errorMessageArgs) {
     checkThrowsThisException(runnable, Exception.class, format, errorMessageArgs);
   }
-
 }
