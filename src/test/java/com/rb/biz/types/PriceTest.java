@@ -11,6 +11,7 @@ import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.OnesBasedReturn.FLAT_RETURN;
 import static com.rb.biz.types.OnesBasedReturn.onesBasedReturn;
+import static com.rb.biz.types.Price.averagePrice;
 import static com.rb.biz.types.Price.maxPrice;
 import static com.rb.biz.types.Price.minPrice;
 import static com.rb.biz.types.Price.price;
@@ -174,8 +175,8 @@ public class PriceTest {
 
   @Test
   public void testAveragePrice() {
-    assertAlmostEquals(price(20.0), Price.averagePrice(price(10.0), price(30.0)), 1e-8);
-    assertAlmostEquals(price(31.0), Price.averagePrice(price(1.0), price(61.0)), 1e-8);
+    assertAlmostEquals(price(20.0), averagePrice(price(10.0), price(30.0)), 1e-8);
+    assertAlmostEquals(price(31.0), averagePrice(price(1.0), price(61.0)), 1e-8);
   }
 
   @Test

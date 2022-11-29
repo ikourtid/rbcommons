@@ -68,7 +68,6 @@ public class Price extends PreciseValue<Price> {
   }
 
   public Price multiply(double multiplier) {
-
     return price(doubleValue() * multiplier);
   }
 
