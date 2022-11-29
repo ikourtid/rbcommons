@@ -238,7 +238,7 @@ public class RBSetTest {
 
     // Next create objects with 2 items
     ArrayList<Integer> numbersList = newArrayList(1, 7);
-    RBSet<Integer> numbersSet1 = newRBSet(newArrayList(1, 7).iterator());
+    RBSet<Integer> numbersSet1 = newRBSet(numbersList.iterator());
     RBSet<Integer> numbersSet2 = newRBSet(numbersList);
     ArrayList<RBSet<Integer>> sets = newArrayList(numbersSet1, numbersSet2);
     assertEquals(2, sets.size());

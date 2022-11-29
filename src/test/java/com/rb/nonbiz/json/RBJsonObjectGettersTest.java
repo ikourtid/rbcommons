@@ -656,6 +656,18 @@ public class RBJsonObjectGettersTest {
     JsonObject jsonObject = jsonObject(
         "a",          jsonString("xyz"),
         "notAString", jsonDouble(1.23));
+
+    assertEquals("xyz",          getJsonStringOrDefault(jsonObject, "a",          DUMMY_STRING));
+    assertEquals("defaultValue", getJsonStringOrDefault(jsonObject, "missingKey", "defaultValue"));
+
+    assertIllegalArgumentException( () -> getJsonStringOrDefault(jsonObject, "notAString", DUMMY_STRING));
+  }
+
+  @Test
+  public void test_getJsonStringOrDefault_overload() {
+    JsonObject jsonObject = jsonObject(
+        "a",          jsonString("xyz"),
+        "notAString", jsonDouble(1.23));
     assertEquals(
         "...",
         getJsonStringOrDefault(jsonObject, "b", v -> Strings.format("_%s_", v), "..."));
