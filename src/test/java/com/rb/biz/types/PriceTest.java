@@ -11,6 +11,7 @@ import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.OnesBasedReturn.FLAT_RETURN;
 import static com.rb.biz.types.OnesBasedReturn.onesBasedReturn;
+import static com.rb.biz.types.Price.averagePrice;
 import static com.rb.biz.types.Price.maxPrice;
 import static com.rb.biz.types.Price.minPrice;
 import static com.rb.biz.types.Price.price;
@@ -152,6 +153,9 @@ public class PriceTest {
     assertAlmostEquals(medium.multiply(signedQuantity(0.5)),  signedMoney(3.5),  1e-8);
     assertAlmostEquals(medium.multiply(signedQuantity(1)),    signedMoney(7),    1e-8);
     assertAlmostEquals(medium.multiply(signedQuantity(2)),    signedMoney(14),   1e-8);
+
+    // Test multiplying by a plain old double
+    assertAlmostEquals(price(14), medium.multiply(2.0), 1e-8);
   }
 
   @Test
@@ -165,6 +169,19 @@ public class PriceTest {
     assertAlmostEquals(medium.divide(halfMedium),  onesBasedReturn(2),   1e-8);
     assertAlmostEquals(medium.divide(medium),      FLAT_RETURN,          1e-8);
     assertAlmostEquals(medium.divide(twiceMedium), onesBasedReturn(0.5), 1e-8);
+
+    assertAlmostEquals(price(3.5), medium.divide(2.0), 1e-8);
+  }
+
+  @Test
+  public void testAveragePrice() {
+    assertAlmostEquals(price(20.0), averagePrice(price(10.0), price(30.0)), 1e-8);
+    assertAlmostEquals(price(31.0), averagePrice(price(1.0), price(61.0)), 1e-8);
+  }
+
+  @Test
+  public void testToString(){
+    assertEquals("20.00", price(20.0).toString(2));
   }
 
   @Test
