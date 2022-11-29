@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -18,13 +19,16 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.newRBSetFromPossibleDuplicates;
+import static com.rb.nonbiz.collections.RBSet.rbSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class RBSetTest {
 
@@ -214,44 +218,38 @@ public class RBSetTest {
   }
 
   @Test
-  public void testConstructors()
-  {
-    /* Start of by testing a set of empty constructors*/
-    RBSet<Integer> empty1 =newRBSet();
-    assertEquals(empty1.size(), 0);
-    assertEquals(empty1.isEmpty(), true);
+  public void testConstructors() {
+    // Start of by testing a set of empty constructors
+    RBSet<Integer> empty1 = newRBSet();
+    assertEquals(0, empty1.size());
+    assertTrue(empty1.isEmpty());
     // Create empty set from collection
     ArrayList<Integer> emptyList = new ArrayList<Integer>();
     RBSet<Integer> empty2 = newRBSet(emptyList);
-    assertEquals(empty2.size(), 0);
-    // Create java set from RB Set
-    Set<Integer> javaSet = empty1.asSet();
-    assertEquals(javaSet.size(), 0);
+    assertEquals(0, empty2.size());
+    // Create java set from RB Set.  This constructor seems to have a different naming convention
+    RBSet<Integer> empty3 = rbSet(empty1.asSet());
+    assertEquals(0, empty3.size());
+    RBSet<Integer> oneNumber = rbSet(new HashSet<Integer>(newArrayList(1)));
+    assertEquals(1, oneNumber.size());
 
     // Create empty set from iterator
-    RBSet<Integer> empty3 = newRBSet(emptyList.iterator());
-    assertEquals(empty3.size(),0);
+    assertEquals(0, newRBSet(emptyList.iterator()).size());
 
-    /* Next create objects with 2 items*/
-    ArrayList<Integer> numbersList = new ArrayList<Integer>();
-    numbersList.add(1);
-    numbersList.add(7);
-    ArrayList<Integer> differentNumbersList = new ArrayList<Integer>();
-    differentNumbersList.add(1);
-    differentNumbersList.add(10);
-    RBSet<Integer> numbersSet1 = newRBSet(numbersList.iterator());
+    // Next create objects with 2 items
+    ArrayList<Integer> numbersList = newArrayList(1, 7);
+    RBSet<Integer> numbersSet1 = newRBSet(newArrayList(1, 7).iterator());
     RBSet<Integer> numbersSet2 = newRBSet(numbersList);
-    ArrayList<RBSet<Integer>> sets = new ArrayList<RBSet<Integer>>();
-    sets.add(numbersSet1);
-    sets.add(numbersSet2);
+    ArrayList<RBSet<Integer>> sets = newArrayList(numbersSet1, numbersSet2);
+    assertEquals(2, sets.size());
     for(RBSet<Integer> rbSet : sets) {
-      assertEquals(rbSet.size(), 2);
-      assertEquals(rbSet.contains(1), true);
-      assertEquals(rbSet.contains(6), false);
-      assertEquals(rbSet.contains(7), true);
-      assertEquals(rbSet.containsAll(numbersList), true);
-      assertEquals(rbSet.containsAll(numbersList), true);
-      assertEquals(rbSet.containsAll(differentNumbersList), false);
+      assertEquals(2, rbSet.size());
+      assertTrue(rbSet.contains(1));
+      assertFalse(rbSet.contains(6));
+      assertTrue(rbSet.contains(7));
+      assertTrue(rbSet.containsAll(numbersList));
+      assertTrue(rbSet.containsAll(numbersList));
+      assertFalse(rbSet.containsAll(newArrayList(1, 10)));
     };
   }
 
