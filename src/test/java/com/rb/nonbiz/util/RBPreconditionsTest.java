@@ -245,7 +245,7 @@ public class RBPreconditionsTest {
   }
 
   @Test
-  public void testCheckThrows(){
+  public void testCheckThrowsThisException(){
     Runnable runWithoutThrow = () -> System.out.println("I will not raise an exception");
     Runnable runAndThrowList = () -> {List<Integer> myList = new ArrayList(); Integer i = myList.get(2);};
     Runnable runAndThrowDivZero = () -> {int i = 2 / 0;};
@@ -280,7 +280,7 @@ public class RBPreconditionsTest {
   }
 
   @Test
-  public void testCheckThrowsAnyException() {
+  public void testCheckThrows() {
     // This one is easy using some cut copy from testCheckThrows, since these were more general
     Runnable runWithoutThrow = () -> System.out.println("I will not raise an exception");
     Runnable runAndThrowList = () -> {List<Integer> myList = new ArrayList(); Integer i = myList.get(2);};
