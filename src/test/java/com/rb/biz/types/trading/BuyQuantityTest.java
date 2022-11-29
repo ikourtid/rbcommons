@@ -3,12 +3,15 @@ package com.rb.biz.types.trading;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.Price.ZERO_PRICE;
 import static com.rb.biz.types.Price.price;
 import static com.rb.biz.types.trading.BuyQuantity.buyQuantity;
+import static com.rb.biz.types.trading.BuyQuantity.sumBuyQuantities;
 import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -65,6 +68,10 @@ public class BuyQuantityTest {
     // but can have money(0)
     assertEquals(ZERO_MONEY, buyQuantity11.multiply(ZERO_MONEY));
     assertEquals(ZERO_MONEY, buyQuantity11.multiply(ZERO_PRICE));
+
+    // Test sum
+    ArrayList<BuyQuantity> buyQuantities = newArrayList(buyQuantity11, buyQuantity33);
+    assertEquals(buyQuantity(44), sumBuyQuantities(buyQuantities.iterator()));
   }
 
 }
