@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.Price.ZERO_PRICE;
@@ -12,6 +13,7 @@ import static com.rb.biz.types.Price.price;
 import static com.rb.biz.types.trading.BuyQuantity.buyQuantity;
 import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
 import static com.rb.biz.types.trading.SellQuantity.sellQuantity;
+import static com.rb.biz.types.trading.SellQuantity.sumSellQuantities;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static org.junit.Assert.assertEquals;
@@ -69,10 +71,8 @@ public class SellQuantityTest {
     assertEquals(ZERO_MONEY, sellQuantity11.multiply(ZERO_PRICE));
 
     // Test sum
-    ArrayList<SellQuantity> sellQuantities = new ArrayList<SellQuantity>();
-    sellQuantities.add(sellQuantity11);
-    sellQuantities.add(sellQuantity33);
-    assertEquals(sellQuantity(44), SellQuantity.sumSellQuantities(sellQuantities.iterator()));
+    ArrayList<SellQuantity> sellQuantities = newArrayList(sellQuantity11, sellQuantity33);
+    assertEquals(sellQuantity(44), sumSellQuantities(sellQuantities.iterator()));
   }
 
 }
