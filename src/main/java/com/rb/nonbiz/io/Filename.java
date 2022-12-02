@@ -23,10 +23,10 @@ public class Filename {
 
   public static Filename filename(String rawString){
     if (rawString.length() == 0) {
-      throw new IllegalArgumentException("Filename cannot be an empty stirng");
+      throw new IllegalArgumentException("Filename cannot be an empty string");
     }
     if (StringUtils.containsAny(rawString, ILLEGAL_CHARACTERS)) {
-      throw new IllegalArgumentException("Filename cannot contain illegal characters");
+      throw new IllegalArgumentException("Filename cannot contain illegal characters: " + rawString);
     }
     return new Filename(rawString);
   }
