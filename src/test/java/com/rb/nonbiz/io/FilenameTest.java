@@ -1,6 +1,7 @@
 package com.rb.nonbiz.io;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.util.RBPreconditions;
 import org.junit.Test;
 
 import static com.rb.nonbiz.io.Filename.filename;
@@ -14,6 +15,17 @@ public class FilenameTest extends RBTestMatcher<Filename> {
     Filename myFilename = filename("out.txt");
     assertEquals("out.txt", myFilename.getFilename());
     assertNotSame("someotherstring", myFilename.getFilename());
+  }
+
+  @Test
+  public void testFilenameValidation(){
+    Runnable emptyFilename = () -> filename("");
+    Runnable badFilename = () -> filename("\\!@#$%^&*()");
+    Runnable goodFilename = () -> filename("output.txt");
+
+    RBPreconditions.checkThrowsThisException(emptyFilename, IllegalArgumentException.class, "");
+    RBPreconditions.checkThrowsThisException(badFilename, IllegalArgumentException.class, "");
+    RBPreconditions.checkDoesNotThrow(goodFilename);
   }
 
   // I really don't have a strong opinion on what makes a filename trivial, so this is a short filename
