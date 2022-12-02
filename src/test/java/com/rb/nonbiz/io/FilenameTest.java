@@ -1,10 +1,14 @@
 package com.rb.nonbiz.io;
 
+import com.rb.nonbiz.testmatchers.Match;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.util.RBPreconditions;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import static com.rb.nonbiz.io.Filename.filename;
+import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
+import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
@@ -47,6 +51,10 @@ public class FilenameTest extends RBTestMatcher<Filename> {
   @Override
   protected boolean willMatch(Filename expected, Filename actual) {
     return expected.getFilename() == actual.getFilename();
+  }
+
+  public static TypeSafeMatcher<Filename> filenameMatcher(Filename expected) {
+    return makeMatcher(expected, matchUsingEquals(v -> v.getFilename()));
   }
 
 }
