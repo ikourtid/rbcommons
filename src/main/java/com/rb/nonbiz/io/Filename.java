@@ -2,17 +2,15 @@ package com.rb.nonbiz.io;
 
 
 import org.apache.commons.lang3.StringUtils;
-
-import java.nio.file.Paths;
+import com.rb.nonbiz.text.Strings;
 
 /**
  * This class wraps a string file name
  *
- * <p> It exists to make filenames more typesafe as function arguments.</p>
+ * <p> It exists to make filenames more typesafe as function arguments. </p>
  *
- * <p>This class is very much not intended to do on-disk validation of files, checks that
- * files exist, are open, are or aren't directories, etc </p>
- *
+ * <p> This class is very much not intended to do on-disk validation of files, checks that
+ * files exist, are open, are or aren't directories, etc. </p>
  */
 public class Filename {
 
@@ -25,16 +23,21 @@ public class Filename {
 
   public static Filename filename(String rawString){
     if (rawString.length() == 0) {
-      throw new IllegalArgumentException("Filename cannot be an empty stirng");
+      throw new IllegalArgumentException("Filename cannot be an empty string");
     }
     if (StringUtils.containsAny(rawString, ILLEGAL_CHARACTERS)) {
-      throw new IllegalArgumentException("Filename cannot contain illegal characters");
+      throw new IllegalArgumentException("Filename cannot contain illegal characters: " + rawString);
     }
     return new Filename(rawString);
   }
 
   public String getFilename() {
     return rawFilenameString;
+  }
+
+  @Override
+  public String toString() {
+    return Strings.format("[F %s F]", rawFilenameString);
   }
   
 }

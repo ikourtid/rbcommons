@@ -1,14 +1,13 @@
 package com.rb.nonbiz.io;
 
-import com.rb.nonbiz.testmatchers.Match;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.util.RBPreconditions;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import static com.rb.nonbiz.io.Filename.filename;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
@@ -23,24 +22,22 @@ public class FilenameTest extends RBTestMatcher<Filename> {
 
   @Test
   public void testFilenameValidation(){
-    Runnable emptyFilename = () -> filename("");
-    Runnable badFilename = () -> filename("\\!@#$%^&*()");
-    Runnable goodFilename = () -> filename("output.txt");
+    assertIllegalArgumentException(() -> filename(""));
+    assertIllegalArgumentException(() -> filename("\\!@#$%^&*()"));
 
-    RBPreconditions.checkThrowsThisException(emptyFilename, IllegalArgumentException.class, "");
-    RBPreconditions.checkThrowsThisException(badFilename, IllegalArgumentException.class, "");
-    RBPreconditions.checkDoesNotThrow(goodFilename);
+    // This is a good file...it shouldn't throw, and sizes should match
+    assertEquals("output.txt".length(), filename("output.txt").getFilename().length());
   }
 
   // I really don't have a strong opinion on what makes a filename trivial, so this is a short filename
   @Override
   public Filename makeTrivialObject() {
-    return filename("dummy.txt");
+    return filename("a.txt");
   }
 
   @Override
   public Filename makeNontrivialObject() {
-    return filename("this_is_another_dummy.txt");
+    return filename("longer_filename.txt");
   }
 
   @Override
