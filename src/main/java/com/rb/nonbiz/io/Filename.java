@@ -7,9 +7,9 @@ import com.rb.nonbiz.text.Strings;
 /**
  * This class wraps a string file name
  *
- * <p> It exists to make filenames more typesafe as function arguments.</p>
+ * <p> It exists to make filenames more typesafe as function arguments. </p>
  *
- * <p>This class is very much not intended to do on-disk validation of files, checks that
+ * <p> This class is very much not intended to do on-disk validation of files, checks that
  * files exist, are open, are or aren't directories, etc. </p>
  */
 public class Filename {
