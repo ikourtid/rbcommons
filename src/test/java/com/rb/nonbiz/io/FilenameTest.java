@@ -47,7 +47,7 @@ public class FilenameTest extends RBTestMatcher<Filename> {
 
   @Override
   protected boolean willMatch(Filename expected, Filename actual) {
-    return expected.getFilename() == actual.getFilename();
+    return filenameMatcher(expected).matches(actual);
   }
 
   public static TypeSafeMatcher<Filename> filenameMatcher(Filename expected) {
