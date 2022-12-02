@@ -19,12 +19,12 @@ public class FilenameTest extends RBTestMatcher<Filename> {
   // I really don't have a strong opinion on what makes a filename trivial, so this is a short filename
   @Override
   public Filename makeTrivialObject() {
-    return filename("dummy.txt");
+    return filename("a.txt");
   }
 
   @Override
   public Filename makeNontrivialObject() {
-    return filename("this_is_another_dummy.txt");
+    return filename("longer_filename.txt");
   }
 
   @Override

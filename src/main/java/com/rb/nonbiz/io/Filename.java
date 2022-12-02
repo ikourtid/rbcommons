@@ -1,6 +1,8 @@
 package com.rb.nonbiz.io;
 
 
+import com.rb.nonbiz.text.Strings;
+
 /*
 This holds a filename.  It's intentionally light-weight and doesn't do a lot.
 The main reason it exists is to make filenames more typesafe as function arguments.
@@ -21,6 +23,11 @@ public class Filename {
 
   public String getFilename() {
     return rawFilenameString;
+  }
+
+  @Override
+  public String toString() {
+    return Strings.format("[F %s F]", rawFilenameString);
   }
   
 }
