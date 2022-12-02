@@ -51,7 +51,8 @@ public class FilenameTest extends RBTestMatcher<Filename> {
   }
 
   public static TypeSafeMatcher<Filename> filenameMatcher(Filename expected) {
-    return makeMatcher(expected, matchUsingEquals(v -> v.getFilename()));
+    return makeMatcher(expected,
+        matchUsingEquals(v -> v.getFilename()));
   }
 
 }
