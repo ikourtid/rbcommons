@@ -2,8 +2,7 @@ package com.rb.nonbiz.io;
 
 
 import org.apache.commons.lang3.StringUtils;
-
-import java.nio.file.Paths;
+import com.rb.nonbiz.text.Strings;
 
 /**
  * This class wraps a string file name
@@ -12,7 +11,6 @@ import java.nio.file.Paths;
  *
  * <p>This class is very much not intended to do on-disk validation of files, checks that
  * files exist, are open, are or aren't directories, etc </p>
- *
  */
 public class Filename {
 
@@ -35,6 +33,11 @@ public class Filename {
 
   public String getFilename() {
     return rawFilenameString;
+  }
+
+  @Override
+  public String toString() {
+    return Strings.format("[F %s F]", rawFilenameString);
   }
   
 }
