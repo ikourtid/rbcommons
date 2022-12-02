@@ -1,13 +1,11 @@
 package com.rb.nonbiz.io;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.util.RBPreconditions;
 import org.junit.Test;
 
 import static com.rb.nonbiz.io.Filename.filename;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static junit.framework.TestCase.assertEquals;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotSame;
 
 public class FilenameTest extends RBTestMatcher<Filename> {
@@ -22,7 +20,6 @@ public class FilenameTest extends RBTestMatcher<Filename> {
   @Test
   public void testFilenameValidation(){
     assertIllegalArgumentException( () -> filename(""));
-    assertIllegalArgumentException( () -> filename("\\!@#$%^&*()"));
 
     // This is a good file...it shouldn't throw, and sizes should match
     assertEquals("output.txt", filename("output.txt").getFilename());
