@@ -10,7 +10,7 @@ import com.rb.nonbiz.text.Strings;
  * <p> It exists to make filenames more typesafe as function arguments.</p>
  *
  * <p>This class is very much not intended to do on-disk validation of files, checks that
- * files exist, are open, are or aren't directories, etc </p>
+ * files exist, are open, are or aren't directories, etc. </p>
  */
 public class Filename {
 
