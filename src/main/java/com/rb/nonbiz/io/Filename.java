@@ -5,11 +5,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.Paths;
 
-/*
-This holds a filename.  It's intentionally light-weight and doesn't do a lot.
-The main reason it exists is to make filenames more typesafe as function arguments.
-This class is very much not intended to do on-disk validation of files, checking that
-files exist, are open, are or aren't directories, etc.
+/**
+ * This class wraps a string file name
+ *
+ * <p> It exists to make filenames more typesafe as function arguments.</p>
+ *
+ * <p>This class is very much not intended to do on-disk validation of files, checks that
+ * files exist, are open, are or aren't directories, etc </p>
+ *
  */
 public class Filename {
 
