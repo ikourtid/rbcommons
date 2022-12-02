@@ -1,8 +1,8 @@
 package com.rb.nonbiz.io;
 
 
-import org.apache.commons.lang3.StringUtils;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBPreconditions;
 
 /**
  * This class wraps a string file name
@@ -15,19 +15,13 @@ import com.rb.nonbiz.text.Strings;
 public class Filename {
 
   private final String rawFilenameString;
-  private static final String ILLEGAL_CHARACTERS = "\n\r\t\0\f`?*<>|\":";
 
   private Filename(String filename) {
     this.rawFilenameString  = filename;
   }
 
   public static Filename filename(String rawString){
-    if (rawString.length() == 0) {
-      throw new IllegalArgumentException("Filename cannot be an empty string");
-    }
-    if (StringUtils.containsAny(rawString, ILLEGAL_CHARACTERS)) {
-      throw new IllegalArgumentException("Filename cannot contain illegal characters: " + rawString);
-    }
+    RBPreconditions.checkArgument(!rawString.isEmpty(), "Filenames cannot be an empty string");
     return new Filename(rawString);
   }
 
