@@ -26,6 +26,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class RBOptionalTransformersTest {
 
@@ -150,6 +151,13 @@ public class RBOptionalTransformersTest {
     assertEquals(price(10), maker.apply(Optional.of(price(9)), Optional.of(price(11))));
     assertEquals(price(9),  maker.apply(Optional.of(price(9)), Optional.empty()));
     assertEquals(price(11), maker.apply(Optional.empty(), Optional.of(price(11))));
+  }
+
+  @Test
+  public void fail_ChrisPleaseFillIn() {
+    // Chris, can you add tests for these?
+    // transformOptional{Int,Double,Long}
+    fail("FIXME CM");
   }
 
 }
