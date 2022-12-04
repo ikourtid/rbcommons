@@ -12,14 +12,14 @@ public class FilenameTest extends RBTestMatcher<Filename> {
   @Test
   public void testGetFilename() {
     Filename myFilename = filename("out.txt");
-    assertEquals("out.txt", myFilename.getFilename());
-    assertNotSame("someotherstring", myFilename.getFilename());
+    assertEquals("out.txt", myFilename.getRawString());
+    assertNotSame("someotherstring", myFilename.getRawString());
   }
 
   // I really don't have a strong opinion on what makes a filename trivial, so this is a short filename
   @Override
   public Filename makeTrivialObject() {
-    return filename("a.txt");
+    return filename("a");
   }
 
   @Override
@@ -34,7 +34,7 @@ public class FilenameTest extends RBTestMatcher<Filename> {
 
   @Override
   protected boolean willMatch(Filename expected, Filename actual) {
-    return expected.getFilename() == actual.getFilename();
+    return expected.getRawString() == actual.getRawString();
   }
 
 }
