@@ -16,8 +16,8 @@ public class FilenameTest extends RBTestMatcher<Filename> {
   @Test
   public void testGetFilename() {
     Filename myFilename = filename("out.txt");
-    assertEquals("out.txt", myFilename.getFilename());
-    assertNotSame("someotherstring", myFilename.getFilename());
+    assertEquals("out.txt", myFilename.getRawString());
+    assertNotSame("someotherstring", myFilename.getRawString());
   }
 
   @Test
@@ -25,13 +25,13 @@ public class FilenameTest extends RBTestMatcher<Filename> {
     assertIllegalArgumentException( () -> filename(""));
 
     // This is a good file...it shouldn't throw, and sizes should match
-    assertEquals("output.txt", filename("output.txt").getFilename());
+    assertEquals("output.txt", filename("output.txt").getRawString());
   }
 
   // I really don't have a strong opinion on what makes a filename trivial, so this is a short filename
   @Override
   public Filename makeTrivialObject() {
-    return filename("a.txt");
+    return filename("a");
   }
 
   @Override
@@ -51,7 +51,7 @@ public class FilenameTest extends RBTestMatcher<Filename> {
 
   public static TypeSafeMatcher<Filename> filenameMatcher(Filename expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getFilename()));
+        matchUsingEquals(v -> v.getRawString()));
   }
 
 }

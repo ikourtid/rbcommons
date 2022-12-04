@@ -6,11 +6,13 @@ import com.rb.nonbiz.types.PreciseValue;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.DoubleFunction;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.function.LongFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -36,6 +38,12 @@ public class RBOptionalTransformers {
   public static <T> Optional<T> transformOptionalInt(OptionalInt optionalA, IntFunction<T> transformer) {
     return optionalA.isPresent()
         ? Optional.of(transformer.apply(optionalA.getAsInt()))
+        : Optional.empty();
+  }
+
+  public static <T> Optional<T> transformOptionalLong(OptionalLong optionalA, LongFunction<T> transformer) {
+    return optionalA.isPresent()
+        ? Optional.of(transformer.apply(optionalA.getAsLong()))
         : Optional.empty();
   }
 
