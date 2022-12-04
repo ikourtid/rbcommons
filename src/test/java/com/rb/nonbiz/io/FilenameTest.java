@@ -4,6 +4,7 @@ import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.junit.Test;
 
 import static com.rb.nonbiz.io.Filename.filename;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
@@ -16,6 +17,14 @@ public class FilenameTest extends RBTestMatcher<Filename> {
     assertNotSame("someotherstring", myFilename.getRawString());
   }
 
+  @Test
+  public void testFilenameValidation(){
+    assertIllegalArgumentException( () -> filename(""));
+
+    // This is a good file...it shouldn't throw, and sizes should match
+    assertEquals("output.txt", filename("output.txt").getFilename());
+  }
+
   // I really don't have a strong opinion on what makes a filename trivial, so this is a short filename
   @Override
   public Filename makeTrivialObject() {
@@ -24,12 +33,12 @@ public class FilenameTest extends RBTestMatcher<Filename> {
 
   @Override
   public Filename makeNontrivialObject() {
-    return filename("longer_filename.txt");
+    return filename("Longer_Filename.txt");
   }
 
   @Override
   public Filename makeMatchingNontrivialObject() {
-    return makeNontrivialObject();
+    return filename("Longer_Filename.txt");
   }
 
   @Override
