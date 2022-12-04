@@ -22,7 +22,7 @@ public class FilenameTest extends RBTestMatcher<Filename> {
     assertIllegalArgumentException( () -> filename(""));
 
     // This is a good file...it shouldn't throw, and sizes should match
-    assertEquals("output.txt", filename("output.txt").getFilename());
+    assertEquals("output.txt", filename("output.txt").getRawString());
   }
 
   // I really don't have a strong opinion on what makes a filename trivial, so this is a short filename
