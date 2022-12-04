@@ -15,10 +15,10 @@ import com.rb.nonbiz.text.Strings;
  */
 public class Filename {
 
-  private final String rawFilenameString;
+  private final String rawString;
 
-  private Filename(String filename) {
-    this.rawFilenameString  = filename;
+  private Filename(String rawString) {
+    this.rawString = rawString;
   }
 
   public static Filename filename(String rawString){
@@ -26,13 +26,13 @@ public class Filename {
     return new Filename(rawString);
   }
 
-  public String getFilename() {
-    return rawFilenameString;
+  public String getRawString() {
+    return rawString;
   }
 
   @Override
   public String toString() {
-    return Strings.format("[F %s F]", rawFilenameString);
+    return Strings.format("[F %s F]", rawString);
   }
   
 }
