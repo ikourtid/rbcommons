@@ -1,9 +1,8 @@
 package com.rb.nonbiz.io;
 
 
-import com.rb.nonbiz.util.RBPreconditions;
-import org.apache.commons.lang3.StringUtils;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBPreconditions;
 
 /**
  * This class wraps a string file name
