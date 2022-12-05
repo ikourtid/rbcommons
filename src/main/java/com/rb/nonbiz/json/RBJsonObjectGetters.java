@@ -477,6 +477,19 @@ public class RBJsonObjectGetters {
 
   /**
    * From 'jsonObject', get the value of 'property' (which we assume to be a String JsonPrimitive)
+   * and return a String, or (if missing) the supplied default String.
+   */
+  public static String getJsonStringOrDefault(
+      JsonObject jsonObject,
+      String property,
+      String ifAbsent) {
+    return jsonObject.has(property)
+        ? getJsonStringOrThrow(jsonObject, property)
+        : ifAbsent;
+  }
+
+  /**
+   * From 'jsonObject', get the value of 'property' (which we assume to be a String JsonPrimitive)
    * and return a transformed value of the String, or (if missing) the supplied default value.
    */
   public static <T> T getJsonStringOrDefault(
