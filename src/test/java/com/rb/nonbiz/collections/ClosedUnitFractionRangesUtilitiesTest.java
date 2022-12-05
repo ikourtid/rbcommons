@@ -1,9 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
-import com.rb.nonbiz.collections.ClosedUnitFractionRanges;
-import com.rb.nonbiz.collections.RBMap;
-import com.rb.nonbiz.types.RBDoubles;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
 
@@ -94,6 +91,15 @@ public class ClosedUnitFractionRangesUtilitiesTest {
                     unitFraction(doubleExplained(0.28, Double.max(0.27, 0.28))),
                     unitFraction(doubleExplained(0.57, Double.min(0.57, 0.58)))),
                 "a3", unitFractionFixedTo(unitFraction(0.33))))));
+
+    // Test an empty intersection...we should throw because both maps contain a1, but the ranges have zero overlap
+    ClosedUnitFractionRanges<String> a = closedUnitFractionRanges(rbMapOf(
+        "a1", closedUnitFractionRange(unitFraction(0.17), unitFraction(0.19)),
+        "a2", closedUnitFractionRange(unitFraction(0.27), unitFraction(0.57))));
+    ClosedUnitFractionRanges<String> b = closedUnitFractionRanges(rbMapOf(
+        "a1", closedUnitFractionRange(unitFraction(0.1), unitFraction(0.11)),
+        "a3", closedUnitFractionRange(unitFraction(0.27), unitFraction(0.57))));
+    assertIllegalArgumentException(() -> closedUnitFractionRangesIntersectionOrThrow(a, b));
   }
 
   @Test
