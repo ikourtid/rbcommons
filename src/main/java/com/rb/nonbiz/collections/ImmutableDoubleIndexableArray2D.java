@@ -2,12 +2,16 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.rb.nonbiz.functional.TriFunction;
+import com.rb.nonbiz.util.RBPreconditions;
+import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.Iterator;
+import java.util.stream.IntStream;
 
 import static com.rb.nonbiz.collections.ImmutableIndexableArray2D.immutableIndexableArray2D;
 import static com.rb.nonbiz.collections.MutableDoubleIndexableArray2D.mutableDoubleIndexableArray2D;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
+import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
  * Just like {@link MutableDoubleIndexableArray2D}, except this is immutable.
@@ -78,6 +82,29 @@ public class ImmutableDoubleIndexableArray2D<R, C> {
 
   public ArrayIndexMapping<C> getColumnMapping() {
     return mutableArray2D.getColumnMapping();
+  }
+
+  public boolean isSquare() {
+    return getNumRows() == getNumColumns();
+  }
+
+  public boolean isSquareWithRowKeysSameAsColumnKeys() {
+    if (!isSquare()) {
+      return false;
+    }
+    int sharedSize = checkBothSame(
+        getNumRows(),
+        getNumColumns(),
+        "This should never throw");
+    ArrayIndexMapping<R> rowMapping = getRowMapping();
+    ArrayIndexMapping<C> columnMapping = getColumnMapping();
+    return IntStream.range(0, sharedSize)
+        .allMatch(i -> rowMapping.getKey(i).equals(columnMapping.getKey(i)));
+  }
+
+  public boolean isSymmetric() {
+    return isSquareWithRowKeysSameAsColumnKeys()
+        &&
   }
 
   @VisibleForTesting // Don't use this; it helps the matcher code be simpler
