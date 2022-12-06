@@ -159,6 +159,60 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
             .isSquare());
   }
 
+  @Test
+  public void test_isSquareWithRowKeysSameAsColumnKeys() {
+    assertTrue(
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 }
+            },
+            simpleArrayIndexMapping("a", "b"),
+            simpleArrayIndexMapping("a", "b"))
+            .isSquareWithRowKeysSameAsColumnKeys());
+    assertFalse(
+        "column keys are same as row keys, but different ordering",
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 }
+            },
+            simpleArrayIndexMapping("a", "b"),
+            simpleArrayIndexMapping("b", "a"))
+            .isSquareWithRowKeysSameAsColumnKeys());
+    assertFalse(
+        "column keys are different than row keys",
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 }
+            },
+            simpleArrayIndexMapping("a", "b"),
+            simpleArrayIndexMapping("a", "c"))
+            .isSquareWithRowKeysSameAsColumnKeys());
+    assertFalse(
+        "column keys are of a different type than row keys",
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 }
+            },
+            simpleArrayIndexMapping("a", "b"),
+            simpleArrayIndexMapping(77, 88))
+            .isSquareWithRowKeysSameAsColumnKeys());
+    assertFalse(
+        "not a square array",
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 },
+                { 5.5, 6.6 }
+            },
+            simpleArrayIndexMapping("a", "b", "c"),
+            simpleArrayIndexMapping("a", "b"))
+            .isSquareWithRowKeysSameAsColumnKeys());
+  }
+
   @Override
   public ImmutableDoubleIndexableArray2D<String, Boolean> makeTrivialObject() {
     return emptyImmutableDoubleIndexableArray2D();
