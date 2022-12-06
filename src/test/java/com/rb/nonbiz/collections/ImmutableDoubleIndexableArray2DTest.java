@@ -7,6 +7,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import java.util.Iterator;
+import java.util.function.DoubleFunction;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.ImmutableDoubleIndexableArray2D.emptyImmutableDoubleIndexableArray2D;
@@ -114,8 +115,8 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
             },
             simpleArrayIndexMapping("a", "b", "c"),
             simpleArrayIndexMapping(false, true))
-        .transform( (rowKey, columnKey, value) -> Strings.format("%s_%s_%s",
-            rowKey, columnKey, value)),
+            .transform( (rowKey, columnKey, value) -> Strings.format("%s_%s_%s",
+                rowKey, columnKey, value)),
         immutableIndexableArray2DMatcher(
             immutableIndexableArray2D(
                 new String[][] {
@@ -211,6 +212,57 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
             simpleArrayIndexMapping("a", "b", "c"),
             simpleArrayIndexMapping("a", "b"))
             .isSquareWithRowKeysSameAsColumnKeys());
+  }
+
+  @Test
+  public void test_isLogicallyAndPhysicallySymmetric_varyEpsilon() {
+    DoubleFunction<Boolean> maker = epsilon ->
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2, 3.3 + epsilon },
+                { 2.2, 4.4, 5.5 + epsilon },
+                { 3.3, 5.5, 6.6 + epsilon }
+            },
+            simpleArrayIndexMapping("a", "b", "c"),
+            simpleArrayIndexMapping("a", "b", "c"))
+            .isLogicallyAndPhysicallySymmetric(1e-8);
+
+    assertTrue(
+        "exactly equal",
+        maker.apply(0));
+
+    assertTrue(
+        "off by a tiny epsilon; still symmetric",
+        maker.apply(1e-9));
+
+    assertFalse(
+        "off by an amount more than epsilon; not symmetric",
+        maker.apply(1e-7));
+  }
+
+  @Test
+  public void dataAreLogicallyButNotPhysicallySymmetric_returnsFalse() {
+    assertTrue(
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2, 3.3 },
+                { 2.2, 4.4, 5.5 },
+                { 3.3, 5.5, 6.6 }
+            },
+            simpleArrayIndexMapping("a", "b", "c"),
+            simpleArrayIndexMapping("a", "b", "c"))
+            .isLogicallyAndPhysicallySymmetric(1e-8));
+
+    // The 2nd row was moved to the top, and the row keys were also changed to b, a, c to match that move.
+    ImmutableDoubleIndexableArray2D<String, String> logicallySymmetric = immutableDoubleIndexableArray2D(
+        new double[][] {
+            { 2.2, 4.4, 5.5 },
+            { 1.1, 2.2, 3.3 },
+            { 3.3, 5.5, 6.6 }
+        },
+        simpleArrayIndexMapping("b", "a", "c"),
+        simpleArrayIndexMapping("a", "b", "c"));
+    assertFalse(logicallySymmetric.isLogicallyAndPhysicallySymmetric(1e-8));
   }
 
   @Override
