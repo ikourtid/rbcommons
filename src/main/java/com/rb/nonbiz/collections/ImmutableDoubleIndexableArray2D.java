@@ -4,10 +4,12 @@ import com.google.common.annotations.VisibleForTesting;
 import com.rb.nonbiz.functional.TriFunction;
 
 import java.util.Iterator;
+import java.util.stream.IntStream;
 
 import static com.rb.nonbiz.collections.ImmutableIndexableArray2D.immutableIndexableArray2D;
 import static com.rb.nonbiz.collections.MutableDoubleIndexableArray2D.mutableDoubleIndexableArray2D;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
+import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
  * Just like {@link MutableDoubleIndexableArray2D}, except this is immutable.
@@ -78,6 +80,87 @@ public class ImmutableDoubleIndexableArray2D<R, C> {
 
   public ArrayIndexMapping<C> getColumnMapping() {
     return mutableArray2D.getColumnMapping();
+  }
+
+  /**
+   * Returns true if and only if the # of rows is the same as the # of columns.
+   * It doesn't matter what the row keys and column keys are.
+   */
+  public boolean isSquare() {
+    return getNumRows() == getNumColumns();
+  }
+
+  /**
+   * Returns true if and only if the # of rows is the same as the # of columns,
+   * and also the row keys are the same as the column keys, and appear in the same numeric order.
+   *
+   * <p> Note that the row and value types must be the same, and that type must implement a non-trivial equals
+   * & hashCode method, which is true here (it's not an assumption), because otherwise they could not be keys
+   * to the {@link ArrayIndexMapping} that specifies the positions of the row keys and column keys in the 2d array. </p>
+   */
+  public boolean isSquareWithRowKeysSameAsColumnKeys() {
+    if (!isSquare()) {
+      return false;
+    }
+    int sharedSize = checkBothSame(
+        getNumRows(),
+        getNumColumns(),
+        "Internal error: This should never throw by this point");
+    ArrayIndexMapping<R> rowMapping = getRowMapping();
+    ArrayIndexMapping<C> columnMapping = getColumnMapping();
+    return IntStream.range(0, sharedSize)
+        .allMatch(i -> rowMapping.getKey(i).equals(columnMapping.getKey(i)));
+  }
+
+  /**
+   * Returns true if this is a symmetric matrix, subject to an epsilon.
+   *
+   * For example, this is symmetric:
+   *
+   * <pre>
+   *   A B C
+   * A 1 2 3
+   * B 2 4 5
+   * C 3 5 6
+   * </pre>
+   *
+   * <p> Note that this class allows us to refer to items by row key and column key. Take a look at this: </p>
+   *
+   * <pre>
+   *   A B C
+   * B 2 4 5
+   * A 1 2 3
+   * C 3 5 6
+   * </pre>
+   *
+   * <p> If you look at the raw 2d array, it's not symmetric. However, all I did here is move the B row to be the first;
+   * the data are still the same. So e.g. both (A, B) and (B, A) have the same value of 2. So, based on this looser
+   * definition of symmetric, the raw 2d array may not be symmetric, but (X, Y) = (Y, X) for every X and Y. </p>
+   *
+   * <p> This method will not consider the latter matrix to be symmetric: it will require that the raw storage
+   * (i.e. using numeric indices) is also symmetric. </p>
+   */
+  public boolean isLogicallyAndPhysicallySymmetric(double epsilon) {
+    if (!isSquareWithRowKeysSameAsColumnKeys()) {
+      return false;
+    }
+
+    int sharedSize = checkBothSame(
+        getNumRows(),
+        getNumColumns(),
+        "Internal error: This should never throw by this point");
+    // We usually like to use Streams and fluent code, but this could be a big operation (for a large matrix),
+    // plus it's clear enough to look at for loops when iterating over a matrix.
+    for (int i = 0; i < sharedSize; i++) {
+      for (int j = i + 1; j < sharedSize; j++) {
+        double aboveDiagonal = getByIndex(i, j);
+        double belowDiagonal = getByIndex(j, i);
+        if (Math.abs(aboveDiagonal - belowDiagonal) > epsilon) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   @VisibleForTesting // Don't use this; it helps the matcher code be simpler
