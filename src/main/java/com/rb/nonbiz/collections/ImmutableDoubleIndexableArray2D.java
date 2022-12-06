@@ -84,7 +84,9 @@ public class ImmutableDoubleIndexableArray2D<R, C> {
 
   /**
    * Returns true if and only if the # of rows is the same as the # of columns.
-   * It doesn't matter what the row keys and column keys are.
+   *
+   * <p> For this method, it doesn't matter what the row keys and column keys are,
+   * and it doesn't even matter if they are of the same type. </p>
    */
   public boolean isSquare() {
     return getNumRows() == getNumColumns();
@@ -97,6 +99,13 @@ public class ImmutableDoubleIndexableArray2D<R, C> {
    * <p> Note that the row and value types must be the same, and that type must implement a non-trivial equals
    * & hashCode method, which is true here (it's not an assumption), because otherwise they could not be keys
    * to the {@link ArrayIndexMapping} that specifies the positions of the row keys and column keys in the 2d array. </p>
+   *
+   * <p> Here is an example that would return true: </p>
+   * <pre>
+   *    A B
+   *  A 1 2
+   *  B 3 4
+   * </pre>
    */
   public boolean isSquareWithRowKeysSameAsColumnKeys() {
     if (!isSquare()) {
