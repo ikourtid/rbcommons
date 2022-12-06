@@ -22,9 +22,13 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_BOOLEAN;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * The test is generic, but the publicly exposed matcher (which gets used elsewhere) isn't, so that's good.
@@ -122,6 +126,37 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
                 simpleArrayIndexMapping("a", "b", "c"),
                 simpleArrayIndexMapping(false, true)),
             f -> typeSafeEqualTo(f)));
+  }
+
+  @Test
+  public void testIsSquare() {
+    assertFalse(
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 },
+                { 5.5, 6.6 }
+            },
+            simpleArrayIndexMapping("a", "b", "c"),
+            simpleArrayIndexMapping(false, true))
+            .isSquare());
+    assertTrue(
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 }
+            },
+            simpleArrayIndexMapping("a", "b"),
+            simpleArrayIndexMapping(false, true))
+            .isSquare());
+    assertTrue(
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { DUMMY_DOUBLE }
+            },
+            simpleArrayIndexMapping(DUMMY_STRING),
+            simpleArrayIndexMapping(DUMMY_BOOLEAN))
+            .isSquare());
   }
 
   @Override
