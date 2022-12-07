@@ -17,7 +17,7 @@ import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
  * <p> Note that someone can modify the underlying object if they have a handle to it via getRawArrayUnsafe()
  * but at least they can't modify it through THIS object; there's no set() method here. </p>
  */
-public class ImmutableDoubleIndexableArray2D<R, C> {
+public class ImmutableDoubleIndexableArray2D<R, C> implements IndexableDoubleDataStore2D<R, C> {
 
   private final MutableDoubleIndexableArray2D<R, C> mutableArray2D;
 
@@ -43,28 +43,19 @@ public class ImmutableDoubleIndexableArray2D<R, C> {
         simpleArrayIndexMapping());
   }
 
-  public double get(R rowKey, C columnKey) {
-    return mutableArray2D.get(rowKey, columnKey);
-  }
-
+  @Override
   public double getByIndex(int rowIndex, int columnIndex) {
     return mutableArray2D.getByIndex(rowIndex, columnIndex);
   }
 
-  public R getRowKey(int row) {
-    return mutableArray2D.getRowKey(row);
+  @Override
+  public ArrayIndexMapping<R> getRowMapping() {
+    return mutableArray2D.getRowMapping();
   }
 
-  public C getColumnKey(int column) {
-    return mutableArray2D.getColumnKey(column);
-  }
-
-  public int getNumRows() {
-    return mutableArray2D.getNumRows();
-  }
-
-  public int getNumColumns() {
-    return mutableArray2D.getNumColumns();
+  @Override
+  public ArrayIndexMapping<C> getColumnMapping() {
+    return mutableArray2D.getColumnMapping();
   }
 
   /** As should be obvious by the name, only use this if you know what you're doing.
@@ -72,14 +63,6 @@ public class ImmutableDoubleIndexableArray2D<R, C> {
    */
   public double[][] getRawArrayUnsafe() {
     return mutableArray2D.getRawArrayUnsafe();
-  }
-
-  public ArrayIndexMapping<R> getRowMapping() {
-    return mutableArray2D.getRowMapping();
-  }
-
-  public ArrayIndexMapping<C> getColumnMapping() {
-    return mutableArray2D.getColumnMapping();
   }
 
   /**
