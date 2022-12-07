@@ -1,5 +1,12 @@
 package com.rb.nonbiz.collections;
 
+import cern.colt.matrix.DoubleMatrix2D;
+
+/**
+ * A 2-dimensional collection of doubles that's not bound to a particular implementation: implementers of this
+ * interface could be using e.g. a 2-d double array, or a Colt (linear algebra library) {@link DoubleMatrix2D}, or
+ * anything else.
+ */
 public interface IndexableDoubleDataStore2D<R, C> {
 
   ArrayIndexMapping<R> getRowMapping();
