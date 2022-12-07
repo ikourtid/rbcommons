@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.util.function.DoubleFunction;
 import java.util.function.Function;
 
+import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.emptySimpleArrayIndexMapping;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableSquareMatrix.rbIndexableSquareMatrix;
@@ -21,6 +22,23 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquareMatrix<String>> {
+
+  public static <K> RBIndexableSquareMatrix<K> singletonRBIndexableSquareMatrix(double onlyValue, K onlyKey) {
+    return rbIndexableSquareMatrix(
+        new DenseDoubleMatrix2D(new double[][] { { onlyValue } }),
+        simpleArrayIndexMapping(onlyKey));
+  }
+
+  @SafeVarargs
+  public static <K> RBIndexableSquareMatrix<K> testRBIndexableSquareMatrix(
+      double[][] rawMatrix,
+      K first,
+      K second,
+      K ... rest) {
+    return rbIndexableSquareMatrix(
+        new DenseDoubleMatrix2D(rawMatrix),
+        simpleArrayIndexMapping(concatenateFirstSecondAndRest(first, second, rest)));
+  }
 
   @Test
   public void disallowsEmptyMatrix() {
@@ -48,13 +66,13 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
   @Test
   public void testIsSymmetric_varyEpsilon() {
     DoubleFunction<Boolean> maker = epsilon ->
-        rbIndexableSquareMatrix(
-            new DenseDoubleMatrix2D(new double[][] {
+        testRBIndexableSquareMatrix(
+            new double[][] {
                 { 1.1, 2.2, 3.3 + epsilon },
                 { 2.2, 4.4, 5.5 + epsilon },
                 { 3.3, 5.5, 6.6 + epsilon } // this is on the diagonal, so it doesn't matter, but let's keep it
-            }),
-            simpleArrayIndexMapping("a", "b", "c"))
+            },
+            "a", "b", "c")
             .isSymmetric(1e-8);
 
     assertTrue(
@@ -72,9 +90,7 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
 
   @Override
   public RBIndexableSquareMatrix<String> makeTrivialObject() {
-    return rbIndexableSquareMatrix(
-        new DenseDoubleMatrix2D(new double[][] { { 0.0 } }),
-        simpleArrayIndexMapping(""));
+    return singletonRBIndexableSquareMatrix(0.0, "");
   }
 
   @Override
@@ -82,23 +98,23 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
     // Normally, we'd create something like testRBIndexableSquareMatrixWithSeed, and use it here,
     // but this class is generic on the row and column key type, so we can't really create such a test-only
     // constructor that's general enough.
-    return rbIndexableSquareMatrix(
-        new DenseDoubleMatrix2D(new double[][] {
+    return testRBIndexableSquareMatrix(
+        new double[][] {
             { -1.1,  2.2 },
             { -3.3,  4.4 }
-        }),
-        simpleArrayIndexMapping("a", "b"));
+        },
+        "a", "b");
   }
 
   @Override
   public RBIndexableSquareMatrix<String> makeMatchingNontrivialObject() {
     double e = 1e-9; // epsilon
-    return rbIndexableSquareMatrix(
-        new DenseDoubleMatrix2D(new double[][] {
+    return testRBIndexableSquareMatrix(
+        new double[][] {
             { -1.1 + e,  2.2 + e },
             { -3.3 + e,  4.4 + e }
-        }),
-        simpleArrayIndexMapping("a", "b"));
+        },
+        "a", "b");
   }
 
   @Override
