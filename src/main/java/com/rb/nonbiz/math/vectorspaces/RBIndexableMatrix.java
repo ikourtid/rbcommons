@@ -4,7 +4,19 @@ import cern.colt.matrix.DoubleMatrix2D;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.IndexableDoubleDataStore2D;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBPreconditions;
+import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
+import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
+
+/**
+ * A 2d collection of doubles, which can be indexed by a row key and a column key, which can be of different types.
+ *
+ * <p> It's a bit like a 2-dimensional map where there are two keys, and the values are doubles.
+ * The underlying data store is a Colt {@link DoubleMatrix2D}, so this class is particularly useful in case we
+ * want to interact with the Colt linear algebra library. Of course, this means that the fact that we use a
+ * {@link DoubleMatrix2D} is not hidden by this abstraction - but it's fine; this is intentional here. </p>
+ */
 public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C> {
 
   private final DoubleMatrix2D rawMatrix;
@@ -24,7 +36,19 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
       DoubleMatrix2D rawMatrix,
       ArrayIndexMapping<R> rowMapping,
       ArrayIndexMapping<C> columnMapping) {
-    // FIXME IAK MATRIX add preconditions
+    RBPreconditions.checkArgument(
+        rawMatrix.size() > 0,
+        "We do not allow an empty RBIndexableMatrix, just to be safe");
+    checkBothSame(
+        rawMatrix.rows(),
+        rowMapping.size(),
+        "# of matrix rows = %s , but # of rows we have a mapping for is %s : %s %s %s",
+        rawMatrix.rows(), rowMapping.size(), rowMapping, columnMapping, rawMatrix);
+    checkBothSame(
+        rawMatrix.columns(),
+        columnMapping.size(),
+        "# of matrix columns = %s , but # of columns we have a mapping for is %s : %s %s %s",
+        rawMatrix.columns(), columnMapping.size(), rowMapping, columnMapping, rawMatrix);
     return new RBIndexableMatrix<>(rawMatrix, rowMapping, columnMapping);
   }
 

@@ -5,6 +5,15 @@ import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.IndexableDoubleDataStore2D;
 import com.rb.nonbiz.text.Strings;
 
+/**
+ * A 2d collection of doubles, which can be indexed by a row key and a column key, which must be of the same type,
+ * and where the number of rows is the same as the number of columns.
+ *
+ * <p> It's a bit like a 2-dimensional map where there are two keys, and the values are doubles.
+ * The underlying data store is a Colt {@link DoubleMatrix2D}, so this class is particularly useful in case we
+ * want to interact with the Colt linear algebra library. Of course, this means that the fact that we use a
+ * {@link DoubleMatrix2D} is not hidden by this abstraction - but it's fine; this is intentional here. </p>
+ */
 public class RBIndexableSquareMatrix<T> implements IndexableDoubleDataStore2D<T, T> {
 
   private final DoubleMatrix2D rawMatrix;
