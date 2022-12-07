@@ -4,6 +4,9 @@ import cern.colt.matrix.DoubleMatrix2D;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.IndexableDoubleDataStore2D;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBPreconditions;
+
+import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
  * A 2d collection of doubles, which can be indexed by a row key and a column key, which must be of the same type,
@@ -14,22 +17,37 @@ import com.rb.nonbiz.text.Strings;
  * want to interact with the Colt linear algebra library. Of course, this means that the fact that we use a
  * {@link DoubleMatrix2D} is not hidden by this abstraction - but it's fine; this is intentional here. </p>
  */
-public class RBIndexableSquareMatrix<T> implements IndexableDoubleDataStore2D<T, T> {
+public class RBIndexableSquareMatrix<K> implements IndexableDoubleDataStore2D<K, K> {
 
   private final DoubleMatrix2D rawMatrix;
-  private final ArrayIndexMapping<T> mappingForBothRowsAndColumns;
+  private final ArrayIndexMapping<K> mappingForBothRowsAndColumns;
 
   private RBIndexableSquareMatrix(
       DoubleMatrix2D rawMatrix,
-      ArrayIndexMapping<T> mappingForBothRowsAndColumns) {
+      ArrayIndexMapping<K> mappingForBothRowsAndColumns) {
     this.rawMatrix = rawMatrix;
     this.mappingForBothRowsAndColumns = mappingForBothRowsAndColumns;
   }
 
-  public static <T> RBIndexableSquareMatrix<T> rbIndexableSquareMatrix(
+  public static <K> RBIndexableSquareMatrix<K> rbIndexableSquareMatrix(
       DoubleMatrix2D rawMatrix,
-      ArrayIndexMapping<T> mappingForBothRowsAndColumns) {
-    // FIXME IAK MATRIX add preconditions
+      ArrayIndexMapping<K> mappingForBothRowsAndColumns) {
+    RBPreconditions.checkArgument(
+        rawMatrix.size() > 0,
+        "We do not allow an empty RBIndexableMatrix, just to be safe");
+
+    int numRowsOrColumns = checkBothSame(
+        rawMatrix.rows(),
+        rawMatrix.columns(),
+        "Not a square matrix: %s %s",
+        rawMatrix, mappingForBothRowsAndColumns);
+
+    checkBothSame(
+        numRowsOrColumns,
+        mappingForBothRowsAndColumns.size(),
+        "# of matrix rows / columns = %s , but # of rows we have a mapping for is %s : %s %s",
+        numRowsOrColumns, mappingForBothRowsAndColumns.size(), rawMatrix, mappingForBothRowsAndColumns);
+
     return new RBIndexableSquareMatrix<>(rawMatrix, mappingForBothRowsAndColumns);
   }
 
@@ -39,19 +57,19 @@ public class RBIndexableSquareMatrix<T> implements IndexableDoubleDataStore2D<T,
   }
 
   @Override
-  public ArrayIndexMapping<T> getRowMapping() {
+  public ArrayIndexMapping<K> getRowMapping() {
     return mappingForBothRowsAndColumns;
   }
 
   @Override
-  public ArrayIndexMapping<T> getColumnMapping() {
+  public ArrayIndexMapping<K> getColumnMapping() {
     return mappingForBothRowsAndColumns;
   }
 
   /**
    * This lets you use clearer semantics for this case where you know you're dealing with a square matrix.
    */
-  public ArrayIndexMapping<T> getMappingForBothRowsAndColumns() {
+  public ArrayIndexMapping<K> getMappingForBothRowsAndColumns() {
     return mappingForBothRowsAndColumns;
   }
 
