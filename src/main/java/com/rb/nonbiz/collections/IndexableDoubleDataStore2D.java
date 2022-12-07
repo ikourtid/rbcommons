@@ -45,4 +45,26 @@ public interface IndexableDoubleDataStore2D<R, C> {
     return getNumRows() == 0 || getNumColumns() == 0;
   }
 
+  default boolean isSymmetric(double epsilon) {
+    if (getNumRows() != getNumColumns()) {
+      return false;
+    }
+
+    int sharedSize = getNumRows();
+
+    // We usually like to use Streams and fluent code, but this could be a big operation (for a large matrix),
+    // plus it's clear enough to look at for loops when iterating over a matrix.
+    for (int i = 0; i < sharedSize; i++) {
+      for (int j = i + 1; j < sharedSize; j++) {
+        double aboveDiagonal = getByIndex(i, j);
+        double belowDiagonal = getByIndex(j, i);
+        if (Math.abs(aboveDiagonal - belowDiagonal) > epsilon) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+
 }
