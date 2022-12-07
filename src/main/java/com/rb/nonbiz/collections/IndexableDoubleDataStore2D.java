@@ -39,9 +39,9 @@ public interface IndexableDoubleDataStore2D<R, C> {
 
   default boolean isEmpty() {
     // In practice, the classes implementing this interface should never allow situations where we somehow
-    // have 0 rows but 1+ columns, or vice versa. However, this is not the place to have preconditions for that.
-    // Since we trust that all our data classes have very restrictive preconditions, we don't have to worry about
-    // that here.
+    // have 0 rows but 1+ columns, or vice versa. However, this default interface method is not the place to have
+    // preconditions for that. Since we trust that all our data classes have very restrictive preconditions,
+    // we don't have to worry about that here. So we could have also used && instead of || here.
     return getNumRows() == 0 || getNumColumns() == 0;
   }
 

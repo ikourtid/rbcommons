@@ -35,19 +35,16 @@ public class RBIndexableSquareMatrix<K> implements IndexableDoubleDataStore2D<K,
     RBPreconditions.checkArgument(
         rawMatrix.size() > 0,
         "We do not allow an empty RBIndexableMatrix, just to be safe");
-
     int numRowsOrColumns = checkBothSame(
         rawMatrix.rows(),
         rawMatrix.columns(),
         "Not a square matrix: %s %s",
         rawMatrix, mappingForBothRowsAndColumns);
-
     checkBothSame(
         numRowsOrColumns,
         mappingForBothRowsAndColumns.size(),
         "# of matrix rows / columns = %s , but # of rows we have a mapping for is %s : %s %s",
         numRowsOrColumns, mappingForBothRowsAndColumns.size(), rawMatrix, mappingForBothRowsAndColumns);
-
     return new RBIndexableSquareMatrix<>(rawMatrix, mappingForBothRowsAndColumns);
   }
 
