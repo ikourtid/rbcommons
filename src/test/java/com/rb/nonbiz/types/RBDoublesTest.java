@@ -1,8 +1,11 @@
 package com.rb.nonbiz.types;
 
+import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
 import org.junit.Test;
 
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 import java.util.function.BiConsumer;
 import java.util.function.DoubleConsumer;
 
@@ -12,6 +15,10 @@ import static com.rb.nonbiz.types.RBDoubles.average;
 import static com.rb.nonbiz.types.RBDoubles.epsilonCompareDoubles;
 import static com.rb.nonbiz.types.RBDoubles.epsilonCompareDoublesAllowingEpsilonOfZero;
 import static com.rb.nonbiz.types.RBDoubles.getDoubleAsLongAssumingIsRound;
+import static com.rb.nonbiz.types.RBDoubles.maxAllowingOptionalDouble;
+import static com.rb.nonbiz.types.RBDoubles.minAllowingOptionalDouble;
+import static com.rb.nonbiz.types.RBIntegers.maxAllowingOptionalInt;
+import static com.rb.nonbiz.types.RBIntegers.minAllowingOptionalInt;
 import static org.junit.Assert.assertEquals;
 
 public class RBDoublesTest {
@@ -136,6 +143,30 @@ public class RBDoublesTest {
     assertIllegal.accept(7.1);
     assertIllegal.accept(7.5);
     assertIllegal.accept(7.9);
+  }
+
+  @Test
+  public void testMaxAllowingOptionalDouble() {
+    TriConsumer<OptionalDouble, Double, Double> asserter = (optionalValue1, value2, expectedResult) -> {
+      assertEquals(expectedResult, maxAllowingOptionalDouble(optionalValue1, value2), 1e-8);
+      assertEquals(expectedResult, maxAllowingOptionalDouble(value2, optionalValue1), 1e-8);
+    };
+
+    asserter.accept(OptionalDouble.of(2.2), 1.1, 2.2);
+    asserter.accept(OptionalDouble.of(2.2), 3.3, 3.3);
+    asserter.accept(OptionalDouble.empty(), 3.3, 3.3);
+  }
+
+  @Test
+  public void testMinAllowingOptionalDouble() {
+    TriConsumer<OptionalDouble, Double, Double> asserter = (optionalValue1, value2, expectedResult) -> {
+      assertEquals(expectedResult, minAllowingOptionalDouble(optionalValue1, value2), 1e-8);
+      assertEquals(expectedResult, minAllowingOptionalDouble(value2, optionalValue1), 1e-8);
+    };
+
+    asserter.accept(OptionalDouble.of(2.2), 1.1, 1.1);
+    asserter.accept(OptionalDouble.of(2.2), 3.3, 2.2);
+    asserter.accept(OptionalDouble.empty(), 3.3, 3.3);
   }
 
 }
