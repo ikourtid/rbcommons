@@ -7,6 +7,8 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -133,6 +135,20 @@ public class MutableIndexableArray1D<K, V> {
    */
   public <V2> MutableIndexableArray1D<K, V2> copyWithValuesReplaced(V2[] valuesForNewObject) {
     return mutableIndexableArray1D(arrayIndexMapping, valuesForNewObject);
+  }
+
+  public <V2> MutableIndexableArray1D<K, V2> copyWithEntriesTransformed(BiFunction<K, V, V2> transformer) {
+    return mutableIndexableArray1D(
+        arrayIndexMapping,
+        IntStream.range(0, size())
+            .mapToObj(i -> transformer.apply(arrayIndexMapping.getKey(i), rawArray[i]))
+            // Unfortunately I can't find a way to avoid this; I will intentionally not @SuppressWarnings,
+            // so that it shows as yellow.
+            .toArray(size -> (V2[]) (new Object[size])));
+  }
+
+  public <V2> MutableIndexableArray1D<K, V2> copyWithValuesTransformed(Function<V, V2> transformer) {
+    return copyWithEntriesTransformed( (ignoredKey, value) -> transformer.apply(value));
   }
 
   @Override
