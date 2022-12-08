@@ -51,4 +51,10 @@ public class RBArrays {
     return IntStream.range(0, array.length).mapToObj(i -> array[i]).iterator();
   }
 
+  public double[] createUnitVectorDoubleArray(int size, int indexOfItemWithValue1) {
+    double[] array = new double[size];
+    array[indexOfItemWithValue1] = 1;
+    return array;
+  }
+
 }

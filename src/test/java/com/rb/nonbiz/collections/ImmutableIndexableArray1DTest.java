@@ -233,11 +233,11 @@ public class ImmutableIndexableArray1DTest extends RBTestMatcher<ImmutableIndexa
                 unitFraction(0.3)
             })
             .copyWithEntriesTransformed(
-                (key, value) -> Strings.format("%s_%s", key, value.toString(2, 2))),
+                (index, key, value) -> Strings.format("%s_%s_%s", index, key, value.toString(2, 2))),
         immutableIndexableArray1DMatcher(
             immutableIndexableArray1D(
                 simpleArrayIndexMapping(77, 88, 99),
-                new String[] { "77_0.10", "88_0.20", "99_0.30" }),
+                new String[] { "0_77_0.10", "1_88_0.20", "2_99_0.30" }),
             stringKey    -> typeSafeEqualTo(stringKey),
             stringValue  -> typeSafeEqualTo(stringValue)));
   }
