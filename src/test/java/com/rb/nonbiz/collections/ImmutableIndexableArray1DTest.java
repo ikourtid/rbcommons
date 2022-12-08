@@ -222,6 +222,46 @@ public class ImmutableIndexableArray1DTest extends RBTestMatcher<ImmutableIndexa
     asserter.accept(ab,    ab.filterKeys(arrayInstantiator, k -> true));
   }
 
+  @Test
+  public void testCopyWithEntriesTransformed() {
+    assertThat(
+        immutableIndexableArray1D(
+            simpleArrayIndexMapping(ImmutableList.of(77, 88, 99)),
+            new UnitFraction[] {
+                unitFraction(0.1),
+                unitFraction(0.2),
+                unitFraction(0.3)
+            })
+            .copyWithEntriesTransformed(
+                (key, value) -> Strings.format("%s_%s", key, value.toString(2, 2))),
+        immutableIndexableArray1DMatcher(
+            immutableIndexableArray1D(
+                simpleArrayIndexMapping(77, 88, 99),
+                new String[] { "77_0.10", "88_0.20", "99_0.30" }),
+            stringKey    -> typeSafeEqualTo(stringKey),
+            stringValue  -> typeSafeEqualTo(stringValue)));
+  }
+
+  @Test
+  public void testCopyWithValuesTransformed() {
+    assertThat(
+        immutableIndexableArray1D(
+            simpleArrayIndexMapping(ImmutableList.of(77, 88, 99)),
+            new UnitFraction[] {
+                unitFraction(0.1),
+                unitFraction(0.2),
+                unitFraction(0.3)
+            })
+            .copyWithValuesTransformed(
+                value -> Strings.format("_%s", value.toString(2, 2))),
+        immutableIndexableArray1DMatcher(
+            immutableIndexableArray1D(
+                simpleArrayIndexMapping(77, 88, 99),
+                new String[] { "_0.10", "_0.20", "_0.30" }),
+            stringKey    -> typeSafeEqualTo(stringKey),
+            stringValue  -> typeSafeEqualTo(stringValue)));
+  }
+
   @Override
   public ImmutableIndexableArray1D<InstrumentId, UnitFraction> makeTrivialObject() {
     return singletonImmutableIndexableArray1D(STOCK_A, UNIT_FRACTION_0);
