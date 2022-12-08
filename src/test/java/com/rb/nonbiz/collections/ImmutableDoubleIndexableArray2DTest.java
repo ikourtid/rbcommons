@@ -221,7 +221,7 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
             new double[][] {
                 { 1.1, 2.2, 3.3 + epsilon },
                 { 2.2, 4.4, 5.5 + epsilon },
-                { 3.3, 5.5, 6.6 + epsilon }
+                { 3.3, 5.5, 6.6 + epsilon } // this epsilon is on the diagonal and has no effect on symmetry
             },
             simpleArrayIndexMapping("a", "b", "c"),
             simpleArrayIndexMapping("a", "b", "c"))
