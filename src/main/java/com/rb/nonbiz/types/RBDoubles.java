@@ -3,6 +3,12 @@ package com.rb.nonbiz.types;
 import com.rb.nonbiz.types.PreciseValues.BigDecimalsEpsilonComparisonVisitor;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+
+import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalDouble;
+import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalInt;
+
 public class RBDoubles {
 
   /**
@@ -85,6 +91,42 @@ public class RBDoubles {
         "The closest long to value %s is %s which is not within an epsilon of %s",
         value, nearestRound, epsilon);
     return nearestRound;
+  }
+
+  /**
+   * If the {@link OptionalDouble} argument is present, return the max of the two doubles; otherwise return the only
+   * present double.
+   */
+  public static double maxAllowingOptionalDouble(OptionalDouble optionalValue1, double value2) {
+    return transformOptionalDouble(optionalValue1, value1 -> Math.max(value1, value2))
+        .orElse(value2);
+  }
+
+  /**
+   * If the {@link OptionalDouble} argument is present, return the max of the two doubles; otherwise return the only
+   * present double.
+   */
+  public static double maxAllowingOptionalDouble(double value1, OptionalDouble optionalValue2) {
+    return transformOptionalDouble(optionalValue2, value2 -> Math.max(value1, value2))
+        .orElse(value1);
+  }
+
+  /**
+   * If the {@link OptionalDouble} argument is present, return the min of the two doubles; otherwise return the only
+   * present double.
+   */
+  public static double minAllowingOptionalDouble(OptionalDouble optionalValue1, double value2) {
+    return transformOptionalDouble(optionalValue1, value1 -> Math.min(value1, value2))
+        .orElse(value2);
+  }
+
+  /**
+   * If the {@link OptionalDouble} argument is present, return the min of the two doubles; otherwise return the only
+   * present double.
+   */
+  public static double minAllowingOptionalDouble(double value1, OptionalDouble optionalValue2) {
+    return transformOptionalDouble(optionalValue2, value2 -> Math.min(value1, value2))
+        .orElse(value1);
   }
 
 }
