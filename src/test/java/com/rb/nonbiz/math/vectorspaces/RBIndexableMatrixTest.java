@@ -20,6 +20,14 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 
 public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<String, Integer>> {
 
+  public static <R, C> RBIndexableMatrix<R, C> singletonRBIndexableMatrix(
+      R onlyRowKey, C onlyColumnKey, double onlyMatrixElement) {
+    return rbIndexableMatrix(
+        new DenseDoubleMatrix2D(new double[][] { { onlyMatrixElement } }),
+        simpleArrayIndexMapping(onlyRowKey),
+        simpleArrayIndexMapping(onlyColumnKey));
+  }
+
   @Test
   public void disallowsEmptyMatrix() {
     assertIllegalArgumentException( () -> rbIndexableMatrix(
@@ -57,10 +65,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
 
   @Override
   public RBIndexableMatrix<String, Integer> makeTrivialObject() {
-    return rbIndexableMatrix(
-        new DenseDoubleMatrix2D(new double[][] { { 0.0 } }),
-        simpleArrayIndexMapping(""),
-        simpleArrayIndexMapping(0));
+    return singletonRBIndexableMatrix("", 0, 0.0);
   }
 
   @Override
