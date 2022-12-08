@@ -16,21 +16,25 @@ import static com.rb.nonbiz.collections.RBOptionals.getIntOrThrow;
  * This is a specialized, more memory-efficient alternative to a {@code MutableIndexableArray2D<Double>}.
  * It's a bit more efficient because it uses unboxed lowercase-d doubles.
  */
-public class MutableDoubleIndexableArray2D<R, C> {
+public class MutableDoubleIndexableArray2D<R, C> implements IndexableDoubleDataStore2D<R, C> {
 
   private final double[][] rawArray;
   private final ArrayIndexMapping<R> rowMapping;
   private final ArrayIndexMapping<C> columnMapping;
 
-  private MutableDoubleIndexableArray2D(double[][] rawArray,
-                                        ArrayIndexMapping<R> rowMapping, ArrayIndexMapping<C> columnMapping) {
+  private MutableDoubleIndexableArray2D(
+      double[][] rawArray,
+      ArrayIndexMapping<R> rowMapping,
+      ArrayIndexMapping<C> columnMapping) {
     this.rawArray = rawArray;
     this.rowMapping = rowMapping;
     this.columnMapping = columnMapping;
   }
 
   public static <R, C> MutableDoubleIndexableArray2D<R, C> mutableDoubleIndexableArray2D(
-      double[][] rawArray, ArrayIndexMapping<R> rowMapping, ArrayIndexMapping<C> columnMapping) {
+      double[][] rawArray,
+      ArrayIndexMapping<R> rowMapping,
+      ArrayIndexMapping<C> columnMapping) {
     RBPreconditions.checkArgument(
         rawArray.length == rowMapping.size(),
         "Array has %s rows but mapping has %s",
@@ -50,10 +54,7 @@ public class MutableDoubleIndexableArray2D<R, C> {
     return new MutableDoubleIndexableArray2D<>(rawArray, rowMapping, columnMapping);
   }
 
-  public double get(R rowKey, C columnKey) {
-    return rawArray[rowMapping.getIndex(rowKey)][columnMapping.getIndex(columnKey)];
-  }
-
+  @Override
   public double getByIndex(int rowIndex, int columnIndex) {
     return rawArray[rowIndex][columnIndex];
   }
@@ -61,31 +62,16 @@ public class MutableDoubleIndexableArray2D<R, C> {
   public void set(R rowKey, C columnKey, double value) {
     rawArray[rowMapping.getIndex(rowKey)][columnMapping.getIndex(columnKey)] = value;
   }
-
-  public R getRowKey(int row) {
-    return rowMapping.getKey(row);
-  }
-
-  public C getColumnKey(int column) {
-    return columnMapping.getKey(column);
-  }
-
-  public int getNumRows() {
-    return rowMapping.size();
-  }
-
-  public int getNumColumns() {
-    return columnMapping.size();
-  }
-
   double[][] getRawArrayUnsafe() {
     return rawArray;
   }
 
+  @Override
   public ArrayIndexMapping<C> getColumnMapping() {
-    return this.columnMapping;
+    return columnMapping;
   }
 
+  @Override
   public ArrayIndexMapping<R> getRowMapping() {
     return rowMapping;
   }

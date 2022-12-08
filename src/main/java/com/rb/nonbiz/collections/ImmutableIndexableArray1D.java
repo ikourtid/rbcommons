@@ -1,10 +1,13 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -135,6 +138,14 @@ public class ImmutableIndexableArray1D<K, V> {
    */
   public <V2> ImmutableIndexableArray1D<K, V2> copyWithValuesReplaced(V2[] valuesForNewObject) {
     return immutableIndexableArray1D(mutableArray1D.copyWithValuesReplaced(valuesForNewObject));
+  }
+
+  public <V2> ImmutableIndexableArray1D<K, V2> copyWithEntriesTransformed(TriFunction<Integer, K, V, V2> transformer) {
+    return immutableIndexableArray1D(mutableArray1D.copyWithEntriesTransformed(transformer));
+  }
+
+  public <V2> ImmutableIndexableArray1D<K, V2> copyWithValuesTransformed(Function<V, V2> transformer) {
+    return immutableIndexableArray1D(mutableArray1D.copyWithValuesTransformed(transformer));
   }
 
   @Override

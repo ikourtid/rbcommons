@@ -179,6 +179,46 @@ public class MutableIndexableArray1DTest extends RBTestMatcher<MutableIndexableA
             stringValue  -> typeSafeEqualTo(stringValue)));
   }
 
+  @Test
+  public void testCopyWithEntriesTransformed() {
+    assertThat(
+        mutableIndexableArray1D(
+            simpleArrayIndexMapping(ImmutableList.of(77, 88, 99)),
+            new UnitFraction[] {
+                unitFraction(0.1),
+                unitFraction(0.2),
+                unitFraction(0.3)
+            })
+            .copyWithEntriesTransformed(
+                (index, key, value) -> Strings.format("%s_%s_%s", index, key, value.toString(2, 2))),
+        mutableIndexableArray1DMatcher(
+            mutableIndexableArray1D(
+                simpleArrayIndexMapping(77, 88, 99),
+                new String[] { "0_77_0.10", "1_88_0.20", "2_99_0.30" }),
+            stringKey    -> typeSafeEqualTo(stringKey),
+            stringValue  -> typeSafeEqualTo(stringValue)));
+  }
+
+  @Test
+  public void testCopyWithValuesTransformed() {
+    assertThat(
+        mutableIndexableArray1D(
+            simpleArrayIndexMapping(ImmutableList.of(77, 88, 99)),
+            new UnitFraction[] {
+                unitFraction(0.1),
+                unitFraction(0.2),
+                unitFraction(0.3)
+            })
+            .copyWithValuesTransformed(
+                value -> Strings.format("_%s", value.toString(2, 2))),
+        mutableIndexableArray1DMatcher(
+            mutableIndexableArray1D(
+                simpleArrayIndexMapping(77, 88, 99),
+                new String[] { "_0.10", "_0.20", "_0.30" }),
+            stringKey    -> typeSafeEqualTo(stringKey),
+            stringValue  -> typeSafeEqualTo(stringValue)));
+  }
+
   @Override
   public MutableIndexableArray1D<InstrumentId, UnitFraction> makeTrivialObject() {
     return mutableIndexableArray1D(

@@ -7,6 +7,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import java.util.Iterator;
+import java.util.function.DoubleFunction;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.ImmutableDoubleIndexableArray2D.emptyImmutableDoubleIndexableArray2D;
@@ -22,9 +23,13 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_BOOLEAN;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * The test is generic, but the publicly exposed matcher (which gets used elsewhere) isn't, so that's good.
@@ -110,8 +115,8 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
             },
             simpleArrayIndexMapping("a", "b", "c"),
             simpleArrayIndexMapping(false, true))
-        .transform( (rowKey, columnKey, value) -> Strings.format("%s_%s_%s",
-            rowKey, columnKey, value)),
+            .transform( (rowKey, columnKey, value) -> Strings.format("%s_%s_%s",
+                rowKey, columnKey, value)),
         immutableIndexableArray2DMatcher(
             immutableIndexableArray2D(
                 new String[][] {
@@ -122,6 +127,142 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
                 simpleArrayIndexMapping("a", "b", "c"),
                 simpleArrayIndexMapping(false, true)),
             f -> typeSafeEqualTo(f)));
+  }
+
+  @Test
+  public void testIsSquare() {
+    assertFalse(
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 },
+                { 5.5, 6.6 }
+            },
+            simpleArrayIndexMapping("a", "b", "c"),
+            simpleArrayIndexMapping(false, true))
+            .isSquare());
+    assertTrue(
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 }
+            },
+            simpleArrayIndexMapping("a", "b"),
+            simpleArrayIndexMapping(false, true))
+            .isSquare());
+    assertTrue(
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { DUMMY_DOUBLE }
+            },
+            simpleArrayIndexMapping(DUMMY_STRING),
+            simpleArrayIndexMapping(DUMMY_BOOLEAN))
+            .isSquare());
+  }
+
+  @Test
+  public void test_isSquareWithRowKeysSameAsColumnKeys() {
+    assertTrue(
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 }
+            },
+            simpleArrayIndexMapping("a", "b"),
+            simpleArrayIndexMapping("a", "b"))
+            .isSquareWithRowKeysSameAsColumnKeys());
+    assertFalse(
+        "column keys are same as row keys, but different ordering",
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 }
+            },
+            simpleArrayIndexMapping("a", "b"),
+            simpleArrayIndexMapping("b", "a"))
+            .isSquareWithRowKeysSameAsColumnKeys());
+    assertFalse(
+        "column keys are different than row keys",
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 }
+            },
+            simpleArrayIndexMapping("a", "b"),
+            simpleArrayIndexMapping("a", "c"))
+            .isSquareWithRowKeysSameAsColumnKeys());
+    assertFalse(
+        "column keys are of a different type than row keys",
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 }
+            },
+            simpleArrayIndexMapping("a", "b"),
+            simpleArrayIndexMapping(77, 88))
+            .isSquareWithRowKeysSameAsColumnKeys());
+    assertFalse(
+        "not a square array",
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2 },
+                { 3.3, 4.4 },
+                { 5.5, 6.6 }
+            },
+            simpleArrayIndexMapping("a", "b", "c"),
+            simpleArrayIndexMapping("a", "b"))
+            .isSquareWithRowKeysSameAsColumnKeys());
+  }
+
+  @Test
+  public void test_isLogicallyAndPhysicallySymmetric_varyEpsilon() {
+    DoubleFunction<Boolean> maker = epsilon ->
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2, 3.3 + epsilon },
+                { 2.2, 4.4, 5.5 + epsilon },
+                { 3.3, 5.5, 6.6 + epsilon }
+            },
+            simpleArrayIndexMapping("a", "b", "c"),
+            simpleArrayIndexMapping("a", "b", "c"))
+            .isLogicallyAndPhysicallySymmetric(1e-8);
+
+    assertTrue(
+        "exactly equal",
+        maker.apply(0));
+
+    assertTrue(
+        "off by a tiny epsilon; still symmetric",
+        maker.apply(1e-9));
+
+    assertFalse(
+        "off by an amount more than epsilon; not symmetric",
+        maker.apply(1e-7));
+  }
+
+  @Test
+  public void dataAreLogicallyButNotPhysicallySymmetric_returnsFalse() {
+    assertTrue(
+        immutableDoubleIndexableArray2D(
+            new double[][] {
+                { 1.1, 2.2, 3.3 },
+                { 2.2, 4.4, 5.5 },
+                { 3.3, 5.5, 6.6 }
+            },
+            simpleArrayIndexMapping("a", "b", "c"),
+            simpleArrayIndexMapping("a", "b", "c"))
+            .isLogicallyAndPhysicallySymmetric(1e-8));
+
+    // The 2nd row was moved to the top, and the row keys were also changed to b, a, c to match that move.
+    ImmutableDoubleIndexableArray2D<String, String> logicallySymmetric = immutableDoubleIndexableArray2D(
+        new double[][] {
+            { 2.2, 4.4, 5.5 },
+            { 1.1, 2.2, 3.3 },
+            { 3.3, 5.5, 6.6 }
+        },
+        simpleArrayIndexMapping("b", "a", "c"),
+        simpleArrayIndexMapping("a", "b", "c"));
+    assertFalse(logicallySymmetric.isLogicallyAndPhysicallySymmetric(1e-8));
   }
 
   @Override
