@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -137,18 +138,18 @@ public class MutableIndexableArray1D<K, V> {
     return mutableIndexableArray1D(arrayIndexMapping, valuesForNewObject);
   }
 
-  public <V2> MutableIndexableArray1D<K, V2> copyWithEntriesTransformed(BiFunction<K, V, V2> transformer) {
+  public <V2> MutableIndexableArray1D<K, V2> copyWithEntriesTransformed(TriFunction<Integer, K, V, V2> transformer) {
     return mutableIndexableArray1D(
         arrayIndexMapping,
         IntStream.range(0, size())
-            .mapToObj(i -> transformer.apply(arrayIndexMapping.getKey(i), rawArray[i]))
+            .mapToObj(i -> transformer.apply(i, arrayIndexMapping.getKey(i), rawArray[i]))
             // Unfortunately I can't find a way to avoid this; I will intentionally not @SuppressWarnings,
             // so that it shows as yellow.
             .toArray(size -> (V2[]) (new Object[size])));
   }
 
   public <V2> MutableIndexableArray1D<K, V2> copyWithValuesTransformed(Function<V, V2> transformer) {
-    return copyWithEntriesTransformed( (ignoredKey, value) -> transformer.apply(value));
+    return copyWithEntriesTransformed( (ignoredNumericIndex, ignoredKey, value) -> transformer.apply(value));
   }
 
   @Override

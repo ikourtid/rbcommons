@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.List;
@@ -139,7 +140,7 @@ public class ImmutableIndexableArray1D<K, V> {
     return immutableIndexableArray1D(mutableArray1D.copyWithValuesReplaced(valuesForNewObject));
   }
 
-  public <V2> ImmutableIndexableArray1D<K, V2> copyWithEntriesTransformed(BiFunction<K, V, V2> transformer) {
+  public <V2> ImmutableIndexableArray1D<K, V2> copyWithEntriesTransformed(TriFunction<Integer, K, V, V2> transformer) {
     return immutableIndexableArray1D(mutableArray1D.copyWithEntriesTransformed(transformer));
   }
 
