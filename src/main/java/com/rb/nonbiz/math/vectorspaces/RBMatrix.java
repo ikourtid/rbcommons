@@ -57,7 +57,7 @@ public class RBMatrix {
   /**
    * Matrix multiplication
    */
-  RBMatrix multiply(RBMatrix other) {
+  public RBMatrix multiply(RBMatrix other) {
     RBSimilarityPreconditions.checkBothSame(
         getNumColumns(),
         other.getNumRows(),
