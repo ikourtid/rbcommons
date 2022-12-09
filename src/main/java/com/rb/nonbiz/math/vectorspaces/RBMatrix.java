@@ -77,8 +77,15 @@ public class RBMatrix {
   /**
    * Matrix transposition
    */
-  RBMatrix transpose() {
+  public RBMatrix transpose() {
     return rbMatrix(new Algebra().transpose(rawMatrix));
+  }
+
+  /**
+   * Matrix inverse
+   */
+  public RBMatrix inverse() {
+    return rbMatrix(new Algebra().inverse(rawMatrix));
   }
 
   /**
