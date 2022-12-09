@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
+import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrixTest.rbIndexableMatrixMatcher;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
@@ -197,7 +198,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
                 new DenseDoubleMatrix2D(new double[][] {
                     { 1.1, 2.1, 3.1 },
                     { 1.2, 2.2, 3.2 } }),
-                simpleArrayIndexMapping(0, 1),
+                simpleArrayIndexMapping(matrixRowIndex(0), matrixRowIndex(1)),
                 simpleArrayIndexMapping("a", "b", "c"))));
   }
 
@@ -214,7 +215,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
                     { 1.1, 2.1, 3.1 },
                     { 1.2, 2.2, 3.2 } }),
                 simpleArrayIndexMapping(77, 88),
-                simpleArrayIndexMapping(0, 1, 2))));
+                simpleArrayIndexMapping(matrixColumnIndex(0), matrixColumnIndex(1), matrixColumnIndex(2)))));
   }
 
   @Override
