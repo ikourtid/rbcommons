@@ -26,7 +26,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBVector.rbVector;
  *
  * Note that we do not allow an empty matrix, for error-checking purposes, since our use cases do not need that.
  */
-public class  RBMatrix {
+public class RBMatrix {
 
   private final DoubleMatrix2D rawMatrix;
 
