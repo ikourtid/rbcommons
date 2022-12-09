@@ -173,7 +173,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
   @Test
   public void testInverse() {
-    fail("");
+    fail("FIXME SWA ORTHO");
   }
 
   @Test
