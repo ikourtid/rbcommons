@@ -5,11 +5,13 @@ import com.google.common.base.Joiner;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
+import org.checkerframework.common.value.qual.IntRange;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
@@ -62,6 +64,12 @@ public class SimpleArrayIndexMapping<T> implements ArrayIndexMapping<T> {
         arrayIndices.size(),
         "1 or more keys in the SimpleArrayIndexMapping were equal");
     return new SimpleArrayIndexMapping<T>(objectsInOrder, newRBMap(arrayIndices));
+  }
+
+  public static SimpleArrayIndexMapping<Integer> simpleArrayIndexMappingFromZeroTo(int maxValueInclusive) {
+    return simpleArrayIndexMapping(IntStream
+        .rangeClosed(0, maxValueInclusive)
+        .iterator());
   }
 
   @VisibleForTesting
