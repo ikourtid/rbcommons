@@ -3,10 +3,12 @@ package com.rb.nonbiz.math.vectorspaces;
 import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
+import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
+import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVector.rbVector;
 
 /**
@@ -78,6 +80,12 @@ public class RBMatrix {
    */
   double determinant() {
     return new Algebra().det(rawMatrix);
+  }
+
+  public <R, C> RBIndexableMatrix<R, C> toIndexableMatrix(
+      ArrayIndexMapping<R> rowMapping,
+      ArrayIndexMapping<C> columnMapping) {
+    return rbIndexableMatrix(rawMatrix, rowMapping, columnMapping);
   }
 
   /**
