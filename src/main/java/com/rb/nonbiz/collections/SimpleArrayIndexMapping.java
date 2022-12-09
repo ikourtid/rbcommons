@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
@@ -62,6 +63,18 @@ public class SimpleArrayIndexMapping<T> implements ArrayIndexMapping<T> {
         arrayIndices.size(),
         "1 or more keys in the SimpleArrayIndexMapping were equal");
     return new SimpleArrayIndexMapping<T>(objectsInOrder, newRBMap(arrayIndices));
+  }
+
+  /**
+   * This is for the special case where we want a trivial mapping, which is useful in multidimensional cases
+   * where e.g. we want 1 of the 2 dimensions of a 2-d indexable array to have keys (like strings, UniqueId, etc.)
+   * but the other one to be 'unindexed', i.e. just be treated like an array. It's like having a spreadsheet with
+   * row headers but no column headers, or vice versa.
+   */
+  public static SimpleArrayIndexMapping<Integer> simpleArrayIndexMappingFromZeroTo(int maxValueInclusive) {
+    return simpleArrayIndexMapping(IntStream
+        .rangeClosed(0, maxValueInclusive)
+        .iterator());
   }
 
   @VisibleForTesting

@@ -4,9 +4,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
 
+import java.util.function.BiConsumer;
+
+import static com.rb.nonbiz.collections.ArrayIndexMappingTest.arrayIndexMappingMatcher;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
+import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMappingFromZeroTo;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static java.util.Collections.emptyList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class SimpleArrayIndexMappingTest {
@@ -42,6 +48,19 @@ public class SimpleArrayIndexMappingTest {
     assertEquals(
         ImmutableSet.of(0, 1, 2),
         ImmutableSet.of(mapping.getIndex("A"), mapping.getIndex("B"), mapping.getIndex("C")));
+  }
+
+  @Test
+  public void testSimpleArrayIndexMappingFromZeroTo() {
+    assertIllegalArgumentException( () -> simpleArrayIndexMappingFromZeroTo(-1));
+    BiConsumer<Integer, ArrayIndexMapping<Integer>> asserter = (maxValueInclusive, expectedResult) ->
+        assertThat(
+            simpleArrayIndexMappingFromZeroTo(maxValueInclusive),
+            arrayIndexMappingMatcher(
+                expectedResult, f -> typeSafeEqualTo(f)));
+    asserter.accept(0, simpleArrayIndexMapping(0));
+    asserter.accept(1, simpleArrayIndexMapping(0, 1));
+    asserter.accept(2, simpleArrayIndexMapping(0, 1, 2));
   }
 
   @Test
