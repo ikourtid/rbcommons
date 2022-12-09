@@ -3,6 +3,7 @@ package com.rb.nonbiz.math.vectorspaces;
 import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
+import com.google.common.annotations.VisibleForTesting;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -126,6 +127,7 @@ public class RBMatrix {
   /**
    * This is here to help the test matcher, hence the 'Unsafe' in the name, and the package-private status.
    */
+  @VisibleForTesting
   public DoubleMatrix2D getRawMatrixUnsafe() {
     return rawMatrix;
   }
