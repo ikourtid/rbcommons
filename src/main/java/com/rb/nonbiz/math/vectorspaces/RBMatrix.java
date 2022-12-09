@@ -4,10 +4,12 @@ import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
+import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
+import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMappingFromZeroTo;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVector.rbVector;
 
@@ -86,6 +88,24 @@ public class RBMatrix {
       ArrayIndexMapping<R> rowMapping,
       ArrayIndexMapping<C> columnMapping) {
     return rbIndexableMatrix(rawMatrix, rowMapping, columnMapping);
+  }
+
+  /**
+   * This is for cases where we only care about having row keys, but no column keys, i.e. the column keys are just
+   * numeric indices for the column, starting at 0.
+   */
+  public <R> RBIndexableMatrix<R, Integer> toIndexableMatrixWithTrivialColumnMapping(
+      ArrayIndexMapping<R> rowMapping) {
+    return rbIndexableMatrix(rawMatrix, rowMapping, simpleArrayIndexMappingFromZeroTo(getNumColumns() - 1));
+  }
+
+  /**
+   * This is for cases where we only care about having column keys, but no row keys, i.e. the row keys are just
+   * numeric indices for the row, starting at 0.
+   */
+  public <C> RBIndexableMatrix<Integer, C> toIndexableMatrixWithTrivialRowMapping(
+      ArrayIndexMapping<C> columnMapping) {
+    return rbIndexableMatrix(rawMatrix, simpleArrayIndexMappingFromZeroTo(getNumRows() - 1), columnMapping);
   }
 
   /**

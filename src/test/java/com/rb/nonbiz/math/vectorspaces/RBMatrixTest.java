@@ -185,6 +185,38 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
                 simpleArrayIndexMapping("a", "b", "c"))));
   }
 
+  @Test
+  public void testToIndexableMatrixWithTrivialRowMapping() {
+    assertThat(
+        rbMatrix(new double[][] {
+            { 1.1, 2.1, 3.1 },
+            { 1.2, 2.2, 3.2 } })
+            .toIndexableMatrixWithTrivialRowMapping(simpleArrayIndexMapping("a", "b", "c")),
+        rbIndexableMatrixMatcher(
+            rbIndexableMatrix(
+                new DenseDoubleMatrix2D(new double[][] {
+                    { 1.1, 2.1, 3.1 },
+                    { 1.2, 2.2, 3.2 } }),
+                simpleArrayIndexMapping(0, 1),
+                simpleArrayIndexMapping("a", "b", "c"))));
+  }
+
+  @Test
+  public void testToIndexableMatrixWithTrivialColumnMapping() {
+    assertThat(
+        rbMatrix(new double[][] {
+            { 1.1, 2.1, 3.1 },
+            { 1.2, 2.2, 3.2 } })
+            .toIndexableMatrixWithTrivialColumnMapping(simpleArrayIndexMapping(77, 88)),
+        rbIndexableMatrixMatcher(
+            rbIndexableMatrix(
+                new DenseDoubleMatrix2D(new double[][] {
+                    { 1.1, 2.1, 3.1 },
+                    { 1.2, 2.2, 3.2 } }),
+                simpleArrayIndexMapping(77, 88),
+                simpleArrayIndexMapping(0, 1, 2))));
+  }
+
   @Override
   public RBMatrix makeTrivialObject() {
     return singletonRBMatrix(0);
