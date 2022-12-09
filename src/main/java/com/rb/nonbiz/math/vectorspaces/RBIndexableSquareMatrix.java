@@ -9,8 +9,9 @@ import com.rb.nonbiz.util.RBPreconditions;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
- * A 2d collection of doubles, which can be indexed by a row key and a column key, which must be of the same type,
- * and where the number of rows is the same as the number of columns.
+ * A 2d square (i.e. same number of rows and columns) collection of doubles , which can be indexed by a row key and a
+ * column key, and where the key for the i-th row is the same (and, consequently, of the same type) as that of the i-th
+ * column.
  *
  * <p> It's a bit like a 2-dimensional map where there are two keys, and the values are doubles.
  * The underlying data store is a Colt {@link DoubleMatrix2D}, so this class is particularly useful in case we

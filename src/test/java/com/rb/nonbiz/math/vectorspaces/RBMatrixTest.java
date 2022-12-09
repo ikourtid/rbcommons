@@ -2,11 +2,16 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
+import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
+import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
+import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrixTest.rbIndexableMatrixMatcher;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVectorMatcher;
@@ -163,6 +168,54 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
                 { 1.1, 1.2 },
                 { 2.1, 2.2 },
                 { 3.1, 3.2 } })));
+  }
+
+  @Test
+  public void testToIndexableMatrix() {
+    assertThat(
+        rbMatrix(new double[][] {
+            { 1.1, 2.1, 3.1 },
+            { 1.2, 2.2, 3.2 } })
+            .toIndexableMatrix(simpleArrayIndexMapping(77, 88), simpleArrayIndexMapping("a", "b", "c")),
+        rbIndexableMatrixMatcher(
+            rbIndexableMatrix(
+                new DenseDoubleMatrix2D(new double[][] {
+                    { 1.1, 2.1, 3.1 },
+                    { 1.2, 2.2, 3.2 } }),
+                simpleArrayIndexMapping(77, 88),
+                simpleArrayIndexMapping("a", "b", "c"))));
+  }
+
+  @Test
+  public void testToIndexableMatrixWithTrivialRowMapping() {
+    assertThat(
+        rbMatrix(new double[][] {
+            { 1.1, 2.1, 3.1 },
+            { 1.2, 2.2, 3.2 } })
+            .toIndexableMatrixWithTrivialRowMapping(simpleArrayIndexMapping("a", "b", "c")),
+        rbIndexableMatrixMatcher(
+            rbIndexableMatrix(
+                new DenseDoubleMatrix2D(new double[][] {
+                    { 1.1, 2.1, 3.1 },
+                    { 1.2, 2.2, 3.2 } }),
+                simpleArrayIndexMapping(matrixRowIndex(0), matrixRowIndex(1)),
+                simpleArrayIndexMapping("a", "b", "c"))));
+  }
+
+  @Test
+  public void testToIndexableMatrixWithTrivialColumnMapping() {
+    assertThat(
+        rbMatrix(new double[][] {
+            { 1.1, 2.1, 3.1 },
+            { 1.2, 2.2, 3.2 } })
+            .toIndexableMatrixWithTrivialColumnMapping(simpleArrayIndexMapping(77, 88)),
+        rbIndexableMatrixMatcher(
+            rbIndexableMatrix(
+                new DenseDoubleMatrix2D(new double[][] {
+                    { 1.1, 2.1, 3.1 },
+                    { 1.2, 2.2, 3.2 } }),
+                simpleArrayIndexMapping(77, 88),
+                simpleArrayIndexMapping(matrixColumnIndex(0), matrixColumnIndex(1), matrixColumnIndex(2)))));
   }
 
   @Override
