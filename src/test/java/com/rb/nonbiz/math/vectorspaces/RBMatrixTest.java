@@ -177,7 +177,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             { 1.2, 2.2, 3.2 } })
             .toIndexableMatrix(simpleArrayIndexMapping(77, 88), simpleArrayIndexMapping("a", "b", "c")),
         rbIndexableMatrixMatcher(
-            RBIndexableMatrix.rbIndexableMatrix(
+            rbIndexableMatrix(
                 new DenseDoubleMatrix2D(new double[][] {
                     { 1.1, 2.1, 3.1 },
                     { 1.2, 2.2, 3.2 } }),
