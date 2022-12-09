@@ -22,6 +22,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
@@ -168,6 +169,11 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
                 { 1.1, 1.2 },
                 { 2.1, 2.2 },
                 { 3.1, 3.2 } })));
+  }
+
+  @Test
+  public void testInverse() {
+    fail("");
   }
 
   @Test
