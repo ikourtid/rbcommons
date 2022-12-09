@@ -8,6 +8,11 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
+import java.util.stream.IntStream;
+
+import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
+import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
+import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVector.rbVector;
 
@@ -63,8 +68,8 @@ public class RBMatrix {
     RBSimilarityPreconditions.checkBothSame(
         getNumColumns(),
         other.getNumRows(),
-    "matrix multiplications: nColumns of first matrix %s must match nRows of second matrix %s",
-    getNumColumns(), other.getNumRows());
+        "matrix multiplications: nColumns of first matrix %s must match nRows of second matrix %s",
+        getNumColumns(), other.getNumRows());
     return rbMatrix(new Algebra().mult(rawMatrix, other.getRawMatrixUnsafe()));
   }
 
@@ -86,6 +91,36 @@ public class RBMatrix {
       ArrayIndexMapping<R> rowMapping,
       ArrayIndexMapping<C> columnMapping) {
     return rbIndexableMatrix(rawMatrix, rowMapping, columnMapping);
+  }
+
+  /**
+   * This is for cases where we only care about having row keys, but no column keys, i.e. the column keys are just
+   * numeric indices for the column, starting at 0.
+   */
+  public <R> RBIndexableMatrix<R, MatrixColumnIndex> toIndexableMatrixWithTrivialColumnMapping(
+      ArrayIndexMapping<R> rowMapping) {
+    return rbIndexableMatrix(
+        rawMatrix,
+        rowMapping,
+        simpleArrayIndexMapping(
+            IntStream.range(0, getNumColumns())
+                .mapToObj(i -> matrixColumnIndex(i))
+                .iterator()));
+  }
+
+  /**
+   * This is for cases where we only care about having column keys, but no row keys, i.e. the row keys are just
+   * numeric indices for the row, starting at 0.
+   */
+  public <C> RBIndexableMatrix<MatrixRowIndex, C> toIndexableMatrixWithTrivialRowMapping(
+      ArrayIndexMapping<C> columnMapping) {
+    return rbIndexableMatrix(
+        rawMatrix,
+        simpleArrayIndexMapping(
+            IntStream.range(0, getNumRows())
+                .mapToObj(i -> matrixRowIndex(i))
+                .iterator()),
+        columnMapping);
   }
 
   /**
