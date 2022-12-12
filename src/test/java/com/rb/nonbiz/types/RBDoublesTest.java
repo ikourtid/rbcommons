@@ -154,7 +154,10 @@ public class RBDoublesTest {
 
     asserter.accept(OptionalDouble.of(2.2), 1.1, 2.2);
     asserter.accept(OptionalDouble.of(2.2), 3.3, 3.3);
-    asserter.accept(OptionalDouble.empty(), 3.3, 3.3);
+
+    asserter.accept(OptionalDouble.empty(), -3.3, -3.3);
+    asserter.accept(OptionalDouble.empty(),  0.0,  0.0);
+    asserter.accept(OptionalDouble.empty(),  3.3,  3.3);
   }
 
   @Test
@@ -166,7 +169,10 @@ public class RBDoublesTest {
 
     asserter.accept(OptionalDouble.of(2.2), 1.1, 1.1);
     asserter.accept(OptionalDouble.of(2.2), 3.3, 2.2);
-    asserter.accept(OptionalDouble.empty(), 3.3, 3.3);
+
+    asserter.accept(OptionalDouble.empty(), -3.3, -3.3);
+    asserter.accept(OptionalDouble.empty(),  0.0,  0.0);
+    asserter.accept(OptionalDouble.empty(),  3.3,  3.3);
   }
 
 }
