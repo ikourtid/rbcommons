@@ -181,17 +181,17 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             input.inverse(),
             rbMatrixMatcher(expected));
 
-    // simplest case: inverting the 1x1 matrix {1} just returns itself.
+    // Simplest case: inverting the 1x1 matrix {1} just returns itself.
     asserter.accept(
         singletonRBMatrix(1.0),
         singletonRBMatrix(1.0));
 
-    // the inverse of the identity matrix is the same identity matrix
+    // The inverse of the identity matrix is the same identity matrix.
     asserter.accept(
         rbIdentityMatrix(3),
         rbIdentityMatrix(3));
 
-    // the inverse of a diagonal matrix is another diagonal matrix, whose elements are reciprocals of the original's.
+    // The inverse of a diagonal matrix is another diagonal matrix, whose elements are reciprocals of the original's.
     asserter.accept(
         rbMatrix3by3(
             4.0, 0.0, 0.0,
@@ -202,7 +202,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             0.0,  0.2,  0.0,
             0.0,  0.0, 10.0));
 
-    // the inverse of a rotation matrix is the inverse rotation
+    // The inverse of a rotation matrix is the inverse rotation.
     asserter.accept(
         rbMatrix2by2(
             0,  1,
@@ -211,7 +211,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             0, -1,
             1,  0));
 
-    // general inverse. See https://www.wolframalpha.com/input?i=inverse%7B+%7B1%2C+2%7D%2C+%7B3%2C+4%7D%7D
+    // General inverse. See https://www.wolframalpha.com/input?i=inverse%7B+%7B1%2C+2%7D%2C+%7B3%2C+4%7D%7D
     asserter.accept(
         rbMatrix2by2(
             1.0, 2.0,
@@ -237,8 +237,9 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             .inverse(),
         rbMatrixMatcher(
             rbMatrix2by2(
-                +50.25126, -49.74874,
+                50.25126,  -49.74874,
                 -49.74874,  50.25126),
+            // use a larger epsilon than in asserter() because the entries aren't round to a small number of digits
             1e-4));
   }
 

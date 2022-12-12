@@ -91,7 +91,9 @@ public class RBMatrix {
    * <p> What you probably want in this situation is to use something like
    * singular value decomposition (SVD) to get a more robust estimate of the inverse. </p>
    *
-   * <p> Before relying on this inverse, it would be wise to check the "condition number" of the matrix. </p>
+   * <p> Before relying on this inverse, it would be wise to check the "condition number" of the matrix.
+   * A condition number much greater than 1.0 indicates near-singularity. Conversely, rotation and
+   * permutation matrices have condition numbers of 1.0. </p>
    */
   public RBMatrix inverse() {
     return rbMatrix(new Algebra().inverse(rawMatrix));
