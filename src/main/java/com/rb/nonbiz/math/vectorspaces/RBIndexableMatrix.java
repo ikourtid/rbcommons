@@ -5,8 +5,12 @@ import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.IndexableDoubleDataStore2D;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
-import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
+import java.util.stream.IntStream;
+
+import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
+import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
+import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
@@ -50,6 +54,30 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
         "# of matrix columns = %s , but # of columns we have a mapping for is %s : %s %s %s",
         rawMatrix.columns(), columnMapping.size(), rowMapping, columnMapping, rawMatrix);
     return new RBIndexableMatrix<>(rawMatrix, rowMapping, columnMapping);
+  }
+
+  public static <R> RBIndexableMatrix<R, MatrixColumnIndex> rbIndexableMatrixWithTrivialColumnMapping(
+      DoubleMatrix2D rawMatrix,
+      ArrayIndexMapping<R> rowMapping) {
+    return rbIndexableMatrix(
+        rawMatrix,
+        rowMapping,
+        simpleArrayIndexMapping(
+            IntStream.range(0, rawMatrix.columns())
+                .mapToObj(i -> matrixColumnIndex(i))
+                .iterator()));
+  }
+
+  public static <C> RBIndexableMatrix<MatrixRowIndex, C> rbIndexableMatrixWithTrivialRowMapping(
+      DoubleMatrix2D rawMatrix,
+      ArrayIndexMapping<C> columnMapping) {
+    return rbIndexableMatrix(
+        rawMatrix,
+        simpleArrayIndexMapping(
+            IntStream.range(0, rawMatrix.rows())
+                .mapToObj(i -> matrixRowIndex(i))
+                .iterator()),
+        columnMapping);
   }
 
   @Override

@@ -11,12 +11,17 @@ import java.util.function.BiFunction;
 
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.emptySimpleArrayIndexMapping;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
+import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
+import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialColumnMapping;
+import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialRowMapping;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<String, Integer>> {
 
@@ -61,6 +66,40 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
     // Trying too many & too few (respectively) rows in the row mapping
     assertIllegalArgumentException( () -> maker.apply(validRowMapping, simpleArrayIndexMapping(77, 88, 99)));
     assertIllegalArgumentException( () -> maker.apply(validRowMapping, simpleArrayIndexMapping(77)));
+  }
+
+  @Test
+  public void testToIndexableMatrixWithTrivialRowMapping() {
+    assertThat(
+        rbIndexableMatrixWithTrivialRowMapping(
+            new DenseDoubleMatrix2D(new double[][] {
+            { 1.1, 2.1, 3.1 },
+            { 1.2, 2.2, 3.2 } }),
+            simpleArrayIndexMapping("a", "b", "c")),
+        rbIndexableMatrixMatcher(
+            rbIndexableMatrix(
+                new DenseDoubleMatrix2D(new double[][] {
+                    { 1.1, 2.1, 3.1 },
+                    { 1.2, 2.2, 3.2 } }),
+                simpleArrayIndexMapping(matrixRowIndex(0), matrixRowIndex(1)),
+                simpleArrayIndexMapping("a", "b", "c"))));
+  }
+
+  @Test
+  public void testToIndexableMatrixWithTrivialColumnMapping() {
+    assertThat(
+        rbIndexableMatrixWithTrivialColumnMapping(
+            new DenseDoubleMatrix2D(new double[][] {
+            { 1.1, 2.1, 3.1 },
+            { 1.2, 2.2, 3.2 } }),
+            simpleArrayIndexMapping(77, 88)),
+        rbIndexableMatrixMatcher(
+            rbIndexableMatrix(
+                new DenseDoubleMatrix2D(new double[][] {
+                    { 1.1, 2.1, 3.1 },
+                    { 1.2, 2.2, 3.2 } }),
+                simpleArrayIndexMapping(77, 88),
+                simpleArrayIndexMapping(matrixColumnIndex(0), matrixColumnIndex(1), matrixColumnIndex(2)))));
   }
 
   @Override

@@ -15,6 +15,8 @@ import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndex
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialColumnMapping;
+import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialRowMapping;
 import static com.rb.nonbiz.math.vectorspaces.RBVector.rbVector;
 
 /**
@@ -120,13 +122,7 @@ public class RBMatrix {
    */
   public <R> RBIndexableMatrix<R, MatrixColumnIndex> toIndexableMatrixWithTrivialColumnMapping(
       ArrayIndexMapping<R> rowMapping) {
-    return rbIndexableMatrix(
-        rawMatrix,
-        rowMapping,
-        simpleArrayIndexMapping(
-            IntStream.range(0, getNumColumns())
-                .mapToObj(i -> matrixColumnIndex(i))
-                .iterator()));
+    return rbIndexableMatrixWithTrivialColumnMapping(rawMatrix, rowMapping);
   }
 
   /**
@@ -135,13 +131,7 @@ public class RBMatrix {
    */
   public <C> RBIndexableMatrix<MatrixRowIndex, C> toIndexableMatrixWithTrivialRowMapping(
       ArrayIndexMapping<C> columnMapping) {
-    return rbIndexableMatrix(
-        rawMatrix,
-        simpleArrayIndexMapping(
-            IntStream.range(0, getNumRows())
-                .mapToObj(i -> matrixRowIndex(i))
-                .iterator()),
-        columnMapping);
+    return rbIndexableMatrixWithTrivialRowMapping(rawMatrix, columnMapping);
   }
 
   /**
