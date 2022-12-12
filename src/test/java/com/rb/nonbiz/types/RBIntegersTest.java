@@ -26,7 +26,10 @@ public class RBIntegersTest {
 
     asserter.accept(OptionalInt.of(22), 11, 22);
     asserter.accept(OptionalInt.of(22), 33, 33);
-    asserter.accept(OptionalInt.empty(), 33, 33);
+
+    asserter.accept(OptionalInt.empty(), -33, -33);
+    asserter.accept(OptionalInt.empty(),   0,   0);
+    asserter.accept(OptionalInt.empty(),  33,  33);
   }
 
   @Test
@@ -38,7 +41,10 @@ public class RBIntegersTest {
 
     asserter.accept(OptionalInt.of(22), 11, 11);
     asserter.accept(OptionalInt.of(22), 33, 22);
-    asserter.accept(OptionalInt.empty(), 33, 33);
+
+    asserter.accept(OptionalInt.empty(), -33, -33);
+    asserter.accept(OptionalInt.empty(),   0,   0);
+    asserter.accept(OptionalInt.empty(),  33,  33);
   }
 
 }
