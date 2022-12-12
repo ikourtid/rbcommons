@@ -238,7 +238,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         rbMatrixMatcher(
             rbMatrix2by2(
                 8_000.0, -7_000.0,
-                - 800.1,   700.1),
+                - 800.1,    700.1),
             // need a larger epsilon here than in asserter()
             1e-6));
   }
