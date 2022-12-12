@@ -6,7 +6,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 /**
  * Just a thin typesafe wrapper around an int, which denotes the row index to a matrix.
  */
-public class MatrixRowIndex {
+public class MatrixRowIndex implements IsArrayIndex {
 
   private final int rawIndex;
 
@@ -22,6 +22,7 @@ public class MatrixRowIndex {
     return new MatrixRowIndex(rawIndex);
   }
 
+  @Override
   public int asInt() {
     return rawIndex;
   }
