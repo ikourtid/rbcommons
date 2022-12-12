@@ -82,7 +82,16 @@ public class RBMatrix {
   }
 
   /**
-   * Matrix inverse
+   * Matrix inverse.
+   *
+   * <p> Warning: this will fail silently for nearly-singular matrices. That is, it will produce
+   * a result consisting of large almost-balancing positive and negative entries, but
+   * the entries will depend very sensitively on the exact input. </p>
+   *
+   * <p> What you probably want in this situation is to use something like
+   * singular value decomposition (SVD) to get a more robust estimate of the inverse. </p>
+   *
+   * <p> Before relying on this inverse, it would be wise to check the "condition number" of the matrix. </p>
    */
   public RBMatrix inverse() {
     return rbMatrix(new Algebra().inverse(rawMatrix));
