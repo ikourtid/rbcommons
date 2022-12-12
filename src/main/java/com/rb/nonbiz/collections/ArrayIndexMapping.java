@@ -53,4 +53,30 @@ public interface ArrayIndexMapping<T> {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Only for the cases where the generic type T is an integer, and this object is non-empty,
+   * this will return true if the mapping is the identity function, i.e. number N maps to array position N.
+   *
+   * <p> Note that this will return false if the mapping is empty, just to be safe, since (due to the way Java
+   * type erasure works) we'd have no way of checking what type T is. </p>
+   */
+  default boolean isTrivialIdentityIntegerMapping() {
+    int size = size();
+    if (size == 0) {
+      return false;
+    }
+    // OK, so there's at least one item in the mapping. Let's get it.
+    T key = getKey(0);
+    // We don't like using reflection and instanceof this way, but ArrayIndexMapping does not store the class object
+    // of its type T, so we have to resort to this.
+    if (!(key instanceof Integer)) {
+      return false;
+    }
+    // There's no way for this class to have different types of keys, because it is generic on T, and all keys are
+    // forced to be of type T. Therefore, if the first key is an int, then all must be ints by this point in the code.
+    // We don't need to run that check for all of them.
+    return IntStream.range(0, size)
+        .allMatch(i -> i == (int) getKey(i));
+  }
+
 }
