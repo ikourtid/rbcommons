@@ -222,8 +222,8 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
     // Can't take the inverse of a singular matrix.
     assertIllegalArgumentException( () -> rbMatrix2by2(
-        1.0, 1.0,
-        1.0, 1.0)
+        7.0, 70.0,
+        8.0, 80.0)
         .inverse());
 
     // Warning: you CAN take the inverse of a nearly-singular matrix. The result will probably
@@ -232,15 +232,15 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     // See https://www.wolframalpha.com/input?i=inverse%7B+%7B1%2C+0.99%7D%2C+%7B0.99%2C+1%7D%7D
     assertThat(
         rbMatrix2by2(
-            1.0,  0.99,
-            0.99, 1.0)
+            7.001, 70.0,   // as above, but with first column entries increased by 0.001
+            8.001, 80.0)
             .inverse(),
         rbMatrixMatcher(
             rbMatrix2by2(
-                50.25126,  -49.74874,
-                -49.74874,  50.25126),
-            // use a larger epsilon than in asserter() because the entries aren't round to a small number of digits
-            1e-4));
+                8_000.0, -7_000.0,
+                - 800.1,   700.1),
+            // need a larger epsilon here than in asserter()
+            1e-6));
   }
 
   @Test
