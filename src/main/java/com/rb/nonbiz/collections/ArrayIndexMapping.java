@@ -1,5 +1,7 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.nonbiz.math.vectorspaces.IsArrayIndex;
+
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.stream.Collectors;
@@ -60,7 +62,7 @@ public interface ArrayIndexMapping<T> {
    * <p> Note that this will return false if the mapping is empty, just to be safe, since (due to the way Java
    * type erasure works) we'd have no way of checking what type T is. </p>
    */
-  default boolean isTrivialIdentityIntegerMapping() {
+  default boolean isTrivialIdentityMapping() {
     int size = size();
     if (size == 0) {
       return false;
@@ -69,14 +71,17 @@ public interface ArrayIndexMapping<T> {
     T key = getKey(0);
     // We don't like using reflection and instanceof this way, but ArrayIndexMapping does not store the class object
     // of its type T, so we have to resort to this.
-    if (!(key instanceof Integer)) {
+    if (!(key instanceof IsArrayIndex)) {
       return false;
     }
     // There's no way for this class to have different types of keys, because it is generic on T, and all keys are
     // forced to be of type T. Therefore, if the first key is an int, then all must be ints by this point in the code.
     // We don't need to run that check for all of them.
     return IntStream.range(0, size)
-        .allMatch(i -> i == (int) getKey(i));
+        .allMatch(numericIndex -> {
+          int keyAsInt = ((IsArrayIndex) getKey(numericIndex)).asInt();
+          return keyAsInt == numericIndex;
+        });
   }
 
 }
