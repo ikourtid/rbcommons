@@ -85,8 +85,8 @@ public class RBMatrix {
    * Matrix inverse.
    *
    * <p> Warning: this will fail silently for nearly-singular matrices. That is, it will produce
-   * a result consisting of large almost-balancing positive and negative entries, but
-   * the entries will depend very sensitively on the exact input. </p>
+   * an inverse matrix consisting of large almost-balancing positive and negative elements, but
+   * the entries will depend very sensitively on the input. </p>
    *
    * <p> What you probably want in this situation is to use something like
    * singular value decomposition (SVD) to get a more robust estimate of the inverse. </p>
