@@ -7,11 +7,14 @@ import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.function.BiConsumer;
+
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrixTest.rbIndexableMatrixMatcher;
+import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrixTest.singletonRBIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVectorMatcher;
@@ -173,7 +176,71 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
   @Test
   public void testInverse() {
-    fail("");
+    BiConsumer<RBMatrix, RBMatrix> asserter = (input, expected) ->
+        assertThat(
+            input.inverse(),
+            rbMatrixMatcher(expected));
+
+    // Simplest case: inverting the 1x1 matrix {1} just returns itself.
+    asserter.accept(
+        singletonRBMatrix(1.0),
+        singletonRBMatrix(1.0));
+
+    // The inverse of the identity matrix is the same identity matrix.
+    asserter.accept(
+        rbIdentityMatrix(3),
+        rbIdentityMatrix(3));
+
+    // The inverse of a diagonal matrix is another diagonal matrix, whose elements are reciprocals of the original's.
+    asserter.accept(
+        rbMatrix3by3(
+            4.0, 0.0, 0.0,
+            0.0, 5.0, 0.0,
+            0.0, 0.0, 0.1),
+        rbMatrix3by3(
+            0.25, 0.0,  0.0,
+            0.0,  0.2,  0.0,
+            0.0,  0.0, 10.0));
+
+    // The inverse of a rotation matrix is the inverse rotation.
+    asserter.accept(
+        rbMatrix2by2(
+            0,  1,
+            -1, 0),
+        rbMatrix2by2(
+            0, -1,
+            1,  0));
+
+    // General inverse. See https://www.wolframalpha.com/input?i=inverse%7B+%7B1%2C+2%7D%2C+%7B3%2C+4%7D%7D
+    asserter.accept(
+        rbMatrix2by2(
+            1.0, 2.0,
+            3.0, 4.0),
+        rbMatrix2by2(
+            -2.0, 1.0,
+            1.5, -0.5));
+
+    // Can't take the inverse of a singular matrix.
+    assertIllegalArgumentException( () -> rbMatrix2by2(
+        7.0, 70.0,
+        8.0, 80.0)
+        .inverse());
+
+    // Warning: you CAN take the inverse of a nearly-singular matrix. The result will probably
+    // have large delicately-balancing elements of opposite signs. However, it (dangerously) won't fail.
+    // This is a case of "garbage in, garbage quietly out".
+    // See https://www.wolframalpha.com/input?i=inverse%7B+%7B1%2C+0.99%7D%2C+%7B0.99%2C+1%7D%7D
+    assertThat(
+        rbMatrix2by2(
+            7.001, 70.0,   // as above, but with first column entries increased by 0.001
+            8.001, 80.0)
+            .inverse(),
+        rbMatrixMatcher(
+            rbMatrix2by2(
+                8_000.0, -7_000.0,
+                - 800.1,    700.1),
+            // need a larger epsilon here than in asserter()
+            1e-6));
   }
 
   @Test
