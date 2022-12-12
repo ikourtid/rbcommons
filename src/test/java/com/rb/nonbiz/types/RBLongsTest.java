@@ -23,7 +23,10 @@ public class RBLongsTest {
 
     asserter.accept(OptionalLong.of(22), 11L, 22L);
     asserter.accept(OptionalLong.of(22), 33L, 33L);
-    asserter.accept(OptionalLong.empty(), 33L, 33L);
+
+    asserter.accept(OptionalLong.empty(), -33L, -33L);
+    asserter.accept(OptionalLong.empty(),   0L,   0L);
+    asserter.accept(OptionalLong.empty(),  33L,  33L);
   }
 
   @Test
@@ -35,7 +38,10 @@ public class RBLongsTest {
 
     asserter.accept(OptionalLong.of(22), 11L, 11L);
     asserter.accept(OptionalLong.of(22), 33L, 22L);
-    asserter.accept(OptionalLong.empty(), 33L, 33L);
+
+    asserter.accept(OptionalLong.empty(), -33L, -33L);
+    asserter.accept(OptionalLong.empty(),   0L,   0L);
+    asserter.accept(OptionalLong.empty(),  33L,  33L);
   }
 
 }
