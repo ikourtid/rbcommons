@@ -82,7 +82,9 @@ public class RBMatrix {
   }
 
   /**
-   * Matrix inverse.
+   * Matrix inverse. This simply calls the Colt matrix inverse() function.
+   *
+   * <p> This will throw an exception for singular matrices, as it should; they don't have inverses. </p>
    *
    * <p> Warning: this will fail silently for nearly-singular matrices. That is, it will produce
    * an inverse matrix consisting of large almost-balancing positive and negative elements, but
