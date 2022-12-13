@@ -9,11 +9,6 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
-import java.util.stream.IntStream;
-
-import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
-import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
-import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialColumnMapping;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialRowMapping;
@@ -46,6 +41,11 @@ public class RBMatrix {
 
   public static RBMatrix rbIdentityMatrix(int n) {
     return rbMatrix(DoubleFactory2D.dense.identity(n));
+  }
+
+  public static RBMatrix rbDiagonalMatrix(RBVector rbVector) {
+    return rbMatrix(DoubleFactory2D.dense.diagonal(
+        rbVector.getRawDoubleMatrix1DUnsafe()));
   }
 
   public RBVector getColumnVector(MatrixColumnIndex matrixColumnIndex) {
