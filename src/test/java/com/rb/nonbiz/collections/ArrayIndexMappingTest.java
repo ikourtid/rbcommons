@@ -64,6 +64,7 @@ public class ArrayIndexMappingTest {
 
             // The following use the correct type, but are invalid for other reasons (per comments):
             simpleArrayIndexMapping(matrixColumnIndex( 1)),                          // should start with 0
+            simpleArrayIndexMapping(matrixColumnIndex( 0),  matrixColumnIndex( 0)),  // should be increasing
             simpleArrayIndexMapping(matrixColumnIndex( 1),  matrixColumnIndex( 0)),  // should start with 0
             simpleArrayIndexMapping(matrixColumnIndex( 0),  matrixColumnIndex( 2)))  // not consecutive ints starting with 0
         .forEach(arrayIndexMapping ->
