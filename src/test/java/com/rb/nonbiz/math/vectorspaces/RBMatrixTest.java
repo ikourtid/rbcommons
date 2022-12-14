@@ -251,12 +251,12 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
   @Test
   public void testDiagonalMatrix() {
     assertThat(
-        rbDiagonalMatrix(rbVector(1, 2, 3)),
+        rbDiagonalMatrix(rbVector(55, 66, 77)),
         rbMatrixMatcher(
             rbMatrix3by3(
-                1, 0, 0,
-                0, 2, 0,
-                0, 0, 3)));
+                55,  0,  0,
+                0,  66,  0,
+                0,   0, 77)));
     assertThat(
         rbDiagonalMatrix(rbVector(1, 1, 1)),
         rbMatrixMatcher(

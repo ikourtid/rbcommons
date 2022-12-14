@@ -11,10 +11,12 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 /**
  * An immutable square matrix.
  *
- * I went back-and-forth between using inheritance and object composition, and settled for the latter.
+ * <p> I went back-and-forth between using inheritance and object composition, and settled for the latter.
  * Even though this is clearly an "is a" relationship, composition is useful because it saves us from having to
  * duplicate some preconditions. Plus, it hides some methods: getNumRows and getNumColumns were replaced with the
- * more explicit #getNumRowsOrColumns.
+ * more explicit #getNumRowsOrColumns. </p>
+ *
+ * @see RBMatrix
  */
 public class RBSquareMatrix {
 

@@ -85,11 +85,11 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
   @Test
   public void testDiagonalMatrix() {
     assertThat(
-        rbDiagonalSquareMatrix(rbVector(1, 2, 3)),
+        rbDiagonalSquareMatrix(rbVector(77, 88, 99)),
         rbSquareMatrixMatcher(rbSquareMatrix3by3(
-            1, 0, 0,
-            0, 2, 0,
-            0, 0, 3)));
+            77, 0,  0,
+            0, 88,  0,
+            0,  0, 99)));
   }
 
   @Override

@@ -19,10 +19,12 @@ import static com.rb.nonbiz.math.vectorspaces.RBVector.rbVector;
  * in the sense that this doesn't expose any methods that can result in mutating the object,
  * or even expose the matrix itself, where the caller could mutate it.
  *
- * We don't have 'double' in the name, because we never use floats, and I don't even know if it ever makes sense
- * to have an int. And we certainly don't use complex numbers. So 'double' is implied here.
+ * <p> We don't have 'double' in the name, because we never use floats, and I don't even know if it ever makes sense
+ * to have an int. And we certainly don't use complex numbers. So 'double' is implied here. </p>
  *
- * Note that we do not allow an empty matrix, for error-checking purposes, since our use cases do not need that.
+ * <p> Note that we do not allow an empty matrix, for error-checking purposes, since our use cases do not need that. </p>
+ *
+ * @see RBSquareMatrix
  */
 public class RBMatrix {
 
