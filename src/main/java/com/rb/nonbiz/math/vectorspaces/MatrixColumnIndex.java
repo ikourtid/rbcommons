@@ -29,8 +29,10 @@ public class MatrixColumnIndex implements IsArrayIndex {
 
   @Override
   public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) return false;
-    return (rawIndex == ((MatrixColumnIndex)o).rawIndex);
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    return rawIndex == ((MatrixColumnIndex)o).rawIndex;
   }
 
   @Override
