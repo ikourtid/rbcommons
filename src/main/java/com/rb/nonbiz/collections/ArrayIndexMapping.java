@@ -56,11 +56,16 @@ public interface ArrayIndexMapping<T> {
   }
 
   /**
-   * Only for the cases where the generic type T is an integer, and this object is non-empty,
-   * this will return true if the mapping is the identity function, i.e. number N maps to array position N.
+   * Only for the cases where the generic type T implements {@link IsArrayIndex}
+   * and this object is non-empty, this will return true if the mapping is the identity function,
+   * i.e. number N maps to array position N.
+   *
+   * <p> We also check that all keys are of the same class. </p>
    *
    * <p> Note that this will return false if the mapping is empty, just to be safe, since (due to the way Java
    * type erasure works) we'd have no way of checking what type T is. </p>
+   *
+   * @see IsArrayIndex
    */
   default boolean isTrivialIdentityMapping() {
     int size = size();
@@ -68,18 +73,23 @@ public interface ArrayIndexMapping<T> {
       return false;
     }
     // OK, so there's at least one item in the mapping. Let's get it.
-    T key = getKey(0);
+    T key0 = getKey(0);
     // We don't like using reflection and instanceof this way, but ArrayIndexMapping does not store the class object
     // of its type T, so we have to resort to this.
-    if (!(key instanceof IsArrayIndex)) {
+    if (!(key0 instanceof IsArrayIndex)) {
       return false;
     }
-    // There's no way for this class to have different types of keys, because it is generic on T, and all keys are
-    // forced to be of type T. Therefore, if the first key is an int, then all must be ints by this point in the code.
-    // We don't need to run that check for all of them.
+    // At this point we know that all keys are of type IsArrayIndex, because this class is generic on T
+    // and key0 is "instanceof IsArrayIndex". However, the different keys could be different classes that
+    // implement IsArrayIndex, so we need to check that they're all the same.
+    Class<?> key0Class = key0.getClass();
     return IntStream.range(0, size)
         .allMatch(numericIndex -> {
-          int keyAsInt = ((IsArrayIndex) getKey(numericIndex)).asInt();
+          T key = getKey(numericIndex);
+          if (key.getClass() != key0Class) {
+            return false;
+          }
+          int keyAsInt = ((IsArrayIndex) key).asInt();
           return keyAsInt == numericIndex;
         });
   }
