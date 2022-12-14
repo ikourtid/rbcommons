@@ -7,7 +7,9 @@ import org.junit.Test;
 
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrixMatcher;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.rbDiagonalSquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.rbIdentitySquareMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -78,6 +80,16 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
             1, 0, 0,
             0, 1, 0,
             0, 0, 1)));
+  }
+
+  @Test
+  public void testDiagonalMatrix() {
+    assertThat(
+        rbDiagonalSquareMatrix(rbVector(77, 88, 99)),
+        rbSquareMatrixMatcher(rbSquareMatrix3by3(
+            77, 0,  0,
+            0, 88,  0,
+            0,  0, 99)));
   }
 
   @Override
