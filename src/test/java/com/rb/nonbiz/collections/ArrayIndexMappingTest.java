@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
+import com.rb.nonbiz.math.vectorspaces.IsArrayIndex;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
 import org.hamcrest.Description;
@@ -66,7 +67,9 @@ public class ArrayIndexMappingTest {
             simpleArrayIndexMapping(matrixColumnIndex( 1)),                          // should start with 0
             simpleArrayIndexMapping(matrixColumnIndex( 0),  matrixColumnIndex( 0)),  // should be increasing
             simpleArrayIndexMapping(matrixColumnIndex( 1),  matrixColumnIndex( 0)),  // should start with 0
-            simpleArrayIndexMapping(matrixColumnIndex( 0),  matrixColumnIndex( 2)))  // not consecutive ints starting with 0
+            simpleArrayIndexMapping(matrixColumnIndex( 0),  matrixColumnIndex( 2)),  // not consecutive ints starting with 0
+            simpleArrayIndexMapping(matrixColumnIndex( 0),  matrixRowIndex(    1)),  // mismatched types
+            simpleArrayIndexMapping(matrixRowIndex(    0),  matrixColumnIndex( 1)))  // mismatched types
         .forEach(arrayIndexMapping ->
             assertFalse(arrayIndexMapping.isTrivialIdentityMapping()));
 
