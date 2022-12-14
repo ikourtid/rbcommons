@@ -28,6 +28,17 @@ public class MatrixColumnIndex implements IsArrayIndex {
   }
 
   @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    return (rawIndex == ((MatrixColumnIndex)o).rawIndex);
+  }
+
+  @Override
+  public int hashCode() {
+    return rawIndex;
+  }
+
+  @Override
   public String toString() {
     return Strings.format("[MCI %s MCI]", rawIndex);
   }
