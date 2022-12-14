@@ -2,7 +2,6 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -14,7 +13,7 @@ import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnInde
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrixTest.rbIndexableMatrixMatcher;
-import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrixTest.singletonRBIndexableMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbDiagonalMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVectorMatcher;
@@ -25,7 +24,6 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
@@ -33,10 +31,23 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     return rbMatrix(new double[][] { { onlyValue } });
   }
 
+  public static RBMatrix rbDiagonalMatrix2by2(double a11, double a22) {
+    return rbMatrix2by2(
+        a11, 0.0,
+        0.0, a22);
+  }
+
   public static RBMatrix rbMatrix2by2(double a11, double a12, double a21, double a22) {
     return rbMatrix(new double[][] {
         { a11, a12 },
         { a21, a22 }});
+  }
+
+  public static RBMatrix rbDiagonalMatrix3by3(double a11, double a22, double a33) {
+    return rbMatrix3by3(
+        a11,  0,   0,
+        0,  a22,   0,
+        0,    0, a33);
   }
 
   public static RBMatrix rbMatrix3by3(
@@ -193,14 +204,8 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
     // The inverse of a diagonal matrix is another diagonal matrix, whose elements are reciprocals of the original's.
     asserter.accept(
-        rbMatrix3by3(
-            4.0, 0.0, 0.0,
-            0.0, 5.0, 0.0,
-            0.0, 0.0, 0.1),
-        rbMatrix3by3(
-            0.25, 0.0,  0.0,
-            0.0,  0.2,  0.0,
-            0.0,  0.0, 10.0));
+        rbDiagonalMatrix(rbVector(4.0,  5.0,  0.1)),
+        rbDiagonalMatrix(rbVector(0.25, 0.2, 10.0)));
 
     // The inverse of a rotation matrix is the inverse rotation.
     asserter.accept(
@@ -241,6 +246,21 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
                 - 800.1,    700.1),
             // need a larger epsilon here than in asserter()
             1e-6));
+  }
+
+  @Test
+  public void testDiagonalMatrix() {
+    assertThat(
+        rbDiagonalMatrix(rbVector(55, 66, 77)),
+        rbMatrixMatcher(
+            rbMatrix3by3(
+                55,  0,  0,
+                0,  66,  0,
+                0,   0, 77)));
+    assertThat(
+        rbDiagonalMatrix(rbVector(1, 1, 1)),
+        rbMatrixMatcher(
+            rbIdentityMatrix(3)));
   }
 
   @Test

@@ -1,18 +1,22 @@
 package com.rb.nonbiz.math.vectorspaces;
 
+import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.linalg.Algebra;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 
 /**
  * An immutable square matrix.
  *
- * I went back-and-forth between using inheritance and object composition, and settled for the latter.
+ * <p> I went back-and-forth between using inheritance and object composition, and settled for the latter.
  * Even though this is clearly an "is a" relationship, composition is useful because it saves us from having to
  * duplicate some preconditions. Plus, it hides some methods: getNumRows and getNumColumns were replaced with the
- * more explicit #getNumRowsOrColumns.
+ * more explicit #getNumRowsOrColumns. </p>
+ *
+ * @see RBMatrix
  */
 public class RBSquareMatrix {
 
@@ -35,6 +39,11 @@ public class RBSquareMatrix {
 
   public static RBSquareMatrix rbIdentitySquareMatrix(int n) {
     return rbSquareMatrix(rbIdentityMatrix(n));
+  }
+
+  public static RBSquareMatrix rbDiagonalSquareMatrix(RBVector rbVector) {
+    return rbSquareMatrix(rbMatrix(DoubleFactory2D.dense.diagonal(
+        rbVector.getRawDoubleMatrix1DUnsafe())));
   }
 
   public RBVector getColumnVector(MatrixColumnIndex matrixColumnIndex) {
