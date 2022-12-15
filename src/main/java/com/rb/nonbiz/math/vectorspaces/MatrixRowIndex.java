@@ -28,6 +28,19 @@ public class MatrixRowIndex implements IsArrayIndex {
   }
 
   @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    return rawIndex == ((MatrixRowIndex)o).rawIndex;
+  }
+
+  @Override
+  public int hashCode() {
+    return rawIndex;
+  }
+
+  @Override
   public String toString() {
     return Strings.format("[MRI %s MRI]", rawIndex);
   }
