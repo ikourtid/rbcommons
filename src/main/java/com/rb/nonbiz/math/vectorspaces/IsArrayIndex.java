@@ -9,7 +9,5 @@ package com.rb.nonbiz.math.vectorspaces;
 public interface IsArrayIndex {
 
   int asInt();
-  // Fixme CM...implement the standard equals and hashcode for classes derived from this. Issue 1313.
-
 
 }
