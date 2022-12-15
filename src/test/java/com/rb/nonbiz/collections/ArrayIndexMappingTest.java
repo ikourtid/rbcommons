@@ -48,18 +48,18 @@ public class ArrayIndexMappingTest {
 
   @Test
   public void testBadArguments() {
-    // Dupe arguments throws...none dupes won't throw
+    // Dupe arguments throws...no dupes won't throw.
     assertIllegalArgumentException( () ->
-        simpleArrayIndexMapping(matrixColumnIndex( 0),  matrixColumnIndex( 0)));
+        simpleArrayIndexMapping(matrixColumnIndex(0), matrixColumnIndex(0)));
     assertIllegalArgumentException( () ->
-        simpleArrayIndexMapping(matrixColumnIndex( 8),  matrixColumnIndex( 8)));
+        simpleArrayIndexMapping(matrixColumnIndex(8), matrixColumnIndex(8)));
     SimpleArrayIndexMapping<MatrixColumnIndex> doesNotThrowMatrixColumnIndex =
-        simpleArrayIndexMapping(matrixColumnIndex( 0),  matrixColumnIndex( 1));
+        simpleArrayIndexMapping(matrixColumnIndex(0), matrixColumnIndex(1));
 
     // Same with strings
-    assertIllegalArgumentException( () -> simpleArrayIndexMapping( "a", "a"));
-    assertIllegalArgumentException( () -> simpleArrayIndexMapping( "b", "b"));
-    SimpleArrayIndexMapping<String> doesNotThrowString = simpleArrayIndexMapping( "a", "b");
+    assertIllegalArgumentException( () -> simpleArrayIndexMapping("a", "a"));
+    assertIllegalArgumentException( () -> simpleArrayIndexMapping("b", "b"));
+    SimpleArrayIndexMapping<String> doesNotThrowString = simpleArrayIndexMapping("a", "b");
   }
 
   @Test
