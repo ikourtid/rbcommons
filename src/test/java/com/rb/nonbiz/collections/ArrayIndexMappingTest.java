@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.math.vectorspaces.IsArrayIndex;
+import com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
 import org.hamcrest.Description;
@@ -15,6 +16,7 @@ import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.emptySimpleArray
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -45,6 +47,22 @@ public class ArrayIndexMappingTest {
   }
 
   @Test
+  public void testBadArguments() {
+    // Dupe arguments throws...no dupes won't throw.
+    assertIllegalArgumentException( () ->
+        simpleArrayIndexMapping(matrixColumnIndex(0), matrixColumnIndex(0)));
+    assertIllegalArgumentException( () ->
+        simpleArrayIndexMapping(matrixColumnIndex(8), matrixColumnIndex(8)));
+    SimpleArrayIndexMapping<MatrixColumnIndex> doesNotThrowMatrixColumnIndex =
+        simpleArrayIndexMapping(matrixColumnIndex(0), matrixColumnIndex(1));
+
+    // Same with strings
+    assertIllegalArgumentException( () -> simpleArrayIndexMapping("a", "a"));
+    assertIllegalArgumentException( () -> simpleArrayIndexMapping("b", "b"));
+    SimpleArrayIndexMapping<String> doesNotThrowString = simpleArrayIndexMapping("a", "b");
+  }
+
+  @Test
   public void testIsTrivialIdentityMapping() {
     ImmutableList.of(
             emptySimpleArrayIndexMapping(),    // unknown type
@@ -65,8 +83,8 @@ public class ArrayIndexMappingTest {
 
             // The following use the correct type, but are invalid for other reasons (per comments):
             simpleArrayIndexMapping(matrixColumnIndex( 1)),                          // should start with 0
-            simpleArrayIndexMapping(matrixColumnIndex( 0),  matrixColumnIndex( 0)),  // should be increasing
             simpleArrayIndexMapping(matrixColumnIndex( 1),  matrixColumnIndex( 0)),  // should start with 0
+            simpleArrayIndexMapping(matrixColumnIndex( 2),  matrixColumnIndex( 0)),  // should start with 0
             simpleArrayIndexMapping(matrixColumnIndex( 0),  matrixColumnIndex( 2)),  // not consecutive ints starting with 0
             simpleArrayIndexMapping(matrixColumnIndex( 0),  matrixRowIndex(    1)),  // mismatched types
             simpleArrayIndexMapping(matrixRowIndex(    0),  matrixColumnIndex( 1)))  // mismatched types
