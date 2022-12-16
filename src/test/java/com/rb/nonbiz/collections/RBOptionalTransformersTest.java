@@ -4,29 +4,23 @@ import com.rb.biz.types.Price;
 import com.rb.nonbiz.text.Strings;
 import org.junit.Test;
 
+import java.text.DecimalFormat;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import static com.rb.biz.types.Price.averagePrice;
 import static com.rb.biz.types.Price.price;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformAtLeastOnePresentOptionalOrThrow;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional2;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalWithPredicate;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformPairOfOptionalDoubles;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformPairOfOptionalInts;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformPairOfOptionals;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformPairOfOptionalsAssumingBothOrNeitherAreEmpty;
+import static com.rb.nonbiz.collections.RBOptionalTransformers.*;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class RBOptionalTransformersTest {
 
@@ -154,10 +148,36 @@ public class RBOptionalTransformersTest {
   }
 
   @Test
-  public void fail_ChrisPleaseFillIn() {
-    // Chris, can you add tests for these?
-    // transformOptional{Int,Double,Long}
-    fail("FIXME CM");
+  public void testTransformOptionalNumbers() {
+    // transformOptionalInt...present and missing, same return type and different return type.
+    assertEquals( Optional.of(20), transformOptionalInt(OptionalInt.of(10),
+        (val) -> 2 * val));
+    assertEquals( Optional.empty(), transformOptionalInt(OptionalInt.empty(),
+        (val) -> 2 * val));
+    assertEquals( Optional.of("40"), transformOptionalInt(OptionalInt.of(10),
+        (val) -> Integer.toString(4 * val)));
+    assertEquals( Optional.empty(), transformOptionalInt(OptionalInt.empty(),
+        (val) -> Integer.toString(4 * val)));
+
+    // transformOptionalDouble...present and missing, same return type and different return type.
+    assertEquals( Optional.of(20.0), transformOptionalDouble(OptionalDouble.of(10.0),
+        (val) -> 2.0 * val));
+    assertEquals( Optional.empty(), transformOptionalDouble(OptionalDouble.empty(),
+        (val) -> 2.0 * val));
+    assertEquals( Optional.of("40.0"), transformOptionalDouble(OptionalDouble.of(10),
+        (val) -> new DecimalFormat("#0.0").format(4 * val)));
+    assertEquals( Optional.empty(), transformOptionalDouble(OptionalDouble.empty(),
+        (val) -> new DecimalFormat("#0.0").format(4 * val)));
+
+    // transformOptionalLong...present and missing, same return type and different return type.
+    assertEquals( Optional.of(Long.valueOf(20)), transformOptionalLong(OptionalLong.of(10),
+        (val) -> 2 * val));
+    assertEquals( Optional.empty(), transformOptionalLong(OptionalLong.empty(),
+        (val) -> 2 * val));
+    assertEquals( Optional.of("40"), transformOptionalLong(OptionalLong.of(10),
+        (val) -> new DecimalFormat("#0").format(4 * val)));
+    assertEquals( Optional.empty(), transformOptionalLong(OptionalLong.empty(),
+        (val) -> new DecimalFormat("#0").format(4 * val)));
   }
 
 }
