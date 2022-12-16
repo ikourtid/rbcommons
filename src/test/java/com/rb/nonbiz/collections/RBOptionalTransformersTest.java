@@ -156,40 +156,16 @@ public class RBOptionalTransformersTest {
     assertEquals(Optional.empty(), transformOptionalInt(OptionalInt.empty(),    v -> Integer.toString(4 * v)));
 
     // transformOptionalDouble...present and missing, same return type and different return type.
-    assertEquals(
-        Optional.of(20.0),
-        transformOptionalDouble(OptionalDouble.of(10.0),
-            v -> 2.0 * v));
-    assertEquals(
-        Optional.empty(),
-        transformOptionalDouble(OptionalDouble.empty(),
-            v -> 2.0 * v));
-    assertEquals(
-        Optional.of("40.0"),
-        transformOptionalDouble(OptionalDouble.of(10),
-            v -> new DecimalFormat("#0.0").format(4 * v)));
-    assertEquals(
-        Optional.empty(),
-        transformOptionalDouble(OptionalDouble.empty(),
-            v -> new DecimalFormat("#0.0").format(4 * v)));
+    assertEquals(Optional.of(20.0), transformOptionalDouble(OptionalDouble.of(10.0), v -> 2.0 * v));
+    assertEquals(Optional.empty(), transformOptionalDouble(OptionalDouble.empty(), v -> 2.0 * v));
+    assertEquals(Optional.of("40.0"), transformOptionalDouble(OptionalDouble.of(10), v -> new DecimalFormat("#0.0").format(4 * v)));
+    assertEquals(Optional.empty(), transformOptionalDouble(OptionalDouble.empty(), v -> new DecimalFormat("#0.0").format(4 * v)));
 
     // transformOptionalLong...present and missing, same return type and different return type.
-    assertEquals(
-        Optional.of(Long.valueOf(20)),
-        transformOptionalLong(OptionalLong.of(10),
-            v -> 2 * v));
-    assertEquals(
-        Optional.empty(),
-        transformOptionalLong(OptionalLong.empty(),
-            v -> 2 * v));
-    assertEquals(
-        Optional.of("40"),
-        transformOptionalLong(OptionalLong.of(10),
-            v -> new DecimalFormat("#0").format(4 * v)));
-    assertEquals(
-        Optional.empty(),
-        transformOptionalLong(OptionalLong.empty(),
-            v -> new DecimalFormat("#0").format(4 * v)));
+    assertEquals(Optional.of(Long.valueOf(20)), transformOptionalLong(OptionalLong.of(10), v -> 2 * v));
+    assertEquals(Optional.empty(), transformOptionalLong(OptionalLong.empty(),            v -> 2 * v));
+    assertEquals(Optional.of("40"), transformOptionalLong(OptionalLong.of(10),         v -> new DecimalFormat("#0").format(4 * v)));
+    assertEquals(Optional.empty(), transformOptionalLong(OptionalLong.empty(),            v -> new DecimalFormat("#0").format(4 * v)));
   }
 
 }
