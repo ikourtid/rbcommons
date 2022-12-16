@@ -150,34 +150,46 @@ public class RBOptionalTransformersTest {
   @Test
   public void testTransformOptionalNumbers() {
     // transformOptionalInt...present and missing, same return type and different return type.
-    assertEquals( Optional.of(20), transformOptionalInt(OptionalInt.of(10),
-        (val) -> 2 * val));
-    assertEquals( Optional.empty(), transformOptionalInt(OptionalInt.empty(),
-        (val) -> 2 * val));
-    assertEquals( Optional.of("40"), transformOptionalInt(OptionalInt.of(10),
-        (val) -> Integer.toString(4 * val)));
-    assertEquals( Optional.empty(), transformOptionalInt(OptionalInt.empty(),
-        (val) -> Integer.toString(4 * val)));
+    assertEquals(Optional.of(20), transformOptionalInt(OptionalInt.of(10),   v -> 2 * v));
+    assertEquals(Optional.empty(), transformOptionalInt(OptionalInt.empty(),    v -> 2 * v));
+    assertEquals(Optional.of("40"), transformOptionalInt(OptionalInt.of(10), v -> Integer.toString(4 * v)));
+    assertEquals(Optional.empty(), transformOptionalInt(OptionalInt.empty(),    v -> Integer.toString(4 * v)));
 
     // transformOptionalDouble...present and missing, same return type and different return type.
-    assertEquals( Optional.of(20.0), transformOptionalDouble(OptionalDouble.of(10.0),
-        (val) -> 2.0 * val));
-    assertEquals( Optional.empty(), transformOptionalDouble(OptionalDouble.empty(),
-        (val) -> 2.0 * val));
-    assertEquals( Optional.of("40.0"), transformOptionalDouble(OptionalDouble.of(10),
-        (val) -> new DecimalFormat("#0.0").format(4 * val)));
-    assertEquals( Optional.empty(), transformOptionalDouble(OptionalDouble.empty(),
-        (val) -> new DecimalFormat("#0.0").format(4 * val)));
+    assertEquals(
+        Optional.of(20.0),
+        transformOptionalDouble(OptionalDouble.of(10.0),
+            v -> 2.0 * v));
+    assertEquals(
+        Optional.empty(),
+        transformOptionalDouble(OptionalDouble.empty(),
+            v -> 2.0 * v));
+    assertEquals(
+        Optional.of("40.0"),
+        transformOptionalDouble(OptionalDouble.of(10),
+            v -> new DecimalFormat("#0.0").format(4 * v)));
+    assertEquals(
+        Optional.empty(),
+        transformOptionalDouble(OptionalDouble.empty(),
+            v -> new DecimalFormat("#0.0").format(4 * v)));
 
     // transformOptionalLong...present and missing, same return type and different return type.
-    assertEquals( Optional.of(Long.valueOf(20)), transformOptionalLong(OptionalLong.of(10),
-        (val) -> 2 * val));
-    assertEquals( Optional.empty(), transformOptionalLong(OptionalLong.empty(),
-        (val) -> 2 * val));
-    assertEquals( Optional.of("40"), transformOptionalLong(OptionalLong.of(10),
-        (val) -> new DecimalFormat("#0").format(4 * val)));
-    assertEquals( Optional.empty(), transformOptionalLong(OptionalLong.empty(),
-        (val) -> new DecimalFormat("#0").format(4 * val)));
+    assertEquals(
+        Optional.of(Long.valueOf(20)),
+        transformOptionalLong(OptionalLong.of(10),
+            v -> 2 * v));
+    assertEquals(
+        Optional.empty(),
+        transformOptionalLong(OptionalLong.empty(),
+            v -> 2 * v));
+    assertEquals(
+        Optional.of("40"),
+        transformOptionalLong(OptionalLong.of(10),
+            v -> new DecimalFormat("#0").format(4 * v)));
+    assertEquals(
+        Optional.empty(),
+        transformOptionalLong(OptionalLong.empty(),
+            v -> new DecimalFormat("#0").format(4 * v)));
   }
 
 }
