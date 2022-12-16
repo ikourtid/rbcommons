@@ -164,7 +164,7 @@ public class RBOptionalTransformersTest {
     // transformOptionalLong...present and missing, same return type and different return type.
     assertEquals(Optional.of(Long.valueOf(20)), transformOptionalLong(OptionalLong.of(10), v -> 2 * v));
     assertEquals(Optional.empty(), transformOptionalLong(OptionalLong.empty(),             v -> 2 * v));
-    assertEquals(Optional.of("40"), transformOptionalLong(OptionalLong.of(10),            v -> new DecimalFormat("#0").format(4 * v)));
+    assertEquals(Optional.of("40"), transformOptionalLong(OptionalLong.of(10),             v -> new DecimalFormat("#0").format(4 * v)));
     assertEquals(Optional.empty(), transformOptionalLong(OptionalLong.empty(),             v -> new DecimalFormat("#0").format(4 * v)));
   }
 
