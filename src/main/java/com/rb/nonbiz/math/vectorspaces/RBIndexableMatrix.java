@@ -116,6 +116,34 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
         rightMatrix.getColumnMapping());
   }
 
+  /**
+   * Matrix inverse. This mostly calls the Colt matrix inverse() function.
+   *
+   * <p> Additionally, because this is an indexable matrix,
+   * the row and column mappings of the original become the column and row mappings (respectively) of the inverse.
+   * Although this is a loose explanation, this makes more sense if you think of the matrix as a transformation
+   * from A to B; the inverse is a transformation from B to A. </p>
+   *
+   * <p> This will throw an exception for singular matrices, as it should; they don't have inverses. </p>
+   *
+   * <p> Warning: this will fail silently for nearly-singular matrices. That is, it will produce
+   * an inverse matrix consisting of large almost-balancing positive and negative elements, but
+   * the entries will depend very sensitively on the input. </p>
+   *
+   * <p> What you probably want in this situation is to use something like
+   * singular value decomposition (SVD) to get a more robust estimate of the inverse. </p>
+   *
+   * <p> Before relying on this inverse, it would be wise to check the "condition number" of the matrix.
+   * A condition number much greater than 1.0 indicates near-singularity. Conversely, rotation and
+   * permutation matrices have condition numbers of 1.0. </p>
+   */
+  public RBIndexableMatrix<C, R> inverse() {
+    return rbIndexableMatrix(
+        new Algebra().inverse(rawMatrix),
+        columnMapping,
+        rowMapping);
+  }
+
   @Override
   public double getByIndex(int rowIndex, int columnIndex) {
     return rawMatrix.get(rowIndex, columnIndex);

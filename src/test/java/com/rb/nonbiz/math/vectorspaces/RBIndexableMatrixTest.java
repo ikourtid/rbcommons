@@ -221,6 +221,28 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
                 simpleArrayIndexMapping(55)))));
   }
 
+  @Test
+  public void testInverse_generalCase() {
+    // General inverse. See https://www.wolframalpha.com/input?i=inverse%7B+%7B1%2C+2%7D%2C+%7B3%2C+4%7D%7D
+    assertThat(
+        rbIndexableMatrix(
+            new DenseDoubleMatrix2D(new double[][] {
+                { 1.0, 2.0 },
+                { 3.0, 4.0 }
+            }),
+            simpleArrayIndexMapping("a", "b"),
+            simpleArrayIndexMapping(77, 88))
+            .inverse(),
+        rbIndexableMatrixMatcher(
+            rbIndexableMatrix(
+                new DenseDoubleMatrix2D(new double[][] {
+                    { -2.0,  1.0 },
+                    {  1.5, -0.5 }
+                }),
+                simpleArrayIndexMapping(77, 88),
+                simpleArrayIndexMapping("a", "b"))));
+  }
+
   @Override
   public RBIndexableMatrix<String, Integer> makeTrivialObject() {
     return singletonRBIndexableMatrix("", 0, 0.0);
