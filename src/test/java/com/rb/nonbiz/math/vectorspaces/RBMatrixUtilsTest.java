@@ -49,18 +49,27 @@ public class RBMatrixUtilsTest extends TestCase {
     // If interested, orthToRaw comes from:
     //   DoubleMatrix2D orthToRaw = new Algebra().inverse(matrix2by2(0.866, 0.866, -0.5, 0.5));
     // For now this matrix may seem arbitrary, but we check it below
-    DoubleMatrix2D orthToRaw = matrix2by2(
-        0.57737, -1,
-        0.57737,1);
-    assertTrue(isOrthoNormalTransformationMatrix(orthToRaw, covMat, epsilon));
-    // Below is valid, along with equivelent transforms which negate one side
-    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2(0.57737, -1, 0.57737,1), covMat, epsilon));
-    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2(0.57737, 1, 0.57737,-1), covMat, epsilon));
-    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2(-0.57737, -1, -0.57737,1), covMat, epsilon));
+    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2( 0.57737, -1, 0.57737,  1), covMat, epsilon));
+    /** Below the tests repeat the case above, and also assert that negating one side of the transformation is valid.
+     * Intuitively, if T is a valid transformation from orthonormal to raw, and transformation that is the same
+     * as T but flips the sign of a vector in raw space is also valid.
+     * For example, imagine that
+     *     (1, 0) in orthonormal space is (-2 marketcap, 0.5 growth) in raw space.
+     *     (0, 1) in orthonormal space is (0.5 marketcap, 2 growth) in raw space.
+     * Then it's equaly valid to (A) negate one of the transformation.  i.e.
+     *       To say that (1, 0) in orthonormal space is (2 marketcap, -0.5 growth) in raw space.
+     *     or to (B) flip the meaning of (1, 0) and (0, 1) in orth space.  i.e.
+     *     (0, 1) in orthonormal space is (-2 marketcap, 0.5 growth) in raw space.
+     *     (1, 0) in orthonormal space is (0.5 marketcap, 2 growth) in raw space.
+     */
+
+    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2(0.57737,  -1, 0.57737,  1), covMat, epsilon));
+    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2(0.57737,   1, 0.57737, -1), covMat, epsilon));
+    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2(-0.57737, -1, -0.57737, 1), covMat, epsilon));
     // Switching top and bottom is the same as well, even if we negate one side
-    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2(0.57737, -1, 0.57737,1), covMat, epsilon));
-    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2( 0.57737,1, 0.57737, -1), covMat, epsilon));
-    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2( 0.57737,-1, 0.57737, 1), covMat, epsilon));
+    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2(0.57737,  -1, 0.57737,  1), covMat, epsilon));
+    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2( 0.57737,  1, 0.57737, -1), covMat, epsilon));
+    assertTrue(isOrthoNormalTransformationMatrix(matrix2by2( 0.57737, -1, 0.57737,  1), covMat, epsilon));
 
     // Making a large change to the transormation makes in invalid
     for (double delta : newRBSet(-0.1, 0.1)) {
@@ -77,9 +86,15 @@ public class RBMatrixUtilsTest extends TestCase {
     // For 2x2, it's enough to check that:
     //   variance( [1, 0]) = variance( [0, 1] ) = 1.0
     //   variance( [1, 1]) = 2.0
-    assertEquals(computeVariance(covMat, new Algebra().mult(orthToRaw, matrix2by1(1,0))), 1.0, epsilon);
-    assertEquals(computeVariance(covMat, new Algebra().mult(orthToRaw, matrix2by1(0,1))), 1.0, epsilon);
-    assertEquals(computeVariance(covMat, new Algebra().mult(orthToRaw, matrix2by1(1,1))), 2.0, epsilon);
+    assertEquals(computeVariance(covMat, new Algebra().mult(matrix2by2(
+        0.57737, -1,
+        0.57737,1), matrix2by1(1,0))), 1.0, epsilon);
+    assertEquals(computeVariance(covMat, new Algebra().mult(matrix2by2(
+        0.57737, -1,
+        0.57737,1), matrix2by1(0,1))), 1.0, epsilon);
+    assertEquals(computeVariance(covMat, new Algebra().mult(matrix2by2(
+        0.57737, -1,
+        0.57737,1), matrix2by1(1,1))), 2.0, epsilon);
   }
   @Test
   public void testIsOrthoNormalTransformationMatrixNoCovariance() {
