@@ -144,6 +144,19 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
         rowMapping);
   }
 
+  /**
+   * Matrix transpose.
+   *
+   * <p> Because this is an indexable matrix, the row and column mappings of the original
+   * will become the column and row mappings (respectively) of the inverse. </p>
+   */
+  public RBIndexableMatrix<C, R> transpose() {
+    return rbIndexableMatrix(
+        new Algebra().transpose(rawMatrix),
+        columnMapping,
+        rowMapping);
+  }
+
   @Override
   public double getByIndex(int rowIndex, int columnIndex) {
     return rawMatrix.get(rowIndex, columnIndex);
