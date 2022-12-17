@@ -243,6 +243,28 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
                 simpleArrayIndexMapping("a", "b"))));
   }
 
+  @Test
+  public void testTranspose() {
+    assertThat(
+        rbIndexableMatrix(
+            new DenseDoubleMatrix2D(new double[][] {
+                { 71.1, 71.2, 71.3 },
+                { 72.1, 72.2, 72.3 }
+            }),
+            simpleArrayIndexMapping(false, true),
+            simpleArrayIndexMapping("a", "b", "c"))
+            .transpose(),
+        rbIndexableMatrixMatcher(
+            rbIndexableMatrix(
+                new DenseDoubleMatrix2D(new double[][] {
+                    { 71.1, 72.1 },
+                    { 71.2, 72.2 },
+                    { 71.3, 72.3 }
+                }),
+                simpleArrayIndexMapping("a", "b", "c"),
+                simpleArrayIndexMapping(false, true))));
+  }
+
   @Override
   public RBIndexableMatrix<String, Integer> makeTrivialObject() {
     return singletonRBIndexableMatrix("", 0, 0.0);
