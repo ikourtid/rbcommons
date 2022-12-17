@@ -4,6 +4,7 @@ import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import com.rb.nonbiz.testutils.RBTest;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 
-public class RBMatrixUtilsTest {
+public class RBMatrixUtilsTest extends TestCase {
 
   private DoubleMatrix2D matrix2by2(double first, double second, double third, double fourth) {
     return rbMatrix2by2(first, second, third, fourth).getRawMatrixUnsafe();
