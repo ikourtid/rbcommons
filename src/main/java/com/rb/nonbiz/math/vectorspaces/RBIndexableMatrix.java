@@ -117,8 +117,12 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
   }
 
   /**
-   * Matrix inverse. This simply calls the Colt matrix inverse() function. Because this is an indexable matrix,
+   * Matrix inverse. This mostly calls the Colt matrix inverse() function.
+   *
+   * <p> Additionally, because this is an indexable matrix,
    * the row and column mappings of the original become the column and row mappings (respectively) of the inverse.
+   * Although this is a loose explanation, this makes more sense if you think of the matrix as a transformation
+   * from A to B; the inverse is a transformation from B to A. </p>
    *
    * <p> This will throw an exception for singular matrices, as it should; they don't have inverses. </p>
    *
