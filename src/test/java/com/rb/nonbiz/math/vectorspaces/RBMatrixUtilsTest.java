@@ -33,7 +33,7 @@ public class RBMatrixUtilsTest extends TestCase {
   }
 
   // Given raw loadings and a matrix, compute variance.  variance = loadings' * COVMAT * loadings
-  public double computeVariance(DoubleMatrix2D covarianceMatrix, DoubleMatrix2D rawLoadings) {
+  private double computeVariance(DoubleMatrix2D covarianceMatrix, DoubleMatrix2D rawLoadings) {
     Algebra algebra = new Algebra();
     // We are getting variance as a double, not a 1 x 1 matrix, hence using .get(0, 0).
     return algebra.mult(algebra.transpose(rawLoadings), algebra.mult(covarianceMatrix, rawLoadings)).get(0,0);
