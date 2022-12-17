@@ -17,8 +17,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 
-public class RBMatrixUtilsTest
-    extends RBTest<RBMatrixUtils> {
+public class RBMatrixUtilsTest {
 
   private DoubleMatrix2D matrix2by2(double first, double second, double third, double fourth) {
     return rbMatrix2by2(first, second, third, fourth).getRawMatrixUnsafe();
@@ -169,8 +168,4 @@ public class RBMatrixUtilsTest
     assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0,  1.0, 1.0,            1.0),  largeEpsilon));
   }
 
-  @Override
-  protected RBMatrixUtils makeTestObject() {
-    return new RBMatrixUtils();
-  }
 }
