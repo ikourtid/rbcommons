@@ -1,6 +1,7 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.linalg.Algebra;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.IndexableDoubleDataStore2D;
 import com.rb.nonbiz.text.Strings;
@@ -78,6 +79,41 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
                 .mapToObj(i -> matrixRowIndex(i))
                 .iterator()),
         columnMapping);
+  }
+
+  /**
+   * When we multiply two matrixes, the # of columns in the left matrix must be the same as the # of rows in the right
+   * matrix. Since this is a {@link RBIndexableMatrix}, the types must also match. However, just to be on the safe
+   * side, we will also confirm that the mapping key for the n-th column of the left matrix is the same as the
+   * mapping key of the n-th row of the right matrix.
+   *
+   * The types are: (R, C) x (C, C2), so the result is (R, C2).
+   */
+  public <C2> RBIndexableMatrix<R, C2> multiply(RBIndexableMatrix<C, C2> rightMatrix) {
+    ArrayIndexMapping<C> leftColumnMapping = this.getColumnMapping();
+    ArrayIndexMapping<C> rightRowMapping = rightMatrix.getRowMapping();
+    int sharedSize = checkBothSame(
+        leftColumnMapping.size(),
+        rightRowMapping.size(),
+        "We cannot multiply a %s x %s with a %s x %s matrix: %s %s",
+        this.getNumRows(), this.getNumColumns(), rightMatrix.getNumRows(), rightMatrix.getNumColumns(), this, rightMatrix);
+
+    for (int i = 0; i < sharedSize; i++) {
+      C leftKey = leftColumnMapping.getKey(i);
+      C rightKey = rightRowMapping.getKey(i);
+      // This relies on #equals, which is normally a pointer comparison in our code because we rarely
+      // implement a non-trivial equals / hashCode. However, for objects that become keys to an ArrayIndexMapping
+      // (or maps and other map-like objects, in general), we always do because we have to.
+      checkBothSame(
+          leftKey,
+          rightKey,
+          "In matrix multiplication, sizes are OK, but the keys do not match: %s %s",
+          this, rightMatrix);
+    }
+    return rbIndexableMatrix(
+        new Algebra().mult(this.rawMatrix, rightMatrix.rawMatrix),
+        this.getRowMapping(),
+        rightMatrix.getColumnMapping());
   }
 
   @Override
