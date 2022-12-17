@@ -84,7 +84,8 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
   /**
    * When we multiply two matrixes, the # of columns in the left matrix must be the same as the # of rows in the right
    * matrix. Since this is a {@link RBIndexableMatrix}, the types must also match. However, just to be on the safe
-   * side, we will confirm that the mapping key for the n-th
+   * side, we will also confirm that the mapping key for the n-th column of the left matrix is the same as the
+   * mapping key of the n-th row of the right matrix.
    */
   public <C2> RBIndexableMatrix<R, C2> multiply(RBIndexableMatrix<C, C2> rightMatrix) {
     ArrayIndexMapping<C> leftColumnMapping = this.getColumnMapping();
