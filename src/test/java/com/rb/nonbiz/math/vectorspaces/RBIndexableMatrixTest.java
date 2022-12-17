@@ -2,13 +2,14 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
-import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.emptySimpleArrayIndexMapping;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
@@ -20,6 +21,7 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -73,8 +75,8 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
     assertThat(
         rbIndexableMatrixWithTrivialRowMapping(
             new DenseDoubleMatrix2D(new double[][] {
-            { 1.1, 2.1, 3.1 },
-            { 1.2, 2.2, 3.2 } }),
+                { 1.1, 2.1, 3.1 },
+                { 1.2, 2.2, 3.2 } }),
             simpleArrayIndexMapping("a", "b", "c")),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
@@ -90,8 +92,8 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
     assertThat(
         rbIndexableMatrixWithTrivialColumnMapping(
             new DenseDoubleMatrix2D(new double[][] {
-            { 1.1, 2.1, 3.1 },
-            { 1.2, 2.2, 3.2 } }),
+                { 1.1, 2.1, 3.1 },
+                { 1.2, 2.2, 3.2 } }),
             simpleArrayIndexMapping(77, 88)),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
@@ -100,6 +102,123 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
                     { 1.2, 2.2, 3.2 } }),
                 simpleArrayIndexMapping(77, 88),
                 simpleArrayIndexMapping(matrixColumnIndex(0), matrixColumnIndex(1), matrixColumnIndex(2)))));
+  }
+
+  @Test
+  public void testMultiply_happyPath() {
+    assertThat(
+        "Matrix multiplication of 2 x 3 by 3 x 2 will give 2 x 2",
+        rbIndexableMatrix(
+            new DenseDoubleMatrix2D(new double[][] {
+                { 71.1, 71.2, 71.3 },
+                { 72.1, 72.2, 72.3 }
+            }),
+            simpleArrayIndexMapping(false, true),
+            simpleArrayIndexMapping("a", "b", "c"))
+            .multiply(
+                rbIndexableMatrix(
+                    new DenseDoubleMatrix2D(new double[][] {
+                        { 81.1, 81.2 },
+                        { 82.1, 82.2 },
+                        { 83.1, 83.2 }
+                    }),
+                    simpleArrayIndexMapping("a", "b", "c"),
+                    simpleArrayIndexMapping(55, 66))),
+        rbIndexableMatrixMatcher(
+            rbIndexableMatrix(
+                new DenseDoubleMatrix2D(new double[][] {
+                    {
+                        doubleExplained(17_536.76, 71.1 * 81.1 + 71.2 * 82.1 + 71.3 * 83.1 ),
+                        doubleExplained(17_558.12, 71.1 * 81.2 + 71.2 * 82.2 + 71.3 * 83.2 )
+                    },
+                    {
+                        doubleExplained(17_783.06, 72.1 * 81.1 + 72.2 * 82.1 + 72.3 * 83.1 ),
+                        doubleExplained(17_804.72, 72.1 * 81.2 + 72.2 * 82.2 + 72.3 * 83.2 )
+                    }
+                }),
+                simpleArrayIndexMapping(false, true),
+                simpleArrayIndexMapping(55, 66))));
+  }
+
+  @Test
+  public void columnsOnLeftMatrix_mustHaveSameKeysAs_rowsOnRightMatrix() {
+    Function<RBIndexableMatrix<String, Integer>, RBIndexableMatrix<Boolean, Integer>> maker = rightMatrix ->
+        rbIndexableMatrix(
+            new DenseDoubleMatrix2D(new double[][] {
+                { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
+                { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE }
+            }),
+            simpleArrayIndexMapping(false, true),
+            simpleArrayIndexMapping("a", "b", "c"))
+            .multiply(rightMatrix);
+
+    // One less row
+    assertIllegalArgumentException( () -> maker.apply(rbIndexableMatrix(
+        new DenseDoubleMatrix2D(new double[][] {
+            { DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE }
+        }),
+        simpleArrayIndexMapping("a", "b"),
+        simpleArrayIndexMapping(55, 66))));
+
+    // One more row
+    assertIllegalArgumentException( () -> maker.apply(rbIndexableMatrix(
+        new DenseDoubleMatrix2D(new double[][] {
+            { DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE }
+        }),
+        simpleArrayIndexMapping("a", "b", "c", "d"),
+        simpleArrayIndexMapping(55, 66))));
+
+    RBIndexableMatrix<Boolean, Integer> doesNotThrow;
+    // A 3 x 2 matrix, just like previous test
+    doesNotThrow = maker.apply(rbIndexableMatrix(
+        new DenseDoubleMatrix2D(new double[][] {
+            { DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE }
+        }),
+        simpleArrayIndexMapping("a", "b", "c"),
+        simpleArrayIndexMapping(55, 66)));
+
+    // one more column; irrelevant
+    doesNotThrow = maker.apply(rbIndexableMatrix(
+        new DenseDoubleMatrix2D(new double[][] {
+            { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE }
+        }),
+        simpleArrayIndexMapping("a", "b", "c"),
+        simpleArrayIndexMapping(55, 66, 77)));
+
+    // one less column; irrelevant
+    doesNotThrow = maker.apply(rbIndexableMatrix(
+        new DenseDoubleMatrix2D(new double[][] {
+            { DUMMY_DOUBLE },
+            { DUMMY_DOUBLE },
+            { DUMMY_DOUBLE }
+        }),
+        simpleArrayIndexMapping("a", "b", "c"),
+        simpleArrayIndexMapping(55)));
+
+    // Finally, if the keys are shuffled, or just different, then even if the sizes are proper,
+    // we should have an exception.
+    rbSetOf(
+        simpleArrayIndexMapping("X", "b", "c"),
+        simpleArrayIndexMapping("a", "X", "c"),
+        simpleArrayIndexMapping("a", "b", "X"),
+        simpleArrayIndexMapping("a", "c", "b"))
+        .forEach(rowMappingOfRightMatrix ->
+            assertIllegalArgumentException( () -> maker.apply(rbIndexableMatrix(
+                new DenseDoubleMatrix2D(new double[][] {
+                    { DUMMY_DOUBLE },
+                    { DUMMY_DOUBLE },
+                    { DUMMY_DOUBLE }
+                }),
+                rowMappingOfRightMatrix,
+                simpleArrayIndexMapping(55)))));
   }
 
   @Override
