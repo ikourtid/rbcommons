@@ -3,7 +3,6 @@ package com.rb.nonbiz.math.vectorspaces;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
-import com.rb.nonbiz.testutils.RBTest;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -11,33 +10,10 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrix2by2;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.singletonRBMatrix;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isOrthoNormalTransformationMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isAlmostIdentityMatrix;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isOrthoNormalTransformationMatrix;
 
 public class RBMatrixUtilsTest extends TestCase {
-
-  private DoubleMatrix2D matrix2by2(double first, double second, double third, double fourth) {
-    return rbMatrix2by2(first, second, third, fourth).getRawMatrixUnsafe();
-  }
-
-  private DoubleMatrix2D matrix2by1(double first, double second) {
-    return new DenseDoubleMatrix2D(new double[][] { { first }, { second } });
-  }
-
-  private DoubleMatrix2D singletonMatrix(double first) {
-    return singletonRBMatrix(first).getRawMatrixUnsafe();
-  }
-
-  // Given raw loadings and a matrix, compute variance.  variance = loadings' * COVMAT * loadings
-  private double computeVariance(DoubleMatrix2D covarianceMatrix, DoubleMatrix2D rawLoadings) {
-    Algebra algebra = new Algebra();
-    // We are getting variance as a double, not a 1 x 1 matrix, hence using .get(0, 0).
-    return algebra.mult(algebra.transpose(rawLoadings), algebra.mult(covarianceMatrix, rawLoadings)).get(0,0);
-  }
 
   @Test
   public void testIsOrthoNormalTransformationMatrixWithCovariance() {
@@ -88,21 +64,47 @@ public class RBMatrixUtilsTest extends TestCase {
     //   variance( [1, 1]) = 2.0
     assertEquals(computeVariance(covMat, new Algebra().mult(matrix2by2(
         0.57737, -1,
-        0.57737,1), matrix2by1(1,0))), 1.0, epsilon);
+        0.57737, 1), matrix2by1(1, 0))), 1.0, epsilon);
     assertEquals(computeVariance(covMat, new Algebra().mult(matrix2by2(
         0.57737, -1,
-        0.57737,1), matrix2by1(0,1))), 1.0, epsilon);
+        0.57737, 1), matrix2by1(0, 1))), 1.0, epsilon);
     assertEquals(computeVariance(covMat, new Algebra().mult(matrix2by2(
         0.57737, -1,
-        0.57737,1), matrix2by1(1,1))), 2.0, epsilon);
+        0.57737, 1), matrix2by1(1, 1))), 2.0, epsilon);
   }
+
+  private DoubleMatrix2D matrix2by2(double first, double second, double third, double fourth) {
+    return rbMatrix2by2(first, second, third, fourth).getRawMatrixUnsafe();
+  }
+
+  // Given raw loadings and a matrix, compute variance.  variance = loadings' * COVMAT * loadings
+  private double computeVariance(DoubleMatrix2D covarianceMatrix, DoubleMatrix2D rawLoadings) {
+    Algebra algebra = new Algebra();
+    // We are getting variance as a double, not a 1 x 1 matrix, hence using .get(0, 0).
+    return algebra.mult(algebra.transpose(rawLoadings), algebra.mult(covarianceMatrix, rawLoadings)).get(0,0);
+  }
+
+  private DoubleMatrix2D matrix2by1(double first, double second) {
+    return new DenseDoubleMatrix2D(new double[][] { { first }, { second } });
+  }
+
   @Test
   public void testIsOrthoNormalTransformationMatrixNoCovariance() {
     DoubleMatrix2D identity2x2 = rbIdentityMatrix(2).getRawMatrixUnsafe();
 
     // One by one matrices are easiest
     assertTrue(isOrthoNormalTransformationMatrix(singletonMatrix(1), singletonMatrix(1), 1e-4));
-    // Stretch transformation matrix one way, covariance the other, so OK.  Flip sign is also OK.
+    /**
+     * Stretch transformation matrix one way, covariance the other, so OK.  Flip sign is also OK.
+     * There are two ways to think about why we need square-root of the difference in variances.
+     * The practical, but not satisfying one, is 'it makes the numbers work, and other transformations don't".
+     * The intuitive one is that, when we compute variance, we do w' * COV * w, where w is raw exposure.
+     * But remember raw exposures are T * w_orth, where T is the transformation matrix and w_orth is orth. exposures.
+     * So you can re-write variance as: (T * w_orth)' * COV * (T * w_orth).  Elements of the transformation matrix
+     * are getting squared in the variance calculation.  So if the covariance matrix has a number N, adding one
+     * over the squaroot of this number in the transformation matrix will multiply it by 1 / N, bringing it back to 1.
+     */
+
     assertTrue(isOrthoNormalTransformationMatrix(singletonMatrix(1 / Math.sqrt(2.0)), singletonMatrix(2), 1e-4));
     assertTrue(isOrthoNormalTransformationMatrix(singletonMatrix(-1 / Math.sqrt(2.0)), singletonMatrix(2), 1e-4));
     // Mismatch but epsilon is huge so OK
@@ -147,6 +149,10 @@ public class RBMatrixUtilsTest extends TestCase {
         1e-4));
   }
 
+  private DoubleMatrix2D singletonMatrix(double first) {
+    return singletonRBMatrix(first).getRawMatrixUnsafe();
+  }
+
   @Test
   public void testIsSimilartoIdentityMatrix() {
     double largeEpsilon = 1e-4;
@@ -160,7 +166,7 @@ public class RBMatrixUtilsTest extends TestCase {
 
     // epsilon tests
     assertTrue(isAlmostIdentityMatrix(
-        rbMatrix2by2(1.0+smallEpsilon, 0.0, 0.0, 1.0 - smallEpsilon),
+        rbMatrix2by2(1.0 + smallEpsilon, 0.0, 0.0, 1.0 - smallEpsilon),
         largeEpsilon));
     assertTrue(isAlmostIdentityMatrix(
         rbMatrix2by2(3.0, -4.0, 8.0, 0.0),
