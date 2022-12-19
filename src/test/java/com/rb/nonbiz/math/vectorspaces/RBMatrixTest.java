@@ -22,8 +22,11 @@ import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
@@ -309,6 +312,37 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
                     { 1.2, 2.2, 3.2 } }),
                 simpleArrayIndexMapping(77, 88),
                 simpleArrayIndexMapping(matrixColumnIndex(0), matrixColumnIndex(1), matrixColumnIndex(2)))));
+  }
+
+  @Test
+  public void testIsSquare() {
+    // 1x1 matrices are square
+    assertTrue(singletonRBMatrix(DUMMY_DOUBLE).isSquare());
+
+    // identity matrices are square
+    assertTrue(rbIdentityMatrix(3).isSquare());
+
+    // diagonal matrices are square
+    assertTrue(rbDiagonalMatrix(rbVector(DUMMY_DOUBLE, DUMMY_DOUBLE)).isSquare());
+
+    // a 2x2 matrix is square
+    assertTrue(rbMatrix(new double[][] {
+        { DUMMY_DOUBLE, DUMMY_DOUBLE },
+        { DUMMY_DOUBLE, DUMMY_DOUBLE }})
+        .isSquare());
+
+    // a 3x2 matrix is not square
+    assertFalse(rbMatrix(new double[][] {
+        { DUMMY_DOUBLE, DUMMY_DOUBLE },
+        { DUMMY_DOUBLE, DUMMY_DOUBLE },
+        { DUMMY_DOUBLE, DUMMY_DOUBLE }})
+        .isSquare());
+
+    // a 2x3 matrix is not square
+    assertFalse(rbMatrix(new double[][] {
+        { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
+        { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE }})
+        .isSquare());
   }
 
   @Override

@@ -137,6 +137,13 @@ public class RBMatrix {
   }
 
   /**
+   * Returns whether this matrix is square or not.
+   */
+  public boolean isSquare() {
+    return getNumRows() == getNumColumns();
+  }
+
+  /**
    * This is here to help the test matcher, hence the 'Unsafe' in the name, and the package-private status.
    */
   @VisibleForTesting
