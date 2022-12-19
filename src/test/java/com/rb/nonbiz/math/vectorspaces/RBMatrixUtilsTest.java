@@ -60,12 +60,18 @@ public class RBMatrixUtilsTest {
           covMat, epsilon));
     }
 
-    //
-    // Now, use different method to check our orthogonal to raw matrix is actually reasonable.
-    // Below we use the axiomatic definition: variance(A) + variance(B) = variance(A+B)
-    // For 2x2, it's enough to check that:
-    //   variance( [1, 0]) = variance( [0, 1] ) = 1.0
-    //   variance( [1, 1]) = 2.0
+    /**
+     *
+     * Now, use different method to check our orthogonal to raw matrix is actually reasonable.
+     * Below we use the axiomatic definition: variance(A) + variance(B) = variance(A+B)
+     * For 2x2, it's enough to check that:
+     *   variance( [1, 0]) = variance( [0, 1] ) = 1.0
+     *   variance( [1, 1]) = 2.0
+     * The reason is that the first two checks make sure the covariance matrix in orthonormal space
+     * has ones in each diagonal, and the third check makes sure the covariance matrix in orthonormal
+     * space has a zero in the top-right.  Because covariances are symmetric, this means it must have a zero
+     * in the bottom left as well.
+     */
     assertEquals(1.0, computeVariance(covMat, rbMatrix2by2(
         0.57737, -1,
         0.57737,  1).multiply(matrix2by1(1, 0))), epsilon);
