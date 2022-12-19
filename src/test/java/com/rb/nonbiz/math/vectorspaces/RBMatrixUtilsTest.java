@@ -66,15 +66,15 @@ public class RBMatrixUtilsTest {
     // For 2x2, it's enough to check that:
     //   variance( [1, 0]) = variance( [0, 1] ) = 1.0
     //   variance( [1, 1]) = 2.0
-    assertEquals(computeVariance(covMat, rbMatrix2by2(
+    assertEquals(1.0, computeVariance(covMat, rbMatrix2by2(
         0.57737, -1,
-        0.57737,  1).multiply(matrix2by1(1, 0))), 1.0, epsilon);
-    assertEquals(computeVariance(covMat, rbMatrix2by2(
+        0.57737,  1).multiply(matrix2by1(1, 0))), epsilon);
+    assertEquals(1.0, computeVariance(covMat, rbMatrix2by2(
         0.57737, -1,
-        0.57737,  1).multiply(matrix2by1(0, 1))), 1.0, epsilon);
-    assertEquals(computeVariance(covMat, rbMatrix2by2(
+        0.57737,  1).multiply(matrix2by1(0, 1))), epsilon);
+    assertEquals(2.0, computeVariance(covMat, rbMatrix2by2(
         0.57737, -1,
-        0.57737,  1).multiply(matrix2by1(1, 1))), 2.0, epsilon);
+        0.57737,  1).multiply(matrix2by1(1, 1))), epsilon);
   }
 
   // Given raw loadings and a matrix, compute variance.  variance = loadings' * COVMAT * loadings
