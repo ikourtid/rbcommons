@@ -137,7 +137,7 @@ public class RBMatrix {
   }
 
   /**
-   * Returns whether this matrix is square or not.
+   * Returns whether or not this matrix is square.
    */
   public boolean isSquare() {
     return getNumRows() == getNumColumns();
