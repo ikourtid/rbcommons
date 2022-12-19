@@ -1,6 +1,7 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.linalg.Algebra;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.IndexableDoubleDataStore2D;
 import com.rb.nonbiz.text.Strings;
@@ -78,6 +79,82 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
                 .mapToObj(i -> matrixRowIndex(i))
                 .iterator()),
         columnMapping);
+  }
+
+  /**
+   * When we multiply two matrixes, the # of columns in the left matrix must be the same as the # of rows in the right
+   * matrix. Since this is a {@link RBIndexableMatrix}, the types must also match. However, just to be on the safe
+   * side, we will also confirm that the mapping key for the n-th column of the left matrix is the same as the
+   * mapping key of the n-th row of the right matrix.
+   *
+   * The types are: (R, C) x (C, C2), so the result is (R, C2).
+   */
+  public <C2> RBIndexableMatrix<R, C2> multiply(RBIndexableMatrix<C, C2> rightMatrix) {
+    ArrayIndexMapping<C> leftColumnMapping = this.getColumnMapping();
+    ArrayIndexMapping<C> rightRowMapping = rightMatrix.getRowMapping();
+    int sharedSize = checkBothSame(
+        leftColumnMapping.size(),
+        rightRowMapping.size(),
+        "We cannot multiply a %s x %s with a %s x %s matrix: %s %s",
+        this.getNumRows(), this.getNumColumns(), rightMatrix.getNumRows(), rightMatrix.getNumColumns(), this, rightMatrix);
+
+    for (int i = 0; i < sharedSize; i++) {
+      C leftKey = leftColumnMapping.getKey(i);
+      C rightKey = rightRowMapping.getKey(i);
+      // This relies on #equals, which is normally a pointer comparison in our code because we rarely
+      // implement a non-trivial equals / hashCode. However, for objects that become keys to an ArrayIndexMapping
+      // (or maps and other map-like objects, in general), we always do because we have to.
+      checkBothSame(
+          leftKey,
+          rightKey,
+          "In matrix multiplication, sizes are OK, but the keys do not match: %s %s",
+          this, rightMatrix);
+    }
+    return rbIndexableMatrix(
+        new Algebra().mult(this.rawMatrix, rightMatrix.rawMatrix),
+        this.getRowMapping(),
+        rightMatrix.getColumnMapping());
+  }
+
+  /**
+   * Matrix inverse. This mostly calls the Colt matrix inverse() function.
+   *
+   * <p> Additionally, because this is an indexable matrix,
+   * the row and column mappings of the original become the column and row mappings (respectively) of the inverse.
+   * Although this is a loose explanation, this makes more sense if you think of the matrix as a transformation
+   * from A to B; the inverse is a transformation from B to A. </p>
+   *
+   * <p> This will throw an exception for singular matrices, as it should; they don't have inverses. </p>
+   *
+   * <p> Warning: this will fail silently for nearly-singular matrices. That is, it will produce
+   * an inverse matrix consisting of large almost-balancing positive and negative elements, but
+   * the entries will depend very sensitively on the input. </p>
+   *
+   * <p> What you probably want in this situation is to use something like
+   * singular value decomposition (SVD) to get a more robust estimate of the inverse. </p>
+   *
+   * <p> Before relying on this inverse, it would be wise to check the "condition number" of the matrix.
+   * A condition number much greater than 1.0 indicates near-singularity. Conversely, rotation and
+   * permutation matrices have condition numbers of 1.0. </p>
+   */
+  public RBIndexableMatrix<C, R> inverse() {
+    return rbIndexableMatrix(
+        new Algebra().inverse(rawMatrix),
+        columnMapping,
+        rowMapping);
+  }
+
+  /**
+   * Matrix transpose.
+   *
+   * <p> Because this is an indexable matrix, the row and column mappings of the original
+   * will become the column and row mappings (respectively) of the inverse. </p>
+   */
+  public RBIndexableMatrix<C, R> transpose() {
+    return rbIndexableMatrix(
+        new Algebra().transpose(rawMatrix),
+        columnMapping,
+        rowMapping);
   }
 
   @Override
