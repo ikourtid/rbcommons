@@ -1,7 +1,5 @@
 package com.rb.nonbiz.math.vectorspaces;
 
-import cern.colt.matrix.DoubleMatrix2D;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
