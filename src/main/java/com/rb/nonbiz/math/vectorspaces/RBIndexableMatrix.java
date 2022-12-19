@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
@@ -79,6 +80,11 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
                 .mapToObj(i -> matrixRowIndex(i))
                 .iterator()),
         columnMapping);
+  }
+
+  // Retrieve this indexable matrix as a standard non-indexable RbMatrix.
+  public RBMatrix asRbMatrix() {
+    return rbMatrix(rawMatrix);
   }
 
   /**

@@ -17,6 +17,8 @@ import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialColumnMapping;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialRowMapping;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrixMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -24,6 +26,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<String, Integer>> {
 
@@ -263,6 +266,26 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
                 }),
                 simpleArrayIndexMapping("a", "b", "c"),
                 simpleArrayIndexMapping(false, true))));
+  }
+
+  @Test
+  public void testAsRbMatrix() {
+    RBMatrix rawMatrix = rbMatrix(new DenseDoubleMatrix2D(new double[][] {
+        { 71.1, 71.2, 71.3 },
+        { 72.1, 72.2, 71.3 }
+    }));
+    // Make sure the content of asRmMatrix matches rawMatrix.
+    assertThat(
+        rbIndexableMatrix(
+            rawMatrix.getRawMatrixUnsafe(),
+            simpleArrayIndexMapping("1", "2"),
+            simpleArrayIndexMapping("a", "b", "c")).asRbMatrix(),
+        rbMatrixMatcher(rawMatrix));
+    // Also make sure the classes are equal.
+    assertEquals(RBMatrix.class, rbIndexableMatrix(
+        rawMatrix.getRawMatrixUnsafe(),
+        simpleArrayIndexMapping("1", "2"),
+        simpleArrayIndexMapping("a", "b", "c")).asRbMatrix().getClass());
   }
 
   @Override
