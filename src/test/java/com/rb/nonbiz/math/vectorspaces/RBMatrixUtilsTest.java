@@ -11,8 +11,11 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrix2by2;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.singletonRBMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isAlmostIdentityMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isOrthoNormalTransformationMatrix;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class RBMatrixUtilsTest extends TestCase {
+public class RBMatrixUtilsTest {
 
   @Test
   public void testIsOrthoNormalTransformationMatrixWithCovariance() {
@@ -21,7 +24,7 @@ public class RBMatrixUtilsTest extends TestCase {
         1.0, 0.5,
         0.5, 1.0);
     double epsilon = 1e-4;
-    // If interested, orthToRaw comes from the invertse of: rbMatrix2by2(0.866, 0.866, -0.5, 0.5));
+    // If interested, orthToRaw comes from the inverse of: rbMatrix2by2(0.866, 0.866, -0.5, 0.5));
     // For now this matrix may seem arbitrary, but we check it below
     assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2( 0.57737, -1, 0.57737,  1), covMat, epsilon));
     /** Below the tests repeat the case above, and also assert that negating one side of the transformation is valid.
@@ -82,10 +85,6 @@ public class RBMatrixUtilsTest extends TestCase {
     return rbMatrix(new double[][] { { first }, { second } });
   }
 
-  private DoubleMatrix2D matrix2by2(double first, double second, double third, double fourth) {
-    return rbMatrix2by2(first, second, third, fourth).getRawMatrixUnsafe();
-  }
-
   @Test
   public void testIsOrthoNormalTransformationMatrixNoCovariance() {
     // One-by-one matrices are easiest
@@ -143,10 +142,6 @@ public class RBMatrixUtilsTest extends TestCase {
         rbMatrix2by2(-0.5, 0, 0, 1),
         rbMatrix2by2(4.0,  0, 0, 1),
         1e-4));
-  }
-
-  private DoubleMatrix2D singletonMatrix(double first) {
-    return singletonRBMatrix(first).getRawMatrixUnsafe();
   }
 
   @Test
