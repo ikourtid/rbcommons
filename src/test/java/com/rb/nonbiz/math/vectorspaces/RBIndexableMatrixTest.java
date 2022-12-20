@@ -281,11 +281,6 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
             simpleArrayIndexMapping("1", "2"),
             simpleArrayIndexMapping("a", "b", "c")).asRbMatrix(),
         rbMatrixMatcher(rawMatrix));
-    // Also make sure the classes are equal.
-    assertEquals(RBMatrix.class, rbIndexableMatrix(
-        rawMatrix.getRawMatrixUnsafe(),
-        simpleArrayIndexMapping("1", "2"),
-        simpleArrayIndexMapping("a", "b", "c")).asRbMatrix().getClass());
   }
 
   @Override
