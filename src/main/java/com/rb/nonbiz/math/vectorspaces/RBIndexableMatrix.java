@@ -82,7 +82,10 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
         columnMapping);
   }
 
-  // Retrieve this indexable matrix as a standard non-indexable RbMatrix.
+  /**
+   * Retrieve this indexable matrix as a standard non-indexable {@link RBMatrix}.
+    */
+
   public RBMatrix asRbMatrix() {
     return rbMatrix(rawMatrix);
   }
