@@ -7,6 +7,8 @@ import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.Arrays;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 /**
  * This is just a thin wrapper around a Colt DoubleMatrix1D, except that we do not expose any methods that could
@@ -111,6 +113,13 @@ public class RBVector {
    */
   DoubleMatrix1D getRawDoubleMatrix1DUnsafe() {
     return rawDoubleMatrix1D;
+  }
+
+  /**
+   * Returns a {@link DoubleStream} with all values in this vector.
+   */
+  public DoubleStream doubleStream() {
+    return Arrays.stream(rawDoubleMatrix1D.toArray());
   }
 
   @Override
