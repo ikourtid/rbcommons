@@ -1,14 +1,21 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import com.google.common.collect.ImmutableList;
+import com.rb.nonbiz.testmatchers.RBCollectionMatchers;
+import com.rb.nonbiz.testmatchers.RBColtMatchers;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
+
+import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRestDoubles;
 import static com.rb.nonbiz.math.vectorspaces.RBVector.zeroRBVectorWithDimension;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.doubleListMatcher;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrix1dMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -224,6 +231,18 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
         rbVector(DUMMY_DOUBLE, DUMMY_DOUBLE).projectOnto(singletonRBVector(DUMMY_DOUBLE)));
     assertIllegalArgumentException( () ->
         rbVector(DUMMY_DOUBLE, DUMMY_DOUBLE).projectOnto(rbVector(DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE)));
+  }
+
+  @Test
+  public void testDoubleStream() {
+    assertThat(
+        rbVector(-1.1, 0, 3.3)
+            .doubleStream()
+            .boxed()
+            .collect(Collectors.toList()),
+        doubleListMatcher(
+            ImmutableList.of(-1.1, 0.0, 3.3),
+            1e-8));
   }
 
   @Override
