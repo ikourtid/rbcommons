@@ -245,6 +245,16 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
             1e-8));
   }
 
+  @Test
+  public void testAsList() {
+    assertThat(
+        rbVector(-1.1, 0.0, 3.3)
+            .asList(),
+        doubleListMatcher(
+            ImmutableList.of(-1.1, 0.0, 3.3),
+            1e-8));
+  }
+
   @Override
   public RBVector makeTrivialObject() {
     return singletonRBVector(0);
