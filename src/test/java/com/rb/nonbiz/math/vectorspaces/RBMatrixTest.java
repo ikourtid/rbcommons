@@ -74,6 +74,32 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
   }
 
   @Test
+  public void testTransformCopy() {
+    assertThat(
+        rbMatrix(
+            new double[][] {
+                { 5.7, 5.8, 5.9 },
+                { 6.7, 6.8, 6.9 }
+            })
+            .transformCopy(
+                (matrixRowIndex, matrixColumnIndex, existingValue) ->
+                    existingValue + 10 * (1 + matrixRowIndex.asInt()) + 100 * (1 + matrixColumnIndex.asInt())),
+        rbMatrixMatcher(
+            rbMatrix(new double[][] {
+                {
+                    doubleExplained(115.7, 5.7 + 10 * (1 + 0) + 100 * (1 + 0)),
+                    doubleExplained(215.8, 5.8 + 10 * (1 + 0) + 100 * (1 + 1)),
+                    doubleExplained(315.9, 5.9 + 10 * (1 + 0) + 100 * (1 + 2))
+                },
+                {
+                    doubleExplained(126.7, 6.7 + 10 * (1 + 1) + 100 * (1 + 0)),
+                    doubleExplained(226.8, 6.8 + 10 * (1 + 1) + 100 * (1 + 1)),
+                    doubleExplained(326.9, 6.9 + 10 * (1 + 1) + 100 * (1 + 2))
+                }
+            })));
+  }
+
+  @Test
   public void matrixMultiplyByIdentity_noChange() {
     RBMatrix matrix2by3 = rbMatrix(new double[][] {
         { 1.1, 2.1, 3.1 },

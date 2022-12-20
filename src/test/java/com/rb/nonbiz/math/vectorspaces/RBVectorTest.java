@@ -1,14 +1,18 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
+
+import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRestDoubles;
 import static com.rb.nonbiz.math.vectorspaces.RBVector.zeroRBVectorWithDimension;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.doubleListMatcher;
 import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrix1dMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -68,8 +72,8 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
     rbSetOf(singletonRBVector(0), rbVector(0, 0), rbVector(0, 0, 0))
         .forEach(zeroVector -> rbSetOf(-999.0, -2.0, -1.0, -0.5, 0.0, 0.5, 1.0, 2.0, 999.0)
             .forEach(multiplier -> assertThat(
-                    zeroVector.multiplyByScalar(multiplier),
-                    rbVectorMatcher(zeroVector))));
+                zeroVector.multiplyByScalar(multiplier),
+                rbVectorMatcher(zeroVector))));
   }
 
   @Test
@@ -224,6 +228,35 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
         rbVector(DUMMY_DOUBLE, DUMMY_DOUBLE).projectOnto(singletonRBVector(DUMMY_DOUBLE)));
     assertIllegalArgumentException( () ->
         rbVector(DUMMY_DOUBLE, DUMMY_DOUBLE).projectOnto(rbVector(DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE)));
+  }
+
+  @Test
+  public void testDoubleStream() {
+    assertThat(
+        rbVector(-1.1, 0, 3.3)
+            .doubleStream()
+            .boxed()
+            .collect(Collectors.toList()),
+        doubleListMatcher(
+            ImmutableList.of(-1.1, 0.0, 3.3),
+            1e-8));
+  }
+
+  @Test
+  public void testAsList() {
+    assertThat(
+        singletonRBVector(1.1)
+            .asList(),
+        doubleListMatcher(
+            ImmutableList.of(1.1),
+            1e-8));
+
+    assertThat(
+        rbVector(-1.1, 0.0, 3.3)
+            .asList(),
+        doubleListMatcher(
+            ImmutableList.of(-1.1, 0.0, 3.3),
+            1e-8));
   }
 
   @Override
