@@ -2,11 +2,13 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import com.google.common.primitives.Doubles;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
@@ -120,6 +122,10 @@ public class RBVector {
    */
   public DoubleStream doubleStream() {
     return Arrays.stream(rawDoubleMatrix1D.toArray());
+  }
+
+  public List<Double> asList() {
+    return Doubles.asList(rawDoubleMatrix1D.toArray());
   }
 
   @Override
