@@ -25,19 +25,17 @@ public class RBMatrixUtilsTest {
     // If interested, orthToRaw comes from the inverse of: rbMatrix2by2(0.866, 0.866, -0.5, 0.5));
     // For now this matrix may seem arbitrary, but we check it below
     assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1, 0.57737, 1), covMat, epsilon));
-    /** Below the tests repeat the case above, and also assert that negating one side of the transformation is valid.
-     * Intuitively, if T is a valid transformation from orthonormal to raw, then a transformation that is the same
-     * as T but flips the sign of a vector in raw space is also valid.
-     * For example, imagine that
-     *     (1, 0) in orthonormal space is (-2 marketcap, 0.5 growth) in raw space.
-     *     (0, 1) in orthonormal space is (0.5 marketcap, 2 growth) in raw space.
-     * Then it's equally valid to (A) negate one of the transformation.  i.e.
-     *       To say that (1, 0) in orthonormal space is (2 marketcap, -0.5 growth) in raw space.
-     *     or to (B) flip the meaning of (1, 0) and (0, 1) in orth space.  i.e.
-     *     (0, 1) in orthonormal space is (-2 marketcap, 0.5 growth) in raw space.
-     *     (1, 0) in orthonormal space is (0.5 marketcap, 2 growth) in raw space.
-     */
-
+    // Below the tests repeat the case above, and also assert that negating one side of the transformation is valid.
+    // Intuitively, if T is a valid transformation from orthonormal to raw, then a transformation that is the same
+    // as T but flips the sign of a vector in raw space is also valid.
+    // For example, imagine that
+    //     (1, 0) in orthonormal space is (-2 marketcap, 0.5 growth) in raw space.
+    //     (0, 1) in orthonormal space is (0.5 marketcap, 2 growth) in raw space.
+    // Then it's equally valid to (A) negate one of the transformation.  i.e.
+    //       To say that (1, 0) in orthonormal space is (2 marketcap, -0.5 growth) in raw space.
+    //     or to (B) flip the meaning of (1, 0) and (0, 1) in orth space.  i.e.
+    //     (0, 1) in orthonormal space is (-2 marketcap, 0.5 growth) in raw space.
+    //     (1, 0) in orthonormal space is (0.5 marketcap, 2 growth) in raw space.
     assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737,  -1,  0.57737,  1), covMat, epsilon));
     assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737,   1,  0.57737, -1), covMat, epsilon));
     assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(-0.57737, -1, -0.57737,  1), covMat, epsilon));
@@ -60,12 +58,16 @@ public class RBMatrixUtilsTest {
           covMat, epsilon));
     }
 
-    //
+
     // Now, use different method to check our orthogonal to raw matrix is actually reasonable.
     // Below we use the axiomatic definition: variance(A) + variance(B) = variance(A+B)
     // For 2x2, it's enough to check that:
     //   variance( [1, 0]) = variance( [0, 1] ) = 1.0
     //   variance( [1, 1]) = 2.0
+    // The reason is that the first two checks make sure the covariance matrix in orthonormal space
+    // has ones in each diagonal, and the third check makes sure the covariance matrix in orthonormal
+    // space has a zero in the top-right.  Because covariances are symmetric, this means it must have a zero
+    // in the bottom left as well.
     assertEquals(1.0, computeVariance(covMat, rbMatrix2by2(
         0.57737, -1,
         0.57737,  1).multiply(matrix2by1(1, 0))), epsilon);
