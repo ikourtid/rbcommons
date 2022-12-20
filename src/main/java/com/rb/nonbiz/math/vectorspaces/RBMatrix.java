@@ -2,13 +2,19 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import com.google.common.annotations.VisibleForTesting;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
+import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
+import java.util.function.BiFunction;
+
+import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
+import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialColumnMapping;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialRowMapping;
@@ -64,6 +70,25 @@ public class RBMatrix {
 
   public int getNumColumns() {
     return rawMatrix.columns();
+  }
+
+  /**
+   * Apply an arbitrary transform for every element based on its position in the matrix (row & column),
+   * and return a copy of this matrix.
+   *
+   * <p> The first two arguments in the supplied {@link TriFunction} give the position of the matrix element.
+   * The third is the value in the original (not the transformed copy) matrix. </p>
+   */
+  public RBMatrix transformCopy(TriFunction<MatrixRowIndex, MatrixColumnIndex, Double, Double> transformer) {
+    DoubleMatrix2D transformedMatrix = new DenseDoubleMatrix2D(getNumRows(), getNumColumns());
+
+    for (int i = 0; i < getNumRows(); i++) {
+      for (int j = 0; j < getNumColumns(); j++) {
+        transformedMatrix.setQuick(i, j,
+            transformer.apply(matrixRowIndex(i), matrixColumnIndex(j), rawMatrix.get(i, j)));
+      }
+    }
+    return rbMatrix(transformedMatrix);
   }
 
   /**
