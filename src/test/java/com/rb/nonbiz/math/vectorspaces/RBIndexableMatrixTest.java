@@ -272,7 +272,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
   public void testAsRbMatrix() {
     RBMatrix rawMatrix = rbMatrix(new DenseDoubleMatrix2D(new double[][] {
         { 71.1, 71.2, 71.3 },
-        { 72.1, 72.2, 71.3 }
+        { 72.1, 72.2, 72.3 }
     }));
     // Make sure the content of asRmMatrix matches rawMatrix.
     assertThat(
