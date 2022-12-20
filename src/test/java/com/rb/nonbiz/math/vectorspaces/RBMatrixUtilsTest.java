@@ -4,11 +4,17 @@ import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbDiagonalMatrix2by2;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbDiagonalMatrix3by3;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrix2by2;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrix3by3;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.singletonRBMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.computeVariance;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isAlmostIdentityMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isOrthoNormalTransformationMatrix;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -79,15 +85,12 @@ public class RBMatrixUtilsTest {
         0.57737,  1).multiply(matrix2by1(1, 1))), epsilon);
   }
 
-  // Given raw loadings and a matrix, compute variance.  variance = loadings' * COVMAT * loadings
-  private double computeVariance(RBMatrix covarianceMatrix, RBMatrix rawLoadings) {
-    // We are getting variance as a double, not a 1 x 1 matrix, hence using .get(0, 0).
-    // Fix
-    return rawLoadings.transpose().multiply(covarianceMatrix.multiply(rawLoadings)).getRawMatrixUnsafe().get(0, 0);
-  }
 
   private RBMatrix matrix2by1(double first, double second) {
     return rbMatrix(new double[][] { { first }, { second } });
+  }
+  private RBMatrix matrix3by1(double first, double second, double third) {
+    return rbMatrix(new double[][] { { first }, { second }, { third } });
   }
 
   @Test
@@ -147,6 +150,109 @@ public class RBMatrixUtilsTest {
         rbMatrix2by2(-0.5, 0, 0, 1),
         rbMatrix2by2(4.0, 0, 0, 1),
         1e-4));
+  }
+
+  @Test
+  public void testComputeVarianceBadArgs()
+  {
+    assertIllegalArgumentException(() -> computeVariance(rbIdentityMatrix(2), rbIdentityMatrix(2)));
+    double doesNotThrow = computeVariance(singletonRBMatrix(1.0), rbIdentityMatrix(1));
+  }
+
+  @Test
+  public void testComputeVariance()
+  {
+    // Singleton matrix.  Correct answer is loading^2 * variance.
+    assertEquals(1.0, computeVariance(singletonRBMatrix(1),       singletonRBMatrix(1)),   1e-4);
+    assertEquals(4.0, computeVariance(singletonRBMatrix(1),       singletonRBMatrix(2)),   1e-4);
+    assertEquals(4.0, computeVariance(singletonRBMatrix(1),       singletonRBMatrix(-2)),  1e-4);
+    assertEquals(3.0, computeVariance(singletonRBMatrix(3),       singletonRBMatrix(-1)),  1e-4);
+    assertEquals(3.0, computeVariance(singletonRBMatrix(3),       singletonRBMatrix(1)),   1e-4);
+    assertEquals(3.0 / 4.0, computeVariance(singletonRBMatrix(3), singletonRBMatrix(0.5)), 1e-4);
+
+    // Simple diagonal covariance checks of variance computation
+    // Without explaining each one, the correct answer is the top-left diagonal times the first factor squared
+    // plus the bottom-right diagonal times the second factor squared
+    assertEquals(4.0,  computeVariance(rbDiagonalMatrix2by2(4, 1),   matrix2by1 (1,  0)), 1e-4);
+    assertEquals(4.0,  computeVariance(rbDiagonalMatrix2by2(1, 1),   matrix2by1( 2,  0)), 1e-4);
+    assertEquals(16.0, computeVariance(rbDiagonalMatrix2by2(4, 1),   matrix2by1( 2,  0)), 1e-4);
+    assertEquals(0.0,  computeVariance(rbDiagonalMatrix2by2(0, 1),   matrix2by1( 2,  0)), 1e-4);
+    assertEquals(16.0, computeVariance(rbDiagonalMatrix2by2(0, 1),   matrix2by1( 2,  4)), 1e-4);
+    assertEquals(2.25, computeVariance(rbDiagonalMatrix2by2(.25, 2), matrix2by1(-1,  1)), 1e-4);
+    assertEquals(18.5, computeVariance(rbDiagonalMatrix2by2(2,0.5),  matrix2by1( 3,  1)), 1e-4);
+    assertEquals(18.5, computeVariance(rbDiagonalMatrix2by2(2, 0.5), matrix2by1(-3, -1)), 1e-4);
+    assertEquals(18.5, computeVariance(rbDiagonalMatrix2by2(2, 0.5), matrix2by1(-3,  1)), 1e-4);
+    assertEquals(0.5,  computeVariance(rbDiagonalMatrix2by2(2, 0.5), matrix2by1(0.5, 0)), 1e-4);
+
+    // Now check with diagonals in covariance, positive correlatation.
+    RBMatrix covmat2x2PositiveCorrelation = rbMatrix2by2( 4,  1,
+                                                          1,  1.5);
+    RBMatrix covmat2x2NegativeCorrelation = rbMatrix2by2( 4, -1,
+                                                          -1, 1.5);
+    assertEquals(4.0,  computeVariance(rbMatrix2by2(4,  1,  1,  1.5), matrix2by1 (1,  0)), 1e-4);
+    assertEquals(1.5,  computeVariance(rbMatrix2by2(4,  1,  1,  1.5), matrix2by1 (0,  1)), 1e-4);
+    assertEquals(doubleExplained(7.5, 4 + 1 + 1 + 1.5),
+        computeVariance(covmat2x2PositiveCorrelation, matrix2by1 ( 1, 1)), 1e-4);
+    assertEquals(doubleExplained(7.5, 4 + 1 + 1 + 1.5),
+        computeVariance(covmat2x2PositiveCorrelation, matrix2by1 (-1,-1)), 1e-4);
+    assertEquals(doubleExplained(3.5, 4 - 1 - 1 + 1.5),
+        computeVariance(covmat2x2PositiveCorrelation, matrix2by1 (1, -1)), 1e-4);
+    assertEquals(doubleExplained(3.5, 4 - 1 - 1 + 1.5),
+        computeVariance(covmat2x2PositiveCorrelation, matrix2by1 (-1, 1)), 1e-4);
+    assertEquals(doubleExplained(13.5, 16 - 2 - 2 + 1.5),
+        computeVariance(covmat2x2PositiveCorrelation, matrix2by1 (-2, 1)), 1e-4);
+    assertEquals(doubleExplained(21.5, 16 + 2 + 2 + 1.5),
+        computeVariance(covmat2x2PositiveCorrelation, matrix2by1 (2,  1)), 1e-4);
+    // Check wth negative correlation
+    assertEquals(doubleExplained(3.5, 4 - 1 - 1 + 1.5),
+        computeVariance(covmat2x2NegativeCorrelation, matrix2by1 ( 1,  1)), 1e-4);
+    assertEquals(doubleExplained(3.5, 4 - 1 - 1 + 1.5),
+        computeVariance(covmat2x2NegativeCorrelation, matrix2by1 (-1, -1)), 1e-4);
+    assertEquals(doubleExplained(7.5, 4 + 1 + 1 + 1.5),
+        computeVariance(covmat2x2NegativeCorrelation, matrix2by1 ( 1, -1)), 1e-4);
+    assertEquals(doubleExplained(7.5, 4 + 1 + 1 + 1.5),
+        computeVariance(covmat2x2NegativeCorrelation, matrix2by1 (-1,  1)), 1e-4);
+    assertEquals(doubleExplained(21.5, 16 + 2 + 2 + 1.5),
+        computeVariance(covmat2x2NegativeCorrelation, matrix2by1 (-2,  1)), 1e-4);
+    assertEquals(doubleExplained(13.5, 16 - 2 - 2 + 1.5),
+        computeVariance(covmat2x2NegativeCorrelation, matrix2by1 ( 2,  1)), 1e-4);
+
+    // Try 3x3 matrices.
+    // We'll use doubleExplained where it's helpful but it's too wordy for each answer.
+    // For diagonal matrices, it's just the exposures squared dot product with the diagonal
+    assertEquals(3.0,  computeVariance(rbDiagonalMatrix3by3(1, 1, 1), matrix3by1( 1,  1,  1)), 1e-4);
+    assertEquals(4.0,  computeVariance(rbDiagonalMatrix3by3(1, 1, 1), matrix3by1( 0,  2,  0)), 1e-4);
+    assertEquals(7.0,  computeVariance(rbDiagonalMatrix3by3(3, 2, 2), matrix3by1( 1,  1,  1)), 1e-4);
+    assertEquals(7.0,  computeVariance(rbDiagonalMatrix3by3(3, 2, 2), matrix3by1(-1, -1, -1)), 1e-4);
+    assertEquals(13.0, computeVariance(rbDiagonalMatrix3by3(3, 2, 2), matrix3by1( 1,  1,  2)), 1e-4);
+    assertEquals(13.0, computeVariance(rbDiagonalMatrix3by3(3, 2, 2), matrix3by1(-1, -1, -2)), 1e-4);
+    assertEquals(doubleExplained(29.98, 3 * 3 * 3 + 2 + 0.7 * 0.7 * 2),
+        computeVariance(rbDiagonalMatrix3by3(3, 2, 2), matrix3by1(3, 1, 0.7)), 1e-4);
+
+    // 3 x 3 non-diagonal matrix.
+    // Remember we don't care if this is a valid correlation matrix...we are testing the multiplication.
+    RBMatrix covmat3x3 = rbMatrix3by3(   3, 1.0,-1.0,
+                                       1.0, 1.5, 0.6,
+                                      -1.0, 0.6, 0.4);
+    assertEquals(3.0,
+        computeVariance(covmat3x3, matrix3by1(-1, 0, 0)), 1e-4);
+    // Check a few cases with only 2 loadings
+    assertEquals(doubleExplained(13, 3 + 1.5 * 2 * 2 + 2 + 2),
+        computeVariance(covmat3x3, matrix3by1(-1, -2, 0)), 1e-4);
+    assertEquals(doubleExplained(13, 3 + 1.5 * 2 * 2 + 2 + 2),
+        computeVariance(covmat3x3, matrix3by1(1, 2, 0)), 1e-4);
+    assertEquals(doubleExplained(5, 3 + 1.5 * 2 * 2 - 2 - 2),
+        computeVariance(covmat3x3, matrix3by1(1, -2, 0)), 1e-4);
+    assertEquals(doubleExplained(3.1, 1.5 + 0.6 + 0.6 + 0.4),
+        computeVariance(covmat3x3, matrix3by1(0, -1, -1)), 1e-4);
+    assertEquals(doubleExplained(0.7, 1.5 - 0.6 - 0.6 + 0.4),
+        computeVariance(covmat3x3, matrix3by1(0, 1, -1)), 1e-4);
+    // Check cases with 3 loadings
+    // This should be the sum of all matrix elements
+    assertEquals(6.1, computeVariance(covmat3x3, matrix3by1(1, 1, 1)), 1e-4);
+    assertEquals(6.1, computeVariance(covmat3x3, matrix3by1(-1, -1, -1)), 1e-4);
+    assertEquals(doubleExplained(20.7, 12 + 2 + 2 + 2 + 1.5 - 0.6 + 2 - 0.6 + 0.4),
+        computeVariance(covmat3x3, matrix3by1(2.0, 1, -1)), 1e-4);
   }
 
   @Test
