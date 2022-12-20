@@ -1,5 +1,7 @@
 package com.rb.nonbiz.math.vectorspaces;
 
+import com.rb.nonbiz.util.RBPreconditions;
+
 import static com.rb.nonbiz.util.RBPreconditions.checkArgument;
 
 public class RBMatrixUtils {
@@ -24,10 +26,14 @@ public class RBMatrixUtils {
   }
 
 
-  // Given raw loadings and a matrix, compute variance.  variance = loadings' * COVMAT * loadings.
-  // This helper function is not taking on the responsibility of making sure any properties of the
-  // covariance matrix are true.  It simply does a multiplication.
+  /** Given raw loadings and a matrix, compute variance.  variance = loadings' * COVMAT * loadings.
+   * This helper function is not taking on the responsibility of making sure any properties of the
+   *  covariance matrix are true.  It simply does a multiplication.
+   *  If the loadings and the covariance matrices passed in are incompatible sizes, this will
+   *  throw an exception.  The only check applied is that rawLoadings has 1 column.
+   */
   public static double computeVariance(RBMatrix covarianceMatrix, RBMatrix rawLoadings) {
+    RBPreconditions.checkArgument(rawLoadings.getNumColumns() == 1);
     // We are getting variance as a double, not a 1 x 1 matrix, hence using .get(0, 0).
     return rawLoadings.transpose().multiply(covarianceMatrix.multiply(rawLoadings)).getRawMatrixUnsafe().get(0, 0);
   }

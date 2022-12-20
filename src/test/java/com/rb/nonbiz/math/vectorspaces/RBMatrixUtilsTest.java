@@ -11,6 +11,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.singletonRBMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.computeVariance;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isAlmostIdentityMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isOrthoNormalTransformationMatrix;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -147,6 +148,13 @@ public class RBMatrixUtilsTest {
         rbMatrix2by2(-0.5, 0, 0, 1),
         rbMatrix2by2(4.0, 0, 0, 1),
         1e-4));
+  }
+
+  @Test
+  public void testComputeVarianceBadArgs()
+  {
+    assertIllegalArgumentException(() -> computeVariance(rbIdentityMatrix(2), rbIdentityMatrix(2)));
+    double doesNotThrow = computeVariance(singletonRBMatrix(1.0), rbIdentityMatrix(1));
   }
 
   @Test
