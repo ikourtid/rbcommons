@@ -50,7 +50,7 @@ public class RBMatrixUtilsTest {
     assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737,  1,   0.57737, -1), covMat, epsilon));
     assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1,   0.57737,  1), covMat, epsilon));
 
-    // Making a large change to the transormation makes in invalid
+    // Making a large change to the transformation makes in invalid
     for (double delta : newRBSet(-0.1, 0.1)) {
       assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737,          -1,         0.57737,         1),
           covMat, epsilon));
