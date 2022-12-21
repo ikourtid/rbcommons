@@ -15,7 +15,7 @@ public abstract class EpsilonDescriptor<T> {
    *
    * {@code public static TypeSafeMatcher<XYZ> xyzMatcher(XYZ expected) { ... }}
    *
-   * ... when you don't care about using different epsilons inside that matcher,
+   * ... when you don't care about using different epsilons for different getters inside that matcher,
    * which means that specifying the class XYZ only suffices for uniquely identifying which epsilon to use.
    */
   public static class ClassWideEpsilonDescriptor<T> extends EpsilonDescriptor<T> {

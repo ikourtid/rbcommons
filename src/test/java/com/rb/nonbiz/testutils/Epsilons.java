@@ -1,14 +1,19 @@
 package com.rb.nonbiz.testutils;
 
 import com.rb.nonbiz.collections.DoubleMap;
+import com.rb.nonbiz.collections.RBMapConstructors;
+import com.rb.nonbiz.collections.RBStreams;
 import com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor;
 import com.rb.nonbiz.testutils.EpsilonDescriptor.GetterSpecificEpsilonDescriptor;
 
 import static com.rb.nonbiz.collections.DoubleMap.doubleMap;
 import static com.rb.nonbiz.collections.DoubleMap.emptyDoubleMap;
 import static com.rb.nonbiz.collections.DoubleMap.singletonDoubleMap;
+import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
+import static com.rb.nonbiz.collections.RBStreams.concatenateFirstAndRest;
+import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.ClassWideEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.GetterSpecificEpsilonDescriptor.eps;
@@ -181,6 +186,20 @@ public class Epsilons {
         epsilonDescriptor4, epsilon4,
         epsilonDescriptor5, epsilon5,
         epsilonDescriptor6, epsilon6)));
+  }
+
+  /**
+   * Use this in situations where you want to use the same numeric value (e.g. 1e-7) for all epsilons
+   * in the contexts specified by the {@link EpsilonDescriptor}s passed in.
+   */
+  public static Epsilons sharedEpsilons(
+      double epsilon,
+      EpsilonDescriptor<?> first,
+      EpsilonDescriptor<?> ... rest) {
+    return new Epsilons(doubleMap(rbMapFromStream(
+        concatenateFirstAndRest(first, rest),
+        v -> v,
+        v -> epsilon)));
   }
 
   public static Epsilons emptyEpsilons() {
