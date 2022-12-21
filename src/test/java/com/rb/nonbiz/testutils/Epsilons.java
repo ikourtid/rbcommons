@@ -205,6 +205,10 @@ public class Epsilons {
     return epsilons(emptyDoubleMap());
   }
 
+  public int size() {
+    return epsilons.size();
+  }
+
   /**
    * See ClassWideEpsilonDescriptor
    */

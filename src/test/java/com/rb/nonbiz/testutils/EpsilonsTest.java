@@ -40,6 +40,8 @@ public class EpsilonsTest {
         // Class4 only has a key that's accessible by a string 'path'
         GeneralEpsilonDescriptor.eps(Class4.class, "key_for_4"), 0.49);
 
+    assertEquals(5, epsilons.size());
+
     // using a smaller epsilon than the usual 1e-8 here for double comparisons,
     // because the return value itself will sometimes be 1e-8, the default epsilon.
     double e = 1e-9;
