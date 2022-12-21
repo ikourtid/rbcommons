@@ -5,6 +5,7 @@ import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Iterables;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.text.Strings;
@@ -166,6 +167,19 @@ public class RBMatrix {
    */
   public boolean isSquare() {
     return getNumRows() == getNumColumns();
+  }
+
+  /**
+   * If this is a 1 x 1 matrix, returns the only element. Otherwise, throws an exception.
+   *
+   * <p> The name parallels {@link Iterables#getOnlyElement(Iterable)}, which has similar behavior. </p>
+   */
+  public double getOnlyElementOrThrow() {
+    RBPreconditions.checkArgument(
+        getNumRows() == 1 && getNumColumns() == 1,
+        "getOnlyElementOrThrow needs a 1x1 matrix, but was %s x %s : %s",
+        getNumRows(), getNumColumns(), rawMatrix);
+    return rawMatrix.get(0, 0);
   }
 
   /**
