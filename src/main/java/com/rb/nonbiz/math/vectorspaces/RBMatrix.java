@@ -145,6 +145,14 @@ public class RBMatrix {
   }
 
   /**
+   * Implements the function DoubleMatrix2D, viewPart, from Colt.
+   * This returns a new matrix which is a square subset of the current matrix
+   */
+  public RBMatrix copyPart(int row, int column, int height, int width) {
+    return rbMatrix(rawMatrix.viewPart(row, column, height, width));
+  }
+
+  /**
    * This is for cases where we only care about having row keys, but no column keys, i.e. the column keys are just
    * numeric indices for the column, starting at 0.
    */

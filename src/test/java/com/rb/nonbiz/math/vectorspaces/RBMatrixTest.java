@@ -373,6 +373,48 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
   }
 
   @Test
+  public void testCopyPart() {
+    RBMatrix matrixToCopyPartOf = rbMatrix3by3(
+        1, 2, 3,
+        4, 5, 6,
+        7, 8, 9);
+    // Copy whole matrix
+    assertThat(
+        matrixToCopyPartOf.copyPart(0, 0, 3, 3),
+        rbMatrixMatcher(matrixToCopyPartOf));
+    // Copy some 2x2 pieces.
+    assertThat(
+        matrixToCopyPartOf.copyPart(0, 0, 2, 2),
+        rbMatrixMatcher(rbMatrix2by2(1, 2,
+            4, 5)));
+    assertThat(
+        matrixToCopyPartOf.copyPart(1, 1, 2, 2),
+        rbMatrixMatcher(rbMatrix2by2(
+            5, 6,
+            8, 9)));
+    // Copy some 1x1 pieces
+    assertThat(
+        matrixToCopyPartOf.copyPart(1, 1, 1, 1),
+        rbMatrixMatcher(singletonRBMatrix(5)));
+    assertThat(
+        matrixToCopyPartOf.copyPart(1, 2, 1, 1),
+        rbMatrixMatcher(singletonRBMatrix(6)));
+    assertThat(
+        matrixToCopyPartOf.copyPart(2, 0, 1, 1),
+        rbMatrixMatcher(singletonRBMatrix(7)));
+    // Copy tall and wide slices
+    assertThat(
+        matrixToCopyPartOf.copyPart(1, 1, 2, 1),
+        rbMatrixMatcher(rbMatrix(new double[][] { { 5 }, { 8 } })));
+    assertThat(
+        matrixToCopyPartOf.copyPart(2, 0, 1, 3),
+        rbMatrixMatcher(rbMatrix(new double[][] { { 7, 8, 9 } })));
+    assertThat(
+        matrixToCopyPartOf.copyPart(0, 0, 3, 2),
+        rbMatrixMatcher(rbMatrix(new double[][] { { 1, 2 }, { 4, 5 }, { 7, 8 } })));
+  }
+
+  @Test
   public void testGetOnlyElementOrThrow() {
     assertEquals(1.1, singletonRBMatrix(1.1).getOnlyElementOrThrow(), 1e-8);
     rbSetOf(
