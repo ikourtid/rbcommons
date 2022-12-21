@@ -1,5 +1,6 @@
 package com.rb.nonbiz.testutils;
 
+import com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor;
 import org.junit.Test;
 
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.ClassWideEpsilonDescriptor.eps;
@@ -22,6 +23,7 @@ public class EpsilonsTest {
     class Class2 {};
     class Class2A {};
     class Class3 {};
+    class Class4 {};
     class DummyClass {};
 
     Epsilons epsilons = epsilons(
@@ -33,10 +35,13 @@ public class EpsilonsTest {
         eps(Class2.class, Class2A.class), 0.28,
 
         // Class3 only has a class-wide epsilon
-        eps(Class3.class), 0.37);
+        eps(Class3.class), 0.37,
+
+        // Class4 only has a key that's accessible by a string 'path'
+        GeneralEpsilonDescriptor.eps(Class4.class, "key_for_4"), 0.49);
 
     // using a smaller epsilon than the usual 1e-8 here for double comparisons,
-    // because the return value itself will sometimes be 1e-8.
+    // because the return value itself will sometimes be 1e-8, the default epsilon.
     double e = 1e-9;
 
     assertEquals(0.17, epsilons.get(Class1.class),                   e);
@@ -49,6 +54,9 @@ public class EpsilonsTest {
 
     assertEquals(0.37, epsilons.get(Class3.class),                   e);
     assertEquals(1e-8, epsilons.get(Class3.class, DummyClass.class), e);
+
+    assertEquals(0.49, epsilons.get(Class4.class, "key_for_4"),      e);
+    assertEquals(1e-8, epsilons.get(Class4.class, "wrong_key"),      e);
 
     assertEquals(1e-8, epsilons.get(DummyClass.class),               e);
   }
