@@ -72,6 +72,10 @@ public class RBMatrix {
     return rawMatrix.columns();
   }
 
+  public double get(int i, int j) {
+    return rawMatrix.get(i, j);
+  }
+
   /**
    * Apply an arbitrary transform for every element based on its position in the matrix (row & column),
    * and return a copy of this matrix.
