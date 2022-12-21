@@ -1,10 +1,9 @@
 package com.rb.nonbiz.testutils;
 
 import com.rb.nonbiz.collections.DoubleMap;
-import com.rb.nonbiz.collections.RBMapConstructors;
-import com.rb.nonbiz.collections.RBStreams;
 import com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor;
 import com.rb.nonbiz.testutils.EpsilonDescriptor.GetterSpecificEpsilonDescriptor;
+import org.junit.Test;
 
 import static com.rb.nonbiz.collections.DoubleMap.doubleMap;
 import static com.rb.nonbiz.collections.DoubleMap.emptyDoubleMap;
@@ -13,16 +12,16 @@ import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstAndRest;
-import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.ClassWideEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.GetterSpecificEpsilonDescriptor.eps;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Normally, our test matchers use 1e-8 (DEFAULT_EPSILON). However, sometimes we want to override the epsilons.
  * This helps you accomplish that.
  *
- * see OrdersTest#testEpsilonsInfra for how this gets used.
+ * see OrdersTest#testEpsilonsInfra for how this gets used. Also, {@link EpsilonsTest}.
  */
 public class Epsilons {
 
