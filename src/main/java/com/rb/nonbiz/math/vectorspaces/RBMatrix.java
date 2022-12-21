@@ -7,6 +7,7 @@ import cern.colt.matrix.linalg.Algebra;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Iterables;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
+import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -142,6 +143,20 @@ public class RBMatrix {
       ArrayIndexMapping<R> rowMapping,
       ArrayIndexMapping<C> columnMapping) {
     return rbIndexableMatrix(rawMatrix, rowMapping, columnMapping);
+  }
+
+  /**
+   * Implements the function DoubleMatrix2D, viewPart, from Colt.
+   * This returns a new matrix which is a square subset of the current matrix.
+   * Note that the colt function itself returns a copy, as of December 2022.
+   */
+  public RBMatrix copyPart(ClosedRange<MatrixRowIndex> rowRange, ClosedRange<MatrixColumnIndex> columnRange) {
+    int firstRow    = rowRange.lowerEndpoint().asInt();
+    int lastRow     = rowRange.upperEndpoint().asInt();
+    int firstColumn = columnRange.lowerEndpoint().asInt();
+    int lastColumn  = columnRange.upperEndpoint().asInt();
+    return rbMatrix(rawMatrix.viewPart(
+        firstRow, firstColumn, lastRow - firstRow + 1, lastColumn - firstColumn + 1));
   }
 
   /**

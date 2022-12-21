@@ -19,6 +19,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
  * @see RBMatrix
  */
 public class RBSquareMatrix {
+  // FIXME CM can this just be derived from RbMatrix to save code?
 
   private final RBMatrix rawMatrix;
   private final int numRowsOrColumns;
