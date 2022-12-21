@@ -169,6 +169,17 @@ public class RBMatrix {
   }
 
   /**
+   * If this is a 1 x 1 matrix, returns the only element. Otherwise, throws an exception.
+   */
+  public double getOnlyElementOrThrow() {
+    RBPreconditions.checkArgument(
+        getNumRows() == 1 && getNumColumns() == 1,
+        "getOnlyElementOrThrow needs a 1x1 matrix, but was %s x %s : %s",
+        getNumRows(), getNumColumns(), rawMatrix);
+    return rawMatrix.get(0, 0);
+  }
+
+  /**
    * This is here to help the test matcher, hence the 'Unsafe' in the name, and the package-private status.
    */
   @VisibleForTesting

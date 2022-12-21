@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.function.BiConsumer;
 
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
@@ -369,6 +370,24 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
         { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE }})
         .isSquare());
+  }
+
+  @Test
+  public void testGetOnlyElementOrThrow() {
+    assertEquals(1.1, singletonRBMatrix(1.1).getOnlyElementOrThrow(), 1e-8);
+    rbSetOf(
+        rbMatrix(new double[][] {
+            { DUMMY_DOUBLE, DUMMY_DOUBLE }
+        }),
+        rbMatrix(new double[][] {
+            { DUMMY_DOUBLE },
+            { DUMMY_DOUBLE }
+        }),
+        rbMatrix(new double[][] {
+            { DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE }
+        }))
+        .forEach(v -> assertIllegalArgumentException( () -> v.getOnlyElementOrThrow()));
   }
 
   @Override
