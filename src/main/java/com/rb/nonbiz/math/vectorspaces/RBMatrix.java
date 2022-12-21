@@ -80,7 +80,7 @@ public class RBMatrix {
    * The third is the value in the original (not the transformed copy) matrix. </p>
    */
   public RBMatrix transformCopy(TriFunction<MatrixRowIndex, MatrixColumnIndex, Double, Double> transformer) {
-    DoubleMatrix2D transformedMatrix = new DenseDoubleMatrix2D(getNumRows(), getNumColumns());
+    DoubleMatrix2D transformedMatrix = DoubleFactory2D.dense.make(getNumRows(), getNumColumns());
 
     for (int i = 0; i < getNumRows(); i++) {
       for (int j = 0; j < getNumColumns(); j++) {
