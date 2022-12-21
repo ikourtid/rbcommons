@@ -2,12 +2,14 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
+import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import java.util.function.BiConsumer;
 
+import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
@@ -380,37 +382,55 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         7, 8, 9);
     // Copy whole matrix
     assertThat(
-        matrixToCopyPartOf.copyPart(0, 0, 3, 3),
+        matrixToCopyPartOf.copyPart(
+            closedRange(   matrixRowIndex(0),    matrixRowIndex(2)),
+            closedRange(matrixColumnIndex(0), matrixColumnIndex(2))),
         rbMatrixMatcher(matrixToCopyPartOf));
     // Copy some 2x2 pieces.
     assertThat(
-        matrixToCopyPartOf.copyPart(0, 0, 2, 2),
-        rbMatrixMatcher(rbMatrix2by2(1, 2,
-            4, 5)));
+        matrixToCopyPartOf.copyPart(
+            closedRange(   matrixRowIndex(0),    matrixRowIndex(1)),
+            closedRange(matrixColumnIndex(0), matrixColumnIndex(1))),
+        rbMatrixMatcher(rbMatrix2by2( 1, 2,
+                                      4, 5)));
     assertThat(
-        matrixToCopyPartOf.copyPart(1, 1, 2, 2),
+        matrixToCopyPartOf.copyPart(
+            closedRange(   matrixRowIndex(1),    matrixRowIndex(2)),
+            closedRange(matrixColumnIndex(1), matrixColumnIndex(2))),
         rbMatrixMatcher(rbMatrix2by2(
             5, 6,
             8, 9)));
     // Copy some 1x1 pieces
     assertThat(
-        matrixToCopyPartOf.copyPart(1, 1, 1, 1),
+        matrixToCopyPartOf.copyPart(
+            closedRange(   matrixRowIndex(1),    matrixRowIndex(1)),
+            closedRange(matrixColumnIndex(1), matrixColumnIndex(1))),
         rbMatrixMatcher(singletonRBMatrix(5)));
     assertThat(
-        matrixToCopyPartOf.copyPart(1, 2, 1, 1),
+        matrixToCopyPartOf.copyPart(
+            closedRange(   matrixRowIndex(1),    matrixRowIndex(1)),
+            closedRange(matrixColumnIndex(2), matrixColumnIndex(2))),
         rbMatrixMatcher(singletonRBMatrix(6)));
     assertThat(
-        matrixToCopyPartOf.copyPart(2, 0, 1, 1),
+        matrixToCopyPartOf.copyPart(
+            closedRange(   matrixRowIndex(2),    matrixRowIndex(2)),
+            closedRange(matrixColumnIndex(0), matrixColumnIndex(0))),
         rbMatrixMatcher(singletonRBMatrix(7)));
     // Copy tall and wide slices
     assertThat(
-        matrixToCopyPartOf.copyPart(1, 1, 2, 1),
+        matrixToCopyPartOf.copyPart(
+            closedRange(   matrixRowIndex(1),    matrixRowIndex(2)),
+            closedRange(matrixColumnIndex(1), matrixColumnIndex(1))),
         rbMatrixMatcher(rbMatrix(new double[][] { { 5 }, { 8 } })));
     assertThat(
-        matrixToCopyPartOf.copyPart(2, 0, 1, 3),
+        matrixToCopyPartOf.copyPart(
+            closedRange(   matrixRowIndex(2),    matrixRowIndex(2)),
+            closedRange(matrixColumnIndex(0), matrixColumnIndex(2))),
         rbMatrixMatcher(rbMatrix(new double[][] { { 7, 8, 9 } })));
     assertThat(
-        matrixToCopyPartOf.copyPart(0, 0, 3, 2),
+        matrixToCopyPartOf.copyPart(
+            closedRange(   matrixRowIndex(0),    matrixRowIndex(2)),
+            closedRange(matrixColumnIndex(0), matrixColumnIndex(1))),
         rbMatrixMatcher(rbMatrix(new double[][] { { 1, 2 }, { 4, 5 }, { 7, 8 } })));
   }
 

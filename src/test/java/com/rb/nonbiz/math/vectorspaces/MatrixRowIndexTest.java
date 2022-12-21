@@ -20,6 +20,12 @@ public class MatrixRowIndexTest extends RBTestMatcher<MatrixRowIndex> {
     assertIllegalArgumentException( () -> matrixRowIndex(-999));
   }
 
+  @Test
+  public void testCompareTo(){
+    assertEquals( 0, matrixRowIndex(1).compareTo(matrixRowIndex(1)));
+    assertEquals( 1, matrixRowIndex(2).compareTo(matrixRowIndex(1)));
+    assertEquals(-1, matrixRowIndex(1).compareTo(matrixRowIndex(2)));
+  }
 
   @Test
   public void testEquals() {

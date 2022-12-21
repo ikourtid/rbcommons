@@ -6,7 +6,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 /**
  * Just a thin typesafe wrapper around an int, which denotes the row index to a matrix.
  */
-public class MatrixRowIndex implements IsArrayIndex {
+public class MatrixRowIndex implements IsArrayIndex, Comparable<MatrixRowIndex> {
 
   private final int rawIndex;
 
@@ -45,4 +45,8 @@ public class MatrixRowIndex implements IsArrayIndex {
     return Strings.format("[MRI %s MRI]", rawIndex);
   }
 
+  @Override
+  public int compareTo(MatrixRowIndex o) {
+    return Integer.valueOf(rawIndex).compareTo(o.rawIndex);
+  }
 }
