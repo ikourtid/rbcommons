@@ -1,8 +1,11 @@
 package com.rb.nonbiz.types;
 
 import com.google.common.math.IntMath;
+import com.google.common.primitives.Doubles;
+import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
+import com.google.common.primitives.Shorts;
 import com.rb.nonbiz.math.vectorspaces.MatrixRowIndex;
 
 import java.util.Iterator;
@@ -38,7 +41,7 @@ public abstract class IntegerValue<T extends IntegerValue<T>> extends RBNumeric<
 
   @Override
   public short shortValue() {
-    return (short) value;
+    return Shorts.checkedCast(value);
   }
 
   @Override
