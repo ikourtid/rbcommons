@@ -86,7 +86,7 @@ public abstract class EpsilonDescriptor<T> {
     public int hashCode() {
       return Objects.hash(clazz, getterReturnType);
     }
-    
+
   }
 
   /**

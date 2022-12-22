@@ -3,7 +3,8 @@ package com.rb.nonbiz.testutils;
 import com.rb.nonbiz.collections.DoubleMap;
 import com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor;
 import com.rb.nonbiz.testutils.EpsilonDescriptor.GetterSpecificEpsilonDescriptor;
-import org.junit.Test;
+
+import java.util.OptionalDouble;
 
 import static com.rb.nonbiz.collections.DoubleMap.doubleMap;
 import static com.rb.nonbiz.collections.DoubleMap.emptyDoubleMap;
@@ -15,7 +16,6 @@ import static com.rb.nonbiz.collections.RBStreams.concatenateFirstAndRest;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.ClassWideEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.GetterSpecificEpsilonDescriptor.eps;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Normally, our test matchers use 1e-8 (DEFAULT_EPSILON). However, sometimes we want to override the epsilons.
@@ -26,15 +26,21 @@ import static org.junit.Assert.assertEquals;
 public class Epsilons {
 
   private static final double DEFAULT_EPSILON = 1e-8;
+  private static final OptionalDouble NO_DEFAULT_EPSILON_OVERRIDE = OptionalDouble.empty();
 
+  private final OptionalDouble defaultEpsilonOverride;
   private final DoubleMap<EpsilonDescriptor<?>> epsilons;
 
-  private Epsilons(DoubleMap<EpsilonDescriptor<?>> epsilons) {
+  private Epsilons(
+      OptionalDouble defaultEpsilonOverride,
+      DoubleMap<EpsilonDescriptor<?>> epsilons) {
+    this.defaultEpsilonOverride = defaultEpsilonOverride;
     this.epsilons = epsilons;
   }
 
   public static Epsilons epsilons(DoubleMap<Class<?>> epsilons) {
     return new Epsilons(
+        NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(epsilons.getRawMap().transformKeysCopy(clazz -> eps(clazz))));
   }
 
@@ -123,26 +129,32 @@ public class Epsilons {
 
   public static Epsilons epsilons(
       EpsilonDescriptor<?> epsilonDescriptor1, double epsilon1) {
-    return new Epsilons(doubleMap(singletonRBMap(
-        epsilonDescriptor1, epsilon1)));
+    return new Epsilons(
+        NO_DEFAULT_EPSILON_OVERRIDE,
+        doubleMap(singletonRBMap(
+            epsilonDescriptor1, epsilon1)));
   }
 
   public static Epsilons epsilons(
       EpsilonDescriptor<?> epsilonDescriptor1, double epsilon1,
       EpsilonDescriptor<?> epsilonDescriptor2, double epsilon2) {
-    return new Epsilons(doubleMap(rbMapOf(
-        epsilonDescriptor1, epsilon1,
-        epsilonDescriptor2, epsilon2)));
+    return new Epsilons(
+        NO_DEFAULT_EPSILON_OVERRIDE,
+        doubleMap(rbMapOf(
+            epsilonDescriptor1, epsilon1,
+            epsilonDescriptor2, epsilon2)));
   }
 
   public static Epsilons epsilons(
       EpsilonDescriptor<?> epsilonDescriptor1, double epsilon1,
       EpsilonDescriptor<?> epsilonDescriptor2, double epsilon2,
       EpsilonDescriptor<?> epsilonDescriptor3, double epsilon3) {
-    return new Epsilons(doubleMap(rbMapOf(
-        epsilonDescriptor1, epsilon1,
-        epsilonDescriptor2, epsilon2,
-        epsilonDescriptor3, epsilon3)));
+    return new Epsilons(
+        NO_DEFAULT_EPSILON_OVERRIDE,
+        doubleMap(rbMapOf(
+            epsilonDescriptor1, epsilon1,
+            epsilonDescriptor2, epsilon2,
+            epsilonDescriptor3, epsilon3)));
   }
 
   public static Epsilons epsilons(
@@ -150,11 +162,13 @@ public class Epsilons {
       EpsilonDescriptor<?> epsilonDescriptor2, double epsilon2,
       EpsilonDescriptor<?> epsilonDescriptor3, double epsilon3,
       EpsilonDescriptor<?> epsilonDescriptor4, double epsilon4) {
-    return new Epsilons(doubleMap(rbMapOf(
-        epsilonDescriptor1, epsilon1,
-        epsilonDescriptor2, epsilon2,
-        epsilonDescriptor3, epsilon3,
-        epsilonDescriptor4, epsilon4)));
+    return new Epsilons(
+        NO_DEFAULT_EPSILON_OVERRIDE,
+        doubleMap(rbMapOf(
+            epsilonDescriptor1, epsilon1,
+            epsilonDescriptor2, epsilon2,
+            epsilonDescriptor3, epsilon3,
+            epsilonDescriptor4, epsilon4)));
   }
 
   public static Epsilons epsilons(
@@ -163,12 +177,14 @@ public class Epsilons {
       EpsilonDescriptor<?> epsilonDescriptor3, double epsilon3,
       EpsilonDescriptor<?> epsilonDescriptor4, double epsilon4,
       EpsilonDescriptor<?> epsilonDescriptor5, double epsilon5) {
-    return new Epsilons(doubleMap(rbMapOf(
-        epsilonDescriptor1, epsilon1,
-        epsilonDescriptor2, epsilon2,
-        epsilonDescriptor3, epsilon3,
-        epsilonDescriptor4, epsilon4,
-        epsilonDescriptor5, epsilon5)));
+    return new Epsilons(
+        NO_DEFAULT_EPSILON_OVERRIDE,
+        doubleMap(rbMapOf(
+            epsilonDescriptor1, epsilon1,
+            epsilonDescriptor2, epsilon2,
+            epsilonDescriptor3, epsilon3,
+            epsilonDescriptor4, epsilon4,
+            epsilonDescriptor5, epsilon5)));
   }
 
   public static Epsilons epsilons(
@@ -178,13 +194,15 @@ public class Epsilons {
       EpsilonDescriptor<?> epsilonDescriptor4, double epsilon4,
       EpsilonDescriptor<?> epsilonDescriptor5, double epsilon5,
       EpsilonDescriptor<?> epsilonDescriptor6, double epsilon6) {
-    return new Epsilons(doubleMap(rbMapOf(
-        epsilonDescriptor1, epsilon1,
-        epsilonDescriptor2, epsilon2,
-        epsilonDescriptor3, epsilon3,
-        epsilonDescriptor4, epsilon4,
-        epsilonDescriptor5, epsilon5,
-        epsilonDescriptor6, epsilon6)));
+    return new Epsilons(
+        NO_DEFAULT_EPSILON_OVERRIDE,
+        doubleMap(rbMapOf(
+            epsilonDescriptor1, epsilon1,
+            epsilonDescriptor2, epsilon2,
+            epsilonDescriptor3, epsilon3,
+            epsilonDescriptor4, epsilon4,
+            epsilonDescriptor5, epsilon5,
+            epsilonDescriptor6, epsilon6)));
   }
 
   /**
@@ -195,10 +213,12 @@ public class Epsilons {
       double epsilon,
       EpsilonDescriptor<?> first,
       EpsilonDescriptor<?> ... rest) {
-    return new Epsilons(doubleMap(rbMapFromStream(
-        concatenateFirstAndRest(first, rest),
-        v -> v,
-        v -> epsilon)));
+    return new Epsilons(
+        NO_DEFAULT_EPSILON_OVERRIDE,
+        doubleMap(rbMapFromStream(
+            concatenateFirstAndRest(first, rest),
+            v -> v,
+            v -> epsilon)));
   }
 
   public static Epsilons emptyEpsilons() {
@@ -213,14 +233,14 @@ public class Epsilons {
    * See ClassWideEpsilonDescriptor
    */
   public double get(Class<?> clazz) {
-    return epsilons.getRawMap().getOrDefault(eps(clazz), DEFAULT_EPSILON);
+    return epsilons.getRawMap().getOrDefault(eps(clazz), getDefaultEpsilon());
   }
 
   /**
    * @see GetterSpecificEpsilonDescriptor
    */
   public double get(Class<?> clazz, Class<?> getterReturnType) {
-    return epsilons.getRawMap().getOrDefault(eps(clazz, getterReturnType), DEFAULT_EPSILON);
+    return epsilons.getRawMap().getOrDefault(eps(clazz, getterReturnType), getDefaultEpsilon());
   }
 
   /**
@@ -231,7 +251,11 @@ public class Epsilons {
    * @see GeneralEpsilonDescriptor
    */
   public double get(Class<?> clazz, String suffix) {
-    return epsilons.getRawMap().getOrDefault(eps(clazz, suffix), DEFAULT_EPSILON);
+    return epsilons.getRawMap().getOrDefault(eps(clazz, suffix), getDefaultEpsilon());
+  }
+
+  private double getDefaultEpsilon() {
+    return defaultEpsilonOverride.orElse(DEFAULT_EPSILON);
   }
 
 }
