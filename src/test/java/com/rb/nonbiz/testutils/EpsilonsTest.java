@@ -51,7 +51,7 @@ public class EpsilonsTest {
     assertEquals(1e-8, epsilons.get(Class1.class, DummyClass.class), e);
 
     assertEquals(1e-8, epsilons.get(Class2.class),                   e);
-    assertEquals(0.18, epsilons.get(Class2.class, Class2A.class),    e);
+    assertEquals(0.28, epsilons.get(Class2.class, Class2A.class),    e);
     assertEquals(1e-8, epsilons.get(Class2.class, DummyClass.class), e);
 
     assertEquals(0.37, epsilons.get(Class3.class),                   e);

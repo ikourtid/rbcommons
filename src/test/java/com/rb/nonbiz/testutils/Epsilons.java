@@ -212,15 +212,15 @@ public class Epsilons {
   /**
    * See ClassWideEpsilonDescriptor
    */
-  public double get(Object obj) {
-    return epsilons.getRawMap().getOrDefault(eps(obj.getClass()), DEFAULT_EPSILON);
+  public double get(Class<?> clazz) {
+    return epsilons.getRawMap().getOrDefault(eps(clazz), DEFAULT_EPSILON);
   }
 
   /**
    * @see GetterSpecificEpsilonDescriptor
    */
-  public double get(Object obj, Class<?> getterReturnType) {
-    return epsilons.getRawMap().getOrDefault(eps(obj.getClass(), getterReturnType), DEFAULT_EPSILON);
+  public double get(Class<?> clazz, Class<?> getterReturnType) {
+    return epsilons.getRawMap().getOrDefault(eps(clazz, getterReturnType), DEFAULT_EPSILON);
   }
 
   /**
@@ -230,8 +230,8 @@ public class Epsilons {
    *
    * @see GeneralEpsilonDescriptor
    */
-  public double get(Object obj, String suffix) {
-    return epsilons.getRawMap().getOrDefault(eps(obj.getClass(), suffix), DEFAULT_EPSILON);
+  public double get(Class<?> clazz, String suffix) {
+    return epsilons.getRawMap().getOrDefault(eps(clazz, suffix), DEFAULT_EPSILON);
   }
 
 }
