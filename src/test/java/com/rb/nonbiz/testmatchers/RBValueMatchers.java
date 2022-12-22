@@ -2,6 +2,7 @@ package com.rb.nonbiz.testmatchers;
 
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.ImpreciseValue;
+import com.rb.nonbiz.types.IntegerValue;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
 import org.hamcrest.Description;
@@ -13,6 +14,7 @@ import static com.rb.nonbiz.testmatchers.LambdaSwitchCase.lambdaCase;
 import static com.rb.nonbiz.testmatchers.LambdaSwitchCase.lambdaSwitchMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
+import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.types.PreciseValue.bigDecimalsAlmostEqual;
 import static junit.framework.TestCase.assertTrue;
@@ -104,6 +106,11 @@ public class RBValueMatchers {
     assertValidEpsilon(epsilon);
     return makeMatcher(expected,
         match(v -> v.doubleValue(), f -> doubleAlmostEqualsMatcher(f, epsilon)));
+  }
+
+  public static <T extends IntegerValue<T>> TypeSafeMatcher<T> integerValueMatcher(T expected) {
+    return makeMatcher(expected,
+        matchUsingEquals(v -> v.intValue()));
   }
 
   /**

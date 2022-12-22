@@ -5,7 +5,9 @@ import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Iterables;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
+import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -58,10 +60,10 @@ public class RBMatrix {
 
   public RBVector getColumnVector(MatrixColumnIndex matrixColumnIndex) {
     RBPreconditions.checkArgument(
-        matrixColumnIndex.asInt() < rawMatrix.columns(),
+        matrixColumnIndex.intValue() < rawMatrix.columns(),
         "Matrix column index %s is not within the range of valid matrix columns 0 to %s",
         matrixColumnIndex, rawMatrix.columns());
-    return rbVector(rawMatrix.viewColumn(matrixColumnIndex.asInt()));
+    return rbVector(rawMatrix.viewColumn(matrixColumnIndex.intValue()));
   }
 
   public int getNumRows() {
@@ -84,7 +86,7 @@ public class RBMatrix {
    * The third is the value in the original (not the transformed copy) matrix. </p>
    */
   public RBMatrix transformCopy(TriFunction<MatrixRowIndex, MatrixColumnIndex, Double, Double> transformer) {
-    DoubleMatrix2D transformedMatrix = new DenseDoubleMatrix2D(getNumRows(), getNumColumns());
+    DoubleMatrix2D transformedMatrix = DoubleFactory2D.dense.make(getNumRows(), getNumColumns());
 
     for (int i = 0; i < getNumRows(); i++) {
       for (int j = 0; j < getNumColumns(); j++) {
@@ -148,6 +150,20 @@ public class RBMatrix {
   }
 
   /**
+   * Implements the function DoubleMatrix2D, viewPart, from Colt.
+   * This returns a new matrix which is a square subset of the current matrix.
+   * Note that the colt function itself returns a copy, as of December 2022.
+   */
+  public RBMatrix copyPart(ClosedRange<MatrixRowIndex> rowRange, ClosedRange<MatrixColumnIndex> columnRange) {
+    int firstRow    = rowRange.lowerEndpoint().intValue();
+    int lastRow     = rowRange.upperEndpoint().intValue();
+    int firstColumn = columnRange.lowerEndpoint().intValue();
+    int lastColumn  = columnRange.upperEndpoint().intValue();
+    return rbMatrix(rawMatrix.viewPart(
+        firstRow, firstColumn, lastRow - firstRow + 1, lastColumn - firstColumn + 1));
+  }
+
+  /**
    * This is for cases where we only care about having row keys, but no column keys, i.e. the column keys are just
    * numeric indices for the column, starting at 0.
    */
@@ -170,6 +186,19 @@ public class RBMatrix {
    */
   public boolean isSquare() {
     return getNumRows() == getNumColumns();
+  }
+
+  /**
+   * If this is a 1 x 1 matrix, returns the only element. Otherwise, throws an exception.
+   *
+   * <p> The name parallels {@link Iterables#getOnlyElement(Iterable)}, which has similar behavior. </p>
+   */
+  public double getOnlyElementOrThrow() {
+    RBPreconditions.checkArgument(
+        getNumRows() == 1 && getNumColumns() == 1,
+        "getOnlyElementOrThrow needs a 1x1 matrix, but was %s x %s : %s",
+        getNumRows(), getNumColumns(), rawMatrix);
+    return rawMatrix.get(0, 0);
   }
 
   /**

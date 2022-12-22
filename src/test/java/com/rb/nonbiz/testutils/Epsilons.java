@@ -3,21 +3,25 @@ package com.rb.nonbiz.testutils;
 import com.rb.nonbiz.collections.DoubleMap;
 import com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor;
 import com.rb.nonbiz.testutils.EpsilonDescriptor.GetterSpecificEpsilonDescriptor;
+import org.junit.Test;
 
 import static com.rb.nonbiz.collections.DoubleMap.doubleMap;
 import static com.rb.nonbiz.collections.DoubleMap.emptyDoubleMap;
 import static com.rb.nonbiz.collections.DoubleMap.singletonDoubleMap;
+import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
+import static com.rb.nonbiz.collections.RBStreams.concatenateFirstAndRest;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.ClassWideEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.GetterSpecificEpsilonDescriptor.eps;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Normally, our test matchers use 1e-8 (DEFAULT_EPSILON). However, sometimes we want to override the epsilons.
  * This helps you accomplish that.
  *
- * see OrdersTest#testEpsilonsInfra for how this gets used.
+ * see OrdersTest#testEpsilonsInfra for how this gets used. Also, {@link EpsilonsTest}.
  */
 public class Epsilons {
 
@@ -183,22 +187,40 @@ public class Epsilons {
         epsilonDescriptor6, epsilon6)));
   }
 
+  /**
+   * Use this in situations where you want to use the same numeric value (e.g. 1e-7) for all epsilons
+   * in the contexts specified by the {@link EpsilonDescriptor}s passed in.
+   */
+  public static Epsilons sharedEpsilons(
+      double epsilon,
+      EpsilonDescriptor<?> first,
+      EpsilonDescriptor<?> ... rest) {
+    return new Epsilons(doubleMap(rbMapFromStream(
+        concatenateFirstAndRest(first, rest),
+        v -> v,
+        v -> epsilon)));
+  }
+
   public static Epsilons emptyEpsilons() {
     return epsilons(emptyDoubleMap());
+  }
+
+  public int size() {
+    return epsilons.size();
   }
 
   /**
    * See ClassWideEpsilonDescriptor
    */
-  public double get(Object obj) {
-    return epsilons.getRawMap().getOrDefault(eps(obj.getClass()), DEFAULT_EPSILON);
+  public double get(Class<?> clazz) {
+    return epsilons.getRawMap().getOrDefault(eps(clazz), DEFAULT_EPSILON);
   }
 
   /**
    * @see GetterSpecificEpsilonDescriptor
    */
-  public double get(Object obj, Class<?> getterReturnType) {
-    return epsilons.getRawMap().getOrDefault(eps(obj.getClass(), getterReturnType), DEFAULT_EPSILON);
+  public double get(Class<?> clazz, Class<?> getterReturnType) {
+    return epsilons.getRawMap().getOrDefault(eps(clazz, getterReturnType), DEFAULT_EPSILON);
   }
 
   /**
@@ -208,8 +230,8 @@ public class Epsilons {
    *
    * @see GeneralEpsilonDescriptor
    */
-  public double get(Object obj, String suffix) {
-    return epsilons.getRawMap().getOrDefault(eps(obj.getClass(), suffix), DEFAULT_EPSILON);
+  public double get(Class<?> clazz, String suffix) {
+    return epsilons.getRawMap().getOrDefault(eps(clazz, suffix), DEFAULT_EPSILON);
   }
 
 }

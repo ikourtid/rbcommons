@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
+import static com.rb.nonbiz.testmatchers.Match.matchIntegerValue;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -30,6 +31,14 @@ public class MatrixColumnIndexTest extends RBTestMatcher<MatrixColumnIndex> {
     // Below the values match but classes don't.
     assertNotEquals(matrixRowIndex(1), matrixColumnIndex(1));
     assertNotEquals(matrixColumnIndex(1), matrixRowIndex(1));
+  }
+
+
+  @Test
+  public void testCompareTo(){
+    assertEquals( 0, matrixColumnIndex(1).compareTo(matrixColumnIndex(1)));
+    assertEquals( 1, matrixColumnIndex(2).compareTo(matrixColumnIndex(1)));
+    assertEquals(-1, matrixColumnIndex(1).compareTo(matrixColumnIndex(2)));
   }
 
 
@@ -61,7 +70,7 @@ public class MatrixColumnIndexTest extends RBTestMatcher<MatrixColumnIndex> {
 
   public static TypeSafeMatcher<MatrixColumnIndex> matrixColumnIndexMatcher(MatrixColumnIndex expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.asInt()));
+        matchIntegerValue(v -> v));
   }
 
 }
