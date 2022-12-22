@@ -1,11 +1,18 @@
 package com.rb.nonbiz.testutils;
 
+import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor;
 import org.junit.Test;
 
+import java.util.OptionalDouble;
+import java.util.function.DoubleFunction;
+
+import static com.rb.nonbiz.collections.DoubleMap.singletonDoubleMap;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.ClassWideEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.EpsilonDescriptor.GetterSpecificEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.Epsilons.epsilons;
+import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -61,6 +68,25 @@ public class EpsilonsTest {
     assertEquals(1e-8, epsilons.get(Class4.class, "wrong_key"),      e);
 
     assertEquals(1e-8, epsilons.get(DummyClass.class),               e);
+  }
+
+  @Test
+  public void invalidDefaultEpsilon_throws() {
+    class DummyClass {};
+    EpsilonDescriptor<?> dummyEpsilonDesriptor = eps(DummyClass.class);
+    RBSet.<DoubleFunction<Epsilons>>rbSetOf(
+            v -> useEpsilonEverywhere(v),
+            v -> epsilons(OptionalDouble.of(0.123), singletonDoubleMap(dummyEpsilonDesriptor, v)),
+            v -> epsilons(OptionalDouble.of(v),     singletonDoubleMap(dummyEpsilonDesriptor, v)),
+            v -> epsilons(OptionalDouble.of(v),     singletonDoubleMap(dummyEpsilonDesriptor, 0.123)))
+        .forEach(maker -> {
+          Epsilons doesNotThrow;
+          assertIllegalArgumentException(() -> maker.apply(-1e-9));
+          doesNotThrow = maker.apply(0);
+          doesNotThrow = maker.apply(1e-9);
+          doesNotThrow = maker.apply(99);
+          assertIllegalArgumentException(() -> maker.apply(101));
+        });
   }
 
 }

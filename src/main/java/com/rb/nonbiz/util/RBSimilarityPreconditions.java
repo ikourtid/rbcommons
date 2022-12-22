@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.RBRanges.getMinMaxClosedRange;
@@ -46,8 +47,8 @@ public class RBSimilarityPreconditions {
       Function<T, V> valueExtractor, Stream<T> itemStream, T additionalItem1, T ... additionalItems) {
     return checkAllSame(
         Stream.concat(
-            itemStream,
-            RBStreams.concatenateFirstAndRest(additionalItem1, additionalItems))
+                itemStream,
+                RBStreams.concatenateFirstAndRest(additionalItem1, additionalItems))
             .iterator(),
         valueExtractor,
         "");
@@ -251,6 +252,15 @@ public class RBSimilarityPreconditions {
    */
   public static <T> T checkBothSame(T item1, T item2, BiPredicate<T, T> samenessPredicate, String format, Object...args) {
     return checkAllSameUsingPredicate(ImmutableList.of(item1, item2).iterator(), identity(), samenessPredicate, format, args);
+  }
+
+  public static void checkDoubleArraysAlmostEqual(double[] array1, double[] array2, double epsilon) {
+    RBPreconditions.checkArgument(epsilon >= 0);
+    int size = checkBothSame(array1.length, array2.length, "Arrays are of unequal size");
+    RBPreconditions.checkArgument(
+        IntStream
+            .range(0, size)
+            .allMatch(i -> Math.abs(array1[i] - array2[i]) < epsilon));
   }
 
 }

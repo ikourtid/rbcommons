@@ -45,7 +45,7 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
 
   @Test
   public void disallowsEmptyMatrix() {
-    assertIllegalArgumentException(() -> rbIndexableSquareMatrix(
+    assertIllegalArgumentException( () -> rbIndexableSquareMatrix(
         new DenseDoubleMatrix2D(new double[][] { {} }),
         emptySimpleArrayIndexMapping()));
   }
@@ -60,10 +60,10 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
             }),
             mappingForRowsAndColumns);
 
-    assertIllegalArgumentException(() -> maker.apply(emptySimpleArrayIndexMapping()));
-    assertIllegalArgumentException(() -> maker.apply(simpleArrayIndexMapping("a")));
+    assertIllegalArgumentException( () -> maker.apply(emptySimpleArrayIndexMapping()));
+    assertIllegalArgumentException( () -> maker.apply(simpleArrayIndexMapping("a")));
     RBIndexableSquareMatrix<String> doesNotThrow = maker.apply(simpleArrayIndexMapping("a", "b"));
-    assertIllegalArgumentException(() -> maker.apply(simpleArrayIndexMapping("a", "b", "c")));
+    assertIllegalArgumentException( () -> maker.apply(simpleArrayIndexMapping("a", "b", "c")));
   }
 
   @Test
