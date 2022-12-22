@@ -78,17 +78,49 @@ public abstract class EpsilonDescriptor<T> {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       GetterSpecificEpsilonDescriptor<?, ?> that = (GetterSpecificEpsilonDescriptor<?, ?>) o;
-      return Objects.equals(clazz, that.clazz) &&
-          Objects.equals(getterReturnType, that.getterReturnType);
+      return Objects.equals(clazz, that.clazz)
+          && Objects.equals(getterReturnType, that.getterReturnType);
     }
 
     @Override
     public int hashCode() {
-
       return Objects.hash(clazz, getterReturnType);
     }
+
   }
 
+  /**
+   * Lets you specify an epsilon using some (ideally unique) combination of class plus string 'path'.
+   *
+   * <p> The high-level idea is that {@link Epsilons} represents some sort of map of (typically small)
+   * numbers to use as epsilon in different calculations, keyed by some unique key. You can think of that as a file
+   * path almost. Each user of an epsilon (e.g. the matcher that will compare a BuyOrder to another one)
+   * requests that epsilon it cares about, using a key. In general, we can think of that key as a unique string.
+   * We can refine that concept a bit and use a combination of a Class and a string key. </p>
+   *
+   * <p> This is particularly
+   * useful in cases where we cannot uniquely identify a use case based on a class and a getter type.
+   * For example, assume a class Foo who has two double fields, A and B, and say that we want to use different epsilons
+   * in our tests when comparing those. We can't uniquely specify this by 'Foo.class' + 'Double.class', because both
+   * A and B are double. And we can't easily refer to the getter method names, despite Java's reflection ability.
+   * Therefore, we can do something like this:
+   *
+   * <pre>
+   * epsilons(
+   *   GeneralEpsilonDescriptor.eps(Foo.class, "forA"), 1e-6,
+   *   GeneralEpsilonDescriptor.eps(Foo.class, "forB"), 1e-7);
+   * </pre>
+   *
+   * Then, the matcher for Foo could look like this (note - this uses generics, so Javadoc won't render it properly):
+   *
+   * {@code
+   * public static TypeSafeMatcher<Foo> fooMatcher() {
+   *   return makeMatcher(expected,
+   *      matchUsingAlmostEquals(v -> v.getA(), epsilons.get(Foo.class, "forA"),
+   *      matchUsingAlmostEquals(v -> v.getB(), epsilons.get(Foo.class, "forB"));
+   *      }
+   *  }
+   */
   public static class GeneralEpsilonDescriptor<T> extends EpsilonDescriptor<T> {
 
     private final String uniqueIdWithinMatcher;
@@ -107,7 +139,8 @@ public abstract class EpsilonDescriptor<T> {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       GeneralEpsilonDescriptor<?> that = (GeneralEpsilonDescriptor<?>) o;
-      return Objects.equals(uniqueIdWithinMatcher, that.uniqueIdWithinMatcher);
+      return Objects.equals(clazz, that.clazz)
+          && Objects.equals(uniqueIdWithinMatcher, that.uniqueIdWithinMatcher);
     }
 
     @Override

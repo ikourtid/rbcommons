@@ -43,10 +43,10 @@ public class RBMatrixUtils {
     */
   public static boolean isAlmostIdentityMatrix(RBMatrix matrix, double epsilon) {
     // Non-square matrices are never similar to identity.
-    if (matrix.getNumColumns() != matrix.getNumRows()) {
+    if (!matrix.isSquare()) {
       return false;
     }
-    checkArgument(epsilon > 0);
+    checkArgument(epsilon >= 0);
     for( int i = 0; i < matrix.getNumRows(); ++i) {
       for( int j = 0; j < matrix.getNumColumns(); ++j) {
         double correctValue = (i == j) ? 1.0 : 0.0;
