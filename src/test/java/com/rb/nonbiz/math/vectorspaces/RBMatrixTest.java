@@ -3,6 +3,7 @@ package com.rb.nonbiz.math.vectorspaces;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import com.rb.nonbiz.collections.ClosedRange;
+import com.rb.nonbiz.testutils.Epsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -25,6 +26,8 @@ import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
+import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -478,12 +481,16 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
   }
 
   public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected) {
-    return rbMatrixMatcher(expected, 1e-8);
+    return rbMatrixMatcher(expected, emptyEpsilons());
   }
 
   public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected, double epsilon) {
+    return rbMatrixMatcher(expected, useEpsilonEverywhere(epsilon));
+  }
+
+  public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected, Epsilons e) {
     return makeMatcher(expected,
-        match(v -> v.getRawMatrixUnsafe(), f -> matrixMatcher(f, epsilon)));
+        match(v -> v.getRawMatrixUnsafe(), f -> matrixMatcher(f, e)));
   }
 
 }
