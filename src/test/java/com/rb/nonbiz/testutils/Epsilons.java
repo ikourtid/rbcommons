@@ -38,8 +38,34 @@ public class Epsilons {
     this.epsilons = epsilons;
   }
 
+  public static Epsilons epsilons(
+      OptionalDouble defaultEpsilonOverride,
+      DoubleMap<EpsilonDescriptor<?>> epsilonsMap) {
+    // Ideally, we'd be using something more typesafe than a double to denote an epsilon, which disallows invalid
+    // epsilons. But unfortunately it's too late to do this by now (Dec 2022).
+    // So let's just check here.
+    defaultEpsilonOverride.ifPresent(v -> RBPreconditions.checkArgument(
+        isValidEpsilon(v),
+        "The default epsilon is invalid: %s",
+        v));
+
+    epsilonsMap.getRawMap().forEachEntry( (epsilonDescriptor, epsilon) ->
+        RBPreconditions.checkArgument(
+            isValidEpsilon(epsilon),
+            "The epsilon with descriptor %s is invalid: %s",
+            epsilonDescriptor, epsilon));
+
+    return new Epsilons(defaultEpsilonOverride, epsilonsMap);
+  }
+
+  private static boolean isValidEpsilon(double epsilon) {
+    // There's nothing special about 100, but it's rare to use an epsilon bigger than 1, let alone 100.
+    // This is particularly useful for cases where one misspells e.g. 1e-6 to 1e6.
+    return 0 <= epsilon && epsilon < 100;
+  }
+
   public static Epsilons emptyEpsilons() {
-    return new Epsilons(
+    return epsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         emptyDoubleMap());
   }
@@ -51,14 +77,14 @@ public class Epsilons {
    */
   public static Epsilons useEpsilonEverywhere(double epsilonToUseEverywhere) {
     RBPreconditions.checkArgument(epsilonToUseEverywhere >= 0);
-    return new Epsilons(
+    return epsilons(
         OptionalDouble.of(epsilonToUseEverywhere),
         emptyDoubleMap());
   }
 
   public static Epsilons epsilons(
       EpsilonDescriptor<?> epsilonDescriptor1, double epsilon1) {
-    return new Epsilons(
+    return epsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(singletonRBMap(
             epsilonDescriptor1, epsilon1)));
@@ -67,7 +93,7 @@ public class Epsilons {
   public static Epsilons epsilons(
       EpsilonDescriptor<?> epsilonDescriptor1, double epsilon1,
       EpsilonDescriptor<?> epsilonDescriptor2, double epsilon2) {
-    return new Epsilons(
+    return epsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(rbMapOf(
             epsilonDescriptor1, epsilon1,
@@ -78,7 +104,7 @@ public class Epsilons {
       EpsilonDescriptor<?> epsilonDescriptor1, double epsilon1,
       EpsilonDescriptor<?> epsilonDescriptor2, double epsilon2,
       EpsilonDescriptor<?> epsilonDescriptor3, double epsilon3) {
-    return new Epsilons(
+    return epsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(rbMapOf(
             epsilonDescriptor1, epsilon1,
@@ -91,7 +117,7 @@ public class Epsilons {
       EpsilonDescriptor<?> epsilonDescriptor2, double epsilon2,
       EpsilonDescriptor<?> epsilonDescriptor3, double epsilon3,
       EpsilonDescriptor<?> epsilonDescriptor4, double epsilon4) {
-    return new Epsilons(
+    return epsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(rbMapOf(
             epsilonDescriptor1, epsilon1,
@@ -106,7 +132,7 @@ public class Epsilons {
       EpsilonDescriptor<?> epsilonDescriptor3, double epsilon3,
       EpsilonDescriptor<?> epsilonDescriptor4, double epsilon4,
       EpsilonDescriptor<?> epsilonDescriptor5, double epsilon5) {
-    return new Epsilons(
+    return epsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(rbMapOf(
             epsilonDescriptor1, epsilon1,
@@ -123,7 +149,7 @@ public class Epsilons {
       EpsilonDescriptor<?> epsilonDescriptor4, double epsilon4,
       EpsilonDescriptor<?> epsilonDescriptor5, double epsilon5,
       EpsilonDescriptor<?> epsilonDescriptor6, double epsilon6) {
-    return new Epsilons(
+    return epsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(rbMapOf(
             epsilonDescriptor1, epsilon1,
@@ -142,7 +168,7 @@ public class Epsilons {
       double epsilon,
       EpsilonDescriptor<?> first,
       EpsilonDescriptor<?> ... rest) {
-    return new Epsilons(
+    return epsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(rbMapFromStream(
             concatenateFirstAndRest(first, rest),
