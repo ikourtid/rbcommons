@@ -227,28 +227,8 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
     return asBigDecimal().compareTo(other.asBigDecimal());
   }
 
-  @Override
-  public boolean isGreaterThan(T other) {
-    return this.asBigDecimal().compareTo(other.asBigDecimal()) > 0;
-  }
-
-  @Override
-  public boolean isGreaterThanOrEqualTo(T other) {
-    return this.asBigDecimal().compareTo(other.asBigDecimal()) >= 0;
-  }
-
   public boolean isGreaterThanOrAlmostEqualTo(T other, double epsilon) {
     return this.asBigDecimal().compareTo(other.asBigDecimal().subtract(BigDecimal.valueOf(epsilon))) >= 0;
-  }
-
-  @Override
-  public boolean isLessThan(T other) {
-    return this.asBigDecimal().compareTo(other.asBigDecimal()) < 0;
-  }
-
-  @Override
-  public boolean isLessThanOrEqualTo(T other) {
-    return this.asBigDecimal().compareTo(other.asBigDecimal()) <= 0;
   }
 
   public boolean isLessThanOrAlmostEqualTo(T other, double epsilon) {

@@ -5,16 +5,27 @@ package com.rb.nonbiz.types;
  * {@code foo1.compareTo(foo2) < 0 }
  * is harder to read than
  * {@code foo1.isLessThan(foo2) }
- * This interface adds some unintuitive comparison methods that are easier to read.
+ *
+ * <p> This interface adds some unintuitive comparison methods that are easier to read.
+ * It is a bit unusual, because all its methods are 'default'.
+ * </p>
  */
 public interface IntuitiveComparable<T> extends Comparable<T> {
 
-  boolean isGreaterThan(T other);
+  default boolean isGreaterThan(T other) {
+    return this.compareTo(other) > 0;
+  }
 
-  boolean isGreaterThanOrEqualTo(T other);
+  default boolean isGreaterThanOrEqualTo(T other) {
+    return this.compareTo(other) >= 0;
+  }
 
-  boolean isLessThan(T other);
+  default boolean isLessThan(T other) {
+    return this.compareTo(other) < 0;
+  }
 
-  boolean isLessThanOrEqualTo(T other);
+  default boolean isLessThanOrEqualTo(T other) {
+    return this.compareTo(other) <= 0;
+  }
 
 }

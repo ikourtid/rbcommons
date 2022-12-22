@@ -76,26 +76,6 @@ public abstract class IntegerValue<T extends IntegerValue<T>> extends RBNumeric<
     return Integer.compare(value, other.intValue());
   }
 
-  @Override
-  public boolean isGreaterThan(T other) {
-    return value > other.intValue();
-  }
-
-  @Override
-  public boolean isGreaterThanOrEqualTo(T other) {
-    return value >= other.intValue();
-  }
-
-  @Override
-  public boolean isLessThan(T other) {
-    return value < other.intValue();
-  }
-
-  @Override
-  public boolean isLessThanOrEqualTo(T other) {
-    return value <= other.intValue();
-  }
-
   public static <T extends IntegerValue<T>> T max(T item1, T item2) {
     return item1.compareTo(item2) < 0 ? item2 : item1;
   }
