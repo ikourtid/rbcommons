@@ -86,7 +86,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             })
             .transformCopy(
                 (matrixRowIndex, matrixColumnIndex, existingValue) ->
-                    existingValue + 10 * (1 + matrixRowIndex.asInt()) + 100 * (1 + matrixColumnIndex.asInt())),
+                    existingValue + 10 * (1 + matrixRowIndex.intValue()) + 100 * (1 + matrixColumnIndex.intValue())),
         rbMatrixMatcher(
             rbMatrix(new double[][] {
                 {

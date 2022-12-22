@@ -5,6 +5,7 @@ import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.types.ImpreciseValue;
+import com.rb.nonbiz.types.IntegerValue;
 import com.rb.nonbiz.types.PreciseValue;
 
 import java.util.List;
@@ -26,6 +27,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.classMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.enumMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.integerValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 
@@ -134,6 +136,11 @@ public class Match<T, F> {
   public static <T, F extends ImpreciseValue<F>> Match<T, F> matchUsingImpreciseAlmostEquals(
       Function<T, F> fieldExtractor, double epsilon) {
     return match(fieldExtractor, f -> impreciseValueMatcher(f, epsilon));
+  }
+
+  public static <T, F extends IntegerValue<F>> Match<T, F> matchIntegerValue(
+      Function<T, F> fieldExtractor) {
+    return match(fieldExtractor, f -> integerValueMatcher(f));
   }
 
   public static <T> Match<T, Double> matchUsingDoubleAlmostEquals(
