@@ -33,14 +33,12 @@ public class MatrixColumnIndexTest extends RBTestMatcher<MatrixColumnIndex> {
     assertNotEquals(matrixColumnIndex(1), matrixRowIndex(1));
   }
 
-
   @Test
   public void testCompareTo(){
     assertEquals( 0, matrixColumnIndex(1).compareTo(matrixColumnIndex(1)));
     assertEquals( 1, matrixColumnIndex(2).compareTo(matrixColumnIndex(1)));
     assertEquals(-1, matrixColumnIndex(1).compareTo(matrixColumnIndex(2)));
   }
-
 
   @Test
   public void testHashcode() {
