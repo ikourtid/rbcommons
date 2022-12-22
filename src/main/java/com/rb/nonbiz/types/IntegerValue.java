@@ -112,6 +112,7 @@ public abstract class IntegerValue<T extends IntegerValue<T>> extends RBNumeric<
    * Sums the contents into an int; throws an exception if that would result in overflow.
    */
   public static <T extends IntegerValue<T>> int sumToInt(Iterator<T> iterator) {
+    // This is a Guava mechanism, which throws an exception if there's overflow when it converts a long to an int.
     return Ints.checkedCast(sumToLong(iterator));
   }
 
