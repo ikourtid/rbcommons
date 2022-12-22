@@ -30,10 +30,12 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -252,6 +254,19 @@ public class RBMapsTest {
     RBMap<String, PositiveMultiplier> emptyMap = emptyRBMap();
     assertTrue( impreciseValueMapsAlmostEqual(emptyMap, emptyMap, 1e-8));
     assertFalse(impreciseValueMapsAlmostEqual(map1, emptyRBMap(), 1e-8));
+  }
+
+  @Test
+  public void hasDuplicates_throws() {
+    assertIllegalArgumentException( () -> rbMapOf(
+        "a", 123,
+        "a", 456));
+    assertIllegalArgumentException( () -> rbMapOf(
+        "a", 123,
+        "a", 123));
+    RBMap<String, Integer> doesNotThrow = rbMapOf(
+        "a", DUMMY_POSITIVE_INTEGER,
+        "b", DUMMY_POSITIVE_INTEGER);
   }
 
 }
