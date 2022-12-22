@@ -22,26 +22,8 @@ public class MatrixRowIndex extends IntegerValue<MatrixRowIndex> implements IsAr
   }
 
   @Override
-  public int asInt() {
-    return intValue();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    return asInt() == ((MatrixRowIndex)o).asInt();
-  }
-
-  @Override
-  public int hashCode() {
-    return asInt();
-  }
-
-  @Override
   public String toString() {
-    return Strings.format("[MRI %s MRI]", asInt());
+    return Strings.format("[MRI %s MRI]", intValue());
   }
 
 }

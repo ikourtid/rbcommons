@@ -3,6 +3,7 @@ package com.rb.nonbiz.types;
 import com.google.common.math.IntMath;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
+import com.rb.nonbiz.math.vectorspaces.MatrixRowIndex;
 
 import java.util.Iterator;
 import java.util.List;
@@ -132,6 +133,19 @@ public abstract class IntegerValue<T extends IntegerValue<T>> extends RBNumeric<
       sum += iterator.next().intValue();
     }
     return sum;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    return intValue() == ((IntegerValue<?>) o).intValue();
+  }
+
+  @Override
+  public int hashCode() {
+    return intValue();
   }
 
 }
