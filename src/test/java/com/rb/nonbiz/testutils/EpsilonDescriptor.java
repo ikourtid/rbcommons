@@ -84,9 +84,9 @@ public abstract class EpsilonDescriptor<T> {
 
     @Override
     public int hashCode() {
-
       return Objects.hash(clazz, getterReturnType);
     }
+    
   }
 
   /**
