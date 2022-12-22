@@ -1,8 +1,11 @@
 package com.rb.nonbiz.types;
 
 import com.google.common.math.IntMath;
+import com.google.common.primitives.Doubles;
+import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
+import com.google.common.primitives.Shorts;
 import com.rb.nonbiz.math.vectorspaces.MatrixRowIndex;
 
 import java.util.Iterator;
@@ -38,7 +41,7 @@ public abstract class IntegerValue<T extends IntegerValue<T>> extends RBNumeric<
 
   @Override
   public short shortValue() {
-    return (short) value;
+    return Shorts.checkedCast(value);
   }
 
   @Override
@@ -71,22 +74,6 @@ public abstract class IntegerValue<T extends IntegerValue<T>> extends RBNumeric<
   @Override
   public int compareTo(T other) {
     return Integer.compare(value, other.intValue());
-  }
-
-  public boolean isGreaterThan(T other) {
-    return value > other.intValue();
-  }
-
-  public boolean isGreaterThanOrEqualTo(T other) {
-    return value >= other.intValue();
-  }
-
-  public boolean isLessThan(T other) {
-    return value < other.intValue();
-  }
-
-  public boolean isLessThanOrEqualTo(T other) {
-    return value <= other.intValue();
   }
 
   public static <T extends IntegerValue<T>> T max(T item1, T item2) {
