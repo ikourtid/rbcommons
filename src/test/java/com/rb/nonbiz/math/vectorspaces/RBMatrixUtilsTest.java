@@ -1,6 +1,10 @@
 package com.rb.nonbiz.math.vectorspaces;
 
+import com.google.common.collect.ImmutableList;
+import com.rb.nonbiz.functional.TriFunction;
 import org.junit.Test;
+
+import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
@@ -13,8 +17,11 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.singletonRBMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.computeVariance;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isAlmostIdentityMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isOrthoNormalTransformationMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isPositiveSemiDefiniteMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isSymmetricMatrix;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -42,25 +49,25 @@ public class RBMatrixUtilsTest {
     //     or to (B) flip the meaning of (1, 0) and (0, 1) in orth space.  i.e.
     //     (0, 1) in orthonormal space is (-2 marketcap, 0.5 growth) in raw space.
     //     (1, 0) in orthonormal space is (0.5 marketcap, 2 growth) in raw space.
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737,  -1,  0.57737,  1), covMat, epsilon));
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737,   1,  0.57737, -1), covMat, epsilon));
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(-0.57737, -1, -0.57737,  1), covMat, epsilon));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1, 0.57737, 1), covMat, epsilon));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, 1, 0.57737, -1), covMat, epsilon));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(-0.57737, -1, -0.57737, 1), covMat, epsilon));
     // Switching top and bottom is the same as well, even if we negate one side
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1,   0.57737,  1), covMat, epsilon));
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737,  1,   0.57737, -1), covMat, epsilon));
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1,   0.57737,  1), covMat, epsilon));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1, 0.57737, 1), covMat, epsilon));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, 1, 0.57737, -1), covMat, epsilon));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1, 0.57737, 1), covMat, epsilon));
 
     // Making a large change to the transformation makes in invalid
     for (double delta : newRBSet(-0.1, 0.1)) {
-      assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737,          -1,         0.57737,         1),
+      assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1, 0.57737, 1),
           covMat, epsilon));
-      assertFalse(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737 + delta, -1,         0.57737,         1),
+      assertFalse(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737 + delta, -1, 0.57737, 1),
           covMat, epsilon));
-      assertFalse(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737,         -1 + delta, 0.57737,         1),
+      assertFalse(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1 + delta, 0.57737, 1),
           covMat, epsilon));
-      assertFalse(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737,         -1,         0.57737 + delta, 1),
+      assertFalse(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1, 0.57737 + delta, 1),
           covMat, epsilon));
-      assertFalse(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737,         -1,         0.57737,         1 + delta),
+      assertFalse(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1, 0.57737, 1 + delta),
           covMat, epsilon));
     }
 
@@ -76,13 +83,13 @@ public class RBMatrixUtilsTest {
     // in the bottom left as well.
     assertEquals(1.0, computeVariance(covMat, rbMatrix2by2(
         0.57737, -1,
-        0.57737,  1).multiply(matrix2by1(1, 0))), epsilon);
+        0.57737, 1).multiply(matrix2by1(1, 0))), epsilon);
     assertEquals(1.0, computeVariance(covMat, rbMatrix2by2(
         0.57737, -1,
-        0.57737,  1).multiply(matrix2by1(0, 1))), epsilon);
+        0.57737, 1).multiply(matrix2by1(0, 1))), epsilon);
     assertEquals(2.0, computeVariance(covMat, rbMatrix2by2(
         0.57737, -1,
-        0.57737,  1).multiply(matrix2by1(1, 1))), epsilon);
+        0.57737, 1).multiply(matrix2by1(1, 1))), epsilon);
   }
 
 
@@ -256,7 +263,7 @@ public class RBMatrixUtilsTest {
   }
 
   @Test
-  public void testIsSimilartoIdentityMatrix() {
+  public void testIsSimilarToIdentityMatrix() {
     double largeEpsilon = 1e-4;
     double smallEpsilon = 1e-8;
 
@@ -292,4 +299,91 @@ public class RBMatrixUtilsTest {
     assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 1.0, 1.0, 1.0), largeEpsilon));
   }
 
+  @Test
+  public void testIsSymmetric() {
+    // can't have negative epsilon
+    assertIllegalArgumentException(() -> isSymmetricMatrix(singletonRBMatrix(DUMMY_DOUBLE), -1e-8));
+
+    assertTrue(isSymmetricMatrix(singletonRBMatrix(DUMMY_DOUBLE), 1e-8));
+    assertTrue(isSymmetricMatrix(rbDiagonalMatrix3by3(3, 2, 1), 1e-8));
+    assertTrue(isSymmetricMatrix(
+        rbMatrix(new double[][] {
+            { 1, 2 },
+            { 2, 3 } }),
+        1e-8));
+
+    // 2 x 3 matrix not symmetric
+    assertFalse(isSymmetricMatrix(
+        rbMatrix(new double[][] {
+            { 1, 2, 3 },
+            { 4, 5, 6 } }),
+        1e-8));
+
+    // 3 x 2 matrix not symmetric
+    assertFalse(isSymmetricMatrix(
+        rbMatrix(new double[][] {
+            { 1, 2 },
+            { 3, 4 },
+            { 5, 6 } }),
+        1e-8));
+  }
+
+  @Test
+  public void testIsPositiveSemiDefinite() {
+    // assertTrue(isPositiveSemiDefiniteMatrix(singletonRBMatrix(DUMMY_DOUBLE)));
+    // assertTrue(isPositiveSemiDefiniteMatrix(rbIdentityMatrix(3)));
+    //  assertTrue(isPositiveSemiDefiniteMatrix(rbDiagonalMatrix3by3(3, 2, 1)));
+
+    // all zero entries are acceptable
+    //  assertTrue(isPositiveSemiDefiniteMatrix(rbDiagonalMatrix3by3(0, 0, 0)));
+
+    // can't have a negative diagonal element
+    //  assertFalse(isPositiveSemiDefiniteMatrix(rbDiagonalMatrix3by3(3, 2, -1e-9)));
+
+    Function<Double, RBMatrix> maker2x2 = offDiagonal -> rbMatrix2by2(
+        4.0,         offDiagonal,
+        offDiagonal,        9.0);
+    // Any off-diagonal element with abs(off-diagonal) <= sqrt(4) * sqrt(9) = 6 is fine.
+    // There is a tiny (1e-14) tolerance for being over.
+    for (double offDiagonal : ImmutableList.of(-6.0 -1e-15, -6.0, -1.0, 0.0, 0.5, 1.0, 6.0, 6.0 + 1e-15)) {
+      //   assertTrue(isPositiveSemiDefiniteMatrix(maker2x2.apply(offDiagonal)));
+    }
+
+    // The off-diagonal elements cannot be larger (in absolute value) than sqrt(diag_i) * sqrt(diag_j).
+//    assertFalse(isPositiveSemiDefiniteMatrix(maker2x2.apply(-6 - 1e-9)));
+//    assertFalse(isPositiveSemiDefiniteMatrix(maker2x2.apply( 6 + 1e-9)));
+
+    TriFunction<Double, Double, Double, RBMatrix> maker3x3 = (elem12, elem13, elem23) -> rbMatrix3by3(
+        4,      elem12, elem13,
+        elem12,      9, elem23,
+        elem13, elem23,     16);
+    // In all the following examples, the off-diagonal elements are <= sqrt(diag_i) * sqrt(diag_j)
+    // For small off-diagonals, we can do a Cholesky decompostion, which (apparently) guarantees positive semi-definite.
+    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(0.0, 0.0, 0.0)));
+    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(1.0, 1.0, 1.0)));
+
+    // In the following, the single non-zero off-diagonal element is as large as possible,
+    // e.g. e_ij = sqrt(e_ii) * sqrt(e_jj).
+    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.9999, 0.0,  0.0)));
+    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(0.0, 8.0,  0.0)));
+    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(0.0, 0.0, 12.0)));
+
+    // As above, but with a second non-zero off-diagonal element e_ij.
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(6.0, 1.0,  0.0)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(1.0, 8.0,  0.0)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(1.0, 0.0, 12.0)));
+    // elem12 = 4 < 6 = sqrt(4) * sqrt(9)
+//    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(4.0, 0.0)));
+//    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.0, 0.0)));
+    // elem23 = 12 = sqrt(9) * sqrt(16)
+    //assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(1.0, 12.0)));
+    //assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(3.0,  6.0)));
+    //assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.0, 11.0)));
+    //assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.5, 11.5)));
+
+    // The elements elem12 and elem21 are individually as large as possible, given the diagonal elements.
+    // However, the matrix as a whole is not positive semi-definite.
+    //assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.8, 11.8)));
+    //assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(6.0, 12.0)));
+  }
 }

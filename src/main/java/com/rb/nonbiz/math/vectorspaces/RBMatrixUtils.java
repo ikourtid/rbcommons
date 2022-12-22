@@ -1,6 +1,12 @@
 package com.rb.nonbiz.math.vectorspaces;
 
+import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.linalg.CholeskyDecomposition;
+import cern.colt.matrix.linalg.EigenvalueDecomposition;
 import com.rb.nonbiz.util.RBPreconditions;
+
+import java.util.Arrays;
+import java.util.OptionalDouble;
 
 import static com.rb.nonbiz.util.RBPreconditions.checkArgument;
 
@@ -40,15 +46,15 @@ public class RBMatrixUtils {
 
   /**
    * Returns true iff a matrix is similar to the identity matrix, to within epsilon.
-    */
+   */
   public static boolean isAlmostIdentityMatrix(RBMatrix matrix, double epsilon) {
     // Non-square matrices are never similar to identity.
     if (!matrix.isSquare()) {
       return false;
     }
-    checkArgument(epsilon >= 0);
-    for( int i = 0; i < matrix.getNumRows(); ++i) {
-      for( int j = 0; j < matrix.getNumColumns(); ++j) {
+    checkArgument(epsilon > 0);
+    for (int i = 0; i < matrix.getNumRows(); ++i) {
+      for (int j = 0; j < matrix.getNumColumns(); ++j) {
         double correctValue = (i == j) ? 1.0 : 0.0;
         if (Math.abs(matrix.getRawMatrixUnsafe().get(i, j) - correctValue) > epsilon) {
           return false;
@@ -58,4 +64,91 @@ public class RBMatrixUtils {
     return true;
   }
 
+  public static boolean isSymmetricMatrix(RBMatrix rbMatrix, double epsilon) {
+    RBPreconditions.checkArgument(
+        epsilon >= 0 && epsilon <= 100.0,
+        "Epsilon should be non-negative and probably less than 100; found %s ",
+        epsilon);
+    if (!rbMatrix.isSquare()) {
+      return false;
+    }
+    int sharedSize = rbMatrix.getNumRows();
+
+    // We usually like to use Streams and fluent code, but this could be a big operation (for a large matrix),
+    // plus it's clear enough to look at for loops when iterating over a matrix.
+    for (int i = 0; i < sharedSize; i++) {
+      for (int j = i + 1; j < sharedSize; j++) {
+        double aboveDiagonal = rbMatrix.get(i, j);
+        double belowDiagonal = rbMatrix.get(j, i);
+        if (Math.abs(aboveDiagonal - belowDiagonal) > epsilon) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  public static boolean isPositiveSemiDefiniteMatrix(RBMatrix rbMatrix) {
+    // Do various matrix checks, from the easiest to most complex, in order to "fail fast".
+    if (!rbMatrix.isSquare()) {
+      return false;
+    }
+
+    if (!isSymmetricMatrix(rbMatrix, 1e-8)) {
+      return false;
+    }
+
+    // We have already checked that the matrix is symmetric, so it must be square. So # rows = # columns.
+    int numRowsOrColumns = rbMatrix.getNumRows();
+    double[] sqrtDiagonal = new double[numRowsOrColumns];
+
+    // Check that all diagonal elements are non-negative.
+    // The covariance of a variable with itself is just that variable's variance. Variances must be
+    // non-negative. That is cov[i, i] = var[i] >= 0.
+    for (int i = 0; i < numRowsOrColumns; ++i) {
+      double diagonalElement = rbMatrix.get(i, i);
+      if (diagonalElement < 0.0) {
+        // can't have a negative diagonal element
+        return false;
+      }
+      sqrtDiagonal[i] = Math.sqrt(diagonalElement);
+    }
+
+    // Check that all off-diagonal elements are not too large.
+    // The covariance[i, j] must be <= sqrt(variance[i]) * sqrt(variance[j]).
+    for (int i = 0; i < numRowsOrColumns; ++i) {
+      for (int j = i + 1; j < numRowsOrColumns; ++j) {
+        if (Math.abs(rbMatrix.get(i, j)) > sqrtDiagonal[i] * sqrtDiagonal[j] + 1e-14) {
+          return false;
+        }
+      }
+    }
+
+    // Now check if we can do a Choleskey decomposition. Apparently, this is only possible for
+    // positive semi-definite matrices.
+    // The downside is that this operation scales as N^3 for matrix size N.
+
+    try {
+      System.out.format("rbMat %s\n", rbMatrix.getRawMatrixUnsafe());
+      CholeskyDecomposition choleskyDecomposition = new CholeskyDecomposition(rbMatrix.getRawMatrixUnsafe());
+      System.out.format("chol %s\n", choleskyDecomposition);
+      if (choleskyDecomposition.isSymmetricPositiveDefinite()) {
+        return true;
+      }
+      EigenvalueDecomposition eigenvalueDecomposition = new EigenvalueDecomposition(rbMatrix.getRawMatrixUnsafe());
+      DoubleMatrix1D realEigenvalues = eigenvalueDecomposition.getRealEigenvalues();
+      System.out.format("eigenvalues %s\n", eigenvalueDecomposition.getRealEigenvalues());
+      OptionalDouble first = Arrays.stream(realEigenvalues.toArray()).sorted().findFirst();
+      System.out.format("first %s\n", first);
+      if (first.isPresent() && first.getAsDouble() < 0) {
+        return false;
+      }
+    } catch (IllegalArgumentException e) {
+      // Don't throw an exception; we just wanted to see if a Cholesky decomposition was possible.
+      return false;
+    }
+
+    return true;
+  }
 }
+
