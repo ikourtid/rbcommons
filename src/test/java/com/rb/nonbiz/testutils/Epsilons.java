@@ -3,6 +3,7 @@ package com.rb.nonbiz.testutils;
 import com.rb.nonbiz.collections.DoubleMap;
 import com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor;
 import com.rb.nonbiz.testutils.EpsilonDescriptor.GetterSpecificEpsilonDescriptor;
+import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.OptionalDouble;
 
@@ -40,6 +41,18 @@ public class Epsilons {
   public static Epsilons emptyEpsilons() {
     return new Epsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
+        emptyDoubleMap());
+  }
+
+  /**
+   * Use this for cases where you want to use the same numeric epsilon everywhere in the matchers,
+   * without needing to have an inclusion list of {@link EpsilonDescriptor}s that describe the exact places
+   * where the epsilons get used.
+   */
+  public static Epsilons useEpsilonEverywhere(double epsilonToUseEverywhere) {
+    RBPreconditions.checkArgument(epsilonToUseEverywhere >= 0);
+    return new Epsilons(
+        OptionalDouble.of(epsilonToUseEverywhere),
         emptyDoubleMap());
   }
 
