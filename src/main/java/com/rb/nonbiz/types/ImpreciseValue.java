@@ -94,18 +94,22 @@ public abstract class ImpreciseValue<T extends ImpreciseValue<T>> extends RBNume
     return Double.compare(value, other.doubleValue());
   }
 
+  @Override
   public boolean isGreaterThan(T other) {
     return value > other.doubleValue();
   }
 
+  @Override
   public boolean isGreaterThanOrEqualTo(T other) {
     return value >= other.doubleValue();
   }
 
+  @Override
   public boolean isLessThan(T other) {
     return value < other.doubleValue();
   }
 
+  @Override
   public boolean isLessThanOrEqualTo(T other) {
     return value <= other.doubleValue();
   }

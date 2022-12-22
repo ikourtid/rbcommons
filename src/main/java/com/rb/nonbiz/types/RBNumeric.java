@@ -6,6 +6,6 @@ package com.rb.nonbiz.types;
  * can work on all 3 of PreciseValue, ImpreciseValue, and Double - although those may look a bit hacky because
  * technically they should also support long, int, etc., which also extend Number.
  */
-public abstract class RBNumeric<T> extends Number implements Comparable<T> {
+public abstract class RBNumeric<T> extends Number implements Comparable<T>, HasIntuitiveComparisons<T> {
 
 }
