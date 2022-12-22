@@ -2,6 +2,7 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
+import com.rb.nonbiz.testutils.Epsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -17,6 +18,8 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
+import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -34,7 +37,7 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
       double[][] rawMatrix,
       K first,
       K second,
-      K ... rest) {
+      K... rest) {
     return rbIndexableSquareMatrix(
         new DenseDoubleMatrix2D(rawMatrix),
         simpleArrayIndexMapping(concatenateFirstSecondAndRest(first, second, rest)));
@@ -43,7 +46,7 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
   @Test
   public void disallowsEmptyMatrix() {
     assertIllegalArgumentException( () -> rbIndexableSquareMatrix(
-        new DenseDoubleMatrix2D(new double[][] { { } }),
+        new DenseDoubleMatrix2D(new double[][] { {} }),
         emptySimpleArrayIndexMapping()));
   }
 
@@ -100,8 +103,8 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
     // constructor that's general enough.
     return testRBIndexableSquareMatrix(
         new double[][] {
-            { -1.1,  2.2 },
-            { -3.3,  4.4 }
+            { -1.1, 2.2 },
+            { -3.3, 4.4 }
         },
         "a", "b");
   }
@@ -111,8 +114,8 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
     double e = 1e-9; // epsilon
     return testRBIndexableSquareMatrix(
         new double[][] {
-            { -1.1 + e,  2.2 + e },
-            { -3.3 + e,  4.4 + e }
+            { -1.1 + e, 2.2 + e },
+            { -3.3 + e, 4.4 + e }
         },
         "a", "b");
   }
@@ -124,13 +127,18 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
 
   public static <K> TypeSafeMatcher<RBIndexableSquareMatrix<K>> rbIndexableSquareMatrixMatcher(
       RBIndexableSquareMatrix<K> expected) {
-    return rbIndexableSquareMatrixMatcher(expected, 1e-8);
+    return rbIndexableSquareMatrixMatcher(expected, emptyEpsilons());
   }
 
   public static <K> TypeSafeMatcher<RBIndexableSquareMatrix<K>> rbIndexableSquareMatrixMatcher(
       RBIndexableSquareMatrix<K> expected, double epsilon) {
+    return rbIndexableSquareMatrixMatcher(expected, useEpsilonEverywhere(epsilon));
+  }
+
+  public static <K> TypeSafeMatcher<RBIndexableSquareMatrix<K>> rbIndexableSquareMatrixMatcher(
+      RBIndexableSquareMatrix<K> expected, Epsilons e) {
     return makeMatcher(expected,
-        match(v -> v.getRawMatrixUnsafe(), f -> matrixMatcher(f, epsilon)));
+        match(v -> v.getRawMatrixUnsafe(), f -> matrixMatcher(f, e)));
   }
 
 }

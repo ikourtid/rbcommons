@@ -105,6 +105,10 @@ public class Asserters {
     assertThrows(IllegalArgumentException.class, runnable);
   }
 
+  public static void assertIndexOutOfBoundsException(Runnable runnable) {
+    assertThrows(IndexOutOfBoundsException.class, runnable);
+  }
+
   public static void assertPossiblyIllegalArgumentException(boolean shouldThrow, Runnable runnable) {
     assertPossiblyThrows(shouldThrow, IllegalArgumentException.class, runnable);
   }

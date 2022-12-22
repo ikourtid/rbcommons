@@ -94,22 +94,6 @@ public abstract class ImpreciseValue<T extends ImpreciseValue<T>> extends RBNume
     return Double.compare(value, other.doubleValue());
   }
 
-  public boolean isGreaterThan(T other) {
-    return value > other.doubleValue();
-  }
-
-  public boolean isGreaterThanOrEqualTo(T other) {
-    return value >= other.doubleValue();
-  }
-
-  public boolean isLessThan(T other) {
-    return value < other.doubleValue();
-  }
-
-  public boolean isLessThanOrEqualTo(T other) {
-    return value <= other.doubleValue();
-  }
-
   public boolean isAlmostZero(double epsilon) {
     return Math.abs(value) <= epsilon;
   }

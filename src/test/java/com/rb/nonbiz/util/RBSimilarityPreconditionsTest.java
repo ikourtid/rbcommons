@@ -11,16 +11,43 @@ import java.util.function.Function;
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.ClosedRange.singletonClosedRange;
 import static com.rb.nonbiz.collections.ClosedRangeTest.closedRangeEqualityMatcher;
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.doubleClosedRangeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkWithinLimitedRange;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkWithinSeconds;
+import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkDoubleArraysAlmostEqual;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RBSimilarityPreconditionsTest {
+
+  @Test
+  public void testCheckDoubleArraysAlmostEqual() {
+    double[] originalArray = new double[] { 3.3, 4.4 };
+
+    rbSetOf(
+        new double[] { },                        // too small
+        new double[] { 3.3 },                    // too small
+        new double[] { 3.3, 4.4, DUMMY_DOUBLE }, // too large
+        new double[] { 3.3, 4.4 - 1e-7 },        // off by more than epsilon
+        new double[] { 3.3, 4.4 + 1e-7 })        // off by more than epsilon
+        .forEach(unequalArray ->
+            assertIllegalArgumentException( () -> checkDoubleArraysAlmostEqual(originalArray, unequalArray, 1e-8)));
+
+    rbSetOf(
+        originalArray,
+        new double[] { 3.3, 4.4 },
+        new double[] { 3.3 - 1e-9, 4.4 - 1e-9 },
+        new double[] { 3.3 + 1e-9, 4.4 + 1e-9 })
+        .forEach(equalArray -> {
+          // does not throw
+          checkDoubleArraysAlmostEqual(originalArray, equalArray, 1e-8);
+        });
+  }
 
   @Test
   public void testCheckWithinLimitedRange_iterator_noArgs() {
