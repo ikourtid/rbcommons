@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
+import static com.rb.nonbiz.testmatchers.Match.matchIntegerValue;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -69,7 +70,7 @@ public class MatrixColumnIndexTest extends RBTestMatcher<MatrixColumnIndex> {
 
   public static TypeSafeMatcher<MatrixColumnIndex> matrixColumnIndexMatcher(MatrixColumnIndex expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.asInt()));
+        matchIntegerValue(v -> v));
   }
 
 }

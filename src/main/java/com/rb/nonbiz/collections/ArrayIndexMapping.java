@@ -89,7 +89,7 @@ public interface ArrayIndexMapping<T> {
           if (key.getClass() != key0Class) {
             return false;
           }
-          int keyAsInt = ((IsArrayIndex) key).asInt();
+          int keyAsInt = ((IsArrayIndex) key).intValue();
           return keyAsInt == numericIndex;
         });
   }

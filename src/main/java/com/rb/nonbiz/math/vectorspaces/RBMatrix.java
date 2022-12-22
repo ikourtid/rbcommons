@@ -60,10 +60,10 @@ public class RBMatrix {
 
   public RBVector getColumnVector(MatrixColumnIndex matrixColumnIndex) {
     RBPreconditions.checkArgument(
-        matrixColumnIndex.asInt() < rawMatrix.columns(),
+        matrixColumnIndex.intValue() < rawMatrix.columns(),
         "Matrix column index %s is not within the range of valid matrix columns 0 to %s",
         matrixColumnIndex, rawMatrix.columns());
-    return rbVector(rawMatrix.viewColumn(matrixColumnIndex.asInt()));
+    return rbVector(rawMatrix.viewColumn(matrixColumnIndex.intValue()));
   }
 
   public int getNumRows() {
@@ -151,10 +151,10 @@ public class RBMatrix {
    * Note that the colt function itself returns a copy, as of December 2022.
    */
   public RBMatrix copyPart(ClosedRange<MatrixRowIndex> rowRange, ClosedRange<MatrixColumnIndex> columnRange) {
-    int firstRow    = rowRange.lowerEndpoint().asInt();
-    int lastRow     = rowRange.upperEndpoint().asInt();
-    int firstColumn = columnRange.lowerEndpoint().asInt();
-    int lastColumn  = columnRange.upperEndpoint().asInt();
+    int firstRow    = rowRange.lowerEndpoint().intValue();
+    int lastRow     = rowRange.upperEndpoint().intValue();
+    int firstColumn = columnRange.lowerEndpoint().intValue();
+    int lastColumn  = columnRange.upperEndpoint().intValue();
     return rbMatrix(rawMatrix.viewPart(
         firstRow, firstColumn, lastRow - firstRow + 1, lastColumn - firstColumn + 1));
   }
