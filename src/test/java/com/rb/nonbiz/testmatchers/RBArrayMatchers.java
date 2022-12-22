@@ -36,7 +36,7 @@ public class RBArrayMatchers {
     return arrayMatcher(expected, f -> typeSafeEqualTo(f));
   }
 
-    public static TypeSafeMatcher<double[]> doubleArrayMatcher(double[] expected, double epsilon) {
+  public static TypeSafeMatcher<double[]> doubleArrayMatcher(double[] expected, double epsilon) {
     return new TypeSafeMatcher<double[]>() {
       @Override
       protected boolean matchesSafely(double[] actual) {
