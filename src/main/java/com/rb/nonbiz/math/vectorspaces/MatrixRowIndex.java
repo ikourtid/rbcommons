@@ -1,17 +1,16 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.IntegerValue;
 import com.rb.nonbiz.util.RBPreconditions;
 
 /**
  * Just a thin typesafe wrapper around an int, which denotes the row index to a matrix.
  */
-public class MatrixRowIndex implements IsArrayIndex, Comparable<MatrixRowIndex> {
-
-  private final int rawIndex;
+public class MatrixRowIndex extends IntegerValue<MatrixRowIndex> implements IsArrayIndex {
 
   private MatrixRowIndex(int rawIndex) {
-    this.rawIndex = rawIndex;
+    super(rawIndex);
   }
 
   public static MatrixRowIndex matrixRowIndex(int rawIndex) {
@@ -24,7 +23,7 @@ public class MatrixRowIndex implements IsArrayIndex, Comparable<MatrixRowIndex> 
 
   @Override
   public int asInt() {
-    return rawIndex;
+    return intValue();
   }
 
   @Override
@@ -32,21 +31,17 @@ public class MatrixRowIndex implements IsArrayIndex, Comparable<MatrixRowIndex> 
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    return rawIndex == ((MatrixRowIndex)o).rawIndex;
+    return asInt() == ((MatrixRowIndex)o).asInt();
   }
 
   @Override
   public int hashCode() {
-    return rawIndex;
+    return asInt();
   }
 
   @Override
   public String toString() {
-    return Strings.format("[MRI %s MRI]", rawIndex);
+    return Strings.format("[MRI %s MRI]", asInt());
   }
 
-  @Override
-  public int compareTo(MatrixRowIndex o) {
-    return Integer.valueOf(rawIndex).compareTo(o.rawIndex);
-  }
 }
