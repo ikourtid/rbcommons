@@ -191,9 +191,9 @@ public class RBMatrixUtilsTest {
 
     // Now check with diagonals in covariance, positive correlatation.
     RBMatrix covmat2x2PositiveCorrelation = rbMatrix2by2( 4,  1,
-                                                          1,  1.5);
+        1,  1.5);
     RBMatrix covmat2x2NegativeCorrelation = rbMatrix2by2( 4, -1,
-                                                          -1, 1.5);
+        -1, 1.5);
     assertEquals(4.0,  computeVariance(covmat2x2PositiveCorrelation, matrix2by1 (1,  0)), 1e-4);
     assertEquals(1.5,  computeVariance(covmat2x2PositiveCorrelation, matrix2by1 (0,  1)), 1e-4);
     assertEquals(doubleExplained(7.5, 4 + 1 + 1 + 1.5),
@@ -237,8 +237,8 @@ public class RBMatrixUtilsTest {
     // 3 x 3 non-diagonal matrix.
     // Remember we don't care if this is a valid covariance matrix...we are testing the multiplication.
     RBMatrix covmat3x3 = rbMatrix3by3(   3, 1.0, -1.0,
-                                       1.0, 1.5,  0.6,
-                                      -1.0, 0.6,  0.4);
+        1.0, 1.5,  0.6,
+        -1.0, 0.6,  0.4);
     assertEquals(3.0,
         computeVariance(covmat3x3, matrix3by1(-1, 0, 0)), 1e-4);
     // Check a few cases with only 2 loadings
@@ -328,60 +328,78 @@ public class RBMatrixUtilsTest {
 
   @Test
   public void testIsPositiveSemiDefinite() {
-    // assertTrue(isPositiveSemiDefiniteMatrix(singletonRBMatrix(DUMMY_DOUBLE)));
-    // assertTrue(isPositiveSemiDefiniteMatrix(rbIdentityMatrix(3)));
-    //  assertTrue(isPositiveSemiDefiniteMatrix(rbDiagonalMatrix3by3(3, 2, 1)));
+    assertTrue(isPositiveSemiDefiniteMatrix(singletonRBMatrix(DUMMY_DOUBLE)));
+    assertTrue(isPositiveSemiDefiniteMatrix(rbIdentityMatrix(3)));
+    assertTrue(isPositiveSemiDefiniteMatrix(rbDiagonalMatrix3by3(3, 2, 1)));
 
     // all zero entries are acceptable
-    //  assertTrue(isPositiveSemiDefiniteMatrix(rbDiagonalMatrix3by3(0, 0, 0)));
+    assertTrue(isPositiveSemiDefiniteMatrix(rbDiagonalMatrix3by3(0, 0, 0)));
 
     // can't have a negative diagonal element
-    //  assertFalse(isPositiveSemiDefiniteMatrix(rbDiagonalMatrix3by3(3, 2, -1e-9)));
+    assertFalse(isPositiveSemiDefiniteMatrix(rbDiagonalMatrix3by3(3, 2, -1e-9)));
 
     Function<Double, RBMatrix> maker2x2 = offDiagonal -> rbMatrix2by2(
         4.0,         offDiagonal,
         offDiagonal,        9.0);
     // Any off-diagonal element with abs(off-diagonal) <= sqrt(4) * sqrt(9) = 6 is fine.
-    // There is a tiny (1e-14) tolerance for being over.
+    // There is a tiny (1e-14) tolerance for the off-diagonal element being slightly too large.
     for (double offDiagonal : ImmutableList.of(-6.0 -1e-15, -6.0, -1.0, 0.0, 0.5, 1.0, 6.0, 6.0 + 1e-15)) {
-      //   assertTrue(isPositiveSemiDefiniteMatrix(maker2x2.apply(offDiagonal)));
+         assertTrue(isPositiveSemiDefiniteMatrix(maker2x2.apply(offDiagonal)));
     }
 
     // The off-diagonal elements cannot be larger (in absolute value) than sqrt(diag_i) * sqrt(diag_j).
-//    assertFalse(isPositiveSemiDefiniteMatrix(maker2x2.apply(-6 - 1e-9)));
-//    assertFalse(isPositiveSemiDefiniteMatrix(maker2x2.apply( 6 + 1e-9)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker2x2.apply(-6 - 1e-9)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker2x2.apply( 6 + 1e-9)));
 
     TriFunction<Double, Double, Double, RBMatrix> maker3x3 = (elem12, elem13, elem23) -> rbMatrix3by3(
         4,      elem12, elem13,
         elem12,      9, elem23,
         elem13, elem23,     16);
-    // In all the following examples, the off-diagonal elements are <= sqrt(diag_i) * sqrt(diag_j)
-    // For small off-diagonals, we can do a Cholesky decompostion, which (apparently) guarantees positive semi-definite.
-    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(0.0, 0.0, 0.0)));
-    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(1.0, 1.0, 1.0)));
 
+    // In all the following examples, the off-diagonal elements are <= sqrt(diag_i) * sqrt(diag_j),
+    // so that check is satisfied.
     // In the following, the single non-zero off-diagonal element is as large as possible,
     // e.g. e_ij = sqrt(e_ii) * sqrt(e_jj).
-    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.9999, 0.0,  0.0)));
+    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(6.0, 0.0,  0.0)));
     assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(0.0, 8.0,  0.0)));
     assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(0.0, 0.0, 12.0)));
 
-    // As above, but with a second non-zero off-diagonal element e_ij.
-    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(6.0, 1.0,  0.0)));
-    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(1.0, 8.0,  0.0)));
-    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(1.0, 0.0, 12.0)));
-    // elem12 = 4 < 6 = sqrt(4) * sqrt(9)
-//    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(4.0, 0.0)));
-//    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.0, 0.0)));
-    // elem23 = 12 = sqrt(9) * sqrt(16)
-    //assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(1.0, 12.0)));
-    //assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(3.0,  6.0)));
-    //assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.0, 11.0)));
-    //assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.5, 11.5)));
+    // As above, but with a second non-zero off-diagonal element e_ij. Even though the second
+    // non-zero element is small, they still make the matrix non-positive semi-definite.
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(6.0, 0.1,  0.0)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(6.0, 0.0,  0.1)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(0.1, 8.0,  0.0)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(0.0, 8.0,  0.1)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(0.1, 0.0, 12.0)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(0.0, 0.1, 12.0)));
 
-    // The elements elem12 and elem21 are individually as large as possible, given the diagonal elements.
-    // However, the matrix as a whole is not positive semi-definite.
-    //assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.8, 11.8)));
-    //assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(6.0, 12.0)));
+    // For smaller non-zero off-diagonals, all the eigenvalues are still non-negative,
+    // which guarantees that the matrix is positive semi-definite.
+    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(0.0, 0.0, 0.0)));
+    for (double ratio : ImmutableList.of(0.0, 0.1, 0.2, 0.5)) {
+      assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply( 6.0 * ratio,  8.0 * ratio,  12.0 * ratio)));
+      assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(-6.0 * ratio, -8.0 * ratio,  12.0 * ratio)));
+      assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply( 6.0 * ratio, -8.0 * ratio,  12.0 * ratio)));
+      assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply( 6.0 * ratio,  8.0 * ratio, -12.0 * ratio)));
+    }
+
+    // With a single large off-diagonal element, the others must be small.
+    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.9, 1.0, 1.0)));
+    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(1.0, 7.9, 1.0)));
+    assertTrue(isPositiveSemiDefiniteMatrix(maker3x3.apply(1.0, 1.0, 11.9)));
+
+    // Having 2 off-diagonal elements close to their max does not work.
+   assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.9, 7.9, 0.0)));
+   assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(5.9, 0.0, 11.9)));
+   assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(0.0, 7.9, 11.9)));
+
+   // With 1 off-diagonal element close to its max, the others can't be too large.
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply( 5.9,  1.0, -1.0)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply( 5.9, -1.0,  1.0)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply( 1.0,  7.9, -1.0)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(-1.0,  7.9,  1.0)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply( 1.0, -1.0, 11.9)));
+    assertFalse(isPositiveSemiDefiniteMatrix(maker3x3.apply(-1.0,  1.0, 11.9)));
   }
+
 }
