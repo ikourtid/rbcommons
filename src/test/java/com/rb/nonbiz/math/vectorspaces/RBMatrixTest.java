@@ -24,6 +24,7 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.assertIndexOutOfBoundsException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -432,6 +433,10 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             closedRange(   matrixRowIndex(0),    matrixRowIndex(2)),
             closedRange(matrixColumnIndex(0), matrixColumnIndex(1))),
         rbMatrixMatcher(rbMatrix(new double[][] { { 1, 2 }, { 4, 5 }, { 7, 8 } })));
+    // Raise an exception when the slice is too large
+    assertIndexOutOfBoundsException( () -> matrixToCopyPartOf.copyPart(
+        closedRange( matrixRowIndex(0),        matrixRowIndex(4)),
+        closedRange( matrixColumnIndex(0),  matrixColumnIndex(4))));
   }
 
   @Test
