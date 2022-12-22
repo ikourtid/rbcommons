@@ -50,14 +50,6 @@ public class Epsilons {
   }
 
   public static Epsilons epsilons(
-      Class<?> class1, double epsilon1,
-      Class<?> class2, double epsilon2) {
-    return epsilons(doubleMap(rbMapOf(
-        class1, epsilon1,
-        class2, epsilon2)));
-  }
-
-  public static Epsilons epsilons(
       EpsilonDescriptor<?> epsilonDescriptor1, double epsilon1) {
     return new Epsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
