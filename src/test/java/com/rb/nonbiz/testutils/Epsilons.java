@@ -8,7 +8,6 @@ import java.util.OptionalDouble;
 
 import static com.rb.nonbiz.collections.DoubleMap.doubleMap;
 import static com.rb.nonbiz.collections.DoubleMap.emptyDoubleMap;
-import static com.rb.nonbiz.collections.DoubleMap.singletonDoubleMap;
 import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
@@ -38,15 +37,10 @@ public class Epsilons {
     this.epsilons = epsilons;
   }
 
-  public static Epsilons epsilons(DoubleMap<Class<?>> epsilons) {
+  public static Epsilons emptyEpsilons() {
     return new Epsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
-        doubleMap(epsilons.getRawMap().transformKeysCopy(clazz -> eps(clazz))));
-  }
-
-  public static Epsilons epsilons(
-      Class<?> class1, double epsilon1) {
-    return epsilons(singletonDoubleMap(class1, epsilon1));
+        emptyDoubleMap());
   }
 
   public static Epsilons epsilons(
@@ -141,10 +135,6 @@ public class Epsilons {
             concatenateFirstAndRest(first, rest),
             v -> v,
             v -> epsilon)));
-  }
-
-  public static Epsilons emptyEpsilons() {
-    return epsilons(emptyDoubleMap());
   }
 
   public int size() {
