@@ -2,7 +2,6 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Iterables;
@@ -13,8 +12,7 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
-import java.util.function.BiFunction;
-
+import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
@@ -76,6 +74,14 @@ public class RBMatrix {
 
   public double get(int i, int j) {
     return rawMatrix.get(i, j);
+  }
+
+  public MatrixRowIndex getLastRowIndex() {
+    return matrixRowIndex(getNumRows() - 1);
+  }
+
+  public MatrixColumnIndex getLastColumnIndex() {
+    return matrixColumnIndex(getNumColumns() - 1);
   }
 
   /**
@@ -161,6 +167,15 @@ public class RBMatrix {
     int lastColumn  = columnRange.upperEndpoint().intValue();
     return rbMatrix(rawMatrix.viewPart(
         firstRow, firstColumn, lastRow - firstRow + 1, lastColumn - firstColumn + 1));
+  }
+
+  /**
+   * Returns a new matrix which is a subset of the current matrix whose top-left item is also (0, 0).
+   */
+  public RBMatrix copyTopLeftPart(MatrixRowIndex lastRowInclusive, MatrixColumnIndex lastColumnInclusive) {
+    return copyPart(
+        closedRange(matrixRowIndex(0), lastRowInclusive),
+        closedRange(matrixColumnIndex(0), lastColumnInclusive));
   }
 
   /**
