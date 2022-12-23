@@ -2,7 +2,7 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import com.rb.nonbiz.collections.ClosedRange;
+import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.testutils.Epsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -396,7 +396,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             closedRange(   matrixRowIndex(0),    matrixRowIndex(1)),
             closedRange(matrixColumnIndex(0), matrixColumnIndex(1))),
         rbMatrixMatcher(rbMatrix2by2( 1, 2,
-                                      4, 5)));
+            4, 5)));
     assertThat(
         matrixToCopyPartOf.copyPart(
             closedRange(   matrixRowIndex(1),    matrixRowIndex(2)),
@@ -440,6 +440,44 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     assertIndexOutOfBoundsException( () -> matrixToCopyPartOf.copyPart(
         closedRange( matrixRowIndex(0),        matrixRowIndex(4)),
         closedRange( matrixColumnIndex(0),  matrixColumnIndex(4))));
+  }
+
+  @Test
+  public void testCopyTopLeftPart() {
+    // Using decimals so it's clear in the code below what's a row / column index and what's a matrix element.
+    RBMatrix originalMatrix = rbMatrix3by3(
+        1.1, 2.2, 3.3,
+        4.4, 5.5, 6.6,
+        7.7, 8.8, 9.9);
+    TriConsumer<Integer, Integer, RBMatrix> asserter = (lastRowIndexInt, lastColumnIndexInt, expectedResult) ->
+        assertThat(
+            originalMatrix.copyTopLeftPart(
+                matrixRowIndex(lastRowIndexInt),
+                matrixColumnIndex(lastColumnIndexInt)),
+            rbMatrixMatcher(
+                expectedResult));
+    asserter.accept(0, 0, singletonRBMatrix(1.1));
+    asserter.accept(1, 1, rbMatrix2by2(
+        1.1, 2.2,
+        4.4, 5.5));
+    asserter.accept(2, 2, originalMatrix);
+
+    asserter.accept(0, 1, rbMatrix(new double[][] {
+        { 1.1, 2.2 }
+    }));
+    asserter.accept(1, 2, rbMatrix(new double[][] {
+        { 1.1, 2.2, 3.3 },
+        { 4.4, 5.5, 6.6 }
+    }));
+
+    MatrixRowIndex       validRowIndex  = matrixRowIndex(1);
+    MatrixRowIndex     invalidRowIndex   = matrixRowIndex(3);
+    MatrixColumnIndex   validColumnIndex = matrixColumnIndex(0);
+    MatrixColumnIndex invalidColumnIndex = matrixColumnIndex(3);
+    assertIndexOutOfBoundsException( () -> originalMatrix.copyTopLeftPart(invalidRowIndex, invalidColumnIndex));
+    assertIndexOutOfBoundsException( () -> originalMatrix.copyTopLeftPart(  validRowIndex, invalidColumnIndex));
+    assertIndexOutOfBoundsException( () -> originalMatrix.copyTopLeftPart(invalidRowIndex,  validColumnIndex));
+    RBMatrix doesNotThrow = originalMatrix.copyTopLeftPart(validRowIndex, validColumnIndex);
   }
 
   @Test
