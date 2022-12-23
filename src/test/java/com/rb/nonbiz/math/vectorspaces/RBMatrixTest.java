@@ -3,6 +3,7 @@ package com.rb.nonbiz.math.vectorspaces;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import com.rb.nonbiz.functional.TriConsumer;
+import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.testutils.Epsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -14,7 +15,9 @@ import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
+import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndexTest.matrixColumnIndexMatcher;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
+import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndexTest.matrixRowIndexMatcher;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrixTest.rbIndexableMatrixMatcher;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbDiagonalMatrix;
@@ -496,6 +499,26 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             { DUMMY_DOUBLE, DUMMY_DOUBLE }
         }))
         .forEach(v -> assertIllegalArgumentException( () -> v.getOnlyElementOrThrow()));
+  }
+  
+  @Test
+  public void testLastValidRowAndColumn() {
+    TriConsumer<Integer, Integer, RBMatrix> asserter = (expectedLastRowInt, expectedLastColumnInt, rbMatrix) -> {
+        assertThat(
+            rbMatrix.getLastRowIndex(),
+            matrixRowIndexMatcher(
+                matrixRowIndex(expectedLastRowInt)));
+      assertThat(
+          rbMatrix.getLastColumnIndex(),
+          matrixColumnIndexMatcher(
+              matrixColumnIndex(expectedLastColumnInt)));
+    };
+
+    asserter.accept(0, 0, singletonRBMatrix(DUMMY_DOUBLE));
+    asserter.accept(1, 2, rbMatrix(new double[][] {
+        { 1.1, 2.2, 3.3 },
+        { 4.4, 5.5, 6.6 }
+    }));
   }
 
   @Override
