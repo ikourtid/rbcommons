@@ -15,6 +15,7 @@ import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.function.BiFunction;
 
+import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
@@ -157,6 +158,15 @@ public class RBMatrix {
     int lastColumn  = columnRange.upperEndpoint().intValue();
     return rbMatrix(rawMatrix.viewPart(
         firstRow, firstColumn, lastRow - firstRow + 1, lastColumn - firstColumn + 1));
+  }
+
+  /**
+   * Returns a new matrix which is a subset of the current matrix whose top-left item is also (0, 0).
+   */
+  public RBMatrix copyTopLeftPart(MatrixRowIndex lastRowInclusive, MatrixColumnIndex lastColumnInclusive) {
+    return copyPart(
+        closedRange(matrixRowIndex(0), lastRowInclusive),
+        closedRange(matrixColumnIndex(0), lastColumnInclusive));
   }
 
   /**
