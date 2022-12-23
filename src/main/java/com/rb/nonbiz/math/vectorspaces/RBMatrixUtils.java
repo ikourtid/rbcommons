@@ -99,7 +99,7 @@ public class RBMatrixUtils {
     // Do various matrix checks, from easiest to complex, in order to "fail fast".
     if (!rbMatrix.isSquare()) {
       // A matrix M can't have x_transpose * M * x >= 0 unless it's square;
-      // the matrix multiplication wouldn't be properly specified.
+      // the matrix multiplication wouldn't be properly specified otherwise.
       return false;
     }
 
@@ -119,7 +119,7 @@ public class RBMatrixUtils {
     // non-negative. That is cov[i, i] = var[i] >= 0.
     for (int i = 0; i < numRowsOrColumns; ++i) {
       double diagonalElement = rbMatrix.get(i, i);
-      // no epsilon for this check; we're going to take the square root of each diagonal element
+      // no epsilon tolerance for this check; we're going to take the square root of each diagonal element
       if (diagonalElement < 0.0) {
         // can't have a negative diagonal element
         return false;
@@ -132,7 +132,7 @@ public class RBMatrixUtils {
     for (int i = 0; i < numRowsOrColumns; ++i) {
       for (int j = i + 1; j < numRowsOrColumns; ++j) {
         // Use a very small tolerance; presumably these matrices are being read in from a vendor and
-        // have been checked. If this turns out to be too tight, we can loosen it.
+        // have been checked before we get them. If this turns out to be too tight, we can loosen it.
         if (Math.abs(rbMatrix.get(i, j)) > sqrtDiagonal[i] * sqrtDiagonal[j] + 1e-14) {
           // the matrix isn't symmetric
           return false;
@@ -145,24 +145,33 @@ public class RBMatrixUtils {
     //
     // Why should non-negative eigenvalues imply a positive semi-definite matrix?
     // A matrix M is positive semi-definite if x' * M * x >= 0 for all vectors x.
-    // Consider an eigenvector v such that M * v = lambda * v.
-    // Then v' * M * v >= 0. Therefore v' * lambda * v >= 0, or lambda * v' * v >= 0.
-    // Since v' * v >= 0, it must be true that lambda >= 0. The converse is also true.
+    // Consider an eigenvector e such that M * e = lambda * e.
+    // Then e' * M * e >= 0. Therefore e' * lambda * e >= 0, or lambda * e' * e >= 0.
+    // Since e' * e >= 0, it must be true that lambda >= 0.
+    //
+    // The converse is also true. Any vector x can be expanded as x = sum_i( a_i * e_i )
+    // since the eigenvectors e_i "span" the vector space.
+    // Then x' * M * x = sum_i(a_i * e_i') * M * sum_j(a_j * e_j)
+    // For i != j each term will be a_i * e_i' * M * a_j * e_j = a_i * a_j * e_i' * (lamba_j * e_j)
+    //        = (a_i * a_j * lambda_j) * e_i' * e_j = 0 since the eigenvectors are orthogonal.
+    // Keeping only terms with i == j, we have x' * M * x = sum_i( (a_i * x_i') * M * (a_i * x_i) )
+    //        = sum_i( a_i * x_i' * lambda_i * a_i * x_i ) = sum( (a_i)^2 * lambda_i * e_i' * e_i) >= 0
+    //  since (a_i)^2 is non-negative, each eigenvalue lambda_i is non-negative, and e_i' * e_i is non-negative.
     //
     // The downside of this check is that its complexity is O(n^3) for matrix of size n x n.
 
     // The documenation for Colt EigenvalueDecomposition() says it will only throw an exception
     // if the matrix isn't square, which we checked at the beginning of this method. Therefore,
     // we don't use "try/catch" when evaluating it.
-    EigenvalueDecomposition eigenvalueDecomposition = new EigenvalueDecomposition(
-        rbMatrix.getRawMatrixUnsafe());
+    EigenvalueDecomposition eigenvalueDecomposition = new EigenvalueDecomposition(rbMatrix.getRawMatrixUnsafe());
+
     // No need to worry about complex eigenvalues; this is a symmetric matrix.
     double[] sortedEigenValues = DoubleStream.of(eigenvalueDecomposition.getRealEigenvalues().toArray())
         .sorted()
         .toArray();
     double smallestEigenvalue = sortedEigenValues[0];
     // For numerical reasons, allow the smallest eigenvalue to be slightly negative.
-    // Zero and epsilon-negative eigenvalues may be discarded if we're using SVD.
+    // Zero and epsilon-negative eigenvalues may be discarded anyway if we're using SVD.
     if (smallestEigenvalue < -1e-8) {
       return false;
     }

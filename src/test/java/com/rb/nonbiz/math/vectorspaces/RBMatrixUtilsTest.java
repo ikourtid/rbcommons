@@ -326,14 +326,14 @@ public class RBMatrixUtilsTest {
             { 567, 3 } }),
         1e-8));
 
-    // a 2 x 3 matrix not symmetric
+    // a 2 x 3 matrix is not symmetric
     assertFalse(isSymmetricMatrix(
         rbMatrix(new double[][] {
             { 1, 2, 3 },
             { 4, 5, 6 } }),
         1e-8));
 
-    // a 3 x 2 matrix not symmetric
+    // a 3 x 2 matrix is not symmetric
     assertFalse(isSymmetricMatrix(
         rbMatrix(new double[][] {
             { 1, 2 },
@@ -355,23 +355,27 @@ public class RBMatrixUtilsTest {
         { 3.0, 4.0 }
     })));
 
+    // simple cases
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(singletonRBMatrix(DUMMY_POSITIVE_DOUBLE)));
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbIdentityMatrix(3)));
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbDiagonalMatrix3by3(3, 2, 1)));
 
-    // all zero entries are acceptable
+    // having one zero diagonal entry is OK; it will introduce 1 eigenvalue = 0, but none will be negative
+    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbDiagonalMatrix3by3(3, 2, 0)));
+    // even all zeros are OK; all eigenvalues will be zero, but none will be negative
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbDiagonalMatrix3by3(0, 0, 0)));
 
     // can't have a negative diagonal element (even epsilon negative)
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(rbDiagonalMatrix3by3(3, 2, -1e-9)));
 
+    // make a matrix whose diagonal elements are perfect squares, for clarity in the following checks
     Function<Double, RBMatrix> maker2x2 = offDiagonal -> rbMatrix2by2(
         4.0,         offDiagonal,
         offDiagonal,        9.0);
     // Any off-diagonal element with abs(off-diagonal) <= sqrt(4) * sqrt(9) = 6 is fine.
     // This is because abs(e_ij) <= sqrt(e_ii) * sqrt(e_jj); the abs(covariance of variables i and j)
     // must be less than or equal to the sqrt(variance(i)) * sqrt(variance(j)).
-    // There is a tiny (1e-14) tolerance for the off-diagonal element being slightly too large.
+    // We use a tiny (1e-14) tolerance for the off-diagonal element being slightly too large.
     for (double offDiagonal : ImmutableList.of(-6.0 -1e-15, -6.0, -1.0, 0.0, 0.5, 1.0, 6.0, 6.0 + 1e-15)) {
       assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker2x2.apply(offDiagonal)));
     }
@@ -380,6 +384,8 @@ public class RBMatrixUtilsTest {
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker2x2.apply(-6 - 1e-9)));
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker2x2.apply( 6 + 1e-9)));
 
+    // Now investigate off-diagonal elements that are follow the above limit of
+    // abs(e_ij) <= sqrt(e_ii) * sqrt(e_jj), but still may be non-positive-semi-definite.
     TriFunction<Double, Double, Double, RBMatrix> maker3x3 = (elem12, elem13, elem23) -> rbMatrix3by3(
         4,      elem12, elem13,
         elem12,      9, elem23,
@@ -388,13 +394,15 @@ public class RBMatrixUtilsTest {
     // In all the following examples, the off-diagonal elements are <= sqrt(diag_i) * sqrt(diag_j),
     // so that check is satisfied.
     // In the following, the single non-zero off-diagonal element is as large as possible,
-    // e.g. e_ij = sqrt(e_ii) * sqrt(e_jj).
+    // e.g. e_ij = sqrt(e_ii) * sqrt(e_jj), and the matrix is positive semi-definite.
+    // In fact, each will have one eigenvalue of 0, so they barely pass the "no negative eigenvalues" test.
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(6.0, 0.0,  0.0)));
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(0.0, 8.0,  0.0)));
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(0.0, 0.0, 12.0)));
 
     // As above, but with a second non-zero off-diagonal element e_ij. Even though the second
-    // non-zero element is small, they still make the matrix non-positive semi-definite.
+    // non-zero element is small, they still push the smallest eigenvalue below 0.0
+    // and make the matrix non-positive semi-definite.
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(6.0, 0.1,  0.0)));
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(6.0, 0.0,  0.1)));
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(0.1, 8.0,  0.0)));
@@ -406,11 +414,11 @@ public class RBMatrixUtilsTest {
     // which guarantees that the matrix is positive semi-definite. Here we check off-diagonal
     // elements up to 50% of their maximum magnitude.
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(0.0, 0.0, 0.0)));
-    for (double ratio : ImmutableList.of(0.0, 0.1, 0.2, 0.5)) {
+    for (double ratio : ImmutableList.of(-0.5, -0.2, -0.1, 0.0, 0.1, 0.2, 0.5)) {
       assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 6.0 * ratio,  8.0 * ratio,  12.0 * ratio)));
-      assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(-6.0 * ratio, -8.0 * ratio,  12.0 * ratio)));
-      assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 6.0 * ratio, -8.0 * ratio,  12.0 * ratio)));
       assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 6.0 * ratio,  8.0 * ratio, -12.0 * ratio)));
+      assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 6.0 * ratio, -8.0 * ratio,  12.0 * ratio)));
+      assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(-6.0 * ratio,  8.0 * ratio,  12.0 * ratio)));
     }
 
     // As above, with a single large off-diagonal element, the others must be small.
@@ -431,6 +439,8 @@ public class RBMatrixUtilsTest {
 
     // However, changing the signs of the "small" off-diagonal elements is enough to make
     // the matrices non-positive-semi-definite.
+    // The point of these checks is that it is not enough to rely on the simple test of
+    // abs(e_ij) <= sqrt(e_ii) * sqrt(i_jj).
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 5.9,  1.0, -1.0)));
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 5.9, -1.0,  1.0)));
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 1.0,  7.9, -1.0)));
