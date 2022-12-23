@@ -93,15 +93,20 @@ public class RBMatrixUtils {
    * {@code v_transpose * M * v >= 0}
    *
    * <p> Covariance matrices are symmetric and positive semi-definite. This check
-   * verifies if a given matrix could be a covariance matrix. </p>
+   * ascertains whether a given matrix could be a covariance matrix. </p>
    */
   public static boolean isPositiveSemiDefiniteSymmetricMatrix(RBMatrix rbMatrix) {
-    // Do various matrix checks, from the easiest to most complex, in order to "fail fast".
+    // Do various matrix checks, from easiest to complex, in order to "fail fast".
     if (!rbMatrix.isSquare()) {
+      // A matrix M can't have v_transpose * M * v >= 0 unless it's square;
+      // the matrix multiplication wouldn't be properly specified.
       return false;
     }
 
     if (!isSymmetricMatrix(rbMatrix, 1e-8)) {
+      // Non-symmetric matrices can be positive semi-definite, but we're only interested in symmetric ones.
+      // In particular, we want to use the property that symmetric matrices have real eigenvalues.
+      // Also, covariance matrices are symmetric, and that's what we're mostly interested in here.
       return false;
     }
 
@@ -135,10 +140,10 @@ public class RBMatrixUtils {
     }
 
     // Now check if all eigenvalues are non-negative (or at most epsilon negative). If they
-    // are, then the matrix will be positive semi-definite.
+    // are non-negative, then the matrix will be positive semi-definite.
     //
     // Why should non-negative eigenvalues imply a positive semi-definite matrix?
-    // A matrix M is positive semi-definite if x' * M * x >= 0.
+    // A matrix M is positive semi-definite if x' * M * x >= 0 for all vectors x.
     // Consider an eigenvector v such that M * v = lambda * v.
     // Then v' * M * v >= 0. Therefore v' * lambda * v >= 0, or lambda * v' * v >= 0.
     // Since v' * v >= 0, it must be true that lambda >= 0. The converse is also true.
@@ -148,7 +153,8 @@ public class RBMatrixUtils {
     // The documenation for Colt EigenvalueDecomposition() says it will only throw an exception
     // if the matrix isn't square, which we checked at the beginning of this method. Therefore,
     // we don't use "try/catch" when evaluating it.
-    EigenvalueDecomposition eigenvalueDecomposition = new EigenvalueDecomposition(rbMatrix.getRawMatrixUnsafe());
+    EigenvalueDecomposition eigenvalueDecomposition = new EigenvalueDecomposition(
+        rbMatrix.getRawMatrixUnsafe());
     // No need to worry about complex eigenvalues; this is a symmetric matrix.
     double[] sortedEigenValues = DoubleStream.of(eigenvalueDecomposition.getRealEigenvalues().toArray())
         .sorted()
@@ -159,7 +165,7 @@ public class RBMatrixUtils {
       return false;
     }
 
-    // All tests pass; the matrix must be positive semi-definite.
+    // All tests pass; the matrix must be symmetric and positive semi-definite.
     return true;
   }
 }
