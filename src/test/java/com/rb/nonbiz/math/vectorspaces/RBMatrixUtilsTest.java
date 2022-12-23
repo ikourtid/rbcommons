@@ -112,7 +112,7 @@ public class RBMatrixUtilsTest {
      * But remember raw exposures are T * w_orth, where T is the transformation matrix and w_orth is orth. exposures.
      * So you can re-write variance as: (T * w_orth)' * COV * (T * w_orth).  Elements of the transformation matrix
      * are getting squared in the variance calculation.  So if the covariance matrix has a number N, adding one
-     * over the squaroot of this number in the transformation matrix will multiply it by 1 / N, bringing it back to 1.
+     * over the square root of this number in the transformation matrix will multiply it by 1 / N, bringing it back to 1.
      */
 
     assertTrue(isOrthoNormalTransformationMatrix(singletonRBMatrix(1 / Math.sqrt(2.0)), singletonRBMatrix(2), 1e-4));
@@ -237,8 +237,9 @@ public class RBMatrixUtilsTest {
 
     // 3 x 3 non-diagonal matrix.
     // Remember we don't care if this is a valid covariance matrix...we are testing the multiplication.
-    RBMatrix covmat3x3 = rbMatrix3by3(   3, 1.0, -1.0,
-        1.0, 1.5,  0.6,
+    RBMatrix covmat3x3 = rbMatrix3by3(
+        3.0,  1.0, -1.0,
+        1.0,  1.5,  0.6,
         -1.0, 0.6,  0.4);
     assertEquals(3.0,
         computeVariance(covmat3x3, matrix3by1(-1, 0, 0)), 1e-4);
@@ -413,8 +414,8 @@ public class RBMatrixUtilsTest {
     }
 
     // As above, with a single large off-diagonal element, the others must be small.
-    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(5.9, 1.0, 1.0)));
-    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(1.0, 7.9, 1.0)));
+    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(5.9, 1.0,  1.0)));
+    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(1.0, 7.9,  1.0)));
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(1.0, 1.0, 11.9)));
 
     // Having 2 off-diagonal elements close to their max does not work.
