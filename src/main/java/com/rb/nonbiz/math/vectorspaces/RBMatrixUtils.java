@@ -1,14 +1,9 @@
 package com.rb.nonbiz.math.vectorspaces;
 
-import cern.colt.matrix.DoubleMatrix1D;
-import cern.colt.matrix.linalg.CholeskyDecomposition;
 import cern.colt.matrix.linalg.EigenvalueDecomposition;
 import com.rb.nonbiz.util.RBPreconditions;
 
-import java.util.Arrays;
-import java.util.OptionalDouble;
-
-import static com.rb.nonbiz.util.RBPreconditions.checkArgument;
+import java.util.stream.DoubleStream;
 
 public class RBMatrixUtils {
 
@@ -53,7 +48,7 @@ public class RBMatrixUtils {
     if (!matrix.isSquare()) {
       return false;
     }
-    checkArgument(epsilon > 0);
+    RBPreconditions.checkArgument(epsilon >= 0);
     for (int i = 0; i < matrix.getNumRows(); ++i) {
       for (int j = 0; j < matrix.getNumColumns(); ++j) {
         double correctValue = (i == j) ? 1.0 : 0.0;
@@ -65,6 +60,9 @@ public class RBMatrixUtils {
     return true;
   }
 
+  /**
+   * Check if a matrix is symmetric (to within epsilon).
+   */
   public static boolean isSymmetricMatrix(RBMatrix rbMatrix, double epsilon) {
     RBPreconditions.checkArgument(
         epsilon >= 0 && epsilon <= 100.0,
@@ -89,7 +87,16 @@ public class RBMatrixUtils {
     return true;
   }
 
-  public static boolean isPositiveSemiDefiniteMatrix(RBMatrix rbMatrix) {
+  /**
+   * Check whether a matrix is symmetric and 'positive semi-definite'.
+   *
+   * <p> A matrix M is 'positive semi-definite' if for any vector v: </p>
+   * {@code v_transpose * M * v >= 0}
+   *
+   * <p> Covariance matrices are symmetric and positive semi-definite. This check
+   * verifies if a given matrix could be a covariance matrix. </p>
+   */
+  public static boolean isPositiveSemiDefiniteSymmetricMatrix(RBMatrix rbMatrix) {
     // Do various matrix checks, from the easiest to most complex, in order to "fail fast".
     if (!rbMatrix.isSquare()) {
       return false;
@@ -119,36 +126,41 @@ public class RBMatrixUtils {
     // The covariance[i, j] must be <= sqrt(variance[i]) * sqrt(variance[j]).
     for (int i = 0; i < numRowsOrColumns; ++i) {
       for (int j = i + 1; j < numRowsOrColumns; ++j) {
+        // Use a very small tolerance; presumably these matrices are being read in from a vendor and
+        // have been checked. If this turns out to be too tight, we can loosen it.
         if (Math.abs(rbMatrix.get(i, j)) > sqrtDiagonal[i] * sqrtDiagonal[j] + 1e-14) {
+          // the matrix isn't symmetric
           return false;
         }
       }
     }
 
-    // Now check if we can do a Choleskey decomposition. Apparently, this is only possible for
-    // positive semi-definite matrices.
-    // The downside is that this operation scales as N^3 for matrix size N.
+    // Now check if all eigenvalues are non-negative (or at most epsilon negative). If they
+    // are, then the matrix will be positive semi-definite.
+    //
+    // Why should non-negative eigenvalues imply a positive semi-definite matrix?
+    // A matrix M is positive semi-definite if x' * M * x >= 0.
+    // Consider an eigenvector v such that M * v = lambda * v.
+    // Then v' * M * v >= 0. Therefore v' * lambda * v >= 0, or lambda * v' * v >= 0.
+    // Since v' * v >= 0, it must be true that lambda >= 0. The converse is also true.
+    //
+    // The downside of this check is that its complexity is O(n^3) for matrix of size n x n.
 
-    try {
-      System.out.format("rbMat %s\n", rbMatrix.getRawMatrixUnsafe());
-      CholeskyDecomposition choleskyDecomposition = new CholeskyDecomposition(rbMatrix.getRawMatrixUnsafe());
-      System.out.format("chol %s\n", choleskyDecomposition);
-      if (choleskyDecomposition.isSymmetricPositiveDefinite()) {
-        return true;
-      }
-      EigenvalueDecomposition eigenvalueDecomposition = new EigenvalueDecomposition(rbMatrix.getRawMatrixUnsafe());
-      DoubleMatrix1D realEigenvalues = eigenvalueDecomposition.getRealEigenvalues();
-      System.out.format("eigenvalues %s\n", eigenvalueDecomposition.getRealEigenvalues());
-      OptionalDouble first = Arrays.stream(realEigenvalues.toArray()).sorted().findFirst();
-      System.out.format("first %s\n", first);
-      if (first.isPresent() && first.getAsDouble() < 0) {
-        return false;
-      }
-    } catch (IllegalArgumentException e) {
-      // Don't throw an exception; we just wanted to see if a Cholesky decomposition was possible.
+    // The documenation for Colt EigenvalueDecomposition() says it will only throw an exception
+    // if the matrix isn't square, which we checked at the beginning of this method. Therefore,
+    // we don't use "try/catch" when evaluating it.
+    EigenvalueDecomposition eigenvalueDecomposition = new EigenvalueDecomposition(rbMatrix.getRawMatrixUnsafe());
+    // No need to worry about complex eigenvalues; this is a symmetric matrix.
+    double[] sortedEigenValues = DoubleStream.of(eigenvalueDecomposition.getRealEigenvalues().toArray())
+        .sorted()
+        .toArray();
+    double smallestEigenvalue = sortedEigenValues[0];
+    // For numerical reasons, allow the smallest eigenvalue to be slightly negative.
+    if (smallestEigenvalue < -1e-8) {
       return false;
     }
 
+    // All tests pass; the matrix must be positive semi-definite.
     return true;
   }
 }
