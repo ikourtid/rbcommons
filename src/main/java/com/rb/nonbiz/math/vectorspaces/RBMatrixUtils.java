@@ -152,7 +152,7 @@ public class RBMatrixUtils {
     // The converse is also true. Any vector x can be expanded as x = sum_i(a_i * e_i)
     // since the eigenvectors e_i "span" the vector space.
     // Then x' * M * x = sum_i(a_i * e_i') * M * sum_j(a_j * e_j)
-    // For i != j each term will be (a_i * e_i') * M * (a_j * e_j) = a_i * a_j * e_i' * (lamba_j * e_j)
+    // Each term with i != j will be (a_i * e_i') * M * (a_j * e_j) = a_i * a_j * e_i' * (lamba_j * e_j)
     //        = (a_i * a_j * lambda_j) * (e_i' * e_j) = 0 since the eigenvectors are orthogonal.
     // Keeping only terms with i == j, we have x' * M * x = sum_i((a_i * x_i') * M * (a_i * x_i))
     //        = sum_i(a_i * x_i' * lambda_i * a_i * x_i) = sum_i((a_i)^2 * lambda_i * e_i' * e_i) >= 0
