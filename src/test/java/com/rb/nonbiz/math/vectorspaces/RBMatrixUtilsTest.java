@@ -296,13 +296,13 @@ public class RBMatrixUtilsTest {
     // Identity matrix
     assertTrue(isAlmostIdentityMatrix(rbMatrix2by2(1.0, 0.0, 0.0, 1.0), largeEpsilon));
     // Lots of non-identity matrices
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(1.0, 0.0, 2 * largeEpsilon, 1.0), largeEpsilon));
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(2.0, 0.0, 0.0, 2.0), largeEpsilon));
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 0.0, 0.0, -1.0), largeEpsilon));
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 0.0, 0.0, -2.0), largeEpsilon));
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 0.1, 0.1, 1.0), largeEpsilon));
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, -0.1, -0.1, 1.0), largeEpsilon));
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 1.0, 1.0, 1.0), largeEpsilon));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2( 1.0,  0.0,  2 * largeEpsilon, 1.0), largeEpsilon));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2( 2.0,  0.0,  0.0,  2.0), largeEpsilon));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0,  0.0,  0.0, -1.0), largeEpsilon));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0,  0.0,  0.0, -2.0), largeEpsilon));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0,  0.1,  0.1,  1.0), largeEpsilon));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, -0.1, -0.1,  1.0), largeEpsilon));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0,  1.0,  1.0,  1.0), largeEpsilon));
 
     // not square
     assertFalse(isAlmostIdentityMatrix(rbMatrix(new double[][] {
@@ -324,6 +324,12 @@ public class RBMatrixUtilsTest {
         rbMatrix(new double[][] {
             { 1,  2 },
             { 2, -3 } }),
+        1e-8));
+    // general case - epsilon symmetric
+    assertTrue(isSymmetricMatrix(
+        rbMatrix(new double[][] {
+            { 1,         2 + 1e-9 },
+            { 2 - 1e-9, -3 } }),
         1e-8));
     // general case - asymmetric
     assertFalse(isSymmetricMatrix(

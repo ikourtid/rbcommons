@@ -111,7 +111,7 @@ public class RBMatrixUtils {
       return false;
     }
 
-    // We have already checked that the matrix is symmetric, so it must be square. So # rows = # columns.
+    // We know the matrix is square. So # rows = # columns.
     int numRowsOrColumns = rbSquareMatrix.getNumRowsOrColumns();
     double[] sqrtDiagonal = new double[numRowsOrColumns];
 
