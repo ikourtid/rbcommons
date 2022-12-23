@@ -89,8 +89,8 @@ public class RBMatrixUtils {
   /**
    * Check whether a matrix is symmetric and 'positive semi-definite'.
    *
-   * <p> A matrix M is 'positive semi-definite' if for any vector v: </p>
-   * {@code v_transpose * M * v >= 0}
+   * <p> A matrix M is 'positive semi-definite' if for any vector x: </p>
+   * {@code x_transpose * M * x >= 0}
    *
    * <p> Covariance matrices are symmetric and positive semi-definite. This check
    * ascertains whether a given matrix could be a covariance matrix. </p>
@@ -98,7 +98,7 @@ public class RBMatrixUtils {
   public static boolean isPositiveSemiDefiniteSymmetricMatrix(RBMatrix rbMatrix) {
     // Do various matrix checks, from easiest to complex, in order to "fail fast".
     if (!rbMatrix.isSquare()) {
-      // A matrix M can't have v_transpose * M * v >= 0 unless it's square;
+      // A matrix M can't have x_transpose * M * x >= 0 unless it's square;
       // the matrix multiplication wouldn't be properly specified.
       return false;
     }
@@ -168,5 +168,6 @@ public class RBMatrixUtils {
     // All tests pass; the matrix must be symmetric and positive semi-definite.
     return true;
   }
+  
 }
 
