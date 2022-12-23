@@ -22,6 +22,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isSymmetricMatrix;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_DOUBLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -353,26 +354,28 @@ public class RBMatrixUtilsTest {
         { 3.0, 4.0 }
     })));
 
-    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(singletonRBMatrix(DUMMY_DOUBLE)));
+    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(singletonRBMatrix(DUMMY_POSITIVE_DOUBLE)));
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbIdentityMatrix(3)));
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbDiagonalMatrix3by3(3, 2, 1)));
 
     // all zero entries are acceptable
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbDiagonalMatrix3by3(0, 0, 0)));
 
-    // can't have a negative diagonal element
+    // can't have a negative diagonal element (even epsilon negative)
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(rbDiagonalMatrix3by3(3, 2, -1e-9)));
 
     Function<Double, RBMatrix> maker2x2 = offDiagonal -> rbMatrix2by2(
         4.0,         offDiagonal,
         offDiagonal,        9.0);
     // Any off-diagonal element with abs(off-diagonal) <= sqrt(4) * sqrt(9) = 6 is fine.
+    // This is because abs(e_ij) <= sqrt(e_ii) * sqrt(e_jj); the abs(covariance of variables i and j)
+    // must be less than or equal to the sqrt(variance(i)) * sqrt(variance(j)).
     // There is a tiny (1e-14) tolerance for the off-diagonal element being slightly too large.
     for (double offDiagonal : ImmutableList.of(-6.0 -1e-15, -6.0, -1.0, 0.0, 0.5, 1.0, 6.0, 6.0 + 1e-15)) {
       assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker2x2.apply(offDiagonal)));
     }
 
-    // The off-diagonal elements cannot be larger (in absolute value) than sqrt(diag_i) * sqrt(diag_j).
+    // Here, the off-diagonal elements are larger (in absolute value) than sqrt(diag_i) * sqrt(diag_j).
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker2x2.apply(-6 - 1e-9)));
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker2x2.apply( 6 + 1e-9)));
 
@@ -398,8 +401,9 @@ public class RBMatrixUtilsTest {
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(0.1, 0.0, 12.0)));
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(0.0, 0.1, 12.0)));
 
-    // For smaller non-zero off-diagonals, all the eigenvalues are still non-negative,
-    // which guarantees that the matrix is positive semi-definite.
+    // For "smallish" non-zero off-diagonals, all the eigenvalues are still non-negative,
+    // which guarantees that the matrix is positive semi-definite. Here we check off-diagonal
+    // elements up to 50% of their maximum magnitude.
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(0.0, 0.0, 0.0)));
     for (double ratio : ImmutableList.of(0.0, 0.1, 0.2, 0.5)) {
       assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 6.0 * ratio,  8.0 * ratio,  12.0 * ratio)));
@@ -408,7 +412,7 @@ public class RBMatrixUtilsTest {
       assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 6.0 * ratio,  8.0 * ratio, -12.0 * ratio)));
     }
 
-    // With a single large off-diagonal element, the others must be small.
+    // As above, with a single large off-diagonal element, the others must be small.
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(5.9, 1.0, 1.0)));
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(1.0, 7.9, 1.0)));
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(1.0, 1.0, 11.9)));
