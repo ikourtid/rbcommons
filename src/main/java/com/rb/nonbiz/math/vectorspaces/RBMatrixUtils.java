@@ -156,7 +156,7 @@ public class RBMatrixUtils {
     //        = (a_i * a_j * lambda_j) * (e_i' * e_j) = 0 since the eigenvectors are orthogonal.
     // Keeping only terms with i == j, we have x' * M * x = sum_i((a_i * x_i') * M * (a_i * x_i))
     //        = sum_i(a_i * x_i' * lambda_i * a_i * x_i) = sum_i((a_i)^2 * lambda_i * e_i' * e_i) >= 0
-    //  since (a_i)^2 is non-negative, each eigenvalue lambda_i is non-negative, and e_i' * e_i is non-negative.
+    // since (a_i)^2 is non-negative, each eigenvalue lambda_i is non-negative, and e_i' * e_i is non-negative.
     //
     // The downside of this check is that its complexity is O(n^3) for matrix of size n x n.
 
