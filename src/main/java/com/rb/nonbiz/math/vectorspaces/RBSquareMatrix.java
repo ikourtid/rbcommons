@@ -61,6 +61,15 @@ public class RBSquareMatrix {
   }
 
   /**
+   * Return matrix element M[i, j].
+   *
+   * <p> Will throw an exception if either i or j is out of bounds. </p>
+   */
+  public double get(int i, int j) {
+    return rawMatrix.get(i, j);
+  }
+
+  /**
    * The name has 'calculate' so it's clear to the caller that the result isn't cached.
    */
   public double calculateDeterminant() {
