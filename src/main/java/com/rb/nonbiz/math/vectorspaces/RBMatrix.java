@@ -156,7 +156,7 @@ public class RBMatrix {
 
   /**
    * Implements the function DoubleMatrix2D, viewPart, from Colt.
-   * This returns a new matrix which is a square subset of the current matrix.
+   * This returns a new matrix which is a rectangle subset of the current matrix.
    * Note that the colt function itself returns a copy, as of December 2022.
    */
   public RBMatrix copyPart(ClosedRange<MatrixRowIndex> rowRange, ClosedRange<MatrixColumnIndex> columnRange) {
