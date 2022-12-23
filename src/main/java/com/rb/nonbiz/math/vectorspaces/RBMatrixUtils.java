@@ -92,18 +92,19 @@ public class RBMatrixUtils {
    * <p> A matrix M is 'positive semi-definite' if for any vector x: </p>
    * {@code x_transpose * M * x >= 0}
    *
+   * <p> 'Positive semi-definite' is the matrix equivalent of 'non-negative'. A 'PSD' matrix
+   * defines a non-negative vector length, i.e. sqrt(x' * M * x). </p>
+   *
    * <p> Covariance matrices are symmetric and positive semi-definite. This check
-   * ascertains whether a given matrix could be a covariance matrix. </p>
+   * ascertains whether a given matrix could be a covariance matrix, at least insofar
+   * as a covariance matrix must be PSD. </p>
+   *
+   * <p> This is meant to be a comprehensive check, not an "80/20" check to catch most problems. </p>
    */
-  public static boolean isPositiveSemiDefiniteSymmetricMatrix(RBMatrix rbMatrix) {
+  public static boolean isPositiveSemiDefiniteSymmetricMatrix(RBSquareMatrix rbSquareMatrix) {
     // Do various matrix checks, from easiest to complex, in order to "fail fast".
-    if (!rbMatrix.isSquare()) {
-      // A matrix M can't have x_transpose * M * x >= 0 unless it's square;
-      // the matrix multiplication wouldn't be properly specified otherwise.
-      return false;
-    }
-
-    if (!isSymmetricMatrix(rbMatrix, 1e-8)) {
+    
+    if (!isSymmetricMatrix(rbSquareMatrix.getRawMatrixUnsafe(), 1e-8)) {
       // Non-symmetric matrices can be positive semi-definite, but we're only interested in symmetric ones.
       // In particular, we want to use the property that symmetric matrices have real eigenvalues.
       // Also, covariance matrices are symmetric, and they're what we're mostly interested in here.
@@ -111,14 +112,14 @@ public class RBMatrixUtils {
     }
 
     // We have already checked that the matrix is symmetric, so it must be square. So # rows = # columns.
-    int numRowsOrColumns = rbMatrix.getNumRows();
+    int numRowsOrColumns = rbSquareMatrix.getNumRowsOrColumns();
     double[] sqrtDiagonal = new double[numRowsOrColumns];
 
     // Check that all diagonal elements are non-negative.
     // The covariance of a variable with itself is just that variable's variance. Variances must be
     // non-negative. That is cov[i, i] = var[i] >= 0.
     for (int i = 0; i < numRowsOrColumns; ++i) {
-      double diagonalElement = rbMatrix.get(i, i);
+      double diagonalElement = rbSquareMatrix.get(i, i);
       // no epsilon tolerance for this check; we're going to take the square root of each diagonal element
       if (diagonalElement < 0.0) {
         // can't have a negative diagonal element
@@ -133,7 +134,7 @@ public class RBMatrixUtils {
       for (int j = i + 1; j < numRowsOrColumns; ++j) {
         // Use a very small tolerance; presumably these matrices are being read in from a vendor and
         // have been checked before we get them. If this turns out to be too tight, we can loosen it.
-        if (Math.abs(rbMatrix.get(i, j)) > sqrtDiagonal[i] * sqrtDiagonal[j] + 1e-14) {
+        if (Math.abs(rbSquareMatrix.get(i, j)) > sqrtDiagonal[i] * sqrtDiagonal[j] + 1e-14) {
           // this off-diagonal term is too big
           return false;
         }
@@ -158,12 +159,14 @@ public class RBMatrixUtils {
     //        = sum_i(a_i * x_i' * lambda_i * a_i * x_i) = sum_i((a_i)^2 * lambda_i * e_i' * e_i) >= 0
     // since (a_i)^2 is non-negative, each eigenvalue lambda_i is non-negative, and e_i' * e_i is non-negative.
     //
-    // The downside of this check is that its complexity is O(n^3) for matrix of size n x n.
+    // The downside of the "eigenvalues are non-negative" check is that the Colt routine has complexity
+    // O(n^3) for matrix of size n x n.
 
     // The documenation for Colt EigenvalueDecomposition() says it will only throw an exception
     // if the matrix isn't square, which we checked at the beginning of this method. Therefore,
     // we don't use "try/catch" when evaluating it.
-    EigenvalueDecomposition eigenvalueDecomposition = new EigenvalueDecomposition(rbMatrix.getRawMatrixUnsafe());
+    EigenvalueDecomposition eigenvalueDecomposition = new EigenvalueDecomposition(
+        rbSquareMatrix.getRawMatrixUnsafe().getRawMatrixUnsafe());
 
     // No need to worry about complex eigenvalues; this is a symmetric matrix.
     double[] sortedEigenValues = DoubleStream.of(eigenvalueDecomposition.getRealEigenvalues().toArray())
