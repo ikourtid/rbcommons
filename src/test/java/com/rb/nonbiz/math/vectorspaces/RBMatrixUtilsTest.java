@@ -328,8 +328,8 @@ public class RBMatrixUtilsTest {
     // general case - epsilon symmetric
     assertTrue(isSymmetricMatrix(
         rbMatrix(new double[][] {
-            { 1,         2 + 1e-9 },
-            { 2 - 1e-9, -3 } }),
+            { 1,  2 + 1e-9 },
+            { 2, -3 } }),
         1e-8));
     // general case - asymmetric
     assertFalse(isSymmetricMatrix(
