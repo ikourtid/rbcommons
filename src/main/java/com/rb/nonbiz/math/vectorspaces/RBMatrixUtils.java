@@ -134,7 +134,7 @@ public class RBMatrixUtils {
         // Use a very small tolerance; presumably these matrices are being read in from a vendor and
         // have been checked before we get them. If this turns out to be too tight, we can loosen it.
         if (Math.abs(rbMatrix.get(i, j)) > sqrtDiagonal[i] * sqrtDiagonal[j] + 1e-14) {
-          // the matrix isn't symmetric
+          // this off-diagonal term is too big
           return false;
         }
       }
@@ -149,13 +149,13 @@ public class RBMatrixUtils {
     // Then e' * M * e >= 0. Therefore e' * lambda * e >= 0, or lambda * e' * e >= 0.
     // Since e' * e >= 0, it must be true that lambda >= 0.
     //
-    // The converse is also true. Any vector x can be expanded as x = sum_i( a_i * e_i )
+    // The converse is also true. Any vector x can be expanded as x = sum_i(a_i * e_i)
     // since the eigenvectors e_i "span" the vector space.
     // Then x' * M * x = sum_i(a_i * e_i') * M * sum_j(a_j * e_j)
-    // For i != j each term will be a_i * e_i' * M * a_j * e_j = a_i * a_j * e_i' * (lamba_j * e_j)
-    //        = (a_i * a_j * lambda_j) * e_i' * e_j = 0 since the eigenvectors are orthogonal.
-    // Keeping only terms with i == j, we have x' * M * x = sum_i( (a_i * x_i') * M * (a_i * x_i) )
-    //        = sum_i( a_i * x_i' * lambda_i * a_i * x_i ) = sum( (a_i)^2 * lambda_i * e_i' * e_i) >= 0
+    // For i != j each term will be (a_i * e_i') * M * (a_j * e_j) = a_i * a_j * e_i' * (lamba_j * e_j)
+    //        = (a_i * a_j * lambda_j) * (e_i' * e_j) = 0 since the eigenvectors are orthogonal.
+    // Keeping only terms with i == j, we have x' * M * x = sum_i((a_i * x_i') * M * (a_i * x_i))
+    //        = sum_i(a_i * x_i' * lambda_i * a_i * x_i) = sum_i((a_i)^2 * lambda_i * e_i' * e_i) >= 0
     //  since (a_i)^2 is non-negative, each eigenvalue lambda_i is non-negative, and e_i' * e_i is non-negative.
     //
     // The downside of this check is that its complexity is O(n^3) for matrix of size n x n.
