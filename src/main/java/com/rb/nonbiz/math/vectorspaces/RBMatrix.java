@@ -75,6 +75,14 @@ public class RBMatrix {
     return rawMatrix.columns();
   }
 
+  public MatrixRowIndex getLastRowIndex() {
+    return matrixRowIndex(getNumRows() - 1);
+  }
+
+  public MatrixColumnIndex getLastColumnIndex() {
+    return matrixColumnIndex(getNumColumns() - 1);
+  }
+
   /**
    * Apply an arbitrary transform for every element based on its position in the matrix (row & column),
    * and return a copy of this matrix.
