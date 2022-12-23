@@ -26,7 +26,6 @@ public class RBMatrixUtils {
     return isAlmostIdentityMatrix(shouldBeIdentity, epsilon);
   }
 
-
   /**
    * Given raw loadings and a matrix, compute variance.  variance = loadings' * COVMAT * loadings.
    * This helper function is not taking on the responsibility of making sure any properties of the
