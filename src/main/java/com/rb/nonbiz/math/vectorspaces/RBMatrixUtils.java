@@ -103,7 +103,7 @@ public class RBMatrixUtils {
    */
   public static boolean isPositiveSemiDefiniteSymmetricMatrix(RBSquareMatrix rbSquareMatrix) {
     // Do various matrix checks, from easiest to complex, in order to "fail fast".
-    
+
     if (!isSymmetricMatrix(rbSquareMatrix.getRawMatrixUnsafe(), 1e-8)) {
       // Non-symmetric matrices can be positive semi-definite, but we're only interested in symmetric ones.
       // In particular, we want to use the property that symmetric matrices have real eigenvalues.
