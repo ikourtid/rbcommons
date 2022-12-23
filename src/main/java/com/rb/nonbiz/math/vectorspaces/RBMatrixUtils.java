@@ -106,7 +106,7 @@ public class RBMatrixUtils {
     if (!isSymmetricMatrix(rbMatrix, 1e-8)) {
       // Non-symmetric matrices can be positive semi-definite, but we're only interested in symmetric ones.
       // In particular, we want to use the property that symmetric matrices have real eigenvalues.
-      // Also, covariance matrices are symmetric, and that's what we're mostly interested in here.
+      // Also, covariance matrices are symmetric, and they're what we're mostly interested in here.
       return false;
     }
 
@@ -119,6 +119,7 @@ public class RBMatrixUtils {
     // non-negative. That is cov[i, i] = var[i] >= 0.
     for (int i = 0; i < numRowsOrColumns; ++i) {
       double diagonalElement = rbMatrix.get(i, i);
+      // no epsilon for this check; we're going to take the square root of each diagonal element
       if (diagonalElement < 0.0) {
         // can't have a negative diagonal element
         return false;
@@ -126,7 +127,7 @@ public class RBMatrixUtils {
       sqrtDiagonal[i] = Math.sqrt(diagonalElement);
     }
 
-    // Check that all off-diagonal elements are not too large.
+    // Check that no off-diagonal elements is too large.
     // The covariance[i, j] must be <= sqrt(variance[i]) * sqrt(variance[j]).
     for (int i = 0; i < numRowsOrColumns; ++i) {
       for (int j = i + 1; j < numRowsOrColumns; ++j) {
@@ -161,6 +162,7 @@ public class RBMatrixUtils {
         .toArray();
     double smallestEigenvalue = sortedEigenValues[0];
     // For numerical reasons, allow the smallest eigenvalue to be slightly negative.
+    // Zero and epsilon-negative eigenvalues may be discarded if we're using SVD.
     if (smallestEigenvalue < -1e-8) {
       return false;
     }
@@ -168,6 +170,6 @@ public class RBMatrixUtils {
     // All tests pass; the matrix must be symmetric and positive semi-definite.
     return true;
   }
-  
+
 }
 
