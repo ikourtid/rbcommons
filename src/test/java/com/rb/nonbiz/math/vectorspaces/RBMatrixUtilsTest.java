@@ -19,6 +19,12 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isAlmostIdentityMatr
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isOrthoNormalTransformationMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isPositiveSemiDefiniteSymmetricMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isSymmetricMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.rbSquareMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrixTest.rbSquareMatrix2by2;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrixTest.rbSquareMatrix3by3;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrixTest.rbSquareMatrixDiagonal3by3;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrixTest.rbSquareMatrixIdentity;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrixTest.singletonRBSquareMatrix;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
@@ -344,32 +350,27 @@ public class RBMatrixUtilsTest {
 
   @Test
   public void testIsPositiveSemiDefiniteSymmetric() {
-    // not square - can't be symmetric
-    assertFalse(isPositiveSemiDefiniteSymmetricMatrix(rbMatrix(new double[][] {
-        { DUMMY_DOUBLE, DUMMY_DOUBLE } }
-    )));
-
     // square but not symmetric
-    assertFalse(isPositiveSemiDefiniteSymmetricMatrix(rbMatrix(new double[][] {
+    assertFalse(isPositiveSemiDefiniteSymmetricMatrix(rbSquareMatrix(rbMatrix(new double[][] {
         { DUMMY_DOUBLE,        123.4 },
         { 567.8,        DUMMY_DOUBLE }
-    })));
+    }))));
 
     // simple cases
-    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(singletonRBMatrix(DUMMY_POSITIVE_DOUBLE)));
-    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbIdentityMatrix(3)));
-    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbDiagonalMatrix3by3(123, 456, 789)));
+    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(singletonRBSquareMatrix(DUMMY_POSITIVE_DOUBLE)));
+    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbSquareMatrixIdentity(3)));
+    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbSquareMatrixDiagonal3by3(123, 456, 789)));
 
     // having one zero diagonal entry is OK; it will introduce 1 eigenvalue = 0, but none will be negative
-    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbDiagonalMatrix3by3(123, 456, 0)));
+    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbSquareMatrixDiagonal3by3(123, 456, 0)));
     // even all zeros are OK; all eigenvalues will be zero, but none will be negative
-    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbDiagonalMatrix3by3(0, 0, 0)));
+    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(rbSquareMatrixDiagonal3by3(0, 0, 0)));
 
     // can't have a negative diagonal element (even epsilon negative)
-    assertFalse(isPositiveSemiDefiniteSymmetricMatrix(rbDiagonalMatrix3by3(123, 456, -1e-9)));
+    assertFalse(isPositiveSemiDefiniteSymmetricMatrix(rbSquareMatrixDiagonal3by3(123, 456, -1e-9)));
 
     // make a matrix whose diagonal elements are perfect squares, for clarity in the following checks
-    Function<Double, RBMatrix> maker2x2 = offDiagonal -> rbMatrix2by2(
+    Function<Double, RBSquareMatrix> maker2x2 = offDiagonal -> rbSquareMatrix2by2(
         4.0,         offDiagonal,
         offDiagonal,        9.0);
     // Any off-diagonal element with abs(off-diagonal) <= sqrt(4) * sqrt(9) = 6 is fine.
@@ -386,7 +387,7 @@ public class RBMatrixUtilsTest {
 
     // Now investigate off-diagonal elements that follow the above limit of
     // abs(e_ij) <= sqrt(e_ii) * sqrt(e_jj), but still may be non-positive-semi-definite.
-    TriFunction<Double, Double, Double, RBMatrix> maker3x3 = (elem12, elem13, elem23) -> rbMatrix3by3(
+    TriFunction<Double, Double, Double, RBSquareMatrix> maker3x3 = (elem12, elem13, elem23) -> rbSquareMatrix3by3(
         4,      elem12, elem13,
         elem12,      9, elem23,
         elem13, elem23,     16);
