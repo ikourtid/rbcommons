@@ -2,12 +2,10 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleFactory1D;
 import cern.colt.matrix.DoubleFactory2D;
-import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import cern.colt.matrix.linalg.SingularValueDecomposition;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Iterables;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.ClosedRange;
@@ -16,8 +14,6 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
-import java.util.Iterator;
-import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -134,13 +130,20 @@ public class RBMatrix {
     this.rawMatrix = rawMatrix;
   }
 
+  /**
+   * Note that we can only instantiate {@link RBMatrix} using a 2d array. Although the underlying data structure is a
+   * Colt {@link DoubleMatrix2D}, it's good to hide that abstraction as much as possible.
+   */
+  public static RBMatrix rbMatrix(double[][] values) {
+    return rbMatrix(new DenseDoubleMatrix2D(values));
+  }
+
   private static RBMatrix rbMatrix(DoubleMatrix2D rawMatrix) {
     RBPreconditions.checkArgument(
         rawMatrix.size() > 0,
         "We do not allow an empty RBMatrix, just to be safe");
     return new RBMatrix(rawMatrix);
   }
-
 
   public RBVector getColumnVector(MatrixColumnIndex matrixColumnIndex) {
     RBPreconditions.checkArgument(

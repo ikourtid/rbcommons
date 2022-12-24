@@ -1,8 +1,6 @@
 package com.rb.nonbiz.math.vectorspaces;
 
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
-import com.rb.nonbiz.collections.ArrayIndexMappingTest;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -20,10 +18,8 @@ import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatri
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialColumnMapping;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialRowMapping;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrixMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
-import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
