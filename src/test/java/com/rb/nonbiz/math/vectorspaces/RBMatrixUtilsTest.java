@@ -3,7 +3,6 @@ package com.rb.nonbiz.math.vectorspaces;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbDiagonalMatrix2by2;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbDiagonalMatrix3by3;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrix;
@@ -13,6 +12,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.singletonRBMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.computeVariance;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isAlmostIdentityMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isOrthoNormalTransformationMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.identityRBSquareMatrix;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static org.junit.Assert.assertEquals;
@@ -116,12 +116,12 @@ public class RBMatrixUtilsTest {
     assertFalse(isOrthoNormalTransformationMatrix(singletonRBMatrix(-1), singletonRBMatrix(2), 1e-4));
 
     // Identity covariance matrix and transformation matrix are always orthonormal
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(1, 0, 0, 1), rbIdentityMatrix(2), 1e-4));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2( 1, 0,  0,  1), identityRBSquareMatrix(2), 1e-4));
     // Flipping a factor is ortho-normal if covariance is identity
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0, 1, 1, 0), rbIdentityMatrix(2), 1e-4));
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0, 1, -1, 0), rbIdentityMatrix(2), 1e-4));
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(-1, 0, 0, 1), rbIdentityMatrix(2), 1e-4));
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(-1, 0, 0, -1), rbIdentityMatrix(2), 1e-4));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2( 0, 1,  1,  0), identityRBSquareMatrix(2), 1e-4));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2( 0, 1, -1,  0), identityRBSquareMatrix(2), 1e-4));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(-1, 0,  0,  1), identityRBSquareMatrix(2), 1e-4));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(-1, 0,  0, -1), identityRBSquareMatrix(2), 1e-4));
     // Now covariance matrix is not identity, so a transformation matrix that switches factors or is identity is not orthonormal
     assertFalse(
         isOrthoNormalTransformationMatrix(
@@ -154,8 +154,8 @@ public class RBMatrixUtilsTest {
   @Test
   public void testComputeVarianceBadArgs() {
     // The loadings should have one column.
-    assertIllegalArgumentException( () -> computeVariance(rbIdentityMatrix(2), rbIdentityMatrix(2)));
-    double doesNotThrow = computeVariance(singletonRBMatrix(1.0), rbIdentityMatrix(1));
+    assertIllegalArgumentException( () -> computeVariance(identityRBSquareMatrix(2), identityRBSquareMatrix(2)));
+    double doesNotThrow = computeVariance(singletonRBMatrix(1.0), identityRBSquareMatrix(1));
   }
 
   @Test
@@ -259,10 +259,10 @@ public class RBMatrixUtilsTest {
     double smallEpsilon = 1e-8;
 
     // Identity equals identity
-    assertTrue(isAlmostIdentityMatrix(rbIdentityMatrix(1), smallEpsilon));
-    assertTrue(isAlmostIdentityMatrix(rbIdentityMatrix(2), smallEpsilon));
-    assertTrue(isAlmostIdentityMatrix(rbIdentityMatrix(4), smallEpsilon));
-    assertTrue(isAlmostIdentityMatrix(rbIdentityMatrix(10), smallEpsilon));
+    assertTrue(isAlmostIdentityMatrix(identityRBSquareMatrix(1), smallEpsilon));
+    assertTrue(isAlmostIdentityMatrix(identityRBSquareMatrix(2), smallEpsilon));
+    assertTrue(isAlmostIdentityMatrix(identityRBSquareMatrix(4), smallEpsilon));
+    assertTrue(isAlmostIdentityMatrix(identityRBSquareMatrix(10), smallEpsilon));
 
     // epsilon tests
     assertTrue(isAlmostIdentityMatrix(

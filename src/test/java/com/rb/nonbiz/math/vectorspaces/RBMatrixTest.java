@@ -24,8 +24,8 @@ import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndexTest.matrixRowIndexMatcher;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrixTest.rbIndexableMatrixMatcher;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbDiagonalMatrix;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.diagonalRBSquareMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.identityRBSquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVectorMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -121,16 +121,16 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         { 1.1, 2.1, 3.1 },
         { 1.2, 2.2, 3.2 } });
     assertThat(
-        matrix2by3.multiply(rbIdentityMatrix(3)),
+        matrix2by3.multiply(identityRBSquareMatrix(3)),
         rbMatrixMatcher(matrix2by3));
     assertThat(
-        rbIdentityMatrix(2).multiply(matrix2by3),
+        identityRBSquareMatrix(2).multiply(matrix2by3),
         rbMatrixMatcher(matrix2by3));
 
     // multiplying an identity matrix by itself results in the same matrix
     assertThat(
-        rbIdentityMatrix(3).multiply(rbIdentityMatrix(3)),
-        rbMatrixMatcher(rbIdentityMatrix(3)));
+        identityRBSquareMatrix(3).multiply(identityRBSquareMatrix(3)),
+        rbMatrixMatcher(identityRBSquareMatrix(3)));
   }
 
   @Test
@@ -164,8 +164,8 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
   @Test
   public void testMatrixDeterminant() {
-    assertEquals(1.0, rbIdentityMatrix(2).determinant(), 1e-8);
-    assertEquals(1.0, rbIdentityMatrix(3).determinant(), 1e-8);
+    assertEquals(1.0, identityRBSquareMatrix(2).determinant(), 1e-8);
+    assertEquals(1.0, identityRBSquareMatrix(3).determinant(), 1e-8);
 
     // recall that Det({{a, b}, {c, d}}) = ad - bc
     assertEquals(doubleExplained(-2, 1 * 4 - 2 * 3), rbMatrix2by2(1, 2, 3, 4).determinant(), 1e-8);
@@ -189,8 +189,8 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     RBMatrix matrix = rbMatrix2by2(
         1.0, 2.0,
         3.0, 4.0);
-    assertIllegalArgumentException( () -> matrix.multiply(rbIdentityMatrix(3)));
-    RBMatrix doesNotThrow = matrix.multiply(rbIdentityMatrix(2));
+    assertIllegalArgumentException( () -> matrix.multiply(identityRBSquareMatrix(3)));
+    RBMatrix doesNotThrow = matrix.multiply(identityRBSquareMatrix(2));
   }
 
   @Test
@@ -220,8 +220,8 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
     // the transposition of an identity matrix is itself
     assertThat(
-        rbIdentityMatrix(3).transpose(),
-        rbMatrixMatcher(rbIdentityMatrix(3)));
+        identityRBSquareMatrix(3).transpose(),
+        rbMatrixMatcher(identityRBSquareMatrix(3)));
 
     assertThat(
         rbMatrix2by2(
@@ -258,13 +258,13 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
     // The inverse of the identity matrix is the same identity matrix.
     asserter.accept(
-        rbIdentityMatrix(3),
-        rbIdentityMatrix(3));
+        identityRBSquareMatrix(3),
+        identityRBSquareMatrix(3));
 
     // The inverse of a diagonal matrix is another diagonal matrix, whose elements are reciprocals of the original's.
     asserter.accept(
-        rbDiagonalMatrix(rbVector(4.0,  5.0,  0.1)),
-        rbDiagonalMatrix(rbVector(0.25, 0.2, 10.0)));
+        diagonalRBSquareMatrix(rbVector(4.0,  5.0,  0.1)),
+        diagonalRBSquareMatrix(rbVector(0.25, 0.2, 10.0)));
 
     // The inverse of a rotation matrix is the inverse rotation.
     asserter.accept(
@@ -310,16 +310,16 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
   @Test
   public void testDiagonalMatrix() {
     assertThat(
-        rbDiagonalMatrix(rbVector(55, 66, 77)),
+        diagonalRBSquareMatrix(rbVector(55, 66, 77)),
         rbMatrixMatcher(
             rbMatrix3by3(
                 55,  0,  0,
                 0,  66,  0,
                 0,   0, 77)));
     assertThat(
-        rbDiagonalMatrix(rbVector(1, 1, 1)),
+        diagonalRBSquareMatrix(rbVector(1, 1, 1)),
         rbMatrixMatcher(
-            rbIdentityMatrix(3)));
+            identityRBSquareMatrix(3)));
   }
 
   @Test
@@ -376,10 +376,10 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     assertTrue(singletonRBMatrix(DUMMY_DOUBLE).isSquare());
 
     // identity matrices are square
-    assertTrue(rbIdentityMatrix(3).isSquare());
+    assertTrue(identityRBSquareMatrix(3).isSquare());
 
     // diagonal matrices are square
-    assertTrue(rbDiagonalMatrix(rbVector(DUMMY_DOUBLE, DUMMY_DOUBLE)).isSquare());
+    assertTrue(diagonalRBSquareMatrix(rbVector(DUMMY_DOUBLE, DUMMY_DOUBLE)).isSquare());
 
     // a 2x2 matrix is square
     assertTrue(rbMatrix(new double[][] {
