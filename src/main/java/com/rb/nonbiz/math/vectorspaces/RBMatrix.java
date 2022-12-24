@@ -135,7 +135,7 @@ public class RBMatrix {
    * Colt {@link DoubleMatrix2D}, it's good to hide that abstraction as much as possible.
    */
   public static RBMatrix rbMatrix(double[][] values) {
-    return rbMatrix(new DenseDoubleMatrix2D(values));
+    return rbMatrix(DoubleFactory2D.dense.make(values));
   }
 
   private static RBMatrix rbMatrix(DoubleMatrix2D rawMatrix) {
