@@ -128,6 +128,8 @@ public class RBVector {
     return Doubles.asList(rawDoubleMatrix1D.toArray());
   }
 
+  public double[] toArray() { return rawDoubleMatrix1D.toArray(); }
+
   @Override
   public String toString() {
     return Strings.format("[RBV %s RBV]", Strings.formatDoubleArray(rawDoubleMatrix1D.toArray()));

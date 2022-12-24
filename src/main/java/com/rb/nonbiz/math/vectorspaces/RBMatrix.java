@@ -1,6 +1,7 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleFactory2D;
+import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
@@ -131,7 +132,7 @@ public class RBMatrix {
   }
 
   /**
-   * Matrix multiplication
+   * Multiplies this matrix by another matrix.
    */
   public RBMatrix multiply(RBMatrix other) {
     RBSimilarityPreconditions.checkBothSame(
@@ -140,6 +141,18 @@ public class RBMatrix {
         "matrix multiplications: nColumns of first matrix %s must match nRows of second matrix %s",
         getNumColumns(), other.getNumRows());
     return rbMatrix(new Algebra().mult(rawMatrix, other.rawMatrix));
+  }
+
+  /**
+   * Multiplies this matrix by a {@link RBVector}.
+   */
+  public RBVector multiply(RBVector rbVector) {
+    RBSimilarityPreconditions.checkBothSame(
+        getNumColumns(),
+        rbVector.size(),
+        "matrix multiplications: nColumns of first matrix %s must match nRows of second matrix %s",
+        getNumColumns(), rbVector.size());
+    return rbVector(new Algebra().mult(rawMatrix, rbVector.getRawDoubleMatrix1DUnsafe()));
   }
 
   /**

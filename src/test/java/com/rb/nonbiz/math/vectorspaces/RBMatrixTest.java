@@ -133,7 +133,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
   }
 
   @Test
-  public void testMatrixMultiply() {
+  public void testMatrixMultiplyByOtherMatrix() {
     RBMatrix matrix1 = rbMatrix2by2(
         1.0, 2.0,
         3.0, 4.0);
@@ -145,6 +145,20 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         rbMatrixMatcher(rbMatrix(new double[][] {
             { doubleExplained(19, 1 * 5 + 2 * 7), doubleExplained(22, 1 * 6 + 2 * 8) },
             { doubleExplained(43, 3 * 5 + 4 * 7), doubleExplained(50, 3 * 6 + 4 * 8) }})));
+  }
+
+  @Test
+  public void testMatrixMultiplyByVector() {
+    assertThat(
+        rbMatrix2by2(
+            1.0, 2.0,
+            3.0, 4.0)
+            .multiply(rbVector(
+                5.0,
+                7.0)),
+        rbVectorMatcher(rbVector(
+            doubleExplained(19, 1 * 5 + 2 * 7),
+            doubleExplained(22, 1 * 6 + 2 * 8))));
   }
 
   @Test

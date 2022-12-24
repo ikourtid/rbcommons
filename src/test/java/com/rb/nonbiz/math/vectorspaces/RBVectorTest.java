@@ -7,12 +7,15 @@ import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRestDoubles;
 import static com.rb.nonbiz.math.vectorspaces.RBVector.zeroRBVectorWithDimension;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.RBArrayMatchers.doubleArrayMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.doubleListMatcher;
 import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrix1dMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -22,6 +25,7 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
 import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -247,19 +251,34 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
 
   @Test
   public void testAsList() {
-    assertThat(
-        singletonRBVector(1.1)
-            .asList(),
-        doubleListMatcher(
-            ImmutableList.of(1.1),
-            1e-8));
+    BiConsumer<RBVector, List<Double>> asserter = (rbVector, expectedResult) ->
+        assertThat(
+            rbVector.asList(),
+            doubleListMatcher(
+                expectedResult, 1e-8));
 
-    assertThat(
-        rbVector(-1.1, 0.0, 3.3)
-            .asList(),
-        doubleListMatcher(
-            ImmutableList.of(-1.1, 0.0, 3.3),
-            1e-8));
+    asserter.accept(
+        singletonRBVector(1.1),
+        singletonList(1.1));
+    asserter.accept(
+        rbVector(-1.1, 0.0, 3.3),
+        ImmutableList.of(-1.1, 0.0, 3.3));
+  }
+
+  @Test
+  public void testToArray() {
+    BiConsumer<RBVector, double[]> asserter = (rbVector, expectedResult) ->
+        assertThat(
+            rbVector.toArray(),
+            doubleArrayMatcher(
+                expectedResult, 1e-8));
+
+    asserter.accept(
+        singletonRBVector(1.1),
+        new double[] { 1.1 });
+    asserter.accept(
+        rbVector(-1.1, 0.0, 3.3),
+        new double[] { -1.1, 0.0, 3.3 });
   }
 
   @Override
