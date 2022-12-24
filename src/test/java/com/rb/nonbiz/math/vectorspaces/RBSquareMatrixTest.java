@@ -1,6 +1,7 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
+import com.rb.nonbiz.testmatchers.Match;
 import com.rb.nonbiz.testutils.Epsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -10,7 +11,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrixMatcher;
 import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.diagonalRBSquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.identityRBSquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
-import static com.rb.nonbiz.testmatchers.Match.matchSuperClass;
+import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
@@ -129,7 +130,7 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
 
   public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected, Epsilons e) {
     return makeMatcher(expected,
-        matchSuperClass(f -> rbMatrixMatcher(f, e)));
+        match(v -> (RBMatrix) v, f -> rbMatrixMatcher(f, e)));
   }
 
 }
