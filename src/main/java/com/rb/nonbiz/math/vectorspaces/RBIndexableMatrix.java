@@ -181,9 +181,9 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
    * <p> The method name has 'unsafe' so it's clear to the caller that this returns a mutable object, which in our
    * codebase is heavily discouraged. However, we can't control what Colt does. </p>
    */
-  public DoubleMatrix2D getRawMatrixUnsafe() {
+  public DoubleMatrix2D getRawMatrixUnsafe() { // FIXME IAK UNSAFE remove this method, as well as the RBMatrix one.
     return rbMatrix.getRawMatrixUnsafe();
-  } // FIXME IAK UNSAFE remove this
+  }
 
   @Override
   public String toString() {
