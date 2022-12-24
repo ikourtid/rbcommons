@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.rb.nonbiz.functional.TriFunction;
+import com.rb.nonbiz.math.vectorspaces.RBMatrix;
 
 import java.util.Iterator;
 import java.util.stream.IntStream;
@@ -9,6 +10,7 @@ import java.util.stream.IntStream;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray2D.immutableIndexableArray2D;
 import static com.rb.nonbiz.collections.MutableDoubleIndexableArray2D.mutableDoubleIndexableArray2D;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
@@ -58,11 +60,8 @@ public class ImmutableDoubleIndexableArray2D<R, C> implements IndexableDoubleDat
     return mutableArray2D.getColumnMapping();
   }
 
-  /** As should be obvious by the name, only use this if you know what you're doing.
-   * We're breaking an abstraction here in order to improve performance in some cases.
-   */
-  public double[][] getRawArrayUnsafe() {
-    return mutableArray2D.getRawArrayUnsafe();
+  public RBMatrix toRBMatrix() {
+    return mutableArray2D.toRBMatrix();
   }
 
   /**

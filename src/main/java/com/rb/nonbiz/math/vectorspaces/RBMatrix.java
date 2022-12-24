@@ -3,8 +3,10 @@ package com.rb.nonbiz.math.vectorspaces;
 import cern.colt.matrix.DoubleFactory1D;
 import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.doublealgo.Statistic;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
+import cern.colt.matrix.linalg.EigenvalueDecomposition;
 import cern.colt.matrix.linalg.SingularValueDecomposition;
 import com.google.common.collect.Iterables;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
@@ -285,6 +287,18 @@ public class RBMatrix {
 
   public RBSingularValueDecomposition calculateSingularValueDecomposition() {
     return rbSingularValueDecomposition(new SingularValueDecomposition(rawMatrix));
+  }
+
+  public RBMatrix calculateCovarianceMatrix() {
+    return rbMatrix(Statistic.covariance(rawMatrix));
+  }
+
+  public RBMatrix calculateCorrelationMatrix() {
+    return rbMatrix(Statistic.correlation(rawMatrix));
+  }
+
+  public EigenvalueDecomposition calculateEigendecomposition() {
+    return new EigenvalueDecomposition(rawMatrix);
   }
 
   public <R, C> RBIndexableMatrix<R, C> toIndexableMatrix(

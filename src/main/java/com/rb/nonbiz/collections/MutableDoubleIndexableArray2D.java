@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.rb.nonbiz.math.vectorspaces.RBMatrix;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -9,6 +10,7 @@ import java.util.Iterator;
 import java.util.stream.IntStream;
 
 import static com.rb.nonbiz.collections.RBOptionals.getIntOrThrow;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 
 /**
  * See {@link MutableIndexableArray2D}.
@@ -62,8 +64,9 @@ public class MutableDoubleIndexableArray2D<R, C> implements IndexableDoubleDataS
   public void set(R rowKey, C columnKey, double value) {
     rawArray[rowMapping.getIndex(rowKey)][columnMapping.getIndex(columnKey)] = value;
   }
-  double[][] getRawArrayUnsafe() {
-    return rawArray;
+
+  public RBMatrix toRBMatrix() {
+    return rbMatrix(rawArray);
   }
 
   @Override
