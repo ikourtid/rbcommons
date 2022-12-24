@@ -5,6 +5,7 @@ import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
+import cern.colt.matrix.linalg.SingularValueDecomposition;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Iterables;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
@@ -175,10 +176,26 @@ public class RBMatrix {
   }
 
   /**
-   * Matrix determinant
+   * The name has 'calculate' so it's clear to the caller that the result isn't cached.
+   *
+   * <p> Although a determinant is only applicable to a square matrix, the reason this method does not live in
+   * ({@link RBSquareMatrix}) is that we want to avoid exposing the underlying {@link DoubleMatrix2D} outside
+   * this class, because it's a 3rd party class and is not immutable like our own classes, so it's unsafe to do so.
+   * Unfortunately, java's 'protected' is not like the C++ 'protected' keyword; it also allows methods and fields
+   * to be accessed by other classes in the same package!
+   * https://stackoverflow.com/questions/215497/what-is-the-difference-between-public-protected-package-private-and-private-in
+   * </p>
    */
-  double determinant() {
+  public double calculateDeterminant() {
+    // You never see new() in the code, really; with verb classes, we use injection, and with data classes,
+    // we use static constructors. However, in this case, new Algebra() is a Colt library way of doing things.
+    // We can't inject one here (it's a data class), but it's also OK to instantiate it, because doing so is very
+    // lightweight (I checked in the decompiler).
     return new Algebra().det(rawMatrix);
+  }
+
+  public SingularValueDecomposition calculateSingularValueDecomposition() {
+    return new SingularValueDecomposition(rawMatrix);
   }
 
   public <R, C> RBIndexableMatrix<R, C> toIndexableMatrix(
@@ -260,14 +277,6 @@ public class RBMatrix {
    */
   public RBVector getColumnAsVector(MatrixColumnIndex matrixColumnIndex) {
     return rbVector(rawMatrix.viewColumn(matrixColumnIndex.intValue()));
-  }
-
-  /**
-   * This is here to help the test matcher, hence the 'Unsafe' in the name, and the package-private status.
-   */
-  @VisibleForTesting
-  public DoubleMatrix2D getRawMatrixUnsafe() {
-    return rawMatrix;
   }
 
   @Override
