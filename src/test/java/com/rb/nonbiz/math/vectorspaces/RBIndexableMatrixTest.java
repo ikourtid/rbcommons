@@ -2,6 +2,7 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
+import com.rb.nonbiz.collections.ArrayIndexMappingTest;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static com.rb.nonbiz.collections.ArrayIndexMappingTest.arrayIndexMappingMatcher;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.emptySimpleArrayIndexMapping;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
@@ -23,6 +25,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrixMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
@@ -329,7 +332,12 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
   public static <R, C> TypeSafeMatcher<RBIndexableMatrix<R, C>> rbIndexableMatrixMatcher(
       RBIndexableMatrix<R, C> expected, double epsilon) {
     return makeMatcher(expected,
-        match(v -> v.getRawMatrixUnsafe(), f -> matrixMatcher(f, epsilon)));
+        match(v -> v.asRbMatrix(),       f -> rbMatrixMatcher(f, epsilon)),
+        // in theory we could be using matchers for R and C here, but in practice R and C have to implement a
+        // non-trivial (i.e. not just a pointer comparison) equals / hashCode in order to appear inside an
+        // ArrayIndexMapping, so it's fine to just use typeSafeEqualTo here.
+        match(v -> v.getRowMapping(),    f -> arrayIndexMappingMatcher(f, f2 -> typeSafeEqualTo(f2))),
+        match(v -> v.getColumnMapping(), f -> arrayIndexMappingMatcher(f, f2 -> typeSafeEqualTo(f2))));
   }
 
 }

@@ -173,19 +173,6 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
     return columnMapping;
   }
 
-  /**
-   * The whole point of this class is for its callers to be able to convert it to a {@link DoubleMatrix2D} when the
-   * need arises, such as when linear algebra functionality from the Colt package needs to be called. However,
-   * ideally you can do most operations (like iterate over its contents) without having to be exposed to the fact that
-   * the underlying data class is a Colt {@link DoubleMatrix2D}.
-   *
-   * <p> The method name has 'unsafe' so it's clear to the caller that this returns a mutable object, which in our
-   * codebase is heavily discouraged. However, we can't control what Colt does. </p>
-   */
-  public DoubleMatrix2D getRawMatrixUnsafe() { // FIXME IAK UNSAFE remove this method, as well as the RBMatrix one.
-    return rbMatrix.getRawMatrixUnsafe();
-  }
-
   @Override
   public String toString() {
     return Strings.format("[RBIM matrix with %s rows= %s and %s columns = %s: %s RBIM]",
