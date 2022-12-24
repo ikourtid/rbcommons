@@ -13,6 +13,7 @@ import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndex
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBVector.rbVector;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**

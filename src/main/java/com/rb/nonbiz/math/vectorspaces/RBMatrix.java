@@ -257,6 +257,20 @@ public class RBMatrix {
   }
 
   /**
+   * Extracts a single row from the matrix.
+   */
+  public RBVector getRowAsVector(MatrixRowIndex matrixRowIndex) {
+    return rbVector(rawMatrix.viewRow(matrixRowIndex.intValue()));
+  }
+
+  /**
+   * Extracts a single column from the matrix.
+   */
+  public RBVector getColumnAsVector(MatrixColumnIndex matrixColumnIndex) {
+    return rbVector(rawMatrix.viewColumn(matrixColumnIndex.intValue()));
+  }
+
+  /**
    * This is here to help the test matcher, hence the 'Unsafe' in the name, and the package-private status.
    */
   @VisibleForTesting
