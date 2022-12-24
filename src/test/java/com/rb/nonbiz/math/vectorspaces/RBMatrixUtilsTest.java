@@ -3,9 +3,9 @@ package com.rb.nonbiz.math.vectorspaces;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbDiagonalMatrix2by2;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbDiagonalMatrix3by3;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrix2by2;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrix3by3;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.singletonRBMatrix;

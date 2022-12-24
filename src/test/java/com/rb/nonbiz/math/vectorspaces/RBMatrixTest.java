@@ -24,6 +24,7 @@ import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndexTest.matrixRowIndexMatcher;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrixTest.rbIndexableMatrixMatcher;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.diagonalRBSquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.identityRBSquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
@@ -77,14 +78,9 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         { a31, a32, a33 }});
   }
 
-  public static RBMatrix rbMatrix(double[][] values) {
-    return RBMatrix.rbMatrix(new DenseDoubleMatrix2D(values));
-  }
-
   @Test
   public void emptyMatrix_throws() {
-    DoubleMatrix2D emptyRawMatrix = new DenseDoubleMatrix2D(new double[][] { {} });
-    assertIllegalArgumentException( () -> RBMatrix.rbMatrix(emptyRawMatrix));
+    assertIllegalArgumentException( () -> rbMatrix(new double[][] { {} }));
   }
 
   @Test
