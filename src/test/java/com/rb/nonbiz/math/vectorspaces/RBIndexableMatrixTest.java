@@ -18,6 +18,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatri
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialColumnMapping;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialRowMapping;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrixMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
@@ -26,14 +27,13 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
 
 public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<String, Integer>> {
 
   public static <R, C> RBIndexableMatrix<R, C> singletonRBIndexableMatrix(
       R onlyRowKey, C onlyColumnKey, double onlyMatrixElement) {
     return rbIndexableMatrix(
-        new DenseDoubleMatrix2D(new double[][] { { onlyMatrixElement } }),
+        rbMatrix(new double[][] { { onlyMatrixElement } }),
         simpleArrayIndexMapping(onlyRowKey),
         simpleArrayIndexMapping(onlyColumnKey));
   }
@@ -41,7 +41,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
   @Test
   public void disallowsEmptyMatrix() {
     assertIllegalArgumentException( () -> rbIndexableMatrix(
-        new DenseDoubleMatrix2D(new double[][] { { } }),
+        rbMatrix(new double[][] { { } }),
         emptySimpleArrayIndexMapping(),
         emptySimpleArrayIndexMapping()));
   }
@@ -51,7 +51,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
     BiFunction<ArrayIndexMapping<String>, ArrayIndexMapping<Integer>, RBIndexableMatrix<String, Integer>> maker =
         (rowMapping, columnMapping) ->
             rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     { DUMMY_DOUBLE, DUMMY_DOUBLE },
                     { DUMMY_DOUBLE, DUMMY_DOUBLE },
                     { DUMMY_DOUBLE, DUMMY_DOUBLE }
@@ -77,13 +77,13 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
   public void testToIndexableMatrixWithTrivialRowMapping() {
     assertThat(
         rbIndexableMatrixWithTrivialRowMapping(
-            new DenseDoubleMatrix2D(new double[][] {
+            rbMatrix(new double[][] {
                 { 1.1, 2.1, 3.1 },
                 { 1.2, 2.2, 3.2 } }),
             simpleArrayIndexMapping("a", "b", "c")),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     { 1.1, 2.1, 3.1 },
                     { 1.2, 2.2, 3.2 } }),
                 simpleArrayIndexMapping(matrixRowIndex(0), matrixRowIndex(1)),
@@ -94,13 +94,13 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
   public void testToIndexableMatrixWithTrivialColumnMapping() {
     assertThat(
         rbIndexableMatrixWithTrivialColumnMapping(
-            new DenseDoubleMatrix2D(new double[][] {
+            rbMatrix(new double[][] {
                 { 1.1, 2.1, 3.1 },
                 { 1.2, 2.2, 3.2 } }),
             simpleArrayIndexMapping(77, 88)),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     { 1.1, 2.1, 3.1 },
                     { 1.2, 2.2, 3.2 } }),
                 simpleArrayIndexMapping(77, 88),
@@ -112,7 +112,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
     assertThat(
         "Matrix multiplication of 2 x 3 by 3 x 2 will give 2 x 2",
         rbIndexableMatrix(
-            new DenseDoubleMatrix2D(new double[][] {
+            rbMatrix(new double[][] {
                 { 71.1, 71.2, 71.3 },
                 { 72.1, 72.2, 72.3 }
             }),
@@ -120,7 +120,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
             simpleArrayIndexMapping("a", "b", "c"))
             .multiply(
                 rbIndexableMatrix(
-                    new DenseDoubleMatrix2D(new double[][] {
+                    rbMatrix(new double[][] {
                         { 81.1, 81.2 },
                         { 82.1, 82.2 },
                         { 83.1, 83.2 }
@@ -129,7 +129,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
                     simpleArrayIndexMapping(55, 66))),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     {
                         doubleExplained(17_536.76, 71.1 * 81.1 + 71.2 * 82.1 + 71.3 * 83.1 ),
                         doubleExplained(17_558.12, 71.1 * 81.2 + 71.2 * 82.2 + 71.3 * 83.2 )
@@ -147,7 +147,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
   public void columnsOnLeftMatrix_mustHaveSameKeysAs_rowsOnRightMatrix() {
     Function<RBIndexableMatrix<String, Integer>, RBIndexableMatrix<Boolean, Integer>> maker = rightMatrix ->
         rbIndexableMatrix(
-            new DenseDoubleMatrix2D(new double[][] {
+            rbMatrix(new double[][] {
                 { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
                 { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE }
             }),
@@ -157,7 +157,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
 
     // One less row
     assertIllegalArgumentException( () -> maker.apply(rbIndexableMatrix(
-        new DenseDoubleMatrix2D(new double[][] {
+        rbMatrix(new double[][] {
             { DUMMY_DOUBLE, DUMMY_DOUBLE },
             { DUMMY_DOUBLE, DUMMY_DOUBLE }
         }),
@@ -166,7 +166,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
 
     // One more row
     assertIllegalArgumentException( () -> maker.apply(rbIndexableMatrix(
-        new DenseDoubleMatrix2D(new double[][] {
+        rbMatrix(new double[][] {
             { DUMMY_DOUBLE, DUMMY_DOUBLE },
             { DUMMY_DOUBLE, DUMMY_DOUBLE },
             { DUMMY_DOUBLE, DUMMY_DOUBLE },
@@ -178,7 +178,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
     RBIndexableMatrix<Boolean, Integer> doesNotThrow;
     // A 3 x 2 matrix, just like previous test
     doesNotThrow = maker.apply(rbIndexableMatrix(
-        new DenseDoubleMatrix2D(new double[][] {
+        rbMatrix(new double[][] {
             { DUMMY_DOUBLE, DUMMY_DOUBLE },
             { DUMMY_DOUBLE, DUMMY_DOUBLE },
             { DUMMY_DOUBLE, DUMMY_DOUBLE }
@@ -188,7 +188,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
 
     // one more column; irrelevant
     doesNotThrow = maker.apply(rbIndexableMatrix(
-        new DenseDoubleMatrix2D(new double[][] {
+        rbMatrix(new double[][] {
             { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
             { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
             { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE }
@@ -198,7 +198,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
 
     // one less column; irrelevant
     doesNotThrow = maker.apply(rbIndexableMatrix(
-        new DenseDoubleMatrix2D(new double[][] {
+        rbMatrix(new double[][] {
             { DUMMY_DOUBLE },
             { DUMMY_DOUBLE },
             { DUMMY_DOUBLE }
@@ -215,7 +215,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
         simpleArrayIndexMapping("a", "c", "b"))
         .forEach(rowMappingOfRightMatrix ->
             assertIllegalArgumentException( () -> maker.apply(rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     { DUMMY_DOUBLE },
                     { DUMMY_DOUBLE },
                     { DUMMY_DOUBLE }
@@ -229,7 +229,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
     // General inverse. See https://www.wolframalpha.com/input?i=inverse%7B+%7B1%2C+2%7D%2C+%7B3%2C+4%7D%7D
     assertThat(
         rbIndexableMatrix(
-            new DenseDoubleMatrix2D(new double[][] {
+            rbMatrix(new double[][] {
                 { 1.0, 2.0 },
                 { 3.0, 4.0 }
             }),
@@ -238,7 +238,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
             .inverse(),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     { -2.0,  1.0 },
                     {  1.5, -0.5 }
                 }),
@@ -250,7 +250,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
   public void testTranspose() {
     assertThat(
         rbIndexableMatrix(
-            new DenseDoubleMatrix2D(new double[][] {
+            rbMatrix(new double[][] {
                 { 71.1, 71.2, 71.3 },
                 { 72.1, 72.2, 72.3 }
             }),
@@ -259,7 +259,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
             .transpose(),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     { 71.1, 72.1 },
                     { 71.2, 72.2 },
                     { 71.3, 72.3 }
@@ -270,14 +270,14 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
 
   @Test
   public void testAsRbMatrix() {
-    RBMatrix rawMatrix = rbMatrix(new DenseDoubleMatrix2D(new double[][] {
+    RBMatrix rawMatrix = rbMatrix(new double[][] {
         { 71.1, 71.2, 71.3 },
         { 72.1, 72.2, 72.3 }
-    }));
+    });
     // Make sure the content of asRmMatrix matches rawMatrix.
     assertThat(
         rbIndexableMatrix(
-            rawMatrix.getRawMatrixUnsafe(),
+            rawMatrix,
             simpleArrayIndexMapping("1", "2"),
             simpleArrayIndexMapping("a", "b", "c")).asRbMatrix(),
         rbMatrixMatcher(rawMatrix));
@@ -294,7 +294,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
     // but this class is generic on the row and column key type, so we can't really create such a test-only
     // constructor that's general enough.
     return rbIndexableMatrix(
-        new DenseDoubleMatrix2D(new double[][] {
+        rbMatrix(new double[][] {
             { -1.1,  2.2 },
             { -3.3,  4.4 },
             {  5.5, -6.6 }
@@ -307,7 +307,7 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
   public RBIndexableMatrix<String, Integer> makeMatchingNontrivialObject() {
     double e = 1e-9; // epsilon
     return rbIndexableMatrix(
-        new DenseDoubleMatrix2D(new double[][] {
+        rbMatrix(new double[][] {
             { -1.1 + e,  2.2 + e },
             { -3.3 + e,  4.4 + e },
             {  5.5 + e, -6.6 + e }

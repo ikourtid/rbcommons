@@ -179,7 +179,7 @@ public class RBMatrix {
   public <R, C> RBIndexableMatrix<R, C> toIndexableMatrix(
       ArrayIndexMapping<R> rowMapping,
       ArrayIndexMapping<C> columnMapping) {
-    return rbIndexableMatrix(rawMatrix, rowMapping, columnMapping);
+    return rbIndexableMatrix(this, rowMapping, columnMapping);
   }
 
   /**
@@ -211,7 +211,7 @@ public class RBMatrix {
    */
   public <R> RBIndexableMatrix<R, MatrixColumnIndex> toIndexableMatrixWithTrivialColumnMapping(
       ArrayIndexMapping<R> rowMapping) {
-    return rbIndexableMatrixWithTrivialColumnMapping(rawMatrix, rowMapping);
+    return rbIndexableMatrixWithTrivialColumnMapping(this, rowMapping);
   }
 
   /**
@@ -220,7 +220,7 @@ public class RBMatrix {
    */
   public <C> RBIndexableMatrix<MatrixRowIndex, C> toIndexableMatrixWithTrivialRowMapping(
       ArrayIndexMapping<C> columnMapping) {
-    return rbIndexableMatrixWithTrivialRowMapping(rawMatrix, columnMapping);
+    return rbIndexableMatrixWithTrivialRowMapping(this, columnMapping);
   }
 
   /**

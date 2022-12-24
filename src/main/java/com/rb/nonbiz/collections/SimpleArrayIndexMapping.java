@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
@@ -41,6 +42,10 @@ public class SimpleArrayIndexMapping<T> implements ArrayIndexMapping<T> {
 
   public static <T> SimpleArrayIndexMapping<T> simpleArrayIndexMapping(Collection<T> objects) {
     return simpleArrayIndexMapping(objects.iterator());
+  }
+
+  public static <T> SimpleArrayIndexMapping<T> simpleArrayIndexMapping(Stream<T> objectsStream) {
+    return simpleArrayIndexMapping(objectsStream.iterator());
   }
 
   public static <T> SimpleArrayIndexMapping<T> simpleArrayIndexMapping(Iterator<T> objects) {
