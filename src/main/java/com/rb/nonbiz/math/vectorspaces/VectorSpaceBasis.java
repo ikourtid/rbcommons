@@ -19,11 +19,11 @@ import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnInde
  */
 public class VectorSpaceBasis {
 
-  private final RBSquareMatrix rawMatrix;
+  private final RBSquareMatrix rawSquareMatrix;
   private final double determinant;
 
-  private VectorSpaceBasis(RBSquareMatrix rawMatrix, double determinant) {
-    this.rawMatrix = rawMatrix;
+  private VectorSpaceBasis(RBSquareMatrix rawSquareMatrix, double determinant) {
+    this.rawSquareMatrix = rawSquareMatrix;
     this.determinant = determinant;
   }
 
@@ -38,18 +38,18 @@ public class VectorSpaceBasis {
   }
 
   public RBVector getBasisVector(MatrixColumnIndex matrixColumnIndex) {
-    return rawMatrix.getColumnVector(matrixColumnIndex);
+    return rawSquareMatrix.getColumnVector(matrixColumnIndex);
   }
 
   public Iterator<RBVector> basisVectorIterator() {
     return IntStream
-        .range(0, rawMatrix.getNumRowsOrColumns())
-        .mapToObj(i -> rawMatrix.getColumnVector(matrixColumnIndex(i)))
+        .range(0, rawSquareMatrix.getNumRowsOrColumns())
+        .mapToObj(i -> rawSquareMatrix.getColumnVector(matrixColumnIndex(i)))
         .iterator();
   }
 
-  public RBSquareMatrix getRbSquareMatrix() {
-    return rawMatrix;
+  public RBSquareMatrix getRawSquareMatrix() {
+    return rawSquareMatrix;
   }
 
   public double getDeterminant() {
@@ -57,12 +57,12 @@ public class VectorSpaceBasis {
   }
 
   public int getNumDimensions() {
-    return rawMatrix.getNumRowsOrColumns();
+    return rawSquareMatrix.getNumRowsOrColumns();
   }
 
   @Override
   public String toString() {
-    return Strings.format("[VSB determinant= %s ; %s VSB]", determinant, rawMatrix);
+    return Strings.format("[VSB determinant= %s ; %s VSB]", determinant, rawSquareMatrix);
   }
 
 }
