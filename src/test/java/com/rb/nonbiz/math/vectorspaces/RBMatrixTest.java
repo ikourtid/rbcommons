@@ -316,7 +316,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             .toIndexableMatrix(simpleArrayIndexMapping(77, 88), simpleArrayIndexMapping("a", "b", "c")),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     { 1.1, 2.1, 3.1 },
                     { 1.2, 2.2, 3.2 } }),
                 simpleArrayIndexMapping(77, 88),
@@ -332,7 +332,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             .toIndexableMatrixWithTrivialRowMapping(simpleArrayIndexMapping("a", "b", "c")),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     { 1.1, 2.1, 3.1 },
                     { 1.2, 2.2, 3.2 } }),
                 simpleArrayIndexMapping(matrixRowIndex(0), matrixRowIndex(1)),
@@ -348,7 +348,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             .toIndexableMatrixWithTrivialColumnMapping(simpleArrayIndexMapping(77, 88)),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     { 1.1, 2.1, 3.1 },
                     { 1.2, 2.2, 3.2 } }),
                 simpleArrayIndexMapping(77, 88),
