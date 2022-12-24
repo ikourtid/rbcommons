@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
@@ -158,7 +159,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
                 7.0)),
         rbVectorMatcher(rbVector(
             doubleExplained(19, 1 * 5 + 2 * 7),
-            doubleExplained(22, 1 * 6 + 2 * 8))));
+            doubleExplained(43, 3 * 5 + 4 * 7))));
   }
 
   @Test
@@ -584,9 +585,9 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
   public void testGet() {
     BiFunction<Integer, Integer, Double> getter = (rowAsInt, columnAsInt) ->
         rbMatrix(new double[][] {
-                { 0.0, 0.1, 0.2 },
-                { 1.0, 1.1, 1.2 }
-            })
+            { 0.0, 0.1, 0.2 },
+            { 1.0, 1.1, 1.2 }
+        })
             .get(matrixRowIndex(rowAsInt), matrixColumnIndex(columnAsInt));
 
     assertEquals(0.0, getter.apply(0, 0), 1e-8);
@@ -600,6 +601,29 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     assertIndexOutOfBoundsException( () -> getter.apply(0, 3));
     assertIndexOutOfBoundsException( () -> getter.apply(2, 0));
     assertIndexOutOfBoundsException( () -> getter.apply(2, 3));
+  }
+
+  @Test
+  public void testGetRowAsVector() {
+    IntFunction<RBVector> getter = row -> rbMatrix(new double[][] {
+        { 1.1, 2.2, 3.3 },
+        { 4.4, 5.5, 6.6 } })
+        .getRowAsVector(matrixRowIndex(row));
+    assertThat(getter.apply(0), rbVectorMatcher(rbVector(1.1, 2.2, 3.3)));
+    assertThat(getter.apply(1), rbVectorMatcher(rbVector(4.4, 5.5, 6.6)));
+    assertIndexOutOfBoundsException( () -> getter.apply(2));
+  }
+
+  @Test
+  public void testGetColumnAsVector() {
+    IntFunction<RBVector> getter = column -> rbMatrix(new double[][] {
+        { 1.1, 2.2, 3.3 },
+        { 4.4, 5.5, 6.6 } })
+        .getColumnAsVector(matrixColumnIndex(column));
+    assertThat(getter.apply(0), rbVectorMatcher(rbVector(1.1, 4.4)));
+    assertThat(getter.apply(1), rbVectorMatcher(rbVector(2.2, 5.5)));
+    assertThat(getter.apply(2), rbVectorMatcher(rbVector(3.3, 6.6)));
+    assertIndexOutOfBoundsException( () -> getter.apply(3));
   }
 
   @Override
