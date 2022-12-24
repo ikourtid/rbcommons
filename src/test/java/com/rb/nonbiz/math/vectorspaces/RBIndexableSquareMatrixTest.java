@@ -1,6 +1,5 @@
 package com.rb.nonbiz.math.vectorspaces;
 
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.testutils.Epsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
@@ -10,13 +9,17 @@ import org.junit.Test;
 import java.util.function.DoubleFunction;
 import java.util.function.Function;
 
+import static com.rb.nonbiz.collections.ArrayIndexMappingTest.arrayIndexMappingMatcher;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.emptySimpleArrayIndexMapping;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableSquareMatrix.rbIndexableSquareMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrixTest.rbSquareMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrixTest.rbSquareMatrixMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
 import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
@@ -28,7 +31,7 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
 
   public static <K> RBIndexableSquareMatrix<K> singletonRBIndexableSquareMatrix(double onlyValue, K onlyKey) {
     return rbIndexableSquareMatrix(
-        new DenseDoubleMatrix2D(new double[][] { { onlyValue } }),
+        rbSquareMatrix(new double[][] { { onlyValue } }),
         simpleArrayIndexMapping(onlyKey));
   }
 
@@ -39,14 +42,14 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
       K second,
       K... rest) {
     return rbIndexableSquareMatrix(
-        new DenseDoubleMatrix2D(rawMatrix),
+        rbSquareMatrix(rawMatrix),
         simpleArrayIndexMapping(concatenateFirstSecondAndRest(first, second, rest)));
   }
 
   @Test
   public void disallowsEmptyMatrix() {
     assertIllegalArgumentException( () -> rbIndexableSquareMatrix(
-        new DenseDoubleMatrix2D(new double[][] { {} }),
+        rbSquareMatrix(new double[][] { {} }),
         emptySimpleArrayIndexMapping()));
   }
 
@@ -54,7 +57,7 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
   public void matrixDimensionsMustMatchArrayIndexMappingDimensions() {
     Function<ArrayIndexMapping<String>, RBIndexableSquareMatrix<String>> maker = mappingForRowsAndColumns ->
         rbIndexableSquareMatrix(
-            new DenseDoubleMatrix2D(new double[][] {
+            rbSquareMatrix(new double[][] {
                 { DUMMY_DOUBLE, DUMMY_DOUBLE },
                 { DUMMY_DOUBLE, DUMMY_DOUBLE }
             }),
@@ -138,7 +141,11 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
   public static <K> TypeSafeMatcher<RBIndexableSquareMatrix<K>> rbIndexableSquareMatrixMatcher(
       RBIndexableSquareMatrix<K> expected, Epsilons e) {
     return makeMatcher(expected,
-        match(v -> v.getRawMatrixUnsafe(), f -> matrixMatcher(f, e)));
+        match(v -> v.getRawSquareMatrix(), f -> rbSquareMatrixMatcher(f, e)),
+        // in theory we could be using a matcher for K here, but in practice K has to implement a
+        // non-trivial (i.e. not just a pointer comparison) equals / hashCode in order to appear inside an
+        // ArrayIndexMapping, so it's fine to just use typeSafeEqualTo here.
+        match(v -> v.getMappingForBothRowsAndColumns(),    f -> arrayIndexMappingMatcher(f, f2 -> typeSafeEqualTo(f2))));
   }
 
 }

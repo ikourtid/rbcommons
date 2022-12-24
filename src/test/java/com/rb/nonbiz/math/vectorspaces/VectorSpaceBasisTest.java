@@ -101,7 +101,7 @@ public class VectorSpaceBasisTest extends RBTestMatcher<VectorSpaceBasis> {
 
   public static TypeSafeMatcher<VectorSpaceBasis> vectorSpaceBasisMatcher(VectorSpaceBasis expected, double epsilon) {
     return makeMatcher(expected,
-        match(v -> v.getRawMatrixUnsafe(), f -> rbSquareMatrixMatcher(f, epsilon)));
+        match(v -> v.getRawSquareMatrix(), f -> rbSquareMatrixMatcher(f, epsilon)));
   }
 
 }
