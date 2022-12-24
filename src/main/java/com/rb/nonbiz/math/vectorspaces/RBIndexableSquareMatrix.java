@@ -4,7 +4,6 @@ import cern.colt.matrix.DoubleMatrix2D;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.IndexableDoubleDataStore2D;
 import com.rb.nonbiz.text.Strings;
-import com.rb.nonbiz.util.RBPreconditions;
 
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
@@ -22,13 +21,13 @@ import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
  */
 public class RBIndexableSquareMatrix<K> implements IndexableDoubleDataStore2D<K, K> {
 
-  private final RBSquareMatrix rbSquareMatrix;
+  private final RBSquareMatrix rawSquareMatrix;
   private final ArrayIndexMapping<K> mappingForBothRowsAndColumns;
 
   private RBIndexableSquareMatrix(
-      RBSquareMatrix rbSquareMatrix,
+      RBSquareMatrix rawSquareMatrix,
       ArrayIndexMapping<K> mappingForBothRowsAndColumns) {
-    this.rbSquareMatrix = rbSquareMatrix;
+    this.rawSquareMatrix = rawSquareMatrix;
     this.mappingForBothRowsAndColumns = mappingForBothRowsAndColumns;
   }
 
@@ -46,7 +45,7 @@ public class RBIndexableSquareMatrix<K> implements IndexableDoubleDataStore2D<K,
 
   @Override
   public double getByIndex(int rowIndexAsInt, int columnIndexAsInt) {
-    return rbSquareMatrix.get(matrixRowIndex(rowIndexAsInt), matrixColumnIndex(columnIndexAsInt));
+    return rawSquareMatrix.get(matrixRowIndex(rowIndexAsInt), matrixColumnIndex(columnIndexAsInt));
   }
 
   @Override
@@ -66,8 +65,8 @@ public class RBIndexableSquareMatrix<K> implements IndexableDoubleDataStore2D<K,
     return mappingForBothRowsAndColumns;
   }
 
-  public RBSquareMatrix getRbSquareMatrix() {
-    return rbSquareMatrix;
+  public RBSquareMatrix getRawSquareMatrix() {
+    return rawSquareMatrix;
   }
 
   /**
@@ -83,7 +82,7 @@ public class RBIndexableSquareMatrix<K> implements IndexableDoubleDataStore2D<K,
         getNumRowsOrColumns(),
         getNumRowsOrColumns(),
         mappingForBothRowsAndColumns,
-        rbSquareMatrix);
+        rawSquareMatrix);
   }
 
 }
