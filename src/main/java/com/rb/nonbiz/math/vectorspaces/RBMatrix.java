@@ -102,6 +102,11 @@ public class RBMatrix {
         .mapToObj(i -> matrixColumnIndex(i));
   }
 
+  /**
+   * Returns an element of this matrix based on a row and column index.
+   * Throws {@link IndexOutOfBoundsException} if either or both indices point to a row and/or column that does
+   * not exist.
+   */
   public double get(MatrixRowIndex matrixRowIndex, MatrixColumnIndex matrixColumnIndex) {
     return rawMatrix.get(matrixRowIndex.intValue(), matrixColumnIndex.intValue());
   }
