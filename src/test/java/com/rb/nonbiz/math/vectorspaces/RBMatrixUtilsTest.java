@@ -254,7 +254,7 @@ public class RBMatrixUtilsTest {
   }
 
   @Test
-  public void testIsSimilartoIdentityMatrix() {
+  public void testIsAlmostIdentityMatrix() {
     double largeEpsilon = 1e-4;
     double smallEpsilon = 1e-8;
 
