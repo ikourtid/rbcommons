@@ -1,5 +1,6 @@
 package com.rb.nonbiz.math.vectorspaces;
 
+import cern.colt.matrix.DoubleFactory1D;
 import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
@@ -26,6 +27,7 @@ import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialColumnMapping;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialRowMapping;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrix.RBSingularValueDecomposition.rbSingularValueDecomposition;
 import static com.rb.nonbiz.math.vectorspaces.RBVector.rbVector;
 
 /**
@@ -42,13 +44,97 @@ import static com.rb.nonbiz.math.vectorspaces.RBVector.rbVector;
  */
 public class RBMatrix {
 
+
+  /**
+   * A wrapper around a Colt SingularValueDecomposition.
+   *
+   * <p> See
+   * https://dst.lbl.gov/ACSSoftware/colt/api/cern/colt/matrix/linalg/SingularValueDecomposition.html </p>
+   */
+  public static class RBSingularValueDecomposition {
+
+    private final SingularValueDecomposition singularValueDecomposition;
+
+    private RBSingularValueDecomposition(SingularValueDecomposition singularValueDecomposition) {
+      this.singularValueDecomposition = singularValueDecomposition;
+    }
+
+    public static RBSingularValueDecomposition rbSingularValueDecomposition(
+        SingularValueDecomposition singularValueDecomposition) {
+      return new RBSingularValueDecomposition(singularValueDecomposition);
+    }
+
+    /**
+     * Returns the diagonal matrix of singular values.
+     */
+    public RBMatrix getSigma() {
+      return rbMatrix(singularValueDecomposition.getS());
+    }
+
+    /**
+     * Returns the left rotation/reflection matrix U.
+     */
+    public RBMatrix getU() {
+      return rbMatrix(singularValueDecomposition.getU());
+    }
+
+    /**
+     * Returns the right rotation/reflection matrix V.
+     */
+    public RBMatrix getV() {
+      return rbMatrix(singularValueDecomposition.getV());
+    }
+
+    /**
+     * Returns the effective rank of the matrix; the number of non-zero singular values.
+     */
+    public int getRank() {
+      return singularValueDecomposition.rank();
+    }
+
+    /**
+     * Returns the maximum value of Sigma: Sigma[0]. Colt calls this 'norm2', for some reason.
+     */
+    public double getNorm2() {
+      return singularValueDecomposition.norm2();
+    }
+
+    /**
+     * Returns either:
+     * <ul>
+     *   <li> The ratio of the largest singular value to the smallest non-zero singular value
+     *        (if the matrix is non-singular). </li>
+     *   <li> 'NaN' or 'Infinity' (if the matrix is singular). </li>
+     * </ul>
+     */
+    public double getConditionNumber() {
+      return singularValueDecomposition.cond();
+    }
+
+    /**
+     * Returs a vector of the diagonal entries of the singular values Sigma.
+     */
+    public RBVector getSingularValues() {
+      return rbVector(DoubleFactory1D.dense.make(singularValueDecomposition.getSingularValues()));
+    }
+
+    @Override
+    public String toString() {
+      return Strings.format(
+          "[RBSVD rank= %s ; cond= %s ; norm2= %s ; singularVals= %s ; U= %s ; Sigma= %s ; V= %s RBSVD]",
+          getRank(), getConditionNumber(), getNorm2(), getSingularValues(), getU(), getSigma(), getV());
+    }
+
+  }
+
+
   private final DoubleMatrix2D rawMatrix;
 
   protected RBMatrix(DoubleMatrix2D rawMatrix) {
     this.rawMatrix = rawMatrix;
   }
 
-  public static RBMatrix rbMatrix(DoubleMatrix2D rawMatrix) {
+  private static RBMatrix rbMatrix(DoubleMatrix2D rawMatrix) {
     RBPreconditions.checkArgument(
         rawMatrix.size() > 0,
         "We do not allow an empty RBMatrix, just to be safe");
@@ -194,8 +280,8 @@ public class RBMatrix {
     return new Algebra().det(rawMatrix);
   }
 
-  public SingularValueDecomposition calculateSingularValueDecomposition() {
-    return new SingularValueDecomposition(rawMatrix);
+  public RBSingularValueDecomposition calculateSingularValueDecomposition() {
+    return rbSingularValueDecomposition(new SingularValueDecomposition(rawMatrix));
   }
 
   public <R, C> RBIndexableMatrix<R, C> toIndexableMatrix(
