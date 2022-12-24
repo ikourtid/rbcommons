@@ -48,10 +48,7 @@ public class VectorSpaceBasis {
         .iterator();
   }
 
-  /**
-   * This is here to help the test matcher, hence the 'Unsafe' in the name, and the package-private status.
-   */
-  RBSquareMatrix getRawMatrixUnsafe() {
+  public RBSquareMatrix getRbSquareMatrix() {
     return rawMatrix;
   }
 

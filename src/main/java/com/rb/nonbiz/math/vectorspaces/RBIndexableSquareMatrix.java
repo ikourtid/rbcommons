@@ -6,6 +6,8 @@ import com.rb.nonbiz.collections.IndexableDoubleDataStore2D;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
+import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
@@ -20,38 +22,31 @@ import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
  */
 public class RBIndexableSquareMatrix<K> implements IndexableDoubleDataStore2D<K, K> {
 
-  private final DoubleMatrix2D rawMatrix;
+  private final RBSquareMatrix rbSquareMatrix;
   private final ArrayIndexMapping<K> mappingForBothRowsAndColumns;
 
   private RBIndexableSquareMatrix(
-      DoubleMatrix2D rawMatrix,
+      RBSquareMatrix rbSquareMatrix,
       ArrayIndexMapping<K> mappingForBothRowsAndColumns) {
-    this.rawMatrix = rawMatrix;
+    this.rbSquareMatrix = rbSquareMatrix;
     this.mappingForBothRowsAndColumns = mappingForBothRowsAndColumns;
   }
 
   public static <K> RBIndexableSquareMatrix<K> rbIndexableSquareMatrix(
-      DoubleMatrix2D rawMatrix,
+      RBSquareMatrix rbSquareMatrix,
       ArrayIndexMapping<K> mappingForBothRowsAndColumns) {
-    RBPreconditions.checkArgument(
-        rawMatrix.size() > 0,
-        "We do not allow an empty RBIndexableMatrix, just to be safe");
-    int numRowsOrColumns = checkBothSame(
-        rawMatrix.rows(),
-        rawMatrix.columns(),
-        "Not a square matrix: %s %s",
-        rawMatrix, mappingForBothRowsAndColumns);
     checkBothSame(
-        numRowsOrColumns,
+        rbSquareMatrix.getNumRowsOrColumns(),
         mappingForBothRowsAndColumns.size(),
         "# of matrix rows / columns = %s , but # of rows we have a mapping for is %s : %s %s",
-        numRowsOrColumns, mappingForBothRowsAndColumns.size(), rawMatrix, mappingForBothRowsAndColumns);
-    return new RBIndexableSquareMatrix<>(rawMatrix, mappingForBothRowsAndColumns);
+        rbSquareMatrix.getNumRowsOrColumns(), mappingForBothRowsAndColumns.size(),
+        rbSquareMatrix, mappingForBothRowsAndColumns);
+    return new RBIndexableSquareMatrix<>(rbSquareMatrix, mappingForBothRowsAndColumns);
   }
 
   @Override
-  public double getByIndex(int rowIndex, int columnIndex) {
-    return rawMatrix.get(rowIndex, columnIndex);
+  public double getByIndex(int rowIndexAsInt, int columnIndexAsInt) {
+    return rbSquareMatrix.get(matrixRowIndex(rowIndexAsInt), matrixColumnIndex(columnIndexAsInt));
   }
 
   @Override
@@ -71,24 +66,15 @@ public class RBIndexableSquareMatrix<K> implements IndexableDoubleDataStore2D<K,
     return mappingForBothRowsAndColumns;
   }
 
+  public RBSquareMatrix getRbSquareMatrix() {
+    return rbSquareMatrix;
+  }
+
   /**
    * This lets you use clearer semantics for this case where you know you're dealing with a square matrix.
    */
   public int getNumRowsOrColumns() {
     return mappingForBothRowsAndColumns.size();
-  }
-
-  /**
-   * The whole point of this class is for its callers to be able to convert it to a {@link DoubleMatrix2D} when the
-   * need arises, such as when linear algebra functionality from the Colt package needs to be called. However,
-   * ideally you can do most operations (like iterate over its contents) without having to be exposed to the fact that
-   * the underlying data class is a Colt {@link DoubleMatrix2D}.
-   *
-   * <p> The method name has 'unsafe' so it's clear to the caller that this returns a mutable object, which in our
-   * codebase is heavily discouraged. However, we can't control what Colt does. </p>
-   */
-  public DoubleMatrix2D getRawMatrixUnsafe() {
-    return rawMatrix;
   }
 
   @Override
@@ -97,7 +83,7 @@ public class RBIndexableSquareMatrix<K> implements IndexableDoubleDataStore2D<K,
         getNumRowsOrColumns(),
         getNumRowsOrColumns(),
         mappingForBothRowsAndColumns,
-        rawMatrix);
+        rbSquareMatrix);
   }
 
 }
