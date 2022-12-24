@@ -158,7 +158,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
                 7.0)),
         rbVectorMatcher(rbVector(
             doubleExplained(19, 1 * 5 + 2 * 7),
-            doubleExplained(22, 1 * 6 + 2 * 8))));
+            doubleExplained(43, 3 * 5 + 4 * 7))));
   }
 
   @Test
