@@ -28,9 +28,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.diagonalRBSquareMat
 import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.identityRBSquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVectorMatcher;
-import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
-import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertIndexOutOfBoundsException;
@@ -163,25 +161,32 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
   }
 
   @Test
-  public void testMatrixDeterminant() {
-    assertEquals(1.0, identityRBSquareMatrix(2).determinant(), 1e-8);
-    assertEquals(1.0, identityRBSquareMatrix(3).determinant(), 1e-8);
+  public void testCalculateDeterminant() {
+    BiConsumer<Double, RBMatrix> asserter = (expectedResult, matrix) ->
+        assertEquals(expectedResult, matrix.calculateDeterminant(), 1e-8);
+
+    asserter.accept(1.0, identityRBSquareMatrix(2));
+    asserter.accept(1.0, identityRBSquareMatrix(3));
 
     // recall that Det({{a, b}, {c, d}}) = ad - bc
-    assertEquals(doubleExplained(-2, 1 * 4 - 2 * 3), rbMatrix2by2(1, 2, 3, 4).determinant(), 1e-8);
-    assertEquals(doubleExplained( 7, 5 * 2 - 1 * 3), rbMatrix2by2(5, 1, 3, 2).determinant(), 1e-8);
+    asserter.accept(doubleExplained(-2, 1 * 4 - 2 * 3), rbMatrix2by2(1, 2, 3, 4));
+    asserter.accept(doubleExplained( 7, 5 * 2 - 1 * 3), rbMatrix2by2(5, 1, 3, 2));
 
     // an empty row or column will make the determinant zero
-    assertEquals(0.0, rbMatrix2by2(1, 1, 0, 0).determinant(), 1e-8);
-    assertEquals(0.0, rbMatrix2by2(0, 0, 1, 1).determinant(), 1e-8);
-    assertEquals(0.0, rbMatrix2by2(1, 0, 1, 0).determinant(), 1e-8);
-    assertEquals(0.0, rbMatrix2by2(0, 1, 0, 1).determinant(), 1e-8);
+    asserter.accept(0.0, rbMatrix2by2(1, 1, 0, 0));
+    asserter.accept(0.0, rbMatrix2by2(0, 0, 1, 1));
+    asserter.accept(0.0, rbMatrix2by2(1, 0, 1, 0));
+    asserter.accept(0.0, rbMatrix2by2(0, 1, 0, 1));
 
     // one row or column being equal to another, or a multiple of another, will cause the determinant to be zero
-    assertEquals(0.0, rbMatrix2by2(1,  2,  1,  2).determinant(), 1e-8);
-    assertEquals(0.0, rbMatrix2by2(1,  2, 10, 20).determinant(), 1e-8);
-    assertEquals(0.0, rbMatrix2by2(1,  1,  2,  2).determinant(), 1e-8);
-    assertEquals(0.0, rbMatrix2by2(1, 10,  2, 20).determinant(), 1e-8);
+    asserter.accept(0.0, rbMatrix2by2(1,  2,  1,  2));
+    asserter.accept(0.0, rbMatrix2by2(1,  2, 10, 20));
+    asserter.accept(0.0, rbMatrix2by2(1,  1,  2,  2));
+    asserter.accept(0.0, rbMatrix2by2(1, 10,  2, 20));
+
+    // Finally, non-square matrices should throw. Trying a 1 x 2 and then a 2 x 1 matrix.
+    assertIllegalArgumentException( () -> rbMatrix(new double[][] { { 1.1, 2.2 }}).calculateDeterminant());
+    assertIllegalArgumentException( () -> rbMatrix(new double[][] { { 1.1 }, { 2.2 }}).calculateDeterminant());
   }
 
   @Test
@@ -659,9 +664,27 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     return rbMatrixMatcher(expected, useEpsilonEverywhere(epsilon));
   }
 
+  // This matcher is very verbose; we could have just exposed the RBMatrix's DoubleMatrix2D and used
+  // matrixMatcher. However, exposing that would be dangerous, because it would also allow other classes in
+  // the same package to also access the DoubleMatrix2D, which is a 3rd party class that's not immutable.
+  // So this matcher's verbosity is a small price to pay compared to that risk.
   public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected, Epsilons e) {
-    return makeMatcher(expected,
-        match(v -> v.getRawMatrixUnsafe(), f -> matrixMatcher(f, e)));
+    return makeMatcher(expected, actual -> {
+      if (expected.getNumRows() != actual.getNumRows()) {
+        return false;
+      }
+      if (expected.getNumColumns() != actual.getNumColumns()) {
+        return false;
+      }
+      // For the index streams, we could have used either 'expected' or 'actual'
+      return expected.matrixRowIndexStream().allMatch(matrixRowIndex ->
+          expected.matrixColumnIndexStream().allMatch(matrixColumnIndex -> {
+            double valueInExpected = expected.get(matrixRowIndex, matrixColumnIndex);
+            double valueInActual   = actual.get(matrixRowIndex, matrixColumnIndex);
+            return Math.abs(
+                valueInExpected - valueInActual) < e.get(RBMatrix.class);
+          }));
+    });
   }
 
 }

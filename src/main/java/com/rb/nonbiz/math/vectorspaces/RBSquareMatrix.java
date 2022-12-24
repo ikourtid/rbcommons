@@ -56,20 +56,9 @@ public class RBSquareMatrix extends RBMatrix {
     return numRowsOrColumns;
   }
 
-  /**
-   * The name has 'calculate' so it's clear to the caller that the result isn't cached.
-   */
-  public double calculateDeterminant() {
-    // You never see new() in the code, really; with verb classes, we use injection, and with data classes,
-    // we use static constructors. However, in this case, new Algebra() is a Colt library way of doing things.
-    // We can't inject one here (it's a data class), but it's also OK to instantiate it, because doing so is very
-    // lightweight (I checked in the decompiler).
-    return new Algebra().det(getRawMatrixUnsafe());
-  }
-
   @Override
   public String toString() {
-    return Strings.format("[RBSM %s RBSM]", super.getRawMatrixUnsafe());
+    return Strings.format("[RBSM %s RBSM]", super.toString());
   }
 
 }
