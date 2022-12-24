@@ -2,14 +2,17 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
+import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.functional.TriConsumer;
-import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.testutils.Epsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
@@ -25,6 +28,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVectorMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -33,6 +37,7 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
 import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -500,14 +505,14 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         }))
         .forEach(v -> assertIllegalArgumentException( () -> v.getOnlyElementOrThrow()));
   }
-  
+
   @Test
   public void testLastValidRowAndColumn() {
     TriConsumer<Integer, Integer, RBMatrix> asserter = (expectedLastRowInt, expectedLastColumnInt, rbMatrix) -> {
-        assertThat(
-            rbMatrix.getLastRowIndex(),
-            matrixRowIndexMatcher(
-                matrixRowIndex(expectedLastRowInt)));
+      assertThat(
+          rbMatrix.getLastRowIndex(),
+          matrixRowIndexMatcher(
+              matrixRowIndex(expectedLastRowInt)));
       assertThat(
           rbMatrix.getLastColumnIndex(),
           matrixColumnIndexMatcher(
@@ -519,6 +524,68 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         { 1.1, 2.2, 3.3 },
         { 4.4, 5.5, 6.6 }
     }));
+  }
+
+  @Test
+  public void testMatrixRowStream() {
+    BiConsumer<RBMatrix, List<MatrixRowIndex>> asserter = (rbMatrix, expectedResult) ->
+        assertThat(
+            rbMatrix.matrixRowIndexStream().collect(Collectors.toList()),
+            orderedListMatcher(
+                expectedResult,
+                f -> matrixRowIndexMatcher(f)));
+
+    asserter.accept(
+        singletonRBMatrix(DUMMY_DOUBLE),
+        singletonList(matrixRowIndex(0)));
+    asserter.accept(
+        rbMatrix(new double[][] {
+            { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE }
+        }),
+        ImmutableList.of(matrixRowIndex(0), matrixRowIndex(1)));
+  }
+
+  @Test
+  public void testMatrixColumnStream() {
+    BiConsumer<RBMatrix, List<MatrixColumnIndex>> asserter = (rbMatrix, expectedResult) ->
+        assertThat(
+            rbMatrix.matrixColumnIndexStream().collect(Collectors.toList()),
+            orderedListMatcher(
+                expectedResult,
+                f -> matrixColumnIndexMatcher(f)));
+
+    asserter.accept(
+        singletonRBMatrix(DUMMY_DOUBLE),
+        singletonList(matrixColumnIndex(0)));
+    asserter.accept(
+        rbMatrix(new double[][] {
+            { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE }
+        }),
+        ImmutableList.of(matrixColumnIndex(0), matrixColumnIndex(1), matrixColumnIndex(2)));
+  }
+
+  @Test
+  public void testGet() {
+    BiFunction<Integer, Integer, Double> getter = (rowAsInt, columnAsInt) ->
+        rbMatrix(new double[][] {
+                { 0.0, 0.1, 0.2 },
+                { 1.0, 1.1, 1.2 }
+            })
+            .get(matrixRowIndex(rowAsInt), matrixColumnIndex(columnAsInt));
+
+    assertEquals(0.0, getter.apply(0, 0), 1e-8);
+    assertEquals(0.1, getter.apply(0, 1), 1e-8);
+    assertEquals(0.2, getter.apply(0, 2), 1e-8);
+
+    assertEquals(1.0, getter.apply(1, 0), 1e-8);
+    assertEquals(1.1, getter.apply(1, 1), 1e-8);
+    assertEquals(1.2, getter.apply(1, 2), 1e-8);
+
+    assertIndexOutOfBoundsException( () -> getter.apply(0, 3));
+    assertIndexOutOfBoundsException( () -> getter.apply(2, 0));
+    assertIndexOutOfBoundsException( () -> getter.apply(2, 3));
   }
 
   @Override

@@ -13,7 +13,10 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
+import java.util.Iterator;
 import java.util.function.BiFunction;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
@@ -84,6 +87,31 @@ public class RBMatrix {
   }
 
   /**
+   * Returns all valid row indices, from 0 to the last valid row, as a stream of {@link MatrixRowIndex}.
+   */
+  public Stream<MatrixRowIndex> matrixRowIndexStream() {
+    return IntStream.range(0, getNumRows())
+        .mapToObj(i -> matrixRowIndex(i));
+  }
+
+  /**
+   * Returns all valid column indices, from 0 to the last valid column, as a stream of {@link MatrixColumnIndex}.
+   */
+  public Stream<MatrixColumnIndex> matrixColumnIndexStream() {
+    return IntStream.range(0, getNumColumns())
+        .mapToObj(i -> matrixColumnIndex(i));
+  }
+
+  /**
+   * Returns an element of this matrix based on a row and column index.
+   * Throws {@link IndexOutOfBoundsException} if either or both indices point to a row and/or column that does
+   * not exist.
+   */
+  public double get(MatrixRowIndex matrixRowIndex, MatrixColumnIndex matrixColumnIndex) {
+    return rawMatrix.get(matrixRowIndex.intValue(), matrixColumnIndex.intValue());
+  }
+  
+  /**
    * Apply an arbitrary transform for every element based on its position in the matrix (row & column),
    * and return a copy of this matrix.
    *
@@ -111,7 +139,7 @@ public class RBMatrix {
         other.getNumRows(),
         "matrix multiplications: nColumns of first matrix %s must match nRows of second matrix %s",
         getNumColumns(), other.getNumRows());
-    return rbMatrix(new Algebra().mult(rawMatrix, other.getRawMatrixUnsafe()));
+    return rbMatrix(new Algebra().mult(rawMatrix, other.rawMatrix));
   }
 
   /**

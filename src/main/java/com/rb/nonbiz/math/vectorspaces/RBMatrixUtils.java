@@ -48,15 +48,11 @@ public class RBMatrixUtils {
       return false;
     }
     checkArgument(epsilon >= 0);
-    for( int i = 0; i < matrix.getNumRows(); ++i) {
-      for( int j = 0; j < matrix.getNumColumns(); ++j) {
-        double correctValue = (i == j) ? 1.0 : 0.0;
-        if (Math.abs(matrix.getRawMatrixUnsafe().get(i, j) - correctValue) > epsilon) {
-          return false;
-        }
-      }
-    }
-    return true;
+    return matrix.matrixRowIndexStream().allMatch(matrixRowIndex ->
+        matrix.matrixColumnIndexStream().allMatch(matrixColumnIndex -> {
+          double correctValue = (matrixRowIndex.intValue() == matrixColumnIndex.intValue()) ? 1.0 : 0.0;
+          return Math.abs(matrix.get(matrixRowIndex, matrixColumnIndex) - correctValue) <= epsilon;
+        }));
   }
 
 }
