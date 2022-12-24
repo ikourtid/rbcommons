@@ -1,12 +1,11 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleFactory2D;
+import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
-
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 
 /**
  * An immutable square matrix.
@@ -18,37 +17,34 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
  *
  * @see RBMatrix
  */
-public class RBSquareMatrix {
-  // FIXME CM can this just be derived from RbMatrix to save code?
+public class RBSquareMatrix extends RBMatrix {
 
-  private final RBMatrix rawMatrix;
   private final int numRowsOrColumns;
 
-  private RBSquareMatrix(RBMatrix rawMatrix, int numRowsOrColumns) {
-    this.rawMatrix = rawMatrix;
+  private RBSquareMatrix(DoubleMatrix2D rawMatrix, int numRowsOrColumns) {
+    super(rawMatrix);
     this.numRowsOrColumns = numRowsOrColumns;
   }
 
-  public static RBSquareMatrix rbSquareMatrix(RBMatrix rawMatrix) {
+  public static RBSquareMatrix rbSquareMatrix(DoubleMatrix2D rawMatrix) {
+    RBPreconditions.checkArgument(
+        rawMatrix.size() > 0,
+        "We do not allow an empty RBSquareMatrix, just to be safe");
     int numRowsOrColumns = RBSimilarityPreconditions.checkBothSame(
-        rawMatrix.getNumRows(),
-        rawMatrix.getNumColumns(),
+        rawMatrix.rows(),
+        rawMatrix.columns(),
         "In a square matrix, we have %s rows but %s columns",
-        rawMatrix.getNumRows(), rawMatrix.getNumColumns());
+        rawMatrix.rows(), rawMatrix.columns());
     return new RBSquareMatrix(rawMatrix, numRowsOrColumns);
   }
 
-  public static RBSquareMatrix rbIdentitySquareMatrix(int n) {
-    return rbSquareMatrix(rbIdentityMatrix(n));
+  public static RBSquareMatrix identityRBSquareMatrix(int n) {
+    return rbSquareMatrix(DoubleFactory2D.dense.identity(n));
   }
 
-  public static RBSquareMatrix rbDiagonalSquareMatrix(RBVector rbVector) {
-    return rbSquareMatrix(rbMatrix(DoubleFactory2D.dense.diagonal(
-        rbVector.getRawDoubleMatrix1DUnsafe())));
-  }
-
-  public RBVector getColumnVector(MatrixColumnIndex matrixColumnIndex) {
-    return rawMatrix.getColumnVector(matrixColumnIndex);
+  public static RBSquareMatrix diagonalRBSquareMatrix(RBVector rbVector) {
+    return rbSquareMatrix(DoubleFactory2D.dense.diagonal(
+        rbVector.getRawDoubleMatrix1DUnsafe()));
   }
 
   /**
@@ -68,19 +64,12 @@ public class RBSquareMatrix {
     // we use static constructors. However, in this case, new Algebra() is a Colt library way of doing things.
     // We can't inject one here (it's a data class), but it's also OK to instantiate it, because doing so is very
     // lightweight (I checked in the decompiler).
-    return new Algebra().det(rawMatrix.getRawMatrixUnsafe());
-  }
-
-  /**
-   * This is here to help the test matcher, hence the 'Unsafe' in the name, and the package-private status.
-   */
-  RBMatrix getRawMatrixUnsafe() {
-    return rawMatrix;
+    return new Algebra().det(getRawMatrixUnsafe());
   }
 
   @Override
   public String toString() {
-    return Strings.format("[RBSM %s RBSM]", rawMatrix);
+    return Strings.format("[RBSM %s RBSM]", super.getRawMatrixUnsafe());
   }
 
 }

@@ -54,14 +54,6 @@ public class RBMatrix {
     return new RBMatrix(rawMatrix);
   }
 
-  public static RBMatrix rbIdentityMatrix(int n) {
-    return rbMatrix(DoubleFactory2D.dense.identity(n));
-  }
-
-  public static RBMatrix rbDiagonalMatrix(RBVector rbVector) {
-    return rbMatrix(DoubleFactory2D.dense.diagonal(
-        rbVector.getRawDoubleMatrix1DUnsafe()));
-  }
 
   public RBVector getColumnVector(MatrixColumnIndex matrixColumnIndex) {
     RBPreconditions.checkArgument(

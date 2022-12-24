@@ -6,12 +6,14 @@ import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrixMatcher;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.diagonalRBSquareMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.identityRBSquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.rbDiagonalSquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.rbIdentitySquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.Match.matchSuperClass;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
@@ -41,7 +43,7 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
   }
 
   public static RBSquareMatrix rbSquareMatrix(double[][] values) {
-    return RBSquareMatrix.rbSquareMatrix(rbMatrix(new DenseDoubleMatrix2D(values)));
+    return RBSquareMatrix.rbSquareMatrix(new DenseDoubleMatrix2D(values));
   }
 
   @Test
@@ -72,13 +74,13 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
   @Test
   public void testIdentityMatrix() {
     assertThat(
-        rbIdentitySquareMatrix(2),
+        identityRBSquareMatrix(2),
         rbSquareMatrixMatcher(rbSquareMatrix2by2(
             1, 0,
             0, 1)));
 
     assertThat(
-        rbIdentitySquareMatrix(3),
+        identityRBSquareMatrix(3),
         rbSquareMatrixMatcher(rbSquareMatrix3by3(
             1, 0, 0,
             0, 1, 0,
@@ -88,7 +90,7 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
   @Test
   public void testDiagonalMatrix() {
     assertThat(
-        rbDiagonalSquareMatrix(rbVector(77, 88, 99)),
+        diagonalRBSquareMatrix(rbVector(77, 88, 99)),
         rbSquareMatrixMatcher(rbSquareMatrix3by3(
             77, 0, 0,
             0, 88, 0,
@@ -130,7 +132,7 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
 
   public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected, Epsilons e) {
     return makeMatcher(expected,
-        match(v -> v.getRawMatrixUnsafe(), f -> rbMatrixMatcher(f, e)));
+        matchSuperClass(f -> rbMatrixMatcher(f, e)));
   }
 
 }
