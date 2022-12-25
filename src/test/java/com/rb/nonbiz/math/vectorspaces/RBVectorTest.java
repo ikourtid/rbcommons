@@ -4,6 +4,7 @@ import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.Epsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.util.RBPreconditions;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -39,6 +40,15 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
 
   public static RBVector singletonRBVector(double onlyValue) {
     return RBVector.rbVector(new DenseDoubleMatrix1D(new double[] { onlyValue }));
+  }
+
+  public static RBVector rbVectorWithSizeAndSharedValue(int size, double sharedValue) {
+    assertTrue(size >= 1);
+    double[] rawArray = new double[size];
+    for (int i = 0; i < size; i++) {
+      rawArray[i] = sharedValue;
+    }
+    return RBVector.rbVector(rawArray);
   }
 
   @Test
