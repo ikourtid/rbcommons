@@ -1,7 +1,5 @@
 package com.rb.nonbiz.math.vectorspaces;
 
-import cern.colt.matrix.DoubleMatrix2D;
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.testutils.Epsilons;
@@ -609,7 +607,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     IntFunction<RBVector> getter = row -> rbMatrix(new double[][] {
         { 1.1, 2.2, 3.3 },
         { 4.4, 5.5, 6.6 } })
-        .getRowAsVector(matrixRowIndex(row));
+        .getRowVector(matrixRowIndex(row));
     assertThat(getter.apply(0), rbVectorMatcher(rbVector(1.1, 2.2, 3.3)));
     assertThat(getter.apply(1), rbVectorMatcher(rbVector(4.4, 5.5, 6.6)));
     assertIndexOutOfBoundsException( () -> getter.apply(2));
@@ -620,7 +618,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     IntFunction<RBVector> getter = column -> rbMatrix(new double[][] {
         { 1.1, 2.2, 3.3 },
         { 4.4, 5.5, 6.6 } })
-        .getColumnAsVector(matrixColumnIndex(column));
+        .getColumnVector(matrixColumnIndex(column));
     assertThat(getter.apply(0), rbVectorMatcher(rbVector(1.1, 4.4)));
     assertThat(getter.apply(1), rbVectorMatcher(rbVector(2.2, 5.5)));
     assertThat(getter.apply(2), rbVectorMatcher(rbVector(3.3, 6.6)));
