@@ -620,7 +620,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     IntFunction<RBVector> getter = column -> rbMatrix(new double[][] {
         { 1.1, 2.2, 3.3 },
         { 4.4, 5.5, 6.6 } })
-        .getColumnAsVector(matrixColumnIndex(column));
+        .getColumnVector(matrixColumnIndex(column));
     assertThat(getter.apply(0), rbVectorMatcher(rbVector(1.1, 4.4)));
     assertThat(getter.apply(1), rbVectorMatcher(rbVector(2.2, 5.5)));
     assertThat(getter.apply(2), rbVectorMatcher(rbVector(3.3, 6.6)));

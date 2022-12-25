@@ -179,11 +179,25 @@ public class RBMatrix {
     return new RBMatrix(rawMatrix);
   }
 
+  /**
+   * Extracts a single row from the matrix.
+   */
+  public RBVector getRowAsVector(MatrixRowIndex matrixRowIndex) {
+    RBPreconditions.checkArgument(
+        matrixRowIndex.intValue() < getNumRows(),
+        "Matrix row index %s is not within the range of valid matrix columns 0 to %s, inclusive",
+        matrixRowIndex, getLastRowIndex());
+    return rbVector(rawMatrix.viewRow(matrixRowIndex.intValue()));
+  }
+
+  /**
+   * Extracts a single column from the matrix.
+   */
   public RBVector getColumnVector(MatrixColumnIndex matrixColumnIndex) {
     RBPreconditions.checkArgument(
-        matrixColumnIndex.intValue() < rawMatrix.columns(),
+        matrixColumnIndex.intValue() < getNumColumns(),
         "Matrix column index %s is not within the range of valid matrix columns 0 to %s",
-        matrixColumnIndex, rawMatrix.columns());
+        matrixColumnIndex, getLastColumnIndex());
     return rbVector(rawMatrix.viewColumn(matrixColumnIndex.intValue()));
   }
 
@@ -398,21 +412,6 @@ public class RBMatrix {
         "getOnlyElementOrThrow needs a 1x1 matrix, but was %s x %s : %s",
         getNumRows(), getNumColumns(), rawMatrix);
     return rawMatrix.get(0, 0);
-  }
-
-  /**
-   * Extracts a single row from the matrix.
-   */
-  public RBVector getRowAsVector(MatrixRowIndex matrixRowIndex) {
-    return rbVector(rawMatrix.viewRow(matrixRowIndex.intValue()));
-  }
-
-  /**
-   * Extracts a single column from the matrix.
-   * FIXME IAK COLT - this is a duplicate of getColumnVector.
-   */
-  public RBVector getColumnAsVector(MatrixColumnIndex matrixColumnIndex) {
-    return rbVector(rawMatrix.viewColumn(matrixColumnIndex.intValue()));
   }
 
   @Override
