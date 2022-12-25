@@ -281,6 +281,20 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
         new double[] { -1.1, 0.0, 3.3 });
   }
 
+  @Test
+  public void testSumElements() {
+    BiConsumer<Double, RBVector> asserter = (expectedResult, rbVector) ->
+        assertEquals(
+            expectedResult,
+            rbVector.sumElements(),
+            1e-8);
+
+    asserter.accept(1.1, singletonRBVector(1.1));
+    asserter.accept(
+        doubleExplained(2.2, -1.1 + 0.0 + 3.3),
+        rbVector(-1.1, 0.0, 3.3));
+  }
+
   @Override
   public RBVector makeTrivialObject() {
     return singletonRBVector(0);

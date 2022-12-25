@@ -1,8 +1,5 @@
 package com.rb.nonbiz.math.eigen;
 
-import cern.colt.matrix.DoubleMatrix2D;
-import com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex;
-import com.rb.nonbiz.math.vectorspaces.MatrixRowIndex;
 import com.rb.nonbiz.math.vectorspaces.RBMatrix;
 
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
