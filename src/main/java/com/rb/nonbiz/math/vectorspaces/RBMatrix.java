@@ -282,7 +282,7 @@ public class RBMatrix {
         rbVector.size(),
         "matrix multiplications: nColumns of first matrix %s must match nRows of second matrix %s",
         getNumColumns(), rbVector.size());
-    return rbVector(new Algebra().mult(rawMatrix, rbVector.getRawDoubleMatrix1DUnsafe()));
+    return rbVector.multiplyOnLeft(rawMatrix);
   }
 
   /**

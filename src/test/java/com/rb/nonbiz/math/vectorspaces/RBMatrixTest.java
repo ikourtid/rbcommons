@@ -610,7 +610,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         .getRowVector(matrixRowIndex(row));
     assertThat(getter.apply(0), rbVectorMatcher(rbVector(1.1, 2.2, 3.3)));
     assertThat(getter.apply(1), rbVectorMatcher(rbVector(4.4, 5.5, 6.6)));
-    assertIndexOutOfBoundsException( () -> getter.apply(2));
+    assertIllegalArgumentException( () -> getter.apply(2));
   }
 
   @Test
@@ -622,7 +622,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     assertThat(getter.apply(0), rbVectorMatcher(rbVector(1.1, 4.4)));
     assertThat(getter.apply(1), rbVectorMatcher(rbVector(2.2, 5.5)));
     assertThat(getter.apply(2), rbVectorMatcher(rbVector(3.3, 6.6)));
-    assertIndexOutOfBoundsException( () -> getter.apply(3));
+    assertIllegalArgumentException( () -> getter.apply(3));
   }
 
   @Override

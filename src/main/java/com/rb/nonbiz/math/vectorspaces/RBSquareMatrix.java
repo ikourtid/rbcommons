@@ -1,7 +1,9 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleFactory2D;
+import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.linalg.Algebra;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -43,8 +45,8 @@ public class RBSquareMatrix extends RBMatrix {
   }
 
   public static RBSquareMatrix diagonalRBSquareMatrix(RBVector rbVector) {
-    return rbSquareMatrix(DoubleFactory2D.dense.diagonal(
-        rbVector.getRawDoubleMatrix1DUnsafe()));
+    return rbSquareMatrix(
+        DoubleFactory2D.dense.diagonal(new DenseDoubleMatrix1D(rbVector.toArray())));
   }
 
   /**
