@@ -4,7 +4,6 @@ import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.Epsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.util.RBPreconditions;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -15,10 +14,8 @@ import java.util.stream.Collectors;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRestDoubles;
 import static com.rb.nonbiz.math.vectorspaces.RBVector.zeroRBVectorWithDimension;
-import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.doubleArrayMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.doubleListMatcher;
-import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrix1dMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrows;
@@ -31,6 +28,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 public class RBVectorTest extends RBTestMatcher<RBVector> {
 
@@ -305,6 +303,11 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
         rbVector(-1.1, 0.0, 3.3));
   }
 
+  @Test
+  public void reminder_testMultiplyOnLeft() {
+    fail("");
+  }
+
   @Override
   public RBVector makeTrivialObject() {
     return singletonRBVector(0);
@@ -335,8 +338,12 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
   }
 
   public static TypeSafeMatcher<RBVector> rbVectorMatcher(RBVector expected, Epsilons e) {
-    return makeMatcher(expected,
-        match(v -> v.getRawDoubleMatrix1DUnsafe(), f -> matrix1dMatcher(f, e)));
+    // This matcher is a bit unusual, but we didn't want to expose the DoubleMatrix1D contents of the RBVector
+    // in test, because prod code could also have access to it, and we don't want that, because DoubleMatrix1D is
+    // a 3rd party mutable class.
+    return makeMatcher(expected, actual ->
+        doubleArrayMatcher(expected.doubleStream().toArray(), e.get(RBVector.class))
+        .matches(actual.doubleStream().toArray()));
   }
 
 }

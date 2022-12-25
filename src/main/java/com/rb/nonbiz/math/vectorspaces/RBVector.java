@@ -1,7 +1,9 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import cern.colt.matrix.linalg.Algebra;
 import com.google.common.primitives.Doubles;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -110,10 +112,15 @@ public class RBVector {
   }
 
   /**
-   * This is here to help the test matcher, hence the 'Unsafe' in the name, and the package-private status.
+   * Multiplies the supplied matrix with this vector, resulting in another vector.
+   *
+   * <p> Note that this takes in a raw {@link DoubleMatrix2D} instead of an RBMatrix. This is because
+   * we don't want to expose the raw Colt {@link DoubleMatrix2D} or {@link DoubleMatrix1D} (because they are mutable,
+   * so one could modify them by accident). However, we can't have {@link RBVector} and {@link RBMatrix} 'peek'
+   * into each other's raw data. </p>
    */
-  DoubleMatrix1D getRawDoubleMatrix1DUnsafe() {
-    return rawDoubleMatrix1D;
+  public RBVector multiplyOnLeft(DoubleMatrix2D leftMatrix) {
+    return rbVector(new Algebra().mult(leftMatrix, rawDoubleMatrix1D));
   }
 
   /**
