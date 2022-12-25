@@ -4,7 +4,6 @@ import cern.colt.matrix.DoubleFactory1D;
 import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.doublealgo.Statistic;
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import cern.colt.matrix.linalg.EigenvalueDecomposition;
 import cern.colt.matrix.linalg.SingularValueDecomposition;
@@ -25,7 +24,6 @@ import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialColumnMapping;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrixWithTrivialRowMapping;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.RBSingularValueDecomposition.rbSingularValueDecomposition;
 import static com.rb.nonbiz.math.vectorspaces.RBVector.rbVector;
 
 /**
@@ -44,7 +42,46 @@ public class RBMatrix {
 
 
   /**
-   * A wrapper around a Colt SingularValueDecomposition.
+   * A wrapper around a Colt {@link EigenvalueDecomposition}.
+   * The reason this lives inside {@link RBMatrix} is to limit this class's instantiation so that it can only be done
+   * from inside {@link RBMatrix}.
+   */
+  public static class RBEigenvalueDecomposition {
+
+    private final EigenvalueDecomposition eigenvalueDecomposition;
+
+    private RBEigenvalueDecomposition(EigenvalueDecomposition eigenvalueDecomposition) {
+      this.eigenvalueDecomposition = eigenvalueDecomposition;
+    }
+
+    /**
+     * Returns the real eigenvalues in ascending order. There are also imaginary (in the complex numbers sense)
+     * eigenvalues, but this class does not deal with that yet.
+     */
+    public RBVector getRealEigenvaluesAscending() {
+      return rbVector(eigenvalueDecomposition.getRealEigenvalues());
+    }
+
+    /**
+     * Returns a matrix of the eigenvectors.
+     */
+    public RBMatrix getEigenvectors() {
+      return rbMatrix(eigenvalueDecomposition.getV());
+    }
+
+    @Override
+    public String toString() {
+      return Strings.format("[RBED %s %s RBED]",
+          getRealEigenvaluesAscending(), getEigenvectors());
+    }
+
+  }
+
+
+  /**
+   * A wrapper around a Colt {@link SingularValueDecomposition}.
+   * The reason this lives inside {@link RBMatrix} is to limit this class's instantiation so that it can only be done
+   * from inside {@link RBMatrix}.
    *
    * <p> See
    * https://dst.lbl.gov/ACSSoftware/colt/api/cern/colt/matrix/linalg/SingularValueDecomposition.html </p>
@@ -55,11 +92,6 @@ public class RBMatrix {
 
     private RBSingularValueDecomposition(SingularValueDecomposition singularValueDecomposition) {
       this.singularValueDecomposition = singularValueDecomposition;
-    }
-
-    public static RBSingularValueDecomposition rbSingularValueDecomposition(
-        SingularValueDecomposition singularValueDecomposition) {
-      return new RBSingularValueDecomposition(singularValueDecomposition);
     }
 
     /**
@@ -286,7 +318,11 @@ public class RBMatrix {
   }
 
   public RBSingularValueDecomposition calculateSingularValueDecomposition() {
-    return rbSingularValueDecomposition(new SingularValueDecomposition(rawMatrix));
+    return new RBSingularValueDecomposition(new SingularValueDecomposition(rawMatrix));
+  }
+
+  public RBEigenvalueDecomposition calculateEigendecomposition() {
+    return new RBEigenvalueDecomposition(new EigenvalueDecomposition(rawMatrix));
   }
 
   public RBMatrix calculateCovarianceMatrix() {
@@ -295,10 +331,6 @@ public class RBMatrix {
 
   public RBMatrix calculateCorrelationMatrix() {
     return rbMatrix(Statistic.correlation(rawMatrix));
-  }
-
-  public EigenvalueDecomposition calculateEigendecomposition() {
-    return new EigenvalueDecomposition(rawMatrix);
   }
 
   public <R, C> RBIndexableMatrix<R, C> toIndexableMatrix(
@@ -377,6 +409,7 @@ public class RBMatrix {
 
   /**
    * Extracts a single column from the matrix.
+   * FIXME IAK COLT - this is a duplicate of getColumnVector.
    */
   public RBVector getColumnAsVector(MatrixColumnIndex matrixColumnIndex) {
     return rbVector(rawMatrix.viewColumn(matrixColumnIndex.intValue()));

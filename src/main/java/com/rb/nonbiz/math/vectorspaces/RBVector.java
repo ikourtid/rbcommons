@@ -130,6 +130,10 @@ public class RBVector {
 
   public double[] toArray() { return rawDoubleMatrix1D.toArray(); }
 
+  public double zSum() {
+    return rawDoubleMatrix1D.zSum();
+  }
+
   @Override
   public String toString() {
     return Strings.format("[RBV %s RBV]", Strings.formatDoubleArray(rawDoubleMatrix1D.toArray()));
