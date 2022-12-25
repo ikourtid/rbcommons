@@ -10,7 +10,6 @@ import com.rb.nonbiz.util.RBSimilarityPreconditions;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.DoubleStream;
-import java.util.stream.Stream;
 
 /**
  * This is just a thin wrapper around a Colt DoubleMatrix1D, except that we do not expose any methods that could
@@ -130,7 +129,10 @@ public class RBVector {
 
   public double[] toArray() { return rawDoubleMatrix1D.toArray(); }
 
-  public double zSum() {
+  /**
+   * Returns the sum of all elements in this vector.
+   */
+  public double sumElements() {
     return rawDoubleMatrix1D.zSum();
   }
 
