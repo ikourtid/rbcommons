@@ -182,7 +182,7 @@ public class RBMatrix {
   /**
    * Extracts a single row from the matrix.
    */
-  public RBVector getRowAsVector(MatrixRowIndex matrixRowIndex) {
+  public RBVector getRowVector(MatrixRowIndex matrixRowIndex) {
     RBPreconditions.checkArgument(
         matrixRowIndex.intValue() < getNumRows(),
         "Matrix row index %s is not within the range of valid matrix columns 0 to %s, inclusive",
