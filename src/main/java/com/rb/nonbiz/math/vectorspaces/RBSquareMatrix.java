@@ -28,7 +28,8 @@ public class RBSquareMatrix extends RBMatrix {
     this.numRowsOrColumns = numRowsOrColumns;
   }
 
-  public static RBSquareMatrix rbSquareMatrix(DoubleMatrix2D rawMatrix) {
+  public static RBSquareMatrix rbSquareMatrix(double[][] doubleMatrixArray) {
+    DoubleMatrix2D rawMatrix = DoubleFactory2D.dense.make(doubleMatrixArray);
     RBPreconditions.checkArgument(
         rawMatrix.size() > 0,
         "We do not allow an empty RBSquareMatrix, just to be safe");
@@ -41,12 +42,16 @@ public class RBSquareMatrix extends RBMatrix {
   }
 
   public static RBSquareMatrix identityRBSquareMatrix(int n) {
-    return rbSquareMatrix(DoubleFactory2D.dense.identity(n));
+    RBPreconditions.checkArgument(
+        n > 0,
+        "We do not allow an empty RBSquareMatrix, just to be safe");
+    return new RBSquareMatrix(DoubleFactory2D.dense.identity(n), n);
   }
 
   public static RBSquareMatrix diagonalRBSquareMatrix(RBVector rbVector) {
-    return rbSquareMatrix(
-        DoubleFactory2D.dense.diagonal(new DenseDoubleMatrix1D(rbVector.toArray())));
+    return new RBSquareMatrix(
+        DoubleFactory2D.dense.diagonal(new DenseDoubleMatrix1D(rbVector.toArray())),
+        rbVector.size());
   }
 
   /**
