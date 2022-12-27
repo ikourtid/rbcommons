@@ -2,11 +2,11 @@ package com.rb.nonbiz.testutils;
 
 import java.util.Objects;
 
-public abstract class EpsilonDescriptor<T> {
+public abstract class MatcherEpsilonDescriptor<T> {
 
   protected final Class<T> clazz;
 
-  protected EpsilonDescriptor(Class<T> clazz) {
+  protected MatcherEpsilonDescriptor(Class<T> clazz) {
     this.clazz = clazz;
   }
 
@@ -18,21 +18,21 @@ public abstract class EpsilonDescriptor<T> {
    * ... when you don't care about using different epsilons for different getters inside that matcher,
    * which means that specifying the class XYZ only suffices for uniquely identifying which epsilon to use.
    */
-  public static class ClassWideEpsilonDescriptor<T> extends EpsilonDescriptor<T> {
+  public static class ClassWideMatcherEpsilonDescriptor<T> extends MatcherEpsilonDescriptor<T> {
 
-    private ClassWideEpsilonDescriptor(Class<T> clazz) {
+    private ClassWideMatcherEpsilonDescriptor(Class<T> clazz) {
       super(clazz);
     }
 
-    public static <T> ClassWideEpsilonDescriptor<T> eps(Class<T> clazz) {
-      return new ClassWideEpsilonDescriptor<>(clazz);
+    public static <T> ClassWideMatcherEpsilonDescriptor<T> eps(Class<T> clazz) {
+      return new ClassWideMatcherEpsilonDescriptor<>(clazz);
     }
 
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      ClassWideEpsilonDescriptor<?> that = (ClassWideEpsilonDescriptor<?>) o;
+      ClassWideMatcherEpsilonDescriptor<?> that = (ClassWideMatcherEpsilonDescriptor<?>) o;
       return Objects.equals(clazz, that.clazz);
     }
 
@@ -59,25 +59,25 @@ public abstract class EpsilonDescriptor<T> {
    * we reduce the risk of a typo. Of course, we could make a mistake and specify a wrong type.
    * But a string is easier to mess up.
    */
-  public static class GetterSpecificEpsilonDescriptor<T, V> extends EpsilonDescriptor<T> {
+  public static class GetterSpecificMatcherEpsilonDescriptor<T, V> extends MatcherEpsilonDescriptor<T> {
 
     private final Class<V> getterReturnType;
 
-    private GetterSpecificEpsilonDescriptor(Class<T> clazz, Class<V> getterReturnType) {
+    private GetterSpecificMatcherEpsilonDescriptor(Class<T> clazz, Class<V> getterReturnType) {
       super(clazz);
       this.getterReturnType = getterReturnType;
     }
 
-    public static <T, V> GetterSpecificEpsilonDescriptor<T, V> eps(
+    public static <T, V> GetterSpecificMatcherEpsilonDescriptor<T, V> eps(
         Class<T> clazz, Class<V> getterReturnType) {
-      return new GetterSpecificEpsilonDescriptor<>(clazz, getterReturnType);
+      return new GetterSpecificMatcherEpsilonDescriptor<>(clazz, getterReturnType);
     }
 
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      GetterSpecificEpsilonDescriptor<?, ?> that = (GetterSpecificEpsilonDescriptor<?, ?>) o;
+      GetterSpecificMatcherEpsilonDescriptor<?, ?> that = (GetterSpecificMatcherEpsilonDescriptor<?, ?>) o;
       return Objects.equals(clazz, that.clazz)
           && Objects.equals(getterReturnType, that.getterReturnType);
     }
@@ -121,24 +121,24 @@ public abstract class EpsilonDescriptor<T> {
    *      }
    *  }
    */
-  public static class GeneralEpsilonDescriptor<T> extends EpsilonDescriptor<T> {
+  public static class GeneralMatcherEpsilonDescriptor<T> extends MatcherEpsilonDescriptor<T> {
 
     private final String uniqueIdWithinMatcher;
 
-    private GeneralEpsilonDescriptor(Class<T> clazz, String uniqueIdWithinMatcher) {
+    private GeneralMatcherEpsilonDescriptor(Class<T> clazz, String uniqueIdWithinMatcher) {
       super(clazz);
       this.uniqueIdWithinMatcher = uniqueIdWithinMatcher;
     }
 
-    public static <T> GeneralEpsilonDescriptor<T> eps(Class<T> clazz, String uniqueIdWithinMatcher) {
-      return new GeneralEpsilonDescriptor<>(clazz, uniqueIdWithinMatcher);
+    public static <T> GeneralMatcherEpsilonDescriptor<T> eps(Class<T> clazz, String uniqueIdWithinMatcher) {
+      return new GeneralMatcherEpsilonDescriptor<>(clazz, uniqueIdWithinMatcher);
     }
 
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      GeneralEpsilonDescriptor<?> that = (GeneralEpsilonDescriptor<?>) o;
+      GeneralMatcherEpsilonDescriptor<?> that = (GeneralMatcherEpsilonDescriptor<?>) o;
       return Objects.equals(clazz, that.clazz)
           && Objects.equals(uniqueIdWithinMatcher, that.uniqueIdWithinMatcher);
     }

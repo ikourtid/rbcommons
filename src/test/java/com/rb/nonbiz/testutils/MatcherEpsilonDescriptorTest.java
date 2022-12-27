@@ -2,13 +2,13 @@ package com.rb.nonbiz.testutils;
 
 import org.junit.Test;
 
-import static com.rb.nonbiz.testutils.EpsilonDescriptor.ClassWideEpsilonDescriptor.eps;
-import static com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor.eps;
-import static com.rb.nonbiz.testutils.EpsilonDescriptor.GetterSpecificEpsilonDescriptor.eps;
+import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassWideMatcherEpsilonDescriptor.eps;
+import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GeneralMatcherEpsilonDescriptor.eps;
+import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GetterSpecificMatcherEpsilonDescriptor.eps;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-public class EpsilonDescriptorTest {
+public class MatcherEpsilonDescriptorTest {
 
   @Test
   public void testEquals() {
