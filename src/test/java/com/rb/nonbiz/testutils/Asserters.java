@@ -6,6 +6,7 @@ import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
@@ -184,8 +185,7 @@ public class Asserters {
     assertFalse(actual.isPresent());
   }
 
-  public static void assertOptionalDoubleAlmostEquals(double expected, OptionalDouble actual, double epsilon) {
-    RBPreconditions.checkArgument(epsilon >= 0);
+  public static void assertOptionalDoubleAlmostEquals(double expected, OptionalDouble actual, Epsilon epsilon) {
     assertThat(actual, nonEmptyOptionalDoubleMatcher(expected, epsilon));
   }
 

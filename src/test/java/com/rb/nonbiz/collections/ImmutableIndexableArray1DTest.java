@@ -37,6 +37,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrows;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static java.util.Collections.emptyList;
@@ -172,7 +173,7 @@ public class ImmutableIndexableArray1DTest extends RBTestMatcher<ImmutableIndexa
         STOCK_C, unitFraction(0.3));
     assertThat(
         array.valuesStream().collect(Collectors.toList()),
-        preciseValueListMatcher(ImmutableList.of(unitFraction(0.1), unitFraction(0.2), unitFraction(0.3)), 1e-8));
+        preciseValueListMatcher(ImmutableList.of(unitFraction(0.1), unitFraction(0.2), unitFraction(0.3)), DEFAULT_EPSILON_1e_8));
     assertFalse(emptyMutableIndexableArray1D().valuesStream().iterator().hasNext());
   }
 
@@ -287,7 +288,7 @@ public class ImmutableIndexableArray1DTest extends RBTestMatcher<ImmutableIndexa
   @Override
   protected boolean willMatch(ImmutableIndexableArray1D<InstrumentId, UnitFraction> expected,
                               ImmutableIndexableArray1D<InstrumentId, UnitFraction> actual) {
-    return immutableIndexableArray1DMatcher(expected, i -> typeSafeEqualTo(i), f -> preciseValueMatcher(f, 1e-8))
+    return immutableIndexableArray1DMatcher(expected, i -> typeSafeEqualTo(i), f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8))
         .matches(actual);
   }
 

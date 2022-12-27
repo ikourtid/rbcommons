@@ -14,6 +14,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.MoneySignedFraction.emptyMoneySignedFraction;
 import static com.rb.nonbiz.types.MoneySignedFraction.moneySignedFraction;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
@@ -69,10 +70,11 @@ public class MoneySignedFractionTest {
    * just like all PreciseValue subclasses. However, if our semantics is such that $10 / $40 is not the same as
    * $100 / $400 (even though, as a fraction, these are equal), then we want to use this matcher.
    */
-  public static TypeSafeMatcher<MoneySignedFraction> moneySignedFractionNumeratorAndDenominatorMatcher(MoneySignedFraction expected) {
+  public static TypeSafeMatcher<MoneySignedFraction> moneySignedFractionNumeratorAndDenominatorMatcher(
+      MoneySignedFraction expected) {
     return makeMatcher(expected,
-        matchUsingAlmostEquals(v -> v.getNumerator(), 1e-8),
-        matchUsingAlmostEquals(v -> v.getDenominator(), 1e-8));
+        matchUsingAlmostEquals(v -> v.getNumerator(),   DEFAULT_EPSILON_1e_8),
+        matchUsingAlmostEquals(v -> v.getDenominator(), DEFAULT_EPSILON_1e_8));
   }
 
 }

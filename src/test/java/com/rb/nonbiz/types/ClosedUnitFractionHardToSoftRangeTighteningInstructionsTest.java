@@ -9,6 +9,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.closedUnitFractionHardToSoftRangeTighteningInstructions;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.setClosedUnitFractionSoftRangeToSameAsHard;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
@@ -50,7 +51,7 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
   closedUnitFractionHardToSoftRangeTighteningInstructionsMatcher(
       ClosedUnitFractionHardToSoftRangeTighteningInstructions expected) {
     return makeMatcher(expected,
-        matchUsingAlmostEquals(v -> v.getRawMultiplier(), 1e-8));
+        matchUsingAlmostEquals(v -> v.getRawMultiplier(), DEFAULT_EPSILON_1e_8));
   }
 
 }

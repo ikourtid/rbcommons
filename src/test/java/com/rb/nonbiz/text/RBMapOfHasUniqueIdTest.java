@@ -24,6 +24,7 @@ import static com.rb.nonbiz.text.RBMapsOfHasUniqueId.rbMapOfHasUniqueIdOf;
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueId;
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueIdMatcher;
 import static com.rb.nonbiz.text.UniqueId.uniqueId;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static java.util.Comparator.comparing;
 import static junit.framework.TestCase.assertEquals;
@@ -96,7 +97,7 @@ public class RBMapOfHasUniqueIdTest extends RBTestMatcher<RBMapOfHasUniqueId<Tes
         map.values(),
         rbSetMatcher(
             rbSetOf(1.1, 2.2, 3.3, 4.4, 5.5),
-            f -> doubleAlmostEqualsMatcher(f, 1e-8),
+            f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8),
             Double::compare));
   }
 
@@ -114,7 +115,7 @@ public class RBMapOfHasUniqueIdTest extends RBTestMatcher<RBMapOfHasUniqueId<Tes
                 testHasUniqueId1, money(701.1),
                 testHasUniqueId2, money(702.2)),
             f -> testHasUniqueIdMatcher(f),
-            f -> preciseValueMatcher(f, 1e-8)));
+            f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8)));
 
     RBMapOfHasUniqueId<TestHasUniqueId, Double> emptyMap = emptyRBMapOfHasUniqueId();
     assertEquals(0, emptyMap.transformValuesCopy(d -> money(700 + d)).size());
@@ -143,7 +144,10 @@ public class RBMapOfHasUniqueIdTest extends RBTestMatcher<RBMapOfHasUniqueId<Tes
   @Override
   protected boolean willMatch(RBMapOfHasUniqueId<TestHasUniqueId, Double> expected,
                               RBMapOfHasUniqueId<TestHasUniqueId, Double> actual) {
-    return rbMapOfHasUniqueIdMatcher(expected, k -> testHasUniqueIdMatcher(k), v -> doubleAlmostEqualsMatcher(v, 1e-8))
+    return rbMapOfHasUniqueIdMatcher(
+        expected,
+        k -> testHasUniqueIdMatcher(k),
+        v -> doubleAlmostEqualsMatcher(v, DEFAULT_EPSILON_1e_8))
         .matches(actual);
   }
 

@@ -7,6 +7,7 @@ import com.rb.biz.types.SignedMoney;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PositiveMultiplier;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
@@ -51,6 +52,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_SIGNED_MONEY;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
@@ -853,8 +855,8 @@ public class RBRangesTest {
         pairOfSameType(Range.<Double>all(),          Range.<Double>all()))) {
       Range<Double> range1 = pair.getLeft();
       Range<Double> range2 = pair.getRight();
-      assertThat(flipRange(range1), doubleRangeMatcher(range2, 1e-8));
-      assertThat(flipRange(range2), doubleRangeMatcher(range1, 1e-8));
+      assertThat(flipRange(range1), doubleRangeMatcher(range2, DEFAULT_EPSILON_1e_8));
+      assertThat(flipRange(range2), doubleRangeMatcher(range1, DEFAULT_EPSILON_1e_8));
     }
   }
 
@@ -872,9 +874,9 @@ public class RBRangesTest {
         pairOfSameType(Range.<Double>all(),               Range.<Double>all()))) {
       Range<Double> range1 = pair.getLeft();
       Range<Double> range2 = pair.getRight();
-      assertThat(shiftDoubleRange(range1, 0.01), doubleRangeMatcher(range2, 1e-8));
-      assertThat(shiftDoubleRange(range2, -0.01), doubleRangeMatcher(range1, 1e-8));
-      assertThat(shiftDoubleRange(range1, 0), doubleRangeMatcher(range1, 1e-8));
+      assertThat(shiftDoubleRange(range1, 0.01), doubleRangeMatcher(range2, DEFAULT_EPSILON_1e_8));
+      assertThat(shiftDoubleRange(range2, -0.01), doubleRangeMatcher(range1, DEFAULT_EPSILON_1e_8));
+      assertThat(shiftDoubleRange(range1, 0), doubleRangeMatcher(range1, DEFAULT_EPSILON_1e_8));
     }
   }
 
@@ -883,7 +885,7 @@ public class RBRangesTest {
     TriConsumer<Range<Double>, Double, Range<Double>> asserter = (initialRange, extension, expectedRange) ->
         assertThat(
             extendDoubleRangeBiDirectionally(initialRange, extension),
-            doubleRangeMatcher(expectedRange, 1e-8));
+            doubleRangeMatcher(expectedRange, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(Range.closed(-1.1, 2.2),  0.0, Range.closed( -1.1,  2.2));
     asserter.accept(Range.closed(-1.1, 2.2),  1.0, Range.closed( -2.1,  3.2));
@@ -1009,7 +1011,7 @@ public class RBRangesTest {
   }
 
   private void assertAbs(Range<Double> originalRange, Range<Double> expected) {
-    assertThat(rangeForAbsValue(originalRange), doubleRangeMatcher(expected, 1e-8));
+    assertThat(rangeForAbsValue(originalRange), doubleRangeMatcher(expected, DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -1040,19 +1042,19 @@ public class RBRangesTest {
     assertThat(
         getMinMaxOfClosedRanges(singletonIterator(singletonClosedRange(ZERO_MONEY))),
         preciseValueClosedRangeMatcher(
-            singletonClosedRange(ZERO_MONEY), 1e-8));
+            singletonClosedRange(ZERO_MONEY), DEFAULT_EPSILON_1e_8));
     assertThat(
         getMinMaxOfClosedRanges(singletonIterator(singletonClosedRange(money(1.1)))),
         preciseValueClosedRangeMatcher(
-            singletonClosedRange(money(1.1)), 1e-8));
+            singletonClosedRange(money(1.1)), DEFAULT_EPSILON_1e_8));
     assertThat(
         getMinMaxOfClosedRanges(singletonIterator(closedRange(money(1.1), money(3.3)))),
         preciseValueClosedRangeMatcher(
-            closedRange(money(1.1), money(3.3)), 1e-8));
+            closedRange(money(1.1), money(3.3)), DEFAULT_EPSILON_1e_8));
     assertThat(
         getMinMaxOfClosedRanges(singletonIterator(closedRange(ZERO_MONEY, money(3.3)))),
         preciseValueClosedRangeMatcher(
-            closedRange(ZERO_MONEY, money(3.3)), 1e-8));
+            closedRange(ZERO_MONEY, money(3.3)), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -1064,7 +1066,7 @@ public class RBRangesTest {
             closedRange(money(3), money(5)))
             .iterator()),
         preciseValueClosedRangeMatcher(
-            closedRange(money(1), money(5)), 1e-8));
+            closedRange(money(1), money(5)), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -1076,7 +1078,7 @@ public class RBRangesTest {
             closedRange(money(23), money(25)))
             .iterator()),
         preciseValueClosedRangeMatcher(
-            closedRange(money(1), money(25)), 1e-8));
+            closedRange(money(1), money(25)), DEFAULT_EPSILON_1e_8));
 
     assertThat(
         getMinMaxOfClosedRanges(ImmutableList.of(
@@ -1085,7 +1087,7 @@ public class RBRangesTest {
             closedRange(money( 1), money( 3)))
             .iterator()),
         preciseValueClosedRangeMatcher(
-            closedRange(money(1), money(25)), 1e-8));
+            closedRange(money(1), money(25)), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -1096,7 +1098,7 @@ public class RBRangesTest {
             closedRange(money(2), money(4)),
             closedRange(money(3), money(5))),
         preciseValueClosedRangeMatcher(
-            closedRange(money(1), money(5)), 1e-8));
+            closedRange(money(1), money(5)), DEFAULT_EPSILON_1e_8));
 
     assertThat(
         getMinMaxOfClosedRanges(
@@ -1104,7 +1106,7 @@ public class RBRangesTest {
             closedRange(money(2), money(4)),
             closedRange(money(1), money(3))),
         preciseValueClosedRangeMatcher(
-            closedRange(money(1), money(5)), 1e-8));
+            closedRange(money(1), money(5)), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -1115,7 +1117,7 @@ public class RBRangesTest {
             closedRange(money(12), money(14)),
             closedRange(money(23), money(25))),
         preciseValueClosedRangeMatcher(
-            closedRange(money(1), money(25)), 1e-8));
+            closedRange(money(1), money(25)), DEFAULT_EPSILON_1e_8));
 
     assertThat(
         getMinMaxOfClosedRanges(
@@ -1123,7 +1125,7 @@ public class RBRangesTest {
             closedRange(money(12), money(14)),
             closedRange(money( 1), money( 3))),
         preciseValueClosedRangeMatcher(
-            closedRange(money(1), money(25)), 1e-8));
+            closedRange(money(1), money(25)), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -1214,7 +1216,7 @@ public class RBRangesTest {
         toClosedDoubleRange(closedRange(signedMoney(-1), signedMoney(3))),
         closedRangeMatcher(
             closedRange(-1.0, 3.0),
-            f -> doubleAlmostEqualsMatcher(f, 1e-8)));
+            f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8)));
   }
 
   @Test
@@ -1236,7 +1238,7 @@ public class RBRangesTest {
         toClosedDoubleRangeFromImpreciseValue(closedRange(positiveMultiplier(1.1), positiveMultiplier(3.3))),
         closedRangeMatcher(
             closedRange(1.1, 3.3),
-            f -> doubleAlmostEqualsMatcher(f, 1e-8)));
+            f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8)));
   }
 
   @Test
@@ -1244,7 +1246,7 @@ public class RBRangesTest {
     BiConsumer<Range<Money>, Range<Double>> asserter = (moneyRange, doubleRange) ->
         assertThat(
             toDoubleRange(moneyRange),
-            doubleRangeMatcher(doubleRange, 1e-8));
+            doubleRangeMatcher(doubleRange, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(Range.all(),                                  Range.all());
     asserter.accept(Range.atLeast(money(100.0)),                  Range.atLeast(100.0));
@@ -1262,7 +1264,7 @@ public class RBRangesTest {
     BiConsumer<Range<BigDecimal>, Range<Double>> asserter = (bigDecimalRange, doubleRange) ->
         assertThat(
             bigDecimalToDoubleRange(bigDecimalRange),
-            doubleRangeMatcher(doubleRange, 1e-8));
+            doubleRangeMatcher(doubleRange, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(Range.all(),                                  Range.all());
     asserter.accept(Range.atLeast(    BigDecimal.valueOf(100.0)), Range.atLeast(    100.0));
@@ -1289,7 +1291,7 @@ public class RBRangesTest {
     BiConsumer<Range<PositiveMultiplier>, Range<Double>> asserter = (positiveMultiplierRange, doubleRange) ->
         assertThat(
             toDoubleRange(positiveMultiplierRange),
-            doubleRangeMatcher(doubleRange, 1e-8));
+            doubleRangeMatcher(doubleRange, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(Range.all(),                                                             Range.all());
     asserter.accept(Range.atLeast(    positiveMultiplier(100.0)),                            Range.atLeast(100.0));
@@ -1320,7 +1322,7 @@ public class RBRangesTest {
         transformClosedRange(closedRange("1.1", "2.2"), v -> parseDouble(v)),
         closedRangeMatcher(
             closedRange(1.1, 2.2),
-            f -> doubleAlmostEqualsMatcher(f, 1e-8)));
+            f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8)));
   }
 
   @Test
@@ -1330,7 +1332,7 @@ public class RBRangesTest {
             RBRanges.withNewLowerEndpoint(
                 startingRange,
                 existingLowerBound -> transformOptional(existingLowerBound, v -> v - 8).orElse(7.0)),
-            doubleRangeMatcher(expectedResult, 1e-8));
+            doubleRangeMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(Range.all(),                    Range.atLeast(7.0));
     asserter.accept(Range.atLeast(100.0),           Range.atLeast(doubleExplained(92, 100 - 8)));
@@ -1357,10 +1359,10 @@ public class RBRangesTest {
 
     assertThat(
         maker.apply(Range.closed(12.0, 100.0)),
-        doubleRangeMatcher(Range.singleton(100.0), 1e-8));
+        doubleRangeMatcher(Range.singleton(100.0), DEFAULT_EPSILON_1e_8));
     assertThat(
         maker.apply(Range.atMost(77.0)),
-        doubleRangeMatcher(Range.singleton(77.0), 1e-8));
+        doubleRangeMatcher(Range.singleton(77.0), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -1370,7 +1372,7 @@ public class RBRangesTest {
             RBRanges.withNewDecreasedClosedLowerEndpoint(
                 startingRange,
                 existingLowerBound -> existingLowerBound - 8.0),
-            doubleRangeMatcher(expectedResult, 1e-8));
+            doubleRangeMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(Range.atLeast(    100.0),        Range.atLeast(doubleExplained(92, 100 - 8)));
     asserter.accept(Range.greaterThan(100.0),        Range.atLeast(    92.0));        // open lower bound becomes closed
@@ -1388,7 +1390,7 @@ public class RBRangesTest {
     // an open endpoint can be "extended" to a closed endpoint
     assertThat(
         RBRanges.withNewDecreasedClosedLowerEndpoint(Range.open(100.0, 200.0), v -> v),
-        doubleRangeMatcher(Range.closedOpen(100.0, 200.0), 1e-8));
+        doubleRangeMatcher(Range.closedOpen(100.0, 200.0), DEFAULT_EPSILON_1e_8));
 
     // the new lower endpoint must be strictly less than the starting lower endpoint
     Range<Double> doesNotThrow;
@@ -1407,7 +1409,7 @@ public class RBRangesTest {
             RBRanges.withNewIncreasedClosedUpperEndpoint(
                 startingRange,
                 existingUpperBound -> existingUpperBound + 8.0),
-            doubleRangeMatcher(expectedResult, 1e-8));
+            doubleRangeMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(Range.atMost(            200.0), Range.atMost(doubleExplained(208, 200 + 8)));
     asserter.accept(Range.lessThan(          200.0), Range.atMost(            208.0)); // open upper bound becomes closed
@@ -1425,7 +1427,7 @@ public class RBRangesTest {
     // an open endpoint can be "extended" to a closed endpoint
     assertThat(
         RBRanges.withNewIncreasedClosedUpperEndpoint(Range.open(100.0, 200.0), v -> v + 0),
-        doubleRangeMatcher(Range.openClosed(100.0, 200.0), 1e-8));
+        doubleRangeMatcher(Range.openClosed(100.0, 200.0), DEFAULT_EPSILON_1e_8));
 
     // the new upper endpoint must be strictly greater than the starting range
     Range<Double> doesNotThrow;
@@ -1444,7 +1446,7 @@ public class RBRangesTest {
             RBRanges.withPossiblyNewLowerEndpoint(
                 startingRange,
                 existingLowerBound -> transformOptional(existingLowerBound, v -> v - 8)),
-            doubleRangeMatcher(expectedResult, 1e-8));
+            doubleRangeMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(Range.all(),                    Range.all());
     asserter.accept(Range.atLeast(100.0),           Range.atLeast(doubleExplained(92, 100 - 8)));
@@ -1476,10 +1478,10 @@ public class RBRangesTest {
 
     assertThat(
         maker.apply(Range.closed(12.0, 100.0)),
-        doubleRangeMatcher(Range.singleton(100.0), 1e-8));
+        doubleRangeMatcher(Range.singleton(100.0), DEFAULT_EPSILON_1e_8));
     assertThat(
         maker.apply(Range.atLeast(1.0)),
-        doubleRangeMatcher(Range.atLeast(89.0), 1e-8));
+        doubleRangeMatcher(Range.atLeast(89.0), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -1489,7 +1491,7 @@ public class RBRangesTest {
             RBRanges.withNewUpperEndpoint(
                 startingRange,
                 existingUpperBound -> transformOptional(existingUpperBound, v -> v + 8).orElse(777.0)),
-            doubleRangeMatcher(expectedResult, 1e-8));
+            doubleRangeMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(Range.all(),                    Range.atMost(777.0));
     asserter.accept(Range.atLeast(100.0),           Range.closed(100.0, 777.0));
@@ -1516,10 +1518,10 @@ public class RBRangesTest {
 
     assertThat(
         maker.apply(Range.closed(12.0, 100.0)),
-        doubleRangeMatcher(Range.singleton(12.0), 1e-8));
+        doubleRangeMatcher(Range.singleton(12.0), DEFAULT_EPSILON_1e_8));
     assertThat(
         maker.apply(Range.atLeast(77.0)),
-        doubleRangeMatcher(Range.singleton(77.0), 1e-8));
+        doubleRangeMatcher(Range.singleton(77.0), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -1529,7 +1531,7 @@ public class RBRangesTest {
             RBRanges.withPossiblyNewUpperEndpoint(
                 startingRange,
                 existingUpperBound -> transformOptional(existingUpperBound, v -> v + 8)),
-            doubleRangeMatcher(expectedResult, 1e-8));
+            doubleRangeMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(Range.all(),                    Range.all());
     asserter.accept(Range.atLeast(100.0),           Range.atLeast(100.0));
@@ -1558,7 +1560,7 @@ public class RBRangesTest {
     TriConsumer<Range<Double>, Range<Double>, Range<Double>> asserter = (initial, other, expected) ->
         assertThat(
             minimallyLoosenRangeToTouchOtherRange(initial, other),
-            doubleRangeMatcher(expected, 1e-8));
+            doubleRangeMatcher(expected, DEFAULT_EPSILON_1e_8));
 
     // if the ranges overlap, the initial range is returned
     asserter.accept(Range.closed( 3.0, 5.0), Range.singleton(4.0),    Range.closed( 3.0, 5.0));
@@ -1837,17 +1839,17 @@ public class RBRangesTest {
   public void testRangeIsSafelyProperSubsetOf() {
     Range<Money> closedRange1to10 = Range.closed(money(1), money(10));
 
-    assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(11)), 1e-8));
-    assertFalse(rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(10)), 1e-8));
-    assertFalse(rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(money(1.0), money(11)), 1e-8));
-    assertFalse(rangeIsSafelyProperSubsetOf(closedRange1to10, closedRange1to10, 1e-8));
+    assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(11)), DEFAULT_EPSILON_1e_8));
+    assertFalse(rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(10)), DEFAULT_EPSILON_1e_8));
+    assertFalse(rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(money(1.0), money(11)), DEFAULT_EPSILON_1e_8));
+    assertFalse(rangeIsSafelyProperSubsetOf(closedRange1to10, closedRange1to10, DEFAULT_EPSILON_1e_8));
 
     // the size of epsilon can determine whether one range is "safely" a proper subset of another
-    assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(10.01)), 1e-8));
+    assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(10.01)), DEFAULT_EPSILON_1e_8));
     assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(10.01)), 0.009));
     assertFalse(rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(10.01)), 0.02));
 
-    assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(money(0.99), money(11)), 1e-8));
+    assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(money(0.99), money(11)), DEFAULT_EPSILON_1e_8));
     assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(money(0.99), money(11)), 0.009));
     assertFalse(rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(money(0.99), money(11)), 0.02));
 

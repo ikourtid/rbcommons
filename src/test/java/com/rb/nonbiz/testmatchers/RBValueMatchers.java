@@ -1,6 +1,7 @@
 package com.rb.nonbiz.testmatchers;
 
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.IntegerValue;
 import com.rb.nonbiz.types.PreciseValue;
@@ -21,17 +22,16 @@ import static junit.framework.TestCase.assertTrue;
 
 public class RBValueMatchers {
 
-  public static <T extends RBNumeric<? super T>> TypeSafeMatcher<T> rbNumericMatcher(T expected, double epsilon) {
+  public static <T extends RBNumeric<? super T>> TypeSafeMatcher<T> rbNumericMatcher(T expected, Epsilon epsilon) {
     return makeMatcher(expected,
         matchUsingDoubleAlmostEquals(v -> v.doubleValue(), epsilon));
   }
 
-  public static TypeSafeMatcher<BigDecimal> bigDecimalMatcher(BigDecimal expected, double epsilon) {
-    assertValidEpsilon(epsilon);
+  public static TypeSafeMatcher<BigDecimal> bigDecimalMatcher(BigDecimal expected, Epsilon epsilon) {
     return new TypeSafeMatcher<BigDecimal>() {
       @Override
       protected boolean matchesSafely(BigDecimal actual) {
-        return bigDecimalsAlmostEqual(expected, actual, epsilon);
+        return bigDecimalsAlmostEqual(expected, actual, epsilon.doubleValue()); // FIXME IAK EPS
       }
 
       @Override
@@ -41,12 +41,11 @@ public class RBValueMatchers {
     };
   }
 
-  public static <V extends PreciseValue<? super V>> TypeSafeMatcher<V> preciseValueMatcher(V expected, double epsilon) {
-    assertValidEpsilon(epsilon);
+  public static <V extends PreciseValue<? super V>> TypeSafeMatcher<V> preciseValueMatcher(V expected, Epsilon epsilon) {
     return new TypeSafeMatcher<V>() {
       @Override
       protected boolean matchesSafely(V actual) {
-        return expected.almostEquals(actual, epsilon);
+        return expected.almostEquals(actual, epsilon.doubleValue());
       }
 
       @Override
@@ -56,12 +55,11 @@ public class RBValueMatchers {
     };
   }
 
-  public static <V extends ImpreciseValue<? super V>> TypeSafeMatcher<V> impreciseValueMatcher(V expected, double epsilon) {
-    assertValidEpsilon(epsilon);
+  public static <V extends ImpreciseValue<? super V>> TypeSafeMatcher<V> impreciseValueMatcher(V expected, Epsilon epsilon) {
     return new TypeSafeMatcher<V>() {
       @Override
       protected boolean matchesSafely(V actual) {
-        return expected.almostEquals(actual, epsilon);
+        return expected.almostEquals(actual, epsilon.doubleValue());
       }
 
       @Override
@@ -71,12 +69,11 @@ public class RBValueMatchers {
     };
   }
 
-  public static <T extends RBNumeric<? super T>> TypeSafeMatcher<T> rbNumericValueMatcher(T expected, double epsilon) {
-    assertValidEpsilon(epsilon);
+  public static <T extends RBNumeric<? super T>> TypeSafeMatcher<T> rbNumericValueMatcher(T expected, Epsilon epsilon) {
     return new TypeSafeMatcher<T>() {
       @Override
       protected boolean matchesSafely(T actual) {
-        return Math.abs(expected.doubleValue() - actual.doubleValue()) <= epsilon;
+        return epsilon.areWithin(expected.doubleValue(), actual.doubleValue());
       }
 
       @Override
@@ -86,13 +83,15 @@ public class RBValueMatchers {
     };
   }
 
-  public static TypeSafeMatcher<Double> doubleAlmostEqualsMatcher(double expected, double epsilon) {
-    assertValidEpsilon(epsilon);
-    return makeMatcher(expected, actual -> Math.abs(expected - actual) <= epsilon);
+  public static TypeSafeMatcher<Double> doubleAlmostEqualsMatcher(double expected, Epsilon epsilon) {
+    return makeMatcher(expected, actual -> epsilon.areWithin(expected, actual));
   }
 
+  /**
+   * Although by now (Dec 2022) we have a specialized {@link ImpreciseValue} subclass to denote an epsilon,
+   * the case of float is special and rare enough that we don't need a float version of {@link Epsilon}.
+   */
   public static TypeSafeMatcher<Float> floatAlmostEqualsMatcher(float expected, float epsilon) {
-    assertValidEpsilon(epsilon);
     return makeMatcher(expected, actual -> Math.abs(expected - actual) <= epsilon);
   }
 
@@ -102,8 +101,7 @@ public class RBValueMatchers {
    *
    * Also see {@link #strictWithTypesNumberMatcher}
    */
-  public static <T extends Number> TypeSafeMatcher<T> numberMatcher(T expected, double epsilon) {
-    assertValidEpsilon(epsilon);
+  public static <T extends Number> TypeSafeMatcher<T> numberMatcher(T expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.doubleValue(), f -> doubleAlmostEqualsMatcher(f, epsilon)));
   }
@@ -171,15 +169,14 @@ public class RBValueMatchers {
    * For any two objects, performs an epsilon comparison if both are numeric (implement Number),
    * otherwise just tests for equality.
    */
-  public static <T> TypeSafeMatcher<T> epsilonForNumericsElseEqualityMatcher(T expected, double epsilon) {
-    assertValidEpsilon(epsilon);
+  public static <T> TypeSafeMatcher<T> epsilonForNumericsElseEqualityMatcher(T expected, Epsilon epsilon) {
     return makeMatcher(expected, actual -> {
       boolean expectedIsNumber = expected instanceof Number;
       boolean actualIsNumber = actual instanceof Number;
       if (expectedIsNumber && actualIsNumber) {
         double expectedNum = ((Number) expected).doubleValue();
         double actualNum = ((Number) actual).doubleValue();
-        return Math.abs(expectedNum - actualNum) <= epsilon;
+        return epsilon.areWithin(expectedNum, actualNum);
       } else if (expectedIsNumber || actualIsNumber) { // can't have only one of them; that's an automatic non-match
         return false;
       }
@@ -188,7 +185,7 @@ public class RBValueMatchers {
       if (expectedIsPreciseValue && actualIsPreciseValue) {
         double expectedNum = ((PreciseValue<?>) expected).doubleValue();
         double actualNum = ((PreciseValue<?>) actual).doubleValue();
-        return Math.abs(expectedNum - actualNum) <= epsilon;
+        return epsilon.areWithin(expectedNum, actualNum);
       } else if (expectedIsPreciseValue || actualIsPreciseValue) { // can't have only one of them; that's an automatic non-match
         return false;
       }
@@ -197,19 +194,12 @@ public class RBValueMatchers {
       if (expectedIsImpreciseValue && actualIsImpreciseValue) {
         double expectedNum = ((ImpreciseValue<?>) expected).doubleValue();
         double actualNum = ((ImpreciseValue<?>) actual).doubleValue();
-        return Math.abs(expectedNum - actualNum) <= epsilon;
+        return epsilon.areWithin(expectedNum, actualNum);
       } else if (expectedIsImpreciseValue || actualIsImpreciseValue) { // can't have only one of them; that's an automatic non-match
         return false;
       }
       return expected.equals(actual);
     });
-  }
-
-  public static void assertValidEpsilon(double epsilon) {
-    // This is useful to avoid typos such as 1-8 and 1e8 (instead of the usual 1e-8)
-    assertTrue(
-        Strings.format("It is very likely you had a typo when typing the epsilon of %s", epsilon),
-        epsilon >= 0 && epsilon < 1_000);
   }
 
 }

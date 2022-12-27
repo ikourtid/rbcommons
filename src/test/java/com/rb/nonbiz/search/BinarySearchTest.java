@@ -26,6 +26,8 @@ import static com.rb.nonbiz.search.BinarySearchTerminationPredicate.terminateBas
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static java.util.Comparator.naturalOrder;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -310,8 +312,8 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
                 .setTargetY(TARGET_Y)
                 .setComparatorForY(Money::compareTo)
                 .build(),
-            f -> preciseValueMatcher(f, 1e-8),
-            f -> preciseValueMatcher(f, 1e-4))); // We need a less tight epsilon on the Y for the test to work
+            f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8),
+            f -> preciseValueMatcher(f, epsilon(1e-4)))); // We need a less tight epsilon on the Y for the test to work
   }
 
   @Override

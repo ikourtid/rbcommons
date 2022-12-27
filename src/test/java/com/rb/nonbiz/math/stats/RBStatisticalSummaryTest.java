@@ -2,6 +2,7 @@ package com.rb.nonbiz.math.stats;
 
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import org.hamcrest.TypeSafeMatcher;
@@ -16,6 +17,7 @@ import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.statisticalSummary
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static junit.framework.TestCase.assertEquals;
 
 public class RBStatisticalSummaryTest extends RBTestMatcher<RBStatisticalSummary<Money>> {
@@ -70,11 +72,11 @@ public class RBStatisticalSummaryTest extends RBTestMatcher<RBStatisticalSummary
 
   @Override
   protected boolean willMatch(RBStatisticalSummary<Money> expected, RBStatisticalSummary<Money> actual) {
-    return rbStatisticalSummaryMatcher(expected, 1e-8).matches(actual);
+    return rbStatisticalSummaryMatcher(expected, DEFAULT_EPSILON_1e_8).matches(actual);
   }
 
   public static <T extends Comparable<?>> TypeSafeMatcher<RBStatisticalSummary<T>> rbStatisticalSummaryMatcher(
-      RBStatisticalSummary<T> expected, double epsilon) {
+      RBStatisticalSummary<T> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.getRawStatisticalSummary(), f -> statisticalSummaryMatcher(f, epsilon)));
   }

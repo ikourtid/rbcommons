@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableSet;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -26,6 +27,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_SYMBOL;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_1;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
@@ -269,11 +271,11 @@ public class SignedPartitionTest extends RBTestMatcher<SignedPartition> {
   }
 
   public static <T> TypeSafeMatcher<SignedPartition<T>> signedPartitionMatcher(SignedPartition<T> expected) {
-    return epsilonSignedPartitionMatcher(expected, 1e-8);
+    return epsilonSignedPartitionMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
   public static <T> TypeSafeMatcher<SignedPartition<T>> epsilonSignedPartitionMatcher(
-      SignedPartition<T> expected, double epsilon) {
+      SignedPartition<T> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.getRawFractionsMap(), f -> rbMapPreciseValueMatcher(f, epsilon)));
   }

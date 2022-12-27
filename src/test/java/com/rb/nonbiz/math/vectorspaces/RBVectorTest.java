@@ -24,6 +24,7 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertTrue;
@@ -256,7 +257,7 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
             .collect(Collectors.toList()),
         doubleListMatcher(
             ImmutableList.of(-1.1, 0.0, 3.3),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -265,7 +266,7 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
         assertThat(
             rbVector.asList(),
             doubleListMatcher(
-                expectedResult, 1e-8));
+                expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(
         singletonRBVector(1.1),
@@ -281,7 +282,7 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
         assertThat(
             rbVector.toArray(),
             doubleArrayMatcher(
-                expectedResult, epsilon(1e-8)));
+                expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(
         singletonRBVector(1.1),

@@ -10,6 +10,8 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.junit.Assert.assertEquals;
 
 public class GeometricProgressionTest extends RBTestMatcher<GeometricProgression> {
@@ -59,8 +61,8 @@ public class GeometricProgressionTest extends RBTestMatcher<GeometricProgression
 
   public static TypeSafeMatcher<GeometricProgression> geometricProgressionMatcher(GeometricProgression expected) {
     return makeMatcher(expected,
-        matchUsingDoubleAlmostEquals(v -> v.getInitialValue(), 1e-8),
-        matchUsingDoubleAlmostEquals(v -> v.getCommonRatio(), 1e-8));
+        matchUsingDoubleAlmostEquals(v -> v.getInitialValue(), DEFAULT_EPSILON_1e_8),
+        matchUsingDoubleAlmostEquals(v -> v.getCommonRatio(),  DEFAULT_EPSILON_1e_8));
   }
 
 }

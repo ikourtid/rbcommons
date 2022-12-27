@@ -15,6 +15,7 @@ import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSortedSetMatcher
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.doubleIteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -68,12 +69,12 @@ public class RBSortedSetTest extends RBTestMatcher<RBSortedSet<Double>> {
         newRBSortedSet(comparator, 3.3, 1.1, 5.5, 4.4, 2.2).iterator(),
         doubleIteratorMatcher(
             ImmutableList.of(1.1, 2.2, 3.3, 4.4, 5.5).iterator(),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
     assertThat(
         newRBSortedSet(comparator.reversed(), 3.3, 1.1, 5.5, 4.4, 2.2).iterator(),
         doubleIteratorMatcher(
             ImmutableList.of(5.5, 4.4, 3.3, 2.2, 1.1).iterator(),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -100,7 +101,8 @@ public class RBSortedSetTest extends RBTestMatcher<RBSortedSet<Double>> {
 
   @Override
   protected boolean willMatch(RBSortedSet<Double> expected, RBSortedSet<Double> actual) {
-    return rbSortedSetMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return rbSortedSetMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   // The TypeSafeMatcher that normally is found at the end of a data class's test file

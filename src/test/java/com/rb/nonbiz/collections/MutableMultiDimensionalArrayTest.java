@@ -14,6 +14,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertThrowsAnyException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static junit.framework.TestCase.assertEquals;
 
 /**
@@ -171,7 +172,8 @@ public class MutableMultiDimensionalArrayTest extends RBTestMatcher<MutableMulti
   @Override
   protected boolean willMatch(MutableMultiDimensionalArray<Double> expected,
                               MutableMultiDimensionalArray<Double> actual) {
-    return mutableMultiDimensionalArrayMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return mutableMultiDimensionalArrayMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
   
   public static <T> TypeSafeMatcher<MutableMultiDimensionalArray<T>> mutableMultiDimensionalArrayMatcher(

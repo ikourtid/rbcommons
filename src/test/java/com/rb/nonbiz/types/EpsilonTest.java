@@ -3,6 +3,7 @@ package com.rb.nonbiz.types;
 import org.junit.Test;
 
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.junit.Assert.*;
 
@@ -28,8 +29,8 @@ public class EpsilonTest {
 
   @Test
   public void testWithin() {
-    assertTrue(epsilon(1e-8).areWithin(100, 100 + 1e-9));
-    assertFalse(epsilon(1e-8).areWithin(100, 100 + 1e-7));
+    assertTrue(DEFAULT_EPSILON_1e_8.areWithin(100, 100 + 1e-9));
+    assertFalse(DEFAULT_EPSILON_1e_8.areWithin(100, 100 + 1e-7));
   }
 
 }

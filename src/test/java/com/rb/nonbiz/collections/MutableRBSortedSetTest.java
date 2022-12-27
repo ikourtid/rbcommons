@@ -7,6 +7,7 @@ import static com.rb.nonbiz.collections.MutableRBSortedSet.newMutableRBSortedSet
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.mutableRBSortedSetMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -131,7 +132,8 @@ public class MutableRBSortedSetTest extends RBTestMatcher<MutableRBSortedSet<Dou
 
   @Override
   protected boolean willMatch(MutableRBSortedSet<Double> expected, MutableRBSortedSet<Double> actual) {
-    return mutableRBSortedSetMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return mutableRBSortedSetMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   // The TypeSafeMatcher that normally is found at the end of a data class's test file

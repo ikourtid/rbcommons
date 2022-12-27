@@ -8,6 +8,7 @@ import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.HasLongRepresentation;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
@@ -35,7 +36,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 public class RBMapMatchers {
 
   public static <K, V extends PreciseValue> TypeSafeMatcher<RBMap<K, V>> rbMapPreciseValueMatcher(
-      RBMap<K, V> expected, double epsilon) {
+      RBMap<K, V> expected, Epsilon epsilon) {
     return new TypeSafeMatcher<RBMap<K, V>>() {
       @Override
       protected boolean matchesSafely(RBMap<K, V> actual) {
@@ -43,7 +44,7 @@ public class RBMapMatchers {
           return false;
         }
         for (K key : expected.keySet()) {
-          if (!expected.getOrThrow(key).almostEquals(actual.getOrThrow(key), epsilon)) {
+          if (!expected.getOrThrow(key).almostEquals(actual.getOrThrow(key), epsilon.doubleValue())) {
             return false;
           }
         }
@@ -58,7 +59,7 @@ public class RBMapMatchers {
   }
 
   public static <K, V extends ImpreciseValue<? super V>> TypeSafeMatcher<RBMap<K, V>> rbMapImpreciseValueMatcher(
-      RBMap<K, V> expected, double epsilon) {
+      RBMap<K, V> expected, Epsilon epsilon) {
     return new TypeSafeMatcher<RBMap<K, V>>() {
       @Override
       protected boolean matchesSafely(RBMap<K, V> actual) {
@@ -81,19 +82,19 @@ public class RBMapMatchers {
   }
 
   public static <V extends PreciseValue<? super V>> TypeSafeMatcher<IidMap<V>> iidMapPreciseValueMatcher(
-      IidMap<V> expected, double epsilon) {
+      IidMap<V> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         matchIidMap(v -> v, f -> preciseValueMatcher(f, epsilon)));
   }
 
   public static <V extends ImpreciseValue<? super V>> TypeSafeMatcher<IidMap<V>> iidMapImpreciseValueMatcher(
-      IidMap<V> expected, double epsilon) {
+      IidMap<V> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         matchIidMap(v -> v, f -> impreciseValueMatcher(f, epsilon)));
   }
 
   public static <K> TypeSafeMatcher<RBMap<K, BigDecimal>> rbMapBigDecimalMatcher(
-      RBMap<K, BigDecimal> expected, double epsilon) {
+      RBMap<K, BigDecimal> expected, Epsilon epsilon) {
     return new TypeSafeMatcher<RBMap<K, BigDecimal>>() {
       @Override
       protected boolean matchesSafely(RBMap<K, BigDecimal> actual) {
@@ -101,7 +102,7 @@ public class RBMapMatchers {
           return false;
         }
         for (K key : expected.keySet()) {
-          if (expected.getOrThrow(key).subtract(actual.getOrThrow(key)).abs().doubleValue() > epsilon) {
+          if (expected.getOrThrow(key).subtract(actual.getOrThrow(key)).abs().doubleValue() > epsilon.doubleValue()) {
             return false;
           }
         }
@@ -116,7 +117,7 @@ public class RBMapMatchers {
   }
 
   public static <K> TypeSafeMatcher<RBMap<K, Double>> rbMapDoubleMatcher(
-      RBMap<K, Double> expected, double epsilon) {
+      RBMap<K, Double> expected, Epsilon epsilon) {
     return new TypeSafeMatcher<RBMap<K, Double>>() {
       @Override
       protected boolean matchesSafely(RBMap<K, Double> actual) {
@@ -124,7 +125,7 @@ public class RBMapMatchers {
           return false;
         }
         for (K key : expected.keySet()) {
-          if (Math.abs(expected.getOrThrow(key) - actual.getOrThrow(key)) > epsilon) {
+          if (epsilon.areWithin(expected.getOrThrow(key), actual.getOrThrow(key))) {
             return false;
           }
         }

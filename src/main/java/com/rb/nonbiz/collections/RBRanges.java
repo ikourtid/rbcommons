@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
@@ -256,13 +257,9 @@ public class RBRanges {
    * because otherwise it doesn't make sense to add/subtract an epsilon. So this only works with RBNumeric.
    */
   public static <T extends RBNumeric<? super T>> boolean rangeIsSafelyProperSubsetOf(
-      Range<T> subset, Range<T> superSet, double epsilon) {
-    RBPreconditions.checkArgument(
-        epsilon >= 0,
-        "Epsilon must be >= 0; found %s",
-        epsilon);
+      Range<T> subset, Range<T> superSet, Epsilon epsilon) {
     return rangeIsProperSubsetOnBothEnds(
-        extendDoubleRangeBiDirectionally(toDoubleRange(subset), epsilon),
+        extendDoubleRangeBiDirectionally(toDoubleRange(subset), epsilon.doubleValue()),
         toDoubleRange(superSet));
   }
 

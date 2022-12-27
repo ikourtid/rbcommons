@@ -1,6 +1,7 @@
 package com.rb.nonbiz.math.stats;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.hamcrest.TypeSafeMatcher;
@@ -8,6 +9,7 @@ import org.hamcrest.TypeSafeMatcher;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 // Unlike almost all cases of RBTestMatcher, in this case, StatisticalSummary is a 3rd party interface,
 // not our code. FYI.
@@ -41,14 +43,14 @@ public class StatisticalSummaryTest extends RBTestMatcher<StatisticalSummary> {
 
   @Override
   protected boolean willMatch(StatisticalSummary expected, StatisticalSummary actual) {
-    return statisticalSummaryMatcher(expected, 1e-8).matches(actual);
+    return statisticalSummaryMatcher(expected, DEFAULT_EPSILON_1e_8).matches(actual);
   }
 
   /**
    * There may be some pathological false positives (i.e. there is a match when there shouldn't be),
    * but this is 99.99% certainly good enough.
    */
-  public static <T extends StatisticalSummary> TypeSafeMatcher<T> statisticalSummaryMatcher(T expected, double epsilon) {
+  public static <T extends StatisticalSummary> TypeSafeMatcher<T> statisticalSummaryMatcher(T expected, Epsilon epsilon) {
     return makeMatcher(expected,
         matchUsingDoubleAlmostEquals(v -> v.getMean(), epsilon),
         matchUsingDoubleAlmostEquals(v -> v.getVariance(), epsilon),

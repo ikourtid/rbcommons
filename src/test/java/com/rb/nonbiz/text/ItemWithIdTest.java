@@ -11,6 +11,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatch
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_DOUBLE;
 import static com.rb.nonbiz.text.ItemWithId.itemWithId;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 
 public class ItemWithIdTest extends RBTestMatcher<ItemWithId<Double>> {
@@ -38,7 +39,8 @@ public class ItemWithIdTest extends RBTestMatcher<ItemWithId<Double>> {
 
   @Override
   protected boolean willMatch(ItemWithId<Double> expected, ItemWithId<Double> actual) {
-    return itemWithIdMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return itemWithIdMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <T> TypeSafeMatcher<ItemWithId<T>> itemWithIdMatcher(

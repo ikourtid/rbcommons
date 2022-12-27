@@ -14,6 +14,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class RBIncreasingSetTest extends RBTestMatcher<RBIncreasingSet<Double>> {
@@ -64,7 +65,7 @@ public class RBIncreasingSetTest extends RBTestMatcher<RBIncreasingSet<Double>> 
 
   @Override
   protected boolean willMatch(RBIncreasingSet<Double> expected, RBIncreasingSet<Double> actual) {
-    return rbIncreasingSetMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return rbIncreasingSetMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8)).matches(actual);
   }
 
   public static <T extends Comparable<? super T>> TypeSafeMatcher<RBIncreasingSet<T>> rbIncreasingSetEqualityMatcher(

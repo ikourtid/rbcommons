@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatch
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -39,8 +41,8 @@ public class EitherOrNeitherTest extends RBTestMatcher<EitherOrNeither<UnitFract
 
   @Test
   public void testConversionFromOptional() {
-    MatcherGenerator<Double> leftMatcher = f -> doubleAlmostEqualsMatcher(f, 1e-8);
-    MatcherGenerator<Money> rightMatcher = f2 -> preciseValueMatcher(f2, 1e-8);
+    MatcherGenerator<Double> leftMatcher = f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8);
+    MatcherGenerator<Money> rightMatcher = f2 -> preciseValueMatcher(f2, DEFAULT_EPSILON_1e_8);
     assertThat(
         eitherOrNeitherFromOptionalEither(Optional.empty()),
         eitherOrNeitherMatcher(neither(), leftMatcher, rightMatcher));
@@ -73,8 +75,8 @@ public class EitherOrNeitherTest extends RBTestMatcher<EitherOrNeither<UnitFract
                               EitherOrNeither<UnitFraction, Double> actual) {
     return eitherOrNeitherMatcher(
         expected,
-        v -> preciseValueMatcher(v, 1e-8),
-        v -> doubleAlmostEqualsMatcher(v, 1e-8))
+        v -> preciseValueMatcher(v, DEFAULT_EPSILON_1e_8),
+        v -> doubleAlmostEqualsMatcher(v, DEFAULT_EPSILON_1e_8))
         .matches(actual);
   }
 
