@@ -92,7 +92,7 @@ public abstract class MatcherEpsilonDescriptor<T> {
   /**
    * Lets you specify an epsilon using some (ideally unique) combination of class plus string 'path'.
    *
-   * <p> The high-level idea is that {@link Epsilons} represents some sort of map of (typically small)
+   * <p> The high-level idea is that {@link MatcherEpsilons} represents some sort of map of (typically small)
    * numbers to use as epsilon in different calculations, keyed by some unique key. You can think of that as a file
    * path almost. Each user of an epsilon (e.g. the matcher that will compare a BuyOrder to another one)
    * requests that epsilon it cares about, using a key. In general, we can think of that key as a unique string.

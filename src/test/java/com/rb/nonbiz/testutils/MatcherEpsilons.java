@@ -21,9 +21,9 @@ import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GetterSpecificMat
  * Normally, our test matchers use 1e-8 (DEFAULT_EPSILON). However, sometimes we want to override the epsilons.
  * This helps you accomplish that.
  *
- * see OrdersTest#testEpsilonsInfra for how this gets used. Also, {@link EpsilonsTest}.
+ * see OrdersTest#testEpsilonsInfra for how this gets used. Also, {@link MatcherEpsilonsTest}.
  */
-public class Epsilons {
+public class MatcherEpsilons {
 
   private static final double DEFAULT_EPSILON = 1e-8;
   private static final OptionalDouble NO_DEFAULT_EPSILON_OVERRIDE = OptionalDouble.empty();
@@ -31,14 +31,14 @@ public class Epsilons {
   private final OptionalDouble defaultEpsilonOverride;
   private final DoubleMap<MatcherEpsilonDescriptor<?>> matcherEpsilonDescriptors;
 
-  private Epsilons(
+  private MatcherEpsilons(
       OptionalDouble defaultEpsilonOverride,
       DoubleMap<MatcherEpsilonDescriptor<?>> matcherEpsilonDescriptors) {
     this.defaultEpsilonOverride = defaultEpsilonOverride;
     this.matcherEpsilonDescriptors = matcherEpsilonDescriptors;
   }
 
-  public static Epsilons epsilons(
+  public static MatcherEpsilons matcherEpsilons(
       OptionalDouble defaultEpsilonOverride,
       DoubleMap<MatcherEpsilonDescriptor<?>> matcherEpsilonDescriptors) {
     // Ideally, we'd be using something more typesafe than a double to denote an epsilon, which disallows invalid
@@ -55,7 +55,7 @@ public class Epsilons {
             "The epsilon with descriptor %s is invalid: %s",
             epsilonDescriptor, epsilon));
 
-    return new Epsilons(defaultEpsilonOverride, matcherEpsilonDescriptors);
+    return new MatcherEpsilons(defaultEpsilonOverride, matcherEpsilonDescriptors);
   }
 
   private static boolean isValidEpsilon(double epsilon) {
@@ -64,8 +64,8 @@ public class Epsilons {
     return 0 <= epsilon && epsilon < 100;
   }
 
-  public static Epsilons emptyEpsilons() {
-    return epsilons(
+  public static MatcherEpsilons emptyMatcherEpsilons() {
+    return matcherEpsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         emptyDoubleMap());
   }
@@ -75,36 +75,36 @@ public class Epsilons {
    * without needing to have an inclusion list of {@link MatcherEpsilonDescriptor}s that describe the exact places
    * where the epsilons get used.
    */
-  public static Epsilons useEpsilonEverywhere(double epsilonToUseEverywhere) {
+  public static MatcherEpsilons useEpsilonInAllMatchers(double epsilonToUseEverywhere) {
     RBPreconditions.checkArgument(epsilonToUseEverywhere >= 0);
-    return epsilons(
+    return matcherEpsilons(
         OptionalDouble.of(epsilonToUseEverywhere),
         emptyDoubleMap());
   }
 
-  public static Epsilons epsilons(
+  public static MatcherEpsilons matcherEpsilons(
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor1, double epsilon1) {
-    return epsilons(
+    return matcherEpsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(singletonRBMap(
             matcherEpsilonDescriptor1, epsilon1)));
   }
 
-  public static Epsilons epsilons(
+  public static MatcherEpsilons matcherEpsilons(
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor1, double epsilon1,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor2, double epsilon2) {
-    return epsilons(
+    return matcherEpsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(rbMapOf(
             matcherEpsilonDescriptor1, epsilon1,
             matcherEpsilonDescriptor2, epsilon2)));
   }
 
-  public static Epsilons epsilons(
+  public static MatcherEpsilons matcherEpsilons(
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor1, double epsilon1,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor2, double epsilon2,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor3, double epsilon3) {
-    return epsilons(
+    return matcherEpsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(rbMapOf(
             matcherEpsilonDescriptor1, epsilon1,
@@ -112,12 +112,12 @@ public class Epsilons {
             matcherEpsilonDescriptor3, epsilon3)));
   }
 
-  public static Epsilons epsilons(
+  public static MatcherEpsilons matcherEpsilons(
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor1, double epsilon1,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor2, double epsilon2,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor3, double epsilon3,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor4, double epsilon4) {
-    return epsilons(
+    return matcherEpsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(rbMapOf(
             matcherEpsilonDescriptor1, epsilon1,
@@ -126,13 +126,13 @@ public class Epsilons {
             matcherEpsilonDescriptor4, epsilon4)));
   }
 
-  public static Epsilons epsilons(
+  public static MatcherEpsilons matcherEpsilons(
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor1, double epsilon1,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor2, double epsilon2,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor3, double epsilon3,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor4, double epsilon4,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor5, double epsilon5) {
-    return epsilons(
+    return matcherEpsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(rbMapOf(
             matcherEpsilonDescriptor1, epsilon1,
@@ -142,14 +142,14 @@ public class Epsilons {
             matcherEpsilonDescriptor5, epsilon5)));
   }
 
-  public static Epsilons epsilons(
+  public static MatcherEpsilons matcherEpsilons(
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor1, double epsilon1,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor2, double epsilon2,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor3, double epsilon3,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor4, double epsilon4,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor5, double epsilon5,
       MatcherEpsilonDescriptor<?> matcherEpsilonDescriptor6, double epsilon6) {
-    return epsilons(
+    return matcherEpsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(rbMapOf(
             matcherEpsilonDescriptor1, epsilon1,
@@ -164,11 +164,11 @@ public class Epsilons {
    * Use this in situations where you want to use the same numeric value (e.g. 1e-7) for all epsilons
    * in the contexts specified by the {@link MatcherEpsilonDescriptor}s passed in.
    */
-  public static Epsilons sharedEpsilons(
+  public static MatcherEpsilons sharedMatcherEpsilons(
       double epsilon,
       MatcherEpsilonDescriptor<?> first,
       MatcherEpsilonDescriptor<?>... rest) {
-    return epsilons(
+    return matcherEpsilons(
         NO_DEFAULT_EPSILON_OVERRIDE,
         doubleMap(rbMapFromStream(
             concatenateFirstAndRest(first, rest),
