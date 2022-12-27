@@ -1,7 +1,7 @@
 package com.rb.nonbiz.testutils;
 
 import com.rb.nonbiz.collections.RBSet;
-import com.rb.nonbiz.testutils.EpsilonDescriptor.GeneralEpsilonDescriptor;
+import com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GeneralMatcherEpsilonDescriptor;
 import org.junit.Test;
 
 import java.util.OptionalDouble;
@@ -9,8 +9,8 @@ import java.util.function.DoubleFunction;
 
 import static com.rb.nonbiz.collections.DoubleMap.singletonDoubleMap;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.EpsilonDescriptor.ClassWideEpsilonDescriptor.eps;
-import static com.rb.nonbiz.testutils.EpsilonDescriptor.GetterSpecificEpsilonDescriptor.eps;
+import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassWideMatcherEpsilonDescriptor.eps;
+import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GetterSpecificMatcherEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.Epsilons.epsilons;
 import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
 import static org.junit.Assert.assertEquals;
@@ -45,7 +45,7 @@ public class EpsilonsTest {
         eps(Class3.class), 0.37,
 
         // Class4 only has a key that's accessible by a string 'path'
-        GeneralEpsilonDescriptor.eps(Class4.class, "key_for_4"), 0.49);
+        GeneralMatcherEpsilonDescriptor.eps(Class4.class, "key_for_4"), 0.49);
 
     assertEquals(5, epsilons.size());
 
@@ -73,7 +73,7 @@ public class EpsilonsTest {
   @Test
   public void invalidDefaultEpsilon_throws() {
     class DummyClass {};
-    EpsilonDescriptor<?> dummyEpsilonDesriptor = eps(DummyClass.class);
+    MatcherEpsilonDescriptor<?> dummyEpsilonDesriptor = eps(DummyClass.class);
     RBSet.<DoubleFunction<Epsilons>>rbSetOf(
             v -> useEpsilonEverywhere(v),
             v -> epsilons(OptionalDouble.of(0.123), singletonDoubleMap(dummyEpsilonDesriptor, v)),
