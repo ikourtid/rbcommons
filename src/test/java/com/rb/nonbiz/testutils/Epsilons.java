@@ -40,7 +40,7 @@ public class Epsilons {
 
   public static Epsilons epsilons(
       OptionalDouble defaultEpsilonOverride,
-      DoubleMap<MatcherEpsilonDescriptor<?>> epsilonsMap) {
+      DoubleMap<MatcherEpsilonDescriptor<?>> matcherEpsilonDescriptors) {
     // Ideally, we'd be using something more typesafe than a double to denote an epsilon, which disallows invalid
     // epsilons. But unfortunately it's too late to do this by now (Dec 2022).
     // So let's just check here.
@@ -49,13 +49,13 @@ public class Epsilons {
         "The default epsilon is invalid: %s",
         v));
 
-    epsilonsMap.getRawMap().forEachEntry( (epsilonDescriptor, epsilon) ->
+    matcherEpsilonDescriptors.getRawMap().forEachEntry( (epsilonDescriptor, epsilon) ->
         RBPreconditions.checkArgument(
             isValidEpsilon(epsilon),
             "The epsilon with descriptor %s is invalid: %s",
             epsilonDescriptor, epsilon));
 
-    return new Epsilons(defaultEpsilonOverride, epsilonsMap);
+    return new Epsilons(defaultEpsilonOverride, matcherEpsilonDescriptors);
   }
 
   private static boolean isValidEpsilon(double epsilon) {
