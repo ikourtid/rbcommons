@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.testutils.MatcherEpsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -35,6 +36,7 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -303,7 +305,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
                 8_000.0, -7_000.0,
                 - 800.1,    700.1),
             // need a larger epsilon here than in asserter()
-            1e-6));
+            epsilon(1e-6)));
   }
 
   @Test
@@ -654,7 +656,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     return rbMatrixMatcher(expected, emptyMatcherEpsilons());
   }
 
-  public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected, double epsilon) {
+  public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected, Epsilon epsilon) {
     return rbMatrixMatcher(expected, useEpsilonInAllMatchers(epsilon));
   }
 
@@ -675,8 +677,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
           expected.matrixColumnIndexStream().allMatch(matrixColumnIndex -> {
             double valueInExpected = expected.get(matrixRowIndex, matrixColumnIndex);
             double valueInActual   = actual.get(matrixRowIndex, matrixColumnIndex);
-            return Math.abs(
-                valueInExpected - valueInActual) < e.get(RBMatrix.class);
+            return e.get(RBMatrix.class).areWithin(valueInExpected, valueInActual);
           }));
     });
   }

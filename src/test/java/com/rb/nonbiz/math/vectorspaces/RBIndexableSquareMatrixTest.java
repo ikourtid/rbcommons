@@ -3,6 +3,7 @@ package com.rb.nonbiz.math.vectorspaces;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.testutils.MatcherEpsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -133,7 +134,7 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
   }
 
   public static <K> TypeSafeMatcher<RBIndexableSquareMatrix<K>> rbIndexableSquareMatrixMatcher(
-      RBIndexableSquareMatrix<K> expected, double epsilon) {
+      RBIndexableSquareMatrix<K> expected, Epsilon epsilon) {
     return rbIndexableSquareMatrixMatcher(expected, useEpsilonInAllMatchers(epsilon));
   }
 
