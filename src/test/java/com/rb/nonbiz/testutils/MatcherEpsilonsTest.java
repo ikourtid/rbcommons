@@ -33,7 +33,7 @@ public class MatcherEpsilonsTest {
     class Class4 {};
     class DummyClass {};
 
-    MatcherEpsilons matcherEpsilons = MatcherEpsilons.matcherEpsilons(
+    MatcherEpsilons matcherEpsilons = matcherEpsilons(
         // Class1 has both class-wide and getter-specific epsilons
         eps(Class1.class), 0.17,
         eps(Class1.class, Class1A.class), 0.18,
@@ -76,9 +76,9 @@ public class MatcherEpsilonsTest {
     MatcherEpsilonDescriptor<?> dummyEpsilonDesriptor = eps(DummyClass.class);
     RBSet.<DoubleFunction<MatcherEpsilons>>rbSetOf(
             v -> useEpsilonInAllMatchers(v),
-            v -> MatcherEpsilons.matcherEpsilons(OptionalDouble.of(0.123), singletonDoubleMap(dummyEpsilonDesriptor, v)),
-            v -> MatcherEpsilons.matcherEpsilons(OptionalDouble.of(v),     singletonDoubleMap(dummyEpsilonDesriptor, v)),
-            v -> MatcherEpsilons.matcherEpsilons(OptionalDouble.of(v),     singletonDoubleMap(dummyEpsilonDesriptor, 0.123)))
+            v -> matcherEpsilons(OptionalDouble.of(0.123), singletonDoubleMap(dummyEpsilonDesriptor, v)),
+            v -> matcherEpsilons(OptionalDouble.of(v),     singletonDoubleMap(dummyEpsilonDesriptor, v)),
+            v -> matcherEpsilons(OptionalDouble.of(v),     singletonDoubleMap(dummyEpsilonDesriptor, 0.123)))
         .forEach(maker -> {
           MatcherEpsilons doesNotThrow;
           assertIllegalArgumentException(() -> maker.apply(-1e-9));
