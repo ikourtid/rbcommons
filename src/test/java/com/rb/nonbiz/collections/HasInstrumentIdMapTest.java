@@ -178,7 +178,7 @@ public class HasInstrumentIdMapTest extends RBTestMatcher<HasInstrumentIdMap<Tes
             iidMapOf(
                 STOCK_A1, money(11.11),
                 STOCK_A2, money(22.22)),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Override

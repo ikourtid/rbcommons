@@ -19,6 +19,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
@@ -79,7 +80,7 @@ public class RBMapWithOptionalDefaultTest extends RBTestMatcher<RBMapWithOptiona
   @Override
   protected boolean willMatch(RBMapWithOptionalDefault<String, Double> expected,
                               RBMapWithOptionalDefault<String, Double> actual) {
-    return rbMapWithOptionalDefaultMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return rbMapWithOptionalDefaultMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8)).matches(actual);
   }
 
   public static <K, V> TypeSafeMatcher<RBMapWithOptionalDefault<K, V>> rbMapWithOptionalDefaultEqualityMatcher(

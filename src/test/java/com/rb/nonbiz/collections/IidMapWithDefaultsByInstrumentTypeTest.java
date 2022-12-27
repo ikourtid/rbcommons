@@ -29,6 +29,7 @@ import static com.rb.nonbiz.testmatchers.Match.matchIidMap;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -123,7 +124,8 @@ public class IidMapWithDefaultsByInstrumentTypeTest extends RBTestMatcher<IidMap
   @Override
   protected boolean willMatch(IidMapWithDefaultsByInstrumentType<Double> expected,
                               IidMapWithDefaultsByInstrumentType<Double> actual) {
-    return iidMapWithDefaultsByInstrumentTypeMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return iidMapWithDefaultsByInstrumentTypeMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <V> TypeSafeMatcher<IidMapWithDefaultsByInstrumentType<V>> iidMapWithDefaultsByInstrumentTypeEqualityMatcher(

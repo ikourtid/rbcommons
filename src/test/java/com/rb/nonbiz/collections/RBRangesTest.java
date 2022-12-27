@@ -53,6 +53,8 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_SIGNED_MONEY;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
@@ -1846,24 +1848,21 @@ public class RBRangesTest {
 
     // the size of epsilon can determine whether one range is "safely" a proper subset of another
     assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(10.01)), DEFAULT_EPSILON_1e_8));
-    assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(10.01)), 0.009));
-    assertFalse(rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(10.01)), 0.02));
+    assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(10.01)), epsilon(0.009)));
+    assertFalse(rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(10.01)), epsilon(0.02)));
 
     assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(money(0.99), money(11)), DEFAULT_EPSILON_1e_8));
-    assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(money(0.99), money(11)), 0.009));
-    assertFalse(rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(money(0.99), money(11)), 0.02));
+    assertTrue( rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(money(0.99), money(11)), epsilon(0.009)));
+    assertFalse(rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(money(0.99), money(11)), epsilon(0.02)));
 
     // zero epsilon is valid
-    assertTrue(rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(11)), 0.0));
-
-    // cannot use negative epsilons
-    assertIllegalArgumentException( () -> rangeIsSafelyProperSubsetOf(closedRange1to10, closedRange1to10, -1e-8));
+    assertTrue(rangeIsSafelyProperSubsetOf(closedRange1to10, Range.closed(ZERO_MONEY, money(11)), ZERO_EPSILON));
 
     // an open range is not a  "safely" proper subset of the equivalent closed range
     assertFalse(rangeIsSafelyProperSubsetOf(
         Range.open(  money(1), money(10)),
         Range.closed(money(1), money(10)),
-        1e-8));
+        DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -1872,7 +1871,7 @@ public class RBRangesTest {
         assertThat(
             toRangeWithoutTrivialEndpoints(inputRange, closedRange(UNIT_FRACTION_0, UNIT_FRACTION_1)),
             // There are no epsilons here; toRangeWithoutTrivialEndpoints uses compareTo for exact comparison.
-            preciseValueRangeMatcher(expectedResult, 1e-12));
+            preciseValueRangeMatcher(expectedResult, epsilon(1e-12)));
 
     asserter.accept(closedRange(UNIT_FRACTION_0, UNIT_FRACTION_1), Range.all());
     asserter.accept(

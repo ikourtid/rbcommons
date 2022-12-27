@@ -14,6 +14,7 @@ import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 // This test class is not generic, but the publicly exposed typesafe matcher is.
@@ -27,7 +28,7 @@ public class RBCategoryMapTest extends RBTestMatcher<RBCategoryMap<String, Doubl
             rbCategoryMap(1.1, rbMapOf(
                 "a", 1.1,
                 "b", 1.1)),
-            f -> doubleAlmostEqualsMatcher(f, 1e-8)));
+            f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8)));
 
     assertThat(
         rbCategoryMap(ImmutableSet.of("a", "b"), "ALL", v -> v + "_"),
@@ -60,7 +61,8 @@ public class RBCategoryMapTest extends RBTestMatcher<RBCategoryMap<String, Doubl
 
   @Override
   protected boolean willMatch(RBCategoryMap<String, Double> expected, RBCategoryMap<String, Double> actual) {
-    return rbCategoryMapMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return rbCategoryMapMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <K, V> TypeSafeMatcher<RBCategoryMap<K, V>> rbCategoryMapMatcher(

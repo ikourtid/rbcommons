@@ -32,6 +32,7 @@ import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.iidMapPreciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -47,7 +48,7 @@ public class IidMapMergersTest {
             mergeIidMapsAllowingOverlapOnSimilarItemsOnly(
                 iidMapIterator,
                 (v1, v2) -> v1.almostEquals(v2, 1e-8)),
-            iidMapPreciseValueMatcher(expectedResult, 1e-8));
+            iidMapPreciseValueMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(emptyIterator(), emptyIidMap());
     asserter.accept(singletonIterator(emptyIidMap()), emptyIidMap());

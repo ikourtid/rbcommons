@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -155,7 +157,7 @@ public class ContiguousNonDiscreteRangeMapTest extends RBTestMatcher<ContiguousN
             singletonList("[0,7)"),
             7.0)
             .getFirstInvalidPointAfterRange(),
-        doubleAlmostEqualsMatcher(7.0, 1e-8));
+        doubleAlmostEqualsMatcher(7.0, DEFAULT_EPSILON_1e_8));
   }
 
   @Override

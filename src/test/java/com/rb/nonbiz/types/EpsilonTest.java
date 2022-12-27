@@ -14,6 +14,8 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class EpsilonTest {
 
+  public static final Epsilon DUMMY_EPSILON = epsilon(0.1234);
+
   @Test
   public void testValidValues() {
     assertIllegalArgumentException( () -> epsilon(-999));

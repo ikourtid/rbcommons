@@ -16,6 +16,7 @@ import static com.rb.nonbiz.types.ClosedSignedFractionRange.closedSignedFraction
 import static com.rb.nonbiz.types.ClosedSignedFractionRange.signedFractionFixedTo;
 import static com.rb.nonbiz.types.ClosedSignedFractionRange.signedFractionFixedToOne;
 import static com.rb.nonbiz.types.ClosedSignedFractionRange.signedFractionFixedToZero;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_1;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
@@ -92,7 +93,7 @@ public class ClosedSignedFractionRangeTest extends RBTestMatcher<ClosedSignedFra
   public static TypeSafeMatcher<ClosedSignedFractionRange> closedSignedFractionRangeMatcher(
       ClosedSignedFractionRange expected) {
     return makeMatcher(expected,
-        match(v -> v.asSignedFractionRange(), f -> preciseValueRangeMatcher(f, 1e-8)));
+        match(v -> v.asSignedFractionRange(), f -> preciseValueRangeMatcher(f, DEFAULT_EPSILON_1e_8)));
   }
 
 }

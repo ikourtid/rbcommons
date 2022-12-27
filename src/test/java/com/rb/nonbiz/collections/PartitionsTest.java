@@ -22,6 +22,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_1;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
@@ -79,7 +80,7 @@ public class PartitionsTest {
     TriConsumer<RBMap<String, UnitFraction>, RBMap<String, UnitFraction>, RBMap<String, SignedFraction>> asserter =
         (partitionA, partitionB, deviationsMap) -> assertThat(
             calculatePartitionDeviations(partition(partitionA), partition(partitionB)),
-            deviationsMatcher(deviations(deviationsMap), 1e-8));
+            deviationsMatcher(deviations(deviationsMap), DEFAULT_EPSILON_1e_8));
     asserter.accept(
         singletonRBMap("a", UNIT_FRACTION_1),
         singletonRBMap("a", UNIT_FRACTION_1),
@@ -114,7 +115,7 @@ public class PartitionsTest {
     TriConsumer<RBMap<String, UnitFraction>, RBMap<String, UnitFraction>, RBMap<String, SignedFraction>> asserter =
         (partitionA, partitionB, deviationsMap) -> assertThat(
             calculatePartitionNonZeroDeviations(partition(partitionA), partition(partitionB)),
-            nonZeroDeviationsMatcher(nonZeroDeviations(deviationsMap), 1e-8));
+            nonZeroDeviationsMatcher(nonZeroDeviations(deviationsMap), DEFAULT_EPSILON_1e_8));
     asserter.accept(
         singletonRBMap("a", UNIT_FRACTION_1),
         singletonRBMap("a", UNIT_FRACTION_1),

@@ -16,6 +16,7 @@ import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.optionalMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -25,8 +26,8 @@ public class BehaviorWithValueButNoOverrideTest extends RBTestMatcher<BehaviorWi
   public void differentTypesDoNotMatch() {
     BehaviorWithValueButNoOverride<Double> obj1 = useExistingValueWhenOverrideMissing();
     BehaviorWithValueButNoOverride<Double> obj2 = useFixedValueWhenOverrideMissing(DUMMY_DOUBLE);
-    assertThat(obj1, not(behaviorWithValueButNoOverrideMatcher(obj2, f -> doubleAlmostEqualsMatcher(f, 1e-8))));
-    assertThat(obj2, not(behaviorWithValueButNoOverrideMatcher(obj1, f -> doubleAlmostEqualsMatcher(f, 1e-8))));
+    assertThat(obj1, not(behaviorWithValueButNoOverrideMatcher(obj2, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))));
+    assertThat(obj2, not(behaviorWithValueButNoOverrideMatcher(obj1, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))));
   }
 
   @Override

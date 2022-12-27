@@ -80,7 +80,7 @@ public class RBJsonDoubleArrayTest extends RBTestMatcher<RBJsonDoubleArray> {
     assertEquals(3, builder.size());
     assertThat(
         builder.build(),
-        rbJsonDoubleArrayMatcher(rbJsonDoubleArray(1.23, 4.56, 7.89), 1e-8));
+        rbJsonDoubleArrayMatcher(rbJsonDoubleArray(1.23, 4.56, 7.89), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -122,7 +122,7 @@ public class RBJsonDoubleArrayTest extends RBTestMatcher<RBJsonDoubleArray> {
 
   @Override
   protected boolean willMatch(RBJsonDoubleArray expected, RBJsonDoubleArray actual) {
-    return rbJsonDoubleArrayMatcher(expected, 1e-8).matches(actual);
+    return rbJsonDoubleArrayMatcher(expected, DEFAULT_EPSILON_1e_8).matches(actual);
   }
 
   public static TypeSafeMatcher<RBJsonDoubleArray> rbJsonDoubleArrayMatcher(RBJsonDoubleArray expected, Epsilon epsilon) {

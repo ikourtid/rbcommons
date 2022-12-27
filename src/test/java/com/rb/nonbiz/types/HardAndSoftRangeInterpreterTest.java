@@ -10,6 +10,7 @@ import java.util.function.BiConsumer;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -25,7 +26,7 @@ public class HardAndSoftRangeInterpreterTest extends RBTest<HardAndSoftRangeInte
                     Range.closedOpen(money(12), money(28)),    // hard range lower bound CLOSED; upper bound OPEN
                     Range.closed(    money(15), money(25)))),  // both soft range bounds MUST be CLOSED
             preciseValueRangeMatcher(
-                expectedResult, 1e-8));
+                expectedResult, DEFAULT_EPSILON_1e_8));
 
     // If below the hard range lower endpoint, we should force the value to go up to the soft range lower endpoint.
     // And since it's also not above the upper endpoint of the hard range, the upper bound will be the tighter of the two.
@@ -72,7 +73,7 @@ public class HardAndSoftRangeInterpreterTest extends RBTest<HardAndSoftRangeInte
                     Range.atMost(money(28)),   // hard range upper bound can  be OPEN or CLOSED; here it's CLOSED
                     Range.atMost(money(25)))), // soft range upper bound must be CLOSED
             preciseValueRangeMatcher(
-                expectedResult, 1e-8));
+                expectedResult, DEFAULT_EPSILON_1e_8));
     asserter.accept(money(28),   Range.atMost(money(28)));
 
     // If within the soft range, then return the soft range.
@@ -106,7 +107,7 @@ public class HardAndSoftRangeInterpreterTest extends RBTest<HardAndSoftRangeInte
                     Range.greaterThan(money(12)),     // hard range lower bound can  be OPEN
                     Range.atLeast(    money(15)))),   // soft range lower bound must be CLOSED
             preciseValueRangeMatcher(
-                expectedResult, 1e-8));
+                expectedResult, DEFAULT_EPSILON_1e_8));
 
     // If below the hard range lower bound, we should force the value to move up to be within the soft range.
     asserter.accept(ZERO_MONEY,  Range.atLeast(money(15)));

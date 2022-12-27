@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -21,6 +22,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.bigDecimalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,7 +44,7 @@ public class DeviationsTest extends RBTestMatcher<Deviations<String>> {
             "b", signedFraction(0.5),
             "c", signedFraction(-0.6)))
             .getMeanAbsoluteDeviation(),
-        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(0.4, (0.1 + 0.5 + 0.6) / 3)), 1e-8));
+        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(0.4, (0.1 + 0.5 + 0.6) / 3)), DEFAULT_EPSILON_1e_8));
     assertThat(
         deviations(rbMapOf(
             "a", signedFraction(0.1),
@@ -50,7 +52,7 @@ public class DeviationsTest extends RBTestMatcher<Deviations<String>> {
             "c", signedFraction(-0.6),
             "d", SIGNED_FRACTION_0))
             .getMeanAbsoluteDeviation(),
-        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(0.3, (0.1 + 0.5 + 0.6) / 4)), 1e-8));
+        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(0.3, (0.1 + 0.5 + 0.6) / 4)), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -62,7 +64,7 @@ public class DeviationsTest extends RBTestMatcher<Deviations<String>> {
             "b", signedFraction(0.5),
             "c", signedFraction(-0.6)))
             .getMeanSquaredDeviation(),
-        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(0.206666667, (0.1 * 0.1 + 0.5 * 0.5 + 0.6 * 0.6) / 3)), 1e-8));
+        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(0.206666667, (0.1 * 0.1 + 0.5 * 0.5 + 0.6 * 0.6) / 3)), DEFAULT_EPSILON_1e_8));
     assertThat(
         deviations(rbMapOf(
             "a", signedFraction(0.1),
@@ -70,7 +72,7 @@ public class DeviationsTest extends RBTestMatcher<Deviations<String>> {
             "c", signedFraction(-0.6),
             "d", SIGNED_FRACTION_0))
             .getMeanSquaredDeviation(),
-        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(0.155, (0.1 * 0.1 + 0.5 * 0.5 + 0.6 * 0.6) / 4)), 1e-8));
+        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(0.155, (0.1 * 0.1 + 0.5 * 0.5 + 0.6 * 0.6) / 4)), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -134,10 +136,10 @@ public class DeviationsTest extends RBTestMatcher<Deviations<String>> {
                 "a", signedFraction(0.1),
                 "b", signedFraction(0.4),
                 "c", signedFraction(-0.5))),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
     assertThat(
         emptyDeviations().toNonZeroDeviationsOrThrow(),
-        nonZeroDeviationsMatcher(emptyNonZeroDeviations(), 1e-8));
+        nonZeroDeviationsMatcher(emptyNonZeroDeviations(), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -180,10 +182,10 @@ public class DeviationsTest extends RBTestMatcher<Deviations<String>> {
 
   @Override
   protected boolean willMatch(Deviations<String> expected, Deviations<String> actual) {
-    return deviationsMatcher(expected, 1e-8).matches(actual);
+    return deviationsMatcher(expected, DEFAULT_EPSILON_1e_8).matches(actual);
   }
 
-  public static <K> TypeSafeMatcher<Deviations<K>> deviationsMatcher(Deviations<K> expected, double epsilon) {
+  public static <K> TypeSafeMatcher<Deviations<K>> deviationsMatcher(Deviations<K> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.getRawSignedFractionsMap(), f -> rbMapPreciseValueMatcher(f, epsilon)));
   }

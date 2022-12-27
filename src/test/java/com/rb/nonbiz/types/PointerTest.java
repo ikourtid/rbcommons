@@ -12,6 +12,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Pointer.initializedPointer;
 import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -112,7 +113,7 @@ public class PointerTest extends RBTestMatcher<Pointer<Double>> {
 
   @Override
   protected boolean willMatch(Pointer<Double> expected, Pointer<Double> actual) {
-    return pointerMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return pointerMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8)).matches(actual);
   }
 
   public static <T> TypeSafeMatcher<Pointer<T>> pointerMatcher(Pointer<T> expected, MatcherGenerator<T> matcherGenerator) {

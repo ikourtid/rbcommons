@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -26,6 +27,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_BOOLEAN;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -51,7 +53,7 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
 
   @Test
   public void testSingleRowIterator() {
-    double e = 1e-9; // epsilon
+    Epsilon e = epsilon(1e-9);
     ImmutableDoubleIndexableArray2D<String, Boolean> array = immutableDoubleIndexableArray2D(
         new double[][] {
             { 1.1, 2.2 },
@@ -61,8 +63,8 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
         simpleArrayIndexMapping("a", "b", "c"),
         simpleArrayIndexMapping(false, true));
     Iterator<Double> iter = array.singleRowIterator("b");
-    assertEquals(3.3, iter.next(), e);
-    assertEquals(4.4, iter.next(), e);
+    assertEquals(3.3, iter.next(), e.doubleValue());
+    assertEquals(4.4, iter.next(), e.doubleValue());
     assertFalse(iter.hasNext());
     assertThat(
         newArrayList(array.singleRowIterator("a")),

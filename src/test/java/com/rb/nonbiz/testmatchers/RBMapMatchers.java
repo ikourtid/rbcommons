@@ -67,7 +67,7 @@ public class RBMapMatchers {
           return false;
         }
         for (K key : expected.keySet()) {
-          if (!expected.getOrThrow(key).almostEquals(actual.getOrThrow(key), epsilon)) {
+          if (!expected.getOrThrow(key).almostEquals(actual.getOrThrow(key), epsilon.doubleValue())) {
             return false;
           }
         }

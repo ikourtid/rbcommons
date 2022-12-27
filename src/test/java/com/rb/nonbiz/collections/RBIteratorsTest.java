@@ -44,6 +44,8 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_BOOLEAN;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -349,7 +351,7 @@ public class RBIteratorsTest {
         transformToDoubleIterator(Collections.<ZScore>emptyIterator()),
         doubleIteratorMatcher(
             emptyIterator(),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
     assertThat(
         transformToDoubleIterator(ImmutableList.of(
                 zScore(1.1),
@@ -358,7 +360,7 @@ public class RBIteratorsTest {
             .iterator()),
         doubleIteratorMatcher(
             ImmutableList.of(1.1, 2.2, 3.3).iterator(),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -369,7 +371,7 @@ public class RBIteratorsTest {
     assertThat(
         transformToBigDecimalIterator(ImmutableList.of(money(1.1), money(3.3)).iterator()),
         iteratorMatcher(ImmutableList.of(BigDecimal.valueOf(1.1), BigDecimal.valueOf(3.3)).iterator(),
-            f -> bigDecimalMatcher(f, 1e-12)));
+            f -> bigDecimalMatcher(f, epsilon(1e-12))));
   }
 
   @Test

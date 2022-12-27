@@ -13,6 +13,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.NonNegativeMultiplier.NON_NEGATIVE_MULTIPLIER_0;
 import static com.rb.nonbiz.types.NonNegativeMultiplier.NON_NEGATIVE_MULTIPLIER_1;
 import static com.rb.nonbiz.types.NonNegativeMultiplier.nonNegativeMultiplier;
@@ -95,7 +96,7 @@ public class NonNegativeMultiplierTest extends RBTestMatcher<NonNegativeMultipli
 
   @Override
   protected boolean willMatch(NonNegativeMultiplier expected, NonNegativeMultiplier actual) {
-    return impreciseValueMatcher(expected, 1e-8).matches(actual);
+    return impreciseValueMatcher(expected, DEFAULT_EPSILON_1e_8).matches(actual);
   }
 
 }

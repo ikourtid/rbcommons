@@ -15,6 +15,7 @@ import static com.rb.nonbiz.collections.EitherOrBothOfSameType.rightOnly;
 import static com.rb.nonbiz.collections.EitherOrBothTest.eitherOrBothMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 
@@ -61,7 +62,8 @@ public class EitherOrBothOfSameTypeTest extends RBTestMatcher<EitherOrBothOfSame
 
   @Override
   protected boolean willMatch(EitherOrBothOfSameType<Double> expected, EitherOrBothOfSameType<Double> actual) {
-    return eitherOrBothOfSameTypeMatcher(expected, d -> doubleAlmostEqualsMatcher(d, 1e-8)).matches(actual);
+    return eitherOrBothOfSameTypeMatcher(expected, d -> doubleAlmostEqualsMatcher(d, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <T> TypeSafeMatcher<EitherOrBothOfSameType<T>> eitherOrBothOfSameTypeMatcher(

@@ -64,6 +64,7 @@ import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueId;
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueIdMatcher;
 import static com.rb.nonbiz.text.UniqueId.uniqueId;
 import static com.rb.nonbiz.text.UniqueIdTest.uniqueIdMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
@@ -142,7 +143,7 @@ public class RBJsonObjectsTest {
     BiConsumer<JsonObject, Range<UnitFraction>> asserter = (jsonObject, expectedRange) ->
         assertThat(
             jsonObjectToRange(jsonObject, v -> unitFraction(v.getAsDouble())),
-            preciseValueRangeMatcher(expectedRange, 1e-8));
+            preciseValueRangeMatcher(expectedRange, DEFAULT_EPSILON_1e_8));
 
     // the 'min' and 'max' properties are both optional:
     asserter.accept(
@@ -187,7 +188,7 @@ public class RBJsonObjectsTest {
             v -> unitFraction(v.getAsDouble())),
         closedRangeMatcher(
             closedRange(unitFraction(0.1), unitFraction(0.9)),
-            f -> preciseValueMatcher(f, 1e-8)));
+            f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8)));
 
     Consumer<JsonObject> assertThrows = invalidJsonObject -> assertIllegalArgumentException( () ->
         RBJsonObjects.<UnitFraction>jsonObjectToClosedRange(
