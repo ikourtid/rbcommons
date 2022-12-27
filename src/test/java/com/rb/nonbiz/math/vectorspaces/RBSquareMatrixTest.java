@@ -1,6 +1,6 @@
 package com.rb.nonbiz.math.vectorspaces;
 
-import com.rb.nonbiz.testutils.Epsilons;
+import com.rb.nonbiz.testutils.MatcherEpsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -13,8 +13,8 @@ import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
-import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
@@ -116,14 +116,14 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
   }
 
   public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected) {
-    return rbSquareMatrixMatcher(expected, emptyEpsilons());
+    return rbSquareMatrixMatcher(expected, emptyMatcherEpsilons());
   }
 
   public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected, double epsilon) {
-    return rbSquareMatrixMatcher(expected, useEpsilonEverywhere(epsilon));
+    return rbSquareMatrixMatcher(expected, useEpsilonInAllMatchers(epsilon));
   }
 
-  public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected, Epsilons e) {
+  public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected, MatcherEpsilons e) {
     return makeMatcher(expected,
         match(v -> (RBMatrix) v, f -> rbMatrixMatcher(f, e)));
   }

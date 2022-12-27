@@ -1,7 +1,7 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import com.rb.nonbiz.collections.ArrayIndexMapping;
-import com.rb.nonbiz.testutils.Epsilons;
+import com.rb.nonbiz.testutils.MatcherEpsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -20,8 +20,8 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
-import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -129,16 +129,16 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
 
   public static <K> TypeSafeMatcher<RBIndexableSquareMatrix<K>> rbIndexableSquareMatrixMatcher(
       RBIndexableSquareMatrix<K> expected) {
-    return rbIndexableSquareMatrixMatcher(expected, emptyEpsilons());
+    return rbIndexableSquareMatrixMatcher(expected, emptyMatcherEpsilons());
   }
 
   public static <K> TypeSafeMatcher<RBIndexableSquareMatrix<K>> rbIndexableSquareMatrixMatcher(
       RBIndexableSquareMatrix<K> expected, double epsilon) {
-    return rbIndexableSquareMatrixMatcher(expected, useEpsilonEverywhere(epsilon));
+    return rbIndexableSquareMatrixMatcher(expected, useEpsilonInAllMatchers(epsilon));
   }
 
   public static <K> TypeSafeMatcher<RBIndexableSquareMatrix<K>> rbIndexableSquareMatrixMatcher(
-      RBIndexableSquareMatrix<K> expected, Epsilons e) {
+      RBIndexableSquareMatrix<K> expected, MatcherEpsilons e) {
     return makeMatcher(expected,
         match(v -> v.getRawSquareMatrix(), f -> rbSquareMatrixMatcher(f, e)),
         // in theory we could be using a matcher for K here, but in practice K has to implement a

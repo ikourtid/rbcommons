@@ -2,7 +2,7 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.google.common.collect.ImmutableList;
-import com.rb.nonbiz.testutils.Epsilons;
+import com.rb.nonbiz.testutils.MatcherEpsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -20,8 +20,8 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrows;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
-import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertTrue;
@@ -330,14 +330,14 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
   }
 
   public static TypeSafeMatcher<RBVector> rbVectorMatcher(RBVector expected) {
-    return rbVectorMatcher(expected, emptyEpsilons());
+    return rbVectorMatcher(expected, emptyMatcherEpsilons());
   }
 
   public static TypeSafeMatcher<RBVector> rbVectorMatcher(RBVector expected, double epsilon) {
-    return rbVectorMatcher(expected, useEpsilonEverywhere(epsilon));
+    return rbVectorMatcher(expected, useEpsilonInAllMatchers(epsilon));
   }
 
-  public static TypeSafeMatcher<RBVector> rbVectorMatcher(RBVector expected, Epsilons e) {
+  public static TypeSafeMatcher<RBVector> rbVectorMatcher(RBVector expected, MatcherEpsilons e) {
     // This matcher is a bit unusual, but we didn't want to expose the DoubleMatrix1D contents of the RBVector
     // in test, because prod code could also have access to it, and we don't want that, because DoubleMatrix1D is
     // a 3rd party mutable class.

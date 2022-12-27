@@ -2,7 +2,7 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.functional.TriConsumer;
-import com.rb.nonbiz.testutils.Epsilons;
+import com.rb.nonbiz.testutils.MatcherEpsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -32,8 +32,8 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertIndexOutOfBoundsException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
-import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -651,18 +651,18 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
   }
 
   public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected) {
-    return rbMatrixMatcher(expected, emptyEpsilons());
+    return rbMatrixMatcher(expected, emptyMatcherEpsilons());
   }
 
   public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected, double epsilon) {
-    return rbMatrixMatcher(expected, useEpsilonEverywhere(epsilon));
+    return rbMatrixMatcher(expected, useEpsilonInAllMatchers(epsilon));
   }
 
   // This matcher is very verbose; we could have just exposed the RBMatrix's DoubleMatrix2D and used
   // matrixMatcher. However, exposing that would be dangerous, because it would also allow other classes in
   // the same package to also access the DoubleMatrix2D, which is a 3rd party class that's not immutable.
   // So this matcher's verbosity is a small price to pay compared to that risk.
-  public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected, Epsilons e) {
+  public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected, MatcherEpsilons e) {
     return makeMatcher(expected, actual -> {
       if (expected.getNumRows() != actual.getNumRows()) {
         return false;

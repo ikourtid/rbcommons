@@ -2,7 +2,7 @@ package com.rb.nonbiz.testmatchers;
 
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.DoubleMatrix2D;
-import com.rb.nonbiz.testutils.Epsilons;
+import com.rb.nonbiz.testutils.MatcherEpsilons;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -11,7 +11,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class RBColtMatchers {
 
-  public static TypeSafeMatcher<DoubleMatrix2D> matrixMatcher(DoubleMatrix2D expected, Epsilons e) {
+  public static TypeSafeMatcher<DoubleMatrix2D> matrixMatcher(DoubleMatrix2D expected, MatcherEpsilons e) {
     return matrixMatcher(expected, e.get(DoubleMatrix2D.class));
   }
 
@@ -42,7 +42,7 @@ public class RBColtMatchers {
     };
   }
 
-  public static TypeSafeMatcher<DoubleMatrix1D> matrix1dMatcher(DoubleMatrix1D expected, Epsilons e) {
+  public static TypeSafeMatcher<DoubleMatrix1D> matrix1dMatcher(DoubleMatrix1D expected, MatcherEpsilons e) {
     return matrix1dMatcher(expected, e.get(DoubleMatrix1D.class));
   }
 

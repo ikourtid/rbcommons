@@ -11,8 +11,8 @@ import static com.rb.nonbiz.collections.DoubleMap.singletonDoubleMap;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassWideMatcherEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GetterSpecificMatcherEpsilonDescriptor.eps;
-import static com.rb.nonbiz.testutils.Epsilons.epsilons;
-import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.matcherEpsilons;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
  *
  * see OrdersTest#testEpsilonsInfra for how this gets used.
  */
-public class EpsilonsTest {
+public class MatcherEpsilonsTest {
 
   @Test
   public void testEpsilonsFunctionality() {
@@ -33,7 +33,7 @@ public class EpsilonsTest {
     class Class4 {};
     class DummyClass {};
 
-    Epsilons epsilons = epsilons(
+    MatcherEpsilons matcherEpsilons = MatcherEpsilons.matcherEpsilons(
         // Class1 has both class-wide and getter-specific epsilons
         eps(Class1.class), 0.17,
         eps(Class1.class, Class1A.class), 0.18,
@@ -47,40 +47,40 @@ public class EpsilonsTest {
         // Class4 only has a key that's accessible by a string 'path'
         GeneralMatcherEpsilonDescriptor.eps(Class4.class, "key_for_4"), 0.49);
 
-    assertEquals(5, epsilons.size());
+    assertEquals(5, matcherEpsilons.size());
 
     // using a smaller epsilon than the usual 1e-8 here for double comparisons,
     // because the return value itself will sometimes be 1e-8, the default epsilon.
     double e = 1e-9;
 
-    assertEquals(0.17, epsilons.get(Class1.class),                   e);
-    assertEquals(0.18, epsilons.get(Class1.class, Class1A.class),    e);
-    assertEquals(1e-8, epsilons.get(Class1.class, DummyClass.class), e);
+    assertEquals(0.17, matcherEpsilons.get(Class1.class),                   e);
+    assertEquals(0.18, matcherEpsilons.get(Class1.class, Class1A.class),    e);
+    assertEquals(1e-8, matcherEpsilons.get(Class1.class, DummyClass.class), e);
 
-    assertEquals(1e-8, epsilons.get(Class2.class),                   e);
-    assertEquals(0.28, epsilons.get(Class2.class, Class2A.class),    e);
-    assertEquals(1e-8, epsilons.get(Class2.class, DummyClass.class), e);
+    assertEquals(1e-8, matcherEpsilons.get(Class2.class),                   e);
+    assertEquals(0.28, matcherEpsilons.get(Class2.class, Class2A.class),    e);
+    assertEquals(1e-8, matcherEpsilons.get(Class2.class, DummyClass.class), e);
 
-    assertEquals(0.37, epsilons.get(Class3.class),                   e);
-    assertEquals(1e-8, epsilons.get(Class3.class, DummyClass.class), e);
+    assertEquals(0.37, matcherEpsilons.get(Class3.class),                   e);
+    assertEquals(1e-8, matcherEpsilons.get(Class3.class, DummyClass.class), e);
 
-    assertEquals(0.49, epsilons.get(Class4.class, "key_for_4"),      e);
-    assertEquals(1e-8, epsilons.get(Class4.class, "wrong_key"),      e);
+    assertEquals(0.49, matcherEpsilons.get(Class4.class, "key_for_4"),      e);
+    assertEquals(1e-8, matcherEpsilons.get(Class4.class, "wrong_key"),      e);
 
-    assertEquals(1e-8, epsilons.get(DummyClass.class),               e);
+    assertEquals(1e-8, matcherEpsilons.get(DummyClass.class),               e);
   }
 
   @Test
   public void invalidDefaultEpsilon_throws() {
     class DummyClass {};
     MatcherEpsilonDescriptor<?> dummyEpsilonDesriptor = eps(DummyClass.class);
-    RBSet.<DoubleFunction<Epsilons>>rbSetOf(
-            v -> useEpsilonEverywhere(v),
-            v -> epsilons(OptionalDouble.of(0.123), singletonDoubleMap(dummyEpsilonDesriptor, v)),
-            v -> epsilons(OptionalDouble.of(v),     singletonDoubleMap(dummyEpsilonDesriptor, v)),
-            v -> epsilons(OptionalDouble.of(v),     singletonDoubleMap(dummyEpsilonDesriptor, 0.123)))
+    RBSet.<DoubleFunction<MatcherEpsilons>>rbSetOf(
+            v -> useEpsilonInAllMatchers(v),
+            v -> MatcherEpsilons.matcherEpsilons(OptionalDouble.of(0.123), singletonDoubleMap(dummyEpsilonDesriptor, v)),
+            v -> MatcherEpsilons.matcherEpsilons(OptionalDouble.of(v),     singletonDoubleMap(dummyEpsilonDesriptor, v)),
+            v -> MatcherEpsilons.matcherEpsilons(OptionalDouble.of(v),     singletonDoubleMap(dummyEpsilonDesriptor, 0.123)))
         .forEach(maker -> {
-          Epsilons doesNotThrow;
+          MatcherEpsilons doesNotThrow;
           assertIllegalArgumentException(() -> maker.apply(-1e-9));
           doesNotThrow = maker.apply(0);
           doesNotThrow = maker.apply(1e-9);
