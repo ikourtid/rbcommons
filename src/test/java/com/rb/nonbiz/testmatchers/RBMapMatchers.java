@@ -125,7 +125,7 @@ public class RBMapMatchers {
           return false;
         }
         for (K key : expected.keySet()) {
-          if (epsilon.areWithin(expected.getOrThrow(key), actual.getOrThrow(key))) {
+          if (!epsilon.areWithin(expected.getOrThrow(key), actual.getOrThrow(key))) {
             return false;
           }
         }
