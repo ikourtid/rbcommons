@@ -49,31 +49,31 @@ public class ContinuouslyCompoundedAnnualizedReturnTest extends RBTestMatcher<Co
         annuallyCompoundedAnnualizedReturn(onesBasedReturn(1.05))
             .toContinuouslyCompoundedAnnualizedReturn()
             .toNonAnnualized(1.0),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         onesBasedReturn(1.05 * 1.05),
         annuallyCompoundedAnnualizedReturn(onesBasedReturn(1.05))
             .toContinuouslyCompoundedAnnualizedReturn()
             .toNonAnnualized(2.0),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         onesBasedReturn(1.05 * 1.05 * 1.05),
         annuallyCompoundedAnnualizedReturn(onesBasedReturn(1.05))
             .toContinuouslyCompoundedAnnualizedReturn()
             .toNonAnnualized(3.0),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         onesBasedReturn(doubleExplained(1.02469508, Math.sqrt(1.05))),
         annuallyCompoundedAnnualizedReturn(onesBasedReturn(1.05))
             .toContinuouslyCompoundedAnnualizedReturn()
             .toNonAnnualized(0.5),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         FLAT_RETURN,
         annuallyCompoundedAnnualizedReturn(onesBasedReturn(1.05))
             .toContinuouslyCompoundedAnnualizedReturn()
             .toNonAnnualized(0),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Test

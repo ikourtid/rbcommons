@@ -2,6 +2,7 @@ package com.rb.biz.types;
 
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
+import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -22,6 +23,7 @@ import static com.rb.biz.types.trading.SignedQuantity.ZERO_SIGNED_QUANTITY;
 import static com.rb.biz.types.trading.SignedQuantity.signedQuantity;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -113,15 +115,15 @@ public class PriceTest {
   public void adding() {
     Price delta = price(medium.asBigDecimal().subtract(small.asBigDecimal()));
 
-    assertTrue(small.add(delta).almostEquals(medium, 1e-8));
-    assertTrue(delta.add(small).almostEquals(medium, 1e-8));
+    assertTrue(small.add(delta).almostEquals(medium, DEFAULT_EPSILON_1e_8));
+    assertTrue(delta.add(small).almostEquals(medium, DEFAULT_EPSILON_1e_8));
   }
 
   @Test
   public void subtracting() {
     Price delta = price(medium.asBigDecimal().subtract(small.asBigDecimal()));
 
-    assertTrue(medium.subtract(delta).almostEquals(small, 1e-8));
+    assertTrue(medium.subtract(delta).almostEquals(small, DEFAULT_EPSILON_1e_8));
 
     assertIllegalArgumentException( () -> small.subtract(small));
     assertIllegalArgumentException( () -> small.subtract(medium));
@@ -133,50 +135,50 @@ public class PriceTest {
 
     assertIllegalArgumentException( () -> medium.multiply(BigDecimal.ZERO));
 
-    assertTrue(medium.multiply(BigDecimal.valueOf(0.5)).almostEquals(halfMedium,  1e-8));
-    assertTrue(medium.multiply(BigDecimal.ONE         ).almostEquals(medium,      1e-8));
-    assertTrue(medium.multiply(BigDecimal.valueOf(2)  ).almostEquals(twiceMedium, 1e-8));
+    assertTrue(medium.multiply(BigDecimal.valueOf(0.5)).almostEquals(halfMedium,  DEFAULT_EPSILON_1e_8));
+    assertTrue(medium.multiply(BigDecimal.ONE         ).almostEquals(medium,      DEFAULT_EPSILON_1e_8));
+    assertTrue(medium.multiply(BigDecimal.valueOf(2)  ).almostEquals(twiceMedium, DEFAULT_EPSILON_1e_8));
 
-    assertTrue(medium.multiply(onesBasedReturn(0.5)).almostEquals(halfMedium,  1e-8));
-    assertTrue(medium.multiply(FLAT_RETURN         ).almostEquals(medium,      1e-8));
-    assertTrue(medium.multiply(onesBasedReturn(2)  ).almostEquals(twiceMedium, 1e-8));
+    assertTrue(medium.multiply(onesBasedReturn(0.5)).almostEquals(halfMedium,  DEFAULT_EPSILON_1e_8));
+    assertTrue(medium.multiply(FLAT_RETURN         ).almostEquals(medium,      DEFAULT_EPSILON_1e_8));
+    assertTrue(medium.multiply(onesBasedReturn(2)  ).almostEquals(twiceMedium, DEFAULT_EPSILON_1e_8));
 
-    assertAlmostEquals(medium.multiply(nonNegativeQuantity(0)),   ZERO_MONEY, 1e-8);
-    assertAlmostEquals(medium.multiply(nonNegativeQuantity(0.5)), money(3.5), 1e-8);
-    assertAlmostEquals(medium.multiply(nonNegativeQuantity(1)),   money(7),   1e-8);
-    assertAlmostEquals(medium.multiply(nonNegativeQuantity(2)),   money(14),  1e-8);
+    assertAlmostEquals(medium.multiply(nonNegativeQuantity(0)),   ZERO_MONEY, DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.multiply(nonNegativeQuantity(0.5)), money(3.5), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.multiply(nonNegativeQuantity(1)),   money(7),   DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.multiply(nonNegativeQuantity(2)),   money(14),  DEFAULT_EPSILON_1e_8);
 
-    assertAlmostEquals(medium.multiply(signedQuantity(-2)),   signedMoney(-14),  1e-8);
-    assertAlmostEquals(medium.multiply(signedQuantity(-1)),   signedMoney(-7),   1e-8);
-    assertAlmostEquals(medium.multiply(signedQuantity(-0.5)), signedMoney(-3.5), 1e-8);
-    assertAlmostEquals(medium.multiply(ZERO_SIGNED_QUANTITY), ZERO_SIGNED_MONEY, 1e-8);
-    assertAlmostEquals(medium.multiply(signedQuantity(0.5)),  signedMoney(3.5),  1e-8);
-    assertAlmostEquals(medium.multiply(signedQuantity(1)),    signedMoney(7),    1e-8);
-    assertAlmostEquals(medium.multiply(signedQuantity(2)),    signedMoney(14),   1e-8);
+    assertAlmostEquals(medium.multiply(signedQuantity(-2)),   signedMoney(-14),  DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.multiply(signedQuantity(-1)),   signedMoney(-7),   DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.multiply(signedQuantity(-0.5)), signedMoney(-3.5), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.multiply(ZERO_SIGNED_QUANTITY), ZERO_SIGNED_MONEY, DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.multiply(signedQuantity(0.5)),  signedMoney(3.5),  DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.multiply(signedQuantity(1)),    signedMoney(7),    DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.multiply(signedQuantity(2)),    signedMoney(14),   DEFAULT_EPSILON_1e_8);
 
     // Test multiplying by a plain old double
-    assertAlmostEquals(price(14), medium.multiply(2.0), 1e-8);
+    assertAlmostEquals(price(14), medium.multiply(2.0), DEFAULT_EPSILON_1e_8);
   }
 
   @Test
   public void dividing() {
-    assertTrue(medium.divide(BigDecimal.valueOf(0.5)).almostEquals(twiceMedium, 1e-8));
-    assertTrue(medium.divide(BigDecimal.ONE         ).almostEquals(medium,      1e-8));
-    assertTrue(medium.divide(BigDecimal.valueOf(2)  ).almostEquals(halfMedium,  1e-8));
+    assertTrue(medium.divide(BigDecimal.valueOf(0.5)).almostEquals(twiceMedium, DEFAULT_EPSILON_1e_8));
+    assertTrue(medium.divide(BigDecimal.ONE         ).almostEquals(medium,      DEFAULT_EPSILON_1e_8));
+    assertTrue(medium.divide(BigDecimal.valueOf(2)  ).almostEquals(halfMedium,  DEFAULT_EPSILON_1e_8));
 
-    assertAlmostEquals(medium.divide(price(0.5)),  onesBasedReturn(14),  1e-8);
-    assertAlmostEquals(medium.divide(price(1.0)),  onesBasedReturn(7),   1e-8);
-    assertAlmostEquals(medium.divide(halfMedium),  onesBasedReturn(2),   1e-8);
-    assertAlmostEquals(medium.divide(medium),      FLAT_RETURN,          1e-8);
-    assertAlmostEquals(medium.divide(twiceMedium), onesBasedReturn(0.5), 1e-8);
+    assertAlmostEquals(medium.divide(price(0.5)),  onesBasedReturn(14),  DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.divide(price(1.0)),  onesBasedReturn(7),   DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.divide(halfMedium),  onesBasedReturn(2),   DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.divide(medium),      FLAT_RETURN,          DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(medium.divide(twiceMedium), onesBasedReturn(0.5), DEFAULT_EPSILON_1e_8);
 
-    assertAlmostEquals(price(3.5), medium.divide(2.0), 1e-8);
+    assertAlmostEquals(price(3.5), medium.divide(2.0), DEFAULT_EPSILON_1e_8);
   }
 
   @Test
   public void testAveragePrice() {
-    assertAlmostEquals(price(20.0), averagePrice(price(10.0), price(30.0)), 1e-8);
-    assertAlmostEquals(price(31.0), averagePrice(price(1.0), price(61.0)), 1e-8);
+    assertAlmostEquals(price(20.0), averagePrice(price(10.0), price(30.0)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(price(31.0), averagePrice(price(1.0), price(61.0)), DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -194,8 +196,8 @@ public class PriceTest {
   public void testMinAndMax() {
     Collections2.permutations(ImmutableList.of(price(1.1), price(2.2), price(3.3)))
         .forEach(pricesList -> {
-          assertAlmostEquals(price(1.1), minPrice(pricesList.stream()), 1e-8);
-          assertAlmostEquals(price(3.3), maxPrice(pricesList.stream()), 1e-8);
+          assertAlmostEquals(price(1.1), minPrice(pricesList.stream()), DEFAULT_EPSILON_1e_8);
+          assertAlmostEquals(price(3.3), maxPrice(pricesList.stream()), DEFAULT_EPSILON_1e_8);
         });
   }
 

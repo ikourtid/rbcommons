@@ -27,6 +27,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_BOOLEAN;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -227,7 +228,7 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
             },
             simpleArrayIndexMapping("a", "b", "c"),
             simpleArrayIndexMapping("a", "b", "c"))
-            .isLogicallyAndPhysicallySymmetric(1e-8);
+            .isLogicallyAndPhysicallySymmetric(DEFAULT_EPSILON_1e_8);
 
     assertTrue(
         "exactly equal",
@@ -253,7 +254,7 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
             },
             simpleArrayIndexMapping("a", "b", "c"),
             simpleArrayIndexMapping("a", "b", "c"))
-            .isLogicallyAndPhysicallySymmetric(1e-8));
+            .isLogicallyAndPhysicallySymmetric(DEFAULT_EPSILON_1e_8));
 
     // The 2nd row was moved to the top, and the row keys were also changed to b, a, c to match that move.
     ImmutableDoubleIndexableArray2D<String, String> logicallySymmetric = immutableDoubleIndexableArray2D(
@@ -264,7 +265,7 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
         },
         simpleArrayIndexMapping("b", "a", "c"),
         simpleArrayIndexMapping("a", "b", "c"));
-    assertFalse(logicallySymmetric.isLogicallyAndPhysicallySymmetric(1e-8));
+    assertFalse(logicallySymmetric.isLogicallyAndPhysicallySymmetric(DEFAULT_EPSILON_1e_8));
   }
 
   @Override
@@ -305,7 +306,7 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
 
   public static <R, C> TypeSafeMatcher<ImmutableDoubleIndexableArray2D<R, C>> immutableDoubleIndexableArray2DMatcher(
       ImmutableDoubleIndexableArray2D<R, C> expected) {
-    return immutableDoubleIndexableArray2DMatcher(expected, 1e-8);
+    return immutableDoubleIndexableArray2DMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
   public static <R, C> TypeSafeMatcher<ImmutableDoubleIndexableArray2D<R, C>> immutableDoubleIndexableArray2DMatcher(

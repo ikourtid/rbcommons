@@ -11,6 +11,8 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrows;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_1;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
@@ -50,12 +52,12 @@ public class UnitFractionTest {
     assertTrue(UNIT_FRACTION_0.isZero());
     assertFalse(unitFraction(0.12345).isZero());
 
-    assertTrue(unitFraction(0.0).isAlmostZero(1e-8));
-    assertTrue(unitFraction(0).isAlmostZero(1e-8));
-    assertTrue(UNIT_FRACTION_0.isAlmostZero(1e-8));
-    assertFalse(unitFraction(0.12345).isAlmostZero(1e-8));
+    assertTrue(unitFraction(0.0).isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertTrue(unitFraction(0).isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertTrue(UNIT_FRACTION_0.isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertFalse(unitFraction(0.12345).isAlmostZero(DEFAULT_EPSILON_1e_8));
 
-    assertTrue(unitFraction(0.12345).isAlmostZero(0.2));
+    assertTrue(unitFraction(0.12345).isAlmostZero(epsilon(0.2)));
   }
 
   @Test
@@ -65,12 +67,12 @@ public class UnitFractionTest {
     assertTrue(UNIT_FRACTION_1.isOne());
     assertFalse(unitFraction(0.12345).isOne());
 
-    assertTrue(unitFraction(1.0).isAlmostOne(1e-8));
-    assertTrue(unitFraction(1).isAlmostOne(1e-8));
-    assertTrue(UNIT_FRACTION_1.isAlmostOne(1e-8));
-    assertFalse(unitFraction(0.12345).isAlmostOne(1e-8));
+    assertTrue(unitFraction(1.0).isAlmostOne(DEFAULT_EPSILON_1e_8));
+    assertTrue(unitFraction(1).isAlmostOne(DEFAULT_EPSILON_1e_8));
+    assertTrue(UNIT_FRACTION_1.isAlmostOne(DEFAULT_EPSILON_1e_8));
+    assertFalse(unitFraction(0.12345).isAlmostOne(DEFAULT_EPSILON_1e_8));
 
-    assertTrue(unitFraction(0.999999).isAlmostOne(0.01));
+    assertTrue(unitFraction(0.999999).isAlmostOne(epsilon(0.01)));
   }
 
   @Test
@@ -85,7 +87,7 @@ public class UnitFractionTest {
         unitFraction(1),
         UNIT_FRACTION_1,
         unitFraction(1 - 1e-9))) {
-      assertTrue(almostExtreme.isAlmostExtreme(1e-8));
+      assertTrue(almostExtreme.isAlmostExtreme(DEFAULT_EPSILON_1e_8));
     }
     for (UnitFraction notExtreme : ImmutableList.of(
         unitFraction(1e-7),
@@ -93,7 +95,7 @@ public class UnitFractionTest {
         unitFraction(0.5),
         unitFraction(0.9),
         unitFraction(1 - 1e-7))) {
-      assertFalse(notExtreme.isAlmostExtreme(1e-8));
+      assertFalse(notExtreme.isAlmostExtreme(DEFAULT_EPSILON_1e_8));
     }
   }
 
@@ -282,8 +284,8 @@ public class UnitFractionTest {
     assertEquals(UNIT_FRACTION_1, UNIT_FRACTION_ONE_HALF.add(0.5));
     assertEquals(UNIT_FRACTION_ONE_HALF, UNIT_FRACTION_0.add(0.5));
 
-    assertAlmostEquals(unitFraction(0.9), unitFraction(0.3).add(0.6), 1e-8);
-    assertAlmostEquals(unitFraction(0.9), unitFraction(0.6).add(0.3), 1e-8);
+    assertAlmostEquals(unitFraction(0.9), unitFraction(0.3).add(0.6), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(unitFraction(0.9), unitFraction(0.6).add(0.3), DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -293,19 +295,19 @@ public class UnitFractionTest {
     assertAlmostEquals(
         unitFraction(0.7),
         UnitFraction.sum(ImmutableList.of(unitFraction(0.1), unitFraction(0.2), unitFraction(0.4))),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         unitFraction(0.7),
         UnitFraction.sum(Stream.of(unitFraction(0.1), unitFraction(0.2), unitFraction(0.4))),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         unitFraction(0.3),
         UnitFraction.sum(unitFraction(0.1), unitFraction(0.2)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         unitFraction(0.7),
         UnitFraction.sum(unitFraction(0.1), unitFraction(0.2), unitFraction(0.4)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertIllegalArgumentException( () -> UnitFraction.sum(Collections.nCopies(3, unitFraction(0.4))));
     assertIllegalArgumentException( () -> UnitFraction.sum(Collections.nCopies(3, unitFraction(0.4)).stream()));
     assertIllegalArgumentException( () -> UnitFraction.sum(unitFraction(0.4), unitFraction(0.4), unitFraction(0.4)));
@@ -320,19 +322,19 @@ public class UnitFractionTest {
     assertAlmostEquals(
         unitFraction(0.7),
         UnitFraction.sumWithCeilingOf1(ImmutableList.of(unitFraction(0.1), unitFraction(0.2), unitFraction(0.4))),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         unitFraction(0.7),
         UnitFraction.sumWithCeilingOf1(Stream.of(unitFraction(0.1), unitFraction(0.2), unitFraction(0.4))),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         unitFraction(0.3),
         UnitFraction.sumWithCeilingOf1(unitFraction(0.1), unitFraction(0.2)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         unitFraction(0.7),
         UnitFraction.sumWithCeilingOf1(unitFraction(0.1), unitFraction(0.2), unitFraction(0.4)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
 
     // ... but here the sum exceeds 1, so we just use a ceiling of 1,
     // instead of an exception which we would get if we just used UnitFraction#sum.
@@ -350,26 +352,26 @@ public class UnitFractionTest {
 
   @Test
   public void sumForgiving() {
-    assertEquals(UNIT_FRACTION_0, UnitFraction.forgivingSum(emptyList(), 1e-8));
+    assertEquals(UNIT_FRACTION_0, UnitFraction.forgivingSum(emptyList(), DEFAULT_EPSILON_1e_8));
     assertEquals(UNIT_FRACTION_0, UnitFraction.forgivingSum(
         ImmutableList.of(UNIT_FRACTION_0),
-        1e-8));
+        DEFAULT_EPSILON_1e_8));
     assertEquals(UNIT_FRACTION_1, UnitFraction.forgivingSum(
         ImmutableList.of(UNIT_FRACTION_1),
-        1e-8));
+        DEFAULT_EPSILON_1e_8));
     assertEquals(UNIT_FRACTION_1, UnitFraction.forgivingSum(
         ImmutableList.of(UNIT_FRACTION_1, unitFraction(1e-9)),
-        1e-8));
+        DEFAULT_EPSILON_1e_8));
     assertEquals(UNIT_FRACTION_1, UnitFraction.forgivingSum(
         ImmutableList.of(unitFraction(0.400), unitFraction(0.601)),
-        1e-3));
+        epsilon(1e-3)));
 
-    assertEquals(UNIT_FRACTION_0, UnitFraction.forgivingSum(Stream.empty(), 1e-8));
-    assertEquals(UNIT_FRACTION_0, UnitFraction.forgivingSum(Stream.of(UNIT_FRACTION_0), 1e-8));
-    assertEquals(UNIT_FRACTION_1, UnitFraction.forgivingSum(Stream.of(UNIT_FRACTION_1), 1e-8));
+    assertEquals(UNIT_FRACTION_0, UnitFraction.forgivingSum(Stream.empty(), DEFAULT_EPSILON_1e_8));
+    assertEquals(UNIT_FRACTION_0, UnitFraction.forgivingSum(Stream.of(UNIT_FRACTION_0), DEFAULT_EPSILON_1e_8));
+    assertEquals(UNIT_FRACTION_1, UnitFraction.forgivingSum(Stream.of(UNIT_FRACTION_1), DEFAULT_EPSILON_1e_8));
     assertEquals(UNIT_FRACTION_1, UnitFraction.forgivingSum(
         Stream.of(UNIT_FRACTION_1, unitFraction(1e-9)),
-        1e-8));
+        DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -444,25 +446,25 @@ public class UnitFractionTest {
 
   @Test
   public void testForgivingUnitFraction() {
-    assertIllegalArgumentException( () -> forgivingUnitFraction(new BigDecimal(-1e-7), 1e-8));
-    assertIllegalArgumentException( () -> forgivingUnitFraction(-1e-7, 1e-8));
-    assertEquals(UNIT_FRACTION_0, forgivingUnitFraction(new BigDecimal(-1e-10), 1e-8));
-    assertEquals(UNIT_FRACTION_0, forgivingUnitFraction(-1e-10, 1e-8));
-    assertEquals(UNIT_FRACTION_0, forgivingUnitFraction(BigDecimal.ZERO, 1e-8));
-    assertEquals(UNIT_FRACTION_0, forgivingUnitFraction(0, 1e-8));
-    assertAlmostEquals(unitFraction(1e-10), forgivingUnitFraction(new BigDecimal(1e-10), 1e-8), 1e-12);
-    assertEquals(unitFraction(1e-10), forgivingUnitFraction(1e-10, 1e-8));
-    assertAlmostEquals(unitFraction(1 - 1e-10), forgivingUnitFraction(new BigDecimal(1 - 1e-10), 1e-8), 1e-12);
-    assertEquals(unitFraction(1 - 1e-10), forgivingUnitFraction(1 - 1e-10, 1e-8));
-    assertEquals(UNIT_FRACTION_1, forgivingUnitFraction(BigDecimal.ONE, 1e-8));
-    assertEquals(UNIT_FRACTION_1, forgivingUnitFraction(1, 1e-8));
-    assertEquals(UNIT_FRACTION_1, forgivingUnitFraction(new BigDecimal(1 + 1e-10), 1e-8));
-    assertEquals(UNIT_FRACTION_1, forgivingUnitFraction(1 + 1e-10, 1e-8));
-    assertIllegalArgumentException( () -> forgivingUnitFraction(new BigDecimal(1 + 1e-7), 1e-8));
-    assertIllegalArgumentException( () -> forgivingUnitFraction(1 + 1e-7, 1e-8));
+    assertIllegalArgumentException( () -> forgivingUnitFraction(new BigDecimal(-1e-7), DEFAULT_EPSILON_1e_8));
+    assertIllegalArgumentException( () -> forgivingUnitFraction(-1e-7, DEFAULT_EPSILON_1e_8));
+    assertEquals(UNIT_FRACTION_0, forgivingUnitFraction(new BigDecimal(-1e-10), DEFAULT_EPSILON_1e_8));
+    assertEquals(UNIT_FRACTION_0, forgivingUnitFraction(-1e-10, DEFAULT_EPSILON_1e_8));
+    assertEquals(UNIT_FRACTION_0, forgivingUnitFraction(BigDecimal.ZERO, DEFAULT_EPSILON_1e_8));
+    assertEquals(UNIT_FRACTION_0, forgivingUnitFraction(0, DEFAULT_EPSILON_1e_8));
+    assertAlmostEquals(unitFraction(1e-10), forgivingUnitFraction(new BigDecimal(1e-10), epsilon(1e-8)), epsilon(1e-12));
+    assertEquals(unitFraction(1e-10), forgivingUnitFraction(1e-10, DEFAULT_EPSILON_1e_8));
+    assertAlmostEquals(unitFraction(1 - 1e-10), forgivingUnitFraction(new BigDecimal(1 - 1e-10), epsilon(1e-8)), epsilon(1e-12));
+    assertEquals(unitFraction(1 - 1e-10), forgivingUnitFraction(1 - 1e-10, DEFAULT_EPSILON_1e_8));
+    assertEquals(UNIT_FRACTION_1, forgivingUnitFraction(BigDecimal.ONE, DEFAULT_EPSILON_1e_8));
+    assertEquals(UNIT_FRACTION_1, forgivingUnitFraction(1, DEFAULT_EPSILON_1e_8));
+    assertEquals(UNIT_FRACTION_1, forgivingUnitFraction(new BigDecimal(1 + 1e-10), DEFAULT_EPSILON_1e_8));
+    assertEquals(UNIT_FRACTION_1, forgivingUnitFraction(1 + 1e-10, DEFAULT_EPSILON_1e_8));
+    assertIllegalArgumentException( () -> forgivingUnitFraction(new BigDecimal(1 + 1e-7), DEFAULT_EPSILON_1e_8));
+    assertIllegalArgumentException( () -> forgivingUnitFraction(1 + 1e-7, DEFAULT_EPSILON_1e_8));
 
-    assertEquals(UNIT_FRACTION_1, forgivingUnitFraction(new BigDecimal("1.000000000000000067"), 1e-15));
-    assertEquals(UNIT_FRACTION_0, forgivingUnitFraction(new BigDecimal("-0.000000000000000067"), 1e-15));
+    assertEquals(UNIT_FRACTION_1, forgivingUnitFraction(new BigDecimal("1.000000000000000067"),  epsilon(1e-15)));
+    assertEquals(UNIT_FRACTION_0, forgivingUnitFraction(new BigDecimal("-0.000000000000000067"), epsilon(1e-15)));
   }
 
   @Test
@@ -470,43 +472,43 @@ public class UnitFractionTest {
     UnitFraction a = unitFraction(new BigDecimal("0.4000000000000003")); // 0.4 + 3 * 1e-16
     UnitFraction b = unitFraction(new BigDecimal("0.6000000000000003")); // 0.6 + 3 * 1e-16
     assertEquals(UNIT_FRACTION_1, a.add(b)); // equals, not almost equals, since the sum caps at 1
-    assertEquals(UNIT_FRACTION_1, a.addForgiving(b, 1e-15));
+    assertEquals(UNIT_FRACTION_1, a.addForgiving(b, epsilon(1e-15)));
   }
 
   @Test
   public void testAdd_overloadThatControlsForgivingness() {
     UnitFraction a = unitFraction(new BigDecimal("0.4002"));
     UnitFraction b = unitFraction(new BigDecimal("0.6002"));
-    assertEquals(UNIT_FRACTION_1, a.addForgiving(b, 1e-3));
-    assertIllegalArgumentException( () -> a.addForgiving(b, 1e-4));
+    assertEquals(UNIT_FRACTION_1, a.addForgiving(b, epsilon(1e-3)));
+    assertIllegalArgumentException( () -> a.addForgiving(b, epsilon(1e-4)));
   }
 
   @Test
   public void testSumToAlmostOne() {
-    assertTrue(sumToAlmostOne(0.00, UNIT_FRACTION_1));
-    assertTrue(sumToAlmostOne(0.02, UNIT_FRACTION_1));
-    assertTrue(sumToAlmostOne(0.02, unitFraction(0.99)));
-    assertFalse(sumToAlmostOne(0.02, unitFraction(0.97)));
+    assertTrue(sumToAlmostOne(epsilon(0.00), UNIT_FRACTION_1));
+    assertTrue(sumToAlmostOne(epsilon(0.02), UNIT_FRACTION_1));
+    assertTrue(sumToAlmostOne(epsilon(0.02), unitFraction(0.99)));
+    assertFalse(sumToAlmostOne(epsilon(0.02), unitFraction(0.97)));
 
-    assertTrue(sumToAlmostOne(0.00, UNIT_FRACTION_ONE_HALF, UNIT_FRACTION_ONE_HALF));
-    assertTrue(sumToAlmostOne(0.00, UNIT_FRACTION_1, UNIT_FRACTION_0));
-    assertTrue(sumToAlmostOne(0.00, unitFraction(0.1), unitFraction(0.9)));
-    assertTrue(sumToAlmostOne(0.02, UNIT_FRACTION_ONE_HALF, unitFraction(0.51)));
-    assertTrue(sumToAlmostOne(0.02, unitFraction(0.1), unitFraction(0.9)));
-    assertTrue(sumToAlmostOne(0.02, unitFraction(0.1), unitFraction(0.89)));
-    assertFalse(sumToAlmostOne(0.02, unitFraction(0.1), unitFraction(0.87)));
+    assertTrue(sumToAlmostOne(epsilon(0.00), UNIT_FRACTION_ONE_HALF, UNIT_FRACTION_ONE_HALF));
+    assertTrue(sumToAlmostOne(epsilon(0.00), UNIT_FRACTION_1, UNIT_FRACTION_0));
+    assertTrue(sumToAlmostOne(epsilon(0.00), unitFraction(0.1), unitFraction(0.9)));
+    assertTrue(sumToAlmostOne(epsilon(0.02), UNIT_FRACTION_ONE_HALF, unitFraction(0.51)));
+    assertTrue(sumToAlmostOne(epsilon(0.02), unitFraction(0.1), unitFraction(0.9)));
+    assertTrue(sumToAlmostOne(epsilon(0.02), unitFraction(0.1), unitFraction(0.89)));
+    assertFalse(sumToAlmostOne(epsilon(0.02), unitFraction(0.1), unitFraction(0.87)));
 
-    assertTrue(sumToAlmostOne(0.00, UNIT_FRACTION_1, UNIT_FRACTION_0, UNIT_FRACTION_0));
-    assertTrue(sumToAlmostOne(0.00, UNIT_FRACTION_ONE_HALF, UNIT_FRACTION_ONE_HALF, UNIT_FRACTION_0));
-    assertTrue(sumToAlmostOne(0.00, unitFraction(0.1), unitFraction(0.4), unitFraction(0.5)));
-    assertTrue(sumToAlmostOne(0.02, unitFraction(0.1), unitFraction(0.4), unitFraction(0.5)));
-    assertTrue(sumToAlmostOne(0.02, unitFraction(0.1), unitFraction(0.4), unitFraction(0.49)));
-    assertFalse(sumToAlmostOne(0.02, unitFraction(0.1), unitFraction(0.4), unitFraction(0.47)));
+    assertTrue(sumToAlmostOne(epsilon(0.00), UNIT_FRACTION_1, UNIT_FRACTION_0, UNIT_FRACTION_0));
+    assertTrue(sumToAlmostOne(epsilon(0.00), UNIT_FRACTION_ONE_HALF, UNIT_FRACTION_ONE_HALF, UNIT_FRACTION_0));
+    assertTrue(sumToAlmostOne(epsilon(0.00), unitFraction(0.1), unitFraction(0.4), unitFraction(0.5)));
+    assertTrue(sumToAlmostOne(epsilon(0.02), unitFraction(0.1), unitFraction(0.4), unitFraction(0.5)));
+    assertTrue(sumToAlmostOne(epsilon(0.02), unitFraction(0.1), unitFraction(0.4), unitFraction(0.49)));
+    assertFalse(sumToAlmostOne(epsilon(0.02), unitFraction(0.1), unitFraction(0.4), unitFraction(0.47)));
 
     // This is not supposed to throw, even though these sum to > 1
-    assertFalse(sumToAlmostOne(0.00, unitFraction(0.1), unitFraction(0.4), unitFraction(0.51)));
-    assertTrue(sumToAlmostOne(0.02, unitFraction(0.1), unitFraction(0.4), unitFraction(0.51)));
-    assertFalse(sumToAlmostOne(0.02, unitFraction(0.1), unitFraction(0.4), unitFraction(0.53)));
+    assertFalse(sumToAlmostOne(epsilon(0.00), unitFraction(0.1), unitFraction(0.4), unitFraction(0.51)));
+    assertTrue(sumToAlmostOne(epsilon(0.02), unitFraction(0.1), unitFraction(0.4), unitFraction(0.51)));
+    assertFalse(sumToAlmostOne(epsilon(0.02), unitFraction(0.1), unitFraction(0.4), unitFraction(0.53)));
   }
 
   @Test
@@ -519,26 +521,26 @@ public class UnitFractionTest {
 
   @Test
   public void testValueOrSnapToZero() {
-    assertEquals(UNIT_FRACTION_0,    UNIT_FRACTION_0.valueOrSnapToZero(0.021));
-    assertEquals(UNIT_FRACTION_0,    UNIT_FRACTION_0.valueOrSnapToZero(0.019));
+    assertEquals(UNIT_FRACTION_0,    UNIT_FRACTION_0.valueOrSnapToZero(epsilon(0.021)));
+    assertEquals(UNIT_FRACTION_0,    UNIT_FRACTION_0.valueOrSnapToZero(epsilon(0.019)));
 
-    assertEquals(UNIT_FRACTION_0,    unitFraction(0.02).valueOrSnapToZero(0.021));
-    assertEquals(unitFraction(0.02), unitFraction(0.02).valueOrSnapToZero(0.019));
+    assertEquals(UNIT_FRACTION_0,    unitFraction(0.02).valueOrSnapToZero(epsilon(0.021)));
+    assertEquals(unitFraction(0.02), unitFraction(0.02).valueOrSnapToZero(epsilon(0.019)));
 
-    assertEquals(UNIT_FRACTION_1,    UNIT_FRACTION_1.valueOrSnapToZero(0.021));
-    assertEquals(UNIT_FRACTION_1,    UNIT_FRACTION_1.valueOrSnapToZero(0.019));
+    assertEquals(UNIT_FRACTION_1,    UNIT_FRACTION_1.valueOrSnapToZero(epsilon(0.021)));
+    assertEquals(UNIT_FRACTION_1,    UNIT_FRACTION_1.valueOrSnapToZero(epsilon(0.019)));
   }
 
   @Test
   public void testValueOrSnapToOne() {
-    assertEquals(UNIT_FRACTION_1,    UNIT_FRACTION_1.valueOrSnapToOne(0.021));
-    assertEquals(UNIT_FRACTION_1,    UNIT_FRACTION_1.valueOrSnapToOne(0.019));
+    assertEquals(UNIT_FRACTION_1,    UNIT_FRACTION_1.valueOrSnapToOne(epsilon(0.021)));
+    assertEquals(UNIT_FRACTION_1,    UNIT_FRACTION_1.valueOrSnapToOne(epsilon(0.019)));
 
-    assertEquals(UNIT_FRACTION_1,    unitFraction(0.98).valueOrSnapToOne(0.021));
-    assertEquals(unitFraction(0.98), unitFraction(0.98).valueOrSnapToOne(0.019));
+    assertEquals(UNIT_FRACTION_1,    unitFraction(0.98).valueOrSnapToOne(epsilon(0.021)));
+    assertEquals(unitFraction(0.98), unitFraction(0.98).valueOrSnapToOne(epsilon(0.019)));
 
-    assertEquals(UNIT_FRACTION_0,    UNIT_FRACTION_0.valueOrSnapToOne(0.021));
-    assertEquals(UNIT_FRACTION_0,    UNIT_FRACTION_0.valueOrSnapToOne(0.019));
+    assertEquals(UNIT_FRACTION_0,    UNIT_FRACTION_0.valueOrSnapToOne(epsilon(0.021)));
+    assertEquals(UNIT_FRACTION_0,    UNIT_FRACTION_0.valueOrSnapToOne(epsilon(0.019)));
   }
 
   @Test

@@ -35,6 +35,7 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTE
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_PRICE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -688,11 +689,11 @@ public class RBJsonObjectGettersTest {
     assertAlmostEquals(
         price(8.8),
         getJsonBigDecimalOrDefault(jsonObject, "b", v -> price(v), price(8.8)),
-        1e-15);
+        epsilon(1e-15));
     assertAlmostEquals(
         price(7.7),
         getJsonBigDecimalOrDefault(jsonObject, "a", v -> price(v), price(8.8)),
-        1e-15);
+        epsilon(1e-15));
 
     // value for property "notANumber" is a String
     assertIllegalArgumentException( () -> getJsonBigDecimalOrDefault(jsonObject, "notANumber", v -> DUMMY_PRICE, DUMMY_PRICE));
@@ -706,11 +707,11 @@ public class RBJsonObjectGettersTest {
     assertAlmostEquals(
         price(8.8),
         getJsonDoubleOrDefault(jsonObject, "b", v -> price(v), price(8.8)),
-        1e-15);
+        epsilon(1e-15));
     assertAlmostEquals(
         price(7.7),
         getJsonDoubleOrDefault(jsonObject, "a", v -> price(v), price(8.8)),
-        1e-15);
+        epsilon(1e-15));
 
     // value for property "notANumber" is a String
     assertIllegalArgumentException( () -> getJsonDoubleOrDefault(jsonObject, "notANumber", v -> DUMMY_PRICE, DUMMY_PRICE));
