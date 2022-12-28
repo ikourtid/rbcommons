@@ -85,8 +85,8 @@ public class MatcherEpsilonsTest {
     RBSet.<Function<Epsilon, MatcherEpsilons>>rbSetOf(
             v -> useEpsilonInAllMatchers(v),
             v -> matcherEpsilons(Optional.of(epsilon(0.123)), singletonRBMap(dummyEpsilonDesriptor, v)),
-            v -> matcherEpsilons(Optional.of(v),     singletonRBMap(dummyEpsilonDesriptor, v)),
-            v -> matcherEpsilons(Optional.of(v),     singletonRBMap(dummyEpsilonDesriptor, epsilon(0.123))))
+            v -> matcherEpsilons(Optional.of(v),              singletonRBMap(dummyEpsilonDesriptor, v)),
+            v -> matcherEpsilons(Optional.of(v),              singletonRBMap(dummyEpsilonDesriptor, epsilon(0.123))))
         .forEach(maker -> {
           MatcherEpsilons doesNotThrow;
           assertIllegalArgumentException(() -> maker.apply(epsilon(-1e-9)));
