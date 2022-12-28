@@ -31,7 +31,7 @@ public class RBValueMatchers {
     return new TypeSafeMatcher<BigDecimal>() {
       @Override
       protected boolean matchesSafely(BigDecimal actual) {
-        return bigDecimalsAlmostEqual(expected, actual, epsilon.doubleValue()); // FIXME IAK EPS
+        return bigDecimalsAlmostEqual(expected, actual, epsilon.doubleValue());
       }
 
       @Override
