@@ -40,7 +40,7 @@ public class PositiveMultiplierTest extends RBTestMatcher<PositiveMultiplier> {
     assertAlmostEquals(
         positiveMultiplier(doubleExplained(1.2, 1.5 * 0.8)),
         positiveMultiplier(1.5).multiply(positiveMultiplier(0.8)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -49,12 +49,12 @@ public class PositiveMultiplierTest extends RBTestMatcher<PositiveMultiplier> {
       assertAlmostEquals(
           positiveMultiplier(1.0 / multiplier),
           positiveMultiplier(multiplier).inverse(),
-          1e-8);
+          DEFAULT_EPSILON_1e_8);
       // the inverse of the inverse should be the original
       assertAlmostEquals(
           positiveMultiplier(multiplier),
           positiveMultiplier(multiplier).inverse().inverse(),
-          1e-8);
+          DEFAULT_EPSILON_1e_8);
     };
 
     asserter.accept(0.123);

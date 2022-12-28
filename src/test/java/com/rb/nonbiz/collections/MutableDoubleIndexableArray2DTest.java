@@ -22,6 +22,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -171,7 +172,7 @@ public class MutableDoubleIndexableArray2DTest extends RBTestMatcher<MutableDoub
 
   public static <R, C> TypeSafeMatcher<MutableDoubleIndexableArray2D<R, C>> mutableDoubleIndexableArray2DMatcher(
       MutableDoubleIndexableArray2D<R, C> expected) {
-    return mutableDoubleIndexableArray2DMatcher(expected, 1e-8);
+    return mutableDoubleIndexableArray2DMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
   public static <R, C> TypeSafeMatcher<MutableDoubleIndexableArray2D<R, C>> mutableDoubleIndexableArray2DMatcher(

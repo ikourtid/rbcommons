@@ -24,6 +24,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -79,7 +80,7 @@ public class RBIndexableSquareMatrixTest extends RBTestMatcher<RBIndexableSquare
                 { 3.3, 5.5, 6.6 + epsilon } // this is on the diagonal, so it doesn't matter, but let's keep it
             },
             "a", "b", "c")
-            .isSymmetric(1e-8);
+            .isSymmetric(DEFAULT_EPSILON_1e_8);
 
     assertTrue(
         "exactly equal",

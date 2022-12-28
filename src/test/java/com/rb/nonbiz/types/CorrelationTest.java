@@ -7,6 +7,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.Correlation.BIGGEST_ANTI_CORRELATION;
 import static com.rb.nonbiz.types.Correlation.PERFECT_CORRELATION;
 import static com.rb.nonbiz.types.Correlation.correlation;
+import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
 
 public class CorrelationTest {
 
@@ -15,11 +16,11 @@ public class CorrelationTest {
     assertAlmostEquals(
         correlation(-1 - 1e-9),
         BIGGEST_ANTI_CORRELATION,
-        0);
+        ZERO_EPSILON);
     assertAlmostEquals(
         correlation(1 + 1e-9),
         PERFECT_CORRELATION,
-        0);
+        ZERO_EPSILON);
   }
 
   @Test

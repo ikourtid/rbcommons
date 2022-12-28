@@ -10,6 +10,7 @@ import java.util.List;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertEquals;
@@ -44,13 +45,13 @@ public class DoublesWeighterTest extends RBTest<DoublesWeighter> {
   @Test
   public void weightedAverage_singleItem_resultIsExact_valueDoesntMatter_weightDoesntMatter() {
     for (double w : ImmutableList.of(0.1, 0.99, 1.0, 1.01, 100.0)) {
-      assertProducesWeightedAverageValue(0.3, singletonList(0.3), singletonList(w), 0);
+      assertProducesWeightedAverageValue(0.3, singletonList(0.3), singletonList(w), ZERO_EPSILON);
     }
     for (double w : ImmutableList.of(0.1, 0.99, 1.0, 1.01, 100.0)) {
-      assertProducesWeightedAverageValue(0.0, singletonList(0.0), singletonList(w), 0);
+      assertProducesWeightedAverageValue(0.0, singletonList(0.0), singletonList(w), ZERO_EPSILON);
     }
     for (double w : ImmutableList.of(0.1, 0.99, 1.0, 1.01, 100.0)) {
-      assertProducesWeightedAverageValue(1.0, singletonList(1.0), singletonList(w), 0);
+      assertProducesWeightedAverageValue(1.0, singletonList(1.0), singletonList(w), ZERO_EPSILON);
     }
   }
 

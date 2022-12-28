@@ -6,6 +6,8 @@ import org.junit.Test;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrows;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_1;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
@@ -42,14 +44,14 @@ public class SignedFractionTest {
     assertFalse(signedFraction(0.12345).isZero());
     assertFalse(signedFraction(-0.12345).isZero());
 
-    assertTrue(signedFraction(0.0).isAlmostZero(1e-8));
-    assertTrue(signedFraction(0).isAlmostZero(1e-8));
-    assertTrue(SIGNED_FRACTION_0.isAlmostZero(1e-8));
-    assertFalse(signedFraction(0.12345).isAlmostZero(1e-8));
-    assertFalse(signedFraction(-0.12345).isAlmostZero(1e-8));
+    assertTrue(signedFraction(0.0).isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertTrue(signedFraction(0).isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertTrue(SIGNED_FRACTION_0.isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertFalse(signedFraction(0.12345).isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertFalse(signedFraction(-0.12345).isAlmostZero(DEFAULT_EPSILON_1e_8));
 
-    assertTrue(signedFraction(0.12345).isAlmostZero(0.2));
-    assertTrue(signedFraction(-0.12345).isAlmostZero(0.2));
+    assertTrue(signedFraction(0.12345).isAlmostZero(epsilon(0.2)));
+    assertTrue(signedFraction(-0.12345).isAlmostZero(epsilon(0.2)));
   }
 
   @Test
@@ -60,14 +62,14 @@ public class SignedFractionTest {
     assertFalse(signedFraction(0.12345).isOne());
     assertFalse(signedFraction(-0.12345).isOne());
 
-    assertTrue(signedFraction(1.0).isAlmostOne(1e-8));
-    assertTrue(signedFraction(1).isAlmostOne(1e-8));
-    assertTrue(SIGNED_FRACTION_1.isAlmostOne(1e-8));
-    assertFalse(signedFraction(0.12345).isAlmostOne(1e-8));
-    assertFalse(signedFraction(-0.12345).isAlmostOne(1e-8));
+    assertTrue(signedFraction(1.0).isAlmostOne(DEFAULT_EPSILON_1e_8));
+    assertTrue(signedFraction(1).isAlmostOne(DEFAULT_EPSILON_1e_8));
+    assertTrue(SIGNED_FRACTION_1.isAlmostOne(DEFAULT_EPSILON_1e_8));
+    assertFalse(signedFraction(0.12345).isAlmostOne(DEFAULT_EPSILON_1e_8));
+    assertFalse(signedFraction(-0.12345).isAlmostOne(DEFAULT_EPSILON_1e_8));
 
-    assertTrue(signedFraction(0.999999).isAlmostOne(0.01));
-    assertTrue(signedFraction(1.000001).isAlmostOne(0.01));
+    assertTrue(signedFraction(0.999999).isAlmostOne(epsilon(0.01)));
+    assertTrue(signedFraction(1.000001).isAlmostOne(epsilon(0.01)));
   }
 
   @Test

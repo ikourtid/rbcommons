@@ -24,6 +24,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RBJsonObjectAddersTest {
@@ -54,7 +55,7 @@ public class RBJsonObjectAddersTest {
   public void testAddPreciseValueToJsonObjectIfNonZero() {
     JsonObject jsonObject = singletonJsonObject("a", jsonDouble(1.1));
     BiFunction<String, Double, JsonObject> adder = (property, value) -> addPreciseValueToJsonObjectIfNonZero(
-        jsonObject, property, money(value), 1e-8);
+        jsonObject, property, money(value), DEFAULT_EPSILON_1e_8);
 
     assertIllegalArgumentException( () -> adder.apply("a", 3.3)); // Property "a" already exists
     assertIllegalArgumentException( () -> adder.apply("a", 0.0)); // Property "a" already exists; problem even if value is non-zero

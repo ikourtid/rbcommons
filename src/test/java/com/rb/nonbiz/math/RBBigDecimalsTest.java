@@ -55,27 +55,27 @@ public class RBBigDecimalsTest {
   @Test
   public void testEpsilonCompare_epsilonMustBePositiveAndSmall() {
     EpsilonComparisonVisitor<String> visitor = comparisonSignVisitor();
-    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, -999, visitor));
-    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, -1, visitor));
-    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, -1e-9, visitor));
-    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, 0, visitor));
-    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, 10_000, visitor));
-    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, 1e9, visitor));
+    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(-999), visitor));
+    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(-1), visitor));
+    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(-1e-9), visitor));
+    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(0), visitor));
+    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(10_000), visitor));
+    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(1e9), visitor));
 
-    assertEquals("==", epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, 1e-8, visitor));
+    assertEquals("==", epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(1e-8), visitor));
   }
 
   @Test
   public void testEpsilonCompare_generalCase() {
     EpsilonComparisonVisitor<String> visitor = comparisonSignVisitor();
     BigDecimal slightlyMoreThan10 = BigDecimal.valueOf(10 + 1e-9);
-    assertEquals("<",  epsilonCompareBigDecimals(BigDecimal.ONE,     BigDecimal.TEN,     1e-8, visitor));
-    assertEquals(">",  epsilonCompareBigDecimals(BigDecimal.TEN,     BigDecimal.ONE,     1e-8, visitor));
-    assertEquals("==", epsilonCompareBigDecimals(BigDecimal.TEN,     BigDecimal.TEN,     1e-8, visitor));
-    assertEquals("==", epsilonCompareBigDecimals(slightlyMoreThan10, BigDecimal.TEN,     1e-8, visitor));
-    assertEquals("==", epsilonCompareBigDecimals(BigDecimal.TEN,     slightlyMoreThan10, 1e-8, visitor));
-    assertEquals(">",  epsilonCompareBigDecimals(slightlyMoreThan10, BigDecimal.TEN,     1e-10, visitor));
-    assertEquals("<",  epsilonCompareBigDecimals(BigDecimal.TEN,     slightlyMoreThan10, 1e-10, visitor));
+    assertEquals("<",  epsilonCompareBigDecimals(BigDecimal.ONE,     BigDecimal.TEN,     epsilon(1e-8), visitor));
+    assertEquals(">",  epsilonCompareBigDecimals(BigDecimal.TEN,     BigDecimal.ONE,     epsilon(1e-8), visitor));
+    assertEquals("==", epsilonCompareBigDecimals(BigDecimal.TEN,     BigDecimal.TEN,     epsilon(1e-8), visitor));
+    assertEquals("==", epsilonCompareBigDecimals(slightlyMoreThan10, BigDecimal.TEN,     epsilon(1e-8), visitor));
+    assertEquals("==", epsilonCompareBigDecimals(BigDecimal.TEN,     slightlyMoreThan10, epsilon(1e-8), visitor));
+    assertEquals(">",  epsilonCompareBigDecimals(slightlyMoreThan10, BigDecimal.TEN,     epsilon(1e-10), visitor));
+    assertEquals("<",  epsilonCompareBigDecimals(BigDecimal.TEN,     slightlyMoreThan10, epsilon(1e-10), visitor));
   }
 
   @Test

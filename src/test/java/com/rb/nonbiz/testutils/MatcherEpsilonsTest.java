@@ -59,7 +59,7 @@ public class MatcherEpsilonsTest {
 
     // using a smaller epsilon than the usual 1e-8 here for double comparisons,
     // because the return value itself will sometimes be 1e-8, the default epsilon.
-    double e = 1e-9;
+    Epsilon e = epsilon(1e-9);
 
     assertAlmostEquals(epsilon(0.17),        matcherEpsilons.get(Class1.class),                   e);
     assertAlmostEquals(epsilon(0.18),        matcherEpsilons.get(Class1.class, Class1A.class),    e);

@@ -31,7 +31,7 @@ public class ClosedSignedFractionRangeTest extends RBTestMatcher<ClosedSignedFra
         (closedSignedFractionRange, signedFraction) ->
             assertTrue(
                 rbNumericRangeIsAlmostThisSinglePoint(
-                    closedSignedFractionRange.asSignedFractionRange(), signedFraction, 1e-8));
+                    closedSignedFractionRange.asSignedFractionRange(), signedFraction, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(signedFractionFixedToZero(), SIGNED_FRACTION_0);
     asserter.accept(signedFractionFixedToOne(),  SIGNED_FRACTION_1);

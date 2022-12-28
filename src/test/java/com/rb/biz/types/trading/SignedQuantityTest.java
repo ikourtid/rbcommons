@@ -15,6 +15,7 @@ import static com.rb.biz.types.trading.SignedQuantity.ZERO_SIGNED_QUANTITY;
 import static com.rb.biz.types.trading.SignedQuantity.signedQuantity;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -306,7 +307,7 @@ public class SignedQuantityTest {
   @Test
   public void testRound() {
     BiConsumer<Integer, Double> asserter = (rounded, unrounded) ->
-        assertAlmostEquals(signedQuantity(rounded), signedQuantity(unrounded).round(), 1e-8);
+        assertAlmostEquals(signedQuantity(rounded), signedQuantity(unrounded).round(), DEFAULT_EPSILON_1e_8);
     asserter.accept(-1, -1.4);
     asserter.accept(-1, -1.0);
     asserter.accept(-1, -0.6);
@@ -321,7 +322,7 @@ public class SignedQuantityTest {
   @Test
   public void testRoundNDigits() {
     TriConsumer<Integer, Double, Double> asserter = (numDecimalsRounding, rounded, unrounded) ->
-        assertAlmostEquals(signedQuantity(rounded), signedQuantity(unrounded).round(numDecimalsRounding), 1e-8);
+        assertAlmostEquals(signedQuantity(rounded), signedQuantity(unrounded).round(numDecimalsRounding), DEFAULT_EPSILON_1e_8);
 
     // round to integers
     asserter.accept(0, -2.0, -1.6);

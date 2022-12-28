@@ -55,7 +55,7 @@ public class RBJsonDoubleArrayTest extends RBTestMatcher<RBJsonDoubleArray> {
     assertDoubleListsAlmostEqual(
         ImmutableList.of(1.23, 4.56, 7.89),
         rbJsonDoubleArray.getRawDoublesList(),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Test
