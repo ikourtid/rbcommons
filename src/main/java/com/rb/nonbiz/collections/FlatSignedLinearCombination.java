@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_1;
 import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFraction;
 import static java.util.Collections.singletonList;
@@ -43,7 +44,7 @@ public class FlatSignedLinearCombination<T> implements Iterable<WeightedBySigned
     RBPreconditions.checkArgument(!weightedItems.isEmpty());
     weightedItems
         .forEach(weightedItem -> RBPreconditions.checkArgument(
-            !weightedItem.getWeight().isAlmostZero(1e-8),
+            !weightedItem.getWeight().isAlmostZero(DEFAULT_EPSILON_1e_8),
             "Fractions in a FlatSignedLinearCombination must be non-0. If you don't want something, just don't put it in. %s",
             weightedItem));
     return new FlatSignedLinearCombination<>(weightedItems);

@@ -32,4 +32,11 @@ public class Epsilon extends ImpreciseValue<Epsilon> {
     return Math.abs(value1 - value2) <= doubleValue();
   }
 
+  /**
+   * Returns true if the two numbers are within this epsilon.
+   */
+  public boolean isAlmostZero(double value) {
+    return areWithin(value, 0);
+  }
+
 }

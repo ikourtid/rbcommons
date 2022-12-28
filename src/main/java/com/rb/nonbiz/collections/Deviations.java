@@ -18,6 +18,7 @@ import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONT
 import static com.rb.nonbiz.collections.NonZeroDeviations.nonZeroDeviations;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBStreams.sumBigDecimals;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static java.math.BigDecimal.ROUND_HALF_EVEN;
 import static java.util.Comparator.comparing;
 import static java.util.Map.Entry.comparingByKey;
@@ -38,7 +39,7 @@ public class Deviations<K> {
   public static <K> Deviations<K> deviations(RBMap<K, SignedFraction> signedFractions) {
     SignedFraction sum = SignedFraction.sum(signedFractions.values());
     RBPreconditions.checkArgument(
-        sum.isAlmostZero(1e-8),
+        sum.isAlmostZero(epsilon(1e-8)),
         "Signed fractions for Deviations must add to 0, not %s ; input was %s",
         sum, signedFractions);
     return new Deviations<>(signedFractions);

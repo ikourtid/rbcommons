@@ -42,7 +42,7 @@ public class RBNumericFunctionTest extends RBTestMatcher<RBNumericFunction<Doubl
   public static <X extends Number, Y extends RBNumeric<? super Y>> TypeSafeMatcher<RBNumericFunction<X, Y>>
   rbNumericFunctionUsingSamplingMatcher(
       RBNumericFunction<X, Y> expected, X firstSamplePoint, X ... restSamplePoints) {
-    double epsilon = 1e-8;
+    Epsilon epsilon = 1e-8;
     return makeMatcher(expected, actual ->
         concatenateFirstAndRest(firstSamplePoint, restSamplePoints)
           .allMatch(x ->

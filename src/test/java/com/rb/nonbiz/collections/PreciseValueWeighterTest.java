@@ -142,7 +142,7 @@ public class PreciseValueWeighterTest extends RBTest<PreciseValueWeighter> {
     assertProducesWeightedAverageValue(expected, values, weights, 1e-8);
   }
 
-  private void assertProducesWeightedAverageValue(double expected, List<Double> values, List<Double> weights, double epsilon) {
+  private void assertProducesWeightedAverageValue(double expected, List<Double> values, List<Double> weights, Epsilon epsilon) {
     assertAlmostEquals(
         signedQuantity(expected),
         signedQuantity(makeTestObject().makeWeightedAverage(
@@ -157,7 +157,7 @@ public class PreciseValueWeighterTest extends RBTest<PreciseValueWeighter> {
     assertProducesUnweightedAverageValue(expected, values, 1e-8);
   }
 
-  private void assertProducesUnweightedAverageValue(double expected, List<Double> values, double epsilon) {
+  private void assertProducesUnweightedAverageValue(double expected, List<Double> values, Epsilon epsilon) {
     assertAlmostEquals(
         signedQuantity(expected),
         signedQuantity(makeTestObject().makeUnweightedAverage(

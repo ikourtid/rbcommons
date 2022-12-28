@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.annotations.VisibleForTesting;
 import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.math.vectorspaces.RBMatrix;
+import com.rb.nonbiz.types.Epsilon;
 
 import java.util.Iterator;
 import java.util.stream.IntStream;
@@ -131,7 +132,7 @@ public class ImmutableDoubleIndexableArray2D<R, C> implements IndexableDoubleDat
    * <p> This method will not consider the latter matrix to be symmetric: it will require that the raw storage
    * (i.e. using numeric indices) is also symmetric. </p>
    */
-  public boolean isLogicallyAndPhysicallySymmetric(double epsilon) {
+  public boolean isLogicallyAndPhysicallySymmetric(Epsilon epsilon) {
     if (!isSquareWithRowKeysSameAsColumnKeys()) {
       return false;
     }
@@ -146,7 +147,7 @@ public class ImmutableDoubleIndexableArray2D<R, C> implements IndexableDoubleDat
       for (int j = i + 1; j < sharedSize; j++) {
         double aboveDiagonal = getByIndex(i, j);
         double belowDiagonal = getByIndex(j, i);
-        if (Math.abs(aboveDiagonal - belowDiagonal) > epsilon) {
+        if (!epsilon.areWithin(aboveDiagonal, belowDiagonal)) {
           return false;
         }
       }

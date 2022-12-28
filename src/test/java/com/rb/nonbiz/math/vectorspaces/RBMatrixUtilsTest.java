@@ -27,7 +27,7 @@ public class RBMatrixUtilsTest {
     RBMatrix covMat = rbMatrix2by2(
         1.0, 0.5,
         0.5, 1.0);
-    double epsilon = 1e-4;
+    Epsilon epsilon = 1e-4;
     // If interested, orthToRaw comes from the inverse of: rbMatrix2by2(0.866, 0.866, -0.5, 0.5));
     // For now this matrix may seem arbitrary, but we check it below
     assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1, 0.57737, 1), covMat, epsilon));

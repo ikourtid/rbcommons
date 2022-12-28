@@ -27,17 +27,9 @@ public class RBDoubles {
 
   }
 
-  public static <T> T epsilonCompareDoubles(double left, double right, double epsilon, EpsilonComparisonVisitor<T> visitor) {
-    RBPreconditions.checkArgument(
-        epsilon > 0,
-        "epsilon must be positive; was %s",
-        epsilon);
-    RBPreconditions.checkArgument(
-        epsilon < 1e4,
-        "even though it could be reasonable, we disallow a huge (> 1e4) epsilon for safety, since it's probably a typo; was %s",
-        epsilon);
+  public static <T> T epsilonCompareDoubles(double left, double right, Epsilon epsilon, EpsilonComparisonVisitor<T> visitor) {
     double rightMinusLeft = right - left;
-    if (Math.abs(rightMinusLeft) <= epsilon) {
+    if (epsilon.isAlmostZero(rightMinusLeft)) {
       return visitor.visitAlmostEqual();
     }
     return rightMinusLeft > 0
@@ -50,17 +42,9 @@ public class RBDoubles {
    * not hardcoded into the code), in which case we may want to allow using an epsilon of 0.
    */
   public static <T> T epsilonCompareDoublesAllowingEpsilonOfZero(
-      double left, double right, double epsilon, EpsilonComparisonVisitor<T> visitor) {
-    RBPreconditions.checkArgument(
-        epsilon >= 0,
-        "epsilon must be non-negative; was %s",
-        epsilon);
-    RBPreconditions.checkArgument(
-        epsilon < 1e4,
-        "even though it could be reasonable, we disallow a huge (> 1e4) epsilon for safety, since it's probably a typo; was %s",
-        epsilon);
+      double left, double right, Epsilon epsilon, EpsilonComparisonVisitor<T> visitor) {
     double rightMinusLeft = right - left;
-    if (Math.abs(rightMinusLeft) <= epsilon) {
+    if (epsilon.isAlmostZero(rightMinusLeft)) {
       return visitor.visitAlmostEqual();
     }
     return rightMinusLeft > 0
@@ -80,14 +64,10 @@ public class RBDoubles {
     return Math.round(100 * value) / 100.0;
   }
 
-  public static long getDoubleAsLongAssumingIsRound(double value, double epsilon) {
-    RBPreconditions.checkArgument(
-        epsilon >= 0,
-        "epsilon to check % cannot be negative: %s",
-        value, epsilon);
+  public static long getDoubleAsLongAssumingIsRound(double value, Epsilon epsilon) {
     long nearestRound = Math.round(value);
     RBPreconditions.checkArgument(
-        Math.abs(value - nearestRound) <= epsilon,
+        epsilon.areWithin(value, nearestRound),
         "The closest long to value %s is %s which is not within an epsilon of %s",
         value, nearestRound, epsilon);
     return nearestRound;

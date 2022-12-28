@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBMapMergers.mergeRBMapsByValue;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 /**
@@ -32,8 +33,8 @@ public class PartitionMerger {
         weight2bd.compareTo(BigDecimal.ZERO) >= 0,
         "You have a negative 2nd weight; %s * %s + %s * %s",
         weight1, partition1, weight2, partition2);
-    boolean almostZero1 = weight1.isAlmostZero(1e-8);
-    boolean almostZero2 = weight2.isAlmostZero(1e-8);
+    boolean almostZero1 = weight1.isAlmostZero(DEFAULT_EPSILON_1e_8);
+    boolean almostZero2 = weight2.isAlmostZero(DEFAULT_EPSILON_1e_8);
     RBPreconditions.checkArgument(
         !(almostZero1 && almostZero2),
         "Both weights were 0 (or almost 0); %s * %s + %s * %s",

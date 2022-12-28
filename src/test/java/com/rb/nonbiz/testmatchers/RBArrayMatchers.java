@@ -159,7 +159,7 @@ public class RBArrayMatchers {
     };
   }
 
-  public static TypeSafeMatcher<double[][]> doubleArray2DMatcher(double[][] expected, double epsilon) {
+  public static TypeSafeMatcher<double[][]> doubleArray2DMatcher(double[][] expected, Epsilon epsilon) {
     return new TypeSafeMatcher<double[][]>() {
       @Override
       protected boolean matchesSafely(double[][] actual) {

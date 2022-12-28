@@ -6,6 +6,8 @@ import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 import com.rb.nonbiz.util.RBSubsetPreconditions;
 
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+
 /**
  * Not a great name...
  * For an original partition of N items (e.g. 10% cash, 40% A, 50% B)
@@ -39,11 +41,11 @@ public class PartitionGradient<T> {
       RBMap<T, Partition<T>> partitionsWhenBumpingUp,
       RBMap<T, Partition<T>> partitionsWhenBumpingDown) {
     RBPreconditions.checkArgument(
-        !bumpAmount.isAlmostZero(1e-8),
+        !bumpAmount.isAlmostZero(DEFAULT_EPSILON_1e_8),
         "It makes no sense to bump by 0; it implies no bumping: %s",
         originalPartition);
     RBPreconditions.checkArgument(
-        !bumpAmount.isAlmostOne(1e-8),
+        !bumpAmount.isAlmostOne(DEFAULT_EPSILON_1e_8),
         "Can't bump by 1; it would have to be a singleton partition, and there's nothing else to take its place: %s",
         originalPartition);
     RBPreconditions.checkArgument(

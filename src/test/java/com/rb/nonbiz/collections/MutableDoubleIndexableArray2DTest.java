@@ -175,7 +175,7 @@ public class MutableDoubleIndexableArray2DTest extends RBTestMatcher<MutableDoub
   }
 
   public static <R, C> TypeSafeMatcher<MutableDoubleIndexableArray2D<R, C>> mutableDoubleIndexableArray2DMatcher(
-      MutableDoubleIndexableArray2D<R, C> expected, double epsilon) {
+      MutableDoubleIndexableArray2D<R, C> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.getRawArray(),      f -> doubleArray2DMatcher(f, epsilon)),
         match(v -> v.getRowMapping(),    f -> arrayIndexMappingMatcher(f, f2 -> typeSafeEqualTo(f2))),

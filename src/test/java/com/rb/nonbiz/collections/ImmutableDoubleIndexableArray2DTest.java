@@ -309,7 +309,7 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
   }
 
   public static <R, C> TypeSafeMatcher<ImmutableDoubleIndexableArray2D<R, C>> immutableDoubleIndexableArray2DMatcher(
-      ImmutableDoubleIndexableArray2D<R, C> expected, double epsilon) {
+      ImmutableDoubleIndexableArray2D<R, C> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.getMutableArray2D(), f -> mutableDoubleIndexableArray2DMatcher(f, epsilon)));
   }

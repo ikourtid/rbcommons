@@ -80,7 +80,7 @@ public class NonZeroDeviationsTest extends RBTestMatcher<NonZeroDeviations<Strin
 
   @Test
   public void weightsSumToAlmostZero_isValid() {
-    for (double epsilon : rbSetOf(-1e-9, 1e-9)) {
+    for (Epsilon epsilon : rbSetOf(-1e-9, 1e-9)) {
       NonZeroDeviations<String> doesNotThrow = nonZeroDeviations(rbMapOf(
           "a", signedFraction(0.1 + epsilon),
           "b", signedFraction(0.4),

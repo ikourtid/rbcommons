@@ -94,7 +94,7 @@ public class DoublesWeighterTest extends RBTest<DoublesWeighter> {
     assertProducesWeightedAverageValue(expected, values, weights, 1e-8);
   }
 
-  private void assertProducesWeightedAverageValue(double expected, List<Double> values, List<Double> weights, double epsilon) {
+  private void assertProducesWeightedAverageValue(double expected, List<Double> values, List<Double> weights, Epsilon epsilon) {
     assertEquals(expected, makeTestObject().makeWeightedAverage(values, weights), epsilon);
   }
 

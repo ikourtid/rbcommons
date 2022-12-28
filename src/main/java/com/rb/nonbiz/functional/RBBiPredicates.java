@@ -1,5 +1,6 @@
 package com.rb.nonbiz.functional;
 
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.types.UnitFraction;
@@ -32,18 +33,16 @@ public class RBBiPredicates {
     return (c1, c2) -> c1.compareTo(c2) == 0;
   }
 
-  public static BiPredicate<Double, Double> doubleIsAlmostEqualTo(double epsilon) {
-    return (c1, c2) -> Math.abs(c1 - c2) <= epsilon;
+  public static BiPredicate<Double, Double> doubleIsAlmostEqualTo(Epsilon epsilon) {
+    return (c1, c2) -> epsilon.areWithin(c1, c2);
   }
 
-  public static <V extends PreciseValue<? super V>> BiPredicate<V, V> isAlmostEqualTo(double epsilon) {
-    RBPreconditions.checkArgument(epsilon >= 0);
-    return (v1, v2) -> Math.abs(v1.doubleValue() - v2.doubleValue()) <= epsilon;
+  public static <V extends PreciseValue<? super V>> BiPredicate<V, V> isAlmostEqualTo(Epsilon epsilon) {
+    return (v1, v2) -> epsilon.areWithin(v1.doubleValue(), v2.doubleValue());
   }
 
   public static <T extends RBNumeric<? super T>> BiPredicate<T, T> isAlmostMultipliedBy(
-      double expectedMultiplier, double epsilon) {
-    RBPreconditions.checkArgument(epsilon >= 0);
+      double expectedMultiplier, Epsilon epsilon) {
     return (v1, v2) -> {
       // Note that we intentionally use a tiny epsilon of 1e-8, instead of the epsilon being passed in,
       // which isn't guarantee to be tiny, and also has a different purpose.
@@ -55,7 +54,7 @@ public class RBBiPredicates {
         return Math.abs(v2.doubleValue()) <= 1e-8;
       }
 
-      return Math.abs(v2.doubleValue() / v1.doubleValue() - expectedMultiplier) <= epsilon;
+      return epsilon.areWithin(v2.doubleValue() / v1.doubleValue(), expectedMultiplier);
     };
   }
 

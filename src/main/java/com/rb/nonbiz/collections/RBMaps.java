@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 
@@ -128,7 +129,7 @@ public class RBMaps {
    * are equal to within epsilon.
    */
   public static <K, V extends PreciseValue<? super V>> boolean preciseValueMapsAlmostEqual(
-      RBMap<K, V> map1, RBMap<K, V> map2, double epsilon) {
+      RBMap<K, V> map1, RBMap<K, V> map2, Epsilon epsilon) {
     if (!map1.keySet().equals(map2.keySet())) {
       return false;
     }
@@ -147,7 +148,7 @@ public class RBMaps {
    * are equal within epsilon.
    */
   public static <K, V extends ImpreciseValue<? super V>> boolean impreciseValueMapsAlmostEqual(
-      RBMap<K, V> map1, RBMap<K, V> map2, double epsilon) {
+      RBMap<K, V> map1, RBMap<K, V> map2, Epsilon epsilon) {
     if (!map1.keySet().equals(map2.keySet())) {
       return false;
     }

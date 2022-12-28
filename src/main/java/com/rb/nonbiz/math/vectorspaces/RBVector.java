@@ -6,6 +6,7 @@ import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import cern.colt.matrix.linalg.Algebra;
 import com.google.common.primitives.Doubles;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
@@ -53,8 +54,8 @@ public class RBVector {
     return rawDoubleMatrix1D.size();
   }
 
-  public boolean isAlmostUnitVector(double epsilon) {
-    return Math.abs(calculateMagnitude() - 1) <= epsilon;
+  public boolean isAlmostUnitVector(Epsilon epsilon) {
+    return epsilon.areWithin(calculateMagnitude(), 1);
   }
 
   /**

@@ -1,6 +1,7 @@
 package com.rb.nonbiz.functional;
 
 import com.google.common.collect.Range;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.types.UnitFraction;
@@ -38,14 +39,12 @@ public class RBPredicates {
     return c -> range.contains(c);
   }
 
-  public static <T extends RBNumeric<? super T>> Predicate<T> isAlmostEqualTo(T otherValue, double epsilon) {
-    RBPreconditions.checkArgument(epsilon >= 0);
-    return v -> Math.abs(v.doubleValue() - otherValue.doubleValue()) <= epsilon;
+  public static <T extends RBNumeric<? super T>> Predicate<T> isAlmostEqualTo(T otherValue, Epsilon epsilon) {
+    return v -> epsilon.areWithin(v.doubleValue(), otherValue.doubleValue());
   }
 
-  public static Predicate<Double> isAlmostEqualTo(double otherValue, double epsilon) {
-    RBPreconditions.checkArgument(epsilon >= 0);
-    return v -> Math.abs(v - otherValue) <= epsilon;
+  public static Predicate<Double> isAlmostEqualTo(double otherValue, Epsilon epsilon) {
+    return v -> epsilon.areWithin(v, otherValue);
   }
 
   // Note: isWithin(100, 10%).test(90) is false; it means abs((90 - 100) / 90), which is greater than 10%

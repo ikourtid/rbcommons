@@ -4,6 +4,7 @@ import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.PartialComparator;
 import com.rb.nonbiz.collections.PartiallyComparable;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -198,7 +199,7 @@ public class RBOrderingPreconditions {
    * for doubles, since we never care about precise equality anyway. Used closed ranges everywhere is more expedient.
    */
   public static <T> void checkConsecutiveClosedDoubleRanges(
-      Iterator<ClosedRange<Double>> rangesIterator, double epsilon) {
+      Iterator<ClosedRange<Double>> rangesIterator, Epsilon epsilon) {
     consecutivePairs( () -> rangesIterator)
         .stream()
         .forEach(pair -> {

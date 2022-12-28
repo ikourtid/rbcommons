@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.SignedFraction;
 import com.rb.nonbiz.types.UnitFraction;
@@ -21,6 +22,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PreciseValue.sumToBigDecimal;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_1;
@@ -47,7 +49,7 @@ public class SignedPartition<K> {
 
   public static <K> SignedPartition<K> signedPartition(RBMap<K, SignedFraction> signedFractions) {
     for (SignedFraction signedFraction : signedFractions.values()) {
-      if (signedFraction.isAlmostZero(1e-8)) {
+      if (signedFraction.isAlmostZero(DEFAULT_EPSILON_1e_8)) {
         throw new IllegalArgumentException(
             "Signed fractions in partitions cannot be zero. " +
                 "If you don't want something, just don't put it into the partition");

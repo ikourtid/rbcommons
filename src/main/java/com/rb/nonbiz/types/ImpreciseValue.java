@@ -69,11 +69,11 @@ public abstract class ImpreciseValue<T extends ImpreciseValue<T>> extends RBNume
    * The upside is fewer conversions and fewer cases where we have an unexpected result because
    * we forgot to do some conversion.
    */
-  public boolean almostEquals(T other, double epsilon) {
+  public boolean almostEquals(T other, Epsilon epsilon) {
     if (this == other) return true;
     if (other == null) return false;
 
-    return Math.abs(value - other.doubleValue()) <= epsilon;
+    return epsilon.areWithin(value, other.doubleValue());
   }
 
   @Override
@@ -94,8 +94,8 @@ public abstract class ImpreciseValue<T extends ImpreciseValue<T>> extends RBNume
     return Double.compare(value, other.doubleValue());
   }
 
-  public boolean isAlmostZero(double epsilon) {
-    return Math.abs(value) <= epsilon;
+  public boolean isAlmostZero(Epsilon epsilon) {
+    return epsilon.isAlmostZero(value);
   }
 
   public static <T extends ImpreciseValue<T>> T max(T item1, T item2) {

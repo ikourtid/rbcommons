@@ -39,13 +39,13 @@ import static org.junit.Assert.fail;
 
 public class Asserters {
 
-  public static <T extends RBNumeric<? super T>> void assertAlmostEquals(T value1, T value2, double epsilon) {
+  public static <T extends RBNumeric<? super T>> void assertAlmostEquals(T value1, T value2, Epsilon epsilon) {
     assertAlmostEquals(
         Strings.format("Values must be within %s but were %s and %s", epsilon, value1, value2),
         value1, value2, epsilon);
   }
 
-  public static <T extends RBNumeric<? super T>> void assertAlmostEquals(String message, T value1, T value2, double epsilon) {
+  public static <T extends RBNumeric<? super T>> void assertAlmostEquals(String message, T value1, T value2, Epsilon epsilon) {
     if (value1 == null && value2 == null) {
       return;
     }
@@ -58,7 +58,7 @@ public class Asserters {
   }
 
   public static <V extends ImpreciseValue<V>> void assertAlmostEquals(
-      String message, V value1, V value2, double epsilon) {
+      String message, V value1, V value2, Epsilon epsilon) {
     if (value1 == null && value2 == null) {
       return;
     }
@@ -72,7 +72,7 @@ public class Asserters {
     assertEquals(ImmutableSet.copyOf(expected), ImmutableSet.copyOf(actual));
   }
 
-  public static void assertDoubleArraysAlmostEqual(double[] expected, double[] actual, double epsilon) {
+  public static void assertDoubleArraysAlmostEqual(double[] expected, double[] actual, Epsilon epsilon) {
     assertEquals(expected.length, actual.length);
     for (int i = 0; i < expected.length; i++) {
       assertEquals(
@@ -81,7 +81,7 @@ public class Asserters {
     }
   }
 
-  public static void assertDoubleListsAlmostEqual(List<Double> expected, List<Double> actual, double epsilon) {
+  public static void assertDoubleListsAlmostEqual(List<Double> expected, List<Double> actual, Epsilon epsilon) {
     assertEquals(expected.size(), actual.size());
     for (int i = 0; i < expected.size(); i++) {
       assertEquals(
@@ -160,7 +160,7 @@ public class Asserters {
   }
 
   public static <T extends RBNumeric<? super T>> void assertOptionalAlmostEquals(
-      T expected, Optional<T> actual, double epsilon) {
+      T expected, Optional<T> actual, Epsilon epsilon) {
     assertTrue(actual.isPresent());
     assertAlmostEquals(expected, actual.get(), epsilon);
   }
@@ -286,7 +286,7 @@ public class Asserters {
     return doubleApproximatelyExplained(1e-8, expected, actualFirst, actualRest);
   }
 
-  public static double doubleApproximatelyExplained(double epsilon, double expected, double actualFirst, double...actualRest) {
+  public static double doubleApproximatelyExplained(Epsilon epsilon, double expected, double actualFirst, double...actualRest) {
     List<Double> actual = concatenateFirstAndRestDoubles(actualFirst, actualRest);
     for (int i = 0; i < actual.size(); i++) {
       assertEquals(

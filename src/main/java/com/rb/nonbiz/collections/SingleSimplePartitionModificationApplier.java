@@ -9,6 +9,7 @@ import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBVoid.rbVoid;
 import static com.rb.nonbiz.math.RBBigDecimals.epsilonCompareBigDecimals;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 /**
  * Applies a modification ({@link SimplePartitionModification}) to a {@link Partition}, resulting in a new, modified
@@ -37,7 +38,7 @@ public class SingleSimplePartitionModificationApplier {
       epsilonCompareBigDecimals(
           originalFraction.asBigDecimal(),
           fractionToSubtract.asBigDecimal(),
-          1e-8,
+          DEFAULT_EPSILON_1e_8,
           new EpsilonComparisonVisitor<RBVoid>() {
             @Override
             public RBVoid visitRightIsGreater(double ignored) {
