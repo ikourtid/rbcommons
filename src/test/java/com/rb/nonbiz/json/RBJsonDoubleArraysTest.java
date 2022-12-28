@@ -7,6 +7,7 @@ import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.json.RBJsonDoubleArray.rbJsonDoubleArray;
 import static com.rb.nonbiz.json.RBJsonDoubleArrayTest.rbJsonDoubleArrayMatcher;
 import static com.rb.nonbiz.json.RBJsonDoubleArrays.convertClosedRangeToRBJsonDoubleArray;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RBJsonDoubleArraysTest {
@@ -16,7 +17,8 @@ public class RBJsonDoubleArraysTest {
     assertThat(
         convertClosedRangeToRBJsonDoubleArray(closedRange(signedMoney(-1.1), signedMoney(3.3))),
         rbJsonDoubleArrayMatcher(
-            rbJsonDoubleArray(-1.1, 3.3), 1e-8));
+            rbJsonDoubleArray(-1.1, 3.3),
+            DEFAULT_EPSILON_1e_8));
   }
 
 }

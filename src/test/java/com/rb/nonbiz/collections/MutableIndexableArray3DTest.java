@@ -25,6 +25,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatch
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_BOOLEAN;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
@@ -120,7 +121,7 @@ public class MutableIndexableArray3DTest extends RBTestMatcher<MutableIndexableA
                     yFilter == null ? noFilter() : filter(yFilter),
                     zFilter == null ? noFilter() : filter(zFilter))
                     .collect(Collectors.toList()),
-                doubleListMatcher(expectedResult, 1e-8));
+                doubleListMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
     // Note that the 'expected results' lists appear in a way that resembles the original grid,
     // so that it's easy to see visually what gets included.
 
@@ -268,7 +269,7 @@ public class MutableIndexableArray3DTest extends RBTestMatcher<MutableIndexableA
   @Override
   protected boolean willMatch(MutableIndexableArray3D<String, Boolean, Integer, Double> expected,
                               MutableIndexableArray3D<String, Boolean, Integer, Double> actual) {
-    return mutableIndexableArray3DMatcher(expected, v -> doubleAlmostEqualsMatcher(v, 1e-8))
+    return mutableIndexableArray3DMatcher(expected, v -> doubleAlmostEqualsMatcher(v, DEFAULT_EPSILON_1e_8))
         .matches(actual);
   }
 

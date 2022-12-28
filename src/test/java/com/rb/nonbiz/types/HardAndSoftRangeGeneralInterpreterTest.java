@@ -11,6 +11,7 @@ import java.util.Optional;
 import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 import static com.rb.nonbiz.types.HardAndSoftRangeTest.hardAndSoftRangeMatcher;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,7 +41,7 @@ public class HardAndSoftRangeGeneralInterpreterTest
         .forEach(interpreter -> assertThat(
             interpreter.getRangeToUse(Optional.of(money(13)), HARD_AND_SOFT_RANGE),
             preciseValueRangeMatcher(
-                Range.closed(money(13), money(25)), 1e-8)));
+                Range.closed(money(13), money(25)), DEFAULT_EPSILON_1e_8)));
   }
 
   @Test
@@ -54,7 +55,7 @@ public class HardAndSoftRangeGeneralInterpreterTest
             interpreter.getRangeToUse(Optional.<Money>empty(), HARD_AND_SOFT_RANGE),
             preciseValueRangeMatcher(
                 // Returns the soft range
-                Range.closed(money(15), money(25)), 1e-8)));
+                Range.closed(money(15), money(25)), DEFAULT_EPSILON_1e_8)));
   }
 
   @Override

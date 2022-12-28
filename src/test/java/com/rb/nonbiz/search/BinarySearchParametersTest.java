@@ -4,6 +4,7 @@ import com.rb.nonbiz.search.BinarySearchParameters.BinarySearchParametersBuilder
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Comparator.comparing;
 
 // This test class is not generic, but the publicly exposed static matcher is.
@@ -136,7 +138,7 @@ public class BinarySearchParametersTest extends RBTestMatcher<BinarySearchParame
       BinarySearchParameters<Double, String> actual) {
     return binarySearchParametersPartialMatcher(
         expected,
-        f -> doubleAlmostEqualsMatcher(f, 1e-8),
+        f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8),
         f -> typeSafeEqualTo(f))
         .matches(actual);
   }

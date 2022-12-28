@@ -17,6 +17,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapPreciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PreciseValueRBMapJsonConverterTest extends RBTest<PreciseValueRBMapJsonConverter> {
@@ -64,7 +65,7 @@ public class PreciseValueRBMapJsonConverterTest extends RBTest<PreciseValueRBMap
         jsonObjectEpsilonMatcher(json));
     assertThat(
         makeTestObject().fromJsonObject(json, s -> instrumentId(Long.parseLong(s)), v -> signedMoney(v)),
-        rbMapPreciseValueMatcher(map, 1e-14));
+        rbMapPreciseValueMatcher(map, epsilon(1e-14)));
   }
 
   @Override

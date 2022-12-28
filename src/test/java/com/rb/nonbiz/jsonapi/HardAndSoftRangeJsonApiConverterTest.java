@@ -21,6 +21,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObj
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectMatcher;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.types.Correlation.correlation;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 import static com.rb.nonbiz.types.HardAndSoftRangeTest.hardAndSoftRangeMatcher;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
@@ -118,7 +119,7 @@ public class HardAndSoftRangeJsonApiConverterTest extends RBTest<HardAndSoftRang
             v -> serializer.apply(v)),
         jsonObjectMatcher(
             rangeJsonObject,
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
 
     assertThat(
         makeTestObject().fromJsonObject(

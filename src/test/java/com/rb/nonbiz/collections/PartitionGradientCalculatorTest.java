@@ -12,6 +12,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -134,7 +135,7 @@ public class PartitionGradientCalculatorTest extends RBCommonsTestPlusIntegratio
       oneOf(partitionExtender).extend(
           with(same(UNBUMPED)),
           with(equal(keyToBumpUp)),
-          with(preciseValueMatcher(bumpAmount, 1e-8)));
+          with(preciseValueMatcher(bumpAmount, DEFAULT_EPSILON_1e_8)));
       will(returnValue(expectedResult));
     }});
   }
@@ -144,7 +145,7 @@ public class PartitionGradientCalculatorTest extends RBCommonsTestPlusIntegratio
       oneOf(partitionUnextender).unextend(
           with(same(UNBUMPED)),
           with(equal(keyToBumpDown)),
-          with(preciseValueMatcher(bumpAmount, 1e-8)));
+          with(preciseValueMatcher(bumpAmount, DEFAULT_EPSILON_1e_8)));
       will(returnValue(expectedResult));
     }});
   }

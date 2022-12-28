@@ -7,6 +7,8 @@ import org.junit.Test;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.types.DoubleMovement.doubleMovement;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.junit.Assert.assertEquals;
 
 public class DoubleMovementTest extends RBTestMatcher<DoubleMovement> {
@@ -49,8 +51,8 @@ public class DoubleMovementTest extends RBTestMatcher<DoubleMovement> {
 
   public static TypeSafeMatcher<DoubleMovement> doubleMovementMatcher(DoubleMovement expected) {
     return makeMatcher(expected,
-        matchUsingDoubleAlmostEquals(v -> v.getValueBefore(), 1e-8),
-        matchUsingDoubleAlmostEquals(v -> v.getValueAfter(),  1e-8));
+        matchUsingDoubleAlmostEquals(v -> v.getValueBefore(), DEFAULT_EPSILON_1e_8),
+        matchUsingDoubleAlmostEquals(v -> v.getValueAfter(),  DEFAULT_EPSILON_1e_8));
   }
 
 }

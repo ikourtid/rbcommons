@@ -23,6 +23,7 @@ import static com.rb.nonbiz.types.ClosedUnitFractionRange.unitFractionFixedTo;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.unitFractionFixedToOne;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.unitFractionFixedToZero;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.unrestrictedClosedUnitFractionRange;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_1;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
@@ -384,7 +385,7 @@ public class ClosedUnitFractionRangeTest extends RBTestMatcher<ClosedUnitFractio
 
   public static TypeSafeMatcher<ClosedUnitFractionRange> closedUnitFractionRangeMatcher(ClosedUnitFractionRange expected) {
     return makeMatcher(expected,
-        match(v -> v.asClosedRangeOfUnitFraction(), f -> closedRangeMatcher(f, f2 -> preciseValueMatcher(f2, 1e-8))));
+        match(v -> v.asClosedRangeOfUnitFraction(), f -> closedRangeMatcher(f, f2 -> preciseValueMatcher(f2, DEFAULT_EPSILON_1e_8))));
   }
 
 }

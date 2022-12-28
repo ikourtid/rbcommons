@@ -19,6 +19,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.WeightedList.nonEmptyWeightedList;
 import static com.rb.nonbiz.types.WeightedList.possiblyEmptyWeightedList;
 import static java.util.Collections.emptyList;
@@ -92,7 +93,7 @@ public class WeightedListTest extends RBTestMatcher<WeightedList<String, TestHas
   public static <T, L extends HasList<T>> TypeSafeMatcher<WeightedList<T, L>> weightedListGeneralMatcher(
       WeightedList<T, L> expected, MatcherGenerator<T> itemMatcherGenerator) {
     return makeMatcher(expected,
-        match(v -> v.getWeights(), f -> doubleListMatcher(f, 1e-8)),
+        match(v -> v.getWeights(), f -> doubleListMatcher(f, DEFAULT_EPSILON_1e_8)),
         match(v -> v.getHasList(), f -> hasListMatcher(f, itemMatcherGenerator)));
   }
 
@@ -104,7 +105,7 @@ public class WeightedListTest extends RBTestMatcher<WeightedList<String, TestHas
   public static <T, L extends HasList<T>> TypeSafeMatcher<WeightedList<T, L>> weightedListMatcher(
       WeightedList<T, L> expected, MatcherGenerator<L> listObjectMatcherGenerator) {
     return makeMatcher(expected,
-        match(v -> v.getWeights(), f -> doubleListMatcher(f, 1e-8)),
+        match(v -> v.getWeights(), f -> doubleListMatcher(f, DEFAULT_EPSILON_1e_8)),
         match(v -> v.getHasList(), listObjectMatcherGenerator));
   }
 

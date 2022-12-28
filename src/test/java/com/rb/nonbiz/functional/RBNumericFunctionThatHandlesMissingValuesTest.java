@@ -24,6 +24,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 public class RBNumericFunctionThatHandlesMissingValuesTest
     extends RBTestMatcher<RBNumericFunctionThatHandlesMissingValues<Double, Money>> {
@@ -93,7 +94,7 @@ public class RBNumericFunctionThatHandlesMissingValuesTest
   rbNumericFunctionThatHandlesMissingValuesUsingSamplingMatcher(
       RBNumericFunctionThatHandlesMissingValues<X, Y> expected, X firstSamplePoint, X ... restSamplePoints) {
     return makeMatcher(expected,
-        matchOptional(v -> v.getYForMissingX(),             f -> rbNumericMatcher(f, 1e-8)),
+        matchOptional(v -> v.getYForMissingX(),             f -> rbNumericMatcher(f, DEFAULT_EPSILON_1e_8)),
         match(        v -> v.getFunctionForPresentValues(), f -> rbNumericFunctionUsingSamplingMatcher(f,
             firstSamplePoint, restSamplePoints)));
   }

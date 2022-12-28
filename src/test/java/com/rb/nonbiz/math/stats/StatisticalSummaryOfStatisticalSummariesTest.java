@@ -18,6 +18,7 @@ import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 
@@ -98,7 +99,7 @@ public class StatisticalSummaryOfStatisticalSummariesTest extends RBTestMatcher<
   public static TypeSafeMatcher<StatisticalSummaryOfStatisticalSummaries> statisticalSummaryOfStatisticalSummariesMatcher(
       StatisticalSummaryOfStatisticalSummaries expected) {
     return makeMatcher(expected,
-        match(v -> v.getRawEnumMap(), f -> enumMapMatcher(f, f2 -> statisticalSummaryMatcher(f2, 1e-8))));
+        match(v -> v.getRawEnumMap(), f -> enumMapMatcher(f, f2 -> statisticalSummaryMatcher(f2, DEFAULT_EPSILON_1e_8))));
   }
 
 }

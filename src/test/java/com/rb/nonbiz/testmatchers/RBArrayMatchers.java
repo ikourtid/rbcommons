@@ -3,6 +3,7 @@ package com.rb.nonbiz.testmatchers;
 import com.google.common.base.Joiner;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -36,7 +37,7 @@ public class RBArrayMatchers {
     return arrayMatcher(expected, f -> typeSafeEqualTo(f));
   }
 
-  public static TypeSafeMatcher<double[]> doubleArrayMatcher(double[] expected, double epsilon) {
+  public static TypeSafeMatcher<double[]> doubleArrayMatcher(double[] expected, Epsilon epsilon) {
     return new TypeSafeMatcher<double[]>() {
       @Override
       protected boolean matchesSafely(double[] actual) {
@@ -45,7 +46,7 @@ public class RBArrayMatchers {
         }
         return IntStream
             .range(0, expected.length)
-            .allMatch(i -> Math.abs(expected[i] - actual[i]) < epsilon);
+            .allMatch(i -> epsilon.areWithin(expected[i], actual[i]));
       }
 
       @Override

@@ -8,6 +8,7 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.rbNumericValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_1;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.WeightedBy.weightedBy;
@@ -42,7 +43,7 @@ public class WeightedByTest extends RBTestMatcher<WeightedBy<SignedFraction, Str
       WeightedBy<W, T> expected, MatcherGenerator<T> itemMatcherGenerator) {
     return makeMatcher(expected,
         match(v -> v.getItem(), itemMatcherGenerator),
-        match(v -> v.getWeight(), f -> rbNumericValueMatcher(f, 1e-8)));
+        match(v -> v.getWeight(), f -> rbNumericValueMatcher(f, DEFAULT_EPSILON_1e_8)));
   }
 
 }

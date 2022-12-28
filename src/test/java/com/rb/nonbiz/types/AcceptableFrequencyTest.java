@@ -15,6 +15,7 @@ import static com.rb.nonbiz.types.AcceptableFrequency.lessOftenThan;
 import static com.rb.nonbiz.types.AcceptableFrequency.moreOftenThan;
 import static com.rb.nonbiz.types.AcceptableFrequency.never;
 import static com.rb.nonbiz.types.AcceptableFrequency.notAlways;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -150,7 +151,7 @@ public class AcceptableFrequencyTest extends RBTestMatcher<AcceptableFrequency> 
 
   public static TypeSafeMatcher<AcceptableFrequency> acceptableFrequencyMatcher(AcceptableFrequency expected) {
     return makeMatcher(expected, actual ->
-        preciseValueRangeMatcher(expected.getFrequencyRange(), 1e-8)
+        preciseValueRangeMatcher(expected.getFrequencyRange(), DEFAULT_EPSILON_1e_8)
             .matches(actual.getFrequencyRange()));
   }
 

@@ -15,6 +15,8 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRange.closedUnitFractionHardAndSoftRange;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRangeTest.closedUnitFractionHardAndSoftRangeMatcher;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.TargetWithOptionalClosedUnitFractionHardAndSoftRange.targetWithClosedUnitFractionHardAndSoftRange;
 import static com.rb.nonbiz.types.TargetWithOptionalClosedUnitFractionHardAndSoftRange.targetWithoutClosedUnitFractionHardAndSoftRange;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
@@ -73,7 +75,7 @@ public class TargetWithOptionalClosedUnitFractionHardAndSoftRangeTest
   public static TypeSafeMatcher<TargetWithOptionalClosedUnitFractionHardAndSoftRange>
       targetWithClosedUnitFractionHardAndSoftRangeMatcher(TargetWithOptionalClosedUnitFractionHardAndSoftRange expected) {
     return makeMatcher(expected,
-        matchUsingAlmostEquals(v -> v.getTarget(), 1e-8),
+        matchUsingAlmostEquals(v -> v.getTarget(),                             DEFAULT_EPSILON_1e_8),
         matchOptional(         v -> v.getClosedUnitFractionHardAndSoftRange(), f -> closedUnitFractionHardAndSoftRangeMatcher(f)));
   }
 

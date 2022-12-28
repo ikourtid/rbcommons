@@ -34,6 +34,7 @@ import static com.rb.nonbiz.testutils.Asserters.*;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_PRICE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -165,8 +166,8 @@ public class RBJsonObjectGettersTest {
     assertOptionalDoubleEmpty(getOptionalJsonDouble(jsonObject, "z"));
     assertOptionalDoubleEmpty(getOptionalJsonDouble(jsonObject, "foo"));
     assertIllegalArgumentException( () -> getOptionalJsonDouble(jsonObject, "y")); // not a double; it's a string
-    assertOptionalDoubleAlmostEquals(1.1, getOptionalJsonDouble(jsonObject, "w1"), 1e-8);
-    assertOptionalDoubleAlmostEquals(22,  getOptionalJsonDouble(jsonObject, "w2"), 1e-8); // not a double, but it's OK
+    assertOptionalDoubleAlmostEquals(1.1, getOptionalJsonDouble(jsonObject, "w1"), DEFAULT_EPSILON_1e_8);
+    assertOptionalDoubleAlmostEquals(22,  getOptionalJsonDouble(jsonObject, "w2"), DEFAULT_EPSILON_1e_8); // not a double, but it's OK
   }
 
   @Test

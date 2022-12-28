@@ -5,6 +5,7 @@ import com.rb.biz.types.asset.HasInstrumentId;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -40,6 +41,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DATE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -376,17 +378,20 @@ public class HasInstrumentIdPartitionTest extends RBTestMatcher<HasInstrumentIdP
 
   public static <T extends HasInstrumentId> TypeSafeMatcher<HasInstrumentIdPartition<T>> hasInstrumentIdPartitionMatcher(
       HasInstrumentIdPartition<T> expected, MatcherGenerator<T> matcherGenerator) {
-    return epsilonHasInstrumentIdPartitionMatcher(expected, matcherGenerator, 1e-8);
+    return epsilonHasInstrumentIdPartitionMatcher(expected, matcherGenerator, DEFAULT_EPSILON_1e_8);
   }
 
   public static <T extends HasInstrumentId> TypeSafeMatcher<HasInstrumentIdPartition<T>> epsilonHasInstrumentIdPartitionMatcher(
-      HasInstrumentIdPartition<T> expected, MatcherGenerator<T> matcherGenerator, double epsilon) {
+      HasInstrumentIdPartition<T> expected, MatcherGenerator<T> matcherGenerator, Epsilon epsilon) {
     // Here, we won't use the usual makeMatcher approach, because we want to be able to print
     // the hasInstrumentIdPartition fraction at a high precision, whereas the default toString() only prints round percentages.
     return new TypeSafeMatcher<HasInstrumentIdPartition<T>>() {
       @Override
       protected boolean matchesSafely(HasInstrumentIdPartition<T> actual) {
-        return hasInstrumentIdMapMatcher(expected.getRawFractionsMap(), matcherGenerator, f -> preciseValueMatcher(f, epsilon))
+        return hasInstrumentIdMapMatcher(
+            expected.getRawFractionsMap(),
+            matcherGenerator,
+            f -> preciseValueMatcher(f, epsilon))
             .matches(actual.getRawFractionsMap());
       }
 

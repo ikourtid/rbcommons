@@ -2,6 +2,7 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import com.rb.nonbiz.testutils.MatcherEpsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -119,7 +120,7 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
     return rbSquareMatrixMatcher(expected, emptyMatcherEpsilons());
   }
 
-  public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected, double epsilon) {
+  public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected, Epsilon epsilon) {
     return rbSquareMatrixMatcher(expected, useEpsilonInAllMatchers(epsilon));
   }
 

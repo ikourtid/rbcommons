@@ -4,6 +4,7 @@ import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -29,6 +30,7 @@ import static com.rb.nonbiz.collections.IidPartition.singletonIidPartition;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DATE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_SYMBOL;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -269,10 +271,10 @@ public class IidPartitionTest extends RBTestMatcher<IidPartition> {
   }
 
   public static TypeSafeMatcher<IidPartition> iidPartitionMatcher(IidPartition expected) {
-    return epsilonIidPartitionMatcher(expected, 1e-8);
+    return epsilonIidPartitionMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
-  public static TypeSafeMatcher<IidPartition> epsilonIidPartitionMatcher(IidPartition expected, double epsilon) {
+  public static TypeSafeMatcher<IidPartition> epsilonIidPartitionMatcher(IidPartition expected, Epsilon epsilon) {
     // Here, we won't use the usual makeMatcher approach, because we want to be able to print
     // the instrumentIdPartition fraction at a high precision, whereas the default toString() only prints round percentages.
     return new TypeSafeMatcher<IidPartition>() {

@@ -5,6 +5,7 @@ import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
@@ -23,12 +24,12 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 
 public class RBRangeMatchers {
 
-  public static TypeSafeMatcher<Range<Double>> doubleRangeMatcher(Range<Double> expected, double epsilon) {
-    return rangeMatcher(expected, v -> new IsCloseTo(v, epsilon));
+  public static TypeSafeMatcher<Range<Double>> doubleRangeMatcher(Range<Double> expected, Epsilon epsilon) {
+    return rangeMatcher(expected, v -> new IsCloseTo(v, epsilon.doubleValue()));
   }
 
-  public static TypeSafeMatcher<ClosedRange<Double>> doubleClosedRangeMatcher(ClosedRange<Double> expected, double epsilon) {
-    return closedRangeMatcher(expected, v -> new IsCloseTo(v, epsilon));
+  public static TypeSafeMatcher<ClosedRange<Double>> doubleClosedRangeMatcher(ClosedRange<Double> expected, Epsilon epsilon) {
+    return closedRangeMatcher(expected, v -> new IsCloseTo(v, epsilon.doubleValue()));
   }
 
   public static <T extends Comparable<? super T>> TypeSafeMatcher<Range<T>> rangeMatcher(Range<T> expected,
@@ -77,32 +78,32 @@ public class RBRangeMatchers {
   }
 
   public static <T extends PreciseValue<? super T>> TypeSafeMatcher<Range<T>> preciseValueRangeMatcher(
-      Range<T> expected, double epsilon) {
+      Range<T> expected, Epsilon epsilon) {
     return rangeMatcher(expected, v -> preciseValueMatcher(v, epsilon));
   }
 
   public static <T extends PreciseValue<T>> TypeSafeMatcher<ClosedRange<T>> preciseValueClosedRangeMatcher(
-      ClosedRange<T> expected, double epsilon) {
+      ClosedRange<T> expected, Epsilon epsilon) {
     return closedRangeMatcher(expected, v -> preciseValueMatcher(v, epsilon));
   }
 
   public static <T extends ImpreciseValue<? super T>> TypeSafeMatcher<Range<T>> impreciseValueRangeMatcher(
-      Range<T> expected, double epsilon) {
+      Range<T> expected, Epsilon epsilon) {
     return rangeMatcher(expected, v -> impreciseValueMatcher(v, epsilon));
   }
 
   public static <T extends RBNumeric<? super T>> TypeSafeMatcher<Range<T>> rbNumericRangeMatcher(
-      Range<T> expected, double epsilon) {
+      Range<T> expected, Epsilon epsilon) {
     return rangeMatcher(expected, v -> rbNumericValueMatcher(v, epsilon));
   }
 
   public static TypeSafeMatcher<Range<BigDecimal>> bigDecimalRangeMatcher(
-      Range<BigDecimal> expected, double epsilon) {
+      Range<BigDecimal> expected, Epsilon epsilon) {
     return rangeMatcher(expected, v -> bigDecimalMatcher(v, epsilon));
   }
 
   public static <K, V extends PreciseValue<? super V>> TypeSafeMatcher<RBMap<K, Range<V>>> rbMapPreciseValueRangeMatcher(
-      RBMap<K, Range<V>> expected, double epsilon) {
+      RBMap<K, Range<V>> expected, Epsilon epsilon) {
     return new TypeSafeMatcher<RBMap<K, Range<V>>>() {
       @Override
       protected boolean matchesSafely(RBMap<K, Range<V>> actual) {
@@ -127,7 +128,7 @@ public class RBRangeMatchers {
   }
 
   public static <K> TypeSafeMatcher<RBMap<K, Range<Double>>> rbMapToDoubleRangeMatcher(
-      RBMap<K, Range<Double>> expected, double epsilon) {
+      RBMap<K, Range<Double>> expected, Epsilon epsilon) {
     return new TypeSafeMatcher<RBMap<K, Range<Double>>>() {
       @Override
       protected boolean matchesSafely(RBMap<K, Range<Double>> actual) {

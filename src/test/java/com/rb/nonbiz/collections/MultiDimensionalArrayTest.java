@@ -21,6 +21,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatch
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrowsAnyException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -182,7 +183,8 @@ public class MultiDimensionalArrayTest extends RBTestMatcher<MultiDimensionalArr
 
   @Override
   protected boolean willMatch(MultiDimensionalArray<Double> expected, MultiDimensionalArray<Double> actual) {
-    return multiDimensionalArrayMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return multiDimensionalArrayMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <T> TypeSafeMatcher<MultiDimensionalArray<T>> multiDimensionalArrayEqualityMatcher(

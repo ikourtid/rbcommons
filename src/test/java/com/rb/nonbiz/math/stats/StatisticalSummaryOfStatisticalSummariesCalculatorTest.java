@@ -20,6 +20,7 @@ import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.makeTestStatistica
 import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.statisticalSummaryMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyIterator;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -42,7 +43,7 @@ public class StatisticalSummaryOfStatisticalSummariesCalculatorTest
                 result.getStatisticalSummary(statisticalSummaryAspect),
                 statisticalSummaryMatcher(
                     expectedStatisticalSummaryForThisAspect,
-                    1e-8));
+                    DEFAULT_EPSILON_1e_8));
     asserter.accept(STATISTICAL_SUMMARY_MEAN, makeTestStatisticalSummary(
         doubleExplained(12, (10 + 11 + 15) / 3.0),
         doubleExplained(23, (20 + 21 + 24 + 27) / 4.0),

@@ -22,6 +22,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -139,7 +140,8 @@ public class RBListWithSpecialValueTest extends RBTestMatcher<RBListWithSpecialV
 
   @Override
   protected boolean willMatch(RBListWithSpecialValue<Double> expected, RBListWithSpecialValue<Double> actual) {
-    return rbListWithSpecialValueMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return rbListWithSpecialValueMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <T> TypeSafeMatcher<RBListWithSpecialValue<T>> rbListWithSpecialValueEqualityMatcher(

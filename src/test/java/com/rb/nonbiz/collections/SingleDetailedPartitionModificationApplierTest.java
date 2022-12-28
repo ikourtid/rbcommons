@@ -13,6 +13,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -46,7 +47,7 @@ public class SingleDetailedPartitionModificationApplierTest extends RBTest<Singl
                 "k2", unitFraction(doubleExplained(0.27, 0.2 + 0.07)), // increased by 0.07
                 "k3", unitFraction(doubleExplained(0.29, 0.3 - 0.01)), // decreased by 0.01
                 "k4", unitFraction(0.4))),                             // untouched
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -107,7 +108,7 @@ public class SingleDetailedPartitionModificationApplierTest extends RBTest<Singl
             partition(rbMapOf(
                 "k4", unitFraction(doubleExplained(0.333333333, 0.4 / (0.4 + (0.3 + 0.5)))),
                 "k5", unitFraction(doubleExplained(0.666666666, 0.8 / (0.4 + (0.3 + 0.5)))))),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Override

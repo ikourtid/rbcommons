@@ -8,6 +8,7 @@ import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -58,6 +59,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIidSetEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.reverseOrder;
 import static java.util.Comparator.comparing;
@@ -826,7 +828,7 @@ public class IidMapTest extends RBTestMatcher<IidMap<Money>> {
             rbMapOf(
                 instrumentId(1), money(0.1),
                 instrumentId(2), money(0.2)),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -844,7 +846,7 @@ public class IidMapTest extends RBTestMatcher<IidMap<Money>> {
             rbMapOf(
                 "1", money(0.1),
                 "2", money(0.2)),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -899,7 +901,7 @@ public class IidMapTest extends RBTestMatcher<IidMap<Money>> {
 
   @Override
   protected boolean willMatch(IidMap<Money> expected, IidMap<Money> actual) {
-    return iidMapPreciseValueMatcher(expected, 1e-8).matches(actual);
+    return iidMapPreciseValueMatcher(expected, DEFAULT_EPSILON_1e_8).matches(actual);
   }
 
   public static <V> TypeSafeMatcher<IidMap<V>> iidMapMatcher(
@@ -915,9 +917,9 @@ public class IidMapTest extends RBTestMatcher<IidMap<Money>> {
   }
 
   public static <V extends PreciseValue> TypeSafeMatcher<IidMap<V>> iidMapPreciseValueMatcher(
-      IidMap<V> expected, double epsilon) {
+      IidMap<V> expected, Epsilon epsilon) {
     return makeMatcher(expected, actual ->
-        hasLongMapMatcher(expected, f -> preciseValueMatcher(f, 1e-8)).matches(actual));
+        hasLongMapMatcher(expected, f -> preciseValueMatcher(f, epsilon)).matches(actual));
   }
 
 }

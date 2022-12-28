@@ -13,6 +13,7 @@ import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 /**
  * This helps tests avoid mentioning real production HasInstrumentId implementers,
@@ -55,7 +56,7 @@ public class TestHasInstrumentId implements HasInstrumentId {
   public static TypeSafeMatcher<TestHasInstrumentId> testHasInstrumentIdMatcher(TestHasInstrumentId expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getInstrumentId()),
-        matchUsingDoubleAlmostEquals(v -> v.getNumericValue(), 1e-8));
+        matchUsingDoubleAlmostEquals(v -> v.getNumericValue(), DEFAULT_EPSILON_1e_8));
   }
 
 }

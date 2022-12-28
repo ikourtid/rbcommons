@@ -21,6 +21,7 @@ import static com.rb.nonbiz.testmatchers.RBEitherMatchers.eitherMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static com.rb.nonbiz.types.WeightedByUnitFraction.weightedByUnitFraction;
 import static org.junit.Assert.assertEquals;
@@ -100,7 +101,8 @@ public class LinearCombinationTest extends RBTestMatcher<LinearCombination<Strin
 
   @Override
   protected boolean willMatch(LinearCombination<String, Money> expected, LinearCombination<String, Money> actual) {
-    return linearCombinationMatcher(expected, n -> typeSafeEqualTo(n), l -> preciseValueMatcher(l, 1e-8)).matches(actual);
+    return linearCombinationMatcher(expected, n -> typeSafeEqualTo(n), l -> preciseValueMatcher(l, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <N, L> TypeSafeMatcher<LinearCombination<N, L>> linearCombinationMatcher(

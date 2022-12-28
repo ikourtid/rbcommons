@@ -2,6 +2,7 @@ package com.rb.nonbiz.util;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.collections.ClosedRange;
+import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import static com.rb.nonbiz.testmatchers.RBRangeMatchers.doubleClosedRangeMatche
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkWithinLimitedRange;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkWithinSeconds;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkDoubleArraysAlmostEqual;
@@ -83,16 +85,16 @@ public class RBSimilarityPreconditionsTest {
     assertIllegalArgumentException( () -> maker.apply(emptyList())); // no items to compute a range for
     assertThat(
         maker.apply(singletonList(7.7)),
-        doubleClosedRangeMatcher(singletonClosedRange(7.7), 1e-8));
+        doubleClosedRangeMatcher(singletonClosedRange(7.7), DEFAULT_EPSILON_1e_8));
     assertThat(
         maker.apply(ImmutableList.of(7.7, 8.8)),
-        doubleClosedRangeMatcher(closedRange(7.7, 8.8), 1e-8));
+        doubleClosedRangeMatcher(closedRange(7.7, 8.8), DEFAULT_EPSILON_1e_8));
     assertThat(
         maker.apply(ImmutableList.of(8.8, 7.7)),
-        doubleClosedRangeMatcher(closedRange(7.7, 8.8), 1e-8));
+        doubleClosedRangeMatcher(closedRange(7.7, 8.8), DEFAULT_EPSILON_1e_8));
     assertThat(
         maker.apply(ImmutableList.of(9.9, 7.7, 8.8)),
-        doubleClosedRangeMatcher(closedRange(7.7, 9.9), 1e-8));
+        doubleClosedRangeMatcher(closedRange(7.7, 9.9), DEFAULT_EPSILON_1e_8));
 
     ClosedRange<Double> doesNotThrow;
     doesNotThrow =

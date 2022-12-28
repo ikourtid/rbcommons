@@ -4,6 +4,7 @@ import com.rb.nonbiz.collections.DetailedPartitionModification.DetailedPartition
 import com.rb.nonbiz.functional.QuadriFunction;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -20,6 +21,8 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPartitionModification<String>> {
@@ -150,11 +153,11 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
 
   public static <T> TypeSafeMatcher<DetailedPartitionModification<T>> detailedPartitionModificationMatcher(
       DetailedPartitionModification<T> expected) {
-    return epsilonDetailedPartitionModificationMatcher(expected, 1e-8);
+    return epsilonDetailedPartitionModificationMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
   public static <T> TypeSafeMatcher<DetailedPartitionModification<T>> epsilonDetailedPartitionModificationMatcher(
-      DetailedPartitionModification<T> expected, double epsilon) {
+      DetailedPartitionModification<T> expected, Epsilon epsilon) {
     // Here, we won't use the usual makeMatcher approach, because we want to be able to print the partition modification
     // fraction at a high precision, whereas the default toString() only prints round percentages.
     return new TypeSafeMatcher<DetailedPartitionModification<T>>() {
@@ -172,8 +175,8 @@ public class DetailedPartitionModificationTest extends RBTestMatcher<DetailedPar
             // So in theory we could even use a double equality comparison, although we avoid that everywhere in the
             // code because it's rarely correct - even if in this case it actually is correct. It's just a bad habit
             // to get into.
-            matchUsingAlmostEquals(   v -> v.getEpsilonForRemovalSanityChecks(),    1e-14),
-            matchOptionalPreciseValue(v -> v.getEpsilonForNetAdditionSanityCheck(), 1e-14))
+            matchUsingAlmostEquals(   v -> v.getEpsilonForRemovalSanityChecks(),    epsilon(1e-14)),
+            matchOptionalPreciseValue(v -> v.getEpsilonForNetAdditionSanityCheck(), epsilon(1e-14)))
             .matches(actual);
       }
 

@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -36,7 +37,8 @@ import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_EPSILON;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.EpsilonTest.DUMMY_EPSILON;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -128,10 +130,10 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         builder.getJsonObject().getAsJsonPrimitive("string"));
     assertThat(
         builder.getJsonObject().getAsJsonPrimitive("double").getAsDouble(),
-        doubleAlmostEqualsMatcher(3.14, 1e-8));
+        doubleAlmostEqualsMatcher(3.14, DEFAULT_EPSILON_1e_8));
     assertThat(
         builder.getJsonObject().getAsJsonPrimitive("doublePct").getAsDouble(),
-        doubleAlmostEqualsMatcher(12.3, 1e-8));
+        doubleAlmostEqualsMatcher(12.3, DEFAULT_EPSILON_1e_8));
     assertFalse(builder.getJsonObject().getAsJsonPrimitive("booleanFalse").getAsBoolean());
     assertTrue( builder.getJsonObject().getAsJsonPrimitive("booleanTrue" ).getAsBoolean());
     assertEquals(
@@ -154,13 +156,13 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
 
     assertThat(
         builder.getJsonObject().getAsJsonObject("objectElement"),
-        jsonElementMatcher(objectElement, 1e-8));
+        jsonElementMatcher(objectElement, DEFAULT_EPSILON_1e_8));
     assertThat(
         builder.getJsonObject().getAsJsonPrimitive("stringElement"),
         jsonElementMatcher(stringElement, DUMMY_EPSILON));  // no epsilon needed for String
     assertThat(
         builder.getJsonObject().getAsJsonPrimitive("doubleElement"),
-        jsonElementMatcher(doubleElement, 1e-8));
+        jsonElementMatcher(doubleElement, DEFAULT_EPSILON_1e_8));
   }
 
   @Test

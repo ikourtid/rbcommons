@@ -12,6 +12,8 @@ import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.nonEmptyOptionalMatc
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class DoubleArraysAveragerTest extends RBTest<DoubleArraysAverager> {
@@ -29,7 +31,9 @@ public class DoubleArraysAveragerTest extends RBTest<DoubleArraysAverager> {
   public void singleArray_allowsAverageOfOneItem_returnsSame() {
     assertThat(
         makeAverage(ALLOW_AVERAGE_OF_SINGLE_ITEM, new double[] { 1.1, 2.2 }),
-        nonEmptyOptionalMatcher(doubleArrayMatcher(new double[] { 1.1, 2.2 }, 1e-12)));
+        nonEmptyOptionalMatcher(
+            doubleArrayMatcher(new double[] { 1.1, 2.2 },
+                epsilon(1e-12))));
   }
 
   @Test
@@ -64,8 +68,10 @@ public class DoubleArraysAveragerTest extends RBTest<DoubleArraysAverager> {
               ignoreAverageOfSingleItem,
               new double[] { 1.1 },
               new double[] { 2.2 }),
-          nonEmptyOptionalMatcher(doubleArrayMatcher(
-              new double[] { doubleExplained(1.65, (1.1 + 2.2) / 2) }, 1e-8)));
+          nonEmptyOptionalMatcher(
+              doubleArrayMatcher(
+                  new double[] { doubleExplained(1.65, (1.1 + 2.2) / 2) },
+                  DEFAULT_EPSILON_1e_8)));
       assertThat(
           makeAverage(
               ignoreAverageOfSingleItem,
@@ -77,7 +83,7 @@ public class DoubleArraysAveragerTest extends RBTest<DoubleArraysAverager> {
                   doubleExplained(3.85, (3.3 + 4.4) / 2),
                   doubleExplained(6.05, (5.5 + 6.6) / 2),
               },
-              1e-8)));
+              DEFAULT_EPSILON_1e_8)));
     }
   }
 
@@ -96,7 +102,7 @@ public class DoubleArraysAveragerTest extends RBTest<DoubleArraysAverager> {
                   doubleExplained(2, (-3.3 + 4.4 + 4.9) / 3),
                   doubleExplained(3, (-5.5 + 6.6 + 7.9) / 3),
               },
-              1e-8)));
+              DEFAULT_EPSILON_1e_8)));
     }
   }
 

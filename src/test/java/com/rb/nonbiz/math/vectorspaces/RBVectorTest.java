@@ -4,6 +4,7 @@ import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.MatcherEpsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -23,6 +24,8 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -254,7 +257,7 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
             .collect(Collectors.toList()),
         doubleListMatcher(
             ImmutableList.of(-1.1, 0.0, 3.3),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -263,7 +266,7 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
         assertThat(
             rbVector.asList(),
             doubleListMatcher(
-                expectedResult, 1e-8));
+                expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(
         singletonRBVector(1.1),
@@ -279,7 +282,7 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
         assertThat(
             rbVector.toArray(),
             doubleArrayMatcher(
-                expectedResult, 1e-8));
+                expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(
         singletonRBVector(1.1),
@@ -333,7 +336,7 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
     return rbVectorMatcher(expected, emptyMatcherEpsilons());
   }
 
-  public static TypeSafeMatcher<RBVector> rbVectorMatcher(RBVector expected, double epsilon) {
+  public static TypeSafeMatcher<RBVector> rbVectorMatcher(RBVector expected, Epsilon epsilon) {
     return rbVectorMatcher(expected, useEpsilonInAllMatchers(epsilon));
   }
 

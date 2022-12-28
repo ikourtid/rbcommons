@@ -4,6 +4,7 @@ import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.IntegerValue;
 import com.rb.nonbiz.types.PreciseValue;
@@ -67,19 +68,19 @@ public class Match<T, F> {
 
   public static <T, V extends PreciseValue<? super V>> Match<T, IidMap<V>> matchIidPreciseValuesMap(
       Function<T, IidMap<V>> fieldExtractor,
-      double epsilon) {
+      Epsilon epsilon) {
     return new Match<>(fieldExtractor, f -> iidMapMatcher(f, f2 -> preciseValueMatcher(f2, epsilon)));
   }
 
   public static <T, K, V extends PreciseValue<? super V>> Match<T, RBMap<K, V>> matchPreciseValuesRBMap(
       Function<T, RBMap<K, V>> fieldExtractor,
-      double epsilon) {
+      Epsilon epsilon) {
     return new Match<>(fieldExtractor, f -> rbMapMatcher(f, f2 -> preciseValueMatcher(f2, epsilon)));
   }
 
   public static <T, K, V extends ImpreciseValue<? super V>> Match<T, RBMap<K, V>> matchImpreciseValuesRBMap(
       Function<T, RBMap<K, V>> fieldExtractor,
-      double epsilon) {
+      Epsilon epsilon) {
     return new Match<>(fieldExtractor, f -> rbMapMatcher(f, f2 -> impreciseValueMatcher(f2, epsilon)));
   }
 
@@ -100,7 +101,7 @@ public class Match<T, F> {
   }
 
   public static <T> Match<T, OptionalDouble> matchOptionalDouble(
-      Function<T, OptionalDouble> fieldExtractor, double epsilon) {
+      Function<T, OptionalDouble> fieldExtractor, Epsilon epsilon) {
     return new Match<T, OptionalDouble>(fieldExtractor, f -> optionalDoubleMatcher(f, epsilon));
   }
 
@@ -110,7 +111,7 @@ public class Match<T, F> {
   }
 
   public static <T, V extends PreciseValue> Match<T, Optional<V>> matchOptionalPreciseValue(
-      Function<T, Optional<V>> fieldExtractor, double epsilon) {
+      Function<T, Optional<V>> fieldExtractor, Epsilon epsilon) {
     return match(fieldExtractor, f -> optionalMatcher(f, f2 -> preciseValueMatcher(f2, epsilon)));
   }
 
@@ -120,7 +121,7 @@ public class Match<T, F> {
   }
 
   public static <T, V extends ImpreciseValue<V>> Match<T, Optional<V>> matchOptionalImpreciseValue(
-      Function<T, Optional<V>> fieldExtractor, double epsilon) {
+      Function<T, Optional<V>> fieldExtractor, Epsilon epsilon) {
     return match(fieldExtractor, f -> optionalMatcher(f, f2 -> impreciseValueMatcher(f2, epsilon)));
   }
 
@@ -129,12 +130,12 @@ public class Match<T, F> {
   }
 
   public static <T, F extends PreciseValue<F>> Match<T, F> matchUsingAlmostEquals(
-      Function<T, F> fieldExtractor, double epsilon) {
+      Function<T, F> fieldExtractor, Epsilon epsilon) {
     return match(fieldExtractor, f -> preciseValueMatcher(f, epsilon));
   }
 
   public static <T, F extends ImpreciseValue<F>> Match<T, F> matchUsingImpreciseAlmostEquals(
-      Function<T, F> fieldExtractor, double epsilon) {
+      Function<T, F> fieldExtractor, Epsilon epsilon) {
     return match(fieldExtractor, f -> impreciseValueMatcher(f, epsilon));
   }
 
@@ -144,7 +145,7 @@ public class Match<T, F> {
   }
 
   public static <T> Match<T, Double> matchUsingDoubleAlmostEquals(
-      Function<T, Double> fieldExtractor, double epsilon) {
+      Function<T, Double> fieldExtractor, Epsilon epsilon) {
     return match(fieldExtractor, f -> doubleAlmostEqualsMatcher(f, epsilon));
   }
 
@@ -154,7 +155,7 @@ public class Match<T, F> {
   }
 
   public static <T> Match<T, List<Double>> matchDoubleList(
-      Function<T, List<Double>> listFieldExtractor, double epsilon) {
+      Function<T, List<Double>> listFieldExtractor, Epsilon epsilon) {
     return match(listFieldExtractor, f -> orderedListMatcher(f, f2 -> doubleAlmostEqualsMatcher(f2, epsilon)));
   }
 
@@ -168,7 +169,7 @@ public class Match<T, F> {
   }
 
   public static <T, V extends PreciseValue<V>> Match<T, List<V>> matchListUsingAlmostEquals(
-      Function<T, List<V>> listFieldExtractor, double epsilon) {
+      Function<T, List<V>> listFieldExtractor, Epsilon epsilon) {
     return matchList(listFieldExtractor, f -> preciseValueMatcher(f, epsilon));
   }
 

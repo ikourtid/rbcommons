@@ -27,6 +27,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_MONEY;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PreciseValue.*;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -112,7 +113,7 @@ public class PreciseValueTest {
         assertTrue(objI.almostEquals(objJ, 1e-8));
         assertThat(
             objI,
-            preciseValueMatcher(objJ, 1e-8));
+            preciseValueMatcher(objJ, DEFAULT_EPSILON_1e_8));
 
       }
       // comparing to null causes an exception

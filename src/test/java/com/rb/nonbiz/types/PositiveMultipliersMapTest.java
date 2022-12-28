@@ -8,6 +8,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapImpreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static com.rb.nonbiz.types.PositiveMultipliersMap.emptyPositiveMultipliersMap;
 import static com.rb.nonbiz.types.PositiveMultipliersMap.positiveMultipliersMap;
@@ -58,11 +59,11 @@ public class PositiveMultipliersMapTest extends RBTestMatcher<PositiveMultiplier
 
   public static <K> TypeSafeMatcher<PositiveMultipliersMap<K>> positiveMultipliersMapMatcher(
       PositiveMultipliersMap<K> expected) {
-    return positiveMultipliersMapMatcher(expected, 1e-8);
+    return positiveMultipliersMapMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
   public static <K> TypeSafeMatcher<PositiveMultipliersMap<K>> positiveMultipliersMapMatcher(
-      PositiveMultipliersMap<K> expected, double epsilon) {
+      PositiveMultipliersMap<K> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.getRawMap(), f -> rbMapImpreciseValueMatcher(f, epsilon)));
   }

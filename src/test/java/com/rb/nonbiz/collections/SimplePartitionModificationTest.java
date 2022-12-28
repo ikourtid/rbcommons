@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.rb.nonbiz.collections.SimplePartitionModification.SimplePartitionModificationBuilder;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -19,6 +20,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 public class SimplePartitionModificationTest extends RBTestMatcher<SimplePartitionModification<String>> {
@@ -131,11 +133,11 @@ public class SimplePartitionModificationTest extends RBTestMatcher<SimplePartiti
 
   public static <T> TypeSafeMatcher<SimplePartitionModification<T>> simplePartitionModificationMatcher(
       SimplePartitionModification<T> expected) {
-    return epsilonSimplePartitionModificationMatcher(expected, 1e-8);
+    return epsilonSimplePartitionModificationMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
   public static <T> TypeSafeMatcher<SimplePartitionModification<T>> epsilonSimplePartitionModificationMatcher(
-      SimplePartitionModification<T> expected, double epsilon) {
+      SimplePartitionModification<T> expected, Epsilon epsilon) {
     // Here, we won't use the usual makeMatcher approach, because we want to be able to print the partition modification
     // fraction at a high precision, whereas the default toString() only prints round percentages.
     return new TypeSafeMatcher<SimplePartitionModification<T>>() {

@@ -22,6 +22,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_LABEL;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 // This test class is not generic, but the publicly exposed static matcher is
 public class RBStringToNumericFunctionThatHandlesMissingValuesTest
@@ -124,9 +125,9 @@ public class RBStringToNumericFunctionThatHandlesMissingValuesTest
   rbStringToNumericFunctionThatHandlesMissingValuesMatcher(
       RBStringToNumericFunctionThatHandlesMissingValues<Y> expected) {
     return makeMatcher(expected,
-        matchRBMap(   v -> v.getStringToValueMap(),      f -> rbNumericMatcher(f, 1e-8)),
-        matchOptional(v -> v.getValueForUnknownString(), f -> rbNumericMatcher(f, 1e-8)),
-        matchOptional(v -> v.getValueForMissingString(), f -> rbNumericMatcher(f, 1e-8)));
+        matchRBMap(   v -> v.getStringToValueMap(),      f -> rbNumericMatcher(f, DEFAULT_EPSILON_1e_8)),
+        matchOptional(v -> v.getValueForUnknownString(), f -> rbNumericMatcher(f, DEFAULT_EPSILON_1e_8)),
+        matchOptional(v -> v.getValueForMissingString(), f -> rbNumericMatcher(f, DEFAULT_EPSILON_1e_8)));
   }
 
 }

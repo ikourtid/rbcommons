@@ -27,6 +27,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertThrowsAnyException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -297,7 +298,10 @@ public class RBSymmetricUnequalPairMapTest extends RBTestMatcher<RBSymmetricUneq
   @Override
   protected boolean willMatch(RBSymmetricUnequalPairMap<String, Double> expected,
                               RBSymmetricUnequalPairMap<String, Double> actual) {
-    return rbSymmetricUnequalPairMapMatcher(expected, k -> typeSafeEqualTo(k), v -> doubleAlmostEqualsMatcher(v, 1e-8))
+    return rbSymmetricUnequalPairMapMatcher(
+        expected,
+        k -> typeSafeEqualTo(k),
+        v -> doubleAlmostEqualsMatcher(v, DEFAULT_EPSILON_1e_8))
         .matches(actual);
   }
 

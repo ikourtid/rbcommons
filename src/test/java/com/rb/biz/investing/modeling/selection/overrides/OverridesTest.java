@@ -21,6 +21,7 @@ import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -95,7 +96,8 @@ public class OverridesTest extends RBTestMatcher<Overrides<String, Double>> {
 
   @Override
   protected boolean willMatch(Overrides<String, Double> expected, Overrides<String, Double> actual) {
-    return overridesMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return overridesMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <K, V extends Comparable<? super V>> TypeSafeMatcher<Overrides<K, V>> overridesMatcher(

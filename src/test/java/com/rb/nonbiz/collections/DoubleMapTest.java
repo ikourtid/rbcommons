@@ -2,6 +2,8 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableSet;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.text.PrintsMultilineString;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.Weighted;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -15,8 +17,10 @@ import static com.rb.nonbiz.collections.RBIterables.sumDoubles;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapDoubleMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DoubleMapTest extends RBTestMatcher<DoubleMap<String>> {
 
@@ -103,10 +107,10 @@ public class DoubleMapTest extends RBTestMatcher<DoubleMap<String>> {
   }
 
   public static <T> TypeSafeMatcher<DoubleMap<T>> doubleMapMatcher(DoubleMap<T> expected) {
-    return epsilonDoubleMapMatcher(expected, 1e-8);
+    return epsilonDoubleMapMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
-  public static <T> TypeSafeMatcher<DoubleMap<T>> epsilonDoubleMapMatcher(DoubleMap<T> expected, double epsilon) {
+  public static <T> TypeSafeMatcher<DoubleMap<T>> epsilonDoubleMapMatcher(DoubleMap<T> expected, Epsilon epsilon) {
     return makeMatcher(expected, actual ->
         rbMapDoubleMatcher(expected.getRawMap(), epsilon).matches(actual.getRawMap()));
   }

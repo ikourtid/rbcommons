@@ -34,6 +34,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_BOOLEAN;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_POSITIVE_INTEGER;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
@@ -297,7 +298,7 @@ public class RBStreamsTest {
                 .collect(Collectors.toList()),
             orderedListMatcher(
                 pairs,
-                f -> pairOfSameTypeMatcher(f, f2 -> doubleAlmostEqualsMatcher(f2, 1e-8))));
+                f -> pairOfSameTypeMatcher(f, f2 -> doubleAlmostEqualsMatcher(f2, DEFAULT_EPSILON_1e_8))));
 
     asserter.accept(
         ImmutableList.of(1.1, 2.2),
@@ -330,7 +331,7 @@ public class RBStreamsTest {
                 .collect(Collectors.toList()),
             orderedListMatcher(
                 pairs,
-                f -> pairOfSameTypeMatcher(f, f2 -> doubleAlmostEqualsMatcher(f2, 1e-8))));
+                f -> pairOfSameTypeMatcher(f, f2 -> doubleAlmostEqualsMatcher(f2, DEFAULT_EPSILON_1e_8))));
 
     asserter.accept(
         rbSetOf(1.1, 2.2),

@@ -15,6 +15,7 @@ import static com.rb.nonbiz.math.RBBigDecimals.epsilonCompareBigDecimals;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.bigDecimalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_BIG_DECIMAL;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.RBDoublesTest.comparisonSignVisitor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -81,13 +82,13 @@ public class RBBigDecimalsTest {
   public void testBigDecimalAverage() {
     assertThat(
         bigDecimalAverage(BigDecimal.ZERO, BigDecimal.ZERO),
-        bigDecimalMatcher(BigDecimal.ZERO, 1e-14));
+        bigDecimalMatcher(BigDecimal.ZERO, epsilon(1e-14)));
     assertThat(
         bigDecimalAverage(BigDecimal.TEN, BigDecimal.TEN),
-        bigDecimalMatcher(BigDecimal.TEN, 1e-14));
+        bigDecimalMatcher(BigDecimal.TEN, epsilon(1e-14)));
     assertThat(
         bigDecimalAverage(BigDecimal.ZERO, BigDecimal.TEN),
-        bigDecimalMatcher(BigDecimal.valueOf(5), 1e-14));
+        bigDecimalMatcher(BigDecimal.valueOf(5), epsilon(1e-14)));
   }
 
 }

@@ -6,6 +6,7 @@ import org.hamcrest.TypeSafeMatcher;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingAlmostEquals;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 /**
  * This class is for test purposes only, so we will not have to rely on some business logic object that
@@ -41,7 +42,7 @@ public class TestHasUniqueId implements HasUniqueId<TestHasUniqueId> {
   public static TypeSafeMatcher<TestHasUniqueId> testHasUniqueIdMatcher(TestHasUniqueId expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getUniqueId()),
-        matchUsingAlmostEquals(v -> v.getValue(), 1e-8));
+        matchUsingAlmostEquals(v -> v.getValue(), DEFAULT_EPSILON_1e_8));
   }
 
 }

@@ -13,6 +13,7 @@ import java.util.function.Function;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.optionalMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 public class AllowsMissingValuesTest extends RBTestMatcher<TestAllowsMissingValues> {
 
@@ -55,7 +56,7 @@ public class AllowsMissingValuesTest extends RBTestMatcher<TestAllowsMissingValu
 
   @Override
   protected boolean willMatch(TestAllowsMissingValues expected, TestAllowsMissingValues actual) {
-    return allowsMissingValuesMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8))
+    return allowsMissingValuesMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
         .matches(actual);
   }
 

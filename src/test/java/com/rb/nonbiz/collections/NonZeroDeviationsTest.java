@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -20,6 +21,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.bigDecimalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,7 +42,7 @@ public class NonZeroDeviationsTest extends RBTestMatcher<NonZeroDeviations<Strin
             "b", signedFraction(0.5),
             "c", signedFraction(-0.6)))
             .getMeanAbsoluteDeviation(),
-        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(0.4, (0.1 + 0.5 + 0.6) / 3)), 1e-8));
+        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(0.4, (0.1 + 0.5 + 0.6) / 3)), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -52,7 +54,7 @@ public class NonZeroDeviationsTest extends RBTestMatcher<NonZeroDeviations<Strin
             "b", signedFraction(0.5),
             "c", signedFraction(-0.6)))
             .getMeanSquaredDeviation(),
-        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(0.206666667, (0.1 * 0.1 + 0.5 * 0.5 + 0.6 * 0.6) / 3)), 1e-8));
+        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(0.206666667, (0.1 * 0.1 + 0.5 * 0.5 + 0.6 * 0.6) / 3)), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -114,10 +116,10 @@ public class NonZeroDeviationsTest extends RBTestMatcher<NonZeroDeviations<Strin
                 "a", signedFraction(0.1),
                 "b", signedFraction(0.4),
                 "c", signedFraction(-0.5))),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
     assertThat(
         emptyNonZeroDeviations().toDeviations(),
-        deviationsMatcher(emptyDeviations(), 1e-8));
+        deviationsMatcher(emptyDeviations(), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -152,11 +154,11 @@ public class NonZeroDeviationsTest extends RBTestMatcher<NonZeroDeviations<Strin
 
   @Override
   protected boolean willMatch(NonZeroDeviations<String> expected, NonZeroDeviations<String> actual) {
-    return nonZeroDeviationsMatcher(expected, 1e-8).matches(actual);
+    return nonZeroDeviationsMatcher(expected, DEFAULT_EPSILON_1e_8).matches(actual);
   }
 
   public static <K> TypeSafeMatcher<NonZeroDeviations<K>> nonZeroDeviationsMatcher(
-      NonZeroDeviations<K> expected, double epsilon) {
+      NonZeroDeviations<K> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.getRawSignedFractionsMap(), f -> rbMapPreciseValueMatcher(f, epsilon)));
   }

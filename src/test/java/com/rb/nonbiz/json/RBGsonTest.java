@@ -24,6 +24,8 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.bigDecimalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
@@ -277,13 +279,13 @@ public class RBGsonTest {
   public void testBigDecimalFromJsonPercentage() {
     assertThat(
         bigDecimalFromJsonPercentage(new JsonPrimitive(BigDecimal.valueOf(12.3456))),
-        bigDecimalMatcher(BigDecimal.valueOf(0.123456), 1e-8));
+        bigDecimalMatcher(BigDecimal.valueOf(0.123456), DEFAULT_EPSILON_1e_8));
     assertThat(
         bigDecimalFromJsonPercentage(new JsonPrimitive(new BigDecimal(100))),
-        bigDecimalMatcher(BigDecimal.ONE, 1e-8));
+        bigDecimalMatcher(BigDecimal.ONE, DEFAULT_EPSILON_1e_8));
     assertThat(
         bigDecimalFromJsonPercentage(new JsonPrimitive(BigDecimal.ZERO)),
-        bigDecimalMatcher(BigDecimal.ZERO, 1e-8));
+        bigDecimalMatcher(BigDecimal.ZERO, DEFAULT_EPSILON_1e_8));
 
     // does NOT round to 8 digits converting from JSON to double; only rounds when going TO JSON.
     assertEquals(
@@ -401,21 +403,21 @@ public class RBGsonTest {
   public void testBigDecimalFromJsonBps() {
     assertThat(
         BigDecimal.valueOf(-0.0123456),
-        bigDecimalMatcher(bigDecimalFromJsonBps(new JsonPrimitive(BigDecimal.valueOf(-123.456))), 1e-12));
+        bigDecimalMatcher(bigDecimalFromJsonBps(new JsonPrimitive(BigDecimal.valueOf(-123.456))), epsilon(1e-12)));
     assertThat(
         BigDecimal.valueOf( 0.0),
-        bigDecimalMatcher(bigDecimalFromJsonBps(new JsonPrimitive(BigDecimal.valueOf(   0.0  ))), 1e-12));
+        bigDecimalMatcher(bigDecimalFromJsonBps(new JsonPrimitive(BigDecimal.valueOf(   0.0  ))), epsilon(1e-12)));
     assertThat(
         BigDecimal.valueOf( 0.01),
-        bigDecimalMatcher(bigDecimalFromJsonBps(new JsonPrimitive(BigDecimal.valueOf( 100.0  ))), 1e-12));
+        bigDecimalMatcher(bigDecimalFromJsonBps(new JsonPrimitive(BigDecimal.valueOf( 100.0  ))), epsilon(1e-12)));
     assertThat(
         BigDecimal.valueOf(0.0123456),
-        bigDecimalMatcher(bigDecimalFromJsonBps(new JsonPrimitive(BigDecimal.valueOf( 123.456))), 1e-12));
+        bigDecimalMatcher(bigDecimalFromJsonBps(new JsonPrimitive(BigDecimal.valueOf( 123.456))), epsilon(1e-12)));
 
     // does NOT round to 8 digits converting from JSON to double; only rounds when going TO JSON.
     assertThat(
         BigDecimal.valueOf(0.001_234_567_890_123_4),
-        bigDecimalMatcher(bigDecimalFromJsonBps(new JsonPrimitive(BigDecimal.valueOf(12.345_678_901_234))), 1e-14));
+        bigDecimalMatcher(bigDecimalFromJsonBps(new JsonPrimitive(BigDecimal.valueOf(12.345_678_901_234))), epsilon(1e-14)));
   }
 
   @Test

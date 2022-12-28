@@ -2,6 +2,7 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -25,6 +26,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<String, Integer>> {
@@ -322,11 +324,11 @@ public class RBIndexableMatrixTest extends RBTestMatcher<RBIndexableMatrix<Strin
 
   public static <R, C> TypeSafeMatcher<RBIndexableMatrix<R, C>> rbIndexableMatrixMatcher(
       RBIndexableMatrix<R, C> expected) {
-    return rbIndexableMatrixMatcher(expected, 1e-8);
+    return rbIndexableMatrixMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
   public static <R, C> TypeSafeMatcher<RBIndexableMatrix<R, C>> rbIndexableMatrixMatcher(
-      RBIndexableMatrix<R, C> expected, double epsilon) {
+      RBIndexableMatrix<R, C> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.asRbMatrix(),       f -> rbMatrixMatcher(f, epsilon)),
         // in theory we could be using matchers for R and C here, but in practice R and C have to implement a

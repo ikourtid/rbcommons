@@ -13,6 +13,7 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapPreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.text.ItemWithLabel.itemWithLabel;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 public class ItemWithLabelTest extends RBTestMatcher<ItemWithLabel<RBMap<String, Money>>> {
 
@@ -39,7 +40,8 @@ public class ItemWithLabelTest extends RBTestMatcher<ItemWithLabel<RBMap<String,
   @Override
   protected boolean willMatch(ItemWithLabel<RBMap<String, Money>> expected,
                               ItemWithLabel<RBMap<String, Money>> actual) {
-    return itemWithLabelMatcher(expected, f -> rbMapPreciseValueMatcher(f, 1e-8)).matches(actual);
+    return itemWithLabelMatcher(expected, f -> rbMapPreciseValueMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <T> TypeSafeMatcher<ItemWithLabel<T>> itemWithLabelMatcher(
