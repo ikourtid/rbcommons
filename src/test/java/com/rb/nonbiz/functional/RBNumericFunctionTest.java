@@ -2,6 +2,7 @@ package com.rb.nonbiz.functional;
 
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.RBNumeric;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -11,6 +12,7 @@ import static com.rb.nonbiz.functional.RBNumericFunction.rbIdentityNumericFuncti
 import static com.rb.nonbiz.functional.RBNumericFunction.rbNumericFunction;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 public class RBNumericFunctionTest extends RBTestMatcher<RBNumericFunction<Double, Money>> {
 
@@ -42,13 +44,12 @@ public class RBNumericFunctionTest extends RBTestMatcher<RBNumericFunction<Doubl
   public static <X extends Number, Y extends RBNumeric<? super Y>> TypeSafeMatcher<RBNumericFunction<X, Y>>
   rbNumericFunctionUsingSamplingMatcher(
       RBNumericFunction<X, Y> expected, X firstSamplePoint, X ... restSamplePoints) {
-    Epsilon epsilon = 1e-8;
     return makeMatcher(expected, actual ->
         concatenateFirstAndRest(firstSamplePoint, restSamplePoints)
           .allMatch(x ->
-              Math.abs(
-                  expected.getRawFunction().applyAsDouble(x.doubleValue()) - actual.getRawFunction().applyAsDouble(x.doubleValue()))
-                  < epsilon));
+              DEFAULT_EPSILON_1e_8.areWithin(
+                  expected.getRawFunction().applyAsDouble(x.doubleValue()),
+                  actual.getRawFunction().applyAsDouble(x.doubleValue()))));
   }
 
 }

@@ -8,6 +8,8 @@ import java.util.List;
 
 import static com.rb.nonbiz.math.stats.ZScore.zScore;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.ImpreciseValue.asDoubleList;
 import static com.rb.nonbiz.types.ImpreciseValue.signsAreOpposite;
 import static com.rb.nonbiz.types.ImpreciseValue.sumToDouble;
@@ -54,26 +56,26 @@ public class ImpreciseValueTest {
 
   @Test
   public void testPreciseValuesAlmostEqual() {
-    assertTrue(zScore(10.0).almostEquals(zScore(10.0), 1e-8));
+    assertTrue(zScore(10.0).almostEquals(zScore(10.0), DEFAULT_EPSILON_1e_8));
 
-    assertTrue(zScore(10.0).almostEquals(zScore(10.0 + 1e-9), 1e-8));
-    assertTrue(zScore(10.0).almostEquals(zScore(10.0 - 1e-9), 1e-8));
-    assertTrue(zScore(10.0 + 1e-9).almostEquals(zScore(10.0), 1e-8));
-    assertTrue(zScore(10.0 - 1e-9).almostEquals(zScore(10.0), 1e-8));
+    assertTrue(zScore(10.0).almostEquals(zScore(10.0 + 1e-9), DEFAULT_EPSILON_1e_8));
+    assertTrue(zScore(10.0).almostEquals(zScore(10.0 - 1e-9), DEFAULT_EPSILON_1e_8));
+    assertTrue(zScore(10.0 + 1e-9).almostEquals(zScore(10.0), DEFAULT_EPSILON_1e_8));
+    assertTrue(zScore(10.0 - 1e-9).almostEquals(zScore(10.0), DEFAULT_EPSILON_1e_8));
 
-    assertFalse(zScore(10.0).almostEquals(zScore(10.0 + 1e-8), 1e-9));
-    assertFalse(zScore(10.0).almostEquals(zScore(10.0 - 1e-8), 1e-9));
-    assertFalse(zScore(10.0 + 1e-8).almostEquals(zScore(10.0), 1e-9));
-    assertFalse(zScore(10.0 - 1e-8).almostEquals(zScore(10.0), 1e-9));
+    assertFalse(zScore(10.0).almostEquals(zScore(10.0 + 1e-8), epsilon(1e-9)));
+    assertFalse(zScore(10.0).almostEquals(zScore(10.0 - 1e-8), epsilon(1e-9)));
+    assertFalse(zScore(10.0 + 1e-8).almostEquals(zScore(10.0), epsilon(1e-9)));
+    assertFalse(zScore(10.0 - 1e-8).almostEquals(zScore(10.0), epsilon(1e-9)));
   }
 
   @Test
   public void testIsAlmostZero() {
-    assertFalse(zScore(-1e-7).isAlmostZero(1e-8));
-    assertTrue(zScore(-1e-9).isAlmostZero(1e-8));
-    assertTrue(zScore(0).isAlmostZero(1e-8));
-    assertTrue(zScore(1e-9).isAlmostZero(1e-8));
-    assertFalse(zScore(1e-7).isAlmostZero(1e-8));
+    assertFalse(zScore(-1e-7).isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertTrue(zScore(-1e-9).isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertTrue(zScore(0).isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertTrue(zScore(1e-9).isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertFalse(zScore(1e-7).isAlmostZero(DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -106,12 +108,12 @@ public class ImpreciseValueTest {
   public void testMin() {
     assertAlmostEquals(
         zScore(10.0), 
-        ImpreciseValue.min(zScore(10.0), zScore(20.0)), 
-        1e-8);
+        ImpreciseValue.min(zScore(10.0), zScore(20.0)),
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         zScore(10.0),
-        ImpreciseValue.min(zScore(20.0), zScore(10.0)), 
-        1e-8);
+        ImpreciseValue.min(zScore(20.0), zScore(10.0)),
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -119,11 +121,11 @@ public class ImpreciseValueTest {
     assertAlmostEquals(
         zScore(20.0),
         ImpreciseValue.max(zScore(10.0), zScore(20.0)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         zScore(20.0),
         ImpreciseValue.max(zScore(20.0), zScore(10.0)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Test

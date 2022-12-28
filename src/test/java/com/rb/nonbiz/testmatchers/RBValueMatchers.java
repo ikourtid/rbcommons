@@ -31,7 +31,7 @@ public class RBValueMatchers {
     return new TypeSafeMatcher<BigDecimal>() {
       @Override
       protected boolean matchesSafely(BigDecimal actual) {
-        return bigDecimalsAlmostEqual(expected, actual, epsilon.doubleValue());
+        return bigDecimalsAlmostEqual(expected, actual, epsilon);
       }
 
       @Override
@@ -45,7 +45,7 @@ public class RBValueMatchers {
     return new TypeSafeMatcher<V>() {
       @Override
       protected boolean matchesSafely(V actual) {
-        return expected.almostEquals(actual, epsilon.doubleValue());
+        return expected.almostEquals(actual, epsilon);
       }
 
       @Override
@@ -59,7 +59,7 @@ public class RBValueMatchers {
     return new TypeSafeMatcher<V>() {
       @Override
       protected boolean matchesSafely(V actual) {
-        return expected.almostEquals(actual, epsilon.doubleValue());
+        return expected.almostEquals(actual, epsilon);
       }
 
       @Override

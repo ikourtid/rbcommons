@@ -171,7 +171,7 @@ public class RBArrayMatchers {
             return false;
           }
           for (int j = 0; j < expected[i].length; j++) {
-            if (Math.abs(expected[i][j] - actual[i][j]) > epsilon) {
+            if (!epsilon.areWithin(expected[i][j], actual[i][j])) {
               return false;
             }
           }

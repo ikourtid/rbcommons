@@ -28,6 +28,7 @@ import static com.rb.nonbiz.collections.IidSetTest.iidSetMatcher;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRestDoubles;
 import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.nonEmptyOptionalDoubleMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -54,7 +55,7 @@ public class Asserters {
         Strings.format("%s is not within %s of %s ; %s", value1, epsilon, value2, message),
         value1.doubleValue(),
         value2.doubleValue(),
-        epsilon);
+        epsilon.doubleValue());
   }
 
   public static <V extends ImpreciseValue<V>> void assertAlmostEquals(
@@ -77,7 +78,7 @@ public class Asserters {
     for (int i = 0; i < expected.length; i++) {
       assertEquals(
           Strings.format("expected array %s ; got %s", ArrayUtils.toString(expected), ArrayUtils.toString(actual)),
-          expected[i], actual[i], epsilon);
+          expected[i], actual[i], epsilon.doubleValue());
     }
   }
 
@@ -86,7 +87,7 @@ public class Asserters {
     for (int i = 0; i < expected.size(); i++) {
       assertEquals(
           Strings.format("expected array %s ; got %s", ArrayUtils.toString(expected), ArrayUtils.toString(actual)),
-          expected.get(i), actual.get(i), epsilon);
+          expected.get(i), actual.get(i), epsilon.doubleValue());
     }
   }
 
@@ -282,8 +283,8 @@ public class Asserters {
     fail(Strings.format("Expected exception with message %s ; got no exception", expectedMessage));
   }
 
-  public static double doubleExplained(double expected, double actualFirst, double...actualRest) {
-    return doubleApproximatelyExplained(1e-8, expected, actualFirst, actualRest);
+  public static double doubleExplained(double expected, double actualFirst, double ... actualRest) {
+    return doubleApproximatelyExplained(DEFAULT_EPSILON_1e_8, expected, actualFirst, actualRest);
   }
 
   public static double doubleApproximatelyExplained(Epsilon epsilon, double expected, double actualFirst, double...actualRest) {
@@ -293,7 +294,7 @@ public class Asserters {
           Strings.format(
               "You have a mistake in your calculations (hopefully not in the test itself: expected= %s ; actual[%s]= %s",
               expected, i, actual.get(i)),
-          expected, actual.get(i), epsilon);
+          expected, actual.get(i), epsilon.doubleValue());
     }
     return expected;
   }
@@ -334,7 +335,7 @@ public class Asserters {
             "You have a mistake in your calculations (hopefully not in the test itself) for value= %s", expected),
         expected,
         actual,
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     return expected;
   }
 

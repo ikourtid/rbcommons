@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.OnesBasedReturn;
 import com.rb.nonbiz.testutils.RBTest;
+import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -17,6 +18,8 @@ import static com.rb.biz.types.trading.SignedQuantity.signedQuantity;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -31,19 +34,19 @@ public class PreciseValueWeighterTest extends RBTest<PreciseValueWeighter> {
     assertAlmostEquals(
         onesBasedReturn(doubleExplained(1.01, (0.99 + 1.00 + 1.04) / 3)),
         onesBasedReturn(makeTestObject().makeUnweightedAverage(returns)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         onesBasedReturn(doubleExplained(1.0025, (60 * 0.99 + 0 * 1.00 + 20 * 1.04) / (60 + 0 + 20))),
         onesBasedReturn(makeTestObject().makeWeightedAverage(
             returns,
             ImmutableList.of(money(60), ZERO_MONEY, money(20)))),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         onesBasedReturn(doubleExplained(1.0025, (60 * 0.99 + 0 * 1.00 + 20 * 1.04) / (60 + 0 + 20))),
         onesBasedReturn(makeTestObject().makeWeightedAverageWithBigDecimalWeights(
             returns,
             ImmutableList.of(BigDecimal.valueOf(60), BigDecimal.ZERO, BigDecimal.valueOf(20)))),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -80,21 +83,21 @@ public class PreciseValueWeighterTest extends RBTest<PreciseValueWeighter> {
 
   @Test
   public void unweightedAverageSingletonList_resultIsExact() {
-    assertProducesUnweightedAverageValue(0.0, singletonList(0.0), 0);
-    assertProducesUnweightedAverageValue(0.6, singletonList(0.6), 0);
-    assertProducesUnweightedAverageValue(1.0, singletonList(1.0), 0);
+    assertProducesUnweightedAverageValue(0.0, singletonList(0.0), ZERO_EPSILON);
+    assertProducesUnweightedAverageValue(0.6, singletonList(0.6), ZERO_EPSILON);
+    assertProducesUnweightedAverageValue(1.0, singletonList(1.0), ZERO_EPSILON);
   }
 
   @Test
   public void weightedAverage_singleItem_resultIsExact_valueDoesntMatter_weightDoesntMatter() {
     for (double w : ImmutableList.of(0.1, 0.99, 1.0, 1.01, 100.0)) {
-      assertProducesWeightedAverageValue(0.3, singletonList(0.3), singletonList(w), 0);
+      assertProducesWeightedAverageValue(0.3, singletonList(0.3), singletonList(w), ZERO_EPSILON);
     }
     for (double w : ImmutableList.of(0.1, 0.99, 1.0, 1.01, 100.0)) {
-      assertProducesWeightedAverageValue(0.0, singletonList(0.0), singletonList(w), 0);
+      assertProducesWeightedAverageValue(0.0, singletonList(0.0), singletonList(w), ZERO_EPSILON);
     }
     for (double w : ImmutableList.of(0.1, 0.99, 1.0, 1.01, 100.0)) {
-      assertProducesWeightedAverageValue(1.0, singletonList(1.0), singletonList(w), 0);
+      assertProducesWeightedAverageValue(1.0, singletonList(1.0), singletonList(w), ZERO_EPSILON);
     }
   }
 
@@ -139,7 +142,7 @@ public class PreciseValueWeighterTest extends RBTest<PreciseValueWeighter> {
   // This is just to make the tests more concise so it's easier to see what's going on.
   // PreciseValueWeighter is generic, but for the test I need to use some concrete classes.
   private void assertProducesWeightedAverageValue(double expected, List<Double> values, List<Double> weights) {
-    assertProducesWeightedAverageValue(expected, values, weights, 1e-8);
+    assertProducesWeightedAverageValue(expected, values, weights, DEFAULT_EPSILON_1e_8);
   }
 
   private void assertProducesWeightedAverageValue(double expected, List<Double> values, List<Double> weights, Epsilon epsilon) {
@@ -154,7 +157,7 @@ public class PreciseValueWeighterTest extends RBTest<PreciseValueWeighter> {
   // This is just to make the tests more concise so it's easier to see what's going on.
   // PreciseValueWeighter is generic, but for the test I need to use some concrete classes.
   private void assertProducesUnweightedAverageValue(double expected, List<Double> values) {
-    assertProducesUnweightedAverageValue(expected, values, 1e-8);
+    assertProducesUnweightedAverageValue(expected, values, DEFAULT_EPSILON_1e_8);
   }
 
   private void assertProducesUnweightedAverageValue(double expected, List<Double> values, Epsilon epsilon) {

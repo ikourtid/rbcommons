@@ -141,7 +141,7 @@ public class RBRangesTest {
 
   @Test
   public void testClosedDoubleRangeEpsilonContains_zeroEpsilon() {
-    double e = 0; // epsilon
+    Epsilon e = ZERO_EPSILON;
     assertFalse(closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7 - 1e-9, e));
     assertTrue( closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7, e));
     assertTrue( closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7.5, e));
@@ -155,7 +155,7 @@ public class RBRangesTest {
 
   @Test
   public void testClosedDoubleRangeContainsWellWithinBounds_zeroEpsilon() {
-    double e = 0; // epsilon
+    Epsilon e = ZERO_EPSILON;
     assertFalse(closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 7 - 1e-9, e));
     assertTrue( closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 7, e));
     assertTrue( closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 7.5, e));
@@ -182,7 +182,7 @@ public class RBRangesTest {
 
   @Test
   public void testClosedDoubleRangeWellWithinBounds_usualEpsilon() {
-    double e = 1e-8; // epsilon
+    Epsilon e = DEFAULT_EPSILON_1e_8;
     assertFalse(closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 7 - 1e-7, e));
     assertFalse(closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 7 - 1e-9, e));
     assertFalse(closedDoubleRangeContainsWellWithinBounds(closedRange(7.0, 8.0), 7, e));
@@ -292,7 +292,7 @@ public class RBRangesTest {
 
   @Test
   public void doubleRangeContainsWellWithinBounds_fewerThanTwoEndpointsArePresent_usingLargerEpsilon() {
-    double eps = 1e-4; // epsilon used in this test, instead of the default 1e-8
+    Epsilon eps = epsilon(1e-4); // epsilon used in this test, instead of the default 1e-8
     rbSetOf(
         Range.atLeast(7.0),
         Range.greaterThan(7.0))
@@ -320,7 +320,7 @@ public class RBRangesTest {
 
   @Test
   public void testDoubleRangeEpsilonContains_zeroEpsilon_rangeIsClosed() {
-    double e = 0; // epsilon
+    Epsilon e = ZERO_EPSILON;
     assertFalse(closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7 - 1e-9, e));
     assertTrue( closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7, e));
     assertTrue( closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7.5, e));
@@ -334,7 +334,7 @@ public class RBRangesTest {
 
   @Test
   public void testClosedDoubleRangeEpsilonContains_usualEpsilon() {
-    double e = 1e-8; // epsilon
+    Epsilon e = DEFAULT_EPSILON_1e_8; // epsilon
     assertFalse(closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7 - 1e-7, e));
     assertTrue( closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7 - 1e-9, e));
     assertTrue( closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7, e));
@@ -370,7 +370,7 @@ public class RBRangesTest {
 
   @Test
   public void testPreciseValueRangeEpsilonContains_zeroEpsilon() {
-    double e = 0; // epsilon = 0
+    Epsilon e = ZERO_EPSILON;
 
     assertFalse(preciseValueRangeEpsilonContains(Range.closed(money(7.0), money(8.0)), money(7 - 1e-7), e));
     assertFalse(preciseValueRangeEpsilonContains(Range.closed(money(7.0), money(8.0)), money(7 - 1e-9), e));
@@ -409,7 +409,7 @@ public class RBRangesTest {
 
   @Test
   public void testPreciseValueRangeEpsilonContains_usualEpsilon() {
-    double e = 1e-8; // epsilon
+    Epsilon e = DEFAULT_EPSILON_1e_8;
 
     // closed ranges
     assertFalse(preciseValueRangeEpsilonContains(Range.closed(money(7.0), money(8.0)), money(7 - 1e-7), e));
@@ -489,16 +489,16 @@ public class RBRangesTest {
 
   @Test
   public void testDoubleRangeIsSinglePoint() {
-    assertTrue(doubleRangeIsAlmostSinglePoint(Range.closed(-1.1, -1.1), 1e-8));
-    assertTrue(doubleRangeIsAlmostSinglePoint(Range.closed(0.0, 0.0), 1e-8));
-    assertTrue(doubleRangeIsAlmostSinglePoint(Range.closed(1.1, 1.1), 1e-8));
+    assertTrue(doubleRangeIsAlmostSinglePoint(Range.closed(-1.1, -1.1), DEFAULT_EPSILON_1e_8));
+    assertTrue(doubleRangeIsAlmostSinglePoint(Range.closed(0.0, 0.0), DEFAULT_EPSILON_1e_8));
+    assertTrue(doubleRangeIsAlmostSinglePoint(Range.closed(1.1, 1.1), DEFAULT_EPSILON_1e_8));
     double e = 1e-9; // epsilon
-    assertTrue( doubleRangeIsAlmostSinglePoint(Range.closed(-1.1, -1.1 + e), 1e-8));
-    assertTrue( doubleRangeIsAlmostSinglePoint(Range.closed(0.0, 0.0 + e), 1e-8));
-    assertTrue( doubleRangeIsAlmostSinglePoint(Range.closed(1.1, 1.1 + e), 1e-8));
-    assertFalse(doubleRangeIsAlmostSinglePoint(Range.closed(-1.1, -1.0), 1e-8));
-    assertFalse(doubleRangeIsAlmostSinglePoint(Range.closed(0.0, 0.1), 1e-8));
-    assertFalse(doubleRangeIsAlmostSinglePoint(Range.closed(1.1, 1.2), 1e-8));
+    assertTrue( doubleRangeIsAlmostSinglePoint(Range.closed(-1.1, -1.1 + e), DEFAULT_EPSILON_1e_8));
+    assertTrue( doubleRangeIsAlmostSinglePoint(Range.closed(0.0, 0.0 + e), DEFAULT_EPSILON_1e_8));
+    assertTrue( doubleRangeIsAlmostSinglePoint(Range.closed(1.1, 1.1 + e), DEFAULT_EPSILON_1e_8));
+    assertFalse(doubleRangeIsAlmostSinglePoint(Range.closed(-1.1, -1.0), DEFAULT_EPSILON_1e_8));
+    assertFalse(doubleRangeIsAlmostSinglePoint(Range.closed(0.0, 0.1), DEFAULT_EPSILON_1e_8));
+    assertFalse(doubleRangeIsAlmostSinglePoint(Range.closed(1.1, 1.2), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -517,16 +517,16 @@ public class RBRangesTest {
 
   @Test
   public void testPreciseValueRangeIsAlmostSinglePoint() {
-    assertTrue(rbNumericRangeIsAlmostSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1)), 1e-8));
-    assertTrue(rbNumericRangeIsAlmostSinglePoint(Range.closed(ZERO_SIGNED_MONEY, ZERO_SIGNED_MONEY), 1e-8));
-    assertTrue(rbNumericRangeIsAlmostSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1)), 1e-8));
+    assertTrue(rbNumericRangeIsAlmostSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1)), DEFAULT_EPSILON_1e_8));
+    assertTrue(rbNumericRangeIsAlmostSinglePoint(Range.closed(ZERO_SIGNED_MONEY, ZERO_SIGNED_MONEY), DEFAULT_EPSILON_1e_8));
+    assertTrue(rbNumericRangeIsAlmostSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1)), DEFAULT_EPSILON_1e_8));
     double e = 1e-9; // epsilon
-    assertTrue( rbNumericRangeIsAlmostSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1 + e)), 1e-8));
-    assertTrue( rbNumericRangeIsAlmostSinglePoint(Range.closed(ZERO_SIGNED_MONEY, signedMoney(e)), 1e-8));
-    assertTrue( rbNumericRangeIsAlmostSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1 + e)), 1e-8));
-    assertFalse(rbNumericRangeIsAlmostSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.0)), 1e-8));
-    assertFalse(rbNumericRangeIsAlmostSinglePoint(Range.closed(ZERO_SIGNED_MONEY, signedMoney(0.1)), 1e-8));
-    assertFalse(rbNumericRangeIsAlmostSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.2)), 1e-8));
+    assertTrue( rbNumericRangeIsAlmostSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1 + e)), DEFAULT_EPSILON_1e_8));
+    assertTrue( rbNumericRangeIsAlmostSinglePoint(Range.closed(ZERO_SIGNED_MONEY, signedMoney(e)), DEFAULT_EPSILON_1e_8));
+    assertTrue( rbNumericRangeIsAlmostSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1 + e)), DEFAULT_EPSILON_1e_8));
+    assertFalse(rbNumericRangeIsAlmostSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.0)), DEFAULT_EPSILON_1e_8));
+    assertFalse(rbNumericRangeIsAlmostSinglePoint(Range.closed(ZERO_SIGNED_MONEY, signedMoney(0.1)), DEFAULT_EPSILON_1e_8));
+    assertFalse(rbNumericRangeIsAlmostSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.2)), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -545,16 +545,16 @@ public class RBRangesTest {
 
   @Test
   public void testImpreciseValueRangeIsAlmostSinglePoint() {
-    assertTrue(rbNumericRangeIsAlmostSinglePoint(Range.closed(zScore(-1.1), zScore(-1.1)), 1e-8));
-    assertTrue(rbNumericRangeIsAlmostSinglePoint(Range.closed(Z_SCORE_0, Z_SCORE_0), 1e-8));
-    assertTrue(rbNumericRangeIsAlmostSinglePoint(Range.closed(zScore(1.1), zScore(1.1)), 1e-8));
+    assertTrue(rbNumericRangeIsAlmostSinglePoint(Range.closed(zScore(-1.1), zScore(-1.1)), DEFAULT_EPSILON_1e_8));
+    assertTrue(rbNumericRangeIsAlmostSinglePoint(Range.closed(Z_SCORE_0, Z_SCORE_0), DEFAULT_EPSILON_1e_8));
+    assertTrue(rbNumericRangeIsAlmostSinglePoint(Range.closed(zScore(1.1), zScore(1.1)), DEFAULT_EPSILON_1e_8));
     double e = 1e-9; // epsilon
-    assertTrue( rbNumericRangeIsAlmostSinglePoint(Range.closed(zScore(-1.1), zScore(-1.1 + e)), 1e-8));
-    assertTrue( rbNumericRangeIsAlmostSinglePoint(Range.closed(Z_SCORE_0, zScore(e)), 1e-8));
-    assertTrue( rbNumericRangeIsAlmostSinglePoint(Range.closed(zScore(1.1), zScore(1.1 + e)), 1e-8));
-    assertFalse(rbNumericRangeIsAlmostSinglePoint(Range.closed(zScore(-1.1), zScore(-1.0)), 1e-8));
-    assertFalse(rbNumericRangeIsAlmostSinglePoint(Range.closed(Z_SCORE_0, zScore(0.1)), 1e-8));
-    assertFalse(rbNumericRangeIsAlmostSinglePoint(Range.closed(zScore(1.1), zScore(1.2)), 1e-8));
+    assertTrue( rbNumericRangeIsAlmostSinglePoint(Range.closed(zScore(-1.1), zScore(-1.1 + e)), DEFAULT_EPSILON_1e_8));
+    assertTrue( rbNumericRangeIsAlmostSinglePoint(Range.closed(Z_SCORE_0, zScore(e)), DEFAULT_EPSILON_1e_8));
+    assertTrue( rbNumericRangeIsAlmostSinglePoint(Range.closed(zScore(1.1), zScore(1.1 + e)), DEFAULT_EPSILON_1e_8));
+    assertFalse(rbNumericRangeIsAlmostSinglePoint(Range.closed(zScore(-1.1), zScore(-1.0)), DEFAULT_EPSILON_1e_8));
+    assertFalse(rbNumericRangeIsAlmostSinglePoint(Range.closed(Z_SCORE_0, zScore(0.1)), DEFAULT_EPSILON_1e_8));
+    assertFalse(rbNumericRangeIsAlmostSinglePoint(Range.closed(zScore(1.1), zScore(1.2)), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -574,27 +574,27 @@ public class RBRangesTest {
   @Test
   public void testDoubleRangeIsThisSinglePoint_usualEpsilon() {
     double e = 1e-9; // epsilon
-    assertTrue(doubleRangeIsAlmostThisSinglePoint(Range.closed(-1.1, -1.1), -1.1 - e, 1e-8));
-    assertTrue(doubleRangeIsAlmostThisSinglePoint(Range.closed(-1.1, -1.1), -1.1, 1e-8));
-    assertTrue(doubleRangeIsAlmostThisSinglePoint(Range.closed(-1.1, -1.1), -1.1 + e, 1e-8));
-    assertFalse(doubleRangeIsAlmostThisSinglePoint(Range.closed(-1.1, -1.1), 1.1, 1e-8));
+    assertTrue(doubleRangeIsAlmostThisSinglePoint(Range.closed(-1.1, -1.1), -1.1 - e, DEFAULT_EPSILON_1e_8));
+    assertTrue(doubleRangeIsAlmostThisSinglePoint(Range.closed(-1.1, -1.1), -1.1, DEFAULT_EPSILON_1e_8));
+    assertTrue(doubleRangeIsAlmostThisSinglePoint(Range.closed(-1.1, -1.1), -1.1 + e, DEFAULT_EPSILON_1e_8));
+    assertFalse(doubleRangeIsAlmostThisSinglePoint(Range.closed(-1.1, -1.1), 1.1, DEFAULT_EPSILON_1e_8));
 
-    assertTrue(doubleRangeIsAlmostThisSinglePoint(Range.closed(0.0, 0.0), 0.0 - e, 1e-8));
-    assertTrue(doubleRangeIsAlmostThisSinglePoint(Range.closed(0.0, 0.0), 0.0, 1e-8));
-    assertTrue(doubleRangeIsAlmostThisSinglePoint(Range.closed(0.0, 0.0), 0.0 + e, 1e-8));
-    assertFalse(doubleRangeIsAlmostThisSinglePoint(Range.closed(0.0, 0.0), 123.456, 1e-8));
+    assertTrue(doubleRangeIsAlmostThisSinglePoint(Range.closed(0.0, 0.0), 0.0 - e, DEFAULT_EPSILON_1e_8));
+    assertTrue(doubleRangeIsAlmostThisSinglePoint(Range.closed(0.0, 0.0), 0.0, DEFAULT_EPSILON_1e_8));
+    assertTrue(doubleRangeIsAlmostThisSinglePoint(Range.closed(0.0, 0.0), 0.0 + e, DEFAULT_EPSILON_1e_8));
+    assertFalse(doubleRangeIsAlmostThisSinglePoint(Range.closed(0.0, 0.0), 123.456, DEFAULT_EPSILON_1e_8));
 
-    assertTrue( doubleRangeIsAlmostThisSinglePoint(Range.closed(1.1, 1.1), 1.1 - e, 1e-8));
-    assertTrue( doubleRangeIsAlmostThisSinglePoint(Range.closed(1.1, 1.1), 1.1, 1e-8));
-    assertTrue( doubleRangeIsAlmostThisSinglePoint(Range.closed(1.1, 1.1), 1.1 + e, 1e-8));
-    assertFalse(doubleRangeIsAlmostThisSinglePoint(Range.closed(1.1, 1.1), -1.1, 1e-8));
+    assertTrue( doubleRangeIsAlmostThisSinglePoint(Range.closed(1.1, 1.1), 1.1 - e, DEFAULT_EPSILON_1e_8));
+    assertTrue( doubleRangeIsAlmostThisSinglePoint(Range.closed(1.1, 1.1), 1.1, DEFAULT_EPSILON_1e_8));
+    assertTrue( doubleRangeIsAlmostThisSinglePoint(Range.closed(1.1, 1.1), 1.1 + e, DEFAULT_EPSILON_1e_8));
+    assertFalse(doubleRangeIsAlmostThisSinglePoint(Range.closed(1.1, 1.1), -1.1, DEFAULT_EPSILON_1e_8));
 
-    assertTrue( doubleRangeIsAlmostThisSinglePoint(Range.closed(-1.1, -1.1 + e), -1.1, 1e-8));
-    assertTrue( doubleRangeIsAlmostThisSinglePoint(Range.closed(0.0, 0.0 + e), 0.0, 1e-8));
-    assertTrue( doubleRangeIsAlmostThisSinglePoint(Range.closed(1.1, 1.1 + e), 1.1, 1e-8));
-    assertFalse(doubleRangeIsAlmostThisSinglePoint(Range.closed(-1.1, -1.0), -1.1, 1e-8));
-    assertFalse(doubleRangeIsAlmostThisSinglePoint(Range.closed(0.0, 0.1), 0.0, 1e-8));
-    assertFalse(doubleRangeIsAlmostThisSinglePoint(Range.closed(1.1, 1.2), 1.1, 1e-8));
+    assertTrue( doubleRangeIsAlmostThisSinglePoint(Range.closed(-1.1, -1.1 + e), -1.1, DEFAULT_EPSILON_1e_8));
+    assertTrue( doubleRangeIsAlmostThisSinglePoint(Range.closed(0.0, 0.0 + e), 0.0, DEFAULT_EPSILON_1e_8));
+    assertTrue( doubleRangeIsAlmostThisSinglePoint(Range.closed(1.1, 1.1 + e), 1.1, DEFAULT_EPSILON_1e_8));
+    assertFalse(doubleRangeIsAlmostThisSinglePoint(Range.closed(-1.1, -1.0), -1.1, DEFAULT_EPSILON_1e_8));
+    assertFalse(doubleRangeIsAlmostThisSinglePoint(Range.closed(0.0, 0.1), 0.0, DEFAULT_EPSILON_1e_8));
+    assertFalse(doubleRangeIsAlmostThisSinglePoint(Range.closed(1.1, 1.2), 1.1, DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -626,27 +626,27 @@ public class RBRangesTest {
   @Test
   public void testPreciseValueRangeIsThisSinglePoint() {
     double e = 1e-9; // epsilon
-    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1)), signedMoney(-1.1 - e), 1e-8));
-    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1)), signedMoney(-1.1), 1e-8));
-    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1)), signedMoney(-1.1 + e), 1e-8));
-    assertFalse(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1)), signedMoney(1.1), 1e-8));
+    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1)), signedMoney(-1.1 - e), DEFAULT_EPSILON_1e_8));
+    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1)), signedMoney(-1.1), DEFAULT_EPSILON_1e_8));
+    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1)), signedMoney(-1.1 + e), DEFAULT_EPSILON_1e_8));
+    assertFalse(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1)), signedMoney(1.1), DEFAULT_EPSILON_1e_8));
 
-    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(ZERO_SIGNED_MONEY, ZERO_SIGNED_MONEY), signedMoney(-e), 1e-8));
-    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(ZERO_SIGNED_MONEY, ZERO_SIGNED_MONEY), ZERO_SIGNED_MONEY, 1e-8));
-    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(ZERO_SIGNED_MONEY, ZERO_SIGNED_MONEY), signedMoney(e), 1e-8));
-    assertFalse(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(ZERO_SIGNED_MONEY, ZERO_SIGNED_MONEY), signedMoney(123.456), 1e-8));
+    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(ZERO_SIGNED_MONEY, ZERO_SIGNED_MONEY), signedMoney(-e), DEFAULT_EPSILON_1e_8));
+    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(ZERO_SIGNED_MONEY, ZERO_SIGNED_MONEY), ZERO_SIGNED_MONEY, DEFAULT_EPSILON_1e_8));
+    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(ZERO_SIGNED_MONEY, ZERO_SIGNED_MONEY), signedMoney(e), DEFAULT_EPSILON_1e_8));
+    assertFalse(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(ZERO_SIGNED_MONEY, ZERO_SIGNED_MONEY), signedMoney(123.456), DEFAULT_EPSILON_1e_8));
 
-    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1)), signedMoney(1.1 - e), 1e-8));
-    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1)), signedMoney(1.1), 1e-8));
-    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1)), signedMoney(1.1 + e), 1e-8));
-    assertFalse(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1)), signedMoney(-1.1), 1e-8));
+    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1)), signedMoney(1.1 - e), DEFAULT_EPSILON_1e_8));
+    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1)), signedMoney(1.1), DEFAULT_EPSILON_1e_8));
+    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1)), signedMoney(1.1 + e), DEFAULT_EPSILON_1e_8));
+    assertFalse(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1)), signedMoney(-1.1), DEFAULT_EPSILON_1e_8));
 
-    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1 + e)), signedMoney(-1.1), 1e-8));
-    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(ZERO_SIGNED_MONEY, signedMoney(e)), ZERO_SIGNED_MONEY, 1e-8));
-    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1 + e)), signedMoney(1.1), 1e-8));
-    assertFalse(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.0)), signedMoney(-1.1), 1e-8));
-    assertFalse(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(ZERO_SIGNED_MONEY, signedMoney(0.1)), ZERO_SIGNED_MONEY, 1e-8));
-    assertFalse(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.2)), signedMoney(1.1), 1e-8));
+    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.1 + e)), signedMoney(-1.1), DEFAULT_EPSILON_1e_8));
+    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(ZERO_SIGNED_MONEY, signedMoney(e)), ZERO_SIGNED_MONEY, DEFAULT_EPSILON_1e_8));
+    assertTrue(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.1 + e)), signedMoney(1.1), DEFAULT_EPSILON_1e_8));
+    assertFalse(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(-1.1), signedMoney(-1.0)), signedMoney(-1.1), DEFAULT_EPSILON_1e_8));
+    assertFalse(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(ZERO_SIGNED_MONEY, signedMoney(0.1)), ZERO_SIGNED_MONEY, DEFAULT_EPSILON_1e_8));
+    assertFalse(rbNumericRangeIsAlmostThisSinglePoint(Range.closed(signedMoney(1.1), signedMoney(1.2)), signedMoney(1.1), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
