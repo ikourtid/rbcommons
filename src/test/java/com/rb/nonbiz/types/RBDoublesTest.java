@@ -45,19 +45,6 @@ public class RBDoublesTest {
   }
 
   @Test
-  public void testEpsilonCompareAllowingEpsilonOfZero_epsilonMustBeNonNegativeAndSmall() {
-    EpsilonComparisonVisitor<String> visitor = comparisonSignVisitor();
-    assertIllegalArgumentException( () -> epsilonCompareDoublesAllowingEpsilonOfZero(DUMMY_DOUBLE, DUMMY_DOUBLE, epsilon(-999), visitor));
-    assertIllegalArgumentException( () -> epsilonCompareDoublesAllowingEpsilonOfZero(DUMMY_DOUBLE, DUMMY_DOUBLE, epsilon(-1), visitor));
-    assertIllegalArgumentException( () -> epsilonCompareDoublesAllowingEpsilonOfZero(DUMMY_DOUBLE, DUMMY_DOUBLE, epsilon(-1e-9), visitor));
-    assertIllegalArgumentException( () -> epsilonCompareDoublesAllowingEpsilonOfZero(DUMMY_DOUBLE, DUMMY_DOUBLE, epsilon(10_000), visitor));
-    assertIllegalArgumentException( () -> epsilonCompareDoublesAllowingEpsilonOfZero(DUMMY_DOUBLE, DUMMY_DOUBLE, epsilon(1e9), visitor));
-
-    assertEquals("==", epsilonCompareDoublesAllowingEpsilonOfZero(DUMMY_DOUBLE, DUMMY_DOUBLE, epsilon(0),    visitor));
-    assertEquals("==", epsilonCompareDoublesAllowingEpsilonOfZero(DUMMY_DOUBLE, DUMMY_DOUBLE, epsilon(1e-8), visitor));
-  }
-
-  @Test
   public void testEpsilonCompare_generalCase() {
     EpsilonComparisonVisitor<String> visitor = comparisonSignVisitor();
     assertEquals("<",  epsilonCompareDoubles(77,        88,        epsilon(1e-8), visitor));
