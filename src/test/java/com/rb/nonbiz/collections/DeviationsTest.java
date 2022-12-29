@@ -98,7 +98,7 @@ public class DeviationsTest extends RBTestMatcher<Deviations<String>> {
 
   @Test
   public void weightsSumToAlmostZero_isValid() {
-    for (double epsilon : rbSetOf(1e-9, 1e-9)) {
+    for (double epsilon : rbSetOf(-1e-9, 1e-9)) {
       Deviations<String> doesNotThrow = deviations(rbMapOf(
           "a", signedFraction(0.1 + epsilon),
           "b", signedFraction(0.4),
