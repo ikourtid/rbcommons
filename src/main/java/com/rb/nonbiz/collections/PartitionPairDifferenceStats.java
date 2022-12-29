@@ -11,6 +11,7 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 import static com.rb.nonbiz.collections.RBVoid.rbVoid;
 import static com.rb.nonbiz.math.stats.RBStats.formatStatisticalSummary;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.PreciseValues.epsilonComparePreciseValuesAsDoubles;
 
 /**
@@ -108,7 +109,7 @@ public class PartitionPairDifferenceStats {
           // sums to be incorrect to within 1e-8, which we will check later.
           // Use an epsilon much less than 1e-8 in case we are using a large index (e.g. Russell 2000, Wilshire 5000)
           // and many stocks have tiny tilts.
-          1e-12,
+          epsilon(1e-12),
           new EpsilonComparisonVisitor<RBVoid>() {
             @Override
             public RBVoid visitRightIsGreater(double overweightness) {

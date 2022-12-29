@@ -11,6 +11,7 @@ import static com.google.common.collect.Range.closed;
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.biz.types.trading.PositiveQuantity.POSITIVE_QUANTITY_1;
 import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 /**
  * A class to hold a stock split ratio, as well as the numerator and denominator
@@ -78,7 +79,7 @@ public class SplitMultiplier extends PreciseValue<SplitMultiplier> {
         multiplier, ALLOWABLE_SPLIT_RANGE);
 
     // a 1:1 split wouldn't make sense (neither would an N:N split)
-    RBPreconditions.checkArgument(!numerator.almostEquals(denominator, 1e-8),
+    RBPreconditions.checkArgument(!numerator.almostEquals(denominator, DEFAULT_EPSILON_1e_8),
         "A 1:1 split (or N:N) is invalid: %s : %s",
         numerator, denominator);
   }

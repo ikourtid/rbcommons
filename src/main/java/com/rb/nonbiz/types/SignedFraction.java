@@ -80,8 +80,8 @@ public class SignedFraction extends PreciseValue<SignedFraction> {
     return this.asBigDecimal().compareTo(BigDecimal.ONE) == 0;
   }
 
-  public boolean isAlmostOne(double epsilon) {
-    return asBigDecimal().subtract(BigDecimal.ONE).abs().compareTo(new BigDecimal(epsilon)) < 0;
+  public boolean isAlmostOne(Epsilon epsilon) {
+    return asBigDecimal().subtract(BigDecimal.ONE).abs().compareTo(BigDecimal.valueOf(epsilon.doubleValue())) < 0;
   }
 
   public SignedFraction complement() {

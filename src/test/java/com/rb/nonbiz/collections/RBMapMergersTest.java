@@ -652,7 +652,7 @@ public class RBMapMergersTest {
         assertThat(
             mergeRBMapsAllowingOverlapOnSimilarItemsOnly(
                 iidMapIterator,
-                (v1, v2) -> v1.almostEquals(v2, 1e-8)),
+                (v1, v2) -> v1.almostEquals(v2, DEFAULT_EPSILON_1e_8)),
             rbMapPreciseValueMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(emptyIterator(), emptyRBMap());
@@ -701,7 +701,7 @@ public class RBMapMergersTest {
                         "A2", money(200 + largeEpsilon),
                         "A3", money(300)))
                     .iterator(),
-                (v1, v2) -> v1.almostEquals(v2, 1e-8))));
+                (v1, v2) -> v1.almostEquals(v2, DEFAULT_EPSILON_1e_8))));
   }
 
   @Test

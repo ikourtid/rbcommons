@@ -4,6 +4,7 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 /**
  * An orthonormal basis for a vector space of size n, i.e. a set of n unit vectors that are mutually orthogonal.
@@ -31,7 +32,7 @@ public class VectorSpaceOrthonormalBasis {
   public static VectorSpaceOrthonormalBasis vectorSpaceOrthonormalBasis(VectorSpaceBasis vectorSpaceBasis) {
     vectorSpaceBasis.basisVectorIterator().forEachRemaining(basisVector ->
         RBPreconditions.checkArgument(
-            basisVector.isAlmostUnitVector(1e-8),
+            basisVector.isAlmostUnitVector(DEFAULT_EPSILON_1e_8),
             "Not all basis vectors in VectorSpaceOrthonormalBasis were unit vectors: %s",
             vectorSpaceBasis));
 

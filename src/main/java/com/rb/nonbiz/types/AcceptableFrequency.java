@@ -5,6 +5,7 @@ import com.google.common.collect.Range;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -103,18 +104,18 @@ public class AcceptableFrequency {
   public String toString() {
     UnitFraction lower = frequencyRange.lowerEndpoint();
     UnitFraction upper = frequencyRange.upperEndpoint();
-    if (lower.isAlmostOne(1e-8)) {
+    if (lower.isAlmostOne(DEFAULT_EPSILON_1e_8)) {
       return "always";
     }
-    if (upper.isAlmostZero(1e-8)) {
+    if (upper.isAlmostZero(DEFAULT_EPSILON_1e_8)) {
       return "never";
     }
-    if (upper.isAlmostOne(1e-8)) {
+    if (upper.isAlmostOne(DEFAULT_EPSILON_1e_8)) {
       return frequencyRange.lowerBoundType() == BoundType.OPEN
           ? Strings.format("more than %s of times", lower.toPercentString(0, true))
           : Strings.format("at least %s of times", lower.toPercentString(0, true));
     }
-    if (lower.isAlmostZero(1e-8)) {
+    if (lower.isAlmostZero(DEFAULT_EPSILON_1e_8)) {
       return frequencyRange.upperBoundType() == BoundType.OPEN
           ? Strings.format("less than %s of times", upper.toPercentString(0, true))
           : Strings.format("at most %s of times", upper.toPercentString(0, true));

@@ -38,18 +38,10 @@ public class PreciseValues {
    * @see #epsilonComparePreciseValuesAsDoubles
    */
   public static <T, P1 extends PreciseValue<? extends P1>, P2 extends PreciseValue<? extends P2>> T epsilonComparePreciseValues(
-      P1 left, P2 right, double epsilon, BigDecimalsEpsilonComparisonVisitor<T> visitor) {
-    RBPreconditions.checkArgument(
-        epsilon > 0,
-        "epsilon must be positive; was %s",
-        epsilon);
-    RBPreconditions.checkArgument(
-        epsilon < 1e4,
-        "even though it could be reasonable, we disallow a huge (> 1e4) epsilon for safety, since it's probably a typo; was %s",
-        epsilon);
+      P1 left, P2 right, Epsilon epsilon, BigDecimalsEpsilonComparisonVisitor<T> visitor) {
     BigDecimal rightMinusLeft = right.asBigDecimal().subtract(left.asBigDecimal());
     int signum = rightMinusLeft.signum();
-    if (Math.abs(rightMinusLeft.doubleValue()) <= epsilon) {
+    if (epsilon.isAlmostZero(rightMinusLeft.doubleValue())) {
       return visitor.visitAlmostEqual();
     }
     return signum > 0
@@ -66,7 +58,7 @@ public class PreciseValues {
    * @see #epsilonComparePreciseValues
    */
   public static <T1 extends PreciseValue<T1>, T2> T2 epsilonComparePreciseValuesAsDoubles(
-      T1 left, T1 right, double epsilon, EpsilonComparisonVisitor<T2> visitor) {
+      T1 left, T1 right, Epsilon epsilon, EpsilonComparisonVisitor<T2> visitor) {
     return epsilonCompareDoubles(left.doubleValue(), right.doubleValue(), epsilon, visitor);
   }
 

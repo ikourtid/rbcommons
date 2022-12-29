@@ -25,6 +25,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrows;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_ONE_HALF;
@@ -162,35 +163,35 @@ public class MoneyTest {
 
   @Test
   public void multiply() {
-    assertAlmostEquals(money(222.22), money(444.44).multiply(0.5), 1e-8);
-    assertAlmostEquals(money(444.44), money(444.44).multiply(1.0), 1e-8);
-    assertAlmostEquals(money(888.88), money(444.44).multiply(2.0), 1e-8);
+    assertAlmostEquals(money(222.22), money(444.44).multiply(0.5), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(444.44), money(444.44).multiply(1.0), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(888.88), money(444.44).multiply(2.0), DEFAULT_EPSILON_1e_8);
 
-    assertAlmostEquals(money(222.22), money(444.44).multiply(BigDecimal.valueOf(0.5)), 1e-8);
-    assertAlmostEquals(money(444.44), money(444.44).multiply(BigDecimal.valueOf(1.0)), 1e-8);
-    assertAlmostEquals(money(888.88), money(444.44).multiply(BigDecimal.valueOf(2.0)), 1e-8);
+    assertAlmostEquals(money(222.22), money(444.44).multiply(BigDecimal.valueOf(0.5)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(444.44), money(444.44).multiply(BigDecimal.valueOf(1.0)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(888.88), money(444.44).multiply(BigDecimal.valueOf(2.0)), DEFAULT_EPSILON_1e_8);
 
-    assertAlmostEquals(money(222.22), money(444.44).multiply(onesBasedReturn(0.5)), 1e-8);
-    assertAlmostEquals(money(444.44), money(444.44).multiply(onesBasedReturn(1.0)), 1e-8);
-    assertAlmostEquals(money(888.88), money(444.44).multiply(onesBasedReturn(2.0)), 1e-8);
+    assertAlmostEquals(money(222.22), money(444.44).multiply(onesBasedReturn(0.5)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(444.44), money(444.44).multiply(onesBasedReturn(1.0)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(888.88), money(444.44).multiply(onesBasedReturn(2.0)), DEFAULT_EPSILON_1e_8);
 
-    assertAlmostEquals(money(  0.00), money(444.44).multiply(UNIT_FRACTION_0),        1e-8);
-    assertAlmostEquals(money(222.22), money(444.44).multiply(UNIT_FRACTION_ONE_HALF), 1e-8);
-    assertAlmostEquals(money(444.44), money(444.44).multiply(UNIT_FRACTION_1),        1e-8);
+    assertAlmostEquals(money(  0.00), money(444.44).multiply(UNIT_FRACTION_0),        DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(222.22), money(444.44).multiply(UNIT_FRACTION_ONE_HALF), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(444.44), money(444.44).multiply(UNIT_FRACTION_1),        DEFAULT_EPSILON_1e_8);
 
-    assertAlmostEquals(money(444.44), money(444.44).multiply(1L), 1e-8);
-    assertAlmostEquals(money(888.88), money(444.44).multiply(2L), 1e-8);
+    assertAlmostEquals(money(444.44), money(444.44).multiply(1L), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(888.88), money(444.44).multiply(2L), DEFAULT_EPSILON_1e_8);
   }
 
   @Test
   public void multiplyToSigned() {
-    assertAlmostEquals(signedMoney(-888.88), money(444.44).multiplyToSigned(-2.0), 1e-8);
-    assertAlmostEquals(signedMoney(-444.44), money(444.44).multiplyToSigned(-1.0), 1e-8);
-    assertAlmostEquals(signedMoney(-222.22), money(444.44).multiplyToSigned(-0.5), 1e-8);
-    assertAlmostEquals(signedMoney(    0.0), money(444.44).multiplyToSigned( 0.0), 1e-8);
-    assertAlmostEquals(signedMoney( 222.22), money(444.44).multiplyToSigned( 0.5), 1e-8);
-    assertAlmostEquals(signedMoney( 444.44), money(444.44).multiplyToSigned( 1.0), 1e-8);
-    assertAlmostEquals(signedMoney( 888.88), money(444.44).multiplyToSigned( 2.0), 1e-8);
+    assertAlmostEquals(signedMoney(-888.88), money(444.44).multiplyToSigned(-2.0), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(signedMoney(-444.44), money(444.44).multiplyToSigned(-1.0), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(signedMoney(-222.22), money(444.44).multiplyToSigned(-0.5), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(signedMoney(    0.0), money(444.44).multiplyToSigned( 0.0), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(signedMoney( 222.22), money(444.44).multiplyToSigned( 0.5), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(signedMoney( 444.44), money(444.44).multiplyToSigned( 1.0), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(signedMoney( 888.88), money(444.44).multiplyToSigned( 2.0), DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -207,17 +208,17 @@ public class MoneyTest {
     assertEquals(1.0, money(888.88).divide(money(888.88)).doubleValue(), 1e-8);
     assertEquals(0.5, money(444.44).divide(money(888.88)).doubleValue(), 1e-8);
 
-    assertAlmostEquals(nonNegativeQuantity(2.0), money(444.44).divide(price(222.22)), 1e-8);
-    assertAlmostEquals(nonNegativeQuantity(1.0), money(444.44).divide(price(444.44)), 1e-8);
-    assertAlmostEquals(nonNegativeQuantity(0.5), money(444.44).divide(price(888.88)), 1e-8);
+    assertAlmostEquals(nonNegativeQuantity(2.0), money(444.44).divide(price(222.22)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(nonNegativeQuantity(1.0), money(444.44).divide(price(444.44)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(nonNegativeQuantity(0.5), money(444.44).divide(price(888.88)), DEFAULT_EPSILON_1e_8);
 
-    assertAlmostEquals(money(888.88), money(444.44).divide(BigDecimal.valueOf(0.5)), 1e-8);
-    assertAlmostEquals(money(444.44), money(444.44).divide(BigDecimal.valueOf(1.0)), 1e-8);
-    assertAlmostEquals(money(222.22), money(444.44).divide(BigDecimal.valueOf(2.0)), 1e-8);
+    assertAlmostEquals(money(888.88), money(444.44).divide(BigDecimal.valueOf(0.5)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(444.44), money(444.44).divide(BigDecimal.valueOf(1.0)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(222.22), money(444.44).divide(BigDecimal.valueOf(2.0)), DEFAULT_EPSILON_1e_8);
 
-    assertAlmostEquals(money(888.88), money(444.44).divide(0.5), 1e-8);
-    assertAlmostEquals(money(444.44), money(444.44).divide(1.0), 1e-8);
-    assertAlmostEquals(money(222.22), money(444.44).divide(2.0), 1e-8);
+    assertAlmostEquals(money(888.88), money(444.44).divide(0.5), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(444.44), money(444.44).divide(1.0), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(money(222.22), money(444.44).divide(2.0), DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -236,10 +237,10 @@ public class MoneyTest {
 
   @Test
   public void toBuyQuantity() {
-    assertAlmostEquals(buyQuantity(888.88), money(444.44).calculateBuyQuantity(price(0.5)), 1e-8);
-    assertAlmostEquals(buyQuantity(444.44), money(444.44).calculateBuyQuantity(price(1.0)), 1e-8);
-    assertAlmostEquals(buyQuantity(222.22), money(444.44).calculateBuyQuantity(price(2.0)), 1e-8);
-    assertAlmostEquals(buyQuantity(111.11), money(444.44).calculateBuyQuantity(price(4.0)), 1e-8);
+    assertAlmostEquals(buyQuantity(888.88), money(444.44).calculateBuyQuantity(price(0.5)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(buyQuantity(444.44), money(444.44).calculateBuyQuantity(price(1.0)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(buyQuantity(222.22), money(444.44).calculateBuyQuantity(price(2.0)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(buyQuantity(111.11), money(444.44).calculateBuyQuantity(price(4.0)), DEFAULT_EPSILON_1e_8);
   }
 
   @Test

@@ -27,6 +27,7 @@ import static com.rb.nonbiz.date.RBDates.dateFromYyyyMmDd;
 import static com.rb.nonbiz.json.RBGson.PERCENTAGE_TO_FRACTION;
 import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.RBDoubles.getDoubleAsLongAssumingIsRound;
 
 public class RBJsonObjectGetters {
@@ -267,7 +268,7 @@ public class RBJsonObjectGetters {
     OptionalDouble optionalDouble = getOptionalJsonDouble(jsonObject, property);
     return !optionalDouble.isPresent()
         ? OptionalInt.empty()
-        : OptionalInt.of(checkedCast(getDoubleAsLongAssumingIsRound(optionalDouble.getAsDouble(), 1e-12)));
+        : OptionalInt.of(checkedCast(getDoubleAsLongAssumingIsRound(optionalDouble.getAsDouble(), epsilon(1e-12))));
   }
 
   /**

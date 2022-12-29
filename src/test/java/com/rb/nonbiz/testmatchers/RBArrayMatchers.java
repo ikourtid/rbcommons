@@ -159,7 +159,7 @@ public class RBArrayMatchers {
     };
   }
 
-  public static TypeSafeMatcher<double[][]> doubleArray2DMatcher(double[][] expected, double epsilon) {
+  public static TypeSafeMatcher<double[][]> doubleArray2DMatcher(double[][] expected, Epsilon epsilon) {
     return new TypeSafeMatcher<double[][]>() {
       @Override
       protected boolean matchesSafely(double[][] actual) {
@@ -171,7 +171,7 @@ public class RBArrayMatchers {
             return false;
           }
           for (int j = 0; j < expected[i].length; j++) {
-            if (Math.abs(expected[i][j] - actual[i][j]) > epsilon) {
+            if (!epsilon.areWithin(expected[i][j], actual[i][j])) {
               return false;
             }
           }

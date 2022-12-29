@@ -38,7 +38,7 @@ public class RBSimilarityPreconditionsTest {
         new double[] { 3.3, 4.4 - 1e-7 },        // off by more than epsilon
         new double[] { 3.3, 4.4 + 1e-7 })        // off by more than epsilon
         .forEach(unequalArray ->
-            assertIllegalArgumentException( () -> checkDoubleArraysAlmostEqual(originalArray, unequalArray, 1e-8)));
+            assertIllegalArgumentException( () -> checkDoubleArraysAlmostEqual(originalArray, unequalArray, DEFAULT_EPSILON_1e_8)));
 
     rbSetOf(
         originalArray,
@@ -47,7 +47,7 @@ public class RBSimilarityPreconditionsTest {
         new double[] { 3.3 + 1e-9, 4.4 + 1e-9 })
         .forEach(equalArray -> {
           // does not throw
-          checkDoubleArraysAlmostEqual(originalArray, equalArray, 1e-8);
+          checkDoubleArraysAlmostEqual(originalArray, equalArray, DEFAULT_EPSILON_1e_8);
         });
   }
 

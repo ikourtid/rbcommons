@@ -27,15 +27,15 @@ public class RBStatisticalSummaryTest extends RBTestMatcher<RBStatisticalSummary
     RBStatisticalSummary<Money> summary = simpleRBStatisticalSummary(v -> money(v), 1, 2, 3, 4, 5);
 
     assertEquals(      summary.getN(),    5);
-    assertAlmostEquals(summary.getMin(),  money( 1.0), 1e-8);
-    assertAlmostEquals(summary.getMax(),  money( 5.0), 1e-8);
-    assertAlmostEquals(summary.getMean(), money( 3.0), 1e-8);
-    assertAlmostEquals(summary.getSum(),  money(15.0), 1e-8);
+    assertAlmostEquals(summary.getMin(),  money( 1.0), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(summary.getMax(),  money( 5.0), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(summary.getMean(), money( 3.0), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(summary.getSum(),  money(15.0), DEFAULT_EPSILON_1e_8);
     assertEquals(summary.getVariance(),          2.5, 1e-8);
     assertEquals(summary.getStandardDeviation(), 1.58113883, 1e-8);
 
-    assertAlmostEquals(summary.getMinMaxRange().lowerEndpoint(), money(1), 1e-8);
-    assertAlmostEquals(summary.getMinMaxRange().upperEndpoint(), money(5), 1e-8);
+    assertAlmostEquals(summary.getMinMaxRange().lowerEndpoint(), money(1), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(summary.getMinMaxRange().upperEndpoint(), money(5), DEFAULT_EPSILON_1e_8);
   }
 
   public static <T extends Comparable<?>> RBStatisticalSummary<T> simpleRBStatisticalSummary(

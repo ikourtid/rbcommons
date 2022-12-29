@@ -103,7 +103,7 @@ public class PartitionTest extends RBTestMatcher<Partition<String>> {
                 .stream()
                 .filter(entry -> entry.getKey().equals("keep"))
                 .map(entry -> entry.getValue())),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Test

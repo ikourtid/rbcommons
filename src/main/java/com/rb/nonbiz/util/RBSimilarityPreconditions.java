@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.RBStreams;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
 
 import java.time.LocalDateTime;
@@ -83,7 +84,7 @@ public class RBSimilarityPreconditions {
   }
 
   public static <T, V extends PreciseValue<V>> V checkAllAlmostSame(
-      Iterable<T> iterable, Function<T, V> valueExtractor, double epsilon, String format, Object...args) {
+      Iterable<T> iterable, Function<T, V> valueExtractor, Epsilon epsilon, String format, Object...args) {
     return checkAllSameUsingPredicate(iterable.iterator(), valueExtractor, (v1, v2) -> v1.almostEquals(v2, epsilon), format, args);
   }
 
@@ -91,7 +92,7 @@ public class RBSimilarityPreconditions {
    * Throws if the items in the iterator, after being transformed by a function, are not all the same.
    */
   public static <T, V extends PreciseValue<V>> V checkAllAlmostSame(
-      Iterator<T> iterator, Function<T, V> valueExtractor, double epsilon, String format, Object...args) {
+      Iterator<T> iterator, Function<T, V> valueExtractor, Epsilon epsilon, String format, Object...args) {
     return checkAllSameUsingPredicate(iterator, valueExtractor, (v1, v2) -> v1.almostEquals(v2, epsilon), format, args);
   }
 
@@ -254,13 +255,12 @@ public class RBSimilarityPreconditions {
     return checkAllSameUsingPredicate(ImmutableList.of(item1, item2).iterator(), identity(), samenessPredicate, format, args);
   }
 
-  public static void checkDoubleArraysAlmostEqual(double[] array1, double[] array2, double epsilon) {
-    RBPreconditions.checkArgument(epsilon >= 0);
+  public static void checkDoubleArraysAlmostEqual(double[] array1, double[] array2, Epsilon epsilon) {
     int size = checkBothSame(array1.length, array2.length, "Arrays are of unequal size");
     RBPreconditions.checkArgument(
         IntStream
             .range(0, size)
-            .allMatch(i -> Math.abs(array1[i] - array2[i]) < epsilon));
+            .allMatch(i -> epsilon.areWithin(array1[i], array2[i])));
   }
 
 }

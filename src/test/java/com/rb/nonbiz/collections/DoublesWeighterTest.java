@@ -2,12 +2,15 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.RBTest;
+import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import java.util.List;
 
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertEquals;
@@ -42,13 +45,13 @@ public class DoublesWeighterTest extends RBTest<DoublesWeighter> {
   @Test
   public void weightedAverage_singleItem_resultIsExact_valueDoesntMatter_weightDoesntMatter() {
     for (double w : ImmutableList.of(0.1, 0.99, 1.0, 1.01, 100.0)) {
-      assertProducesWeightedAverageValue(0.3, singletonList(0.3), singletonList(w), 0);
+      assertProducesWeightedAverageValue(0.3, singletonList(0.3), singletonList(w), ZERO_EPSILON);
     }
     for (double w : ImmutableList.of(0.1, 0.99, 1.0, 1.01, 100.0)) {
-      assertProducesWeightedAverageValue(0.0, singletonList(0.0), singletonList(w), 0);
+      assertProducesWeightedAverageValue(0.0, singletonList(0.0), singletonList(w), ZERO_EPSILON);
     }
     for (double w : ImmutableList.of(0.1, 0.99, 1.0, 1.01, 100.0)) {
-      assertProducesWeightedAverageValue(1.0, singletonList(1.0), singletonList(w), 0);
+      assertProducesWeightedAverageValue(1.0, singletonList(1.0), singletonList(w), ZERO_EPSILON);
     }
   }
 
@@ -91,11 +94,11 @@ public class DoublesWeighterTest extends RBTest<DoublesWeighter> {
   // This is just to make the tests more concise so it's easier to see what's going on.
   // PreciseValueWeighter is generic, but for the test I need to use some concrete classes.
   private void assertProducesWeightedAverageValue(double expected, List<Double> values, List<Double> weights) {
-    assertProducesWeightedAverageValue(expected, values, weights, 1e-8);
+    assertProducesWeightedAverageValue(expected, values, weights, DEFAULT_EPSILON_1e_8);
   }
 
-  private void assertProducesWeightedAverageValue(double expected, List<Double> values, List<Double> weights, double epsilon) {
-    assertEquals(expected, makeTestObject().makeWeightedAverage(values, weights), epsilon);
+  private void assertProducesWeightedAverageValue(double expected, List<Double> values, List<Double> weights, Epsilon epsilon) {
+    assertEquals(expected, makeTestObject().makeWeightedAverage(values, weights), epsilon.doubleValue());
   }
 
   @Override

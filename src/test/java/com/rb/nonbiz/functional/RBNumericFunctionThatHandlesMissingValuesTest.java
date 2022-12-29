@@ -38,7 +38,7 @@ public class RBNumericFunctionThatHandlesMissingValuesTest
     assertOptionalAlmostEquals(
         money(doubleExplained(87, 10 + 77)),
         function.apply(new TestAllowsMissingValues(OptionalDouble.of(77))),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertOptionalEmpty(function.apply(new TestAllowsMissingValues(OptionalDouble.empty())));
   }
 
@@ -51,11 +51,11 @@ public class RBNumericFunctionThatHandlesMissingValuesTest
     assertOptionalAlmostEquals(
         money(doubleExplained(87, 10 + 77)),
         function.apply(new TestAllowsMissingValues(OptionalDouble.of(77))),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertOptionalAlmostEquals(
         money(123),
         function.apply(new TestAllowsMissingValues(OptionalDouble.empty())),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Override

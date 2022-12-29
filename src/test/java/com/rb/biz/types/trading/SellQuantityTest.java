@@ -16,6 +16,7 @@ import static com.rb.biz.types.trading.SellQuantity.sellQuantity;
 import static com.rb.biz.types.trading.SellQuantity.sumSellQuantities;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.junit.Assert.assertEquals;
 
 public class SellQuantityTest {
@@ -54,13 +55,13 @@ public class SellQuantityTest {
         sellQuantity33
             .multiply(BigDecimal.valueOf(123.45))
             .divide(  BigDecimal.valueOf(123.45)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         sellQuantity33,
         sellQuantity33
             .divide(  BigDecimal.valueOf(123.45))
             .multiply(BigDecimal.valueOf(123.45)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
 
     // can't have sellQuantity(0)
     assertIllegalArgumentException( () -> sellQuantity11.subtract(sellQuantity11));

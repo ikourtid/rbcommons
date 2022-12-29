@@ -3,6 +3,7 @@ package com.rb.nonbiz.types;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 
 /**
@@ -27,7 +28,7 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructions {
   public static ClosedUnitFractionHardToSoftRangeTighteningInstructions closedUnitFractionHardToSoftRangeTighteningInstructions(
       UnitFraction rawMultiplier) {
     RBPreconditions.checkArgument(
-        !rawMultiplier.isAlmostZero(1e-8),
+        !rawMultiplier.isAlmostZero(DEFAULT_EPSILON_1e_8),
         "You can't have the soft range be a singleton (or almost singleton) range: %s",
         rawMultiplier);
     return new ClosedUnitFractionHardToSoftRangeTighteningInstructions(rawMultiplier);

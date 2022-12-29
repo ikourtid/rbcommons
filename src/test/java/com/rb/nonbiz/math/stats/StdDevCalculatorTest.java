@@ -6,6 +6,7 @@ import com.rb.biz.types.OnesBasedReturn;
 import com.rb.biz.types.SignedMoney;
 import com.rb.nonbiz.collections.PreciseValueWeighter;
 import com.rb.nonbiz.testutils.RBTest;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
 
@@ -18,6 +19,7 @@ import static com.rb.biz.types.SignedMoney.ZERO_SIGNED_MONEY;
 import static com.rb.biz.types.SignedMoney.signedMoney;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -68,7 +70,7 @@ public class StdDevCalculatorTest extends RBTest<StdDevCalculator> {
         "unweighted average of 0.5 is irrelevant in this calculation. The relevant weighted average is 1",
         signedMoney(doubleExplained(1, (0.5 * 4 + 0.7 * 0 + 0.2 * (-3) + 0.6 * 1) / sumOfWeights)),
         signedMoney(new PreciseValueWeighter().makeWeightedAverage(values, weights)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     double varianceNumerator = doubleExplained(8.4,
         0.5 * ( 4 - 1) * ( 4 - 1)
       + 0.7 * ( 0 - 1) * ( 0 - 1)

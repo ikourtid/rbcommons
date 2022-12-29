@@ -1,6 +1,7 @@
 package com.rb.nonbiz.math.stats;
 
 import com.google.common.collect.ImmutableList;
+import com.rb.nonbiz.types.Epsilon;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.junit.Test;
@@ -19,6 +20,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyIterator;
 import static org.junit.Assert.assertEquals;
 
@@ -134,14 +136,14 @@ public class RBStatsTest {
     stats.addValue(5.0);
     double stdDev = doubleExplained(1.58113883008419, stats.getStandardDeviation());
     assertAlmostEquals(zScore(-2), getZScore(doubleExplained(3.0, stats.getMean())
-        - 2 * stdDev, stats), 1e-8);
-    assertAlmostEquals(zScore(-1), getZScore(3 - 1 * stdDev, stats), 1e-8);
-    assertAlmostEquals(Z_SCORE_0,  getZScore(3,              stats), 1e-8);
-    assertAlmostEquals(zScore(1),  getZScore(3 + 1 * stdDev, stats), 1e-8);
-    assertAlmostEquals(zScore(2),  getZScore(3 + 2 * stdDev, stats), 1e-8);
+        - 2 * stdDev, stats), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(zScore(-1), getZScore(3 - 1 * stdDev, stats), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(Z_SCORE_0,  getZScore(3,              stats), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(zScore(1),  getZScore(3 + 1 * stdDev, stats), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(zScore(2),  getZScore(3 + 2 * stdDev, stats), DEFAULT_EPSILON_1e_8);
 
-    assertAlmostEquals(zScore(doubleExplained(-0.6324555320336758, (2 - 3.0) / stdDev)), getZScore(2.0, stats), 1e-8);
-    assertAlmostEquals(zScore(doubleExplained( 0.6324555320336758, (4 - 3.0) / stdDev)), getZScore(4.0, stats), 1e-8);
+    assertAlmostEquals(zScore(doubleExplained(-0.6324555320336758, (2 - 3.0) / stdDev)), getZScore(2.0, stats), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(zScore(doubleExplained( 0.6324555320336758, (4 - 3.0) / stdDev)), getZScore(4.0, stats), DEFAULT_EPSILON_1e_8);
   }
 
   @Test

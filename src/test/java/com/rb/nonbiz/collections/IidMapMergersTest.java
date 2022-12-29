@@ -47,7 +47,7 @@ public class IidMapMergersTest {
         assertThat(
             mergeIidMapsAllowingOverlapOnSimilarItemsOnly(
                 iidMapIterator,
-                (v1, v2) -> v1.almostEquals(v2, 1e-8)),
+                (v1, v2) -> v1.almostEquals(v2, DEFAULT_EPSILON_1e_8)),
             iidMapPreciseValueMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(emptyIterator(), emptyIidMap());
@@ -96,7 +96,7 @@ public class IidMapMergersTest {
                         STOCK_A2, money(200 + largeEpsilon),
                         STOCK_A3, money(300)))
                     .iterator(),
-                (v1, v2) -> v1.almostEquals(v2, 1e-8))));
+                (v1, v2) -> v1.almostEquals(v2, DEFAULT_EPSILON_1e_8))));
   }
 
   @Test

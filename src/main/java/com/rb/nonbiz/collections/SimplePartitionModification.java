@@ -17,6 +17,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSets.noSharedItems;
 import static com.rb.nonbiz.text.Strings.formatCollectionInDefaultOrder;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PreciseValue.sumToBigDecimal;
 import static com.rb.nonbiz.types.UnitFraction.isValidUnitFraction;
 import static java.util.Comparator.reverseOrder;
@@ -147,7 +148,7 @@ public class SimplePartitionModification<K> {
 
       BiConsumer<RBMap<K, UnitFraction>, String> singleChecker = (map, mapName) ->
           RBPreconditions.checkArgument(
-              map.values().stream().noneMatch(fractionToAdd -> fractionToAdd.isAlmostZero(1e-8)),
+              map.values().stream().noneMatch(fractionToAdd -> fractionToAdd.isAlmostZero(DEFAULT_EPSILON_1e_8)),
               "%s must not have any 0 differences implied: %s",
               mapName, map);
 

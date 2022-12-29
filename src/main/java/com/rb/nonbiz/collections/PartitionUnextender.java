@@ -7,6 +7,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 
 /**
@@ -75,7 +76,7 @@ public class PartitionUnextender {
         "You are trying to reduce %s by %s but it doesn't exist in the partition of %s",
         existingKey, unitFractionOfOldTotal, startingPartition);
     // Now possibly add the item being 'unextended', or skip it altogether if we are unextending its entire %
-    if (unitFractionOfOldTotal.almostEquals(oldMembership, 1e-8)) {
+    if (unitFractionOfOldTotal.almostEquals(oldMembership, DEFAULT_EPSILON_1e_8)) {
       // removing entire amount; do nothing
     } else {
       RBPreconditions.checkArgument(

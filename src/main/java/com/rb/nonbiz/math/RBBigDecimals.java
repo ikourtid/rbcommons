@@ -1,5 +1,6 @@
 package com.rb.nonbiz.math;
 
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
 
 import java.math.BigDecimal;
@@ -33,7 +34,7 @@ public class RBBigDecimals {
    * and also lets you do a comparison subject to an epsilon.
    */
   public static <T> T epsilonCompareBigDecimals(
-      BigDecimal left, BigDecimal right, double epsilon, EpsilonComparisonVisitor<T> visitor) {
+      BigDecimal left, BigDecimal right, Epsilon epsilon, EpsilonComparisonVisitor<T> visitor) {
     // Since these comparisons are subject to an epsilon, we don't really need to worry about the loss of precision
     // in going from a BigDecimal to a double.
     return epsilonCompareDoubles(left.doubleValue(), right.doubleValue(), epsilon, visitor);

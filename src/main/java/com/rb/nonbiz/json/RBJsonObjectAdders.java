@@ -3,6 +3,7 @@ package com.rb.nonbiz.json;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -120,7 +121,7 @@ public class RBJsonObjectAdders {
    * Throws if 'property' already exists in inputObject.
    */
   public static <P extends PreciseValue<? super P>> JsonObject addPreciseValueToJsonObjectIfNonZero(
-      JsonObject inputObject, String property, P value, double epsilon) {
+      JsonObject inputObject, String property, P value, Epsilon epsilon) {
     return addToJsonObjectIf(inputObject, property, value, v -> !v.isAlmostZero(epsilon), v -> jsonDouble(v));
   }
 

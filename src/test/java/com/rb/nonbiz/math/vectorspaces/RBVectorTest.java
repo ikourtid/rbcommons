@@ -61,19 +61,19 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
   public void testIsAlmostUnitVector_1d() {
     rbSetOf(0.0, 1e-9, 1e-7, 1 - 1e-7, 1 + 1e-7, 999.0)
         .forEach(x -> {
-          assertFalse(singletonRBVector(x).isAlmostUnitVector(1e-8));
-          assertFalse(singletonRBVector(-1 * x).isAlmostUnitVector(1e-8));
+          assertFalse(singletonRBVector(x).isAlmostUnitVector(DEFAULT_EPSILON_1e_8));
+          assertFalse(singletonRBVector(-1 * x).isAlmostUnitVector(DEFAULT_EPSILON_1e_8));
         });
 
     rbSetOf(1 - 1e-9, 1.0, 1 + 1e-9)
-        .forEach(x -> assertTrue(singletonRBVector(x).isAlmostUnitVector(1e-8)));
+        .forEach(x -> assertTrue(singletonRBVector(x).isAlmostUnitVector(DEFAULT_EPSILON_1e_8)));
   }
 
   @Test
   public void assertIsAlmostUnitVector_2d() {
-    assertTrue( rbVector(1 / Math.sqrt(2),        1 / Math.sqrt(2)       ).isAlmostUnitVector(1e-8));
-    assertTrue( rbVector(1 / Math.sqrt(2) + 1e-9, 1 / Math.sqrt(2) + 1e-9).isAlmostUnitVector(1e-8));
-    assertFalse(rbVector(1 / Math.sqrt(2) + 1e-7, 1 / Math.sqrt(2) + 1e-7).isAlmostUnitVector(1e-8));
+    assertTrue( rbVector(1 / Math.sqrt(2),        1 / Math.sqrt(2)       ).isAlmostUnitVector(DEFAULT_EPSILON_1e_8));
+    assertTrue( rbVector(1 / Math.sqrt(2) + 1e-9, 1 / Math.sqrt(2) + 1e-9).isAlmostUnitVector(DEFAULT_EPSILON_1e_8));
+    assertFalse(rbVector(1 / Math.sqrt(2) + 1e-7, 1 / Math.sqrt(2) + 1e-7).isAlmostUnitVector(DEFAULT_EPSILON_1e_8));
   }
 
   @Test

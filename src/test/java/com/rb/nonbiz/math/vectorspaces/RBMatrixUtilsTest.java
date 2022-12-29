@@ -1,5 +1,6 @@
 package com.rb.nonbiz.math.vectorspaces;
 
+import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
@@ -15,6 +16,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrixUtils.isOrthoNormalTransfo
 import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.identityRBSquareMatrix;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -27,7 +29,7 @@ public class RBMatrixUtilsTest {
     RBMatrix covMat = rbMatrix2by2(
         1.0, 0.5,
         0.5, 1.0);
-    double epsilon = 1e-4;
+    Epsilon epsilon = epsilon(1e-4);
     // If interested, orthToRaw comes from the inverse of: rbMatrix2by2(0.866, 0.866, -0.5, 0.5));
     // For now this matrix may seem arbitrary, but we check it below
     assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(0.57737, -1, 0.57737, 1), covMat, epsilon));
@@ -74,15 +76,24 @@ public class RBMatrixUtilsTest {
     // has ones in each diagonal, and the third check makes sure the covariance matrix in orthonormal
     // space has a zero in the top-right.  Because covariances are symmetric, this means it must have a zero
     // in the bottom left as well.
-    assertEquals(1.0, computeVariance(covMat, rbMatrix2by2(
-        0.57737, -1,
-        0.57737,  1).multiply(matrix2by1(1, 0))), epsilon);
-    assertEquals(1.0, computeVariance(covMat, rbMatrix2by2(
-        0.57737, -1,
-        0.57737,  1).multiply(matrix2by1(0, 1))), epsilon);
-    assertEquals(2.0, computeVariance(covMat, rbMatrix2by2(
-        0.57737, -1,
-        0.57737,  1).multiply(matrix2by1(1, 1))), epsilon);
+    assertEquals(
+        1.0,
+        computeVariance(covMat, rbMatrix2by2(
+            0.57737, -1,
+            0.57737,  1).multiply(matrix2by1(1, 0))),
+        epsilon.doubleValue());
+    assertEquals(
+        1.0,
+        computeVariance(covMat, rbMatrix2by2(
+            0.57737, -1,
+            0.57737,  1).multiply(matrix2by1(0, 1))),
+        epsilon.doubleValue());
+    assertEquals(
+        2.0,
+        computeVariance(covMat, rbMatrix2by2(
+            0.57737, -1,
+            0.57737,  1).multiply(matrix2by1(1, 1))),
+        epsilon.doubleValue());
   }
 
   private RBMatrix matrix2by1(double first, double second) {
@@ -95,7 +106,7 @@ public class RBMatrixUtilsTest {
   @Test
   public void testIsOrthoNormalTransformationMatrixNoCovariance() {
     // One-by-one matrices are easiest
-    assertTrue(isOrthoNormalTransformationMatrix(singletonRBMatrix(1), singletonRBMatrix(1), 1e-4));
+    assertTrue(isOrthoNormalTransformationMatrix(singletonRBMatrix(1), singletonRBMatrix(1), epsilon(1e-4)));
     /**
      * Stretch transformation matrix one way, covariance the other, so OK.  Flip sign is also OK.
      * There are two ways to think about why we need square-root of the difference in variances.
@@ -107,48 +118,48 @@ public class RBMatrixUtilsTest {
      * over the squaroot of this number in the transformation matrix will multiply it by 1 / N, bringing it back to 1.
      */
 
-    assertTrue(isOrthoNormalTransformationMatrix(singletonRBMatrix(1 / Math.sqrt(2.0)), singletonRBMatrix(2), 1e-4));
-    assertTrue(isOrthoNormalTransformationMatrix(singletonRBMatrix(-1 / Math.sqrt(2.0)), singletonRBMatrix(2), 1e-4));
+    assertTrue(isOrthoNormalTransformationMatrix(singletonRBMatrix(1 / Math.sqrt(2.0)), singletonRBMatrix(2), epsilon(1e-4)));
+    assertTrue(isOrthoNormalTransformationMatrix(singletonRBMatrix(-1 / Math.sqrt(2.0)), singletonRBMatrix(2), epsilon(1e-4)));
     // Mismatch but epsilon is huge so OK
-    assertTrue(isOrthoNormalTransformationMatrix(singletonRBMatrix(5.0), singletonRBMatrix(1), 100));
+    assertTrue(isOrthoNormalTransformationMatrix(singletonRBMatrix(5.0), singletonRBMatrix(1), epsilon(99)));
 
     // Mismatch.  Flip sign is OK but stretches don't match
-    assertFalse(isOrthoNormalTransformationMatrix(singletonRBMatrix(-1), singletonRBMatrix(2), 1e-4));
+    assertFalse(isOrthoNormalTransformationMatrix(singletonRBMatrix(-1), singletonRBMatrix(2), epsilon(1e-4)));
 
     // Identity covariance matrix and transformation matrix are always orthonormal
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2( 1, 0,  0,  1), identityRBSquareMatrix(2), 1e-4));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2( 1, 0,  0,  1), identityRBSquareMatrix(2), epsilon(1e-4)));
     // Flipping a factor is ortho-normal if covariance is identity
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2( 0, 1,  1,  0), identityRBSquareMatrix(2), 1e-4));
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2( 0, 1, -1,  0), identityRBSquareMatrix(2), 1e-4));
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(-1, 0,  0,  1), identityRBSquareMatrix(2), 1e-4));
-    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(-1, 0,  0, -1), identityRBSquareMatrix(2), 1e-4));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2( 0, 1,  1,  0), identityRBSquareMatrix(2), epsilon(1e-4)));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2( 0, 1, -1,  0), identityRBSquareMatrix(2), epsilon(1e-4)));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(-1, 0,  0,  1), identityRBSquareMatrix(2), epsilon(1e-4)));
+    assertTrue(isOrthoNormalTransformationMatrix(rbMatrix2by2(-1, 0,  0, -1), identityRBSquareMatrix(2), epsilon(1e-4)));
     // Now covariance matrix is not identity, so a transformation matrix that switches factors or is identity is not orthonormal
     assertFalse(
         isOrthoNormalTransformationMatrix(
             rbMatrix2by2(0, 1, 1, 0),
             rbMatrix2by2(4.0, 1.0, 1.0, 0.5),
-            1e-4));
+            epsilon(1e-4)));
     assertFalse(
         isOrthoNormalTransformationMatrix(
             rbMatrix2by2(1, 0, 0, 1),
             rbMatrix2by2(4.0, 1.0, 1.0, 0.5),
-            1e-4));
+            epsilon(1e-4)));
 
     // Mismatch...if the covariance matrix stretches one factor, the transformation has to undo the stretch
     assertFalse(isOrthoNormalTransformationMatrix(
         rbMatrix2by2(1.0, 0, 0, 1),
         rbMatrix2by2(4.0, 0, 0, 1),
-        1e-4));
+        epsilon(1e-4)));
     // OK...transformation matrix stretches first factor to compensate for higher variance.
     assertTrue(isOrthoNormalTransformationMatrix(
         rbMatrix2by2(0.5, 0, 0, 1),
         rbMatrix2by2(4.0, 0, 0, 1),
-        1e-4));
+        epsilon(1e-4)));
     // OK...same as above but flip a sign
     assertTrue(isOrthoNormalTransformationMatrix(
         rbMatrix2by2(-0.5, 0, 0, 1),
         rbMatrix2by2(4.0, 0, 0, 1),
-        1e-4));
+        epsilon(1e-4)));
   }
 
   @Test
@@ -184,9 +195,9 @@ public class RBMatrixUtilsTest {
 
     // Now check with diagonals in covariance, positive correlatation.
     RBMatrix covmat2x2PositiveCorrelation = rbMatrix2by2( 4,  1,
-                                                          1,  1.5);
+        1,  1.5);
     RBMatrix covmat2x2NegativeCorrelation = rbMatrix2by2( 4, -1,
-                                                          -1, 1.5);
+        -1, 1.5);
     assertEquals(4.0,  computeVariance(covmat2x2PositiveCorrelation, matrix2by1 (1,  0)), 1e-4);
     assertEquals(1.5,  computeVariance(covmat2x2PositiveCorrelation, matrix2by1 (0,  1)), 1e-4);
     assertEquals(doubleExplained(7.5, 4 + 1 + 1 + 1.5),
@@ -230,8 +241,8 @@ public class RBMatrixUtilsTest {
     // 3 x 3 non-diagonal matrix.
     // Remember we don't care if this is a valid covariance matrix...we are testing the multiplication.
     RBMatrix covmat3x3 = rbMatrix3by3(   3, 1.0, -1.0,
-                                       1.0, 1.5,  0.6,
-                                      -1.0, 0.6,  0.4);
+        1.0, 1.5,  0.6,
+        -1.0, 0.6,  0.4);
     assertEquals(3.0,
         computeVariance(covmat3x3, matrix3by1(-1, 0, 0)), 1e-4);
     // Check a few cases with only 2 loadings
@@ -259,35 +270,35 @@ public class RBMatrixUtilsTest {
     double smallEpsilon = 1e-8;
 
     // Identity equals identity
-    assertTrue(isAlmostIdentityMatrix(identityRBSquareMatrix(1), smallEpsilon));
-    assertTrue(isAlmostIdentityMatrix(identityRBSquareMatrix(2), smallEpsilon));
-    assertTrue(isAlmostIdentityMatrix(identityRBSquareMatrix(4), smallEpsilon));
-    assertTrue(isAlmostIdentityMatrix(identityRBSquareMatrix(10), smallEpsilon));
+    assertTrue(isAlmostIdentityMatrix(identityRBSquareMatrix(1), epsilon(smallEpsilon)));
+    assertTrue(isAlmostIdentityMatrix(identityRBSquareMatrix(2), epsilon(smallEpsilon)));
+    assertTrue(isAlmostIdentityMatrix(identityRBSquareMatrix(4), epsilon(smallEpsilon)));
+    assertTrue(isAlmostIdentityMatrix(identityRBSquareMatrix(10), epsilon(smallEpsilon)));
 
     // epsilon tests
     assertTrue(isAlmostIdentityMatrix(
         rbMatrix2by2(1.0 + smallEpsilon, 0.0, 0.0, 1.0 - smallEpsilon),
-        largeEpsilon));
+        epsilon(largeEpsilon)));
     assertTrue(isAlmostIdentityMatrix(
         rbMatrix2by2(3.0, -4.0, 8.0, 0.0),
-        10.0)); // Huge epsilon is forgiving
+        epsilon(10.0))); // Huge epsilon is forgiving
     assertFalse(isAlmostIdentityMatrix(
         rbMatrix2by2(1.0 + smallEpsilon, 0.0, 0.0, 1.0 - largeEpsilon),
-        smallEpsilon));
+        epsilon(smallEpsilon)));
     assertFalse(isAlmostIdentityMatrix(
         rbMatrix2by2(1.0 + 2 * smallEpsilon, 0.0, 0.0, 1.0 - smallEpsilon),
-        smallEpsilon));
+        epsilon(smallEpsilon)));
 
     // Identity matrix
-    assertTrue(isAlmostIdentityMatrix(rbMatrix2by2(1.0, 0.0, 0.0, 1.0), largeEpsilon));
+    assertTrue(isAlmostIdentityMatrix(rbMatrix2by2(1.0, 0.0, 0.0, 1.0), epsilon(largeEpsilon)));
     // Lots of non-identity matrices
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(1.0, 0.0, 2 * largeEpsilon, 1.0), largeEpsilon));
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(2.0, 0.0, 0.0, 2.0), largeEpsilon));
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 0.0, 0.0, -1.0), largeEpsilon));
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 0.0, 0.0, -2.0), largeEpsilon));
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 0.1, 0.1, 1.0), largeEpsilon));
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, -0.1, -0.1, 1.0), largeEpsilon));
-    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 1.0, 1.0, 1.0), largeEpsilon));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(1.0, 0.0, 2 * largeEpsilon, 1.0), epsilon(largeEpsilon)));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(2.0, 0.0, 0.0, 2.0), epsilon(largeEpsilon)));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 0.0, 0.0, -1.0), epsilon(largeEpsilon)));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 0.0, 0.0, -2.0), epsilon(largeEpsilon)));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 0.1, 0.1, 1.0), epsilon(largeEpsilon)));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, -0.1, -0.1, 1.0), epsilon(largeEpsilon)));
+    assertFalse(isAlmostIdentityMatrix(rbMatrix2by2(-1.0, 1.0, 1.0, 1.0), epsilon(largeEpsilon)));
   }
 
 }

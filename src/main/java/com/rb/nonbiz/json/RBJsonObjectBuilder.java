@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.types.UnitFraction;
@@ -279,16 +280,16 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
    * Adds { property : jsonDouble(value) } to jsonObject if value is not zero (to within epsilon).
    * Throws if 'property' already exists in jsonObject.
    */
-  public RBJsonObjectBuilder setDoubleIfNotAlmostZero(String property, double value, double epsilon) {
-    return setIf(property, value, v -> Math.abs(v) > epsilon, v -> jsonDouble(v));
+  public RBJsonObjectBuilder setDoubleIfNotAlmostZero(String property, double value, Epsilon epsilon) {
+    return setIf(property, value, v -> !epsilon.isAlmostZero(v), v -> jsonDouble(v));
   }
 
   /**
    * Adds { property : jsonDouble(value * 100) } to jsonObject if value is not zero (to within epsilon).
    * Throws if 'property' already exists in jsonObject.
    */
-  public RBJsonObjectBuilder setDoublePercentageIfNotAlmostZero(String property, double value, double epsilon) {
-    return setIf(property, value, v -> Math.abs(v) > epsilon, v -> jsonDouble(v * 100));
+  public RBJsonObjectBuilder setDoublePercentageIfNotAlmostZero(String property, double value, Epsilon epsilon) {
+    return setIf(property, value, v -> !epsilon.isAlmostZero(v), v -> jsonDouble(v * 100));
   }
 
   /**
@@ -304,7 +305,7 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
    * Throws if 'property' already exists in jsonObject.
    */
   public <P extends PreciseValue<? super P>> RBJsonObjectBuilder setPreciseValueIfNotAlmostZero(
-      String property, P value, double epsilon) {
+      String property, P value, Epsilon epsilon) {
     return setIf(property, value, v -> !v.isAlmostZero(epsilon), v -> jsonDouble(v));
   }
 

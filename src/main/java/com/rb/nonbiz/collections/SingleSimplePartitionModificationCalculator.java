@@ -10,6 +10,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapVisitors.visitItemsOfTwoRBMaps;
 import static com.rb.nonbiz.collections.RBVoid.rbVoid;
 import static com.rb.nonbiz.math.RBBigDecimals.epsilonCompareBigDecimals;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 /**
@@ -57,7 +58,7 @@ public class SingleSimplePartitionModificationCalculator {
             epsilonCompareBigDecimals(
                 valueInLeftMap.asBigDecimal(),
                 valueInRightMap.asBigDecimal(),
-                1e-8,
+                DEFAULT_EPSILON_1e_8,
                 new EpsilonComparisonVisitor<RBVoid>() {
                   @Override
                   public RBVoid visitRightIsGreater(double rightMinusLeft) {

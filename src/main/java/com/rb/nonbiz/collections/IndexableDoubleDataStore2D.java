@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import cern.colt.matrix.DoubleMatrix2D;
+import com.rb.nonbiz.types.Epsilon;
 
 /**
  * A 2-dimensional collection of doubles that's not bound to a particular implementation: implementers of this
@@ -45,7 +46,7 @@ public interface IndexableDoubleDataStore2D<R, C> {
     return getNumRows() == 0 || getNumColumns() == 0;
   }
 
-  default boolean isSymmetric(double epsilon) {
+  default boolean isSymmetric(Epsilon epsilon) {
     if (getNumRows() != getNumColumns()) {
       return false;
     }
@@ -58,7 +59,7 @@ public interface IndexableDoubleDataStore2D<R, C> {
       for (int j = i + 1; j < sharedSize; j++) {
         double aboveDiagonal = getByIndex(i, j);
         double belowDiagonal = getByIndex(j, i);
-        if (Math.abs(aboveDiagonal - belowDiagonal) > epsilon) {
+        if (!epsilon.areWithin(aboveDiagonal, belowDiagonal)) {
           return false;
         }
       }

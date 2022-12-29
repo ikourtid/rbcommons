@@ -1,5 +1,6 @@
 package com.rb.biz.types.trading;
 
+import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import static com.rb.biz.types.trading.BuyQuantity.sumBuyQuantities;
 import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.junit.Assert.assertEquals;
 
 public class BuyQuantityTest {
@@ -53,13 +55,13 @@ public class BuyQuantityTest {
         buyQuantity33
             .multiply(BigDecimal.valueOf(123.45))
             .divide(  BigDecimal.valueOf(123.45)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         buyQuantity33,
         buyQuantity33
             .divide(  BigDecimal.valueOf(123.45))
             .multiply(BigDecimal.valueOf(123.45)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
 
     // can't have buyQuantity(0)
     assertIllegalArgumentException( () -> buyQuantity11.subtract(buyQuantity11));

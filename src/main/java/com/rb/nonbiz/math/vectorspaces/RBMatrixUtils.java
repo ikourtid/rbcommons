@@ -1,5 +1,6 @@
 package com.rb.nonbiz.math.vectorspaces;
 
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import static com.rb.nonbiz.util.RBPreconditions.checkArgument;
@@ -19,7 +20,7 @@ public class RBMatrixUtils {
   public static boolean isOrthoNormalTransformationMatrix(
       RBMatrix transformationMatrixOrthToRaw,
       RBMatrix covarianceMatrix,
-      double epsilon) {
+      Epsilon epsilon) {
     RBMatrix shouldBeIdentity = transformationMatrixOrthToRaw.transpose().multiply(
         covarianceMatrix.multiply(transformationMatrixOrthToRaw));
     return isAlmostIdentityMatrix(shouldBeIdentity, epsilon);
@@ -42,16 +43,15 @@ public class RBMatrixUtils {
   /**
    * Returns true iff a matrix is similar to the identity matrix, to within epsilon.
     */
-  public static boolean isAlmostIdentityMatrix(RBMatrix matrix, double epsilon) {
+  public static boolean isAlmostIdentityMatrix(RBMatrix matrix, Epsilon epsilon) {
     // Non-square matrices are never similar to identity.
     if (!matrix.isSquare()) {
       return false;
     }
-    checkArgument(epsilon >= 0);
     return matrix.matrixRowIndexStream().allMatch(matrixRowIndex ->
         matrix.matrixColumnIndexStream().allMatch(matrixColumnIndex -> {
           double correctValue = (matrixRowIndex.intValue() == matrixColumnIndex.intValue()) ? 1.0 : 0.0;
-          return Math.abs(matrix.get(matrixRowIndex, matrixColumnIndex) - correctValue) <= epsilon;
+          return epsilon.areWithin(matrix.get(matrixRowIndex, matrixColumnIndex), correctValue);
         }));
   }
 

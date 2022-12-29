@@ -125,16 +125,16 @@ public class HasInstrumentIdMapTest extends RBTestMatcher<HasInstrumentIdMap<Tes
 
   @Test
   public void testGetValueOrThrow() {
-    assertAlmostEquals(TEST_MAP.getValueOrThrow(instrumentId(1)),        money(11.11), 1e-8);
-    assertAlmostEquals(TEST_MAP.getValueOrThrow(instrumentId(1), "msg"), money(11.11), 1e-8);
+    assertAlmostEquals(TEST_MAP.getValueOrThrow(instrumentId(1)),        money(11.11), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(TEST_MAP.getValueOrThrow(instrumentId(1), "msg"), money(11.11), DEFAULT_EPSILON_1e_8);
     assertIllegalArgumentException( () -> TEST_MAP.getValueOrThrow(instrumentId(999)));
     assertIllegalArgumentException( () -> TEST_MAP.getValueOrThrow(instrumentId(999), "msg"));
   }
 
   @Test
   public void testGetValueOrDefault() {
-    assertAlmostEquals(TEST_MAP.getValueOrDefault(instrumentId(1),   money(99.99)), money(11.11), 1e-8);
-    assertAlmostEquals(TEST_MAP.getValueOrDefault(instrumentId(999), money(99.99)), money(99.99), 1e-8);
+    assertAlmostEquals(TEST_MAP.getValueOrDefault(instrumentId(1),   money(99.99)), money(11.11), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(TEST_MAP.getValueOrDefault(instrumentId(999), money(99.99)), money(99.99), DEFAULT_EPSILON_1e_8);
   }
 
   @Test
