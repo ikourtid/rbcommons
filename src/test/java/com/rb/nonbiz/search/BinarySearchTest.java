@@ -88,15 +88,15 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
             (amt1, amt2) -> true);
 
     BinarySearchTerminationPredicate<OnesBasedReturn, Money> onlyY_onlyYmatters =
-        onlyTerminateBasedOnY( (amt1, amt2) -> amt1.almostEquals(amt2, DEFAULT_EPSILON_1e_8));
+        onlyTerminateBasedOnY( (amt1, amt2) -> amt1.almostEquals(amt2, epsilon(1e-4)));
     BinarySearchTerminationPredicate<OnesBasedReturn, Money> xOrY_onlyYmatters =
         terminateBasedOnXorY(
             (ret1, ret2) -> false,
-            (amt1, amt2) -> amt1.almostEquals(amt2, DEFAULT_EPSILON_1e_8));
+            (amt1, amt2) -> amt1.almostEquals(amt2, epsilon(1e-4)));
     BinarySearchTerminationPredicate<OnesBasedReturn, Money> xAndY_onlyYmatters=
         terminateBasedOnXandY(
             (ret1, ret2) -> true,
-            (amt1, amt2) -> amt1.almostEquals(amt2, DEFAULT_EPSILON_1e_8));
+            (amt1, amt2) -> amt1.almostEquals(amt2, epsilon(1e-4)));
 
     UnaryOperator<BinarySearchResultBuilder<OnesBasedReturn, Money>> resultTerminatedByX = v -> v
         .setLowerBoundX(onesBasedReturn(doubleExplained(0.8, 1_600 / 2_000.0)))
@@ -143,7 +143,7 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
             .setLowerBoundX(onesBasedReturn(0.1))
             .setUpperBoundX(onesBasedReturn(10.0))
             // terminating based on X or Y here, but X will never be true
-            .setTerminationPredicate(onlyTerminateBasedOnY( (amt1, amt2) -> amt1.almostEquals(amt2, DEFAULT_EPSILON_1e_8)))
+            .setTerminationPredicate(onlyTerminateBasedOnY( (amt1, amt2) -> amt1.almostEquals(amt2, epsilon(1e-4))))
             .build(), // using lower epsilon for termination
         v -> v
             // ideal is 0.8, but the binary search doesn't iterate enough times in this test (intentionally)
