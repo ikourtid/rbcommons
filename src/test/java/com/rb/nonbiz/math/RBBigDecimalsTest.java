@@ -53,19 +53,6 @@ public class RBBigDecimalsTest {
   }
 
   @Test
-  public void testEpsilonCompare_epsilonMustBePositiveAndSmall() {
-    EpsilonComparisonVisitor<String> visitor = comparisonSignVisitor();
-    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(-999), visitor));
-    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(-1), visitor));
-    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(-1e-9), visitor));
-    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(0), visitor));
-    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(10_000), visitor));
-    assertIllegalArgumentException( () -> epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(1e9), visitor));
-
-    assertEquals("==", epsilonCompareBigDecimals(DUMMY_BIG_DECIMAL, DUMMY_BIG_DECIMAL, epsilon(1e-8), visitor));
-  }
-
-  @Test
   public void testEpsilonCompare_generalCase() {
     EpsilonComparisonVisitor<String> visitor = comparisonSignVisitor();
     BigDecimal slightlyMoreThan10 = BigDecimal.valueOf(10 + 1e-9);
