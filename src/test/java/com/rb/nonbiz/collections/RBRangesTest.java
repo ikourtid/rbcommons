@@ -1318,7 +1318,10 @@ public class RBRangesTest {
         Range.openClosed("1.1", "2.2"))) {
       // After the introduction of the class ClosedRange, the exception gets thrown inside the closedRange
       // static constructor, not toClosedDoubleRange, but let's keep this test anyway.
-      assertIllegalArgumentException( () -> transformClosedRange(closedRange(nonClosedRange), v -> parseDouble(v)));
+      // Strangely, this will still build without the RBRanges.<String, Double> type qualification,
+      // but it shows with red underlining in the IDE (like a build error), which is annoying. So let's be explicit.
+      assertIllegalArgumentException( () -> RBRanges.<String, Double>transformClosedRange(
+          closedRange(nonClosedRange), v -> parseDouble(v)));
     }
     assertThat(
         transformClosedRange(closedRange("1.1", "2.2"), v -> parseDouble(v)),
@@ -1707,10 +1710,15 @@ public class RBRangesTest {
     asserter.accept(Range.lessThan(   100), Range.lessThan(   -107));
     asserter.accept(Range.atMost(     100), Range.atMost(     -107));
 
-    assertIllegalArgumentException( () -> transformRange(Range.open(      100, 200), v -> -(v + 7)));
-    assertIllegalArgumentException( () -> transformRange(Range.closedOpen(100, 200), v -> -(v + 7)));
-    assertIllegalArgumentException( () -> transformRange(Range.openClosed(100, 200), v -> -(v + 7)));
-    assertIllegalArgumentException( () -> transformRange(Range.closed(    100, 200), v -> -(v + 7)));
+    rbSetOf(
+        Range.open(      100, 200),
+        Range.closedOpen(100, 200),
+        Range.openClosed(100, 200),
+        Range.closed(    100, 200))
+        .forEach(range ->
+            // Strangely, this will still build without the RBRanges.<Integer, Integer> type qualification,
+            // but it shows with red underlining in the IDE (like a build error), which is annoying. So let's be explicit.
+            assertIllegalArgumentException( () -> RBRanges.<Integer, Integer>transformRange(range, v -> -(v + 7))));
   }
 
   @Test
