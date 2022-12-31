@@ -1,6 +1,11 @@
 package com.rb.nonbiz.testutils;
 
+import com.rb.nonbiz.text.UniqueId;
+import com.rb.nonbiz.types.Epsilon;
+
 import java.util.Objects;
+
+import static com.rb.nonbiz.text.UniqueId.uniqueId;
 
 public abstract class MatcherEpsilonDescriptor<T> {
 
@@ -123,15 +128,19 @@ public abstract class MatcherEpsilonDescriptor<T> {
    */
   public static class ClassPlusStringKeyMatcherEpsilonDescriptor<T> extends MatcherEpsilonDescriptor<T> {
 
-    private final String uniqueIdWithinMatcher;
+    private final UniqueId<Epsilon> uniqueIdWithinMatcher;
 
-    private ClassPlusStringKeyMatcherEpsilonDescriptor(Class<T> clazz, String uniqueIdWithinMatcher) {
+    private ClassPlusStringKeyMatcherEpsilonDescriptor(Class<T> clazz, UniqueId<Epsilon> uniqueIdWithinMatcher) {
       super(clazz);
       this.uniqueIdWithinMatcher = uniqueIdWithinMatcher;
     }
 
-    public static <T> ClassPlusStringKeyMatcherEpsilonDescriptor<T> eps(Class<T> clazz, String uniqueIdWithinMatcher) {
+    public static <T> ClassPlusStringKeyMatcherEpsilonDescriptor<T> eps(Class<T> clazz, UniqueId<Epsilon> uniqueIdWithinMatcher) {
       return new ClassPlusStringKeyMatcherEpsilonDescriptor<>(clazz, uniqueIdWithinMatcher);
+    }
+
+    public static UniqueId<Epsilon> epsilonId(String rawId) {
+      return uniqueId(rawId);
     }
 
     @Override
@@ -140,6 +149,7 @@ public abstract class MatcherEpsilonDescriptor<T> {
       if (o == null || getClass() != o.getClass()) return false;
       ClassPlusStringKeyMatcherEpsilonDescriptor<?> that = (ClassPlusStringKeyMatcherEpsilonDescriptor<?>) o;
       return Objects.equals(clazz, that.clazz)
+          // Note that UniqueId actually implements a non-trivial equals & hashCode.
           && Objects.equals(uniqueIdWithinMatcher, that.uniqueIdWithinMatcher);
     }
 

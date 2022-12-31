@@ -3,6 +3,7 @@ package com.rb.nonbiz.testutils;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassPlusStringKeyMatcherEpsilonDescriptor;
 import com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GetterSpecificMatcherEpsilonDescriptor;
+import com.rb.nonbiz.text.UniqueId;
 import com.rb.nonbiz.types.Epsilon;
 
 import java.util.Optional;
@@ -181,8 +182,8 @@ public class MatcherEpsilons {
    *
    * @see ClassPlusStringKeyMatcherEpsilonDescriptor
    */
-  public Epsilon get(Class<?> clazz, String suffix) {
-    return matcherEpsilonDescriptors.getOrDefault(eps(clazz, suffix),
+  public Epsilon get(Class<?> clazz, UniqueId<Epsilon> epsilonId) {
+    return matcherEpsilonDescriptors.getOrDefault(eps(clazz, epsilonId),
         matcherEpsilonDescriptors.getOrDefault(eps(clazz),
             getDefaultEpsilon()));
   }
