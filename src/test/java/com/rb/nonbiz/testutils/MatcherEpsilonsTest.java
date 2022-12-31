@@ -12,7 +12,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassWideMatcherEpsilonDescriptor.eps;
-import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GeneralMatcherEpsilonDescriptor.eps;
+import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassPlusStringKeyMatcherEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GetterSpecificMatcherEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.matcherEpsilons;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;

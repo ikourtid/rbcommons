@@ -3,7 +3,7 @@ package com.rb.nonbiz.testutils;
 import org.junit.Test;
 
 import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassWideMatcherEpsilonDescriptor.eps;
-import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GeneralMatcherEpsilonDescriptor.eps;
+import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassPlusStringKeyMatcherEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GetterSpecificMatcherEpsilonDescriptor.eps;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

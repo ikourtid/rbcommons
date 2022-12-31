@@ -121,24 +121,24 @@ public abstract class MatcherEpsilonDescriptor<T> {
    *      }
    *  }
    */
-  public static class GeneralMatcherEpsilonDescriptor<T> extends MatcherEpsilonDescriptor<T> {
+  public static class ClassPlusStringKeyMatcherEpsilonDescriptor<T> extends MatcherEpsilonDescriptor<T> {
 
     private final String uniqueIdWithinMatcher;
 
-    private GeneralMatcherEpsilonDescriptor(Class<T> clazz, String uniqueIdWithinMatcher) {
+    private ClassPlusStringKeyMatcherEpsilonDescriptor(Class<T> clazz, String uniqueIdWithinMatcher) {
       super(clazz);
       this.uniqueIdWithinMatcher = uniqueIdWithinMatcher;
     }
 
-    public static <T> GeneralMatcherEpsilonDescriptor<T> eps(Class<T> clazz, String uniqueIdWithinMatcher) {
-      return new GeneralMatcherEpsilonDescriptor<>(clazz, uniqueIdWithinMatcher);
+    public static <T> ClassPlusStringKeyMatcherEpsilonDescriptor<T> eps(Class<T> clazz, String uniqueIdWithinMatcher) {
+      return new ClassPlusStringKeyMatcherEpsilonDescriptor<>(clazz, uniqueIdWithinMatcher);
     }
 
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      GeneralMatcherEpsilonDescriptor<?> that = (GeneralMatcherEpsilonDescriptor<?>) o;
+      ClassPlusStringKeyMatcherEpsilonDescriptor<?> that = (ClassPlusStringKeyMatcherEpsilonDescriptor<?>) o;
       return Objects.equals(clazz, that.clazz)
           && Objects.equals(uniqueIdWithinMatcher, that.uniqueIdWithinMatcher);
     }

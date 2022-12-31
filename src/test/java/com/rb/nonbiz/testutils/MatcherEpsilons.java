@@ -1,8 +1,7 @@
 package com.rb.nonbiz.testutils;
 
 import com.rb.nonbiz.collections.RBMap;
-import com.rb.nonbiz.collections.RBMaps;
-import com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GeneralMatcherEpsilonDescriptor;
+import com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassPlusStringKeyMatcherEpsilonDescriptor;
 import com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GetterSpecificMatcherEpsilonDescriptor;
 import com.rb.nonbiz.types.Epsilon;
 
@@ -14,7 +13,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstAndRest;
 import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassWideMatcherEpsilonDescriptor.eps;
-import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GeneralMatcherEpsilonDescriptor.eps;
+import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassPlusStringKeyMatcherEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GetterSpecificMatcherEpsilonDescriptor.eps;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
@@ -180,7 +179,7 @@ public class MatcherEpsilons {
    * and you want to distinguish between them. This is similar to situations with jmock where there is more than one
    * mock object of the same class; we do the same thing there.
    *
-   * @see GeneralMatcherEpsilonDescriptor
+   * @see ClassPlusStringKeyMatcherEpsilonDescriptor
    */
   public Epsilon get(Class<?> clazz, String suffix) {
     return matcherEpsilonDescriptors.getOrDefault(eps(clazz, suffix),
