@@ -60,14 +60,14 @@ public class MatcherEpsilonsTest {
 
     assertAlmostEquals(epsilon(0.17),        matcherEpsilons.get(Class1.class),                   e);
     assertAlmostEquals(epsilon(0.18),        matcherEpsilons.get(Class1.class, Class1A.class),    e);
-    assertAlmostEquals(DEFAULT_EPSILON_1e_8, matcherEpsilons.get(Class1.class, DummyClass.class), e);
+    assertAlmostEquals(epsilon(0.17),        matcherEpsilons.get(Class1.class, DummyClass.class), e);
 
     assertAlmostEquals(DEFAULT_EPSILON_1e_8, matcherEpsilons.get(Class2.class),                   e);
     assertAlmostEquals(epsilon(0.28),        matcherEpsilons.get(Class2.class, Class2A.class),    e);
     assertAlmostEquals(DEFAULT_EPSILON_1e_8, matcherEpsilons.get(Class2.class, DummyClass.class), e);
 
     assertAlmostEquals(epsilon(0.37),        matcherEpsilons.get(Class3.class),                   e);
-    assertAlmostEquals(DEFAULT_EPSILON_1e_8, matcherEpsilons.get(Class3.class, DummyClass.class), e);
+    assertAlmostEquals(epsilon(0.37),        matcherEpsilons.get(Class3.class, DummyClass.class), e);
 
     assertAlmostEquals(epsilon(0.49),        matcherEpsilons.get(Class4.class, "key_for_4"),      e);
     assertAlmostEquals(DEFAULT_EPSILON_1e_8, matcherEpsilons.get(Class4.class, "wrong_key"),      e);

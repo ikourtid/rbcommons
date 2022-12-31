@@ -1,6 +1,7 @@
 package com.rb.nonbiz.testutils;
 
 import com.rb.nonbiz.collections.RBMap;
+import com.rb.nonbiz.collections.RBMaps;
 import com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GeneralMatcherEpsilonDescriptor;
 import com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GetterSpecificMatcherEpsilonDescriptor;
 import com.rb.nonbiz.types.Epsilon;
@@ -169,7 +170,9 @@ public class MatcherEpsilons {
    * @see GetterSpecificMatcherEpsilonDescriptor
    */
   public Epsilon get(Class<?> clazz, Class<?> getterReturnType) {
-    return matcherEpsilonDescriptors.getOrDefault(eps(clazz, getterReturnType), getDefaultEpsilon());
+    return matcherEpsilonDescriptors.getOrDefault(eps(clazz, getterReturnType),
+        matcherEpsilonDescriptors.getOrDefault(eps(clazz),
+            getDefaultEpsilon()));
   }
 
   /**
