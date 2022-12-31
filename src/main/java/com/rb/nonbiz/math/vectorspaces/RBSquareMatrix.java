@@ -49,6 +49,7 @@ public class RBSquareMatrix extends RBMatrix {
   }
 
   public static RBSquareMatrix diagonalRBSquareMatrix(RBVector rbVector) {
+    // Note that RBVector can't be empty, so we don't have to check for that.
     return new RBSquareMatrix(
         DoubleFactory2D.dense.diagonal(new DenseDoubleMatrix1D(rbVector.toArray())),
         rbVector.size());

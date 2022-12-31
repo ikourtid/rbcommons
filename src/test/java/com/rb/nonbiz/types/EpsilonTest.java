@@ -34,7 +34,10 @@ public class EpsilonTest {
   @Test
   public void testWithin() {
     assertTrue(DEFAULT_EPSILON_1e_8.areWithin(100, 100 + 1e-9));
+    assertTrue(DEFAULT_EPSILON_1e_8.areWithin(100 + 1e-9, 100));
+
     assertFalse(DEFAULT_EPSILON_1e_8.areWithin(100, 100 + 1e-7));
+    assertFalse(DEFAULT_EPSILON_1e_8.areWithin(100 + 1e-7, 100));
   }
 
   /**

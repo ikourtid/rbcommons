@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.diagonalRBSquareMat
 import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.identityRBSquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVectorMatcher;
+import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.singletonRBVector;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -144,16 +146,35 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
   @Test
   public void testMatrixMultiplyByVector() {
+    Function<RBMatrix, RBVector> maker = leftMatrix ->
+        leftMatrix.multiply(rbVector(
+            5.0,
+            7.0));
+
     assertThat(
-        rbMatrix2by2(
+        "correct number of columns; works",
+        maker.apply(rbMatrix(new double[][] {
+            { 1.0, 2.0 }
+        })),
+        rbVectorMatcher(singletonRBVector(
+            doubleExplained(19, 1 * 5 + 2 * 7))));
+    assertThat(
+        "correct number of columns; works",
+        maker.apply(rbMatrix2by2(
             1.0, 2.0,
-            3.0, 4.0)
-            .multiply(rbVector(
-                5.0,
-                7.0)),
+            3.0, 4.0)),
         rbVectorMatcher(rbVector(
             doubleExplained(19, 1 * 5 + 2 * 7),
             doubleExplained(43, 3 * 5 + 4 * 7))));
+
+    // 1 column is too few
+    assertIllegalArgumentException( () -> maker.apply(rbMatrix(new double[][] {
+        { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
+        { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE } })));
+    // 3 columns; too many
+    assertIllegalArgumentException( () -> maker.apply(rbMatrix(new double[][] {
+        { DUMMY_DOUBLE },
+        { DUMMY_DOUBLE } })));
   }
 
   @Test
