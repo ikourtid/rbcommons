@@ -1,16 +1,13 @@
 package com.rb.nonbiz.testutils;
 
 import com.rb.nonbiz.collections.RBSet;
-import com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GeneralMatcherEpsilonDescriptor;
 import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.function.DoubleFunction;
 import java.util.function.Function;
 
-import static com.rb.nonbiz.collections.DoubleMap.singletonDoubleMap;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -63,14 +60,14 @@ public class MatcherEpsilonsTest {
 
     assertAlmostEquals(epsilon(0.17),        matcherEpsilons.get(Class1.class),                   e);
     assertAlmostEquals(epsilon(0.18),        matcherEpsilons.get(Class1.class, Class1A.class),    e);
-    assertAlmostEquals(DEFAULT_EPSILON_1e_8, matcherEpsilons.get(Class1.class, DummyClass.class), e);
+    assertAlmostEquals(epsilon(0.17),        matcherEpsilons.get(Class1.class, DummyClass.class), e);
 
     assertAlmostEquals(DEFAULT_EPSILON_1e_8, matcherEpsilons.get(Class2.class),                   e);
     assertAlmostEquals(epsilon(0.28),        matcherEpsilons.get(Class2.class, Class2A.class),    e);
     assertAlmostEquals(DEFAULT_EPSILON_1e_8, matcherEpsilons.get(Class2.class, DummyClass.class), e);
 
     assertAlmostEquals(epsilon(0.37),        matcherEpsilons.get(Class3.class),                   e);
-    assertAlmostEquals(DEFAULT_EPSILON_1e_8, matcherEpsilons.get(Class3.class, DummyClass.class), e);
+    assertAlmostEquals(epsilon(0.37),        matcherEpsilons.get(Class3.class, DummyClass.class), e);
 
     assertAlmostEquals(epsilon(0.49),        matcherEpsilons.get(Class4.class, "key_for_4"),      e);
     assertAlmostEquals(DEFAULT_EPSILON_1e_8, matcherEpsilons.get(Class4.class, "wrong_key"),      e);
@@ -95,6 +92,60 @@ public class MatcherEpsilonsTest {
           doesNotThrow = maker.apply(epsilon(99));
           assertIllegalArgumentException(() -> maker.apply(epsilon(101)));
         });
+  }
+
+  @Test
+  public void getterSpecificEpsilonRequestedButNotDefined_defaultsToClassSpecificEpsilon() {
+    class Class1 {};
+    class Class1A {};
+    class Class1B {};
+    class Class2 {};
+
+    // using a smaller epsilon than the usual 1e-8 here for double comparisons,
+    // because the return value itself will sometimes be 1e-8, the default epsilon.
+    Epsilon e = epsilon(1e-9);
+
+    MatcherEpsilons matcherEpsilons = matcherEpsilons(
+        Optional.of(epsilon(0.16)),
+        rbMapOf(
+            eps(Class1.class),                epsilon(0.17),
+            eps(Class1.class, Class1A.class), epsilon(0.18)));
+
+    // Class1A-getter-specific epsilon exists
+    assertAlmostEquals(epsilon(0.18), matcherEpsilons.get(Class1.class, Class1A.class), e);
+
+    // No Class1B-getter-specific epsilon exists; defaulting to classwide epsilon for Class1
+    assertAlmostEquals(epsilon(0.17), matcherEpsilons.get(Class1.class, Class1B.class), e);
+    assertAlmostEquals(epsilon(0.17), matcherEpsilons.get(Class1.class),                e);
+
+    assertAlmostEquals(epsilon(0.16), matcherEpsilons.get(Class1A.class), e);
+    assertAlmostEquals(epsilon(0.16), matcherEpsilons.get(Class1B.class), e);
+    assertAlmostEquals(epsilon(0.16), matcherEpsilons.get(Class2.class), e);
+  }
+
+  @Test
+  public void stringBasedEpsilonRequestedButNotDefined_defaultsToClassSpecificEpsilon() {
+    class Class1 {};
+    class Class2 {};
+
+    // using a smaller epsilon than the usual 1e-8 here for double comparisons,
+    // because the return value itself will sometimes be 1e-8, the default epsilon.
+    Epsilon e = epsilon(1e-9);
+
+    MatcherEpsilons matcherEpsilons = matcherEpsilons(
+        Optional.of(epsilon(0.16)),
+        rbMapOf(
+            eps(Class1.class),       epsilon(0.17),
+            eps(Class1.class, "1A"), epsilon(0.18)));
+
+    // string-specific epsilon exists for string "1A"
+    assertAlmostEquals(epsilon(0.18), matcherEpsilons.get(Class1.class, "1A"), e);
+
+    // No string-specific epsilon exists for string "1B"; defaulting to classwide epsilon for Class1
+    assertAlmostEquals(epsilon(0.17), matcherEpsilons.get(Class1.class, "1B"), e);
+    assertAlmostEquals(epsilon(0.17), matcherEpsilons.get(Class1.class),       e);
+
+    assertAlmostEquals(epsilon(0.16), matcherEpsilons.get(Class2.class), e);
   }
 
 }
