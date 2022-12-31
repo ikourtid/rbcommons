@@ -183,7 +183,9 @@ public class MatcherEpsilons {
    * @see GeneralMatcherEpsilonDescriptor
    */
   public Epsilon get(Class<?> clazz, String suffix) {
-    return matcherEpsilonDescriptors.getOrDefault(eps(clazz, suffix), getDefaultEpsilon());
+    return matcherEpsilonDescriptors.getOrDefault(eps(clazz, suffix),
+        matcherEpsilonDescriptors.getOrDefault(eps(clazz),
+            getDefaultEpsilon()));
   }
 
   private Epsilon getDefaultEpsilon() {
