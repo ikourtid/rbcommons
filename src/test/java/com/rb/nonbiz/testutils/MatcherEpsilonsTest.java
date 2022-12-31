@@ -108,7 +108,7 @@ public class MatcherEpsilonsTest {
     MatcherEpsilons matcherEpsilons = matcherEpsilons(
         Optional.of(epsilon(0.16)),
         rbMapOf(
-            eps(Class1.class), epsilon(0.17),
+            eps(Class1.class),                epsilon(0.17),
             eps(Class1.class, Class1A.class), epsilon(0.18)));
 
     // Class1A-getter-specific epsilon exists
@@ -120,6 +120,31 @@ public class MatcherEpsilonsTest {
 
     assertAlmostEquals(epsilon(0.16), matcherEpsilons.get(Class1A.class), e);
     assertAlmostEquals(epsilon(0.16), matcherEpsilons.get(Class1B.class), e);
+    assertAlmostEquals(epsilon(0.16), matcherEpsilons.get(Class2.class), e);
+  }
+
+  @Test
+  public void stringBasedEpsilonRequestedButNotDefined_defaultsToClassSpecificEpsilon() {
+    class Class1 {};
+    class Class2 {};
+
+    // using a smaller epsilon than the usual 1e-8 here for double comparisons,
+    // because the return value itself will sometimes be 1e-8, the default epsilon.
+    Epsilon e = epsilon(1e-9);
+
+    MatcherEpsilons matcherEpsilons = matcherEpsilons(
+        Optional.of(epsilon(0.16)),
+        rbMapOf(
+            eps(Class1.class),       epsilon(0.17),
+            eps(Class1.class, "1A"), epsilon(0.18)));
+
+    // string-specific epsilon exists for string "1A"
+    assertAlmostEquals(epsilon(0.18), matcherEpsilons.get(Class1.class, "1A"), e);
+
+    // No string-specific epsilon exists for string "1B"; defaulting to classwide epsilon for Class1
+    assertAlmostEquals(epsilon(0.17), matcherEpsilons.get(Class1.class, "1B"), e);
+    assertAlmostEquals(epsilon(0.17), matcherEpsilons.get(Class1.class),       e);
+
     assertAlmostEquals(epsilon(0.16), matcherEpsilons.get(Class2.class), e);
   }
 
