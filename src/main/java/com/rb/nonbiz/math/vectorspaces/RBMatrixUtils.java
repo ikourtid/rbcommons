@@ -4,6 +4,9 @@ import com.rb.nonbiz.math.vectorspaces.RBMatrix.RBEigenvalueDecomposition;
 import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
+import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
+
 public class RBMatrixUtils {
 
   /**
@@ -70,8 +73,8 @@ public class RBMatrixUtils {
     // plus it's clear enough to look at for loops when iterating over a matrix.
     for (int i = 0; i < sharedSize; i++) {
       for (int j = i + 1; j < sharedSize; j++) {
-        double aboveDiagonal = rbMatrix.get(i, j);
-        double belowDiagonal = rbMatrix.get(j, i);
+        double aboveDiagonal = rbMatrix.get(matrixRowIndex(i), matrixColumnIndex(j));
+        double belowDiagonal = rbMatrix.get(matrixRowIndex(j), matrixColumnIndex(i));
         if (Math.abs(aboveDiagonal - belowDiagonal) > epsilon) {
           return false;
         }
@@ -113,7 +116,7 @@ public class RBMatrixUtils {
     // The covariance of a variable with itself is just that variable's variance. Variances must be
     // non-negative. That is cov[i, i] = var[i] >= 0.
     for (int i = 0; i < numRowsOrColumns; ++i) {
-      double diagonalElement = rbSquareMatrix.get(i, i);
+      double diagonalElement = rbSquareMatrix.get(matrixRowIndex(i), matrixColumnIndex(i));
       // no epsilon tolerance for this check; we're going to take the square root of each diagonal element
       if (diagonalElement < 0.0) {
         // can't have a negative diagonal element
@@ -128,7 +131,8 @@ public class RBMatrixUtils {
       for (int j = i + 1; j < numRowsOrColumns; ++j) {
         // Use a very small tolerance; presumably these matrices are being read in from a vendor and
         // have been checked before we get them. If this turns out to be too tight, we can loosen it.
-        if (Math.abs(rbSquareMatrix.get(i, j)) > sqrtDiagonal[i] * sqrtDiagonal[j] + 1e-14) {
+        if (Math.abs(rbSquareMatrix.get(matrixRowIndex(i), matrixColumnIndex(j))) >
+            sqrtDiagonal[i] * sqrtDiagonal[j] + 1e-14) {
           // this off-diagonal term is too big
           return false;
         }
@@ -160,9 +164,9 @@ public class RBMatrixUtils {
 
     // No need to worry about complex eigenvalues; this is a symmetric matrix.
     double[] sortedEigenValues = rbEigenvalueDecomposition.getRealEigenvaluesAscending()
-            .doubleStream()
-            .sorted()
-            .toArray();
+        .doubleStream()
+        .sorted()
+        .toArray();
     double smallestEigenvalue = sortedEigenValues[0];
     // For numerical reasons, allow the smallest eigenvalue to be slightly negative.
     // Zero and epsilon-negative eigenvalues may be discarded anyway if we're using SVD.

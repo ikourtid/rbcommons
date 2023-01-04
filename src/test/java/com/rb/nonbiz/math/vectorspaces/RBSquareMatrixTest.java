@@ -14,11 +14,9 @@ import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.Asserters.assertIndexOutOfBoundsException;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
 
 public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
 
@@ -104,24 +102,6 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
             77, 0, 0,
             0, 88, 0,
             0, 0, 99)));
-  }
-
-  @Test
-  public void testGetIJ() {
-    RBSquareMatrix matrix = rbSquareMatrix2by2(
-        1.0, 2.0,
-        3.0, 4.0);
-    assertEquals(1.0, matrix.get(0, 0), 1e-8);
-    assertEquals(2.0, matrix.get(0, 1), 1e-8);
-    assertEquals(3.0, matrix.get(1, 0), 1e-8);
-    assertEquals(4.0, matrix.get(1, 1), 1e-8);
-
-    // no negative indices
-    assertIndexOutOfBoundsException( () -> matrix.get(-1,  0));
-    assertIndexOutOfBoundsException( () -> matrix.get( 0, -1));
-    // indices can't be too large
-    assertIndexOutOfBoundsException( () -> matrix.get(0, 2));
-    assertIndexOutOfBoundsException( () -> matrix.get(2, 0));
   }
 
   @Override

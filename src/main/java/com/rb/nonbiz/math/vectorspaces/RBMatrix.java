@@ -209,10 +209,6 @@ public class RBMatrix {
     return rawMatrix.columns();
   }
 
-  public double get(int i, int j) {
-    return rawMatrix.get(i, j);
-  }
-
   public MatrixRowIndex getLastRowIndex() {
     return matrixRowIndex(getNumRows() - 1);
   }
