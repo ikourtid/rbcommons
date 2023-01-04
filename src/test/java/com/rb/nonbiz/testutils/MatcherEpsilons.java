@@ -13,8 +13,8 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstAndRest;
-import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassWideMatcherEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassPlusStringKeyMatcherEpsilonDescriptor.eps;
+import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.ClassWideMatcherEpsilonDescriptor.eps;
 import static com.rb.nonbiz.testutils.MatcherEpsilonDescriptor.GetterSpecificMatcherEpsilonDescriptor.eps;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
@@ -170,8 +170,10 @@ public class MatcherEpsilons {
    * @see GetterSpecificMatcherEpsilonDescriptor
    */
   public Epsilon get(Class<?> clazz, Class<?> getterReturnType) {
-    return matcherEpsilonDescriptors.getOrDefault(eps(clazz, getterReturnType),
-        matcherEpsilonDescriptors.getOrDefault(eps(clazz),
+    return matcherEpsilonDescriptors.getOrDefault(
+        eps(clazz, getterReturnType),
+        matcherEpsilonDescriptors.getOrDefault(
+            eps(clazz),
             getDefaultEpsilon()));
   }
 
@@ -183,8 +185,10 @@ public class MatcherEpsilons {
    * @see ClassPlusStringKeyMatcherEpsilonDescriptor
    */
   public Epsilon get(Class<?> clazz, UniqueId<Epsilon> epsilonId) {
-    return matcherEpsilonDescriptors.getOrDefault(eps(clazz, epsilonId),
-        matcherEpsilonDescriptors.getOrDefault(eps(clazz),
+    return matcherEpsilonDescriptors.getOrDefault(
+        eps(clazz, epsilonId),
+        matcherEpsilonDescriptors.getOrDefault(
+            eps(clazz),
             getDefaultEpsilon()));
   }
 
