@@ -16,7 +16,9 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
 
@@ -26,15 +28,15 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
 
   public static RBSquareMatrix rbSquareMatrixDiagonal2by2(double a11, double a22) {
     return rbSquareMatrix2by2(
-        a11,  0,
-        0,  a22);
+        a11,   0,
+        0,   a22);
   }
 
   public static RBSquareMatrix rbSquareMatrixDiagonal3by3(double a11, double a22, double a33) {
     return rbSquareMatrix3by3(
-        a11,  0,   0,
-        0,  a22,   0,
-        0,    0, a33);
+        a11,   0,   0,
+        0,   a22,   0,
+        0,     0, a33);
   }
 
   public static RBSquareMatrix rbSquareMatrix2by2(double a11, double a12, double a21, double a22) {
@@ -99,9 +101,15 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
     assertThat(
         diagonalRBSquareMatrix(rbVector(77, 88, 99)),
         rbSquareMatrixMatcher(rbSquareMatrix3by3(
-            77, 0, 0,
-            0, 88, 0,
-            0, 0, 99)));
+            77,  0,  0,
+            0,  88,  0,
+            0,   0, 99)));
+  }
+
+  @Test
+  public void testGetNumRowsOrColumns() {
+    assertEquals(1, singletonRBSquareMatrix(DUMMY_DOUBLE).getNumRowsOrColumns());
+    assertEquals(3, diagonalRBSquareMatrix(rbVector(77, 88, 99)).getNumRowsOrColumns());
   }
 
   @Override

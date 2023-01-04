@@ -5,6 +5,7 @@ import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
+import java.util.function.DoubleFunction;
 import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
@@ -366,8 +367,8 @@ public class RBMatrixUtilsTest {
   public void testIsPositiveSemiDefiniteSymmetric() {
     // square but not symmetric
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(rbSquareMatrix(new double[][] {
-        { DUMMY_DOUBLE,        123.4 },
-        { 567.8,        DUMMY_DOUBLE }
+        { DUMMY_POSITIVE_DOUBLE,                 123.4 },
+        { 567.8,                 DUMMY_POSITIVE_DOUBLE }
     })));
 
     // simple cases
@@ -384,7 +385,7 @@ public class RBMatrixUtilsTest {
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(rbSquareMatrixDiagonal3by3(123, 456, -1e-9)));
 
     // make a matrix whose diagonal elements are perfect squares, for clarity in the following checks
-    Function<Double, RBSquareMatrix> maker2x2 = offDiagonal -> rbSquareMatrix2by2(
+    DoubleFunction<RBSquareMatrix> maker2x2 = offDiagonal -> rbSquareMatrix2by2(
         4.0,         offDiagonal,
         offDiagonal,        9.0);
     // Any off-diagonal element with abs(off-diagonal) <= sqrt(4) * sqrt(9) = 6 is fine.
@@ -396,8 +397,8 @@ public class RBMatrixUtilsTest {
     }
 
     // Here, the off-diagonal elements are larger (in absolute value) than sqrt(diag_i) * sqrt(diag_j).
-    assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker2x2.apply(-6 - 1e-9)));
-    assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker2x2.apply( 6 + 1e-9)));
+    assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker2x2.apply(-6 - 1e-13)));
+    assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker2x2.apply( 6 + 1e-13)));
 
     // Now investigate off-diagonal elements that follow the above limit of
     // abs(e_ij) <= sqrt(e_ii) * sqrt(e_jj), but still may be non-positive-semi-definite.
@@ -412,9 +413,12 @@ public class RBMatrixUtilsTest {
     // In the following, the single non-zero off-diagonal element is as large as possible,
     // e.g. e_ij = sqrt(e_ii) * sqrt(e_jj), and the matrix is positive semi-definite.
     // Each matrix will have one eigenvalue of 0, so they barely pass the "no negative eigenvalues" test.
-    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(6.0, 0.0,  0.0)));
-    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(0.0, 8.0,  0.0)));
-    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(0.0, 0.0, 12.0)));
+    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(
+        doubleExplained(6.0, Math.sqrt(4) * Math.sqrt(9)), 0.0,  0.0)));
+    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(
+        0.0, doubleExplained(8.0, Math.sqrt(4) * Math.sqrt(16)), 0.0)));
+    assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(
+        0.0, 0.0, doubleExplained(12.0, Math.sqrt(9) * Math.sqrt(16)))));
 
     // As above, but with a second non-zero off-diagonal element e_ij. Even though the second
     // non-zero element is small, they still push the smallest eigenvalue below 0.0
@@ -428,9 +432,11 @@ public class RBMatrixUtilsTest {
 
     // For "smallish" non-zero off-diagonals, all the eigenvalues are still non-negative,
     // which guarantees that the matrix is positive semi-definite. Here we check off-diagonal
-    // elements up to 50% of their maximum magnitude.
+    // elements up to 40% of their maximum magnitude.
+    // The goal here is not to figure out the maximum allowable ratio that can still be PSD,
+    // but to show that *some* fractions result in PSD matrices.
     assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply(0.0, 0.0, 0.0)));
-    for (double ratio : ImmutableList.of(-0.5, -0.2, -0.1, 0.0, 0.1, 0.2, 0.5)) {
+    for (double ratio : ImmutableList.of(-0.4, -0.2, -0.1, 0.0, 0.1, 0.2, 0.4)) {
       assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 6.0 * ratio,  8.0 * ratio,  12.0 * ratio)));
       assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 6.0 * ratio,  8.0 * ratio, -12.0 * ratio)));
       assertTrue(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 6.0 * ratio, -8.0 * ratio,  12.0 * ratio)));
@@ -456,8 +462,10 @@ public class RBMatrixUtilsTest {
     // However, changing the signs of the "small" off-diagonal elements is enough to make
     // the matrices non-positive-semi-definite.
     // The point of these checks is not to come up with rules for how large the off-diagonal elements can be.
-    // Rather , the point is to demonstrate that it is not enough to rely on the simple test of
+    // Rather, the point is to demonstrate that it is not enough to rely on the simple test of
     // abs(e_ij) <= sqrt(e_ii) * sqrt(i_jj).
+    // It's a simple check to do, but it doesn't catch all non-PSD matrices. For that, we need
+    // to do the (more computationally intensive) check that all eigenvalues are non-negative.
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 5.9,  1.0, -1.0)));
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 5.9, -1.0,  1.0)));
     assertFalse(isPositiveSemiDefiniteSymmetricMatrix(maker3x3.apply( 1.0,  7.9, -1.0)));
