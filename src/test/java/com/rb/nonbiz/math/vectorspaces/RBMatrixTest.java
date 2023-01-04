@@ -234,6 +234,27 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
   }
 
   @Test
+  public void testGetIJ() {
+    RBMatrix matrix = rbMatrix(new double[][] {
+        { 1.0, 2.0 },
+        { 3.0, 4.0 },
+        { 5.0, 6.0 }});
+    assertEquals(1.0, matrix.get(matrixRowIndex(0), matrixColumnIndex(0)), 1e-8);
+    assertEquals(2.0, matrix.get(matrixRowIndex(0), matrixColumnIndex(1)), 1e-8);
+    assertEquals(3.0, matrix.get(matrixRowIndex(1), matrixColumnIndex(0)), 1e-8);
+    assertEquals(4.0, matrix.get(matrixRowIndex(1), matrixColumnIndex(1)), 1e-8);
+    assertEquals(5.0, matrix.get(matrixRowIndex(2), matrixColumnIndex(0)), 1e-8);
+    assertEquals(6.0, matrix.get(matrixRowIndex(2), matrixColumnIndex(1)), 1e-8);
+
+    // indices can't be too large
+    assertIndexOutOfBoundsException( () -> matrix.get(matrixRowIndex(0), matrixColumnIndex(2)));
+    assertIndexOutOfBoundsException( () -> matrix.get(matrixRowIndex(1), matrixColumnIndex(2)));
+    assertIndexOutOfBoundsException( () -> matrix.get(matrixRowIndex(2), matrixColumnIndex(2)));
+    assertIndexOutOfBoundsException( () -> matrix.get(matrixRowIndex(3), matrixColumnIndex(0)));
+    assertIndexOutOfBoundsException( () -> matrix.get(matrixRowIndex(3), matrixColumnIndex(1)));
+  }
+
+  @Test
   public void testTranspose() {
     // the transposition of a 1x1 matrix is itself
     assertThat(
@@ -697,7 +718,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
       return expected.matrixRowIndexStream().allMatch(matrixRowIndex ->
           expected.matrixColumnIndexStream().allMatch(matrixColumnIndex -> {
             double valueInExpected = expected.get(matrixRowIndex, matrixColumnIndex);
-            double valueInActual   = actual.get(matrixRowIndex, matrixColumnIndex);
+            double valueInActual   = actual.get(  matrixRowIndex, matrixColumnIndex);
             return e.get(RBMatrix.class).areWithin(valueInExpected, valueInActual);
           }));
     });

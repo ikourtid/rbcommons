@@ -241,7 +241,7 @@ public class RBMatrix {
   public double get(MatrixRowIndex matrixRowIndex, MatrixColumnIndex matrixColumnIndex) {
     return rawMatrix.get(matrixRowIndex.intValue(), matrixColumnIndex.intValue());
   }
-  
+
   /**
    * Apply an arbitrary transform for every element based on its position in the matrix (row & column),
    * and return a copy of this matrix.
