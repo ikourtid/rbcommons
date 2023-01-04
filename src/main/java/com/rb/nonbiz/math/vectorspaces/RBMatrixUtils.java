@@ -128,15 +128,15 @@ public class RBMatrixUtils {
       for (int j = i + 1; j < numRowsOrColumns; ++j) {
         // Use a very small tolerance; presumably these matrices are being read in from a vendor and
         // have been checked before we get them. If this turns out to be too tight, we can loosen it.
-        if (Math.abs(rbSquareMatrix.get(matrixRowIndex(i), matrixColumnIndex(j))) >
-            sqrtDiagonal[i] * sqrtDiagonal[j] + 1e-14) {
+        double offDiagonalElement = rbSquareMatrix.get(matrixRowIndex(i), matrixColumnIndex(j));
+        if (Math.abs(offDiagonalElement) > sqrtDiagonal[i] * sqrtDiagonal[j] + 1e-14) {
           // this off-diagonal term is too big
           return false;
         }
       }
     }
 
-    // Now check if all eigenvalues are non-negative (or at most epsilon negative). If they
+    // Now check if all eigenvalues are non-negative (or at most epsilon negative). If all
     // are non-negative, then the matrix will be positive semi-definite.
     //
     // Why should non-negative eigenvalues imply a positive semi-definite matrix?
@@ -176,4 +176,3 @@ public class RBMatrixUtils {
   }
 
 }
-
