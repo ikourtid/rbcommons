@@ -188,7 +188,7 @@ public class MatcherEpsilons {
             getDefaultEpsilon()));
   }
 
-  private Epsilon getDefaultEpsilon() {
+  public Epsilon getDefaultEpsilon() {
     return defaultEpsilonOverride.orElse(DEFAULT_EPSILON_1e_8);
   }
 
