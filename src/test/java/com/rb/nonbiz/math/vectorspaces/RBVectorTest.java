@@ -314,15 +314,22 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
             rbVector(1, 2, 3).multiplyOnLeft(doubleMatrix2D),
             rbVectorMatcher(expectedResult));
 
+    // multiplying by the identity matrix gives the original vector
     asserter.accept(
         DoubleFactory2D.dense.identity(3),
         rbVector(1, 2, 3));
+    // multiplying by an all-zero matrix gives a vector of zeros
+    asserter.accept(
+        DoubleFactory2D.dense.diagonal(DoubleFactory1D.dense.make(new double[] { 0.0, 0.0, 0.0 })),
+        rbVector(0, 0, 0));
+    // multiplying by a diagonal matrix scales each component of the original vector
     asserter.accept(
         DoubleFactory2D.dense.diagonal(DoubleFactory1D.dense.make(new double[] { 4.0, 5.0, 6.0 })),
         rbVector(
             doubleExplained( 4.0, 4.0 * 1),
             doubleExplained(10.0, 5.0 * 2),
             doubleExplained(18.0, 6.0 * 3)));
+    // general matrix multiplication
     asserter.accept(
         DoubleFactory2D.dense.make(new double[][] {
             { 1.0, 2.0, 3.0 },
