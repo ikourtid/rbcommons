@@ -6,6 +6,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 public class RBMatrixUtils {
 
@@ -59,11 +60,7 @@ public class RBMatrixUtils {
   /**
    * Check if a matrix is symmetric (to within epsilon).
    */
-  public static boolean isSymmetricMatrix(RBMatrix rbMatrix, double epsilon) {
-    RBPreconditions.checkArgument(
-        epsilon >= 0 && epsilon <= 100.0,
-        "Epsilon should be non-negative and probably less than 100; found %s ",
-        epsilon);
+  public static boolean isSymmetricMatrix(RBMatrix rbMatrix, Epsilon epsilon) {
     if (!rbMatrix.isSquare()) {
       return false;
     }
@@ -75,7 +72,7 @@ public class RBMatrixUtils {
       for (int j = i + 1; j < sharedSize; j++) {
         double aboveDiagonal = rbMatrix.get(matrixRowIndex(i), matrixColumnIndex(j));
         double belowDiagonal = rbMatrix.get(matrixRowIndex(j), matrixColumnIndex(i));
-        if (Math.abs(aboveDiagonal - belowDiagonal) > epsilon) {
+        if (!epsilon.areWithin(aboveDiagonal, belowDiagonal)) {
           return false;
         }
       }
@@ -101,7 +98,7 @@ public class RBMatrixUtils {
   public static boolean isPositiveSemiDefiniteSymmetricMatrix(RBSquareMatrix rbSquareMatrix) {
     // Do various matrix checks, from easiest to complex, in order to "fail fast".
 
-    if (!isSymmetricMatrix(rbSquareMatrix, 1e-8)) {
+    if (!isSymmetricMatrix(rbSquareMatrix, DEFAULT_EPSILON_1e_8)) {
       // Non-symmetric matrices can be positive semi-definite, but we're only interested in symmetric ones.
       // In particular, we want to use the property that symmetric matrices have real eigenvalues.
       // Also, covariance matrices are symmetric, and they're what we're mostly interested in here.

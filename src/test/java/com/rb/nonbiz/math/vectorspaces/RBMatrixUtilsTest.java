@@ -29,6 +29,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -322,38 +323,35 @@ public class RBMatrixUtilsTest {
 
   @Test
   public void testIsSymmetric() {
-    // can't use a negative epsilon
-    assertIllegalArgumentException( () -> isSymmetricMatrix(singletonRBMatrix(DUMMY_DOUBLE), -1e-8));
-
     // a 1x1 matrix is symmetric
-    assertTrue(isSymmetricMatrix(singletonRBMatrix(DUMMY_DOUBLE), 1e-8));
+    assertTrue(isSymmetricMatrix(singletonRBMatrix(DUMMY_DOUBLE), DEFAULT_EPSILON_1e_8));
     // a diagonal matrix is symmetric
-    assertTrue(isSymmetricMatrix(rbDiagonalMatrix3by3(123, -234, 567), 1e-8));
+    assertTrue(isSymmetricMatrix(rbDiagonalMatrix3by3(123, -234, 567), DEFAULT_EPSILON_1e_8));
     // general case - symmetric
     assertTrue(isSymmetricMatrix(
         rbMatrix(new double[][] {
             { 1,  2 },
             { 2, -3 } }),
-        1e-8));
+        DEFAULT_EPSILON_1e_8));
     // general case - epsilon symmetric
     assertTrue(isSymmetricMatrix(
         rbMatrix(new double[][] {
             { 1,  2 + 1e-9 },
             { 2, -3 } }),
-        1e-8));
+        DEFAULT_EPSILON_1e_8));
     // general case - asymmetric
     assertFalse(isSymmetricMatrix(
         rbMatrix(new double[][] {
             { 1,   2 },
             { 567, 3 } }),
-        1e-8));
+        DEFAULT_EPSILON_1e_8));
 
     // a 2 x 3 matrix is not symmetric
     assertFalse(isSymmetricMatrix(
         rbMatrix(new double[][] {
             { 1, 2, 3 },
             { 4, 5, 6 } }),
-        1e-8));
+        DEFAULT_EPSILON_1e_8));
 
     // a 3 x 2 matrix is not symmetric
     assertFalse(isSymmetricMatrix(
@@ -361,7 +359,7 @@ public class RBMatrixUtilsTest {
             { 1, 2 },
             { 3, 4 },
             { 5, 6 } }),
-        1e-8));
+        DEFAULT_EPSILON_1e_8));
   }
 
   @Test
