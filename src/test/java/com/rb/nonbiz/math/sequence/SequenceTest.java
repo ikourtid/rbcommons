@@ -14,6 +14,7 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class SequenceTest extends RBTestMatcher<Sequence<Money>> {
@@ -46,7 +47,8 @@ public class SequenceTest extends RBTestMatcher<Sequence<Money>> {
 
   @Override
   protected boolean willMatch(Sequence<Money> expected, Sequence<Money> actual) {
-    return sequenceIncompleteMatcher(expected, f -> preciseValueMatcher(f, 1e-8)).matches(actual);
+    return sequenceIncompleteMatcher(expected, f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <T>TypeSafeMatcher<Sequence<T>> sequenceEqualityIncompleteMatcher(Sequence<T> expected) {

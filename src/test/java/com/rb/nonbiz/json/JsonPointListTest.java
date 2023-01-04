@@ -17,6 +17,7 @@ import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class JsonPointListTest extends RBTestMatcher<JsonPointList> {
@@ -97,7 +98,7 @@ public class JsonPointListTest extends RBTestMatcher<JsonPointList> {
   public static TypeSafeMatcher<JsonPointList> jsonPointListMatcher(JsonPointList expected) {
     return makeMatcher(expected,
         match(        v -> v.getXCoordinates(), f -> rbJsonLocalDateArrayMatcher(f)),
-        match(        v -> v.getYCoordinates(), f -> rbJsonDoubleArrayMatcher(f, 1e-8)),
+        match(        v -> v.getYCoordinates(), f -> rbJsonDoubleArrayMatcher(f, DEFAULT_EPSILON_1e_8)),
         matchOptional(v -> v.getTextLabels(),   f -> rbJsonStringArrayMatcher(f)));
   }
 

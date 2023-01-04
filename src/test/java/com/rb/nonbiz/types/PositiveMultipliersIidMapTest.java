@@ -10,6 +10,7 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.iidMapImpreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static com.rb.nonbiz.types.PositiveMultipliersIidMap.emptyPositiveMultipliersIidMap;
 import static com.rb.nonbiz.types.PositiveMultipliersIidMap.positiveMultipliersIidMap;
@@ -59,11 +60,11 @@ public class PositiveMultipliersIidMapTest extends RBTestMatcher<PositiveMultipl
 
   public static TypeSafeMatcher<PositiveMultipliersIidMap> positiveMultipliersIidMapMatcher(
       PositiveMultipliersIidMap expected) {
-    return positiveMultipliersIidMapMatcher(expected, 1e-8);
+    return positiveMultipliersIidMapMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
   public static TypeSafeMatcher<PositiveMultipliersIidMap> positiveMultipliersIidMapMatcher(
-      PositiveMultipliersIidMap expected, double epsilon) {
+      PositiveMultipliersIidMap expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.getRawMap(), f -> iidMapImpreciseValueMatcher(f, epsilon)));
   }

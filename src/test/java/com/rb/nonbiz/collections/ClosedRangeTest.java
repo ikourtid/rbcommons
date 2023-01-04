@@ -1,7 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
-import com.rb.nonbiz.testutils.Epsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;

@@ -20,6 +20,7 @@ import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 // This test class is not generic, but the publicly exposed static matcher is.
@@ -52,13 +53,13 @@ public class IidMapWithDefaultTest extends RBTestMatcher<IidMapWithDefault<Doubl
             STOCK_A2, 2.2)).streamOfDefaultValuePlusOverrides().iterator()),
         rbSetMatcher(
             rbSetOf(1.1, 2.2, 7.7),
-            f -> doubleAlmostEqualsMatcher(f, 1e-8),
+            f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8),
             Double::compareTo));
     assertThat(
         newRBSet(emptyIidMapWithDefault(7.7).streamOfDefaultValuePlusOverrides().iterator()),
         rbSetMatcher(
             singletonRBSet(7.7),
-            f -> doubleAlmostEqualsMatcher(f, 1e-8),
+            f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8),
             Double::compareTo));
   }
 
@@ -73,12 +74,12 @@ public class IidMapWithDefaultTest extends RBTestMatcher<IidMapWithDefault<Doubl
             iidMapWithDefault(6.6, iidMapOf(
                 STOCK_A1, 1.1,
                 STOCK_A2, 2.2)),
-            f -> doubleAlmostEqualsMatcher(f, 1e-8)));
+            f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8)));
     assertThat(
         emptyIidMapWithDefault(0.0).copyWithReplacedDefaultValue(1.1),
         iidMapWithDefaultMatcher(
             emptyIidMapWithDefault(1.1),
-            f -> doubleAlmostEqualsMatcher(f, 1e-8)));
+            f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8)));
   }
 
   @Override
@@ -103,7 +104,7 @@ public class IidMapWithDefaultTest extends RBTestMatcher<IidMapWithDefault<Doubl
 
   @Override
   protected boolean willMatch(IidMapWithDefault<Double> expected, IidMapWithDefault<Double> actual) {
-    return iidMapWithDefaultMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return iidMapWithDefaultMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8)).matches(actual);
   }
 
   public static <V> TypeSafeMatcher<IidMapWithDefault<V>> iidMapWithDefaultEqualityMatcher(

@@ -1,12 +1,11 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleFactory2D;
-import cern.colt.matrix.linalg.Algebra;
+import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
-
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 
 /**
  * An immutable square matrix.
@@ -18,37 +17,40 @@ import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
  *
  * @see RBMatrix
  */
-public class RBSquareMatrix {
-  // FIXME CM can this just be derived from RbMatrix to save code?
+public class RBSquareMatrix extends RBMatrix {
 
-  private final RBMatrix rawMatrix;
   private final int numRowsOrColumns;
 
-  private RBSquareMatrix(RBMatrix rawMatrix, int numRowsOrColumns) {
-    this.rawMatrix = rawMatrix;
+  private RBSquareMatrix(DoubleMatrix2D rawMatrix, int numRowsOrColumns) {
+    super(rawMatrix);
     this.numRowsOrColumns = numRowsOrColumns;
   }
 
-  public static RBSquareMatrix rbSquareMatrix(RBMatrix rawMatrix) {
+  public static RBSquareMatrix rbSquareMatrix(double[][] doubleMatrixArray) {
+    DoubleMatrix2D rawMatrix = DoubleFactory2D.dense.make(doubleMatrixArray);
+    RBPreconditions.checkArgument(
+        rawMatrix.size() > 0,
+        "We do not allow an empty RBSquareMatrix, just to be safe");
     int numRowsOrColumns = RBSimilarityPreconditions.checkBothSame(
-        rawMatrix.getNumRows(),
-        rawMatrix.getNumColumns(),
+        rawMatrix.rows(),
+        rawMatrix.columns(),
         "In a square matrix, we have %s rows but %s columns",
-        rawMatrix.getNumRows(), rawMatrix.getNumColumns());
+        rawMatrix.rows(), rawMatrix.columns());
     return new RBSquareMatrix(rawMatrix, numRowsOrColumns);
   }
 
-  public static RBSquareMatrix rbIdentitySquareMatrix(int n) {
-    return rbSquareMatrix(rbIdentityMatrix(n));
+  public static RBSquareMatrix identityRBSquareMatrix(int n) {
+    RBPreconditions.checkArgument(
+        n > 0,
+        "We do not allow an empty RBSquareMatrix, just to be safe");
+    return new RBSquareMatrix(DoubleFactory2D.dense.identity(n), n);
   }
 
-  public static RBSquareMatrix rbDiagonalSquareMatrix(RBVector rbVector) {
-    return rbSquareMatrix(rbMatrix(DoubleFactory2D.dense.diagonal(
-        rbVector.getRawDoubleMatrix1DUnsafe())));
-  }
-
-  public RBVector getColumnVector(MatrixColumnIndex matrixColumnIndex) {
-    return rawMatrix.getColumnVector(matrixColumnIndex);
+  public static RBSquareMatrix diagonalRBSquareMatrix(RBVector rbVector) {
+    // Note that RBVector can't be empty, so we don't have to check for that.
+    return new RBSquareMatrix(
+        DoubleFactory2D.dense.diagonal(new DenseDoubleMatrix1D(rbVector.toArray())),
+        rbVector.size());
   }
 
   /**
@@ -60,36 +62,9 @@ public class RBSquareMatrix {
     return numRowsOrColumns;
   }
 
-  /**
-   * Return matrix element M[i, j].
-   *
-   * <p> Will throw an exception if either i or j is out of bounds. </p>
-   */
-  public double get(int i, int j) {
-    return rawMatrix.get(i, j);
-  }
-
-  /**
-   * The name has 'calculate' so it's clear to the caller that the result isn't cached.
-   */
-  public double calculateDeterminant() {
-    // You never see new() in the code, really; with verb classes, we use injection, and with data classes,
-    // we use static constructors. However, in this case, new Algebra() is a Colt library way of doing things.
-    // We can't inject one here (it's a data class), but it's also OK to instantiate it, because doing so is very
-    // lightweight (I checked in the decompiler).
-    return new Algebra().det(rawMatrix.getRawMatrixUnsafe());
-  }
-
-  /**
-   * This is here to help the test matcher, hence the 'Unsafe' in the name, and the package-private status.
-   */
-  RBMatrix getRawMatrixUnsafe() {
-    return rawMatrix;
-  }
-
   @Override
   public String toString() {
-    return Strings.format("[RBSM %s RBSM]", rawMatrix);
+    return Strings.format("[RBSM %s RBSM]", super.toString());
   }
 
 }

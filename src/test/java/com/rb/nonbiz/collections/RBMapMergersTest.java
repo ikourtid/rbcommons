@@ -33,6 +33,7 @@ import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PositiveMultiplier.POSITIVE_MULTIPLIER_1;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static java.util.Collections.emptyIterator;
@@ -651,8 +652,8 @@ public class RBMapMergersTest {
         assertThat(
             mergeRBMapsAllowingOverlapOnSimilarItemsOnly(
                 iidMapIterator,
-                (v1, v2) -> v1.almostEquals(v2, 1e-8)),
-            rbMapPreciseValueMatcher(expectedResult, 1e-8));
+                (v1, v2) -> v1.almostEquals(v2, DEFAULT_EPSILON_1e_8)),
+            rbMapPreciseValueMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
 
     asserter.accept(emptyIterator(), emptyRBMap());
     asserter.accept(singletonIterator(emptyRBMap()), emptyRBMap());
@@ -700,7 +701,7 @@ public class RBMapMergersTest {
                         "A2", money(200 + largeEpsilon),
                         "A3", money(300)))
                     .iterator(),
-                (v1, v2) -> v1.almostEquals(v2, 1e-8))));
+                (v1, v2) -> v1.almostEquals(v2, DEFAULT_EPSILON_1e_8))));
   }
 
   @Test

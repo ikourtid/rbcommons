@@ -35,6 +35,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -93,7 +94,7 @@ public class HasInstrumentIdMapTest extends RBTestMatcher<HasInstrumentIdMap<Tes
         TEST_MAP.valuesStream().collect(Collectors.toList()),
         unorderedCollectionMatcher(
             ImmutableList.of(money(11.11), money(22.22), money(33.33), money(44.44), money(55.55), money(66.66)),
-            f -> preciseValueMatcher(f, 1e-8),
+            f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8),
             Money::compareTo));
   }
 
@@ -124,16 +125,16 @@ public class HasInstrumentIdMapTest extends RBTestMatcher<HasInstrumentIdMap<Tes
 
   @Test
   public void testGetValueOrThrow() {
-    assertAlmostEquals(TEST_MAP.getValueOrThrow(instrumentId(1)),        money(11.11), 1e-8);
-    assertAlmostEquals(TEST_MAP.getValueOrThrow(instrumentId(1), "msg"), money(11.11), 1e-8);
+    assertAlmostEquals(TEST_MAP.getValueOrThrow(instrumentId(1)),        money(11.11), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(TEST_MAP.getValueOrThrow(instrumentId(1), "msg"), money(11.11), DEFAULT_EPSILON_1e_8);
     assertIllegalArgumentException( () -> TEST_MAP.getValueOrThrow(instrumentId(999)));
     assertIllegalArgumentException( () -> TEST_MAP.getValueOrThrow(instrumentId(999), "msg"));
   }
 
   @Test
   public void testGetValueOrDefault() {
-    assertAlmostEquals(TEST_MAP.getValueOrDefault(instrumentId(1),   money(99.99)), money(11.11), 1e-8);
-    assertAlmostEquals(TEST_MAP.getValueOrDefault(instrumentId(999), money(99.99)), money(99.99), 1e-8);
+    assertAlmostEquals(TEST_MAP.getValueOrDefault(instrumentId(1),   money(99.99)), money(11.11), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(TEST_MAP.getValueOrDefault(instrumentId(999), money(99.99)), money(99.99), DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -177,7 +178,7 @@ public class HasInstrumentIdMapTest extends RBTestMatcher<HasInstrumentIdMap<Tes
             iidMapOf(
                 STOCK_A1, money(11.11),
                 STOCK_A2, money(22.22)),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Override
@@ -203,7 +204,7 @@ public class HasInstrumentIdMapTest extends RBTestMatcher<HasInstrumentIdMap<Tes
   @Override
   protected boolean willMatch(HasInstrumentIdMap<TestHasInstrumentId, Money> expected,
                               HasInstrumentIdMap<TestHasInstrumentId, Money> actual) {
-    return hasInstrumentIdMapMatcher(expected, f1 -> testHasInstrumentIdMatcher(f1), f2 -> preciseValueMatcher(f2, 1e-8))
+    return hasInstrumentIdMapMatcher(expected, f1 -> testHasInstrumentIdMatcher(f1), f2 -> preciseValueMatcher(f2, DEFAULT_EPSILON_1e_8))
         .matches(actual);
   }
 

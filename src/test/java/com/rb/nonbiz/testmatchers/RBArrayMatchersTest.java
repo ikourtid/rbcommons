@@ -1,5 +1,6 @@
 package com.rb.nonbiz.testmatchers;
 
+import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.array2DMatcher;
@@ -7,6 +8,7 @@ import static com.rb.nonbiz.testmatchers.RBArrayMatchers.array3DMatcher;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.doubleArray2DMatcher;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.intArray2DMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -50,7 +52,7 @@ public class RBArrayMatchersTest {
 
   @Test
   public void testDoubleArray2D() {
-    double e = 1e-8; // epsilon
+    Epsilon e = DEFAULT_EPSILON_1e_8;
     // These are intentionally constructed so that the 1st item subarray always has the same size (3),
     // in order to catch a bug.
     double[][] nonJagged = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };

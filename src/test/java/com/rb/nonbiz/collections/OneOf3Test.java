@@ -19,6 +19,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatch
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -68,9 +69,9 @@ public class OneOf3Test extends RBTestMatcher<OneOf3<Double, PositiveMultiplier,
     // all scenarios, because we can't have all 3 fields existing at the same time.
     MatcherGenerator<OneOf3<Double, PositiveMultiplier, UnitFraction>> matcherGenerator =
         expected -> oneOf3Matcher(expected,
-            f -> doubleAlmostEqualsMatcher(f, 1e-8),
-            f -> impreciseValueMatcher(f, 1e-8),
-            f -> preciseValueMatcher(f, 1e-8));
+            f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8),
+            f -> impreciseValueMatcher(f, DEFAULT_EPSILON_1e_8),
+            f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8));
     double e = 1e-9; // epsilon
     assertThat(
         only1stOf3(0.0),
@@ -103,9 +104,9 @@ public class OneOf3Test extends RBTestMatcher<OneOf3<Double, PositiveMultiplier,
   protected boolean willMatch(OneOf3<Double, PositiveMultiplier, UnitFraction> expected,
                               OneOf3<Double, PositiveMultiplier, UnitFraction> actual) {
     return oneOf3Matcher(expected,
-        f -> doubleAlmostEqualsMatcher(f, 1e-8),
-        f -> impreciseValueMatcher(f, 1e-8),
-        f -> preciseValueMatcher(f, 1e-8))
+        f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8),
+        f -> impreciseValueMatcher(f, DEFAULT_EPSILON_1e_8),
+        f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8))
         .matches(actual);
   }
 

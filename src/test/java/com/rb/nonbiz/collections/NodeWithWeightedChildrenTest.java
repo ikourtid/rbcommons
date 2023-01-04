@@ -22,6 +22,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -182,7 +183,7 @@ public class NodeWithWeightedChildrenTest extends RBTestMatcher<NodeWithWeighted
 
   @Override
   protected boolean willMatch(NodeWithWeightedChildren<String, Money> expected, NodeWithWeightedChildren<String, Money> actual) {
-    return nodeWithWeightedChildrenMatcher(expected, n -> typeSafeEqualTo(n), l -> preciseValueMatcher(l, 1e-8))
+    return nodeWithWeightedChildrenMatcher(expected, n -> typeSafeEqualTo(n), l -> preciseValueMatcher(l, DEFAULT_EPSILON_1e_8))
         .matches(actual);
   }
 

@@ -18,6 +18,7 @@ import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.nonEmptyOptionalMatc
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.text.csv.CsvColumnExtractor.csvColumnExtractorAllowingInvalidValues;
 import static com.rb.nonbiz.text.csv.CsvColumnExtractor.csvColumnExtractorThatThrowsOnInvalidValues;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -52,7 +53,7 @@ public class CsvColumnExtractorTest {
 
     assertTrue(
         csvColumnExtractorAllowingInvalidValuesMatcher(
-            csvColumnExtractor, f -> preciseValueMatcher(f, 1e-8),
+            csvColumnExtractor, f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8),
             // valid conversion samples
             rbMapOf(
                 "100 %",   UNIT_FRACTION_1,
@@ -82,7 +83,7 @@ public class CsvColumnExtractorTest {
 
     assertTrue(
         csvColumnExtractorThatThrowsOnInvalidValuesMatcher(
-            csvColumnExtractor, f -> preciseValueMatcher(f, 1e-8),
+            csvColumnExtractor, f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8),
             // valid conversion samples
             rbMapOf(
                 "100 %",   UNIT_FRACTION_1,

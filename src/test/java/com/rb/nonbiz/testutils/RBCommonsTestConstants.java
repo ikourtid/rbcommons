@@ -86,7 +86,6 @@ public abstract class RBCommonsTestConstants<T> {
   public static double ZERO_SEED = 0;
   public static double EPSILON_SEED = 1e-9;
   public static double DUMMY_SEED = 1e-7;
-  public static double DUMMY_EPSILON = 123.456_789;
 
   // The following are consecutive market days used in many tests.
   public static final LocalDate DAY0 = LocalDate.of(2010, 1, 29);

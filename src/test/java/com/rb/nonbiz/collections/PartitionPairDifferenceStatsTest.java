@@ -16,6 +16,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -145,10 +146,10 @@ public class PartitionPairDifferenceStatsTest extends RBTestMatcher<PartitionPai
   public static TypeSafeMatcher<PartitionPairDifferenceStats> partitionPairDifferenceStatsMatcher(
       PartitionPairDifferenceStats expected) {
     return makeMatcher(expected,
-        match(v -> v.getStatsForOverweight(),               f -> statisticalSummaryMatcher(f, 1e-8)),
-        match(v -> v.getStatsForUnderweight(),              f -> statisticalSummaryMatcher(f, 1e-8)),
-        match(v -> v.getStatsForSignedDifferences(),        f -> statisticalSummaryMatcher(f, 1e-8)),
-        match(v -> v.getStatsForAbsoluteValueDifferences(), f -> statisticalSummaryMatcher(f, 1e-8)));
+        match(v -> v.getStatsForOverweight(),               f -> statisticalSummaryMatcher(f, DEFAULT_EPSILON_1e_8)),
+        match(v -> v.getStatsForUnderweight(),              f -> statisticalSummaryMatcher(f, DEFAULT_EPSILON_1e_8)),
+        match(v -> v.getStatsForSignedDifferences(),        f -> statisticalSummaryMatcher(f, DEFAULT_EPSILON_1e_8)),
+        match(v -> v.getStatsForAbsoluteValueDifferences(), f -> statisticalSummaryMatcher(f, DEFAULT_EPSILON_1e_8)));
   }
 
 }

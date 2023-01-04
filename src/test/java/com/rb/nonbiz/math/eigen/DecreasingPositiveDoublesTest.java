@@ -8,6 +8,7 @@ import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRestDoubles;
 import static com.rb.nonbiz.testmatchers.Match.matchDoubleList;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyList;
 
 public class DecreasingPositiveDoublesTest extends RBTestMatcher<DecreasingPositiveDoubles> {
@@ -59,7 +60,7 @@ public class DecreasingPositiveDoublesTest extends RBTestMatcher<DecreasingPosit
 
   public static TypeSafeMatcher<DecreasingPositiveDoubles> decreasingPositiveDoublesMatcher(DecreasingPositiveDoubles expected) {
     return makeMatcher(expected,
-        matchDoubleList(v -> v.getRawList(), 1e-8));
+        matchDoubleList(v -> v.getRawList(), DEFAULT_EPSILON_1e_8));
   }
 
 }

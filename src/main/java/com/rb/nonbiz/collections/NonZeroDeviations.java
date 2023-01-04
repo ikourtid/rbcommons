@@ -15,6 +15,7 @@ import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONT
 import static com.rb.nonbiz.collections.Deviations.deviations;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBStreams.sumBigDecimals;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 
 /**
  * Just like Deviations, except that this explicitly disallows items with a 0 fraction.
@@ -35,7 +36,7 @@ public class NonZeroDeviations<K> {
   public static <K> NonZeroDeviations<K> nonZeroDeviations(RBMap<K, SignedFraction> signedFractions) {
     SignedFraction sumOfSignedFractions = SignedFraction.sum(signedFractions.values());
     RBPreconditions.checkArgument(
-        sumOfSignedFractions.isAlmostZero(1e-7), // 1e-8 doesn't work always
+        sumOfSignedFractions.isAlmostZero(epsilon(1e-7)), // 1e-8 doesn't work always
         "Signed fractions for NonZeroDeviations must add to 0 but they sum to %s. Input was %s",
         sumOfSignedFractions.toPercentString(10), signedFractions);
     RBPreconditions.checkArgument(

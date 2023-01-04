@@ -17,6 +17,7 @@ import static com.rb.nonbiz.functional.RBPredicates.isIn;
 import static com.rb.nonbiz.functional.RBPredicates.isLessThan;
 import static com.rb.nonbiz.functional.RBPredicates.isLessThanOrEqualTo;
 import static com.rb.nonbiz.functional.RBPredicates.isWithin;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -66,17 +67,17 @@ public class RBPredicatesTest {
 
   @Test
   public void testIsAlmostEqualTo() {
-    assertFalse(isAlmostEqualTo(signedMoney(7.59), 0.1).test(signedMoney(7.7)));
-    assertTrue(isAlmostEqualTo(signedMoney(7.61), 0.1).test(signedMoney(7.7)));
-    assertTrue(isAlmostEqualTo(signedMoney(7.7), 0.1).test(signedMoney(7.7)));
-    assertTrue(isAlmostEqualTo(signedMoney(7.79), 0.1).test(signedMoney(7.7)));
-    assertFalse(isAlmostEqualTo(signedMoney(7.81), 0.1).test(signedMoney(7.7)));
+    assertFalse(isAlmostEqualTo(signedMoney(7.59), epsilon(0.1)).test(signedMoney(7.7)));
+    assertTrue(isAlmostEqualTo(signedMoney(7.61), epsilon(0.1)).test(signedMoney(7.7)));
+    assertTrue(isAlmostEqualTo(signedMoney(7.7), epsilon(0.1)).test(signedMoney(7.7)));
+    assertTrue(isAlmostEqualTo(signedMoney(7.79), epsilon(0.1)).test(signedMoney(7.7)));
+    assertFalse(isAlmostEqualTo(signedMoney(7.81), epsilon(0.1)).test(signedMoney(7.7)));
 
-    assertFalse(isAlmostEqualTo(signedMoney(-7.59), 0.1).test(signedMoney(-7.7)));
-    assertTrue(isAlmostEqualTo(signedMoney(-7.61), 0.1).test(signedMoney(-7.7)));
-    assertTrue(isAlmostEqualTo(signedMoney(-7.7), 0.1).test(signedMoney(-7.7)));
-    assertTrue(isAlmostEqualTo(signedMoney(-7.79), 0.1).test(signedMoney(-7.7)));
-    assertFalse(isAlmostEqualTo(signedMoney(-7.81), 0.1).test(signedMoney(-7.7)));
+    assertFalse(isAlmostEqualTo(signedMoney(-7.59), epsilon(0.1)).test(signedMoney(-7.7)));
+    assertTrue(isAlmostEqualTo(signedMoney(-7.61), epsilon(0.1)).test(signedMoney(-7.7)));
+    assertTrue(isAlmostEqualTo(signedMoney(-7.7), epsilon(0.1)).test(signedMoney(-7.7)));
+    assertTrue(isAlmostEqualTo(signedMoney(-7.79), epsilon(0.1)).test(signedMoney(-7.7)));
+    assertFalse(isAlmostEqualTo(signedMoney(-7.81), epsilon(0.1)).test(signedMoney(-7.7)));
   }
 
   @Test

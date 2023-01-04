@@ -1,6 +1,7 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -12,6 +13,7 @@ import static com.rb.nonbiz.math.vectorspaces.VectorSpaceBasis.vectorSpaceBasis;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 public class VectorSpaceBasisTest extends RBTestMatcher<VectorSpaceBasis> {
 
@@ -96,12 +98,12 @@ public class VectorSpaceBasisTest extends RBTestMatcher<VectorSpaceBasis> {
   }
 
   public static TypeSafeMatcher<VectorSpaceBasis> vectorSpaceBasisMatcher(VectorSpaceBasis expected) {
-    return vectorSpaceBasisMatcher(expected, 1e-8);
+    return vectorSpaceBasisMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
-  public static TypeSafeMatcher<VectorSpaceBasis> vectorSpaceBasisMatcher(VectorSpaceBasis expected, double epsilon) {
+  public static TypeSafeMatcher<VectorSpaceBasis> vectorSpaceBasisMatcher(VectorSpaceBasis expected, Epsilon epsilon) {
     return makeMatcher(expected,
-        match(v -> v.getRawMatrixUnsafe(), f -> rbSquareMatrixMatcher(f, epsilon)));
+        match(v -> v.getRawSquareMatrix(), f -> rbSquareMatrixMatcher(f, epsilon)));
   }
 
 }

@@ -18,6 +18,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatch
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.util.RBEnumMaps.enumMapCoveringAllEnumValues;
 import static com.rb.nonbiz.util.RBEnumMaps.transformEnumMap;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -62,7 +63,7 @@ public class RBEnumMapsTest {
             newEnumMap(rbMapOf(
                 TestEnumXYZ.X, 11.07,
                 TestEnumXYZ.Y, 22.07)),
-            f -> doubleAlmostEqualsMatcher(f, 1e-8)));
+            f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8)));
     assertThat(
         transformEnumMap(original, (enumKey, value) -> enumKey + "_" + value),
         enumMapEqualityMatcher(

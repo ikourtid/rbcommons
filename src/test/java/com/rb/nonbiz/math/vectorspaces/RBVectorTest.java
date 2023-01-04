@@ -2,30 +2,36 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.google.common.collect.ImmutableList;
-import com.rb.nonbiz.testutils.Epsilons;
+import com.rb.nonbiz.testutils.MatcherEpsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRestDoubles;
 import static com.rb.nonbiz.math.vectorspaces.RBVector.zeroRBVectorWithDimension;
-import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.RBArrayMatchers.doubleArrayMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.doubleListMatcher;
-import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrix1dMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrows;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
-import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
+import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 public class RBVectorTest extends RBTestMatcher<RBVector> {
 
@@ -37,6 +43,15 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
     return RBVector.rbVector(new DenseDoubleMatrix1D(new double[] { onlyValue }));
   }
 
+  public static RBVector rbVectorWithSizeAndSharedValue(int size, double sharedValue) {
+    assertTrue(size >= 1);
+    double[] rawArray = new double[size];
+    for (int i = 0; i < size; i++) {
+      rawArray[i] = sharedValue;
+    }
+    return RBVector.rbVector(rawArray);
+  }
+
   @Test
   public void emptyVector_throws() {
     assertIllegalArgumentException( () -> RBVector.rbVector(new DenseDoubleMatrix1D(new double[] { })));
@@ -46,19 +61,19 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
   public void testIsAlmostUnitVector_1d() {
     rbSetOf(0.0, 1e-9, 1e-7, 1 - 1e-7, 1 + 1e-7, 999.0)
         .forEach(x -> {
-          assertFalse(singletonRBVector(x).isAlmostUnitVector(1e-8));
-          assertFalse(singletonRBVector(-1 * x).isAlmostUnitVector(1e-8));
+          assertFalse(singletonRBVector(x).isAlmostUnitVector(DEFAULT_EPSILON_1e_8));
+          assertFalse(singletonRBVector(-1 * x).isAlmostUnitVector(DEFAULT_EPSILON_1e_8));
         });
 
     rbSetOf(1 - 1e-9, 1.0, 1 + 1e-9)
-        .forEach(x -> assertTrue(singletonRBVector(x).isAlmostUnitVector(1e-8)));
+        .forEach(x -> assertTrue(singletonRBVector(x).isAlmostUnitVector(DEFAULT_EPSILON_1e_8)));
   }
 
   @Test
   public void assertIsAlmostUnitVector_2d() {
-    assertTrue( rbVector(1 / Math.sqrt(2),        1 / Math.sqrt(2)       ).isAlmostUnitVector(1e-8));
-    assertTrue( rbVector(1 / Math.sqrt(2) + 1e-9, 1 / Math.sqrt(2) + 1e-9).isAlmostUnitVector(1e-8));
-    assertFalse(rbVector(1 / Math.sqrt(2) + 1e-7, 1 / Math.sqrt(2) + 1e-7).isAlmostUnitVector(1e-8));
+    assertTrue( rbVector(1 / Math.sqrt(2),        1 / Math.sqrt(2)       ).isAlmostUnitVector(DEFAULT_EPSILON_1e_8));
+    assertTrue( rbVector(1 / Math.sqrt(2) + 1e-9, 1 / Math.sqrt(2) + 1e-9).isAlmostUnitVector(DEFAULT_EPSILON_1e_8));
+    assertFalse(rbVector(1 / Math.sqrt(2) + 1e-7, 1 / Math.sqrt(2) + 1e-7).isAlmostUnitVector(DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -242,24 +257,58 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
             .collect(Collectors.toList()),
         doubleListMatcher(
             ImmutableList.of(-1.1, 0.0, 3.3),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Test
   public void testAsList() {
-    assertThat(
-        singletonRBVector(1.1)
-            .asList(),
-        doubleListMatcher(
-            ImmutableList.of(1.1),
-            1e-8));
+    BiConsumer<RBVector, List<Double>> asserter = (rbVector, expectedResult) ->
+        assertThat(
+            rbVector.asList(),
+            doubleListMatcher(
+                expectedResult, DEFAULT_EPSILON_1e_8));
 
-    assertThat(
-        rbVector(-1.1, 0.0, 3.3)
-            .asList(),
-        doubleListMatcher(
-            ImmutableList.of(-1.1, 0.0, 3.3),
-            1e-8));
+    asserter.accept(
+        singletonRBVector(1.1),
+        singletonList(1.1));
+    asserter.accept(
+        rbVector(-1.1, 0.0, 3.3),
+        ImmutableList.of(-1.1, 0.0, 3.3));
+  }
+
+  @Test
+  public void testToArray() {
+    BiConsumer<RBVector, double[]> asserter = (rbVector, expectedResult) ->
+        assertThat(
+            rbVector.toArray(),
+            doubleArrayMatcher(
+                expectedResult, DEFAULT_EPSILON_1e_8));
+
+    asserter.accept(
+        singletonRBVector(1.1),
+        new double[] { 1.1 });
+    asserter.accept(
+        rbVector(-1.1, 0.0, 3.3),
+        new double[] { -1.1, 0.0, 3.3 });
+  }
+
+  @Test
+  public void testSumElements() {
+    BiConsumer<Double, RBVector> asserter = (expectedResult, rbVector) ->
+        assertEquals(
+            expectedResult,
+            rbVector.sumElements(),
+            1e-8);
+
+    asserter.accept(1.1, singletonRBVector(1.1));
+    asserter.accept(
+        doubleExplained(2.2, -1.1 + 0.0 + 3.3),
+        rbVector(-1.1, 0.0, 3.3));
+  }
+
+  @Test
+  public void reminder_testMultiplyOnLeft() {
+    fail("");
   }
 
   @Override
@@ -284,16 +333,20 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
   }
 
   public static TypeSafeMatcher<RBVector> rbVectorMatcher(RBVector expected) {
-    return rbVectorMatcher(expected, emptyEpsilons());
+    return rbVectorMatcher(expected, emptyMatcherEpsilons());
   }
 
-  public static TypeSafeMatcher<RBVector> rbVectorMatcher(RBVector expected, double epsilon) {
-    return rbVectorMatcher(expected, useEpsilonEverywhere(epsilon));
+  public static TypeSafeMatcher<RBVector> rbVectorMatcher(RBVector expected, Epsilon epsilon) {
+    return rbVectorMatcher(expected, useEpsilonInAllMatchers(epsilon));
   }
 
-  public static TypeSafeMatcher<RBVector> rbVectorMatcher(RBVector expected, Epsilons e) {
-    return makeMatcher(expected,
-        match(v -> v.getRawDoubleMatrix1DUnsafe(), f -> matrix1dMatcher(f, e)));
+  public static TypeSafeMatcher<RBVector> rbVectorMatcher(RBVector expected, MatcherEpsilons e) {
+    // This matcher is a bit unusual, but we didn't want to expose the DoubleMatrix1D contents of the RBVector
+    // in test, because prod code could also have access to it, and we don't want that, because DoubleMatrix1D is
+    // a 3rd party mutable class.
+    return makeMatcher(expected, actual ->
+        doubleArrayMatcher(expected.doubleStream().toArray(), e.get(RBVector.class))
+        .matches(actual.doubleStream().toArray()));
   }
 
 }

@@ -2,12 +2,14 @@ package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.collections.SimplePartitionModification.SimplePartitionModificationBuilder;
 import com.rb.nonbiz.testutils.RBTest;
+import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.PartitionTest.epsilonPartitionMatcher;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -36,7 +38,7 @@ public class SingleSimplePartitionModificationApplierTest extends RBTest<SingleS
                 "k2", unitFraction(doubleExplained(0.26, 0.2 + 0.06)),
                 "k3", unitFraction(doubleExplained(0.38, 0.3 + 0.08)),
                 "k4", unitFraction(doubleExplained(0.36, 0.4 - 0.04)))), // removed
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Override

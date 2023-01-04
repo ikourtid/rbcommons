@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
@@ -26,6 +27,7 @@ import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.RBIterables.consecutivePairsForEach;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.POSITIVE_INFINITY;
 
@@ -35,40 +37,44 @@ import static java.lang.Double.POSITIVE_INFINITY;
 public class RBRanges {
 
   public static boolean closedDoubleRangeEpsilonContains(ClosedRange<Double> range, double value) {
-    return closedDoubleRangeEpsilonContains(range, value, 1e-8);
+    return closedDoubleRangeEpsilonContains(range, value, DEFAULT_EPSILON_1e_8);
   }
 
-  public static boolean closedDoubleRangeEpsilonContains(ClosedRange<Double> range, double value, double epsilon) {
-    return range.lowerEndpoint() - epsilon <= value && value <= range.upperEndpoint() + epsilon;
+  public static boolean closedDoubleRangeEpsilonContains(ClosedRange<Double> range, double value, Epsilon epsilon) {
+    return range.lowerEndpoint() - epsilon.doubleValue() <= value
+        && range.upperEndpoint() + epsilon.doubleValue() >= value;
   }
 
   public static boolean closedDoubleRangeContainsWellWithinBounds(ClosedRange<Double> range, double value) {
-    return closedDoubleRangeContainsWellWithinBounds(range, value, 1e-8);
+    return closedDoubleRangeContainsWellWithinBounds(range, value, DEFAULT_EPSILON_1e_8);
   }
 
-  public static boolean closedDoubleRangeContainsWellWithinBounds(ClosedRange<Double> range, double value, double epsilon) {
+  public static boolean closedDoubleRangeContainsWellWithinBounds(ClosedRange<Double> range, double value, Epsilon epsilon) {
     return doubleRangeContainsWellWithinBounds(range.asRange(), value, epsilon);
   }
 
   public static boolean doubleRangeContainsWellWithinBounds(Range<Double> range, double value) {
-    return doubleRangeContainsWellWithinBounds(range, value, 1e-8);
+    return doubleRangeContainsWellWithinBounds(range, value, DEFAULT_EPSILON_1e_8);
   }
 
-  public static boolean doubleRangeContainsWellWithinBounds(Range<Double> range, double value, double epsilon) {
-    return (!range.hasLowerBound() || range.lowerEndpoint() + epsilon <= value)
-        && (!range.hasUpperBound() || value <= range.upperEndpoint() - epsilon);
+  public static boolean doubleRangeContainsWellWithinBounds(Range<Double> range, double value, Epsilon epsilon) {
+    return (!range.hasLowerBound() || range.lowerEndpoint() + epsilon.doubleValue() <= value)
+        && (!range.hasUpperBound() || range.upperEndpoint() - epsilon.doubleValue() >= value);
   }
 
   public static <P extends PreciseValue<? super P>> boolean preciseValueRangeEpsilonContains(Range<P> range, P value) {
-    return preciseValueRangeEpsilonContains(range, value, 1e-8);
+    return preciseValueRangeEpsilonContains(range, value, DEFAULT_EPSILON_1e_8);
   }
 
-  public static <P extends PreciseValue<? super P>> boolean preciseValueRangeEpsilonContains(Range<P> range, P value, double epsilon) {
+  public static <P extends PreciseValue<? super P>> boolean preciseValueRangeEpsilonContains(
+      Range<P> range,
+      P value,
+      Epsilon epsilon) {
     if (range.hasLowerBound()) {
       P lowerBound = range.lowerEndpoint();
       // is 'value' more than epsilon BELOW the lower bound?
       // Treat OPEN and CLOSED separately to support epsilon = 0
-      int valueCompareToLower = Double.compare(value.doubleValue(), lowerBound.doubleValue() - epsilon);
+      int valueCompareToLower = Double.compare(value.doubleValue(), lowerBound.doubleValue() - epsilon.doubleValue());
       if (range.lowerBoundType() == CLOSED && valueCompareToLower <  0 ||
           range.lowerBoundType() == OPEN   && valueCompareToLower <= 0) {
         return false;
@@ -78,7 +84,7 @@ public class RBRanges {
     if (range.hasUpperBound()) {
       P upperBound = range.upperEndpoint();
       // is 'value' more than epsilon ABOVE the upper bound?
-      int valueCompareToUpper = Double.compare(value.doubleValue(), upperBound.doubleValue() + epsilon);
+      int valueCompareToUpper = Double.compare(value.doubleValue(), upperBound.doubleValue() + epsilon.doubleValue());
       if (range.upperBoundType() == CLOSED && valueCompareToUpper >  0 ||
           range.upperBoundType() == OPEN   && valueCompareToUpper >= 0) {
         return false;
@@ -89,42 +95,41 @@ public class RBRanges {
   }
 
   public static boolean doubleRangeIsAlmostSinglePoint(Range<Double> range) {
-    return doubleRangeIsAlmostSinglePoint(range, 1e-8);
+    return doubleRangeIsAlmostSinglePoint(range, DEFAULT_EPSILON_1e_8);
   }
 
-  public static boolean doubleRangeIsAlmostSinglePoint(Range<Double> range, double epsilon) {
-    RBPreconditions.checkArgument(epsilon >= 0);
-    return rangeIsClosed(range) && (range.upperEndpoint() - range.lowerEndpoint() <= epsilon);
+  public static boolean doubleRangeIsAlmostSinglePoint(Range<Double> range, Epsilon epsilon) {
+    return rangeIsClosed(range) && (range.upperEndpoint() - range.lowerEndpoint() <= epsilon.doubleValue());
   }
 
   public static boolean doubleRangeIsAlmostThisSinglePoint(Range<Double> range, double value) {
-    return doubleRangeIsAlmostThisSinglePoint(range, value, 1e-8);
+    return doubleRangeIsAlmostThisSinglePoint(range, value, DEFAULT_EPSILON_1e_8);
   }
 
   /**
    * E.g. returns true if you pass it [1.1, 1.1] and 1.1
    */
-  public static boolean doubleRangeIsAlmostThisSinglePoint(Range<Double> range, double value, double epsilon) {
-    RBPreconditions.checkArgument(epsilon >= 0);
+  public static boolean doubleRangeIsAlmostThisSinglePoint(Range<Double> range, double value, Epsilon epsilon) {
     return rangeIsClosed(range)
-        && Math.abs(range.upperEndpoint() - value) <= epsilon
-        && Math.abs(range.lowerEndpoint() - value) <= epsilon;
+        && epsilon.areWithin(range.upperEndpoint(), value)
+        && epsilon.areWithin(range.lowerEndpoint(), value);
   }
 
   // Since we use an epsilon, the extra precision of BigDecimal is irrelevant here, so this has no PreciseValue equivalent.
   public static <T extends RBNumeric<? super T>> boolean rbNumericRangeIsAlmostSinglePoint(Range<T> range) {
-    return rbNumericRangeIsAlmostSinglePoint(range, 1e-8);
+    return rbNumericRangeIsAlmostSinglePoint(range, DEFAULT_EPSILON_1e_8);
   }
 
   // Since we use an epsilon, the extra precision of BigDecimal is irrelevant here, so this has no PreciseValue equivalent.
-  public static <T extends RBNumeric<? super T>> boolean rbNumericRangeIsAlmostSinglePoint(Range<T> range, double epsilon) {
-    RBPreconditions.checkArgument(epsilon >= 0);
-    return rangeIsClosed(range) && (range.upperEndpoint().doubleValue() - range.lowerEndpoint().doubleValue() <= epsilon);
+  public static <T extends RBNumeric<? super T>> boolean rbNumericRangeIsAlmostSinglePoint(
+      Range<T> range,
+      Epsilon epsilon) {
+    return rangeIsClosed(range) && (range.upperEndpoint().doubleValue() - range.lowerEndpoint().doubleValue() <= epsilon.doubleValue());
   }
 
   // Since we use an epsilon, the extra precision of BigDecimal is irrelevant here, so this has no PreciseValue equivalent.
   public static <T extends RBNumeric<? super T>> boolean rbNumericRangeIsAlmostThisSinglePoint(Range<T> range, T value) {
-    return rbNumericRangeIsAlmostThisSinglePoint(range, value, 1e-8);
+    return rbNumericRangeIsAlmostThisSinglePoint(range, value, DEFAULT_EPSILON_1e_8);
   }
 
   /**
@@ -132,11 +137,13 @@ public class RBRanges {
    *
    * Since we use an epsilon, the extra precision of BigDecimal is irrelevant here, so this has no PreciseValue equivalent.
    */
-  public static <T extends RBNumeric<? super T>> boolean rbNumericRangeIsAlmostThisSinglePoint(Range<T> range, T value, double epsilon) {
-    RBPreconditions.checkArgument(epsilon >= 0);
+  public static <T extends RBNumeric<? super T>> boolean rbNumericRangeIsAlmostThisSinglePoint(
+      Range<T> range,
+      T value,
+      Epsilon epsilon) {
     return rangeIsClosed(range)
-        && Math.abs(range.upperEndpoint().doubleValue() - value.doubleValue()) <= epsilon
-        && Math.abs(range.lowerEndpoint().doubleValue() - value.doubleValue()) <= epsilon;
+        && epsilon.areWithin(range.upperEndpoint().doubleValue(), value.doubleValue())
+        && epsilon.areWithin(range.lowerEndpoint().doubleValue(), value.doubleValue());
   }
 
   public static <C extends Comparable<? super C>> boolean rangeIsUnrestricted(Range<C> range) {
@@ -256,13 +263,9 @@ public class RBRanges {
    * because otherwise it doesn't make sense to add/subtract an epsilon. So this only works with RBNumeric.
    */
   public static <T extends RBNumeric<? super T>> boolean rangeIsSafelyProperSubsetOf(
-      Range<T> subset, Range<T> superSet, double epsilon) {
-    RBPreconditions.checkArgument(
-        epsilon >= 0,
-        "Epsilon must be >= 0; found %s",
-        epsilon);
+      Range<T> subset, Range<T> superSet, Epsilon epsilon) {
     return rangeIsProperSubsetOnBothEnds(
-        extendDoubleRangeBiDirectionally(toDoubleRange(subset), epsilon),
+        extendDoubleRangeBiDirectionally(toDoubleRange(subset), epsilon.doubleValue()),
         toDoubleRange(superSet));
   }
 

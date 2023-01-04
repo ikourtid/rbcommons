@@ -17,6 +17,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.WeightedBySignedFraction.weightedBySignedFraction;
 import static java.util.Collections.singletonList;
@@ -73,7 +74,7 @@ public class FlatSignedLinearCombinationJsonApiConverterTest
         makeTestObject().toJsonArray(
             flatSignedLinearCombination,
             string -> jsonString(string)),
-        jsonArrayMatcher(jsonArray, 1e-8));
+        jsonArrayMatcher(jsonArray, DEFAULT_EPSILON_1e_8));
 
     assertThat(
         makeTestObject().fromJsonArray(

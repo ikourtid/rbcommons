@@ -14,6 +14,7 @@ import static com.rb.biz.types.OnesBasedReturn.onesBasedReturn;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -72,32 +73,32 @@ public class OnesBasedReturnTest {
 
   @Test
   public void testToGain() {
-    assertAlmostEquals(FLAT_RETURN, FLAT_RETURN.toGain(), 1e-8);
-    assertAlmostEquals(onesBasedReturn(doubleExplained(1.25, 1 / 0.8)), onesBasedReturn(0.8).toGain(), 1e-8);
-    assertAlmostEquals(onesBasedReturn(1.25), onesBasedReturn(1.25).toGain(), 1e-8);
+    assertAlmostEquals(FLAT_RETURN, FLAT_RETURN.toGain(), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(onesBasedReturn(doubleExplained(1.25, 1 / 0.8)), onesBasedReturn(0.8).toGain(), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(onesBasedReturn(1.25), onesBasedReturn(1.25).toGain(), DEFAULT_EPSILON_1e_8);
   }
 
   @Test
   public void testTimeAdjust() {
     assertIllegalArgumentException( () -> FLAT_RETURN.timeScaleAdjust(0));
     assertIllegalArgumentException( () -> FLAT_RETURN.timeScaleAdjust(-0.1));
-    assertAlmostEquals(FLAT_RETURN, FLAT_RETURN.timeScaleAdjust(1), 1e-8);
+    assertAlmostEquals(FLAT_RETURN, FLAT_RETURN.timeScaleAdjust(1), DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         onesBasedGain(doubleExplained(1.10462213, Math.pow(1.01, 10))),
         onesBasedGain(1.01).timeScaleAdjust(10),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         onesBasedGain(1.01),
         onesBasedGain(1.10462213).timeScaleAdjust(1 / 10.0),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         onesBasedLoss(doubleExplained(0.904382075, Math.pow(0.99, 10))),
         onesBasedLoss(0.99).timeScaleAdjust(10),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         onesBasedLoss(0.99),
         onesBasedLoss(0.904382075).timeScaleAdjust(1 / 10.0),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -115,11 +116,11 @@ public class OnesBasedReturnTest {
     OnesBasedReturn preTax = onesBasedGain(1.2);
     OnesBasedReturn taxAlpha = onesBasedGain(1.05);
     OnesBasedReturn afterTax = onesBasedGain(doubleExplained(1.26, 1.2 * 1.05));
-    assertAlmostEquals(afterTax, preTax.compoundWith(taxAlpha), 1e-8);
-    assertAlmostEquals(afterTax, taxAlpha.compoundWith(preTax), 1e-8);
+    assertAlmostEquals(afterTax, preTax.compoundWith(taxAlpha), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(afterTax, taxAlpha.compoundWith(preTax), DEFAULT_EPSILON_1e_8);
 
-    assertAlmostEquals(taxAlpha, afterTax.residualReturnOver(preTax), 1e-8);
-    assertAlmostEquals(preTax, afterTax.residualReturnOver(taxAlpha), 1e-8);
+    assertAlmostEquals(taxAlpha, afterTax.residualReturnOver(preTax), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(preTax, afterTax.residualReturnOver(taxAlpha), DEFAULT_EPSILON_1e_8);
   }
 
 }

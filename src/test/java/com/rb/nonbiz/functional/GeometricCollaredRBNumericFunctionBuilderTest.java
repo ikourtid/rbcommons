@@ -8,6 +8,7 @@ import java.util.function.BiConsumer;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_LABEL;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 
 // The builder is not quite a data class, so RBTestMatcher is not appropriate here.
@@ -26,7 +27,7 @@ public class GeometricCollaredRBNumericFunctionBuilderTest {
             .build();
 
     BiConsumer<Double, Double> asserter = (x, y) ->
-        assertAlmostEquals(positiveMultiplier(y), rbNumericFunction.apply(x), 1e-8);
+        assertAlmostEquals(positiveMultiplier(y), rbNumericFunction.apply(x), DEFAULT_EPSILON_1e_8);
 
     asserter.accept(-999.9, 1 / 3.0);
     asserter.accept(   3.9, 1 / 3.0);
@@ -53,7 +54,7 @@ public class GeometricCollaredRBNumericFunctionBuilderTest {
             .build();
 
     BiConsumer<Double, Double> asserter = (x, y) ->
-        assertAlmostEquals(positiveMultiplier(y), rbNumericFunction.apply(x), 1e-8);
+        assertAlmostEquals(positiveMultiplier(y), rbNumericFunction.apply(x), DEFAULT_EPSILON_1e_8);
 
     asserter.accept(-999.9, 1 / 7.0);
     asserter.accept(   0.9, 1 / 7.0);

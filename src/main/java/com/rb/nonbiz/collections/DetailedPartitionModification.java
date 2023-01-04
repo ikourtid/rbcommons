@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -20,6 +21,7 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSets.noSharedItems;
 import static com.rb.nonbiz.text.Strings.formatCollectionInDefaultOrder;
 import static com.rb.nonbiz.text.Strings.formatOptional;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PreciseValue.sumToBigDecimal;
 import static com.rb.nonbiz.types.UnitFraction.isValidUnitFraction;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -269,7 +271,7 @@ public class DetailedPartitionModification<K> {
 
       BiConsumer<RBMap<K, UnitFraction>, String> singleChecker = (map, mapName) ->
           RBPreconditions.checkArgument(
-              map.values().stream().noneMatch(changeFraction -> changeFraction.isAlmostZero(1e-8)),
+              map.values().stream().noneMatch(changeFraction -> changeFraction.isAlmostZero(DEFAULT_EPSILON_1e_8)),
               "%s must not have any 0 differences implied: %s",
               mapName, map);
 

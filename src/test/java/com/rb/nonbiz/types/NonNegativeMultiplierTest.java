@@ -13,6 +13,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.NonNegativeMultiplier.NON_NEGATIVE_MULTIPLIER_0;
 import static com.rb.nonbiz.types.NonNegativeMultiplier.NON_NEGATIVE_MULTIPLIER_1;
 import static com.rb.nonbiz.types.NonNegativeMultiplier.nonNegativeMultiplier;
@@ -45,22 +46,22 @@ public class NonNegativeMultiplierTest extends RBTestMatcher<NonNegativeMultipli
     assertAlmostEquals(
         nonNegativeMultiplier(doubleExplained(1.2, 1.5 * 0.8)),
         nonNegativeMultiplier(1.5).multiply(nonNegativeMultiplier(0.8)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
 
     assertAlmostEquals(
         nonNegativeMultiplier(doubleExplained(1.5, 1.5 * 1.0)),
         nonNegativeMultiplier(1.5).multiply(NON_NEGATIVE_MULTIPLIER_1),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
 
     assertAlmostEquals(
         NON_NEGATIVE_MULTIPLIER_0,
         nonNegativeMultiplier(1.5).multiply(NON_NEGATIVE_MULTIPLIER_0),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
 
     assertAlmostEquals(
         NON_NEGATIVE_MULTIPLIER_0,
         NON_NEGATIVE_MULTIPLIER_0.multiply(nonNegativeMultiplier(0.8)),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -69,7 +70,7 @@ public class NonNegativeMultiplierTest extends RBTestMatcher<NonNegativeMultipli
         assertAlmostEquals(
             nonNegativeMultiplier(expectedSum),
             NonNegativeMultiplier.sum(inputList.stream().map(v -> nonNegativeMultiplier(v)).collect(Collectors.toList())),
-            1e-8);
+            DEFAULT_EPSILON_1e_8);
     asserter.accept(0.0, emptyList());
     asserter.accept(1.1, singletonList(1.1));
     asserter.accept(4.4, ImmutableList.of(3.3, 1.1));
@@ -95,7 +96,7 @@ public class NonNegativeMultiplierTest extends RBTestMatcher<NonNegativeMultipli
 
   @Override
   protected boolean willMatch(NonNegativeMultiplier expected, NonNegativeMultiplier actual) {
-    return impreciseValueMatcher(expected, 1e-8).matches(actual);
+    return impreciseValueMatcher(expected, DEFAULT_EPSILON_1e_8).matches(actual);
   }
 
 }

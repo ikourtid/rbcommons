@@ -13,6 +13,7 @@ import static com.rb.nonbiz.text.MutableRBMapOfHasUniqueId.newMutableRBMapOfHasU
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueId;
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueIdMatcher;
 import static com.rb.nonbiz.text.UniqueId.uniqueId;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 // This test class is not generic, but the publicly exposed static matcher is.
@@ -43,7 +44,10 @@ public class MutableRBMapOfHasUniqueIdTest extends RBTestMatcher<MutableRBMapOfH
   @Override
   protected boolean willMatch(MutableRBMapOfHasUniqueId<TestHasUniqueId, Double> expected,
                               MutableRBMapOfHasUniqueId<TestHasUniqueId, Double> actual) {
-    return mutableRBMapOfHasUniqueIdMatcher(expected, f1 -> testHasUniqueIdMatcher(f1), f2 -> doubleAlmostEqualsMatcher(f2, 1e-8))
+    return mutableRBMapOfHasUniqueIdMatcher(
+        expected,
+        f1 -> testHasUniqueIdMatcher(f1),
+        f2 -> doubleAlmostEqualsMatcher(f2, DEFAULT_EPSILON_1e_8))
         .matches(actual);
   }
 

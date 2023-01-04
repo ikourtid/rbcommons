@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -34,6 +35,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_SYMBOL;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static com.rb.nonbiz.types.UnitFraction.DUMMY_UNIT_FRACTION;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
@@ -101,7 +103,7 @@ public class PartitionTest extends RBTestMatcher<Partition<String>> {
                 .stream()
                 .filter(entry -> entry.getKey().equals("keep"))
                 .map(entry -> entry.getValue())),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -481,10 +483,10 @@ public class PartitionTest extends RBTestMatcher<Partition<String>> {
   }
 
   public static <T> TypeSafeMatcher<Partition<T>> partitionMatcher(Partition<T> expected) {
-    return epsilonPartitionMatcher(expected, 1e-8);
+    return epsilonPartitionMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
-  public static <T> TypeSafeMatcher<Partition<T>> epsilonPartitionMatcher(Partition<T> expected, double epsilon) {
+  public static <T> TypeSafeMatcher<Partition<T>> epsilonPartitionMatcher(Partition<T> expected, Epsilon epsilon) {
     // Here, we won't use the usual makeMatcher approach, because we want to be able to print
     // the partition fraction at a high precision, whereas the default toString() only prints round percentages.
     return new TypeSafeMatcher<Partition<T>>() {

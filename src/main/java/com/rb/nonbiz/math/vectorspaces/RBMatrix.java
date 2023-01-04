@@ -1,9 +1,12 @@
 package com.rb.nonbiz.math.vectorspaces;
 
+import cern.colt.matrix.DoubleFactory1D;
 import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
+import cern.colt.matrix.doublealgo.Statistic;
 import cern.colt.matrix.linalg.Algebra;
-import com.google.common.annotations.VisibleForTesting;
+import cern.colt.matrix.linalg.EigenvalueDecomposition;
+import cern.colt.matrix.linalg.SingularValueDecomposition;
 import com.google.common.collect.Iterables;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.ClosedRange;
@@ -11,6 +14,9 @@ import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
+
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
@@ -34,33 +40,164 @@ import static com.rb.nonbiz.math.vectorspaces.RBVector.rbVector;
  */
 public class RBMatrix {
 
+
+  /**
+   * A wrapper around a Colt {@link EigenvalueDecomposition}.
+   * The reason this lives inside {@link RBMatrix} is to limit this class's instantiation so that it can only be done
+   * from inside {@link RBMatrix}.
+   */
+  public static class RBEigenvalueDecomposition {
+
+    private final EigenvalueDecomposition eigenvalueDecomposition;
+
+    private RBEigenvalueDecomposition(EigenvalueDecomposition eigenvalueDecomposition) {
+      this.eigenvalueDecomposition = eigenvalueDecomposition;
+    }
+
+    /**
+     * Returns the real eigenvalues in ascending order. There are also imaginary (in the complex numbers sense)
+     * eigenvalues, but this class does not deal with that yet.
+     */
+    public RBVector getRealEigenvaluesAscending() {
+      return rbVector(eigenvalueDecomposition.getRealEigenvalues());
+    }
+
+    /**
+     * Returns a matrix of the eigenvectors.
+     */
+    public RBMatrix getEigenvectors() {
+      return rbMatrix(eigenvalueDecomposition.getV());
+    }
+
+    @Override
+    public String toString() {
+      return Strings.format("[RBED %s %s RBED]",
+          getRealEigenvaluesAscending(), getEigenvectors());
+    }
+
+  }
+
+
+  /**
+   * A wrapper around a Colt {@link SingularValueDecomposition}.
+   * The reason this lives inside {@link RBMatrix} is to limit this class's instantiation so that it can only be done
+   * from inside {@link RBMatrix}.
+   *
+   * <p> See
+   * https://dst.lbl.gov/ACSSoftware/colt/api/cern/colt/matrix/linalg/SingularValueDecomposition.html </p>
+   */
+  public static class RBSingularValueDecomposition {
+
+    private final SingularValueDecomposition singularValueDecomposition;
+
+    private RBSingularValueDecomposition(SingularValueDecomposition singularValueDecomposition) {
+      this.singularValueDecomposition = singularValueDecomposition;
+    }
+
+    /**
+     * Returns the diagonal matrix of singular values.
+     */
+    public RBMatrix getSigma() {
+      return rbMatrix(singularValueDecomposition.getS());
+    }
+
+    /**
+     * Returns the left rotation/reflection matrix U.
+     */
+    public RBMatrix getU() {
+      return rbMatrix(singularValueDecomposition.getU());
+    }
+
+    /**
+     * Returns the right rotation/reflection matrix V.
+     */
+    public RBMatrix getV() {
+      return rbMatrix(singularValueDecomposition.getV());
+    }
+
+    /**
+     * Returns the effective rank of the matrix; the number of non-zero singular values.
+     */
+    public int getRank() {
+      return singularValueDecomposition.rank();
+    }
+
+    /**
+     * Returns the maximum value of Sigma: Sigma[0]. Colt calls this 'norm2', for some reason.
+     */
+    public double getNorm2() {
+      return singularValueDecomposition.norm2();
+    }
+
+    /**
+     * Returns either:
+     * <ul>
+     *   <li> The ratio of the largest singular value to the smallest non-zero singular value
+     *        (if the matrix is non-singular). </li>
+     *   <li> 'NaN' or 'Infinity' (if the matrix is singular). </li>
+     * </ul>
+     */
+    public double getConditionNumber() {
+      return singularValueDecomposition.cond();
+    }
+
+    /**
+     * Returs a vector of the diagonal entries of the singular values Sigma.
+     */
+    public RBVector getSingularValues() {
+      return rbVector(DoubleFactory1D.dense.make(singularValueDecomposition.getSingularValues()));
+    }
+
+    @Override
+    public String toString() {
+      return Strings.format(
+          "[RBSVD rank= %s ; cond= %s ; norm2= %s ; singularVals= %s ; U= %s ; Sigma= %s ; V= %s RBSVD]",
+          getRank(), getConditionNumber(), getNorm2(), getSingularValues(), getU(), getSigma(), getV());
+    }
+
+  }
+
+
   private final DoubleMatrix2D rawMatrix;
 
   protected RBMatrix(DoubleMatrix2D rawMatrix) {
     this.rawMatrix = rawMatrix;
   }
 
-  public static RBMatrix rbMatrix(DoubleMatrix2D rawMatrix) {
+  /**
+   * Note that we can only instantiate {@link RBMatrix} using a 2d array. Although the underlying data structure is a
+   * Colt {@link DoubleMatrix2D}, it's good to hide that abstraction as much as possible.
+   */
+  public static RBMatrix rbMatrix(double[][] values) {
+    return rbMatrix(DoubleFactory2D.dense.make(values));
+  }
+
+  private static RBMatrix rbMatrix(DoubleMatrix2D rawMatrix) {
     RBPreconditions.checkArgument(
         rawMatrix.size() > 0,
         "We do not allow an empty RBMatrix, just to be safe");
     return new RBMatrix(rawMatrix);
   }
 
-  public static RBMatrix rbIdentityMatrix(int n) {
-    return rbMatrix(DoubleFactory2D.dense.identity(n));
+  /**
+   * Extracts a single row from the matrix.
+   */
+  public RBVector getRowVector(MatrixRowIndex matrixRowIndex) {
+    RBPreconditions.checkArgument(
+        matrixRowIndex.intValue() < getNumRows(),
+        "Matrix row index %s is not within the range of valid matrix columns 0 to %s, inclusive",
+        matrixRowIndex, getLastRowIndex());
+    return rbVector(rawMatrix.viewRow(matrixRowIndex.intValue()));
   }
 
-  public static RBMatrix rbDiagonalMatrix(RBVector rbVector) {
-    return rbMatrix(DoubleFactory2D.dense.diagonal(
-        rbVector.getRawDoubleMatrix1DUnsafe()));
-  }
-
+  /**
+   * Extracts a single column from the matrix.
+   */
   public RBVector getColumnVector(MatrixColumnIndex matrixColumnIndex) {
     RBPreconditions.checkArgument(
-        matrixColumnIndex.intValue() < rawMatrix.columns(),
+        matrixColumnIndex.intValue() < getNumColumns(),
         "Matrix column index %s is not within the range of valid matrix columns 0 to %s",
-        matrixColumnIndex, rawMatrix.columns());
+        matrixColumnIndex, getLastColumnIndex());
     return rbVector(rawMatrix.viewColumn(matrixColumnIndex.intValue()));
   }
 
@@ -85,6 +222,31 @@ public class RBMatrix {
   }
 
   /**
+   * Returns all valid row indices, from 0 to the last valid row, as a stream of {@link MatrixRowIndex}.
+   */
+  public Stream<MatrixRowIndex> matrixRowIndexStream() {
+    return IntStream.range(0, getNumRows())
+        .mapToObj(i -> matrixRowIndex(i));
+  }
+
+  /**
+   * Returns all valid column indices, from 0 to the last valid column, as a stream of {@link MatrixColumnIndex}.
+   */
+  public Stream<MatrixColumnIndex> matrixColumnIndexStream() {
+    return IntStream.range(0, getNumColumns())
+        .mapToObj(i -> matrixColumnIndex(i));
+  }
+
+  /**
+   * Returns an element of this matrix based on a row and column index.
+   * Throws {@link IndexOutOfBoundsException} if either or both indices point to a row and/or column that does
+   * not exist.
+   */
+  public double get(MatrixRowIndex matrixRowIndex, MatrixColumnIndex matrixColumnIndex) {
+    return rawMatrix.get(matrixRowIndex.intValue(), matrixColumnIndex.intValue());
+  }
+
+  /**
    * Apply an arbitrary transform for every element based on its position in the matrix (row & column),
    * and return a copy of this matrix.
    *
@@ -104,7 +266,7 @@ public class RBMatrix {
   }
 
   /**
-   * Matrix multiplication
+   * Multiplies this matrix by another matrix.
    */
   public RBMatrix multiply(RBMatrix other) {
     RBSimilarityPreconditions.checkBothSame(
@@ -112,7 +274,19 @@ public class RBMatrix {
         other.getNumRows(),
         "matrix multiplications: nColumns of first matrix %s must match nRows of second matrix %s",
         getNumColumns(), other.getNumRows());
-    return rbMatrix(new Algebra().mult(rawMatrix, other.getRawMatrixUnsafe()));
+    return rbMatrix(new Algebra().mult(rawMatrix, other.rawMatrix));
+  }
+
+  /**
+   * Multiplies this matrix by a {@link RBVector}.
+   */
+  public RBVector multiply(RBVector rbVector) {
+    RBSimilarityPreconditions.checkBothSame(
+        getNumColumns(),
+        rbVector.size(),
+        "matrix multiplications: nColumns of first matrix %s must match nRows of second matrix %s",
+        getNumColumns(), rbVector.size());
+    return rbVector.multiplyOnLeft(rawMatrix);
   }
 
   /**
@@ -143,21 +317,49 @@ public class RBMatrix {
   }
 
   /**
-   * Matrix determinant
+   * The name has 'calculate' so it's clear to the caller that the result isn't cached.
+   *
+   * <p> Although a determinant is only applicable to a square matrix, the reason this method does not live in
+   * ({@link RBSquareMatrix}) is that we want to avoid exposing the underlying {@link DoubleMatrix2D} outside
+   * this class, because it's a 3rd party class and is not immutable like our own classes, so it's unsafe to do so.
+   * Unfortunately, java's 'protected' is not like the C++ 'protected' keyword; it also allows methods and fields
+   * to be accessed by other classes in the same package!
+   * https://stackoverflow.com/questions/215497/what-is-the-difference-between-public-protected-package-private-and-private-in
+   * </p>
    */
-  double determinant() {
+  public double calculateDeterminant() {
+    // You never see new() in the code, really; with verb classes, we use injection, and with data classes,
+    // we use static constructors. However, in this case, new Algebra() is a Colt library way of doing things.
+    // We can't inject one here (it's a data class), but it's also OK to instantiate it, because doing so is very
+    // lightweight (I checked in the decompiler).
     return new Algebra().det(rawMatrix);
+  }
+
+  public RBSingularValueDecomposition calculateSingularValueDecomposition() {
+    return new RBSingularValueDecomposition(new SingularValueDecomposition(rawMatrix));
+  }
+
+  public RBEigenvalueDecomposition calculateEigendecomposition() {
+    return new RBEigenvalueDecomposition(new EigenvalueDecomposition(rawMatrix));
+  }
+
+  public RBMatrix calculateCovarianceMatrix() {
+    return rbMatrix(Statistic.covariance(rawMatrix));
+  }
+
+  public RBMatrix calculateCorrelationMatrix() {
+    return rbMatrix(Statistic.correlation(rawMatrix));
   }
 
   public <R, C> RBIndexableMatrix<R, C> toIndexableMatrix(
       ArrayIndexMapping<R> rowMapping,
       ArrayIndexMapping<C> columnMapping) {
-    return rbIndexableMatrix(rawMatrix, rowMapping, columnMapping);
+    return rbIndexableMatrix(this, rowMapping, columnMapping);
   }
 
   /**
    * Implements the function DoubleMatrix2D, viewPart, from Colt.
-   * This returns a new matrix which is a square subset of the current matrix.
+   * This returns a new matrix which is a rectangle subset of the current matrix.
    * Note that the colt function itself returns a copy, as of December 2022.
    */
   public RBMatrix copyPart(ClosedRange<MatrixRowIndex> rowRange, ClosedRange<MatrixColumnIndex> columnRange) {
@@ -184,7 +386,7 @@ public class RBMatrix {
    */
   public <R> RBIndexableMatrix<R, MatrixColumnIndex> toIndexableMatrixWithTrivialColumnMapping(
       ArrayIndexMapping<R> rowMapping) {
-    return rbIndexableMatrixWithTrivialColumnMapping(rawMatrix, rowMapping);
+    return rbIndexableMatrixWithTrivialColumnMapping(this, rowMapping);
   }
 
   /**
@@ -193,7 +395,7 @@ public class RBMatrix {
    */
   public <C> RBIndexableMatrix<MatrixRowIndex, C> toIndexableMatrixWithTrivialRowMapping(
       ArrayIndexMapping<C> columnMapping) {
-    return rbIndexableMatrixWithTrivialRowMapping(rawMatrix, columnMapping);
+    return rbIndexableMatrixWithTrivialRowMapping(this, columnMapping);
   }
 
   /**
@@ -214,14 +416,6 @@ public class RBMatrix {
         "getOnlyElementOrThrow needs a 1x1 matrix, but was %s x %s : %s",
         getNumRows(), getNumColumns(), rawMatrix);
     return rawMatrix.get(0, 0);
-  }
-
-  /**
-   * This is here to help the test matcher, hence the 'Unsafe' in the name, and the package-private status.
-   */
-  @VisibleForTesting
-  public DoubleMatrix2D getRawMatrixUnsafe() {
-    return rawMatrix;
   }
 
   @Override

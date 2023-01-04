@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -11,6 +12,7 @@ import java.util.function.UnaryOperator;
 import static com.rb.nonbiz.collections.ClosedRange.optionalClosedRangeIntersection;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.InterpolationPreference.preferSuppliedValueBy;
 import static com.rb.nonbiz.types.Interpolator.interpolateUsingPreference;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -35,7 +37,7 @@ public class ClosedUnitFractionRangeUtilities {
         "Center of range %s must be an interior point for range %s",
         centerOfRange, initialRange);
     RBPreconditions.checkArgument(
-        !fractionToTightenOnEachSide.isAlmostExtreme(1e-8),
+        !fractionToTightenOnEachSide.isAlmostExtreme(DEFAULT_EPSILON_1e_8),
         "Fraction to tighten range can be neither 0 nor 1");
     UnaryOperator<UnitFraction> interpolator = initial -> unitFraction(
         interpolateUsingPreference(preferSuppliedValueBy(fractionToTightenOnEachSide))
@@ -69,7 +71,7 @@ public class ClosedUnitFractionRangeUtilities {
       ClosedUnitFractionRange initialRange,
       ClosedUnitFractionHardToSoftRangeTighteningInstructions closedUnitFractionHardToSoftRangeTighteningInstructions) {
     UnitFraction rawMultiplier = closedUnitFractionHardToSoftRangeTighteningInstructions.getRawMultiplier();
-    if (rawMultiplier.isAlmostOne(1e-8)) {
+    if (rawMultiplier.isAlmostOne(DEFAULT_EPSILON_1e_8)) {
       // There are some cases where we need to special-case this, to avoid numerical issues.
       // Unfortunately, the only way I'm able to test this for tiny epsilons is with DirectIndexingJapanBacktest.
       // There was a case where where the double operations below would result in a soft range that was just a tiny

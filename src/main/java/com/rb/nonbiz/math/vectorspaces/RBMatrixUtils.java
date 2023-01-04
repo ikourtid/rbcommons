@@ -1,9 +1,8 @@
 package com.rb.nonbiz.math.vectorspaces;
 
-import cern.colt.matrix.linalg.EigenvalueDecomposition;
+import com.rb.nonbiz.math.vectorspaces.RBMatrix.RBEigenvalueDecomposition;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.util.RBPreconditions;
-
-import java.util.stream.DoubleStream;
 
 public class RBMatrixUtils {
 
@@ -20,7 +19,7 @@ public class RBMatrixUtils {
   public static boolean isOrthoNormalTransformationMatrix(
       RBMatrix transformationMatrixOrthToRaw,
       RBMatrix covarianceMatrix,
-      double epsilon) {
+      Epsilon epsilon) {
     RBMatrix shouldBeIdentity = transformationMatrixOrthToRaw.transpose().multiply(
         covarianceMatrix.multiply(transformationMatrixOrthToRaw));
     return isAlmostIdentityMatrix(shouldBeIdentity, epsilon);
@@ -42,21 +41,16 @@ public class RBMatrixUtils {
   /**
    * Returns true iff a matrix is similar to the identity matrix, to within epsilon.
    */
-  public static boolean isAlmostIdentityMatrix(RBMatrix matrix, double epsilon) {
+  public static boolean isAlmostIdentityMatrix(RBMatrix matrix, Epsilon epsilon) {
     // Non-square matrices are never similar to identity.
     if (!matrix.isSquare()) {
       return false;
     }
-    RBPreconditions.checkArgument(epsilon >= 0);
-    for (int i = 0; i < matrix.getNumRows(); ++i) {
-      for (int j = 0; j < matrix.getNumColumns(); ++j) {
-        double correctValue = (i == j) ? 1.0 : 0.0;
-        if (Math.abs(matrix.getRawMatrixUnsafe().get(i, j) - correctValue) > epsilon) {
-          return false;
-        }
-      }
-    }
-    return true;
+    return matrix.matrixRowIndexStream().allMatch(matrixRowIndex ->
+        matrix.matrixColumnIndexStream().allMatch(matrixColumnIndex -> {
+          double correctValue = (matrixRowIndex.intValue() == matrixColumnIndex.intValue()) ? 1.0 : 0.0;
+          return epsilon.areWithin(matrix.get(matrixRowIndex, matrixColumnIndex), correctValue);
+        }));
   }
 
   /**
@@ -104,7 +98,7 @@ public class RBMatrixUtils {
   public static boolean isPositiveSemiDefiniteSymmetricMatrix(RBSquareMatrix rbSquareMatrix) {
     // Do various matrix checks, from easiest to complex, in order to "fail fast".
 
-    if (!isSymmetricMatrix(rbSquareMatrix.getRawMatrixUnsafe(), 1e-8)) {
+    if (!isSymmetricMatrix(rbSquareMatrix, 1e-8)) {
       // Non-symmetric matrices can be positive semi-definite, but we're only interested in symmetric ones.
       // In particular, we want to use the property that symmetric matrices have real eigenvalues.
       // Also, covariance matrices are symmetric, and they're what we're mostly interested in here.
@@ -162,16 +156,13 @@ public class RBMatrixUtils {
     // The downside of the "eigenvalues are non-negative" check is that the Colt routine has complexity
     // O(n^3) for matrix of size n x n.
 
-    // The documenation for Colt EigenvalueDecomposition() says it will only throw an exception
-    // if the matrix isn't square, which we checked at the beginning of this method. Therefore,
-    // we don't use "try/catch" when evaluating it.
-    EigenvalueDecomposition eigenvalueDecomposition = new EigenvalueDecomposition(
-        rbSquareMatrix.getRawMatrixUnsafe().getRawMatrixUnsafe());
+    RBEigenvalueDecomposition rbEigenvalueDecomposition = rbSquareMatrix.calculateEigendecomposition();
 
     // No need to worry about complex eigenvalues; this is a symmetric matrix.
-    double[] sortedEigenValues = DoubleStream.of(eigenvalueDecomposition.getRealEigenvalues().toArray())
-        .sorted()
-        .toArray();
+    double[] sortedEigenValues = rbEigenvalueDecomposition.getRealEigenvaluesAscending()
+            .doubleStream()
+            .sorted()
+            .toArray();
     double smallestEigenvalue = sortedEigenValues[0];
     // For numerical reasons, allow the smallest eigenvalue to be slightly negative.
     // Zero and epsilon-negative eigenvalues may be discarded anyway if we're using SVD.

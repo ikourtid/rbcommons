@@ -4,6 +4,7 @@ import com.rb.biz.types.asset.InstrumentTypeMap.InstrumentTypeMapBuilder;
 import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -24,6 +25,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 // This test class is not generic, but the publicly exposed static matcher is.
@@ -83,7 +85,8 @@ public class InstrumentTypeMapTest extends RBTestMatcher<InstrumentTypeMap<Doubl
 
   @Override
   protected boolean willMatch(InstrumentTypeMap<Double> expected, InstrumentTypeMap<Double> actual) {
-    return instrumentTypeMapMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return instrumentTypeMapMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <T> TypeSafeMatcher<InstrumentTypeMap<T>> instrumentTypeMapEqualityMatcher(

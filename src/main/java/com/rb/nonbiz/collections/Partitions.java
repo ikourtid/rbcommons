@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.SignedFraction;
 import com.rb.nonbiz.types.UnitFraction;
 
@@ -11,6 +12,7 @@ import static com.rb.nonbiz.collections.NonZeroDeviations.nonZeroDeviations;
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBMapMergers.mergeRBMapsByValue;
 import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 public class Partitions {
 
@@ -18,9 +20,9 @@ public class Partitions {
    * This is useful for generating a partition when we have a fractions that sum to APPROXIMATELY 1
    * (subject to a small but not tiny epsilon), but not necessariliy exactly (i.e. tiny epsilon).
    */
-  public static <K> Partition<K> partitionFromApproximateFractions(RBMap<K, UnitFraction> approximatePartition, double epsilon) {
+  public static <K> Partition<K> partitionFromApproximateFractions(RBMap<K, UnitFraction> approximatePartition, Epsilon epsilon) {
     BigDecimal sumOfFractions = sumAsBigDecimals(approximatePartition.values());
-    if (Math.abs(sumOfFractions.doubleValue() - 1) > epsilon) {
+    if (!epsilon.areWithin(sumOfFractions.doubleValue(), 1)) {
       throw new IllegalArgumentException(Strings.format(
           "Fractions add up to %s which is too far from 1 within an epsilon of %s : %s",
           sumOfFractions, epsilon, approximatePartition));
@@ -46,22 +48,22 @@ public class Partitions {
 
   public static <K> NonZeroDeviations<K> calculatePartitionNonZeroDeviations(Partition<K> partitionA, Partition<K> partitionB) {
     return nonZeroDeviations(calculateFractionsForDifference(partitionA.toSignedPartition(), partitionB.toSignedPartition())
-        .filterValues(signedFraction -> !signedFraction.isAlmostZero(1e-8)));
+        .filterValues(signedFraction -> !signedFraction.isAlmostZero(DEFAULT_EPSILON_1e_8)));
   }
 
   public static <K> NonZeroDeviations<K> calculatePartitionNonZeroDeviations(SignedPartition<K> partitionA, Partition<K> partitionB) {
     return nonZeroDeviations(calculateFractionsForDifference(partitionA, partitionB.toSignedPartition())
-        .filterValues(signedFraction -> !signedFraction.isAlmostZero(1e-8)));
+        .filterValues(signedFraction -> !signedFraction.isAlmostZero(DEFAULT_EPSILON_1e_8)));
   }
 
   public static <K> NonZeroDeviations<K> calculatePartitionNonZeroDeviations(Partition<K> partitionA, SignedPartition<K> partitionB) {
     return nonZeroDeviations(calculateFractionsForDifference(partitionA.toSignedPartition(), partitionB)
-        .filterValues(signedFraction -> !signedFraction.isAlmostZero(1e-8)));
+        .filterValues(signedFraction -> !signedFraction.isAlmostZero(DEFAULT_EPSILON_1e_8)));
   }
 
   public static <K> NonZeroDeviations<K> calculatePartitionNonZeroDeviations(SignedPartition<K> partitionA, SignedPartition<K> partitionB) {
     return nonZeroDeviations(calculateFractionsForDifference(partitionA, partitionB)
-        .filterValues(signedFraction -> !signedFraction.isAlmostZero(1e-8)));
+        .filterValues(signedFraction -> !signedFraction.isAlmostZero(DEFAULT_EPSILON_1e_8)));
   }
 
   private static <K> RBMap<K, SignedFraction> calculateFractionsForDifference(

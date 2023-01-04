@@ -17,6 +17,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertNullPointerException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_LABEL;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.junit.Assert.assertEquals;
 
 // The builder is not quite a data class, so RBTestMatcher is not appropriate here.
@@ -133,10 +134,10 @@ public class SimpleStepFunctionRBNumericFunctionBuilderTest extends
   simpleStepFunctionRBNumericFunctionBuilderMatcher(
       SimpleStepFunctionRBNumericFunctionBuilder<X, Y> expected, X firstSamplePoint, X ... restSamplePoints) {
     return makeMatcher(expected,
-        matchUsingDoubleAlmostEquals(v -> v.getX0().doubleValue(),            1e-8),
-        matchUsingDoubleAlmostEquals(v -> v.getY0().doubleValue(),            1e-8),
-        matchUsingDoubleAlmostEquals(v -> v.getY1().doubleValue(),            1e-8),
-        matchUsingDoubleAlmostEquals(v -> v.getYForXEqualsX0().doubleValue(), 1e-8),
+        matchUsingDoubleAlmostEquals(v -> v.getX0().doubleValue(),            DEFAULT_EPSILON_1e_8),
+        matchUsingDoubleAlmostEquals(v -> v.getY0().doubleValue(),            DEFAULT_EPSILON_1e_8),
+        matchUsingDoubleAlmostEquals(v -> v.getY1().doubleValue(),            DEFAULT_EPSILON_1e_8),
+        matchUsingDoubleAlmostEquals(v -> v.getYForXEqualsX0().doubleValue(), DEFAULT_EPSILON_1e_8),
         match(v -> v.getInstantiator(), f -> rbNumericFunctionUsingSamplingMatcher(f, firstSamplePoint, restSamplePoints)));
   }
 

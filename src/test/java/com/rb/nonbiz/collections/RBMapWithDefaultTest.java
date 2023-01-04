@@ -16,6 +16,7 @@ import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 // This test class is not generic, but the publicly exposed static matcher is.
@@ -55,7 +56,8 @@ public class RBMapWithDefaultTest extends RBTestMatcher<RBMapWithDefault<String,
 
   @Override
   protected boolean willMatch(RBMapWithDefault<String, Double> expected, RBMapWithDefault<String, Double> actual) {
-    return rbMapWithDefaultMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return rbMapWithDefaultMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <K, V> TypeSafeMatcher<RBMapWithDefault<K, V>> rbMapWithDefaultEqualityMatcher(

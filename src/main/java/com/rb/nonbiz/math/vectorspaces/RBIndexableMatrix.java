@@ -1,93 +1,79 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleMatrix2D;
-import cern.colt.matrix.linalg.Algebra;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.IndexableDoubleDataStore2D;
 import com.rb.nonbiz.text.Strings;
-import com.rb.nonbiz.util.RBPreconditions;
-
-import java.util.stream.IntStream;
 
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
  * A 2d collection of doubles, which can be indexed by a row key and a column key, which can be of different types.
  *
  * <p> It's a bit like a 2-dimensional map where there are two keys, and the values are doubles.
- * The underlying data store is a Colt {@link DoubleMatrix2D}, so this class is particularly useful in case we
+ * The underlying data store is a {@link RBMatrix}, so this class is particularly useful in case we
  * want to interact with the Colt linear algebra library. Of course, this means that the fact that we use a
- * {@link DoubleMatrix2D} is not hidden by this abstraction - but it's fine; this is intentional here. </p>
+ * {@link DoubleMatrix2D} inside {@link RBMatrix} is not hidden by this abstraction -
+ * but it's fine; this is intentional here. </p>
  */
 public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C> {
 
-  private final DoubleMatrix2D rawMatrix;
+  private final RBMatrix rbMatrix;
   private final ArrayIndexMapping<R> rowMapping;
   private final ArrayIndexMapping<C> columnMapping;
 
   private RBIndexableMatrix(
-      DoubleMatrix2D rawMatrix,
+      RBMatrix rbMatrix,
       ArrayIndexMapping<R> rowMapping,
       ArrayIndexMapping<C> columnMapping) {
-    this.rawMatrix = rawMatrix;
+    this.rbMatrix = rbMatrix;
     this.rowMapping = rowMapping;
     this.columnMapping = columnMapping;
   }
 
   public static <R, C> RBIndexableMatrix<R, C> rbIndexableMatrix(
-      DoubleMatrix2D rawMatrix,
+      RBMatrix rbMatrix,
       ArrayIndexMapping<R> rowMapping,
       ArrayIndexMapping<C> columnMapping) {
-    RBPreconditions.checkArgument(
-        rawMatrix.size() > 0,
-        "We do not allow an empty RBIndexableMatrix, just to be safe");
     checkBothSame(
-        rawMatrix.rows(),
+        rbMatrix.getNumRows(),
         rowMapping.size(),
         "# of matrix rows = %s , but # of rows we have a mapping for is %s : %s %s %s",
-        rawMatrix.rows(), rowMapping.size(), rowMapping, columnMapping, rawMatrix);
+        rbMatrix.getNumRows(), rowMapping.size(), rowMapping, columnMapping, rbMatrix);
     checkBothSame(
-        rawMatrix.columns(),
+        rbMatrix.getNumColumns(),
         columnMapping.size(),
         "# of matrix columns = %s , but # of columns we have a mapping for is %s : %s %s %s",
-        rawMatrix.columns(), columnMapping.size(), rowMapping, columnMapping, rawMatrix);
-    return new RBIndexableMatrix<>(rawMatrix, rowMapping, columnMapping);
+        rbMatrix.getNumColumns(), columnMapping.size(), rowMapping, columnMapping, rbMatrix);
+    return new RBIndexableMatrix<>(rbMatrix, rowMapping, columnMapping);
   }
 
   public static <R> RBIndexableMatrix<R, MatrixColumnIndex> rbIndexableMatrixWithTrivialColumnMapping(
-      DoubleMatrix2D rawMatrix,
+      RBMatrix rbMatrix,
       ArrayIndexMapping<R> rowMapping) {
     return rbIndexableMatrix(
-        rawMatrix,
+        rbMatrix,
         rowMapping,
-        simpleArrayIndexMapping(
-            IntStream.range(0, rawMatrix.columns())
-                .mapToObj(i -> matrixColumnIndex(i))
-                .iterator()));
+        simpleArrayIndexMapping(rbMatrix.matrixColumnIndexStream()));
   }
 
   public static <C> RBIndexableMatrix<MatrixRowIndex, C> rbIndexableMatrixWithTrivialRowMapping(
-      DoubleMatrix2D rawMatrix,
+      RBMatrix rbMatrix,
       ArrayIndexMapping<C> columnMapping) {
     return rbIndexableMatrix(
-        rawMatrix,
-        simpleArrayIndexMapping(
-            IntStream.range(0, rawMatrix.rows())
-                .mapToObj(i -> matrixRowIndex(i))
-                .iterator()),
+        rbMatrix,
+        simpleArrayIndexMapping(rbMatrix.matrixRowIndexStream()),
         columnMapping);
   }
 
   /**
    * Retrieve this indexable matrix as a standard non-indexable {@link RBMatrix}.
    */
-
   public RBMatrix asRbMatrix() {
-    return rbMatrix(rawMatrix);
+    return rbMatrix;
   }
 
   /**
@@ -120,7 +106,7 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
           this, rightMatrix);
     }
     return rbIndexableMatrix(
-        new Algebra().mult(this.rawMatrix, rightMatrix.rawMatrix),
+        this.rbMatrix.multiply(rightMatrix.rbMatrix),
         this.getRowMapping(),
         rightMatrix.getColumnMapping());
   }
@@ -148,7 +134,7 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
    */
   public RBIndexableMatrix<C, R> inverse() {
     return rbIndexableMatrix(
-        new Algebra().inverse(rawMatrix),
+        rbMatrix.inverse(),
         columnMapping,
         rowMapping);
   }
@@ -161,14 +147,14 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
    */
   public RBIndexableMatrix<C, R> transpose() {
     return rbIndexableMatrix(
-        new Algebra().transpose(rawMatrix),
+        rbMatrix.transpose(),
         columnMapping,
         rowMapping);
   }
 
   @Override
-  public double getByIndex(int rowIndex, int columnIndex) {
-    return rawMatrix.get(rowIndex, columnIndex);
+  public double getByIndex(int rowIndexAsInt, int columnIndexAsInt) {
+    return rbMatrix.get(matrixRowIndex(rowIndexAsInt), matrixColumnIndex(columnIndexAsInt));
   }
 
   @Override
@@ -181,19 +167,6 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
     return columnMapping;
   }
 
-  /**
-   * The whole point of this class is for its callers to be able to convert it to a {@link DoubleMatrix2D} when the
-   * need arises, such as when linear algebra functionality from the Colt package needs to be called. However,
-   * ideally you can do most operations (like iterate over its contents) without having to be exposed to the fact that
-   * the underlying data class is a Colt {@link DoubleMatrix2D}.
-   *
-   * <p> The method name has 'unsafe' so it's clear to the caller that this returns a mutable object, which in our
-   * codebase is heavily discouraged. However, we can't control what Colt does. </p>
-   */
-  public DoubleMatrix2D getRawMatrixUnsafe() {
-    return rawMatrix;
-  }
-
   @Override
   public String toString() {
     return Strings.format("[RBIM matrix with %s rows= %s and %s columns = %s: %s RBIM]",
@@ -201,7 +174,7 @@ public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C>
         rowMapping,
         getNumColumns(),
         getColumnMapping(),
-        rawMatrix);
+        rbMatrix);
   }
 
 }

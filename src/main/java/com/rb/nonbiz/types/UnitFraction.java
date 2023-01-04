@@ -14,6 +14,7 @@ import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONT
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 
 /**
@@ -78,7 +79,7 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
    * or a tiny bit above 1. This lets you round those cases to 0 and 1, respectively,
    * while still throwing if the input is significantly outside [0, 1].
    */
-  public static UnitFraction forgivingUnitFraction(double value, double epsilon) {
+  public static UnitFraction forgivingUnitFraction(double value, Epsilon epsilon) {
     return forgivingUnitFraction(BigDecimal.valueOf(value), epsilon);
   }
 
@@ -87,11 +88,10 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
    * or a tiny bit above 1. This lets you round those cases to 0 and 1, respectively,
    * while still throwing if the input is significantly outside [0, 1].
    */
-  public static UnitFraction forgivingUnitFraction(BigDecimal value, double epsilon) {
-    RBPreconditions.checkArgument(epsilon >= 0);
+  public static UnitFraction forgivingUnitFraction(BigDecimal value, Epsilon epsilon) {
     double doubleValue = value.doubleValue();
-    return (-epsilon <= doubleValue && value.signum() < 0) ? UNIT_FRACTION_0
-        : (1 <= doubleValue && doubleValue <= 1 + epsilon) ? UNIT_FRACTION_1
+    return (-epsilon.doubleValue() <= doubleValue && value.signum() < 0) ? UNIT_FRACTION_0
+        : (1 <= doubleValue && doubleValue <= 1 + epsilon.doubleValue()) ? UNIT_FRACTION_1
         // if value < -epsilon or value > 1 + epsilon, the unitFraction static constructor will throw
         : unitFraction(value, doubleValue);
   }
@@ -129,11 +129,11 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
     return this.asBigDecimal().compareTo(BigDecimal.ONE) == 0;
   }
 
-  public boolean isAlmostOne(double epsilon) {
-    return asBigDecimal().subtract(BigDecimal.ONE).abs().compareTo(new BigDecimal(epsilon)) < 0;
+  public boolean isAlmostOne(Epsilon epsilon) {
+    return asBigDecimal().subtract(BigDecimal.ONE).abs().compareTo(BigDecimal.valueOf(epsilon.doubleValue())) < 0;
   }
 
-  public boolean isAlmostExtreme(double epsilon) {
+  public boolean isAlmostExtreme(Epsilon epsilon) {
     return isAlmostZero(epsilon) || isAlmostOne(epsilon);
   }
 
@@ -196,19 +196,19 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
   }
 
   public UnitFraction add(UnitFraction toAdd) {
-    return forgivingUnitFraction(asBigDecimal().add(toAdd.asBigDecimal(), DEFAULT_MATH_CONTEXT), 1e-15);
+    return forgivingUnitFraction(asBigDecimal().add(toAdd.asBigDecimal(), DEFAULT_MATH_CONTEXT), epsilon(1e-15));
   }
 
   /**
    * For numerical reasons, adding two UnitFractions may give us a result that slightly above 1.
    * #add handles this already, but this allows us to control the epsilon of the 'forgiving-ness'.
    */
-  public UnitFraction addForgiving(UnitFraction toAdd, double epsilon) {
+  public UnitFraction addForgiving(UnitFraction toAdd, Epsilon epsilon) {
     return forgivingUnitFraction(asBigDecimal().add(toAdd.asBigDecimal(), DEFAULT_MATH_CONTEXT), epsilon);
   }
 
   public UnitFraction add(double toAdd) {
-    return forgivingUnitFraction(asBigDecimal().add(new BigDecimal(toAdd)), 1e-15);
+    return forgivingUnitFraction(asBigDecimal().add(new BigDecimal(toAdd)), epsilon(1e-15));
   }
 
   public static UnitFraction sum(Collection<UnitFraction> unitFractions) {
@@ -243,11 +243,11 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
   }
 
   // sum of unit fractions, but if the sum is just over 1, snap to 1.
-  public static UnitFraction forgivingSum(Collection<UnitFraction> unitFractions, double epsilon) {
+  public static UnitFraction forgivingSum(Collection<UnitFraction> unitFractions, Epsilon epsilon) {
     return forgivingSum(unitFractions.stream(), epsilon);
   }
 
-  public static UnitFraction forgivingSum(Stream<UnitFraction> unitFractionStream, double epsilon) {
+  public static UnitFraction forgivingSum(Stream<UnitFraction> unitFractionStream, Epsilon epsilon) {
     return forgivingUnitFraction(
         unitFractionStream.mapToDouble(v -> v.doubleValue()).reduce(0.0, Double::sum),
         epsilon);
@@ -261,17 +261,17 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
     return sum;
   }
 
-  public static boolean sumToAlmostOne(double epsilon, UnitFraction first, UnitFraction...rest) {
+  public static boolean sumToAlmostOne(Epsilon epsilon, UnitFraction first, UnitFraction...rest) {
     return sumToAlmostOne(concatenateFirstAndRest(first, rest), epsilon);
   }
 
-  public static boolean sumToAlmostOne(Collection<UnitFraction> unitFractions, double epsilon) {
+  public static boolean sumToAlmostOne(Collection<UnitFraction> unitFractions, Epsilon epsilon) {
     BigDecimal sum = sumAsBigDecimals(unitFractions);
-    return sum.subtract(BigDecimal.ONE).abs().doubleValue() <= epsilon;
+    return epsilon.isAlmostZero(sum.subtract(BigDecimal.ONE).doubleValue());
   }
 
   public UnitFraction subtract(UnitFraction remainingToAllocate) {
-    return forgivingUnitFraction(asBigDecimal().subtract(remainingToAllocate.asBigDecimal()), 1e-15);
+    return forgivingUnitFraction(asBigDecimal().subtract(remainingToAllocate.asBigDecimal()), epsilon(1e-15));
   }
 
   public UnitFraction multiply(UnitFraction other) {
@@ -293,13 +293,13 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
     return signedFraction(asBigDecimal());
   }
 
-  public UnitFraction valueOrSnapToZero(double epsilon) {
+  public UnitFraction valueOrSnapToZero(Epsilon epsilon) {
     return isAlmostZero(epsilon)
         ? UNIT_FRACTION_0
         : this;
   }
 
-  public UnitFraction valueOrSnapToOne(double epsilon) {
+  public UnitFraction valueOrSnapToOne(Epsilon epsilon) {
     return isAlmostOne(epsilon)
         ? UNIT_FRACTION_1
         : this;

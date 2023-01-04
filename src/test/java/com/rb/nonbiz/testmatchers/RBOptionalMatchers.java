@@ -2,6 +2,7 @@ package com.rb.nonbiz.testmatchers;
 
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import org.hamcrest.Description;
@@ -15,7 +16,6 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatch
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeSame;
-import static junit.framework.TestCase.assertTrue;
 
 public class RBOptionalMatchers {
 
@@ -81,8 +81,7 @@ public class RBOptionalMatchers {
     return sameOptional(Optional.of(expected));
   }
 
-  public static TypeSafeMatcher<OptionalDouble> optionalDoubleMatcher(OptionalDouble expected, double epsilon) {
-    assertValidEpsilon(epsilon);
+  public static TypeSafeMatcher<OptionalDouble> optionalDoubleMatcher(OptionalDouble expected, Epsilon epsilon) {
     return new TypeSafeMatcher<OptionalDouble>() {
       @Override
       protected boolean matchesSafely(OptionalDouble actual) {
@@ -92,7 +91,7 @@ public class RBOptionalMatchers {
         if (!expected.isPresent() || !actual.isPresent()) {
           return false; // only 1 is Optional.empty()
         }
-        return Math.abs(expected.getAsDouble() - actual.getAsDouble()) < epsilon;
+        return epsilon.areWithin(expected.getAsDouble(), actual.getAsDouble());
       }
 
       @Override
@@ -127,19 +126,17 @@ public class RBOptionalMatchers {
   }
 
   public static <T extends PreciseValue<T>> TypeSafeMatcher<Optional<T>> optionalPreciseValueMatcher(
-      Optional<T> expected, double epsilon) {
-    assertValidEpsilon(epsilon);
+      Optional<T> expected, Epsilon epsilon) {
     return optionalMatcher(expected, v -> preciseValueMatcher(v, epsilon));
   }
 
   public static <T extends ImpreciseValue<? super T>> TypeSafeMatcher<Optional<T>> optionalImpreciseValueMatcher(
-      Optional<T> expected, double epsilon) {
-    assertValidEpsilon(epsilon);
+      Optional<T> expected, Epsilon epsilon) {
     return optionalMatcher(expected, v -> impreciseValueMatcher(v, epsilon));
   }
 
-  public static <T extends PreciseValue<T>> TypeSafeMatcher<Optional<T>> nonEmptyOptionalPreciseValueMatcher(T expected, double epsilon) {
-    assertValidEpsilon(epsilon);
+  public static <T extends PreciseValue<T>> TypeSafeMatcher<Optional<T>> nonEmptyOptionalPreciseValueMatcher(
+      T expected, Epsilon epsilon) {
     return new TypeSafeMatcher<Optional<T>>() {
       @Override
       protected boolean matchesSafely(Optional<T> actual) {
@@ -154,8 +151,7 @@ public class RBOptionalMatchers {
   }
 
   public static <T extends ImpreciseValue<T>> TypeSafeMatcher<Optional<T>> nonEmptyOptionalImpreciseValueMatcher(
-      T expected, double epsilon) {
-    assertValidEpsilon(epsilon);
+      T expected, Epsilon epsilon) {
     return new TypeSafeMatcher<Optional<T>>() {
       @Override
       protected boolean matchesSafely(Optional<T> actual) {
@@ -169,8 +165,7 @@ public class RBOptionalMatchers {
     };
   }
 
-  public static TypeSafeMatcher<OptionalDouble> nonEmptyOptionalDoubleMatcher(double expected, double epsilon) {
-    assertValidEpsilon(epsilon);
+  public static TypeSafeMatcher<OptionalDouble> nonEmptyOptionalDoubleMatcher(double expected, Epsilon epsilon) {
     return new TypeSafeMatcher<OptionalDouble>() {
       @Override
       protected boolean matchesSafely(OptionalDouble actual) {
@@ -182,13 +177,6 @@ public class RBOptionalMatchers {
         doubleAlmostEqualsMatcher(expected, epsilon).describeTo(description);
       }
     };
-  }
-
-  private static final void assertValidEpsilon(double epsilon) {
-    // This is useful to avoid typos such as 1-8 and 1e8 (instead of the usual 1e-8)
-    assertTrue(
-        Strings.format("It is very likely you had a typo when typing the epsilon of %s", epsilon),
-        epsilon >= 0 && epsilon < 1_000);
   }
 
 }

@@ -27,6 +27,8 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_MONEY;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.PreciseValue.*;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -109,14 +111,14 @@ public class PreciseValueTest {
       SignedQuantity objI = quantities.get(i);
       for (int j = 0; j < quantities.size(); j++) {
         SignedQuantity objJ = quantities.get(j);
-        assertTrue(objI.almostEquals(objJ, 1e-8));
+        assertTrue(objI.almostEquals(objJ, DEFAULT_EPSILON_1e_8));
         assertThat(
             objI,
-            preciseValueMatcher(objJ, 1e-8));
+            preciseValueMatcher(objJ, DEFAULT_EPSILON_1e_8));
 
       }
       // comparing to null causes an exception
-      assertIllegalArgumentException( () -> objI.almostEquals(null, 1e-8));
+      assertIllegalArgumentException( () -> objI.almostEquals(null, DEFAULT_EPSILON_1e_8));
     }
   }
 
@@ -174,18 +176,18 @@ public class PreciseValueTest {
       for (double diff : rbSetOf(-1e-15, 0.0, 1e-15)) {
         assertTrue(signedMoney(intValue).almostEquals(
             signedMoney(snapToRound(BigDecimal.valueOf(intValue + diff))),
-            1e-14));
+            epsilon(1e-14)));
         assertTrue(signedMoney(intValue).almostEquals(
             signedMoney(snapToRound(signedMoney(BigDecimal.valueOf(intValue + diff)))),
-            1e-14));
+            epsilon(1e-14)));
       }
       for (double diff : rbSetOf(-0.5, -0.4, -1e-8, 0.4, 0.5)) {
         assertFalse(signedMoney(intValue).almostEquals(
             signedMoney(snapToRound(BigDecimal.valueOf(intValue + diff))),
-            1e-14));
+            epsilon(1e-14)));
         assertFalse(signedMoney(intValue).almostEquals(
             signedMoney(snapToRound(signedMoney(BigDecimal.valueOf(intValue + diff)))),
-            1e-14));
+            epsilon(1e-14)));
       }
     }
   }
@@ -214,54 +216,54 @@ public class PreciseValueTest {
 
   @Test
   public void testPreciseValuesAlmostEqual() {
-    assertTrue(preciseValuesAlmostEqual(signedMoney(10.0), signedMoney(10.0), 1e-8));
+    assertTrue(preciseValuesAlmostEqual(signedMoney(10.0), signedMoney(10.0), DEFAULT_EPSILON_1e_8));
 
-    assertTrue(preciseValuesAlmostEqual(signedMoney(10.0), signedMoney(10.0 + 1e-9), 1e-8));
-    assertTrue(preciseValuesAlmostEqual(signedMoney(10.0), signedMoney(10.0 - 1e-9), 1e-8));
-    assertTrue(preciseValuesAlmostEqual(signedMoney(10.0 + 1e-9), signedMoney(10.0), 1e-8));
-    assertTrue(preciseValuesAlmostEqual(signedMoney(10.0 - 1e-9), signedMoney(10.0), 1e-8));
+    assertTrue(preciseValuesAlmostEqual(signedMoney(10.0), signedMoney(10.0 + 1e-9), DEFAULT_EPSILON_1e_8));
+    assertTrue(preciseValuesAlmostEqual(signedMoney(10.0), signedMoney(10.0 - 1e-9), DEFAULT_EPSILON_1e_8));
+    assertTrue(preciseValuesAlmostEqual(signedMoney(10.0 + 1e-9), signedMoney(10.0), DEFAULT_EPSILON_1e_8));
+    assertTrue(preciseValuesAlmostEqual(signedMoney(10.0 - 1e-9), signedMoney(10.0), DEFAULT_EPSILON_1e_8));
 
-    assertFalse(preciseValuesAlmostEqual(signedMoney(10.0), signedMoney(10.0 + 1e-8), 1e-9));
-    assertFalse(preciseValuesAlmostEqual(signedMoney(10.0), signedMoney(10.0 - 1e-8), 1e-9));
-    assertFalse(preciseValuesAlmostEqual(signedMoney(10.0 + 1e-8), signedMoney(10.0), 1e-9));
-    assertFalse(preciseValuesAlmostEqual(signedMoney(10.0 - 1e-8), signedMoney(10.0), 1e-9));
+    assertFalse(preciseValuesAlmostEqual(signedMoney(10.0), signedMoney(10.0 + 1e-8), epsilon(1e-9)));
+    assertFalse(preciseValuesAlmostEqual(signedMoney(10.0), signedMoney(10.0 - 1e-8), epsilon(1e-9)));
+    assertFalse(preciseValuesAlmostEqual(signedMoney(10.0 + 1e-8), signedMoney(10.0), epsilon(1e-9)));
+    assertFalse(preciseValuesAlmostEqual(signedMoney(10.0 - 1e-8), signedMoney(10.0), epsilon(1e-9)));
   }
 
   @Test
   public void testBigDecimalsAlmostEqual() {
-    assertTrue(bigDecimalsAlmostEqual(BigDecimal.TEN, BigDecimal.TEN, 1e-8));
-    assertTrue(bigDecimalsAlmostEqual(signedMoney(10.0).asBigDecimal(), signedMoney(10.0).asBigDecimal(), 1e-8));
+    assertTrue(bigDecimalsAlmostEqual(BigDecimal.TEN, BigDecimal.TEN, DEFAULT_EPSILON_1e_8));
+    assertTrue(bigDecimalsAlmostEqual(signedMoney(10.0).asBigDecimal(), signedMoney(10.0).asBigDecimal(), DEFAULT_EPSILON_1e_8));
 
-    assertTrue(bigDecimalsAlmostEqual(signedMoney(10.0).asBigDecimal(), signedMoney(10.0 + 1e-9).asBigDecimal(), 1e-8));
-    assertTrue(bigDecimalsAlmostEqual(signedMoney(10.0).asBigDecimal(), signedMoney(10.0 - 1e-9).asBigDecimal(), 1e-8));
-    assertTrue(bigDecimalsAlmostEqual(signedMoney(10.0 + 1e-9).asBigDecimal(), signedMoney(10.0).asBigDecimal(), 1e-8));
-    assertTrue(bigDecimalsAlmostEqual(signedMoney(10.0 - 1e-9).asBigDecimal(), signedMoney(10.0).asBigDecimal(), 1e-8));
+    assertTrue(bigDecimalsAlmostEqual(signedMoney(10.0).asBigDecimal(), signedMoney(10.0 + 1e-9).asBigDecimal(), DEFAULT_EPSILON_1e_8));
+    assertTrue(bigDecimalsAlmostEqual(signedMoney(10.0).asBigDecimal(), signedMoney(10.0 - 1e-9).asBigDecimal(), DEFAULT_EPSILON_1e_8));
+    assertTrue(bigDecimalsAlmostEqual(signedMoney(10.0 + 1e-9).asBigDecimal(), signedMoney(10.0).asBigDecimal(), DEFAULT_EPSILON_1e_8));
+    assertTrue(bigDecimalsAlmostEqual(signedMoney(10.0 - 1e-9).asBigDecimal(), signedMoney(10.0).asBigDecimal(), DEFAULT_EPSILON_1e_8));
 
-    assertFalse(bigDecimalsAlmostEqual(signedMoney(10.0).asBigDecimal(), signedMoney(10.0 + 1e-8).asBigDecimal(), 1e-9));
-    assertFalse(bigDecimalsAlmostEqual(signedMoney(10.0).asBigDecimal(), signedMoney(10.0 - 1e-8).asBigDecimal(), 1e-9));
-    assertFalse(bigDecimalsAlmostEqual(signedMoney(10.0 + 1e-8).asBigDecimal(), signedMoney(10.0).asBigDecimal(), 1e-9));
-    assertFalse(bigDecimalsAlmostEqual(signedMoney(10.0 - 1e-8).asBigDecimal(), signedMoney(10.0).asBigDecimal(), 1e-9));
+    assertFalse(bigDecimalsAlmostEqual(signedMoney(10.0).asBigDecimal(), signedMoney(10.0 + 1e-8).asBigDecimal(), epsilon(1e-9)));
+    assertFalse(bigDecimalsAlmostEqual(signedMoney(10.0).asBigDecimal(), signedMoney(10.0 - 1e-8).asBigDecimal(), epsilon(1e-9)));
+    assertFalse(bigDecimalsAlmostEqual(signedMoney(10.0 + 1e-8).asBigDecimal(), signedMoney(10.0).asBigDecimal(), epsilon(1e-9)));
+    assertFalse(bigDecimalsAlmostEqual(signedMoney(10.0 - 1e-8).asBigDecimal(), signedMoney(10.0).asBigDecimal(), epsilon(1e-9)));
 
-    assertIllegalArgumentException( () -> bigDecimalsAlmostEqual(null, BigDecimal.TEN, 1e-8));
-    assertIllegalArgumentException( () -> bigDecimalsAlmostEqual(BigDecimal.TEN, null, 1e-8));
+    assertIllegalArgumentException( () -> bigDecimalsAlmostEqual(null, BigDecimal.TEN, DEFAULT_EPSILON_1e_8));
+    assertIllegalArgumentException( () -> bigDecimalsAlmostEqual(BigDecimal.TEN, null, DEFAULT_EPSILON_1e_8));
   }
 
   @Test
   public void testIsAlmostZero() {
-    assertFalse(signedMoney(-1e-7).isAlmostZero(1e-8));
-    assertTrue(signedMoney(-1e-9).isAlmostZero(1e-8));
-    assertTrue(ZERO_SIGNED_MONEY.isAlmostZero(1e-8));
-    assertTrue(signedMoney(1e-9).isAlmostZero(1e-8));
-    assertFalse(signedMoney(1e-7).isAlmostZero(1e-8));
+    assertFalse(signedMoney(-1e-7).isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertTrue(signedMoney(-1e-9).isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertTrue(ZERO_SIGNED_MONEY.isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertTrue(signedMoney(1e-9).isAlmostZero(DEFAULT_EPSILON_1e_8));
+    assertFalse(signedMoney(1e-7).isAlmostZero(DEFAULT_EPSILON_1e_8));
   }
 
   @Test
   public void testIsAlmostZeroButNotZero() {
-    assertFalse(signedMoney(-1e-7).isAlmostZeroButNotZero(1e-8));
-    assertTrue(signedMoney( -1e-9).isAlmostZeroButNotZero(1e-8));
-    assertFalse(ZERO_SIGNED_MONEY .isAlmostZeroButNotZero(1e-8));
-    assertTrue(signedMoney(  1e-9).isAlmostZeroButNotZero(1e-8));
-    assertFalse(signedMoney( 1e-7).isAlmostZeroButNotZero(1e-8));
+    assertFalse(signedMoney(-1e-7).isAlmostZeroButNotZero(DEFAULT_EPSILON_1e_8));
+    assertTrue(signedMoney( -1e-9).isAlmostZeroButNotZero(DEFAULT_EPSILON_1e_8));
+    assertFalse(ZERO_SIGNED_MONEY .isAlmostZeroButNotZero(DEFAULT_EPSILON_1e_8));
+    assertTrue(signedMoney(  1e-9).isAlmostZeroButNotZero(DEFAULT_EPSILON_1e_8));
+    assertFalse(signedMoney( 1e-7).isAlmostZeroButNotZero(DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -279,13 +281,13 @@ public class PreciseValueTest {
 
   @Test
   public void testIsLessThanOrAlmostEqualTo() {
-    assertFalse(signedMoney(1.0).isLessThanOrAlmostEqualTo(signedMoney(1.0 - 1e-7), 1e-8));
-    assertTrue( signedMoney(1.0).isLessThanOrAlmostEqualTo(signedMoney(1.0 - 1e-9), 1e-8));
-    assertTrue( signedMoney(1.0).isLessThanOrAlmostEqualTo(signedMoney(1.0       ), 1e-8));
-    assertTrue( signedMoney(1.0).isLessThanOrAlmostEqualTo(signedMoney(1.0 + 1e-9), 1e-8));
-    assertTrue( signedMoney(1.0).isLessThanOrAlmostEqualTo(signedMoney(2.0       ), 1e-8));
+    assertFalse(signedMoney(1.0).isLessThanOrAlmostEqualTo(signedMoney(1.0 - 1e-7), DEFAULT_EPSILON_1e_8));
+    assertTrue( signedMoney(1.0).isLessThanOrAlmostEqualTo(signedMoney(1.0 - 1e-9), DEFAULT_EPSILON_1e_8));
+    assertTrue( signedMoney(1.0).isLessThanOrAlmostEqualTo(signedMoney(1.0       ), DEFAULT_EPSILON_1e_8));
+    assertTrue( signedMoney(1.0).isLessThanOrAlmostEqualTo(signedMoney(1.0 + 1e-9), DEFAULT_EPSILON_1e_8));
+    assertTrue( signedMoney(1.0).isLessThanOrAlmostEqualTo(signedMoney(2.0       ), DEFAULT_EPSILON_1e_8));
 
-    assertFalse(signedMoney(2.0).isLessThanOrAlmostEqualTo(signedMoney(1.0       ), 1e-8));
+    assertFalse(signedMoney(2.0).isLessThanOrAlmostEqualTo(signedMoney(1.0       ), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -303,13 +305,13 @@ public class PreciseValueTest {
 
   @Test
   public void testIsGreaterThanOrAlmostEqualTo() {
-    assertTrue( signedMoney(1.0).isGreaterThanOrAlmostEqualTo(signedMoney(1.0 - 1e-7), 1e-8));
-    assertTrue( signedMoney(1.0).isGreaterThanOrAlmostEqualTo(signedMoney(1.0 - 1e-9), 1e-8));
-    assertTrue( signedMoney(1.0).isGreaterThanOrAlmostEqualTo(signedMoney(1.0       ), 1e-8));
-    assertTrue( signedMoney(1.0).isGreaterThanOrAlmostEqualTo(signedMoney(1.0 + 1e-9), 1e-8));
-    assertFalse(signedMoney(1.0).isGreaterThanOrAlmostEqualTo(signedMoney(1.0 + 1e-7), 1e-8));
+    assertTrue( signedMoney(1.0).isGreaterThanOrAlmostEqualTo(signedMoney(1.0 - 1e-7), DEFAULT_EPSILON_1e_8));
+    assertTrue( signedMoney(1.0).isGreaterThanOrAlmostEqualTo(signedMoney(1.0 - 1e-9), DEFAULT_EPSILON_1e_8));
+    assertTrue( signedMoney(1.0).isGreaterThanOrAlmostEqualTo(signedMoney(1.0       ), DEFAULT_EPSILON_1e_8));
+    assertTrue( signedMoney(1.0).isGreaterThanOrAlmostEqualTo(signedMoney(1.0 + 1e-9), DEFAULT_EPSILON_1e_8));
+    assertFalse(signedMoney(1.0).isGreaterThanOrAlmostEqualTo(signedMoney(1.0 + 1e-7), DEFAULT_EPSILON_1e_8));
 
-    assertTrue( signedMoney(2.0).isGreaterThanOrAlmostEqualTo(signedMoney(1.0       ), 1e-8));
+    assertTrue( signedMoney(2.0).isGreaterThanOrAlmostEqualTo(signedMoney(1.0       ), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -425,23 +427,19 @@ public class PreciseValueTest {
 
   @Test
   public void testMin() {
-    assertAlmostEquals(signedMoney(10.0), PreciseValue.min(signedMoney(10.0), signedMoney(20.0)), 1e-8);
-    assertAlmostEquals(signedMoney(10.0), PreciseValue.min(signedMoney(20.0), signedMoney(10.0)), 1e-8);
+    assertAlmostEquals(signedMoney(10.0), PreciseValue.min(signedMoney(10.0), signedMoney(20.0)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(signedMoney(10.0), PreciseValue.min(signedMoney(20.0), signedMoney(10.0)), DEFAULT_EPSILON_1e_8);
   }
 
   @Test
   public void testMax() {
-    assertAlmostEquals(signedMoney(20.0), PreciseValue.max(signedMoney(10.0), signedMoney(20.0)), 1e-8);
-    assertAlmostEquals(signedMoney(20.0), PreciseValue.max(signedMoney(20.0), signedMoney(10.0)), 1e-8);
+    assertAlmostEquals(signedMoney(20.0), PreciseValue.max(signedMoney(10.0), signedMoney(20.0)), DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(signedMoney(20.0), PreciseValue.max(signedMoney(20.0), signedMoney(10.0)), DEFAULT_EPSILON_1e_8);
   }
 
   @Test
   public void testIsSafelyLessThan() {
-    // epsilon must be > 0
-    assertIllegalArgumentException( () -> money(10.0).isSafelyLessThan(DUMMY_MONEY, -1e-9));
-    assertIllegalArgumentException( () -> money(10.0).isSafelyLessThan(DUMMY_MONEY, 0));
-
-    double e = 1e-8;
+    Epsilon e = DEFAULT_EPSILON_1e_8;
     assertTrue( ZERO_MONEY        .isSafelyLessThan(money(10), e));
     assertTrue( money(0.1)        .isSafelyLessThan(money(10), e));
     assertTrue( money(9.9)        .isSafelyLessThan(money(10), e));
@@ -454,11 +452,7 @@ public class PreciseValueTest {
 
   @Test
   public void testIsSafelyGreaterThan() {
-    // epsilon must be > 0
-    assertIllegalArgumentException( () -> money(10.0).isSafelyGreaterThan(DUMMY_MONEY, -1e-9));
-    assertIllegalArgumentException( () -> money(10.0).isSafelyGreaterThan(DUMMY_MONEY, 0));
-
-    double e = 1e-8;
+    Epsilon e = DEFAULT_EPSILON_1e_8;
     assertFalse(ZERO_MONEY        .isSafelyGreaterThan(money(10), e));
     assertFalse(money(0.1)        .isSafelyGreaterThan(money(10), e));
     assertFalse(money(9.9)        .isSafelyGreaterThan(money(10), e));

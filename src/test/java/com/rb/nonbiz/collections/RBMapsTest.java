@@ -36,6 +36,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -198,29 +199,29 @@ public class RBMapsTest {
 
     RBMap<String, Money> map1 = maker.apply(0.0);
 
-    assertFalse(preciseValueMapsAlmostEqual(map1, maker.apply(-0.1),  1e-8));
-    assertFalse(preciseValueMapsAlmostEqual(map1, maker.apply(-1e-7), 1e-8));
+    assertFalse(preciseValueMapsAlmostEqual(map1, maker.apply(-0.1),  DEFAULT_EPSILON_1e_8));
+    assertFalse(preciseValueMapsAlmostEqual(map1, maker.apply(-1e-7), DEFAULT_EPSILON_1e_8));
 
-    assertTrue( preciseValueMapsAlmostEqual(map1, maker.apply(-1e-9), 1e-8));
-    assertTrue( preciseValueMapsAlmostEqual(map1, maker.apply( 0.0),  1e-8));
-    assertTrue( preciseValueMapsAlmostEqual(map1, maker.apply( 1e-9), 1e-8));
+    assertTrue( preciseValueMapsAlmostEqual(map1, maker.apply(-1e-9), DEFAULT_EPSILON_1e_8));
+    assertTrue( preciseValueMapsAlmostEqual(map1, maker.apply( 0.0),  DEFAULT_EPSILON_1e_8));
+    assertTrue( preciseValueMapsAlmostEqual(map1, maker.apply( 1e-9), DEFAULT_EPSILON_1e_8));
 
-    assertFalse(preciseValueMapsAlmostEqual(map1, maker.apply( 1e-7), 1e-8));
-    assertFalse(preciseValueMapsAlmostEqual(map1, maker.apply( 0.1),  1e-8));
+    assertFalse(preciseValueMapsAlmostEqual(map1, maker.apply( 1e-7), DEFAULT_EPSILON_1e_8));
+    assertFalse(preciseValueMapsAlmostEqual(map1, maker.apply( 0.1),  DEFAULT_EPSILON_1e_8));
 
     // if the keys don't match, then the maps aren't equal
-    assertFalse(preciseValueMapsAlmostEqual(map1, singletonRBMap("A", money(1.11)), 1e-8));
-    assertFalse(preciseValueMapsAlmostEqual(map1, singletonRBMap("B", money(2.22)), 1e-8));
+    assertFalse(preciseValueMapsAlmostEqual(map1, singletonRBMap("A", money(1.11)), DEFAULT_EPSILON_1e_8));
+    assertFalse(preciseValueMapsAlmostEqual(map1, singletonRBMap("B", money(2.22)), DEFAULT_EPSILON_1e_8));
     assertFalse(preciseValueMapsAlmostEqual(map1, rbMapOf(
         "A", money(1.11),
         "B", money(2.22),
         "C", money(3.33)),
-        1e-8));
+        DEFAULT_EPSILON_1e_8));
 
     // also works on empty maps
     RBMap<String, Money> emptyMap = emptyRBMap();
-    assertTrue( preciseValueMapsAlmostEqual(emptyMap, emptyMap, 1e-8));
-    assertFalse(preciseValueMapsAlmostEqual(map1, emptyRBMap(), 1e-8));
+    assertTrue( preciseValueMapsAlmostEqual(emptyMap, emptyMap, DEFAULT_EPSILON_1e_8));
+    assertFalse(preciseValueMapsAlmostEqual(map1, emptyRBMap(), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -231,29 +232,29 @@ public class RBMapsTest {
 
     RBMap<String, PositiveMultiplier> map1 = maker.apply(0.0);
 
-    assertFalse(impreciseValueMapsAlmostEqual(map1, maker.apply(-0.1),  1e-8));
-    assertFalse(impreciseValueMapsAlmostEqual(map1, maker.apply(-1e-7), 1e-8));
+    assertFalse(impreciseValueMapsAlmostEqual(map1, maker.apply(-0.1),  DEFAULT_EPSILON_1e_8));
+    assertFalse(impreciseValueMapsAlmostEqual(map1, maker.apply(-1e-7), DEFAULT_EPSILON_1e_8));
 
-    assertTrue( impreciseValueMapsAlmostEqual(map1, maker.apply(-1e-9), 1e-8));
-    assertTrue( impreciseValueMapsAlmostEqual(map1, maker.apply( 0.0),  1e-8));
-    assertTrue( impreciseValueMapsAlmostEqual(map1, maker.apply( 1e-9), 1e-8));
+    assertTrue( impreciseValueMapsAlmostEqual(map1, maker.apply(-1e-9), DEFAULT_EPSILON_1e_8));
+    assertTrue( impreciseValueMapsAlmostEqual(map1, maker.apply( 0.0),  DEFAULT_EPSILON_1e_8));
+    assertTrue( impreciseValueMapsAlmostEqual(map1, maker.apply( 1e-9), DEFAULT_EPSILON_1e_8));
 
-    assertFalse(impreciseValueMapsAlmostEqual(map1, maker.apply( 1e-7), 1e-8));
-    assertFalse(impreciseValueMapsAlmostEqual(map1, maker.apply( 0.1),  1e-8));
+    assertFalse(impreciseValueMapsAlmostEqual(map1, maker.apply( 1e-7), DEFAULT_EPSILON_1e_8));
+    assertFalse(impreciseValueMapsAlmostEqual(map1, maker.apply( 0.1),  DEFAULT_EPSILON_1e_8));
 
     // if the keys don't match, then the maps aren't equal
-    assertFalse(impreciseValueMapsAlmostEqual(map1, singletonRBMap("A", positiveMultiplier(1.11)), 1e-8));
-    assertFalse(impreciseValueMapsAlmostEqual(map1, singletonRBMap("B", positiveMultiplier(2.22)), 1e-8));
+    assertFalse(impreciseValueMapsAlmostEqual(map1, singletonRBMap("A", positiveMultiplier(1.11)), DEFAULT_EPSILON_1e_8));
+    assertFalse(impreciseValueMapsAlmostEqual(map1, singletonRBMap("B", positiveMultiplier(2.22)), DEFAULT_EPSILON_1e_8));
     assertFalse(impreciseValueMapsAlmostEqual(map1, rbMapOf(
         "A", positiveMultiplier(1.11),
         "B", positiveMultiplier(2.22),
         "C", positiveMultiplier(3.33)),
-        1e-8));
+        DEFAULT_EPSILON_1e_8));
 
     // also works on empty maps
     RBMap<String, PositiveMultiplier> emptyMap = emptyRBMap();
-    assertTrue( impreciseValueMapsAlmostEqual(emptyMap, emptyMap, 1e-8));
-    assertFalse(impreciseValueMapsAlmostEqual(map1, emptyRBMap(), 1e-8));
+    assertTrue( impreciseValueMapsAlmostEqual(emptyMap, emptyMap, DEFAULT_EPSILON_1e_8));
+    assertFalse(impreciseValueMapsAlmostEqual(map1, emptyRBMap(), DEFAULT_EPSILON_1e_8));
   }
 
   @Test

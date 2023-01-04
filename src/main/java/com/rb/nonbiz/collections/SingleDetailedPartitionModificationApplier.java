@@ -7,6 +7,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.Partition.partitionFromPositiveWeightsWhichMayNotSumTo1;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 
 /**
  * Applies a modification ({@link DetailedPartitionModification}) to a {@link Partition}, resulting in a new, modified
@@ -45,8 +46,10 @@ public class SingleDetailedPartitionModificationApplier {
           "Key %s was meant to be removed, but it does not exist in the original partition: %s",
           key, originalPartition);
       RBPreconditions.checkArgument(
-          actualOriginalUnitFraction.almostEquals(expectedOriginalUnitFraction,
-              detailedPartitionModification.getEpsilonForRemovalSanityChecks().doubleValue()),
+          actualOriginalUnitFraction.almostEquals(
+              expectedOriginalUnitFraction,
+              // getEpsilonForRemovalSanityChecks is a UnitFraction, but almostEquals needs an Epsilon.
+              epsilon(detailedPartitionModification.getEpsilonForRemovalSanityChecks().doubleValue())),
           "Key %s to be removed from the original partition was supposed to have a weight of %s , but was %s ; partition: %s",
           key, expectedOriginalUnitFraction, actualOriginalUnitFraction, originalPartition);
       // Nothing else to do here; we just won't put an entry for this key in the final weights.

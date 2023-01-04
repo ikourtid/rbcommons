@@ -17,6 +17,7 @@ import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PreciseValueIidMapJsonConverterTest extends RBCommonsIntegrationTest<PreciseValueIidMapJsonConverter> {
@@ -49,7 +50,7 @@ public class PreciseValueIidMapJsonConverterTest extends RBCommonsIntegrationTes
         jsonObjectEpsilonMatcher(json));
     assertThat(
         makeRealObject().fromJsonObject(json, TICKER_MAP, v -> signedMoney(v)),
-        iidMapPreciseValueMatcher(map, 1e-14));
+        iidMapPreciseValueMatcher(map, epsilon(1e-14)));
   }
 
   @Override

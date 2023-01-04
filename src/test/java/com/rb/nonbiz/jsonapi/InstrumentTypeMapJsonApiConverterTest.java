@@ -14,6 +14,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class InstrumentTypeMapJsonApiConverterTest extends RBTest<InstrumentTypeMapJsonApiConverter> {
@@ -40,7 +41,7 @@ public class InstrumentTypeMapJsonApiConverterTest extends RBTest<InstrumentType
             d -> jsonDouble(d)),
         jsonObjectMatcher(
             JSON_OBJECT,
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
 
     assertThat(
         makeTestObject().fromJsonObject(
@@ -64,7 +65,7 @@ public class InstrumentTypeMapJsonApiConverterTest extends RBTest<InstrumentType
                 // entry for 'stock' is filtered out; value = 2.2 < 3
                 "mutualFund",        jsonDouble(3.3),
                 "structuredProduct", jsonDouble(4.4)),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Test

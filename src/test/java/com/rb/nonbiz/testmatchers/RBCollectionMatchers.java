@@ -5,6 +5,7 @@ import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSortedSet;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import org.apache.commons.math3.util.MultidimensionalCounter;
@@ -169,7 +170,7 @@ public class RBCollectionMatchers {
     return makeMatcher(expected, actual -> newRBSet(expected).equals(newRBSet(actual)));
   }
 
-  public static TypeSafeMatcher<List<Double>> doubleListMatcher(List<Double> expected, double epsilon) {
+  public static TypeSafeMatcher<List<Double>> doubleListMatcher(List<Double> expected, Epsilon epsilon) {
     return orderedListMatcher(expected, d -> doubleAlmostEqualsMatcher(d, epsilon));
   }
 
@@ -177,11 +178,13 @@ public class RBCollectionMatchers {
     return orderedListEqualityMatcher(expected);
   }
 
-  public static <V extends PreciseValue<? super V>> TypeSafeMatcher<List<V>> preciseValueListMatcher(List<V> expected, double epsilon) {
+  public static <V extends PreciseValue<? super V>> TypeSafeMatcher<List<V>> preciseValueListMatcher(
+      List<V> expected, Epsilon epsilon) {
     return orderedListMatcher(expected, v -> preciseValueMatcher(v, epsilon));
   }
 
-  public static <V extends ImpreciseValue<? super V>> TypeSafeMatcher<List<V>> impreciseValueListMatcher(List<V> expected, double epsilon) {
+  public static <V extends ImpreciseValue<? super V>> TypeSafeMatcher<List<V>> impreciseValueListMatcher(
+      List<V> expected, Epsilon epsilon) {
     return orderedListMatcher(expected, v -> impreciseValueMatcher(v, epsilon));
   }
 

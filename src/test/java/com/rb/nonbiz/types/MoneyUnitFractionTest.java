@@ -10,6 +10,8 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.MoneyUnitFraction.emptyMoneyUnitFraction;
 import static com.rb.nonbiz.types.MoneyUnitFraction.moneyUnitFraction;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
@@ -78,8 +80,8 @@ public class MoneyUnitFractionTest {
    */
   public static TypeSafeMatcher<MoneyUnitFraction> moneyUnitFractionNumeratorAndDenominatorMatcher(MoneyUnitFraction expected) {
     return makeMatcher(expected,
-        matchUsingAlmostEquals(v -> v.getNumerator(), 1e-8),
-        matchUsingAlmostEquals(v -> v.getDenominator(), 1e-8));
+        matchUsingAlmostEquals(v -> v.getNumerator(),   DEFAULT_EPSILON_1e_8),
+        matchUsingAlmostEquals(v -> v.getDenominator(), DEFAULT_EPSILON_1e_8));
   }
 
 }

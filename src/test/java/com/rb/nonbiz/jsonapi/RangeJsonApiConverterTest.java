@@ -28,6 +28,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.types.Correlation.correlation;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -62,7 +63,7 @@ public class RangeJsonApiConverterTest extends RBTest<RangeJsonApiConverter> {
             "max", jsonDouble(0.1)),
         signedFraction -> jsonDouble(signedFraction.doubleValue()),
         jsonPrimitive  -> signedFraction(jsonPrimitive.getAsDouble()),
-        f -> preciseValueMatcher(f, 1e-8));
+        f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8));
 
     // convert a Range of ImpreciseValues
     testRoundTripConversionHelper(
@@ -72,7 +73,7 @@ public class RangeJsonApiConverterTest extends RBTest<RangeJsonApiConverter> {
             "max", jsonDouble(1)),
         correlation   -> jsonDouble(correlation.doubleValue()),
         jsonPrimitive -> correlation(jsonPrimitive.getAsDouble()),
-        f -> impreciseValueMatcher(f, 1e-8));
+        f -> impreciseValueMatcher(f, DEFAULT_EPSILON_1e_8));
 
     // convert a Range of Doubles
     testRoundTripConversionHelper(
@@ -82,7 +83,7 @@ public class RangeJsonApiConverterTest extends RBTest<RangeJsonApiConverter> {
             "max", jsonDouble(22.2)),
         d -> jsonDouble(d),
         jsonPrimitive -> jsonPrimitive.getAsDouble(),
-        f -> doubleAlmostEqualsMatcher(f, 1e-8));
+        f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8));
 
     // convert a Range of Strings
     testRoundTripConversionHelper(
@@ -143,7 +144,7 @@ public class RangeJsonApiConverterTest extends RBTest<RangeJsonApiConverter> {
         jsonObject,
         v -> jsonDouble(v),
         jsonPrimitive -> money(jsonPrimitive.getAsDouble()),
-        f -> preciseValueMatcher(f, 1e-8));
+        f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8));
   }
 
   private <C extends Comparable<? super C>> void testRoundTripConversionHelper(
@@ -158,7 +159,7 @@ public class RangeJsonApiConverterTest extends RBTest<RangeJsonApiConverter> {
             v -> serializer.apply(v)),
         jsonObjectMatcher(
             rangeJsonObject,
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
 
     assertThat(
         makeTestObject().fromJsonObject(

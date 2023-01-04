@@ -19,6 +19,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_MONEY;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 
 public class HardAndSoftRangeTest extends RBTestMatcher<HardAndSoftRange<SignedMoney>> {
@@ -190,8 +191,8 @@ public class HardAndSoftRangeTest extends RBTestMatcher<HardAndSoftRange<SignedM
   public static <T extends RBNumeric<? super T>> TypeSafeMatcher<HardAndSoftRange<T>> hardAndSoftRangeMatcher(
       HardAndSoftRange<T> expected) {
     return makeMatcher(expected,
-        match(v -> v.getHardRange(), f -> rbNumericRangeMatcher(f, 1e-8)),
-        match(v -> v.getSoftRange(), f -> rbNumericRangeMatcher(f, 1e-8)));
+        match(v -> v.getHardRange(), f -> rbNumericRangeMatcher(f, DEFAULT_EPSILON_1e_8)),
+        match(v -> v.getSoftRange(), f -> rbNumericRangeMatcher(f, DEFAULT_EPSILON_1e_8)));
   }
 
 }

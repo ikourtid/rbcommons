@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -36,7 +37,8 @@ import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_EPSILON;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.EpsilonTest.DUMMY_EPSILON;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -101,8 +103,8 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
 
     // can use setPreciseValueIfNotAlmostZero() multiple times for the same key if value is zero
     doesNotThrow = rbJsonObjectBuilder()
-        .setPreciseValueIfNotAlmostZero("zeroSignedMoney", ZERO_SIGNED_MONEY, 1e-8)
-        .setPreciseValueIfNotAlmostZero("zeroSignedMoney", ZERO_SIGNED_MONEY, 1e-8);
+        .setPreciseValueIfNotAlmostZero("zeroSignedMoney", ZERO_SIGNED_MONEY, DEFAULT_EPSILON_1e_8)
+        .setPreciseValueIfNotAlmostZero("zeroSignedMoney", ZERO_SIGNED_MONEY, DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -128,10 +130,10 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         builder.getJsonObject().getAsJsonPrimitive("string"));
     assertThat(
         builder.getJsonObject().getAsJsonPrimitive("double").getAsDouble(),
-        doubleAlmostEqualsMatcher(3.14, 1e-8));
+        doubleAlmostEqualsMatcher(3.14, DEFAULT_EPSILON_1e_8));
     assertThat(
         builder.getJsonObject().getAsJsonPrimitive("doublePct").getAsDouble(),
-        doubleAlmostEqualsMatcher(12.3, 1e-8));
+        doubleAlmostEqualsMatcher(12.3, DEFAULT_EPSILON_1e_8));
     assertFalse(builder.getJsonObject().getAsJsonPrimitive("booleanFalse").getAsBoolean());
     assertTrue( builder.getJsonObject().getAsJsonPrimitive("booleanTrue" ).getAsBoolean());
     assertEquals(
@@ -154,13 +156,13 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
 
     assertThat(
         builder.getJsonObject().getAsJsonObject("objectElement"),
-        jsonElementMatcher(objectElement, 1e-8));
+        jsonElementMatcher(objectElement, DEFAULT_EPSILON_1e_8));
     assertThat(
         builder.getJsonObject().getAsJsonPrimitive("stringElement"),
         jsonElementMatcher(stringElement, DUMMY_EPSILON));  // no epsilon needed for String
     assertThat(
         builder.getJsonObject().getAsJsonPrimitive("doubleElement"),
-        jsonElementMatcher(doubleElement, 1e-8));
+        jsonElementMatcher(doubleElement, DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -261,10 +263,10 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
   @Test
   public void testConditionalContents() {
     RBJsonObjectBuilder builder = rbJsonObjectBuilder()
-        .setDoubleIfNotAlmostZero("nonZeroDouble", 3.14, 1e-8)
-        .setDoubleIfNotAlmostZero("zeroDouble",    1e-9, 1e-8)  // almost zero; 1e-9 < 1e-8
-        .setDoublePercentageIfNotAlmostZero("nonZeroDoublePct", 0.0567, 1e-8)
-        .setDoublePercentageIfNotAlmostZero("zeroDoublePct", 1e-9, 1e-8)
+        .setDoubleIfNotAlmostZero("nonZeroDouble", 3.14, DEFAULT_EPSILON_1e_8)
+        .setDoubleIfNotAlmostZero("zeroDouble",    1e-9, DEFAULT_EPSILON_1e_8)  // almost zero; 1e-9 < 1e-8
+        .setDoublePercentageIfNotAlmostZero("nonZeroDoublePct", 0.0567, DEFAULT_EPSILON_1e_8)
+        .setDoublePercentageIfNotAlmostZero("zeroDoublePct", 1e-9, DEFAULT_EPSILON_1e_8)
         .setBooleanIfTrue( "trueBoolean1",  true)
         .setBooleanIfTrue( "falseBoolean1", false)
         .setBooleanIfFalse("trueBoolean2",  true)
@@ -284,8 +286,8 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setIf("ifEvenPredicate567", 567, v -> v % 2 == 0, v -> jsonInteger(v))
         .setIf("ifEvenBoolean456",   456, true,            v -> jsonInteger(v))  // can also pass in a Boolean instead of a predicate
         .setIf("ifEvenBoolean567",   567, false,           v -> jsonInteger(v))
-        .setPreciseValueIfNotAlmostZero("nonZeroSignedMoney", signedMoney(1.23), 1e-8)
-        .setPreciseValueIfNotAlmostZero("zeroSignedMoney", ZERO_SIGNED_MONEY, 1e-8)
+        .setPreciseValueIfNotAlmostZero("nonZeroSignedMoney", signedMoney(1.23), DEFAULT_EPSILON_1e_8)
+        .setPreciseValueIfNotAlmostZero("zeroSignedMoney", ZERO_SIGNED_MONEY, DEFAULT_EPSILON_1e_8)
         .setIfNonEmpty("nonEmptySubObject", singletonJsonObject("subObject", jsonString("aSubObject")))
         .setIfNonEmpty("emptySubObject",    emptyJsonObject())
         .setArrayIfNonEmpty("nonEmptyArray", jsonArray(jsonString("first"), jsonString("second")))
@@ -362,7 +364,7 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
     assertAlmostEquals(
         signedMoney(1.23),
         signedMoney(builder.getJsonObject().getAsJsonPrimitive("nonZeroSignedMoney").getAsDouble()),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     // using setPreciseValueIfNotAlmostZero for a zero value does not add a JsonElement
     assertFalse(builder.getJsonObject().has("zeroSignedMoney"));
 
@@ -499,8 +501,8 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setIfOptionalPresent("optionalPresent", Optional.of(123), v -> jsonInteger(v))
         .setIfOptionalPresent("optionalPresent2", Optional.of("Optional2"),
             v -> v.length() > 2, v -> jsonString(v))
-        .setDoubleIfNotAlmostZero("nonZeroDouble", 7.89, 1e-8)
-        .setPreciseValueIfNotAlmostZero("nonZero", signedMoney(456.78), 1e-8)
+        .setDoubleIfNotAlmostZero("nonZeroDouble", 7.89, DEFAULT_EPSILON_1e_8)
+        .setPreciseValueIfNotAlmostZero("nonZero", signedMoney(456.78), DEFAULT_EPSILON_1e_8)
         .setArrayIfNonEmpty("array", jsonStringArray("abc", "def"))
         .setIf("predicateTrue", 789, v -> true, i -> jsonInteger(i))
         .setJsonSubObject("subObject", singletonJsonObject("subObject", jsonDouble(6.78)));
@@ -524,8 +526,8 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setIfOptionalPresent("optionalPresent", Optional.of(123), v -> jsonInteger(v))
         .setIfOptionalPresent("optionalPresent2", Optional.of("Optional2"),
             v -> v.length() > 2, v -> jsonString(v))
-        .setDoubleIfNotAlmostZero("nonZeroDouble", 7.89 + e, 1e-8)
-        .setPreciseValueIfNotAlmostZero("nonZero", signedMoney(456.78 + e), 1e-8)
+        .setDoubleIfNotAlmostZero("nonZeroDouble", 7.89 + e, DEFAULT_EPSILON_1e_8)
+        .setPreciseValueIfNotAlmostZero("nonZero", signedMoney(456.78 + e), DEFAULT_EPSILON_1e_8)
         .setArrayIfNonEmpty("array", jsonStringArray("abc", "def"))
         .setIf("predicateTrue", 789, v -> true, i -> jsonInteger(i))
         .setJsonSubObject("subObject", singletonJsonObject("subObject", jsonDouble(6.78 + e)));

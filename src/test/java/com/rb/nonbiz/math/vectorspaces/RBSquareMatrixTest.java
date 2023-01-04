@@ -1,25 +1,22 @@
 package com.rb.nonbiz.math.vectorspaces;
 
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import com.rb.nonbiz.testutils.Epsilons;
+import com.rb.nonbiz.testutils.MatcherEpsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbDiagonalMatrix;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrix2by2;
 import static com.rb.nonbiz.math.vectorspaces.RBMatrixTest.rbMatrixMatcher;
-import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.rbDiagonalSquareMatrix;
-import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.rbIdentitySquareMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.diagonalRBSquareMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.identityRBSquareMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.rbSquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertIndexOutOfBoundsException;
-import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
-import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -27,14 +24,6 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
 
   public static RBSquareMatrix singletonRBSquareMatrix(double onlyValue) {
     return rbSquareMatrix(new double[][] { { onlyValue } });
-  }
-
-  public static RBSquareMatrix rbSquareMatrixIdentity(int n) {
-    return RBSquareMatrix.rbSquareMatrix(rbIdentityMatrix(n));
-  }
-
-  public static RBSquareMatrix rbSquareMatrixDiagonal(RBVector rbVector) {
-    return RBSquareMatrix.rbSquareMatrix(rbDiagonalMatrix(rbVector));
   }
 
   public static RBSquareMatrix rbSquareMatrixDiagonal2by2(double a11, double a22) {
@@ -66,10 +55,6 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
         { a31, a32, a33 } });
   }
 
-  public static RBSquareMatrix rbSquareMatrix(double[][] values) {
-    return RBSquareMatrix.rbSquareMatrix(rbMatrix(new DenseDoubleMatrix2D(values)));
-  }
-
   @Test
   public void notSquare_throws() {
     assertIllegalArgumentException(() -> rbSquareMatrix(new double[][] {
@@ -98,13 +83,13 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
   @Test
   public void testIdentityMatrix() {
     assertThat(
-        rbIdentitySquareMatrix(2),
+        identityRBSquareMatrix(2),
         rbSquareMatrixMatcher(rbSquareMatrix2by2(
             1, 0,
             0, 1)));
 
     assertThat(
-        rbIdentitySquareMatrix(3),
+        identityRBSquareMatrix(3),
         rbSquareMatrixMatcher(rbSquareMatrix3by3(
             1, 0, 0,
             0, 1, 0,
@@ -114,7 +99,7 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
   @Test
   public void testDiagonalMatrix() {
     assertThat(
-        rbDiagonalSquareMatrix(rbVector(77, 88, 99)),
+        diagonalRBSquareMatrix(rbVector(77, 88, 99)),
         rbSquareMatrixMatcher(rbSquareMatrix3by3(
             77, 0, 0,
             0, 88, 0,
@@ -123,9 +108,9 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
 
   @Test
   public void testGetIJ() {
-    RBSquareMatrix matrix = RBSquareMatrix.rbSquareMatrix(rbMatrix2by2(
+    RBSquareMatrix matrix = rbSquareMatrix2by2(
         1.0, 2.0,
-        3.0, 4.0));
+        3.0, 4.0);
     assertEquals(1.0, matrix.get(0, 0), 1e-8);
     assertEquals(2.0, matrix.get(0, 1), 1e-8);
     assertEquals(3.0, matrix.get(1, 0), 1e-8);
@@ -165,16 +150,16 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
   }
 
   public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected) {
-    return rbSquareMatrixMatcher(expected, emptyEpsilons());
+    return rbSquareMatrixMatcher(expected, emptyMatcherEpsilons());
   }
 
-  public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected, double epsilon) {
-    return rbSquareMatrixMatcher(expected, useEpsilonEverywhere(epsilon));
+  public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected, Epsilon epsilon) {
+    return rbSquareMatrixMatcher(expected, useEpsilonInAllMatchers(epsilon));
   }
 
-  public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected, Epsilons e) {
+  public static TypeSafeMatcher<RBSquareMatrix> rbSquareMatrixMatcher(RBSquareMatrix expected, MatcherEpsilons e) {
     return makeMatcher(expected,
-        match(v -> v.getRawMatrixUnsafe(), f -> rbMatrixMatcher(f, e)));
+        match(v -> (RBMatrix) v, f -> rbMatrixMatcher(f, e)));
   }
 
 }

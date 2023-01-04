@@ -8,6 +8,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.List;
 
 import static com.rb.nonbiz.collections.LinearCombination.trivialLinearCombinationOfOneItem;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.WeightedByUnitFraction.weightedByUnitFraction;
 
 /**
@@ -28,7 +29,7 @@ public class NodeWithWeightedChildren<N, L> {
     double sum = 0;
     for (WeightedByUnitFraction<LinearCombination<N, L>> weightedChild : weightedChildren) {
       RBPreconditions.checkArgument(
-          !weightedChild.getWeight().isAlmostZero(1e-8),
+          !weightedChild.getWeight().isAlmostZero(DEFAULT_EPSILON_1e_8),
           "Weight can't be 0 (or almost 0) for %s",
           weightedChild);
       double weight = weightedChild.getWeight().doubleValue();
@@ -38,7 +39,7 @@ public class NodeWithWeightedChildren<N, L> {
       throw new IllegalArgumentException(
           String.format("Weights should add to EXACTLY 1 but add to %.30f", sum));
     }
-    return new NodeWithWeightedChildren(node, weightedChildren);
+    return new NodeWithWeightedChildren<>(node, weightedChildren);
   }
 
   public static <N, L> NodeWithWeightedChildren<N, L> nodeWithTwoWeightedLeafChildren(

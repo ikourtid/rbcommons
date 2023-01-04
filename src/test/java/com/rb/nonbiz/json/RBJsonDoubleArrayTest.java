@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.rb.nonbiz.json.RBJsonDoubleArray.RBJsonDoubleArrayBuilder;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -18,6 +19,7 @@ import static com.rb.nonbiz.testmatchers.Match.matchDoubleList;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertDoubleListsAlmostEqual;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -53,7 +55,7 @@ public class RBJsonDoubleArrayTest extends RBTestMatcher<RBJsonDoubleArray> {
     assertDoubleListsAlmostEqual(
         ImmutableList.of(1.23, 4.56, 7.89),
         rbJsonDoubleArray.getRawDoublesList(),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Test
@@ -78,7 +80,7 @@ public class RBJsonDoubleArrayTest extends RBTestMatcher<RBJsonDoubleArray> {
     assertEquals(3, builder.size());
     assertThat(
         builder.build(),
-        rbJsonDoubleArrayMatcher(rbJsonDoubleArray(1.23, 4.56, 7.89), 1e-8));
+        rbJsonDoubleArrayMatcher(rbJsonDoubleArray(1.23, 4.56, 7.89), DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -91,7 +93,7 @@ public class RBJsonDoubleArrayTest extends RBTestMatcher<RBJsonDoubleArray> {
     expected.add(7.89);
     assertThat(
         rbJsonDoubleArray.asJsonArray(),
-        jsonArrayMatcher(expected, 1e-8));
+        jsonArrayMatcher(expected, DEFAULT_EPSILON_1e_8));
   }
 
   @Override
@@ -120,10 +122,10 @@ public class RBJsonDoubleArrayTest extends RBTestMatcher<RBJsonDoubleArray> {
 
   @Override
   protected boolean willMatch(RBJsonDoubleArray expected, RBJsonDoubleArray actual) {
-    return rbJsonDoubleArrayMatcher(expected, 1e-8).matches(actual);
+    return rbJsonDoubleArrayMatcher(expected, DEFAULT_EPSILON_1e_8).matches(actual);
   }
 
-  public static TypeSafeMatcher<RBJsonDoubleArray> rbJsonDoubleArrayMatcher(RBJsonDoubleArray expected, double epsilon) {
+  public static TypeSafeMatcher<RBJsonDoubleArray> rbJsonDoubleArrayMatcher(RBJsonDoubleArray expected, Epsilon epsilon) {
     return makeMatcher(expected,
         matchDoubleList(v -> v.getRawDoublesList(), epsilon));
   }

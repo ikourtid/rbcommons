@@ -24,6 +24,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
@@ -324,7 +325,7 @@ public class NonContiguousNonDiscreteRangeMapTest extends RBTestMatcher<NonConti
 
   @Override
   protected boolean willMatch(NonContiguousRangeMap<LocalDate, Double> expected, NonContiguousRangeMap<LocalDate, Double> actual) {
-    return nonContiguousRangeMapMatcher(expected, v -> doubleAlmostEqualsMatcher(v, 1e-8)).matches(actual);
+    return nonContiguousRangeMapMatcher(expected, v -> doubleAlmostEqualsMatcher(v, DEFAULT_EPSILON_1e_8)).matches(actual);
   }
 
   public static <K extends Comparable<? super K>, V> TypeSafeMatcher<NonContiguousRangeMap<K, V>>

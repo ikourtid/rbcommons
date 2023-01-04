@@ -1,15 +1,19 @@
 package com.rb.nonbiz.math.vectorspaces;
 
-import cern.colt.matrix.DoubleMatrix2D;
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
+import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.functional.TriConsumer;
-import com.rb.nonbiz.functional.TriFunction;
-import com.rb.nonbiz.testutils.Epsilons;
+import com.rb.nonbiz.testutils.MatcherEpsilons;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
@@ -20,19 +24,22 @@ import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndexTest.matrixRowIndexMatcher;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrixTest.rbIndexableMatrixMatcher;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbDiagonalMatrix;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbIdentityMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.diagonalRBSquareMatrix;
+import static com.rb.nonbiz.math.vectorspaces.RBSquareMatrix.identityRBSquareMatrix;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
 import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVectorMatcher;
-import static com.rb.nonbiz.testmatchers.Match.match;
-import static com.rb.nonbiz.testmatchers.RBColtMatchers.matrixMatcher;
+import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.singletonRBVector;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertIndexOutOfBoundsException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
-import static com.rb.nonbiz.testutils.Epsilons.emptyEpsilons;
-import static com.rb.nonbiz.testutils.Epsilons.useEpsilonEverywhere;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
+import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -73,14 +80,9 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         { a31, a32, a33 }});
   }
 
-  public static RBMatrix rbMatrix(double[][] values) {
-    return RBMatrix.rbMatrix(new DenseDoubleMatrix2D(values));
-  }
-
   @Test
   public void emptyMatrix_throws() {
-    DoubleMatrix2D emptyRawMatrix = new DenseDoubleMatrix2D(new double[][] { {} });
-    assertIllegalArgumentException( () -> RBMatrix.rbMatrix(emptyRawMatrix));
+    assertIllegalArgumentException( () -> rbMatrix(new double[][] { {} }));
   }
 
   @Test
@@ -115,20 +117,20 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         { 1.1, 2.1, 3.1 },
         { 1.2, 2.2, 3.2 } });
     assertThat(
-        matrix2by3.multiply(rbIdentityMatrix(3)),
+        matrix2by3.multiply(identityRBSquareMatrix(3)),
         rbMatrixMatcher(matrix2by3));
     assertThat(
-        rbIdentityMatrix(2).multiply(matrix2by3),
+        identityRBSquareMatrix(2).multiply(matrix2by3),
         rbMatrixMatcher(matrix2by3));
 
     // multiplying an identity matrix by itself results in the same matrix
     assertThat(
-        rbIdentityMatrix(3).multiply(rbIdentityMatrix(3)),
-        rbMatrixMatcher(rbIdentityMatrix(3)));
+        identityRBSquareMatrix(3).multiply(identityRBSquareMatrix(3)),
+        rbMatrixMatcher(identityRBSquareMatrix(3)));
   }
 
   @Test
-  public void testMatrixMultiply() {
+  public void testMatrixMultiplyByOtherMatrix() {
     RBMatrix matrix1 = rbMatrix2by2(
         1.0, 2.0,
         3.0, 4.0);
@@ -143,25 +145,65 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
   }
 
   @Test
-  public void testMatrixDeterminant() {
-    assertEquals(1.0, rbIdentityMatrix(2).determinant(), 1e-8);
-    assertEquals(1.0, rbIdentityMatrix(3).determinant(), 1e-8);
+  public void testMatrixMultiplyByVector() {
+    Function<RBMatrix, RBVector> maker = leftMatrix ->
+        leftMatrix.multiply(rbVector(
+            5.0,
+            7.0));
+
+    assertThat(
+        "correct number of columns; works",
+        maker.apply(rbMatrix(new double[][] {
+            { 1.0, 2.0 }
+        })),
+        rbVectorMatcher(singletonRBVector(
+            doubleExplained(19, 1 * 5 + 2 * 7))));
+    assertThat(
+        "correct number of columns; works",
+        maker.apply(rbMatrix2by2(
+            1.0, 2.0,
+            3.0, 4.0)),
+        rbVectorMatcher(rbVector(
+            doubleExplained(19, 1 * 5 + 2 * 7),
+            doubleExplained(43, 3 * 5 + 4 * 7))));
+
+    // 1 column is too few
+    assertIllegalArgumentException( () -> maker.apply(rbMatrix(new double[][] {
+        { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
+        { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE } })));
+    // 3 columns; too many
+    assertIllegalArgumentException( () -> maker.apply(rbMatrix(new double[][] {
+        { DUMMY_DOUBLE },
+        { DUMMY_DOUBLE } })));
+  }
+
+  @Test
+  public void testCalculateDeterminant() {
+    BiConsumer<Double, RBMatrix> asserter = (expectedResult, matrix) ->
+        assertEquals(expectedResult, matrix.calculateDeterminant(), 1e-8);
+
+    asserter.accept(1.0, identityRBSquareMatrix(2));
+    asserter.accept(1.0, identityRBSquareMatrix(3));
 
     // recall that Det({{a, b}, {c, d}}) = ad - bc
-    assertEquals(doubleExplained(-2, 1 * 4 - 2 * 3), rbMatrix2by2(1, 2, 3, 4).determinant(), 1e-8);
-    assertEquals(doubleExplained( 7, 5 * 2 - 1 * 3), rbMatrix2by2(5, 1, 3, 2).determinant(), 1e-8);
+    asserter.accept(doubleExplained(-2, 1 * 4 - 2 * 3), rbMatrix2by2(1, 2, 3, 4));
+    asserter.accept(doubleExplained( 7, 5 * 2 - 1 * 3), rbMatrix2by2(5, 1, 3, 2));
 
     // an empty row or column will make the determinant zero
-    assertEquals(0.0, rbMatrix2by2(1, 1, 0, 0).determinant(), 1e-8);
-    assertEquals(0.0, rbMatrix2by2(0, 0, 1, 1).determinant(), 1e-8);
-    assertEquals(0.0, rbMatrix2by2(1, 0, 1, 0).determinant(), 1e-8);
-    assertEquals(0.0, rbMatrix2by2(0, 1, 0, 1).determinant(), 1e-8);
+    asserter.accept(0.0, rbMatrix2by2(1, 1, 0, 0));
+    asserter.accept(0.0, rbMatrix2by2(0, 0, 1, 1));
+    asserter.accept(0.0, rbMatrix2by2(1, 0, 1, 0));
+    asserter.accept(0.0, rbMatrix2by2(0, 1, 0, 1));
 
     // one row or column being equal to another, or a multiple of another, will cause the determinant to be zero
-    assertEquals(0.0, rbMatrix2by2(1,  2,  1,  2).determinant(), 1e-8);
-    assertEquals(0.0, rbMatrix2by2(1,  2, 10, 20).determinant(), 1e-8);
-    assertEquals(0.0, rbMatrix2by2(1,  1,  2,  2).determinant(), 1e-8);
-    assertEquals(0.0, rbMatrix2by2(1, 10,  2, 20).determinant(), 1e-8);
+    asserter.accept(0.0, rbMatrix2by2(1,  2,  1,  2));
+    asserter.accept(0.0, rbMatrix2by2(1,  2, 10, 20));
+    asserter.accept(0.0, rbMatrix2by2(1,  1,  2,  2));
+    asserter.accept(0.0, rbMatrix2by2(1, 10,  2, 20));
+
+    // Finally, non-square matrices should throw. Trying a 1 x 2 and then a 2 x 1 matrix.
+    assertIllegalArgumentException( () -> rbMatrix(new double[][] { { 1.1, 2.2 }}).calculateDeterminant());
+    assertIllegalArgumentException( () -> rbMatrix(new double[][] { { 1.1 }, { 2.2 }}).calculateDeterminant());
   }
 
   @Test
@@ -169,8 +211,8 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     RBMatrix matrix = rbMatrix2by2(
         1.0, 2.0,
         3.0, 4.0);
-    assertIllegalArgumentException( () -> matrix.multiply(rbIdentityMatrix(3)));
-    RBMatrix doesNotThrow = matrix.multiply(rbIdentityMatrix(2));
+    assertIllegalArgumentException( () -> matrix.multiply(identityRBSquareMatrix(3)));
+    RBMatrix doesNotThrow = matrix.multiply(identityRBSquareMatrix(2));
   }
 
   @Test
@@ -225,8 +267,8 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
     // the transposition of an identity matrix is itself
     assertThat(
-        rbIdentityMatrix(3).transpose(),
-        rbMatrixMatcher(rbIdentityMatrix(3)));
+        identityRBSquareMatrix(3).transpose(),
+        rbMatrixMatcher(identityRBSquareMatrix(3)));
 
     assertThat(
         rbMatrix2by2(
@@ -263,13 +305,13 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
 
     // The inverse of the identity matrix is the same identity matrix.
     asserter.accept(
-        rbIdentityMatrix(3),
-        rbIdentityMatrix(3));
+        identityRBSquareMatrix(3),
+        identityRBSquareMatrix(3));
 
     // The inverse of a diagonal matrix is another diagonal matrix, whose elements are reciprocals of the original's.
     asserter.accept(
-        rbDiagonalMatrix(rbVector(4.0,  5.0,  0.1)),
-        rbDiagonalMatrix(rbVector(0.25, 0.2, 10.0)));
+        diagonalRBSquareMatrix(rbVector(4.0,  5.0,  0.1)),
+        diagonalRBSquareMatrix(rbVector(0.25, 0.2, 10.0)));
 
     // The inverse of a rotation matrix is the inverse rotation.
     asserter.accept(
@@ -309,22 +351,22 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
                 8_000.0, -7_000.0,
                 - 800.1,    700.1),
             // need a larger epsilon here than in asserter()
-            1e-6));
+            epsilon(1e-6)));
   }
 
   @Test
   public void testDiagonalMatrix() {
     assertThat(
-        rbDiagonalMatrix(rbVector(55, 66, 77)),
+        diagonalRBSquareMatrix(rbVector(55, 66, 77)),
         rbMatrixMatcher(
             rbMatrix3by3(
                 55,  0,  0,
                 0,  66,  0,
                 0,   0, 77)));
     assertThat(
-        rbDiagonalMatrix(rbVector(1, 1, 1)),
+        diagonalRBSquareMatrix(rbVector(1, 1, 1)),
         rbMatrixMatcher(
-            rbIdentityMatrix(3)));
+            identityRBSquareMatrix(3)));
   }
 
   @Test
@@ -336,7 +378,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             .toIndexableMatrix(simpleArrayIndexMapping(77, 88), simpleArrayIndexMapping("a", "b", "c")),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     { 1.1, 2.1, 3.1 },
                     { 1.2, 2.2, 3.2 } }),
                 simpleArrayIndexMapping(77, 88),
@@ -352,7 +394,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             .toIndexableMatrixWithTrivialRowMapping(simpleArrayIndexMapping("a", "b", "c")),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     { 1.1, 2.1, 3.1 },
                     { 1.2, 2.2, 3.2 } }),
                 simpleArrayIndexMapping(matrixRowIndex(0), matrixRowIndex(1)),
@@ -368,7 +410,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             .toIndexableMatrixWithTrivialColumnMapping(simpleArrayIndexMapping(77, 88)),
         rbIndexableMatrixMatcher(
             rbIndexableMatrix(
-                new DenseDoubleMatrix2D(new double[][] {
+                rbMatrix(new double[][] {
                     { 1.1, 2.1, 3.1 },
                     { 1.2, 2.2, 3.2 } }),
                 simpleArrayIndexMapping(77, 88),
@@ -381,10 +423,10 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
     assertTrue(singletonRBMatrix(DUMMY_DOUBLE).isSquare());
 
     // identity matrices are square
-    assertTrue(rbIdentityMatrix(3).isSquare());
+    assertTrue(identityRBSquareMatrix(3).isSquare());
 
     // diagonal matrices are square
-    assertTrue(rbDiagonalMatrix(rbVector(DUMMY_DOUBLE, DUMMY_DOUBLE)).isSquare());
+    assertTrue(diagonalRBSquareMatrix(rbVector(DUMMY_DOUBLE, DUMMY_DOUBLE)).isSquare());
 
     // a 2x2 matrix is square
     assertTrue(rbMatrix(new double[][] {
@@ -525,14 +567,14 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         }))
         .forEach(v -> assertIllegalArgumentException( () -> v.getOnlyElementOrThrow()));
   }
-  
+
   @Test
   public void testLastValidRowAndColumn() {
     TriConsumer<Integer, Integer, RBMatrix> asserter = (expectedLastRowInt, expectedLastColumnInt, rbMatrix) -> {
-        assertThat(
-            rbMatrix.getLastRowIndex(),
-            matrixRowIndexMatcher(
-                matrixRowIndex(expectedLastRowInt)));
+      assertThat(
+          rbMatrix.getLastRowIndex(),
+          matrixRowIndexMatcher(
+              matrixRowIndex(expectedLastRowInt)));
       assertThat(
           rbMatrix.getLastColumnIndex(),
           matrixColumnIndexMatcher(
@@ -544,6 +586,91 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
         { 1.1, 2.2, 3.3 },
         { 4.4, 5.5, 6.6 }
     }));
+  }
+
+  @Test
+  public void testMatrixRowStream() {
+    BiConsumer<RBMatrix, List<MatrixRowIndex>> asserter = (rbMatrix, expectedResult) ->
+        assertThat(
+            rbMatrix.matrixRowIndexStream().collect(Collectors.toList()),
+            orderedListMatcher(
+                expectedResult,
+                f -> matrixRowIndexMatcher(f)));
+
+    asserter.accept(
+        singletonRBMatrix(DUMMY_DOUBLE),
+        singletonList(matrixRowIndex(0)));
+    asserter.accept(
+        rbMatrix(new double[][] {
+            { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE }
+        }),
+        ImmutableList.of(matrixRowIndex(0), matrixRowIndex(1)));
+  }
+
+  @Test
+  public void testMatrixColumnStream() {
+    BiConsumer<RBMatrix, List<MatrixColumnIndex>> asserter = (rbMatrix, expectedResult) ->
+        assertThat(
+            rbMatrix.matrixColumnIndexStream().collect(Collectors.toList()),
+            orderedListMatcher(
+                expectedResult,
+                f -> matrixColumnIndexMatcher(f)));
+
+    asserter.accept(
+        singletonRBMatrix(DUMMY_DOUBLE),
+        singletonList(matrixColumnIndex(0)));
+    asserter.accept(
+        rbMatrix(new double[][] {
+            { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
+            { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE }
+        }),
+        ImmutableList.of(matrixColumnIndex(0), matrixColumnIndex(1), matrixColumnIndex(2)));
+  }
+
+  @Test
+  public void testGet() {
+    BiFunction<Integer, Integer, Double> getter = (rowAsInt, columnAsInt) ->
+        rbMatrix(new double[][] {
+            { 0.0, 0.1, 0.2 },
+            { 1.0, 1.1, 1.2 }
+        })
+            .get(matrixRowIndex(rowAsInt), matrixColumnIndex(columnAsInt));
+
+    assertEquals(0.0, getter.apply(0, 0), 1e-8);
+    assertEquals(0.1, getter.apply(0, 1), 1e-8);
+    assertEquals(0.2, getter.apply(0, 2), 1e-8);
+
+    assertEquals(1.0, getter.apply(1, 0), 1e-8);
+    assertEquals(1.1, getter.apply(1, 1), 1e-8);
+    assertEquals(1.2, getter.apply(1, 2), 1e-8);
+
+    assertIndexOutOfBoundsException( () -> getter.apply(0, 3));
+    assertIndexOutOfBoundsException( () -> getter.apply(2, 0));
+    assertIndexOutOfBoundsException( () -> getter.apply(2, 3));
+  }
+
+  @Test
+  public void testGetRowAsVector() {
+    IntFunction<RBVector> getter = row -> rbMatrix(new double[][] {
+        { 1.1, 2.2, 3.3 },
+        { 4.4, 5.5, 6.6 } })
+        .getRowVector(matrixRowIndex(row));
+    assertThat(getter.apply(0), rbVectorMatcher(rbVector(1.1, 2.2, 3.3)));
+    assertThat(getter.apply(1), rbVectorMatcher(rbVector(4.4, 5.5, 6.6)));
+    assertIllegalArgumentException( () -> getter.apply(2));
+  }
+
+  @Test
+  public void testGetColumnAsVector() {
+    IntFunction<RBVector> getter = column -> rbMatrix(new double[][] {
+        { 1.1, 2.2, 3.3 },
+        { 4.4, 5.5, 6.6 } })
+        .getColumnVector(matrixColumnIndex(column));
+    assertThat(getter.apply(0), rbVectorMatcher(rbVector(1.1, 4.4)));
+    assertThat(getter.apply(1), rbVectorMatcher(rbVector(2.2, 5.5)));
+    assertThat(getter.apply(2), rbVectorMatcher(rbVector(3.3, 6.6)));
+    assertIllegalArgumentException( () -> getter.apply(3));
   }
 
   @Override
@@ -572,16 +699,33 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
   }
 
   public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected) {
-    return rbMatrixMatcher(expected, emptyEpsilons());
+    return rbMatrixMatcher(expected, emptyMatcherEpsilons());
   }
 
-  public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected, double epsilon) {
-    return rbMatrixMatcher(expected, useEpsilonEverywhere(epsilon));
+  public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected, Epsilon epsilon) {
+    return rbMatrixMatcher(expected, useEpsilonInAllMatchers(epsilon));
   }
 
-  public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected, Epsilons e) {
-    return makeMatcher(expected,
-        match(v -> v.getRawMatrixUnsafe(), f -> matrixMatcher(f, e)));
+  // This matcher is very verbose; we could have just exposed the RBMatrix's DoubleMatrix2D and used
+  // matrixMatcher. However, exposing that would be dangerous, because it would also allow other classes in
+  // the same package to also access the DoubleMatrix2D, which is a 3rd party class that's not immutable.
+  // So this matcher's verbosity is a small price to pay compared to that risk.
+  public static TypeSafeMatcher<RBMatrix> rbMatrixMatcher(RBMatrix expected, MatcherEpsilons e) {
+    return makeMatcher(expected, actual -> {
+      if (expected.getNumRows() != actual.getNumRows()) {
+        return false;
+      }
+      if (expected.getNumColumns() != actual.getNumColumns()) {
+        return false;
+      }
+      // For the index streams, we could have used either 'expected' or 'actual'
+      return expected.matrixRowIndexStream().allMatch(matrixRowIndex ->
+          expected.matrixColumnIndexStream().allMatch(matrixColumnIndex -> {
+            double valueInExpected = expected.get(matrixRowIndex, matrixColumnIndex);
+            double valueInActual   = actual.get(matrixRowIndex, matrixColumnIndex);
+            return e.get(RBMatrix.class).areWithin(valueInExpected, valueInActual);
+          }));
+    });
   }
 
 }

@@ -1,6 +1,7 @@
 package com.rb.nonbiz.testmatchers;
 
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Iterator;
@@ -54,7 +55,7 @@ public class RBIterMatchers {
   /**
    * Obviously this 'consumes' the iterator, so be mindful.
    */
-  public static <T> TypeSafeMatcher<Iterator<Double>> doubleIteratorMatcher(Iterator<Double> expected, double epsilon) {
+  public static <T> TypeSafeMatcher<Iterator<Double>> doubleIteratorMatcher(Iterator<Double> expected, Epsilon epsilon) {
     return iteratorMatcher(expected, f -> doubleAlmostEqualsMatcher(f, epsilon));
   }
 

@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -26,6 +27,8 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_BOOLEAN;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -51,7 +54,7 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
 
   @Test
   public void testSingleRowIterator() {
-    double e = 1e-9; // epsilon
+    Epsilon e = epsilon(1e-9);
     ImmutableDoubleIndexableArray2D<String, Boolean> array = immutableDoubleIndexableArray2D(
         new double[][] {
             { 1.1, 2.2 },
@@ -61,8 +64,8 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
         simpleArrayIndexMapping("a", "b", "c"),
         simpleArrayIndexMapping(false, true));
     Iterator<Double> iter = array.singleRowIterator("b");
-    assertEquals(3.3, iter.next(), e);
-    assertEquals(4.4, iter.next(), e);
+    assertEquals(3.3, iter.next(), e.doubleValue());
+    assertEquals(4.4, iter.next(), e.doubleValue());
     assertFalse(iter.hasNext());
     assertThat(
         newArrayList(array.singleRowIterator("a")),
@@ -225,7 +228,7 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
             },
             simpleArrayIndexMapping("a", "b", "c"),
             simpleArrayIndexMapping("a", "b", "c"))
-            .isLogicallyAndPhysicallySymmetric(1e-8);
+            .isLogicallyAndPhysicallySymmetric(DEFAULT_EPSILON_1e_8);
 
     assertTrue(
         "exactly equal",
@@ -251,7 +254,7 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
             },
             simpleArrayIndexMapping("a", "b", "c"),
             simpleArrayIndexMapping("a", "b", "c"))
-            .isLogicallyAndPhysicallySymmetric(1e-8));
+            .isLogicallyAndPhysicallySymmetric(DEFAULT_EPSILON_1e_8));
 
     // The 2nd row was moved to the top, and the row keys were also changed to b, a, c to match that move.
     ImmutableDoubleIndexableArray2D<String, String> logicallySymmetric = immutableDoubleIndexableArray2D(
@@ -262,7 +265,7 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
         },
         simpleArrayIndexMapping("b", "a", "c"),
         simpleArrayIndexMapping("a", "b", "c"));
-    assertFalse(logicallySymmetric.isLogicallyAndPhysicallySymmetric(1e-8));
+    assertFalse(logicallySymmetric.isLogicallyAndPhysicallySymmetric(DEFAULT_EPSILON_1e_8));
   }
 
   @Override
@@ -303,11 +306,11 @@ public class ImmutableDoubleIndexableArray2DTest extends RBTestMatcher<Immutable
 
   public static <R, C> TypeSafeMatcher<ImmutableDoubleIndexableArray2D<R, C>> immutableDoubleIndexableArray2DMatcher(
       ImmutableDoubleIndexableArray2D<R, C> expected) {
-    return immutableDoubleIndexableArray2DMatcher(expected, 1e-8);
+    return immutableDoubleIndexableArray2DMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
   public static <R, C> TypeSafeMatcher<ImmutableDoubleIndexableArray2D<R, C>> immutableDoubleIndexableArray2DMatcher(
-      ImmutableDoubleIndexableArray2D<R, C> expected, double epsilon) {
+      ImmutableDoubleIndexableArray2D<R, C> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.getMutableArray2D(), f -> mutableDoubleIndexableArray2DMatcher(f, epsilon)));
   }

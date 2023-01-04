@@ -26,6 +26,8 @@ import static com.rb.nonbiz.search.BinarySearchTerminationPredicate.terminateBas
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static java.util.Comparator.naturalOrder;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,7 +35,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class BinarySearchTest extends RBTest<BinarySearch> {
 
   private final BinarySearchTerminationPredicate<OnesBasedReturn, Money> DEFAULT_TERMINATION_PREDICATE =
-      onlyTerminateBasedOnX( (ret1, ret2) -> ret1.almostEquals(ret2, 1e-8));
+      onlyTerminateBasedOnX( (ret1, ret2) -> ret1.almostEquals(ret2, DEFAULT_EPSILON_1e_8));
   private final Money TARGET_Y = money(1_600);
 
   @Test
@@ -75,26 +77,26 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
   @Test
   public void terminationCausedByAllReasonCombinations() {
     BinarySearchTerminationPredicate<OnesBasedReturn, Money> onlyX_onlyXmatters =
-        onlyTerminateBasedOnX( (ret1, ret2) -> ret1.almostEquals(ret2, 1e-8));
+        onlyTerminateBasedOnX( (ret1, ret2) -> ret1.almostEquals(ret2, DEFAULT_EPSILON_1e_8));
     BinarySearchTerminationPredicate<OnesBasedReturn, Money> xOrY_onlyXmatters =
         terminateBasedOnXorY(
-            (ret1, ret2) -> ret1.almostEquals(ret2, 1e-8),
+            (ret1, ret2) -> ret1.almostEquals(ret2, DEFAULT_EPSILON_1e_8),
             (amt1, amt2) -> false);
     BinarySearchTerminationPredicate<OnesBasedReturn, Money> xAndY_onlyXmatters=
         terminateBasedOnXandY(
-            (ret1, ret2) -> ret1.almostEquals(ret2, 1e-8),
+            (ret1, ret2) -> ret1.almostEquals(ret2, DEFAULT_EPSILON_1e_8),
             (amt1, amt2) -> true);
 
     BinarySearchTerminationPredicate<OnesBasedReturn, Money> onlyY_onlyYmatters =
-        onlyTerminateBasedOnY( (amt1, amt2) -> amt1.almostEquals(amt2, 1e-4));
+        onlyTerminateBasedOnY( (amt1, amt2) -> amt1.almostEquals(amt2, epsilon(1e-4)));
     BinarySearchTerminationPredicate<OnesBasedReturn, Money> xOrY_onlyYmatters =
         terminateBasedOnXorY(
             (ret1, ret2) -> false,
-            (amt1, amt2) -> amt1.almostEquals(amt2, 1e-4));
+            (amt1, amt2) -> amt1.almostEquals(amt2, epsilon(1e-4)));
     BinarySearchTerminationPredicate<OnesBasedReturn, Money> xAndY_onlyYmatters=
         terminateBasedOnXandY(
             (ret1, ret2) -> true,
-            (amt1, amt2) -> amt1.almostEquals(amt2, 1e-4));
+            (amt1, amt2) -> amt1.almostEquals(amt2, epsilon(1e-4)));
 
     UnaryOperator<BinarySearchResultBuilder<OnesBasedReturn, Money>> resultTerminatedByX = v -> v
         .setLowerBoundX(onesBasedReturn(doubleExplained(0.8, 1_600 / 2_000.0)))
@@ -141,7 +143,7 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
             .setLowerBoundX(onesBasedReturn(0.1))
             .setUpperBoundX(onesBasedReturn(10.0))
             // terminating based on X or Y here, but X will never be true
-            .setTerminationPredicate(onlyTerminateBasedOnY( (amt1, amt2) -> amt1.almostEquals(amt2, 1e-4)))
+            .setTerminationPredicate(onlyTerminateBasedOnY( (amt1, amt2) -> amt1.almostEquals(amt2, epsilon(1e-4))))
             .build(), // using lower epsilon for termination
         v -> v
             // ideal is 0.8, but the binary search doesn't iterate enough times in this test (intentionally)
@@ -310,8 +312,8 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
                 .setTargetY(TARGET_Y)
                 .setComparatorForY(Money::compareTo)
                 .build(),
-            f -> preciseValueMatcher(f, 1e-8),
-            f -> preciseValueMatcher(f, 1e-4))); // We need a less tight epsilon on the Y for the test to work
+            f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8),
+            f -> preciseValueMatcher(f, epsilon(1e-4)))); // We need a less tight epsilon on the Y for the test to work
   }
 
   @Override

@@ -16,6 +16,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static junit.framework.TestCase.assertEquals;
 
@@ -64,7 +65,10 @@ public class EitherOrBothTest extends RBTestMatcher<EitherOrBoth<UnitFraction, D
 
   @Override
   protected boolean willMatch(EitherOrBoth<UnitFraction, Double> expected, EitherOrBoth<UnitFraction, Double> actual) {
-    return eitherOrBothMatcher(expected, v -> preciseValueMatcher(v, 1e-8), v -> doubleAlmostEqualsMatcher(v, 1e-8))
+    return eitherOrBothMatcher(
+        expected,
+        v -> preciseValueMatcher(v, DEFAULT_EPSILON_1e_8),
+        v -> doubleAlmostEqualsMatcher(v, DEFAULT_EPSILON_1e_8))
         .matches(actual);
   }
 

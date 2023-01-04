@@ -47,6 +47,8 @@ import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.nonEmptyOptionalMatc
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static com.rb.nonbiz.types.Correlation.correlation;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static java.util.Collections.emptyList;
@@ -194,7 +196,9 @@ public class RBJsonArraysTest {
     JsonArray jsonArray = jsonArray(jsonDouble(1.23), jsonDouble(4.56), jsonDouble(7.89));
     assertThat(
         jsonArrayToDoubleArray(jsonArray, v -> v.getAsDouble()),
-        doubleArrayMatcher(new double[] {1.23, 4.56, 7.89}, 1e-8));
+        doubleArrayMatcher(
+            new double[] {1.23, 4.56, 7.89},
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Test

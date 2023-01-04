@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import static com.rb.nonbiz.testmatchers.Match.matchUsingAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.InterpolationPreference.USE_DEFAULT_VALUE_INSTEAD_OF_SUPPLIED;
 import static com.rb.nonbiz.types.InterpolationPreference.USE_SUPPLIED_VALUE_INSTEAD_OF_DEFAULT;
 import static com.rb.nonbiz.types.InterpolationPreference.preferSuppliedValueBy;
@@ -45,7 +46,7 @@ public class InterpolationPreferenceTest extends RBTestMatcher<InterpolationPref
 
   public static TypeSafeMatcher<InterpolationPreference> interpolationPreferenceMatcher(InterpolationPreference expected) {
     return makeMatcher(expected,
-        matchUsingAlmostEquals(v -> v.getRawPreferenceForSuppliedValue(), 1e-8));
+        matchUsingAlmostEquals(v -> v.getRawPreferenceForSuppliedValue(), DEFAULT_EPSILON_1e_8));
   }
 
 }

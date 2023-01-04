@@ -1,16 +1,18 @@
 package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleMatrix1D;
+import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
+import cern.colt.matrix.linalg.Algebra;
 import com.google.common.primitives.Doubles;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.DoubleStream;
-import java.util.stream.Stream;
 
 /**
  * This is just a thin wrapper around a Colt DoubleMatrix1D, except that we do not expose any methods that could
@@ -52,8 +54,8 @@ public class RBVector {
     return rawDoubleMatrix1D.size();
   }
 
-  public boolean isAlmostUnitVector(double epsilon) {
-    return Math.abs(calculateMagnitude() - 1) <= epsilon;
+  public boolean isAlmostUnitVector(Epsilon epsilon) {
+    return epsilon.areWithin(calculateMagnitude(), 1);
   }
 
   /**
@@ -111,10 +113,15 @@ public class RBVector {
   }
 
   /**
-   * This is here to help the test matcher, hence the 'Unsafe' in the name, and the package-private status.
+   * Multiplies the supplied matrix with this vector, resulting in another vector.
+   *
+   * <p> Note that this takes in a raw {@link DoubleMatrix2D} instead of an RBMatrix. This is because
+   * we don't want to expose the raw Colt {@link DoubleMatrix2D} or {@link DoubleMatrix1D} (because they are mutable,
+   * so one could modify them by accident). However, we can't have {@link RBVector} and {@link RBMatrix} 'peek'
+   * into each other's raw data. </p>
    */
-  DoubleMatrix1D getRawDoubleMatrix1DUnsafe() {
-    return rawDoubleMatrix1D;
+  public RBVector multiplyOnLeft(DoubleMatrix2D leftMatrix) {
+    return rbVector(new Algebra().mult(leftMatrix, rawDoubleMatrix1D));
   }
 
   /**
@@ -126,6 +133,15 @@ public class RBVector {
 
   public List<Double> asList() {
     return Doubles.asList(rawDoubleMatrix1D.toArray());
+  }
+
+  public double[] toArray() { return rawDoubleMatrix1D.toArray(); }
+
+  /**
+   * Returns the sum of all elements in this vector.
+   */
+  public double sumElements() {
+    return rawDoubleMatrix1D.zSum();
   }
 
   @Override

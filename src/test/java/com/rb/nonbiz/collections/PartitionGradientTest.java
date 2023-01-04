@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -20,6 +21,7 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 public class PartitionGradientTest extends RBTestMatcher<PartitionGradient<String>> {
@@ -238,10 +240,10 @@ public class PartitionGradientTest extends RBTestMatcher<PartitionGradient<Strin
 
   public static <T> TypeSafeMatcher<PartitionGradient<T>> partitionGradientMatcher(PartitionGradient<T> expected) {
     return makeMatcher(expected,
-        match(                 v -> v.getOriginalPartition(),         f -> epsilonPartitionMatcher(f, 1e-8)),
-        matchUsingAlmostEquals(v -> v.getBumpAmount(), 1e-8),
-        matchRBMap(            v -> v.getPartitionsWhenBumpingUp(),   f -> epsilonPartitionMatcher(f, 1e-8)),
-        matchRBMap(            v -> v.getPartitionsWhenBumpingDown(), f -> epsilonPartitionMatcher(f, 1e-8)));
+        match(                 v -> v.getOriginalPartition(),         f -> epsilonPartitionMatcher(f, DEFAULT_EPSILON_1e_8)),
+        matchUsingAlmostEquals(v -> v.getBumpAmount(), DEFAULT_EPSILON_1e_8),
+        matchRBMap(            v -> v.getPartitionsWhenBumpingUp(),   f -> epsilonPartitionMatcher(f, DEFAULT_EPSILON_1e_8)),
+        matchRBMap(            v -> v.getPartitionsWhenBumpingDown(), f -> epsilonPartitionMatcher(f, DEFAULT_EPSILON_1e_8)));
   }
 
 }

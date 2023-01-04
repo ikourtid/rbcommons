@@ -13,6 +13,7 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class AnnuallyCompoundedAnnualizedReturnTest extends RBTestMatcher<AnnuallyCompoundedAnnualizedReturn> {
@@ -46,27 +47,27 @@ public class AnnuallyCompoundedAnnualizedReturnTest extends RBTestMatcher<Annual
         onesBasedReturn(1.05),
         annuallyCompoundedAnnualizedReturn(onesBasedReturn(1.05))
             .toNonAnnualized(1.0),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         onesBasedReturn(1.05 * 1.05),
         annuallyCompoundedAnnualizedReturn(onesBasedReturn(1.05))
             .toNonAnnualized(2.0),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         onesBasedReturn(1.05 * 1.05 * 1.05),
         annuallyCompoundedAnnualizedReturn(onesBasedReturn(1.05))
             .toNonAnnualized(3.0),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         onesBasedReturn(doubleExplained(1.02469508, Math.sqrt(1.05))),
         annuallyCompoundedAnnualizedReturn(onesBasedReturn(1.05))
             .toNonAnnualized(0.5),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
     assertAlmostEquals(
         FLAT_RETURN,
         annuallyCompoundedAnnualizedReturn(onesBasedReturn(1.05))
             .toNonAnnualized(0),
-        1e-8);
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Override
@@ -94,7 +95,7 @@ public class AnnuallyCompoundedAnnualizedReturnTest extends RBTestMatcher<Annual
   public static TypeSafeMatcher<AnnuallyCompoundedAnnualizedReturn> annuallyCompoundedAnnualizedReturnMatcher(
       AnnuallyCompoundedAnnualizedReturn expected) {
     return makeMatcher(expected,
-        matchUsingAlmostEquals(v -> v.getRawReturn(), 1e-8));
+        matchUsingAlmostEquals(v -> v.getRawReturn(), DEFAULT_EPSILON_1e_8));
   }
 
 }

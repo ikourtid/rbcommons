@@ -12,6 +12,8 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.junit.Assert.assertEquals;
 
 public class ArithmeticProgressionTest extends RBTestMatcher<ArithmeticProgression> {
@@ -87,8 +89,8 @@ public class ArithmeticProgressionTest extends RBTestMatcher<ArithmeticProgressi
 
   public static TypeSafeMatcher<ArithmeticProgression> arithmeticProgressionMatcher(ArithmeticProgression expected) {
     return makeMatcher(expected,
-        matchUsingDoubleAlmostEquals(v -> v.getInitialValue(),      1e-8),
-        matchUsingDoubleAlmostEquals(v -> v.getCommonDifference(), 1e-8));
+        matchUsingDoubleAlmostEquals(v -> v.getInitialValue(),     DEFAULT_EPSILON_1e_8),
+        matchUsingDoubleAlmostEquals(v -> v.getCommonDifference(), DEFAULT_EPSILON_1e_8));
   }
 
 }

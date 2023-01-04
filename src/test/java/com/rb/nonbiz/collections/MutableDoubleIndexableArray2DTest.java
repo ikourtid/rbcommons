@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
+import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -21,6 +22,8 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -78,7 +81,7 @@ public class MutableDoubleIndexableArray2DTest extends RBTestMatcher<MutableDoub
 
   @Test
   public void testSingleRowIterator() {
-    double e = 1e-9; // epsilon
+    Epsilon e = epsilon(1e-9);
     MutableDoubleIndexableArray2D<String, Boolean> array = mutableDoubleIndexableArray2D(
         new double[][] {
             { 1.1, 2.2 },
@@ -88,8 +91,8 @@ public class MutableDoubleIndexableArray2DTest extends RBTestMatcher<MutableDoub
         simpleArrayIndexMapping("a", "b", "c"),
         simpleArrayIndexMapping(false, true));
     Iterator<Double> iter = array.singleRowIterator("b");
-    assertEquals(3.3, iter.next(), e);
-    assertEquals(4.4, iter.next(), e);
+    assertEquals(3.3, iter.next(), e.doubleValue());
+    assertEquals(4.4, iter.next(), e.doubleValue());
     assertFalse(iter.hasNext());
     assertThat(
         newArrayList(array.singleRowIterator("a")),
@@ -169,11 +172,11 @@ public class MutableDoubleIndexableArray2DTest extends RBTestMatcher<MutableDoub
 
   public static <R, C> TypeSafeMatcher<MutableDoubleIndexableArray2D<R, C>> mutableDoubleIndexableArray2DMatcher(
       MutableDoubleIndexableArray2D<R, C> expected) {
-    return mutableDoubleIndexableArray2DMatcher(expected, 1e-8);
+    return mutableDoubleIndexableArray2DMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
   public static <R, C> TypeSafeMatcher<MutableDoubleIndexableArray2D<R, C>> mutableDoubleIndexableArray2DMatcher(
-      MutableDoubleIndexableArray2D<R, C> expected, double epsilon) {
+      MutableDoubleIndexableArray2D<R, C> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.getRawArray(),      f -> doubleArray2DMatcher(f, epsilon)),
         match(v -> v.getRowMapping(),    f -> arrayIndexMappingMatcher(f, f2 -> typeSafeEqualTo(f2))),

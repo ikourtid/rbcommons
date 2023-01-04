@@ -5,6 +5,7 @@ import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 /**
  * Shrinks a range by scaling it by a non-zero UnitFraction multiplier (i.e. &le; 1).
@@ -17,7 +18,7 @@ public class ClosedUnitFractionRangeShrinker {
 
   public ClosedUnitFractionRange shrink(ClosedUnitFractionRange originalRange, UnitFraction fractionOfOriginal) {
     RBPreconditions.checkArgument(
-        !fractionOfOriginal.isAlmostZero(1e-8),
+        !fractionOfOriginal.isAlmostZero(DEFAULT_EPSILON_1e_8),
         "You can only shrink a range using a UnitFraction multiplier in (0, 1], subject to epsilon; you used %s",
         fractionOfOriginal);
     return closedUnitFractionRange(

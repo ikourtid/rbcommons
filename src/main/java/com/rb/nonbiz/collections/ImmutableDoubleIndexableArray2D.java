@@ -2,6 +2,8 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.rb.nonbiz.functional.TriFunction;
+import com.rb.nonbiz.math.vectorspaces.RBMatrix;
+import com.rb.nonbiz.types.Epsilon;
 
 import java.util.Iterator;
 import java.util.stream.IntStream;
@@ -9,6 +11,7 @@ import java.util.stream.IntStream;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray2D.immutableIndexableArray2D;
 import static com.rb.nonbiz.collections.MutableDoubleIndexableArray2D.mutableDoubleIndexableArray2D;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
+import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
@@ -58,11 +61,8 @@ public class ImmutableDoubleIndexableArray2D<R, C> implements IndexableDoubleDat
     return mutableArray2D.getColumnMapping();
   }
 
-  /** As should be obvious by the name, only use this if you know what you're doing.
-   * We're breaking an abstraction here in order to improve performance in some cases.
-   */
-  public double[][] getRawArrayUnsafe() {
-    return mutableArray2D.getRawArrayUnsafe();
+  public RBMatrix toRBMatrix() {
+    return mutableArray2D.toRBMatrix();
   }
 
   /**
@@ -132,7 +132,7 @@ public class ImmutableDoubleIndexableArray2D<R, C> implements IndexableDoubleDat
    * <p> This method will not consider the latter matrix to be symmetric: it will require that the raw storage
    * (i.e. using numeric indices) is also symmetric. </p>
    */
-  public boolean isLogicallyAndPhysicallySymmetric(double epsilon) {
+  public boolean isLogicallyAndPhysicallySymmetric(Epsilon epsilon) {
     if (!isSquareWithRowKeysSameAsColumnKeys()) {
       return false;
     }
@@ -147,7 +147,7 @@ public class ImmutableDoubleIndexableArray2D<R, C> implements IndexableDoubleDat
       for (int j = i + 1; j < sharedSize; j++) {
         double aboveDiagonal = getByIndex(i, j);
         double belowDiagonal = getByIndex(j, i);
-        if (Math.abs(aboveDiagonal - belowDiagonal) > epsilon) {
+        if (!epsilon.areWithin(aboveDiagonal, belowDiagonal)) {
           return false;
         }
       }

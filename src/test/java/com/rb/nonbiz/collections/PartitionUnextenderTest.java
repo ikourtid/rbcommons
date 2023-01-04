@@ -13,6 +13,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
@@ -92,7 +93,7 @@ public class PartitionUnextenderTest extends RBTest<PartitionUnextender> {
             partition(rbMapOf(
                 "a", unitFraction(doubleExplained(0.25, 0.15 / (0.15 + doubleExplained(0.45, (0.85 - 0.4))))),
                 "b", unitFraction(doubleExplained(0.75, 0.45 / (0.15 + 0.45))))),
-            1e-8));
+            DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -105,13 +106,13 @@ public class PartitionUnextenderTest extends RBTest<PartitionUnextender> {
             makeTestObject().unextend(partition, "b", unitFraction(0.2)),
             "b",
             unitFraction(0.2)),
-        epsilonPartitionMatcher(partition, 1e-8));
+        epsilonPartitionMatcher(partition, DEFAULT_EPSILON_1e_8));
     assertThat(
         makeTestObject().unextend(
             makeRealObject(PartitionExtender.class).extend(partition, "b", unitFraction(0.2)),
             "b",
             unitFraction(0.2)),
-        epsilonPartitionMatcher(partition, 1e-8));
+        epsilonPartitionMatcher(partition, DEFAULT_EPSILON_1e_8));
   }
 
   @Test
@@ -132,7 +133,7 @@ public class PartitionUnextenderTest extends RBTest<PartitionUnextender> {
         makeRealObject(PartitionExtender.class).extend(
             makeTestObject().unextend(original, "c", unitFraction(0.01)),
             "d", unitFraction(0.01)),
-        epsilonPartitionMatcher(mutuallyTweaked, 1e-8));
+        epsilonPartitionMatcher(mutuallyTweaked, DEFAULT_EPSILON_1e_8));
     // If we add 1% to D and then subtract 1% from C, it's NOT the same as if we did both steps at the same time,
     // and it is therefore not the same as the previous. This is non-obvious but makes sense; if we subtract 1% from C
     // FIRST, that removes e.g. $10k from a $1m partition (using some sample amount). However, if we first add 1% of D
@@ -141,7 +142,7 @@ public class PartitionUnextenderTest extends RBTest<PartitionUnextender> {
         makeTestObject().unextend(
             makeRealObject(PartitionExtender.class).extend(original, "d", unitFraction(0.01)),
             "c", unitFraction(0.01)),
-        not(epsilonPartitionMatcher(mutuallyTweaked, 1e-8)));
+        not(epsilonPartitionMatcher(mutuallyTweaked, DEFAULT_EPSILON_1e_8)));
   }
 
   @Override

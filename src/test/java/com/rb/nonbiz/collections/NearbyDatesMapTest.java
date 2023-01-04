@@ -19,6 +19,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatch
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DATE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 public class NearbyDatesMapTest extends RBTestMatcher<NearbyDatesMap<Double>> {
 
@@ -79,7 +80,8 @@ public class NearbyDatesMapTest extends RBTestMatcher<NearbyDatesMap<Double>> {
 
   @Override
   protected boolean willMatch(NearbyDatesMap<Double> expected, NearbyDatesMap<Double> actual) {
-    return nearbyDatesMapMatcher(expected, f -> doubleAlmostEqualsMatcher(f, 1e-8)).matches(actual);
+    return nearbyDatesMapMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
+        .matches(actual);
   }
 
   public static <V> TypeSafeMatcher<NearbyDatesMap<V>> nearbyDatesMapMatcher(

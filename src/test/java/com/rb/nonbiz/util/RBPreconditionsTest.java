@@ -2,6 +2,7 @@ package com.rb.nonbiz.util;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.collections.Pair;
+import com.rb.nonbiz.types.Epsilon;
 import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 
@@ -21,6 +22,7 @@ import static com.rb.nonbiz.collections.RBLists.listConcatenation;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_POSITIVE_INTEGER;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
@@ -140,14 +142,14 @@ public class RBPreconditionsTest {
 
   @Test
   public void testCheckConsecutiveClosedDoubleRanges() {
-    RBOrderingPreconditions.checkConsecutiveClosedDoubleRanges(emptyIterator(), 1e-8);
-    RBOrderingPreconditions.checkConsecutiveClosedDoubleRanges(singleton(closedRange(1.1, 2.2)).iterator(), 1e-8);
+    RBOrderingPreconditions.checkConsecutiveClosedDoubleRanges(emptyIterator(), DEFAULT_EPSILON_1e_8);
+    RBOrderingPreconditions.checkConsecutiveClosedDoubleRanges(singleton(closedRange(1.1, 2.2)).iterator(), DEFAULT_EPSILON_1e_8);
     RBOrderingPreconditions.checkConsecutiveClosedDoubleRanges(
-        ImmutableList.of(closedRange(1.1, 2.2), closedRange(2.2, 4.4)).iterator(), 1e-8);
+        ImmutableList.of(closedRange(1.1, 2.2), closedRange(2.2, 4.4)).iterator(), DEFAULT_EPSILON_1e_8);
     assertIllegalArgumentException( () -> RBOrderingPreconditions.checkConsecutiveClosedDoubleRanges(
-        ImmutableList.of(closedRange(1.1, 2.2), closedRange(2.19, 4.4)).iterator(), 1e-8));
+        ImmutableList.of(closedRange(1.1, 2.2), closedRange(2.19, 4.4)).iterator(), DEFAULT_EPSILON_1e_8));
     assertIllegalArgumentException( () -> RBOrderingPreconditions.checkConsecutiveClosedDoubleRanges(
-        ImmutableList.of(closedRange(1.1, 2.2), closedRange(2.21, 4.4)).iterator(), 1e-8));
+        ImmutableList.of(closedRange(1.1, 2.2), closedRange(2.21, 4.4)).iterator(), DEFAULT_EPSILON_1e_8));
   }
 
   @Test

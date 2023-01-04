@@ -22,6 +22,8 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_1;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
@@ -34,14 +36,14 @@ public class PartitionsTest {
   @Test
   public void isWithinEpsilon_returnsPartition() {
     assertThat(
-        partitionFromApproximateFractions(singletonRBMap(STOCK_A, unitFraction(0.999)), 0.01),
+        partitionFromApproximateFractions(singletonRBMap(STOCK_A, unitFraction(0.999)), epsilon(0.01)),
         partitionMatcher(singletonPartition(STOCK_A)));
     assertThat(
         partitionFromApproximateFractions(
             rbMapOf(
                 STOCK_A, unitFraction(0.4004),
                 STOCK_B, unitFraction(0.6006)),
-            0.01),
+            epsilon(0.01)),
         partitionMatcher(partition(rbMapOf(
             STOCK_A, unitFraction(0.4),
             STOCK_B, unitFraction(0.6)))));
@@ -50,7 +52,7 @@ public class PartitionsTest {
             rbMapOf(
                 STOCK_A, unitFraction(doubleExplained(0.3996, 0.4 - 0.0004)),
                 STOCK_B, unitFraction(doubleExplained(0.5994, 0.6 - 0.0006))),
-            0.01),
+            epsilon(0.01)),
         partitionMatcher(partition(rbMapOf(
             STOCK_A, unitFraction(0.4),
             STOCK_B, unitFraction(0.6)))));
@@ -59,19 +61,19 @@ public class PartitionsTest {
   @Test
   public void isNotWithinEpsilon_throws() {
     assertIllegalArgumentException( () ->
-        partitionFromApproximateFractions(singletonRBMap(STOCK_A, unitFraction(0.999)), 0.0001));
+        partitionFromApproximateFractions(singletonRBMap(STOCK_A, unitFraction(0.999)), epsilon(0.0001)));
     assertIllegalArgumentException( () ->
         partitionFromApproximateFractions(
             rbMapOf(
                 STOCK_A, unitFraction(0.4004),
                 STOCK_B, unitFraction(0.6006)),
-            0.00001));
+            epsilon(0.00001)));
     assertIllegalArgumentException( () ->
         partitionFromApproximateFractions(
             rbMapOf(
                 STOCK_A, unitFraction(doubleExplained(0.3996, 0.4 - 0.0004)),
                 STOCK_B, unitFraction(doubleExplained(0.5994, 0.6 - 0.0006))),
-            0.00001));
+            epsilon(0.00001)));
   }
 
   @Test
@@ -79,7 +81,7 @@ public class PartitionsTest {
     TriConsumer<RBMap<String, UnitFraction>, RBMap<String, UnitFraction>, RBMap<String, SignedFraction>> asserter =
         (partitionA, partitionB, deviationsMap) -> assertThat(
             calculatePartitionDeviations(partition(partitionA), partition(partitionB)),
-            deviationsMatcher(deviations(deviationsMap), 1e-8));
+            deviationsMatcher(deviations(deviationsMap), DEFAULT_EPSILON_1e_8));
     asserter.accept(
         singletonRBMap("a", UNIT_FRACTION_1),
         singletonRBMap("a", UNIT_FRACTION_1),
@@ -114,7 +116,7 @@ public class PartitionsTest {
     TriConsumer<RBMap<String, UnitFraction>, RBMap<String, UnitFraction>, RBMap<String, SignedFraction>> asserter =
         (partitionA, partitionB, deviationsMap) -> assertThat(
             calculatePartitionNonZeroDeviations(partition(partitionA), partition(partitionB)),
-            nonZeroDeviationsMatcher(nonZeroDeviations(deviationsMap), 1e-8));
+            nonZeroDeviationsMatcher(nonZeroDeviations(deviationsMap), DEFAULT_EPSILON_1e_8));
     asserter.accept(
         singletonRBMap("a", UNIT_FRACTION_1),
         singletonRBMap("a", UNIT_FRACTION_1),

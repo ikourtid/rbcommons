@@ -24,6 +24,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 public class JsonApiClassWithSubclassesDocumentationTest extends RBTestMatcher<JsonApiClassWithSubclassesDocumentation> {
 
@@ -89,7 +90,7 @@ public class JsonApiClassWithSubclassesDocumentationTest extends RBTestMatcher<J
         match(                   v -> v.getLongDocumentation(),          f -> humanReadableDocumentationMatcher(f)),
         matchList(               v -> v.getJsonApiSubclassInfoList(),    f -> jsonApiSubclassInfoMatcher(f)),
         matchOptionalUsingEquals(v -> v.getDiscriminatorProperty()),
-        matchOptional(           v -> v.getNontrivialSampleJson(),       f -> jsonElementMatcher(f, 1e-8)));
+        matchOptional(           v -> v.getNontrivialSampleJson(),       f -> jsonElementMatcher(f, DEFAULT_EPSILON_1e_8)));
   }
 
 }

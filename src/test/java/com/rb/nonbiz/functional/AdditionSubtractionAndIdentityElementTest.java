@@ -12,6 +12,7 @@ import static com.rb.biz.types.Money.sumMoney;
 import static com.rb.nonbiz.functional.AdditionSubtractionAndIdentityElement.additionSubtractionAndIdentityElement;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -36,7 +37,7 @@ public class AdditionSubtractionAndIdentityElementTest {
             maker.apply(1e-9),
             money(100),
             money(70),
-            f -> preciseValueMatcher(f, 1e-8)));
+            f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8)));
     // Unfortunately, I can't assert that, because the matcher itself checks that
     // identity minus identity 'matches' (almost equals) the identity, and because in this case (unlike above)
     // the matcher has a tighter epsilon, it will fail.

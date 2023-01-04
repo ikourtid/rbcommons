@@ -15,6 +15,7 @@ import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayMatcher;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
 
+import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
 
 public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDocumentation> {
 
@@ -90,7 +92,7 @@ public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDoc
         match(           v -> v.getLongDocumentation(),     f -> humanReadableDocumentationMatcher(f)),
         matchOptional(   v -> v.getChildJsonApiConverter(), f -> hasJsonApiDocumentationMatcher(f)),
         // See comment in makeMatchingNontrivialObject on why we use a zero epsilon.
-        matchOptional(   v -> v.getNontrivialSampleJson(),  f -> jsonArrayMatcher(f, 0.0)));
+        matchOptional(   v -> v.getNontrivialSampleJson(),  f -> jsonArrayMatcher(f, ZERO_EPSILON)));
   }
 
 }

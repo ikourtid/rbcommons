@@ -169,7 +169,7 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
    * The upside is fewer conversions and fewer cases where we have an unexpected result because
    * we forgot to do some conversion.
    */
-  public <S extends T> boolean almostEquals(S other, double epsilon) {
+  public <S extends T> boolean almostEquals(S other, Epsilon epsilon) {
     if (other == null) {
       throw new IllegalArgumentException(Strings.format("almostEquals(%s, %s) cannot have a null 'other' argument", other, epsilon));
     }
@@ -178,11 +178,11 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
     return bigDecimalsAlmostEqual(this.asBigDecimal(), other.asBigDecimal(), epsilon);
   }
 
-  public static <V extends PreciseValue<V>> boolean preciseValuesAlmostEqual(V v1, V v2, double epsilon) {
+  public static <V extends PreciseValue<V>> boolean preciseValuesAlmostEqual(V v1, V v2, Epsilon epsilon) {
     return bigDecimalsAlmostEqual(v1.asBigDecimal(), v2.asBigDecimal(), epsilon);
   }
 
-  public static boolean bigDecimalsAlmostEqual(BigDecimal bd1, BigDecimal bd2, double epsilon) {
+  public static boolean bigDecimalsAlmostEqual(BigDecimal bd1, BigDecimal bd2, Epsilon epsilon) {
     if (bd1 == null || bd2 == null) {
       throw new IllegalArgumentException(
           Strings.format("bigDecimalsAlmostEqual(%s, %s, %s) cannot have a null argument", bd1, bd2, epsilon));
@@ -192,7 +192,7 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
       return true;
     }
 
-    return bd1.subtract(bd2).abs().compareTo(BigDecimal.valueOf(epsilon)) <= 0;
+    return bd1.subtract(bd2).abs().compareTo(BigDecimal.valueOf(epsilon.doubleValue())) <= 0;
   }
 
   // IDE-generated, except for last line
@@ -227,12 +227,12 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
     return asBigDecimal().compareTo(other.asBigDecimal());
   }
 
-  public boolean isGreaterThanOrAlmostEqualTo(T other, double epsilon) {
-    return this.asBigDecimal().compareTo(other.asBigDecimal().subtract(BigDecimal.valueOf(epsilon))) >= 0;
+  public boolean isGreaterThanOrAlmostEqualTo(T other, Epsilon epsilon) {
+    return this.asBigDecimal().compareTo(other.asBigDecimal().subtract(BigDecimal.valueOf(epsilon.doubleValue()))) >= 0;
   }
 
-  public boolean isLessThanOrAlmostEqualTo(T other, double epsilon) {
-    return this.asBigDecimal().compareTo(other.asBigDecimal().add(BigDecimal.valueOf(epsilon))) <= 0;
+  public boolean isLessThanOrAlmostEqualTo(T other, Epsilon epsilon) {
+    return this.asBigDecimal().compareTo(other.asBigDecimal().add(BigDecimal.valueOf(epsilon.doubleValue()))) <= 0;
   }
 
   /**
@@ -245,23 +245,15 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
    * Note that there is no isSafelyLessThanOrEqualTo; once we start adding a double non-zero epsilon,
    * that itself will cause some tiny numerical inaccuracy, so it doesn't make sense to do equality comparisons.
    */
-  public boolean isSafelyLessThan(T other, double epsilon) {
-    RBPreconditions.checkArgument(
-        epsilon > 0,
-        "Epsilon must be > 0 when comparing %s against %s using isSafelyLessThan; was %s",
-        this, other, epsilon);
-    return this.doubleValue() < other.doubleValue() + epsilon;
+  public boolean isSafelyLessThan(T other, Epsilon epsilon) {
+    return this.doubleValue() < other.doubleValue() + epsilon.doubleValue();
   }
 
   /**
    * @see #isSafelyLessThan
    */
-  public boolean isSafelyGreaterThan(T other, double epsilon) {
-    RBPreconditions.checkArgument(
-        epsilon > 0,
-        "Epsilon must be > 0 when comparing %s against %s using isSafelyGreaterThan; was %s",
-        this, other, epsilon);
-    return this.doubleValue() > other.doubleValue() - epsilon;
+  public boolean isSafelyGreaterThan(T other, Epsilon epsilon) {
+    return this.doubleValue() > other.doubleValue() - epsilon.doubleValue();
   }
 
   public boolean isZero() {
@@ -290,15 +282,15 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
     return !isPositive();
   }
 
-  public boolean isAlmostZero(double epsilon) {
+  public boolean isAlmostZero(Epsilon epsilon) {
     // small performance optimization; first check for exact 0, so as to avoid the slightly slower 2nd check
     return asBigDecimal().signum() == 0
-        || Math.abs(doubleValue()) <= epsilon;
+        || epsilon.isAlmostZero(doubleValue());
   }
 
-  public boolean isAlmostZeroButNotZero(double epsilon) {
+  public boolean isAlmostZeroButNotZero(Epsilon epsilon) {
     return asBigDecimal().signum() != 0
-        && Math.abs(doubleValue()) <= epsilon;
+        && epsilon.isAlmostZero(doubleValue());
   }
 
   public boolean isRoundToScale(RoundingScale roundingScale) {
