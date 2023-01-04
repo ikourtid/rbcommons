@@ -336,9 +336,9 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
             { 4.0, 5.0, 6.0 },
             { 7.0, 8.0, 9.0 } }),
         rbVector(
-            doubleExplained(14, 1.0 * 1 + 2.0 * 2 + 3.0 * 3),
-            doubleExplained(32, 4.0 * 1 + 5.0 * 2 + 6.0 * 3),
-            doubleExplained(50, 7.0 * 1 + 8.0 * 2 + 9.0 * 3)));
+            doubleExplained(14.0, 1.0 * 1 + 2.0 * 2 + 3.0 * 3),
+            doubleExplained(32.0, 4.0 * 1 + 5.0 * 2 + 6.0 * 3),
+            doubleExplained(50.0, 7.0 * 1 + 8.0 * 2 + 9.0 * 3)));
   }
 
   @Override
