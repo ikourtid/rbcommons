@@ -167,11 +167,11 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
             doubleExplained(19, 1 * 5 + 2 * 7),
             doubleExplained(43, 3 * 5 + 4 * 7))));
 
-    // 1 column is too few
+    // 3 columns; too many
     assertIllegalArgumentException( () -> maker.apply(rbMatrix(new double[][] {
         { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE },
         { DUMMY_DOUBLE, DUMMY_DOUBLE, DUMMY_DOUBLE } })));
-    // 3 columns; too many
+    // 1 column is too few
     assertIllegalArgumentException( () -> maker.apply(rbMatrix(new double[][] {
         { DUMMY_DOUBLE },
         { DUMMY_DOUBLE } })));
