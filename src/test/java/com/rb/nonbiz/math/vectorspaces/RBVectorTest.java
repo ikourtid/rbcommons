@@ -1,5 +1,8 @@
 package com.rb.nonbiz.math.vectorspaces;
 
+import cern.colt.matrix.DoubleFactory1D;
+import cern.colt.matrix.DoubleFactory2D;
+import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix1D;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.MatcherEpsilons;
@@ -25,13 +28,11 @@ import static com.rb.nonbiz.testutils.MatcherEpsilons.emptyMatcherEpsilons;
 import static com.rb.nonbiz.testutils.MatcherEpsilons.useEpsilonInAllMatchers;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
-import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
 
 public class RBVectorTest extends RBTestMatcher<RBVector> {
 
@@ -86,7 +87,7 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
   }
 
   @Test
-  public void zeroVector_multipliedByAnyScalar_retunrsZeroVectorOfSameDimension() {
+  public void zeroVector_multipliedByAnyScalar_returnsZeroVectorOfSameDimension() {
     rbSetOf(singletonRBVector(0), rbVector(0, 0), rbVector(0, 0, 0))
         .forEach(zeroVector -> rbSetOf(-999.0, -2.0, -1.0, -0.5, 0.0, 0.5, 1.0, 2.0, 999.0)
             .forEach(multiplier -> assertThat(
@@ -308,7 +309,29 @@ public class RBVectorTest extends RBTestMatcher<RBVector> {
 
   @Test
   public void reminder_testMultiplyOnLeft() {
-    fail("");
+    BiConsumer<DoubleMatrix2D, RBVector> asserter = (doubleMatrix2D, expectedResult) ->
+        assertThat(
+            rbVector(1, 2, 3).multiplyOnLeft(doubleMatrix2D),
+            rbVectorMatcher(expectedResult));
+
+    asserter.accept(
+        DoubleFactory2D.dense.identity(3),
+        rbVector(1, 2, 3));
+    asserter.accept(
+        DoubleFactory2D.dense.diagonal(DoubleFactory1D.dense.make(new double[] { 4.0, 5.0, 6.0 })),
+        rbVector(
+            doubleExplained( 4.0, 4.0 * 1),
+            doubleExplained(10.0, 5.0 * 2),
+            doubleExplained(18.0, 6.0 * 3)));
+    asserter.accept(
+        DoubleFactory2D.dense.make(new double[][] {
+            { 1.0, 2.0, 3.0 },
+            { 4.0, 5.0, 6.0 },
+            { 7.0, 8.0, 9.0 } }),
+        rbVector(
+            doubleExplained(14, 1.0 * 1 + 2.0 * 2 + 3.0 * 3),
+            doubleExplained(32, 4.0 * 1 + 5.0 * 2 + 6.0 * 3),
+            doubleExplained(50, 7.0 * 1 + 8.0 * 2 + 9.0 * 3)));
   }
 
   @Override
