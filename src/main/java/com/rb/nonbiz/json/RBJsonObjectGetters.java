@@ -5,8 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.rb.biz.jsonapi.JsonSerializedEnumStringMap;
-import com.rb.nonbiz.collections.RBOptionalTransformers;
-import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;

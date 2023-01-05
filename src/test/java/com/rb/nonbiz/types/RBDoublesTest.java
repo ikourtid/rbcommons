@@ -5,12 +5,10 @@ import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
 import org.junit.Test;
 
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 import java.util.function.BiConsumer;
 import java.util.function.DoubleConsumer;
 
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.RBDoubles.average;
@@ -19,8 +17,6 @@ import static com.rb.nonbiz.types.RBDoubles.epsilonCompareDoublesAllowingEpsilon
 import static com.rb.nonbiz.types.RBDoubles.getDoubleAsLongAssumingIsRound;
 import static com.rb.nonbiz.types.RBDoubles.maxAllowingOptionalDouble;
 import static com.rb.nonbiz.types.RBDoubles.minAllowingOptionalDouble;
-import static com.rb.nonbiz.types.RBIntegers.maxAllowingOptionalInt;
-import static com.rb.nonbiz.types.RBIntegers.minAllowingOptionalInt;
 import static org.junit.Assert.assertEquals;
 
 public class RBDoublesTest {

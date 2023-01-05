@@ -1,7 +1,6 @@
 package com.rb.nonbiz.math.stats;
 
 import com.google.common.collect.ImmutableList;
-import com.rb.nonbiz.types.Epsilon;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.junit.Test;

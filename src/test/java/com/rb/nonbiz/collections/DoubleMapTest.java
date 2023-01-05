@@ -2,7 +2,6 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableSet;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.text.PrintsMultilineString;
 import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.Weighted;
 import org.hamcrest.TypeSafeMatcher;
@@ -20,7 +19,6 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class DoubleMapTest extends RBTestMatcher<DoubleMap<String>> {
 

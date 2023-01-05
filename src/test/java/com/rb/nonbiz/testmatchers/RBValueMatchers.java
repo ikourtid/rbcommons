@@ -18,7 +18,6 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.types.PreciseValue.bigDecimalsAlmostEqual;
-import static junit.framework.TestCase.assertTrue;
 
 public class RBValueMatchers {
 

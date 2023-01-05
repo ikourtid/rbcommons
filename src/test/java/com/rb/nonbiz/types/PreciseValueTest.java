@@ -26,7 +26,6 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_MONEY;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.PreciseValue.*;

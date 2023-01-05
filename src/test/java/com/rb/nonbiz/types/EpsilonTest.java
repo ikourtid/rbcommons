@@ -1,5 +1,6 @@
 package com.rb.nonbiz.types;
 
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
@@ -7,11 +8,8 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
-import static org.junit.Assert.*;
-
-import org.hamcrest.TypeSafeMatcher;
-
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class EpsilonTest {
 

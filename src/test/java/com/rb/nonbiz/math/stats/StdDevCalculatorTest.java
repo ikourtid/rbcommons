@@ -6,7 +6,6 @@ import com.rb.biz.types.OnesBasedReturn;
 import com.rb.biz.types.SignedMoney;
 import com.rb.nonbiz.collections.PreciseValueWeighter;
 import com.rb.nonbiz.testutils.RBTest;
-import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
 

@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import java.util.function.Function;
 
-import static com.rb.nonbiz.collections.SimplePartitionModification.emptySimplePartitionModification;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
+import static com.rb.nonbiz.collections.SimplePartitionModification.emptySimplePartitionModification;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapPreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;

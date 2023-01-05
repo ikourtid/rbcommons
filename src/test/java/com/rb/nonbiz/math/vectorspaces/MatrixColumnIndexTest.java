@@ -7,7 +7,6 @@ import org.junit.Test;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.testmatchers.Match.matchIntegerValue;
-import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static org.junit.Assert.assertEquals;

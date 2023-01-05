@@ -4,7 +4,6 @@ import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import com.rb.nonbiz.types.UnitFraction;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.optionalClosedUnitFractionRangeIntersection;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.tightenClosedUnitFractionRangeAround;

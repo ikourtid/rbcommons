@@ -3,11 +3,8 @@ package com.rb.nonbiz.types;
 import com.rb.nonbiz.functional.TriConsumer;
 import org.junit.Test;
 
-import java.util.OptionalInt;
 import java.util.OptionalLong;
 
-import static com.rb.nonbiz.types.RBIntegers.maxAllowingOptionalInt;
-import static com.rb.nonbiz.types.RBIntegers.minAllowingOptionalInt;
 import static com.rb.nonbiz.types.RBLongs.maxAllowingOptionalLong;
 import static com.rb.nonbiz.types.RBLongs.minAllowingOptionalLong;
 import static org.junit.Assert.assertEquals;

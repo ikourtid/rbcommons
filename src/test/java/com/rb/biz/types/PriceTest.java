@@ -2,7 +2,6 @@ package com.rb.biz.types;
 
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
-import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import java.math.BigDecimal;
