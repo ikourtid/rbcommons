@@ -73,7 +73,7 @@ public abstract class ImpreciseValue<T extends ImpreciseValue<T>> extends RBNume
     if (this == other) return true;
     if (other == null) return false;
 
-    return epsilon.areWithin(value, other.doubleValue());
+    return epsilon.valuesAreWithin(value, other.doubleValue());
   }
 
   @Override

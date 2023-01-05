@@ -28,7 +28,7 @@ public class RBColtMatchers {
         }
         for (int i = 0; i < expected.rows(); i++) {
           for (int j = 0; j < expected.columns(); j++) {
-            if (!epsilon.areWithin(expected.getQuick(i, j), actual.getQuick(i, j))) {
+            if (!epsilon.valuesAreWithin(expected.getQuick(i, j), actual.getQuick(i, j))) {
               return false;
             }
           }

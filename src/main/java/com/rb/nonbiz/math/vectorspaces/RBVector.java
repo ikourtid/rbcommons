@@ -55,7 +55,7 @@ public class RBVector {
   }
 
   public boolean isAlmostUnitVector(Epsilon epsilon) {
-    return epsilon.areWithin(calculateMagnitude(), 1);
+    return epsilon.valuesAreWithin(calculateMagnitude(), 1);
   }
 
   /**

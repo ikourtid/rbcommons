@@ -39,11 +39,11 @@ public class RBPredicates {
   }
 
   public static <T extends RBNumeric<? super T>> Predicate<T> isAlmostEqualTo(T otherValue, Epsilon epsilon) {
-    return v -> epsilon.areWithin(v.doubleValue(), otherValue.doubleValue());
+    return v -> epsilon.valuesAreWithin(v.doubleValue(), otherValue.doubleValue());
   }
 
   public static Predicate<Double> isAlmostEqualTo(double otherValue, Epsilon epsilon) {
-    return v -> epsilon.areWithin(v, otherValue);
+    return v -> epsilon.valuesAreWithin(v, otherValue);
   }
 
   // Note: isWithin(100, 10%).test(90) is false; it means abs((90 - 100) / 90), which is greater than 10%

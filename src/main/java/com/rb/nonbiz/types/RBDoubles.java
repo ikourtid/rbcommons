@@ -65,7 +65,7 @@ public class RBDoubles {
   public static long getDoubleAsLongAssumingIsRound(double value, Epsilon epsilon) {
     long nearestRound = Math.round(value);
     RBPreconditions.checkArgument(
-        epsilon.areWithin(value, nearestRound),
+        epsilon.valuesAreWithin(value, nearestRound),
         "The closest long to value %s is %s which is not within an epsilon of %s",
         value, nearestRound, epsilon);
     return nearestRound;

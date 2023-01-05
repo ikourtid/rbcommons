@@ -46,7 +46,7 @@ public class RBNumericFunctionTest extends RBTestMatcher<RBNumericFunction<Doubl
     return makeMatcher(expected, actual ->
         concatenateFirstAndRest(firstSamplePoint, restSamplePoints)
           .allMatch(x ->
-              DEFAULT_EPSILON_1e_8.areWithin(
+              DEFAULT_EPSILON_1e_8.valuesAreWithin(
                   expected.getRawFunction().applyAsDouble(x.doubleValue()),
                   actual.getRawFunction().applyAsDouble(x.doubleValue()))));
   }

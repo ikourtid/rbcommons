@@ -53,7 +53,7 @@ public class RBMatrixUtils {
     return matrix.matrixRowIndexStream().allMatch(matrixRowIndex ->
         matrix.matrixColumnIndexStream().allMatch(matrixColumnIndex -> {
           double correctValue = (matrixRowIndex.intValue() == matrixColumnIndex.intValue()) ? 1.0 : 0.0;
-          return epsilon.areWithin(matrix.get(matrixRowIndex, matrixColumnIndex), correctValue);
+          return epsilon.valuesAreWithin(matrix.get(matrixRowIndex, matrixColumnIndex), correctValue);
         }));
   }
 
@@ -72,7 +72,7 @@ public class RBMatrixUtils {
       for (int j = i + 1; j < sharedSize; j++) {
         double aboveDiagonal = rbMatrix.get(matrixRowIndex(i), matrixColumnIndex(j));
         double belowDiagonal = rbMatrix.get(matrixRowIndex(j), matrixColumnIndex(i));
-        if (!epsilon.areWithin(aboveDiagonal, belowDiagonal)) {
+        if (!epsilon.valuesAreWithin(aboveDiagonal, belowDiagonal)) {
           return false;
         }
       }

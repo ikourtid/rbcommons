@@ -91,7 +91,7 @@ public class RBOptionalMatchers {
         if (!expected.isPresent() || !actual.isPresent()) {
           return false; // only 1 is Optional.empty()
         }
-        return epsilon.areWithin(expected.getAsDouble(), actual.getAsDouble());
+        return epsilon.valuesAreWithin(expected.getAsDouble(), actual.getAsDouble());
       }
 
       @Override

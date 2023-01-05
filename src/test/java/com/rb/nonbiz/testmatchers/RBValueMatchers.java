@@ -72,7 +72,7 @@ public class RBValueMatchers {
     return new TypeSafeMatcher<T>() {
       @Override
       protected boolean matchesSafely(T actual) {
-        return epsilon.areWithin(expected.doubleValue(), actual.doubleValue());
+        return epsilon.valuesAreWithin(expected.doubleValue(), actual.doubleValue());
       }
 
       @Override
@@ -83,7 +83,7 @@ public class RBValueMatchers {
   }
 
   public static TypeSafeMatcher<Double> doubleAlmostEqualsMatcher(double expected, Epsilon epsilon) {
-    return makeMatcher(expected, actual -> epsilon.areWithin(expected, actual));
+    return makeMatcher(expected, actual -> epsilon.valuesAreWithin(expected, actual));
   }
 
   /**
@@ -175,7 +175,7 @@ public class RBValueMatchers {
       if (expectedIsNumber && actualIsNumber) {
         double expectedNum = ((Number) expected).doubleValue();
         double actualNum = ((Number) actual).doubleValue();
-        return epsilon.areWithin(expectedNum, actualNum);
+        return epsilon.valuesAreWithin(expectedNum, actualNum);
       } else if (expectedIsNumber || actualIsNumber) { // can't have only one of them; that's an automatic non-match
         return false;
       }
@@ -184,7 +184,7 @@ public class RBValueMatchers {
       if (expectedIsPreciseValue && actualIsPreciseValue) {
         double expectedNum = ((PreciseValue<?>) expected).doubleValue();
         double actualNum = ((PreciseValue<?>) actual).doubleValue();
-        return epsilon.areWithin(expectedNum, actualNum);
+        return epsilon.valuesAreWithin(expectedNum, actualNum);
       } else if (expectedIsPreciseValue || actualIsPreciseValue) { // can't have only one of them; that's an automatic non-match
         return false;
       }
@@ -193,7 +193,7 @@ public class RBValueMatchers {
       if (expectedIsImpreciseValue && actualIsImpreciseValue) {
         double expectedNum = ((ImpreciseValue<?>) expected).doubleValue();
         double actualNum = ((ImpreciseValue<?>) actual).doubleValue();
-        return epsilon.areWithin(expectedNum, actualNum);
+        return epsilon.valuesAreWithin(expectedNum, actualNum);
       } else if (expectedIsImpreciseValue || actualIsImpreciseValue) { // can't have only one of them; that's an automatic non-match
         return false;
       }
