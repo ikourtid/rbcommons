@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 

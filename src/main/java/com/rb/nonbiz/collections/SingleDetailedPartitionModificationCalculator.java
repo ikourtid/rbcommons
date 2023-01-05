@@ -2,7 +2,6 @@ package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.collections.DetailedPartitionModification.DetailedPartitionModificationBuilder;
 import com.rb.nonbiz.collections.RBMapVisitors.TwoRBMapsVisitor;
-import com.rb.nonbiz.collections.SimplePartitionModification.SimplePartitionModificationBuilder;
 import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
 import com.rb.nonbiz.types.UnitFraction;
 

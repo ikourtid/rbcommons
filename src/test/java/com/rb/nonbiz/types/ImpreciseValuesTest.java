@@ -5,8 +5,6 @@ import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
 import org.junit.Test;
 
 import static com.rb.nonbiz.math.stats.ZScore.zScore;
-import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.ImpreciseValues.epsilonCompareImpreciseValues;
 import static com.rb.nonbiz.types.RBDoublesTest.comparisonSignVisitor;

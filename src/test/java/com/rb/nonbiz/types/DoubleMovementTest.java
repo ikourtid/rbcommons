@@ -8,7 +8,6 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.types.DoubleMovement.doubleMovement;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
-import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.junit.Assert.assertEquals;
 
 public class DoubleMovementTest extends RBTestMatcher<DoubleMovement> {

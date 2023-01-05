@@ -16,7 +16,6 @@ import static com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRange.closedUnitF
 import static com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRangeTest.closedUnitFractionHardAndSoftRangeMatcher;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
-import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.TargetWithOptionalClosedUnitFractionHardAndSoftRange.targetWithClosedUnitFractionHardAndSoftRange;
 import static com.rb.nonbiz.types.TargetWithOptionalClosedUnitFractionHardAndSoftRange.targetWithoutClosedUnitFractionHardAndSoftRange;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;

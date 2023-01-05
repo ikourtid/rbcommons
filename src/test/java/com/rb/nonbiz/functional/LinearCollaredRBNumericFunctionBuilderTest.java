@@ -1,7 +1,6 @@
 package com.rb.nonbiz.functional;
 
 import com.rb.biz.types.Money;
-import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import static com.rb.biz.types.Money.money;

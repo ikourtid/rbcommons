@@ -1,7 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.text.Strings;
-import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;

@@ -2,7 +2,6 @@ package com.rb.nonbiz.util;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.collections.ClosedRange;
-import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -18,9 +17,9 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkDoubleArraysAlmostEqual;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkWithinLimitedRange;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkWithinSeconds;
-import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkDoubleArraysAlmostEqual;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;

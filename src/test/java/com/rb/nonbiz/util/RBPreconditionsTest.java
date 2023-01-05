@@ -2,13 +2,10 @@ package com.rb.nonbiz.util;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.collections.Pair;
-import com.rb.nonbiz.types.Epsilon;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
@@ -31,7 +28,6 @@ import static java.util.function.Function.identity;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class RBPreconditionsTest {
 

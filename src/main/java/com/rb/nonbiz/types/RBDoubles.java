@@ -4,10 +4,8 @@ import com.rb.nonbiz.types.PreciseValues.BigDecimalsEpsilonComparisonVisitor;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalDouble;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalInt;
 
 public class RBDoubles {
 

@@ -9,7 +9,6 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
-import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static com.rb.nonbiz.types.WeightedByUnitFraction.weightedByUnitFraction;

@@ -5,7 +5,6 @@ import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 
-import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTest.hasJsonApiDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentationTest.testJsonApiClassDocumentationWithSeed;
 import static com.rb.nonbiz.jsonapi.JsonApiSubclassInfo.JsonApiSubclassInfoBuilder.jsonApiSubclassInfoBuilder;
