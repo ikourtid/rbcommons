@@ -46,7 +46,7 @@ public class RBArrayMatchers {
         }
         return IntStream
             .range(0, expected.length)
-            .allMatch(i -> epsilon.areWithin(expected[i], actual[i]));
+            .allMatch(i -> epsilon.valuesAreWithin(expected[i], actual[i]));
       }
 
       @Override
@@ -171,7 +171,7 @@ public class RBArrayMatchers {
             return false;
           }
           for (int j = 0; j < expected[i].length; j++) {
-            if (!epsilon.areWithin(expected[i][j], actual[i][j])) {
+            if (!epsilon.valuesAreWithin(expected[i][j], actual[i][j])) {
               return false;
             }
           }

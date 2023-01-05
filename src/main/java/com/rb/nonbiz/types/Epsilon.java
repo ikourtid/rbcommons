@@ -28,7 +28,7 @@ public class Epsilon extends ImpreciseValue<Epsilon> {
   /**
    * Returns true if the two numbers are within this epsilon.
    */
-  public boolean areWithin(double value1, double value2) {
+  public boolean valuesAreWithin(double value1, double value2) {
     return Math.abs(value1 - value2) <= doubleValue();
   }
 
@@ -36,7 +36,7 @@ public class Epsilon extends ImpreciseValue<Epsilon> {
    * Returns true if the two numbers are within this epsilon.
    */
   public boolean isAlmostZero(double value) {
-    return areWithin(value, 0);
+    return valuesAreWithin(value, 0);
   }
 
 }

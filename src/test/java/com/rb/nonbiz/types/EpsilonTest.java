@@ -11,7 +11,6 @@ import static org.junit.Assert.*;
 
 import org.hamcrest.TypeSafeMatcher;
 
-import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class EpsilonTest {
@@ -33,11 +32,11 @@ public class EpsilonTest {
 
   @Test
   public void testWithin() {
-    assertTrue(DEFAULT_EPSILON_1e_8.areWithin(100, 100 + 1e-9));
-    assertTrue(DEFAULT_EPSILON_1e_8.areWithin(100 + 1e-9, 100));
+    assertTrue(DEFAULT_EPSILON_1e_8.valuesAreWithin(100, 100 + 1e-9));
+    assertTrue(DEFAULT_EPSILON_1e_8.valuesAreWithin(100 + 1e-9, 100));
 
-    assertFalse(DEFAULT_EPSILON_1e_8.areWithin(100, 100 + 1e-7));
-    assertFalse(DEFAULT_EPSILON_1e_8.areWithin(100 + 1e-7, 100));
+    assertFalse(DEFAULT_EPSILON_1e_8.valuesAreWithin(100, 100 + 1e-7));
+    assertFalse(DEFAULT_EPSILON_1e_8.valuesAreWithin(100 + 1e-7, 100));
   }
 
   /**

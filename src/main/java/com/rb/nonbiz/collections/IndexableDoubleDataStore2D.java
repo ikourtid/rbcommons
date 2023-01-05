@@ -59,7 +59,7 @@ public interface IndexableDoubleDataStore2D<R, C> {
       for (int j = i + 1; j < sharedSize; j++) {
         double aboveDiagonal = getByIndex(i, j);
         double belowDiagonal = getByIndex(j, i);
-        if (!epsilon.areWithin(aboveDiagonal, belowDiagonal)) {
+        if (!epsilon.valuesAreWithin(aboveDiagonal, belowDiagonal)) {
           return false;
         }
       }

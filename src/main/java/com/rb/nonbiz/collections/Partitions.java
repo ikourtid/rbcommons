@@ -22,7 +22,7 @@ public class Partitions {
    */
   public static <K> Partition<K> partitionFromApproximateFractions(RBMap<K, UnitFraction> approximatePartition, Epsilon epsilon) {
     BigDecimal sumOfFractions = sumAsBigDecimals(approximatePartition.values());
-    if (!epsilon.areWithin(sumOfFractions.doubleValue(), 1)) {
+    if (!epsilon.valuesAreWithin(sumOfFractions.doubleValue(), 1)) {
       throw new IllegalArgumentException(Strings.format(
           "Fractions add up to %s which is too far from 1 within an epsilon of %s : %s",
           sumOfFractions, epsilon, approximatePartition));

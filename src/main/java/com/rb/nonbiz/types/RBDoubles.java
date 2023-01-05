@@ -4,10 +4,8 @@ import com.rb.nonbiz.types.PreciseValues.BigDecimalsEpsilonComparisonVisitor;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalDouble;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalInt;
 
 public class RBDoubles {
 
@@ -67,7 +65,7 @@ public class RBDoubles {
   public static long getDoubleAsLongAssumingIsRound(double value, Epsilon epsilon) {
     long nearestRound = Math.round(value);
     RBPreconditions.checkArgument(
-        epsilon.areWithin(value, nearestRound),
+        epsilon.valuesAreWithin(value, nearestRound),
         "The closest long to value %s is %s which is not within an epsilon of %s",
         value, nearestRound, epsilon);
     return nearestRound;

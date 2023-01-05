@@ -4,7 +4,6 @@ import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.types.UnitFraction;
-import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;
 import java.util.function.BiPredicate;
@@ -34,11 +33,11 @@ public class RBBiPredicates {
   }
 
   public static BiPredicate<Double, Double> doubleIsAlmostEqualTo(Epsilon epsilon) {
-    return (c1, c2) -> epsilon.areWithin(c1, c2);
+    return (c1, c2) -> epsilon.valuesAreWithin(c1, c2);
   }
 
   public static <V extends PreciseValue<? super V>> BiPredicate<V, V> isAlmostEqualTo(Epsilon epsilon) {
-    return (v1, v2) -> epsilon.areWithin(v1.doubleValue(), v2.doubleValue());
+    return (v1, v2) -> epsilon.valuesAreWithin(v1.doubleValue(), v2.doubleValue());
   }
 
   public static <T extends RBNumeric<? super T>> BiPredicate<T, T> isAlmostMultipliedBy(
@@ -54,7 +53,7 @@ public class RBBiPredicates {
         return Math.abs(v2.doubleValue()) <= 1e-8;
       }
 
-      return epsilon.areWithin(v2.doubleValue() / v1.doubleValue(), expectedMultiplier);
+      return epsilon.valuesAreWithin(v2.doubleValue() / v1.doubleValue(), expectedMultiplier);
     };
   }
 

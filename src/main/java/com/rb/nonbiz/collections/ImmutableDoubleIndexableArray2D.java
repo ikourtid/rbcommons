@@ -11,7 +11,6 @@ import java.util.stream.IntStream;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray2D.immutableIndexableArray2D;
 import static com.rb.nonbiz.collections.MutableDoubleIndexableArray2D.mutableDoubleIndexableArray2D;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
@@ -147,7 +146,7 @@ public class ImmutableDoubleIndexableArray2D<R, C> implements IndexableDoubleDat
       for (int j = i + 1; j < sharedSize; j++) {
         double aboveDiagonal = getByIndex(i, j);
         double belowDiagonal = getByIndex(j, i);
-        if (!epsilon.areWithin(aboveDiagonal, belowDiagonal)) {
+        if (!epsilon.valuesAreWithin(aboveDiagonal, belowDiagonal)) {
           return false;
         }
       }

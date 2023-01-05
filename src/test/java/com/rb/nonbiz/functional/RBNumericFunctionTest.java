@@ -2,7 +2,6 @@ package com.rb.nonbiz.functional;
 
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.RBNumeric;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -47,7 +46,7 @@ public class RBNumericFunctionTest extends RBTestMatcher<RBNumericFunction<Doubl
     return makeMatcher(expected, actual ->
         concatenateFirstAndRest(firstSamplePoint, restSamplePoints)
           .allMatch(x ->
-              DEFAULT_EPSILON_1e_8.areWithin(
+              DEFAULT_EPSILON_1e_8.valuesAreWithin(
                   expected.getRawFunction().applyAsDouble(x.doubleValue()),
                   actual.getRawFunction().applyAsDouble(x.doubleValue()))));
   }

@@ -111,8 +111,8 @@ public class RBRanges {
    */
   public static boolean doubleRangeIsAlmostThisSinglePoint(Range<Double> range, double value, Epsilon epsilon) {
     return rangeIsClosed(range)
-        && epsilon.areWithin(range.upperEndpoint(), value)
-        && epsilon.areWithin(range.lowerEndpoint(), value);
+        && epsilon.valuesAreWithin(range.upperEndpoint(), value)
+        && epsilon.valuesAreWithin(range.lowerEndpoint(), value);
   }
 
   // Since we use an epsilon, the extra precision of BigDecimal is irrelevant here, so this has no PreciseValue equivalent.
@@ -142,8 +142,8 @@ public class RBRanges {
       T value,
       Epsilon epsilon) {
     return rangeIsClosed(range)
-        && epsilon.areWithin(range.upperEndpoint().doubleValue(), value.doubleValue())
-        && epsilon.areWithin(range.lowerEndpoint().doubleValue(), value.doubleValue());
+        && epsilon.valuesAreWithin(range.upperEndpoint().doubleValue(), value.doubleValue())
+        && epsilon.valuesAreWithin(range.lowerEndpoint().doubleValue(), value.doubleValue());
   }
 
   public static <C extends Comparable<? super C>> boolean rangeIsUnrestricted(Range<C> range) {

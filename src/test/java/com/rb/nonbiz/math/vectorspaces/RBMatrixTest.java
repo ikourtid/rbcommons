@@ -719,7 +719,7 @@ public class RBMatrixTest extends RBTestMatcher<RBMatrix> {
           expected.matrixColumnIndexStream().allMatch(matrixColumnIndex -> {
             double valueInExpected = expected.get(matrixRowIndex, matrixColumnIndex);
             double valueInActual   = actual.get(  matrixRowIndex, matrixColumnIndex);
-            return e.get(RBMatrix.class).areWithin(valueInExpected, valueInActual);
+            return e.get(RBMatrix.class).valuesAreWithin(valueInExpected, valueInActual);
           }));
     });
   }

@@ -260,7 +260,7 @@ public class RBSimilarityPreconditions {
     RBPreconditions.checkArgument(
         IntStream
             .range(0, size)
-            .allMatch(i -> epsilon.areWithin(array1[i], array2[i])));
+            .allMatch(i -> epsilon.valuesAreWithin(array1[i], array2[i])));
   }
 
 }
