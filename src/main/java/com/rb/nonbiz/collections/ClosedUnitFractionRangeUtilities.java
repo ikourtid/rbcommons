@@ -2,7 +2,6 @@ package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
-import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.util.RBPreconditions;
 

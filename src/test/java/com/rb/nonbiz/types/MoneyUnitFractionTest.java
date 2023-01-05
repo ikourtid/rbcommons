@@ -11,7 +11,6 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
-import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.MoneyUnitFraction.emptyMoneyUnitFraction;
 import static com.rb.nonbiz.types.MoneyUnitFraction.moneyUnitFraction;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;

@@ -1,9 +1,7 @@
 package com.rb.nonbiz.testutils;
 
 import com.google.common.io.CharStreams;
-import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.jsonapi.HasJsonApiDocumentation;
-import com.rb.nonbiz.jsonapi.JsonApiDocumentation;
 import org.jmock.Mockery;
 import org.jmock.Sequence;
 import org.junit.After;
@@ -11,7 +9,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Optional;
 
 import static com.rb.nonbiz.testutils.RBMockeries.imposterizingMockery;
 import static org.junit.Assert.assertNotNull;

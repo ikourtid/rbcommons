@@ -4,8 +4,8 @@ import com.rb.nonbiz.testutils.RBTest;
 import org.jmock.Expectations;
 import org.junit.Test;
 
-import static com.rb.nonbiz.collections.Partition.singletonPartition;
 import static com.rb.nonbiz.collections.DetailedPartitionModificationTest.testDetailedStringPartitionModificationWithSeed;
+import static com.rb.nonbiz.collections.Partition.singletonPartition;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.jmock.AbstractExpectations.same;
 

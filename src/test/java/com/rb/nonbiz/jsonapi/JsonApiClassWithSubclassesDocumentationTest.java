@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
-import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassWithSubclassesDocumentation.JsonApiClassWithSubclassesDocumentationBuilder.jsonApiClassWithSubclassesDocumentationBuilder;
 import static com.rb.nonbiz.jsonapi.JsonApiSubclassInfoTest.jsonApiSubclassInfoMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;

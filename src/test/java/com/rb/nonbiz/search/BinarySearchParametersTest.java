@@ -4,7 +4,6 @@ import com.rb.nonbiz.search.BinarySearchParameters.BinarySearchParametersBuilder
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.text.Strings;
-import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 

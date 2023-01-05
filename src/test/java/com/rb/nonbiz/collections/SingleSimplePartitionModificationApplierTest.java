@@ -2,7 +2,6 @@ package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.collections.SimplePartitionModification.SimplePartitionModificationBuilder;
 import com.rb.nonbiz.testutils.RBTest;
-import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.Partition.partition;

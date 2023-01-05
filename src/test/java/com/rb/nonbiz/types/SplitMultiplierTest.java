@@ -13,7 +13,6 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
-import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.SplitMultiplier.MAX_SPLIT_MULTIPLIER;
 import static com.rb.nonbiz.types.SplitMultiplier.MIN_SPLIT_MULTIPLIER;
 import static com.rb.nonbiz.types.SplitMultiplier.splitMultiplier;

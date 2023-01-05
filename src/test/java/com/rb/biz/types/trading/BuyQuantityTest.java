@@ -1,6 +1,5 @@
 package com.rb.biz.types.trading;
 
-import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import java.math.BigDecimal;

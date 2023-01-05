@@ -1,7 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
-import com.rb.nonbiz.math.vectorspaces.IsArrayIndex;
 import com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;

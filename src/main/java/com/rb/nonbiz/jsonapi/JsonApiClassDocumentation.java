@@ -9,14 +9,12 @@ import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.json.JsonValidationInstructions.emptyJsonValidationInstructions;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatListInExistingOrder;
 import static com.rb.nonbiz.text.Strings.formatOptional;
 import static java.util.Collections.emptyList;

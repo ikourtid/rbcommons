@@ -3,26 +3,23 @@ package com.rb.nonbiz.jsonapi;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.reflection.RBClassTest;
 import com.rb.nonbiz.testutils.RBTestMatcher;
+import com.rb.nonbiz.types.UnitFraction;
+import org.hamcrest.TypeSafeMatcher;
+
+import java.math.BigDecimal;
 
 import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
 import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTest.hasJsonApiDocumentationMatcher;
 import static com.rb.nonbiz.jsonapi.JsonApiArrayDocumentation.JsonApiArrayDocumentationBuilder.jsonApiArrayDocumentationBuilder;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentationTest.testJsonApiClassDocumentationWithSeed;
 import static com.rb.nonbiz.reflection.RBClassTest.rbClassMatcher;
+import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayMatcher;
+import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
-
-import com.rb.nonbiz.types.Epsilon;
-import com.rb.nonbiz.types.UnitFraction;
-import org.hamcrest.TypeSafeMatcher;
-
-import java.math.BigDecimal;
-
-import static com.rb.nonbiz.testmatchers.Match.match;
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
 
 public class JsonApiArrayDocumentationTest extends RBTestMatcher<JsonApiArrayDocumentation> {

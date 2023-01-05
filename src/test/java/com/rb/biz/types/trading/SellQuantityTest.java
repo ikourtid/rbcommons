@@ -10,7 +10,6 @@ import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.Price.ZERO_PRICE;
 import static com.rb.biz.types.Price.price;
-import static com.rb.biz.types.trading.BuyQuantity.buyQuantity;
 import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
 import static com.rb.biz.types.trading.SellQuantity.sellQuantity;
 import static com.rb.biz.types.trading.SellQuantity.sumSellQuantities;

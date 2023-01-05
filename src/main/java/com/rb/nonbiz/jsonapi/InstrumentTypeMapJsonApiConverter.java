@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.rb.biz.types.asset.InstrumentTypeMap;
 import com.rb.biz.types.asset.InstrumentTypeMap.InstrumentTypeMapBuilder;
-import com.rb.nonbiz.collections.IidMapWithDefaultsByInstrumentType;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
 

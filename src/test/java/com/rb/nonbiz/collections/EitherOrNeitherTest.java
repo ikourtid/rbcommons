@@ -3,7 +3,6 @@ package com.rb.nonbiz.collections;
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.UnitFraction;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;

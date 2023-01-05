@@ -1,18 +1,11 @@
 package com.rb.nonbiz.types;
 
-import com.google.common.math.IntMath;
-import com.google.common.primitives.Doubles;
-import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
-import com.google.common.primitives.Longs;
 import com.google.common.primitives.Shorts;
-import com.rb.nonbiz.math.vectorspaces.MatrixRowIndex;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.rb.nonbiz.types.PreciseValue.formatWithoutCommas;
 
 /**
  * This is like {@link PreciseValue} and {@link ImpreciseValue}, but for int typesafe wrappers.

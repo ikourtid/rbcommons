@@ -19,7 +19,6 @@ import static com.rb.nonbiz.collections.NonZeroDeviations.nonZeroDeviations;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBStreams.sumBigDecimals;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
-import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static java.math.BigDecimal.ROUND_HALF_EVEN;
 import static java.util.Comparator.comparing;
 import static java.util.Map.Entry.comparingByKey;

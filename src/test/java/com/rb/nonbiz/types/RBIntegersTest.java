@@ -3,17 +3,11 @@ package com.rb.nonbiz.types;
 import com.rb.nonbiz.functional.TriConsumer;
 import org.junit.Test;
 
+import java.util.OptionalInt;
+
 import static com.rb.nonbiz.types.RBIntegers.maxAllowingOptionalInt;
 import static com.rb.nonbiz.types.RBIntegers.minAllowingOptionalInt;
-import static org.junit.Assert.*;
-
-import org.hamcrest.TypeSafeMatcher;
-
-import java.util.OptionalInt;
-import java.util.function.BiConsumer;
-
-import static com.rb.nonbiz.testmatchers.Match.match;
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static org.junit.Assert.assertEquals;
 
 public class RBIntegersTest {
 

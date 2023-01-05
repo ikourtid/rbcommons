@@ -8,7 +8,6 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class HumanReadableDocumentationTest extends RBTestMatcher<HumanReadableDocumentation> {
 

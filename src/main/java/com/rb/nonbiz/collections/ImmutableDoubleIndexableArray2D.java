@@ -11,7 +11,6 @@ import java.util.stream.IntStream;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray2D.immutableIndexableArray2D;
 import static com.rb.nonbiz.collections.MutableDoubleIndexableArray2D.mutableDoubleIndexableArray2D;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
-import static com.rb.nonbiz.math.vectorspaces.RBMatrix.rbMatrix;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
