@@ -65,6 +65,7 @@ public class RBDoubles {
 
   /**
    * {@link Math#min(double, double)} does not allow for varargs, so this is handy.
+   * We will not call it 'min' to avoid confusion with {@link Math#min(double, double)}.
    */
   public static double minDouble(double first, double second, double third, double ... rest) {
     double runningMin = Math.min(Math.min(first, second), third);
@@ -76,6 +77,7 @@ public class RBDoubles {
 
   /**
    * {@link Math#max(double, double)} does not allow for varargs, so this is handy.
+   * We will not call it 'max' to avoid confusion with {@link Math#max(double, double)}.
    */
   public static double maxDouble(double first, double second, double third, double ... rest) {
     double runningMax = Math.max(Math.max(first, second), third);
