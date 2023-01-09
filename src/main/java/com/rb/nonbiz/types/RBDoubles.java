@@ -54,6 +54,39 @@ public class RBDoubles {
     return 0.5 * (v1 + v2);
   }
 
+  public static double average(double first, double second, double third, double ... rest) {
+    int size = 3 + rest.length;
+    double sum = first + second + third;
+    for (double restItem : rest) {
+      sum += restItem;
+    }
+    return sum / size;
+  }
+
+  /**
+   * {@link Math#min(double, double)} does not allow for varargs, so this is handy.
+   * We will not call it 'min' to avoid confusion with {@link Math#min(double, double)}.
+   */
+  public static double minDouble(double first, double second, double third, double ... rest) {
+    double runningMin = Math.min(Math.min(first, second), third);
+    for (double restItem : rest) {
+      runningMin = Math.min(runningMin, restItem);
+    }
+    return runningMin;
+  }
+
+  /**
+   * {@link Math#max(double, double)} does not allow for varargs, so this is handy.
+   * We will not call it 'max' to avoid confusion with {@link Math#max(double, double)}.
+   */
+  public static double maxDouble(double first, double second, double third, double ... rest) {
+    double runningMax = Math.max(Math.max(first, second), third);
+    for (double restItem : rest) {
+      runningMax = Math.max(runningMax, restItem);
+    }
+    return runningMax;
+  }
+
   /**
    * We have a specific implementation for 2 decimal places, because if we use some variable n instead of 2,
    * we'll have to compute Math.pow which may be a tiny bit slow.

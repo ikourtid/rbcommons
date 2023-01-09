@@ -9,6 +9,7 @@ import java.util.function.BiConsumer;
 import java.util.function.DoubleConsumer;
 
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.RBDoubles.average;
@@ -65,11 +66,36 @@ public class RBDoublesTest {
   }
 
   @Test
-  public void testAverage() {
-    assertEquals(0, average(0, 0), 1e-8);
-    assertEquals(5.5, average(4.4, 6.6), 1e-8);
+  public void testAverageOfTwo() {
+    assertEquals(0,    average( 0,    0),   1e-8);
+    assertEquals(5.5,  average( 4.4,  6.6), 1e-8);
     assertEquals(-5.5, average(-4.4, -6.6), 1e-8);
-    assertEquals(4, average(-0.5, 8.5), 1e-8);
+    assertEquals(4,    average(-0.5,  8.5), 1e-8);
+  }
+
+  @Test
+  public void testAverage_varargsOverload() {
+    // This uses a different overload of #average than the previous test.
+    assertEquals(doubleExplained(3.3, (1.1 + 2.2 + 6.6)       / 3),  average(1.1, 2.2, 6.6),      1e-8);
+    assertEquals(doubleExplained(5.5, (1.1 + 2.2 + 8.8 + 9.9) / 4),  average(1.1, 2.2, 8.8, 9.9), 1e-8);
+  }
+
+  @Test
+  public void testMinDouble() {
+    assertEquals(7.1, RBDoubles.minDouble(7.1, 7.2, 7.3), 1e-8);
+    assertEquals(7.1, RBDoubles.minDouble(7.3, 7.2, 7.1), 1e-8);
+
+    assertEquals(7.1, RBDoubles.minDouble(7.1, 7.2, 7.3, 7.4), 1e-8);
+    assertEquals(7.1, RBDoubles.minDouble(7.4, 7.3, 7.2, 7.1), 1e-8);
+  }
+
+  @Test
+  public void testMaxDouble() {
+    assertEquals(7.3, RBDoubles.maxDouble(7.1, 7.2, 7.3), 1e-8);
+    assertEquals(7.3, RBDoubles.maxDouble(7.3, 7.2, 7.1), 1e-8);
+
+    assertEquals(7.4, RBDoubles.maxDouble(7.1, 7.2, 7.3, 7.4), 1e-8);
+    assertEquals(7.4, RBDoubles.maxDouble(7.4, 7.3, 7.2, 7.1), 1e-8);
   }
 
   @Test
