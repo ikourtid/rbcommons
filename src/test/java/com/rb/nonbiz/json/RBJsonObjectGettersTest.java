@@ -415,20 +415,20 @@ public class RBJsonObjectGettersTest {
         "invalidTime3",   jsonString("2014-04-04T12:59:60.123"));
 
     // can't use assertEquals(LocalDateTime, LocalDateTime) for some reason
-    assertEquals(LocalDate.of(2014, 4, 4),  getJsonDateTimeOrThrow(jsonObject, "dateTime").toLocalDate());
+    assertEquals(LocalDate.of(2014, 4, 4),               getJsonDateTimeOrThrow(jsonObject, "dateTime").toLocalDate());
     // 123_000_000 is in nanoseconds; e.g. 0.123 seconds
     assertEquals(LocalTime.of(12, 59, 59, 123_000_000),  getJsonDateTimeOrThrow(jsonObject, "dateTime").toLocalTime());
 
-    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "badDateFormat1"));
-    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "invalidDate"));
-    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "badTimeFormat1"));
-    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "badTimeFormat2"));
-    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "badTimeFormat3"));
-    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "invalidTime1"));
-    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "invalidTime2"));
-    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "invalidTime3"));
-    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "missingProperty"));
-    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "subObject"));
+    assertIllegalArgumentException( () -> getJsonDateTimeOrThrow(jsonObject, "badDateFormat1"));
+    assertIllegalArgumentException( () -> getJsonDateTimeOrThrow(jsonObject, "invalidDate"));
+    assertIllegalArgumentException( () -> getJsonDateTimeOrThrow(jsonObject, "badTimeFormat1"));
+    assertIllegalArgumentException( () -> getJsonDateTimeOrThrow(jsonObject, "badTimeFormat2"));
+    assertIllegalArgumentException( () -> getJsonDateTimeOrThrow(jsonObject, "badTimeFormat3"));
+    assertIllegalArgumentException( () -> getJsonDateTimeOrThrow(jsonObject, "invalidTime1"));
+    assertIllegalArgumentException( () -> getJsonDateTimeOrThrow(jsonObject, "invalidTime2"));
+    assertIllegalArgumentException( () -> getJsonDateTimeOrThrow(jsonObject, "invalidTime3"));
+    assertIllegalArgumentException( () -> getJsonDateTimeOrThrow(jsonObject, "missingProperty"));
+    assertIllegalArgumentException( () -> getJsonDateTimeOrThrow(jsonObject, "subObject"));
   }
 
   @Test
