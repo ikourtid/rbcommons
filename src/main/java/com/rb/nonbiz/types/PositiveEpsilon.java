@@ -17,7 +17,7 @@ public class PositiveEpsilon extends Epsilon {
     RBPreconditions.checkArgument(value > 0.0);
 
     // Model after pre-conditions in pseudo-constructor for Epsilon class, don't allow anything 100 or over.
-    RBPreconditions.checkArgument(value < 100.0);
+    RBPreconditions.checkArgument(value <= MAX_ALLOWED_EPSILON_VALUE);
     return new PositiveEpsilon(value);
   }
 
