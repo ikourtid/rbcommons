@@ -2,10 +2,12 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.rb.biz.types.Money;
 import org.junit.Test;
 
 import java.util.function.BiConsumer;
 
+import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.collections.ArrayIndexMappingTest.arrayIndexMappingMatcher;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMappingFromZeroTo;
@@ -52,15 +54,31 @@ public class SimpleArrayIndexMappingTest {
 
   @Test
   public void testSimpleArrayIndexMappingFromZeroTo() {
-    assertIllegalArgumentException( () -> simpleArrayIndexMappingFromZeroTo(-1));
+    assertIllegalArgumentException( () -> simpleArrayIndexMappingFromZeroTo(-1, x -> x));
     BiConsumer<Integer, ArrayIndexMapping<Integer>> asserter = (maxValueInclusive, expectedResult) ->
         assertThat(
-            simpleArrayIndexMappingFromZeroTo(maxValueInclusive),
+            simpleArrayIndexMappingFromZeroTo(maxValueInclusive, x -> x),
             arrayIndexMappingMatcher(
                 expectedResult, f -> typeSafeEqualTo(f)));
     asserter.accept(0, simpleArrayIndexMapping(0));
     asserter.accept(1, simpleArrayIndexMapping(0, 1));
     asserter.accept(2, simpleArrayIndexMapping(0, 1, 2));
+
+    // Test non-identity function on integers
+    SimpleArrayIndexMapping<Integer> times2Mapping = simpleArrayIndexMappingFromZeroTo(5, x -> 2 * x);
+    assertEquals(10, times2Mapping.getLast(), 1e-8);
+    assertEquals(0, times2Mapping.getFirst(), 1e-8);
+    assertEquals(6, times2Mapping.getKey(3), 1e-8);
+    assertEquals(times2Mapping.size(), 6);
+    // Reverse lookup
+    assertEquals(3, times2Mapping.getIndex(6), 1e-8);
+
+    // Test non-integers
+    SimpleArrayIndexMapping<Money> moneyIndexMapping = simpleArrayIndexMappingFromZeroTo(8, x -> money(10 * x));
+    assertEquals(9, moneyIndexMapping.size());
+    assertEquals(money(8 * 10), moneyIndexMapping.getLast());
+    // Make sure we're actually returning the money class
+    assertEquals(Money.class, moneyIndexMapping.getLast().getClass());
   }
 
   @Test
