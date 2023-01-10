@@ -77,7 +77,7 @@ public class SimpleArrayIndexMapping<T> implements ArrayIndexMapping<T> {
    * but the other one to be 'unindexed', i.e. just be treated like an array. It's like having a spreadsheet with
    * row headers but no column headers, or vice versa.
    */
-  public static <T> SimpleArrayIndexMapping<T> simpleArrayIndexMappingFromZeroTo(
+  public static <T> SimpleArrayIndexMapping<T> simpleArrayIndexMappingFromZeroUpToAndIncluding(
       int maxValueInclusive, IntFunction<T> intToValueConverter) {
     return simpleArrayIndexMapping(IntStream
         .rangeClosed(0, maxValueInclusive)

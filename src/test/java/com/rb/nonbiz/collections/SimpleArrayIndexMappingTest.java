@@ -2,15 +2,13 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.rb.biz.types.Money;
 import org.junit.Test;
 
 import java.util.function.BiConsumer;
 
-import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.collections.ArrayIndexMappingTest.arrayIndexMappingMatcher;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
-import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMappingFromZeroTo;
+import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMappingFromZeroUpToAndIncluding;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static java.util.Collections.emptyList;
@@ -53,32 +51,25 @@ public class SimpleArrayIndexMappingTest {
   }
 
   @Test
-  public void testSimpleArrayIndexMappingFromZeroTo() {
-    assertIllegalArgumentException( () -> simpleArrayIndexMappingFromZeroTo(-1, x -> x));
+  public void testSimpleArrayIndexMappingFromZeroUpToAndIncluding() {
+    assertIllegalArgumentException( () -> simpleArrayIndexMappingFromZeroUpToAndIncluding(-1, x -> x));
     BiConsumer<Integer, ArrayIndexMapping<Integer>> asserter = (maxValueInclusive, expectedResult) ->
         assertThat(
-            simpleArrayIndexMappingFromZeroTo(maxValueInclusive, x -> x),
+            simpleArrayIndexMappingFromZeroUpToAndIncluding(maxValueInclusive, x -> x),
             arrayIndexMappingMatcher(
                 expectedResult, f -> typeSafeEqualTo(f)));
     asserter.accept(0, simpleArrayIndexMapping(0));
     asserter.accept(1, simpleArrayIndexMapping(0, 1));
     asserter.accept(2, simpleArrayIndexMapping(0, 1, 2));
 
-    // Test non-identity function on integers
-    SimpleArrayIndexMapping<Integer> times2Mapping = simpleArrayIndexMappingFromZeroTo(5, x -> 2 * x);
-    assertEquals(10, times2Mapping.getLast(), 1e-8);
-    assertEquals(0, times2Mapping.getFirst(), 1e-8);
-    assertEquals(6, times2Mapping.getKey(3), 1e-8);
-    assertEquals(times2Mapping.size(), 6);
+    // Test non-identity function on Strings
+    SimpleArrayIndexMapping<String> times2Mapping = simpleArrayIndexMappingFromZeroUpToAndIncluding(5, x -> "_" + 2 * x);
+    assertEquals("_10", times2Mapping.getLast());
+    assertEquals("_0", times2Mapping.getFirst());
+    assertEquals("_6", times2Mapping.getKey(3));
+    assertEquals(6, times2Mapping.size());
     // Reverse lookup
-    assertEquals(3, times2Mapping.getIndex(6), 1e-8);
-
-    // Test non-integers
-    SimpleArrayIndexMapping<Money> moneyIndexMapping = simpleArrayIndexMappingFromZeroTo(8, x -> money(10 * x));
-    assertEquals(9, moneyIndexMapping.size());
-    assertEquals(money(8 * 10), moneyIndexMapping.getLast());
-    // Make sure we're actually returning the money class
-    assertEquals(Money.class, moneyIndexMapping.getLast().getClass());
+    assertEquals(3, times2Mapping.getIndex("_6"));
   }
 
   @Test
