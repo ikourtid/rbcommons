@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -76,9 +77,11 @@ public class SimpleArrayIndexMapping<T> implements ArrayIndexMapping<T> {
    * but the other one to be 'unindexed', i.e. just be treated like an array. It's like having a spreadsheet with
    * row headers but no column headers, or vice versa.
    */
-  public static SimpleArrayIndexMapping<Integer> simpleArrayIndexMappingFromZeroTo(int maxValueInclusive) {
+  public static <T> SimpleArrayIndexMapping<T> simpleArrayIndexMappingFromZeroTo(
+      int maxValueInclusive, IntFunction<T> intToValueConverter) {
     return simpleArrayIndexMapping(IntStream
         .rangeClosed(0, maxValueInclusive)
+        .mapToObj(intToValueConverter)
         .iterator());
   }
 
