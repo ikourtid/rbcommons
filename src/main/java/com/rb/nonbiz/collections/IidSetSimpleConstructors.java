@@ -1,14 +1,18 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.Iterators;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.util.RBOrderingPreconditions;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableIidSet.newMutableIidSetWithExpectedSize;
+import static com.rb.nonbiz.collections.RBStreams.concatenateFirstAndRest;
 
 /**
  * Constructors for IidSets based on lists, Collections, iterators.
@@ -41,8 +45,12 @@ public class IidSetSimpleConstructors {
     return newIidSetHelper(NOT_IN_INCREASING_INSTRUMENT_ID, DISALLOW_DUPLICATES, instrumentIds, sizeHint);
   }
 
-  public static IidSet newIidSet(InstrumentId...instrumentIds) {
-    return newIidSetHelper(DISALLOW_DUPLICATES, instrumentIds);
+  public static IidSet newIidSet(InstrumentId[] instrumentIds) {
+    return newIidSet(Iterators.forArray(instrumentIds), instrumentIds.length);
+  }
+
+  public static IidSet newIidSet(InstrumentId first, InstrumentId ... rest) {
+    return newIidSet(concatenateFirstAndRest(first, rest).iterator(), 1 + rest.length);
   }
 
   public static IidSet newIidSetFromPossibleDuplicates(Collection<InstrumentId> instrumentIds) {

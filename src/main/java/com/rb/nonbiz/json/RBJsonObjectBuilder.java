@@ -13,6 +13,7 @@ import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.function.Function;
@@ -88,6 +89,10 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
 
   public RBJsonObjectBuilder setLocalDate(String property, LocalDate value) {
     return setJsonPrimitive(property, jsonDate(value));
+  }
+
+  public RBJsonObjectBuilder setLocalDateTime(String property, LocalDateTime value) {
+    return setJsonPrimitive(property, jsonString(value.toString()));
   }
 
   public RBJsonObjectBuilder setJsonSubObject(String property, JsonObject jsonSubObject) {
