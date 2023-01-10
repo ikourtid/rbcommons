@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -398,6 +399,32 @@ public class RBJsonObjectGettersTest {
     assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "invalidDate"));
     assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "missingProperty"));
     assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "subObject"));
+  }
+
+  @Test
+  public void test_getJsonDateTimeOrThrow() {
+    JsonObject jsonObject = jsonObject(
+        "dateTime",       jsonString("2014-04-04T12:59:59.123"),
+        "badDateFormat1", jsonString("20140404T12:59:59.123"),
+        "invalidDate",    jsonString("2014-02-31T12:59:59.123"),
+        "badTimeFormat1", jsonString("2014-04-04T125959123"),
+        "badTimeFormat3", jsonString("2014-04-04T12:59:59:123"),
+        "invalidTime1",   jsonString("2014-04-04T25:59:59.123"),
+        "invalidTime2",   jsonString("2014-04-04T12:60:59.123"),
+        "invalidTime3",   jsonString("2014-04-04T12:59:60.123"));
+
+    assertEquals(LocalDateTime.of(2014, 4, 4, 12, 59, 59, 123_000_000), getJsonDateTimeOrThrow(jsonObject, "dateTime"));
+    
+    assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "badDateFormat1"));
+    assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "invalidDate"));
+    assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "badTimeFormat1"));
+    assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "badTimeFormat2"));
+    assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "badTimeFormat3"));
+    assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "invalidTime1"));
+    assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "invalidTime2"));
+    assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "invalidTime3"));
+    assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "missingProperty"));
+    assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "subObject"));
   }
 
   @Test
