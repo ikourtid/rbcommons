@@ -8,9 +8,11 @@ import com.google.gson.JsonObject;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import com.rb.nonbiz.text.Strings;
 import org.junit.Test;
+import org.threeten.bp.LocalDateTime;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -396,6 +398,35 @@ public class RBJsonObjectGettersTest {
     assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "badDateFormat2"));
     assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "badDateFormat3"));
     assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "invalidDate"));
+    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "missingProperty"));
+    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "subObject"));
+  }
+
+  @Test
+  public void test_getJsonDateTimeOrThrow() {
+    JsonObject jsonObject = jsonObject(
+        "dateTime",       jsonString("2014-04-04T12:59:59.123"),
+        "badDateFormat1", jsonString("20140404T12:59:59.123"),
+        "invalidDate",    jsonString("2014-02-31T12:59:59.123"),
+        "badTimeFormat1", jsonString("2014-04-04T125959123"),
+        "badTimeFormat3", jsonString("2014-04-04T12:59:59:123"),
+        "invalidTime1",   jsonString("2014-04-04T25:59:59.123"),
+        "invalidTime2",   jsonString("2014-04-04T12:60:59.123"),
+        "invalidTime3",   jsonString("2014-04-04T12:59:60.123"));
+
+    // can't use assertEquals(LocalDateTime, LocalDateTime) for some reason
+    assertEquals(LocalDate.of(2014, 4, 4),  getJsonDateTimeOrThrow(jsonObject, "dateTime").toLocalDate());
+    // 123_000_000 is in nanoseconds; e.g. 0.123 seconds
+    assertEquals(LocalTime.of(12, 59, 59, 123_000_000),  getJsonDateTimeOrThrow(jsonObject, "dateTime").toLocalTime());
+
+    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "badDateFormat1"));
+    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "invalidDate"));
+    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "badTimeFormat1"));
+    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "badTimeFormat2"));
+    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "badTimeFormat3"));
+    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "invalidTime1"));
+    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "invalidTime2"));
+    assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "invalidTime3"));
     assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "missingProperty"));
     assertIllegalArgumentException( () -> getJsonDateOrThrow(jsonObject, "subObject"));
   }

@@ -9,6 +9,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -306,6 +307,18 @@ public class RBJsonObjectGetters {
       JsonObject jsonObject,
       String property) {
     return dateFromYyyyMmDd(getJsonStringOrThrow(jsonObject, property));
+  }
+
+  /**
+   *  From 'jsonObject', get the value of 'property' and check that it can be converted into a LocalDateTime
+   *  using the format "ISO-DATE" + "T" + "ISO-TIME", e.g. YYYY-MM-DDTHH:MM:SS.NNNNNNNNN.
+   *  If it is missing or cannot be parsed as a date with this format, throw an exception.
+   *  Otherwise, return as a LocalDateTime.
+   */
+  public static LocalDateTime getJsonDateTimeOrThrow(
+      JsonObject jsonObject,
+      String property) {
+    return LocalDateTime.parse(getJsonStringOrThrow(jsonObject, property));
   }
 
   /**
