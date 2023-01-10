@@ -311,10 +311,13 @@ public class RBJsonObjectGetters {
 
   /**
    *  From 'jsonObject', get the value of 'property' and check that it can be converted into a LocalDateTime
-   *  using the format "ISO-DATE" + "T" + "ISO-TIME", i.e. YYYY-MM-DDTHH:MM:SS.NNNNNNNNN,
-   *  where NNNNNNNNN is the number of nano-seconds.
-   *  If it is missing or cannot be parsed as a date with this format, throw an exception.
-   *  Otherwise, return as a LocalDateTime.
+   *  using the format "ISO-DATE" + "T" + "ISO-TIME", e.g. 2022-12-31T15:59:59.123456789
+   *  where the final NNNNNNNNN is the number of nano-seconds.
+   *
+   *  <p> This is the format from the UTC standard; we didn't make it up. </p>
+   *
+   *  <p> If it is missing or cannot be parsed as a date with this format, throw an exception.
+   *  Otherwise, return as a LocalDateTime. </p>
    */
   public static LocalDateTime getJsonDateTimeOrThrow(
       JsonObject jsonObject,
