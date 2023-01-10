@@ -7,8 +7,10 @@ import org.junit.Test;
 import java.util.function.BiConsumer;
 
 import static com.rb.nonbiz.collections.ArrayIndexMappingTest.arrayIndexMappingMatcher;
+import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
-import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMappingFromZeroUpToAndIncluding;
+import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMappingClosedRange;
+import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMappingFromZeroWithSizeN;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static java.util.Collections.emptyList;
@@ -50,20 +52,34 @@ public class SimpleArrayIndexMappingTest {
         ImmutableSet.of(mapping.getIndex("A"), mapping.getIndex("B"), mapping.getIndex("C")));
   }
 
-  @Test
-  public void testSimpleArrayIndexMappingFromZeroUpToAndIncluding() {
-    assertIllegalArgumentException( () -> simpleArrayIndexMappingFromZeroUpToAndIncluding(-1, x -> x));
-    BiConsumer<Integer, ArrayIndexMapping<Integer>> asserter = (maxValueInclusive, expectedResult) ->
+  public void testSimpleArrayIndexMappingClosedRange() {
+    BiConsumer<ClosedRange<Integer>, ArrayIndexMapping<Integer>> asserter = (range, expectedResult) ->
         assertThat(
-            simpleArrayIndexMappingFromZeroUpToAndIncluding(maxValueInclusive, x -> x),
+            simpleArrayIndexMappingClosedRange(range, x -> x),
             arrayIndexMappingMatcher(
                 expectedResult, f -> typeSafeEqualTo(f)));
-    asserter.accept(0, simpleArrayIndexMapping(0));
-    asserter.accept(1, simpleArrayIndexMapping(0, 1));
-    asserter.accept(2, simpleArrayIndexMapping(0, 1, 2));
+    asserter.accept(closedRange( 0, 0), simpleArrayIndexMapping(0));
+    asserter.accept(closedRange(2, 2), simpleArrayIndexMapping(2));
+    asserter.accept(closedRange(-1, 1), simpleArrayIndexMapping(-1, 0, 1));
+    asserter.accept(closedRange( 0, 4), simpleArrayIndexMapping( 0, 1, 2, 3, 4));
+    asserter.accept(closedRange( 2, 5), simpleArrayIndexMapping( 2, 3, 4, 5));
+  }
+
+  @Test
+  public void testSimpleArrayIndexMappingFromZeroWithSizeN() {
+    assertIllegalArgumentException( () -> simpleArrayIndexMappingFromZeroWithSizeN(-1, x -> x));
+    assertIllegalArgumentException( () -> simpleArrayIndexMappingFromZeroWithSizeN(0, x -> x));
+    BiConsumer<Integer, ArrayIndexMapping<Integer>> asserter = (size, expectedResult) ->
+        assertThat(
+            simpleArrayIndexMappingFromZeroWithSizeN(size, x -> x),
+            arrayIndexMappingMatcher(
+                expectedResult, f -> typeSafeEqualTo(f)));
+    asserter.accept(1, simpleArrayIndexMapping(0));
+    asserter.accept(2, simpleArrayIndexMapping(0, 1));
+    asserter.accept(3, simpleArrayIndexMapping(0, 1, 2));
 
     // Test non-identity function on Strings
-    SimpleArrayIndexMapping<String> times2Mapping = simpleArrayIndexMappingFromZeroUpToAndIncluding(5, x -> "_" + 2 * x);
+    SimpleArrayIndexMapping<String> times2Mapping = simpleArrayIndexMappingFromZeroWithSizeN(6, x -> "_" + 2 * x);
     assertEquals("_10", times2Mapping.getLast());
     assertEquals("_0", times2Mapping.getFirst());
     assertEquals("_6", times2Mapping.getKey(3));
