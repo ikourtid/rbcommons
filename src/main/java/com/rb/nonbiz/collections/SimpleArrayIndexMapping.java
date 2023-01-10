@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.OptionalInt;
-import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -80,14 +79,6 @@ public class SimpleArrayIndexMapping<T> implements ArrayIndexMapping<T> {
   public static SimpleArrayIndexMapping<Integer> simpleArrayIndexMappingFromZeroTo(int maxValueInclusive) {
     return simpleArrayIndexMapping(IntStream
         .rangeClosed(0, maxValueInclusive)
-        .iterator());
-  }
-
-  public static <T> SimpleArrayIndexMapping<T> simpleArrayIndexMappingFromZeroTo(
-      int maxValueInclusive, IntFunction<T> intToValueConverter) {
-    return simpleArrayIndexMapping(IntStream
-        .rangeClosed(0, maxValueInclusive)
-        .mapToObj(intToValueConverter)
         .iterator());
   }
 
