@@ -9,6 +9,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.function.Function;
@@ -116,7 +117,8 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setDoublePercentage("doublePct", 0.123)
         .setBoolean("booleanFalse", false)
         .setBoolean("booleanTrue",  true)
-        .setLocalDate("date", LocalDate.of(2010, 1, 1));
+        .setLocalDate("date", LocalDate.of(2010, 1, 1))
+        .setLocalDateTime("dateAndTime", LocalDateTime.of(2020, 12, 31, 15, 59, 59, 123_456_789));
 
     assertEquals(
         jsonInteger(123),
@@ -138,6 +140,9 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
     assertEquals(
         new JsonPrimitive("2010-01-01"),
         builder.getJsonObject().getAsJsonPrimitive("date"));
+    assertEquals(
+        new JsonPrimitive("2020-12-31T15:59:59.123456789"),
+        builder.getJsonObject().getAsJsonPrimitive("dateAndTime"));
   }
 
   @Test
