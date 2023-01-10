@@ -1,8 +1,10 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.Iterators;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.util.RBOrderingPreconditions;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -43,8 +45,8 @@ public class IidSetSimpleConstructors {
     return newIidSetHelper(NOT_IN_INCREASING_INSTRUMENT_ID, DISALLOW_DUPLICATES, instrumentIds, sizeHint);
   }
 
-  public static IidSet newIidSet(InstrumentId ... instrumentIds) {
-    return newIidSetHelper(DISALLOW_DUPLICATES, instrumentIds);
+  public static IidSet newIidSet(InstrumentId[] instrumentIds) {
+    return newIidSet(Iterators.forArray(instrumentIds), instrumentIds.length);
   }
 
   public static IidSet newIidSet(InstrumentId first, InstrumentId ... rest) {
