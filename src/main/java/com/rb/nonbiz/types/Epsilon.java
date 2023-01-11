@@ -21,8 +21,7 @@ public class Epsilon extends ImpreciseValue<Epsilon> {
     // This is particularly useful for cases where one misspells e.g. 1e-6 to 1e6.
     RBPreconditions.checkArgument(
         0 <= value && value <= MAX_ALLOWED_EPSILON_VALUE,
-        "Epsilon must be in [0, 100]; was %s",
-        value);
+        "Epsilon must be in [0, %s]; was %s", MAX_ALLOWED_EPSILON_VALUE, value);
     return new Epsilon(value);
   }
 
