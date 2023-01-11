@@ -21,7 +21,7 @@ public class PositiveEpsilonTest {
     doesNotThrow = positiveEpsilon(1e-7);
     doesNotThrow = positiveEpsilon(1);
     doesNotThrow = positiveEpsilon(99);
-    assertIllegalArgumentException(() -> positiveEpsilon(1e9));
+    assertIllegalArgumentException( () -> positiveEpsilon(1e9));
   }
 
 }
