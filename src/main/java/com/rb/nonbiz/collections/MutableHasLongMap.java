@@ -8,6 +8,7 @@ import gnu.trove.map.hash.TLongObjectHashMap;
 
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -246,6 +247,27 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
     if (previousValue != null) {
       throw new IllegalArgumentException(Strings.format(
           "Trying to add value %s to key %s which already maps to %s",
+          value, key, previousValue));
+    }
+  }
+
+  /**
+   * Adds a key/value mapping.
+   * Throws if there already is a value for this key AND the existing value is not equal
+   * (subject to the {@link BiPredicate)} to the one supplied.
+   *
+   * <p> Use this instead of #put for extra safety, when applicable - which is pretty much all the time. </p>
+   */
+  public void putAssumingAbsentOrEqual(K key, V value, BiPredicate<V, V> equalityPredicate) {
+    if (key == null || value == null) {
+      throw new IllegalArgumentException(Strings.format(
+          "Neither key ( %s ) nor value ( %s ) can be null in a MutableHasLongMap",
+          key, value));
+    }
+    V previousValue = put(key, value);
+    if (previousValue != null && !equalityPredicate.test(previousValue, value)) {
+      throw new IllegalArgumentException(Strings.format(
+          "Trying to add value %s to key %s which already maps to the (unequal) value of %s",
           value, key, previousValue));
     }
   }
