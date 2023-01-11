@@ -1,22 +1,28 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
+import com.rb.biz.types.Price;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.function.BiPredicate;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
+import static com.rb.biz.types.Price.price;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -97,6 +103,28 @@ public class MutableIidMapTest {
         newIidMap(mutableMap),
         iidMapEqualityMatcher(
             singletonIidMap(STOCK_A, ImmutableList.of("x", "y"))));
+  }
+
+  @Test
+  public void testPutAssumingAbsentOrEqual() {
+    BiPredicate<Price, Price> almostEqualityPredicate = (px1, px2) -> px1.almostEquals(px2, epsilon(0.001));
+    MutableIidMap<Price> mutableIidMap = newMutableIidMap();
+
+    mutableIidMap.putAssumingAbsentOrEqual(STOCK_A, price(10), almostEqualityPredicate);
+
+    assertEquals(1, mutableIidMap.size());
+    assertAlmostEquals(price(10), mutableIidMap.getOrThrow(STOCK_A), DEFAULT_EPSILON_1e_8);
+
+    // Throws because the new price is off by more than the epsilon, i.e. it is not 'equal' according to the
+    // almostEqualityPredicate
+    assertIllegalArgumentException( () -> mutableIidMap.putAssumingAbsentOrEqual(
+        STOCK_A, price(10.0011), almostEqualityPredicate));
+
+    // Just within the epsilon, as per the almostEqualityPredicate
+    mutableIidMap.putAssumingAbsentOrEqual(STOCK_A, price(10.0009), almostEqualityPredicate);
+    // this should insert the new 'almost equal' value, to match the name of this method
+    assertEquals(1, mutableIidMap.size());
+    assertAlmostEquals(price(10.0009), mutableIidMap.getOrThrow(STOCK_A), DEFAULT_EPSILON_1e_8);
   }
 
 }

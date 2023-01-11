@@ -1,5 +1,6 @@
 package com.rb.biz.marketdata.instrumentmaster;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidBiMap;
@@ -105,6 +106,12 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
   @Override
   public Optional<Symbol> getLatestValidSymbol(InstrumentId instrumentId, LocalDate ignoredEffectiveDate) {
     return getSymbol(instrumentId, ignoredEffectiveDate);
+  }
+
+  // Do not use this; it's here to help the test matcher.
+  @VisibleForTesting
+  IidBiMap<Symbol> getHardCodedSymbolBiMapDoNotUse() {
+    return hardCodedSymbolBiMap;
   }
 
 }
