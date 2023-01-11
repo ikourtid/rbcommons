@@ -9,6 +9,8 @@ import com.rb.nonbiz.util.RBPreconditions;
  */
 public class PositiveEpsilon extends Epsilon {
 
+  public static final Epsilon DEFAULT_POSITIVE_EPSILON_1e_8       = positiveEpsilon(1e-8);
+
   protected PositiveEpsilon(double value) {
     super(value);
   }
