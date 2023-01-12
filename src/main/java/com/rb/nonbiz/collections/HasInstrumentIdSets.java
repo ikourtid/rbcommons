@@ -59,7 +59,7 @@ public class HasInstrumentIdSets {
   }
 
   @SafeVarargs
-  public static <T extends HasInstrumentId> HasInstrumentIdSet<T> mergeHasInstrumentIdSets(
+  public static <T extends HasInstrumentId> HasInstrumentIdSet<T> mergeHasInstrumentIdSetsDisallowingOverlap(
       HasInstrumentIdSet<T> first,
       HasInstrumentIdSet<T> second,
       HasInstrumentIdSet<T> ... rest) {
