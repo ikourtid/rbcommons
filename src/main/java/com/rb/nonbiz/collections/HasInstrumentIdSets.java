@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromStream;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
+import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 
 
 public class HasInstrumentIdSets {
@@ -55,6 +56,16 @@ public class HasInstrumentIdSets {
       map.putAssumingAbsent(item.getInstrumentId(), item);
     }
     return newHasInstrumentIdSet(map);
+  }
+
+  @SafeVarargs
+  public static <T extends HasInstrumentId> HasInstrumentIdSet<T> mergeHasInstrumentIdSets(
+      HasInstrumentIdSet<T> first,
+      HasInstrumentIdSet<T> second,
+      HasInstrumentIdSet<T> ... rest) {
+    return newHasInstrumentIdSet(
+        concatenateFirstSecondAndRest(first, second, rest)
+            .flatMap(v -> v.stream()));
   }
 
 }
