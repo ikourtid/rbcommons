@@ -114,4 +114,12 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
     return hardCodedSymbolBiMap;
   }
 
+  /**
+   * Ideally callers will only treat this class as a plain {@link InstrumentMaster}, but sometimes it's convenient
+   * in tests to confirm that we loaded the right number of instruments.
+   */
+  public int size() {
+    return hardCodedSymbolBiMap.size();
+  }
+
 }
