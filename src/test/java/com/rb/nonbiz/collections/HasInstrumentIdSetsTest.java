@@ -4,9 +4,6 @@ import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import org.junit.Test;
 
-import java.util.function.BiConsumer;
-import java.util.function.Predicate;
-
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_C;
