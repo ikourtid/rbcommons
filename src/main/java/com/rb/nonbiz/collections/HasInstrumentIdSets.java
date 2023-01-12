@@ -1,11 +1,20 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.biz.types.asset.HasInstrumentId;
+import com.rb.biz.types.asset.InstrumentId;
+import com.rb.nonbiz.util.RBPreconditions;
+import gnu.trove.iterator.TLongIterator;
+import gnu.trove.map.hash.TLongObjectHashMap;
 
+import java.util.Iterator;
+import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
+import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromStream;
+import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
+import static com.rb.nonbiz.collections.RBMapMergers.mergeRBMapsAllowingOverlapOnSimilarItemsOnly;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 
 
@@ -55,6 +64,29 @@ public class HasInstrumentIdSets {
     for (T item : rest) {
       map.putAssumingAbsent(item.getInstrumentId(), item);
     }
+    return newHasInstrumentIdSet(map);
+  }
+
+  @SafeVarargs
+  public static <T extends HasInstrumentId> HasInstrumentIdSet<T> mergeHasInstrumentIdSetsAllowingOverlapOnSimilarItemsOnly(
+      BiPredicate<T, T> itemsAreSimilar,
+      HasInstrumentIdSet<T> first,
+      HasInstrumentIdSet<T> second,
+      HasInstrumentIdSet<T> ... rest) {
+    MutableIidMap<T> map = newMutableIidMap();
+    Stream<HasInstrumentIdSet<T>> setStream = concatenateFirstSecondAndRest(first, second, rest);
+    for (Iterator<HasInstrumentIdSet<T>> iter = setStream.iterator(); iter.hasNext();) {
+      HasInstrumentIdSet<T> thisSet = iter.next();
+      for (TLongIterator itemIter = thisSet.getRawMapUnsafe().keySet().iterator(); itemIter.hasNext();) {
+        InstrumentId key = instrumentId(itemIter.next());
+        T value = thisSet.getOrThrow(key);
+        if (map.containsKey(key)) {
+          RBPreconditions.checkArgument(itemsAreSimilar.test(map.getOrThrow(key), value));
+        }
+        map.put(key, value);
+      }
+    }
+
     return newHasInstrumentIdSet(map);
   }
 
