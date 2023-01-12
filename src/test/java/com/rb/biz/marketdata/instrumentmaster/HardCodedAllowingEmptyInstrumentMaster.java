@@ -11,6 +11,7 @@ import java.util.Optional;
 import static com.rb.biz.types.Symbol.symbol;
 import static com.rb.nonbiz.collections.IidBiMap.iidBiMap;
 import static com.rb.nonbiz.collections.IidBiMaps.iidBiMapOf;
+import static com.rb.nonbiz.collections.IidBiMaps.singletonIidBiMap;
 
 /**
  * Similar to {@link HardCodedInstrumentMaster}, except that it allows missing items and returns empty optionals
@@ -27,6 +28,12 @@ public class HardCodedAllowingEmptyInstrumentMaster implements InstrumentMaster 
   public static HardCodedAllowingEmptyInstrumentMaster hardCodedAllowingEmptyInstrumentMaster(
       IidMap<Symbol> hardCodedSymbolMap) {
     return new HardCodedAllowingEmptyInstrumentMaster(iidBiMap(hardCodedSymbolMap));
+  }
+
+  public static HardCodedAllowingEmptyInstrumentMaster singletonHardCodedAllowingEmptyInstrumentMaster(
+      InstrumentId instrumentId1, String symbol1) {
+    return new HardCodedAllowingEmptyInstrumentMaster(singletonIidBiMap(
+        instrumentId1, symbol(symbol1)));
   }
 
   public static HardCodedAllowingEmptyInstrumentMaster hardCodedAllowingEmptyInstrumentMaster(
