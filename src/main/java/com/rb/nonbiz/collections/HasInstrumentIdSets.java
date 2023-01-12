@@ -74,8 +74,7 @@ public class HasInstrumentIdSets {
       HasInstrumentIdSet<T> second,
       HasInstrumentIdSet<T> ... rest) {
     MutableIidMap<T> map = newMutableIidMap();
-    Stream<HasInstrumentIdSet<T>> setStream = concatenateFirstSecondAndRest(first, second, rest);
-    for (Iterator<HasInstrumentIdSet<T>> iter = setStream.iterator(); iter.hasNext();) {
+    for (Iterator<HasInstrumentIdSet<T>> iter = concatenateFirstSecondAndRest(first, second, rest).iterator(); iter.hasNext();) {
       HasInstrumentIdSet<T> thisSet = iter.next();
       for (TLongIterator itemIter = thisSet.getRawMapUnsafe().keySet().iterator(); itemIter.hasNext();) {
         InstrumentId key = instrumentId(itemIter.next());
@@ -86,7 +85,6 @@ public class HasInstrumentIdSets {
         map.put(key, value);
       }
     }
-
     return newHasInstrumentIdSet(map);
   }
 
