@@ -3,6 +3,8 @@ package com.rb.nonbiz.types;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import static java.lang.Math.toIntExact;
+
 /**
  * Use this when you modify a value e.g. inside some inner method in a lambda.
  * We should never pass around an LongCounter, or store it. It's not meant to be a C++ pointer!
@@ -55,6 +57,11 @@ import com.rb.nonbiz.util.RBPreconditions;
 
   public long get() {
     return currentValue;
+  }
+
+  public int getAsIntOrThrow() {
+    // toIntExact() checks for overflow
+    return toIntExact(currentValue);
   }
 
   @Override
