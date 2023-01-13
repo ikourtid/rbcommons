@@ -60,7 +60,7 @@ public class LongCounterTest extends RBTestMatcher<LongCounter> {
   @Test
   public void testGetAsIntOrThrow() {
     LongCounter longCounter = longCounter();
-    // set to max int value
+    // set to max int value (2_147_483_647)
     longCounter.incrementBy(Integer.MAX_VALUE);
 
     // can get this longCounter value as either a long or as an int
@@ -71,9 +71,27 @@ public class LongCounterTest extends RBTestMatcher<LongCounter> {
     longCounter.increment();
 
     // can get this as a long
-    assertEquals( (long) Integer.MAX_VALUE + 1L, longCounter.get());
+    assertEquals( Integer.MAX_VALUE + 1L, longCounter.get());
 
     // can't get this as an int
+    assertThrowsAnyException( () -> longCounter.getAsIntOrThrow());
+
+    // Now check for -Integer.MAX_VALUE
+    // decrement to zero
+    longCounter.incrementOrDecrementBy(-(Integer.MAX_VALUE + 1L));
+    assertEquals(0, longCounter.getAsIntOrThrow());
+
+    // decrement to Integer.MIN_VALUE (-2_147_483_648)
+    longCounter.incrementOrDecrementBy(Integer.MIN_VALUE);
+
+    // can get this as int
+    assertEquals(Integer.MIN_VALUE, longCounter.getAsIntOrThrow());
+
+    // decrement again
+    longCounter.incrementOrDecrementBy(-1L);
+    // can get this as long
+    assertEquals(Integer.MIN_VALUE - 1L, longCounter.get());
+    // can't get this as int
     assertThrowsAnyException( () -> longCounter.getAsIntOrThrow());
   }
 
