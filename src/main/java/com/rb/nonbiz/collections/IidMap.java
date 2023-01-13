@@ -401,7 +401,7 @@ public class IidMap<V> extends HasLongMap<InstrumentId, V> implements PrintsInst
     if (throwOnMissingKeys) {
       RBSimilarityPreconditions.checkBothSame(
           totalRemoved.get(),
-          toRemove.size(),
+          (long) toRemove.size(),
           "Not all keys requested to be removed are in the map");
     }
     return newIidMap(mutableMap);
