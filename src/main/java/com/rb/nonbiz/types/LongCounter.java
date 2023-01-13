@@ -14,7 +14,7 @@ import com.rb.nonbiz.util.RBPreconditions;
  */
  public class LongCounter {
 
-  private int currentValue;
+  private long currentValue;
 
   private LongCounter() {
     this.currentValue = 0;
@@ -53,7 +53,7 @@ import com.rb.nonbiz.util.RBPreconditions;
     return this;
   }
 
-  public int get() {
+  public long get() {
     return currentValue;
   }
 
