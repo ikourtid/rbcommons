@@ -17,7 +17,6 @@ import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.immutableIndex
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.types.LongCounter.longCounter;
-import static java.lang.Math.toIntExact;
 
 public class ImmutableIndexableArrays1D {
 
@@ -69,7 +68,7 @@ public class ImmutableIndexableArrays1D {
         .forEach(array -> array.forEachEntry( (key, value) -> {
           Optional<Integer> keyPosition = keysEncountered.getOptional(key);
           if (!keyPosition.isPresent()) {
-            keysEncountered.putAssumingAbsent(key, toIntExact(currentPosition.get()));
+            keysEncountered.putAssumingAbsent(key, currentPosition.getAsIntOrThrow());
             keysInOrder.add(key);
             valuesInOrder.add(value);
             currentPosition.increment();
