@@ -59,7 +59,9 @@ public class BinarySearch {
             midpointX, lowerBoundX, upperBoundX, midpointY, lowerBoundY, upperBoundY));
       }
       int comparisonY = comparatorForY.compare(midpointY, targetY);
-      log.debug("compY %s midX %s low %s up %s", comparisonY, midpointX, lowerBoundX, upperBoundX);
+      if (log.isDebugEnabled()) {
+        log.debug("compY %s midX %s low %s up %s", comparisonY, midpointX, lowerBoundX, upperBoundX);
+      }
       if (comparisonY < 0) {
         lowerBoundX = midpointX;
         lowerBoundY = midpointY;
