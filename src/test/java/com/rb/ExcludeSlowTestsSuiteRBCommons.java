@@ -1,7 +1,7 @@
 package com.rb;
 
 import com.rb.nonbiz.testcategories.AllTests;
-import com.rb.nonbiz.testcategories.Backtests;
+import com.rb.nonbiz.testcategories.OvernightTests;
 import com.rb.nonbiz.testcategories.DataGenerators;
 import com.rb.nonbiz.testcategories.DataPrinters;
 import com.rb.nonbiz.testcategories.EigenAnalyzers;
@@ -19,7 +19,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Categories.class)
 @Categories.ExcludeCategory( {
-    Backtests.class,
+    OvernightTests.class,
     DataGenerators.class,
     DataPrinters.class,
     EigenAnalyzers.class,
