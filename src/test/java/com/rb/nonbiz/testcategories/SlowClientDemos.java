@@ -8,6 +8,6 @@ package com.rb.nonbiz.testcategories;
  * development laptops many times intraday. We don't want those tests - currently (Jan 2023) over 18,000 of them -
  * to take more than a few seconds and interfere with our development.
  */
-public interface SlowClientDemos {
+public interface SlowClientDemos extends OvernightTests {
 
 }
