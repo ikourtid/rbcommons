@@ -1,7 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.functional.TriConsumer;
-import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import org.junit.Test;
 
 import java.util.function.BiPredicate;
@@ -24,8 +23,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
-public class HasInstrumentIdSetsTest
-    extends RBCommonsIntegrationTest<HasInstrumentIdSets> {
+public class HasInstrumentIdSetsTest {
 
   private final TestHasInstrumentId STOCK_A_ID1 = testHasInstrumentId(STOCK_A, 1.0);
   private final TestHasInstrumentId STOCK_A_ID2 = testHasInstrumentId(STOCK_A, 2.0);
@@ -38,11 +36,13 @@ public class HasInstrumentIdSetsTest
     assertEquals(0, newHasInstrumentIdSet(emptyIidMap()).size());
 
     // Test set with 2 item
-    assertThat(newHasInstrumentIdSet(
+    assertThat(
+        newHasInstrumentIdSet(
             iidMapOf(
                 STOCK_A, STOCK_A_ID1,
                 STOCK_B, STOCK_B_ID2)),
-        hasInstrumentIdSetMatcher(hasInstrumentIdSetOf(
+        hasInstrumentIdSetMatcher(
+            hasInstrumentIdSetOf(
                 STOCK_A_ID1,
                 STOCK_B_ID2),
             f -> testHasInstrumentIdMatcher(f)));
@@ -65,11 +65,16 @@ public class HasInstrumentIdSetsTest
     HasInstrumentIdSet<TestHasInstrumentId> setB2C3 = hasInstrumentIdSetOf(STOCK_B_ID2, STOCK_C_ID3);
     HasInstrumentIdSet<TestHasInstrumentId> setA1B2C3 = hasInstrumentIdSetOf(STOCK_A_ID1, STOCK_B_ID2, STOCK_C_ID3);
     BiPredicate<TestHasInstrumentId, TestHasInstrumentId> checker = (a, b) -> a.getNumericValue() == b.getNumericValue();
+    // Intentionally run the assertion on (set1, set2) and (set2, set1), which tests given and reversed order.
     TriConsumer<HasInstrumentIdSet<TestHasInstrumentId>, HasInstrumentIdSet<TestHasInstrumentId>, HasInstrumentIdSet<TestHasInstrumentId>> asserter =
-        (set1, set2, combinedSet) ->
-            assertThat(
-                mergeHasInstrumentIdSetsAllowingOverlapOnSimilarItemsOnly(checker, set1, set2),
-                hasInstrumentIdSetMatcher(combinedSet, f -> testHasInstrumentIdMatcher(f)));
+        (set1, set2, combinedSet) -> {
+          assertThat(
+              mergeHasInstrumentIdSetsAllowingOverlapOnSimilarItemsOnly(checker, set1, set2),
+              hasInstrumentIdSetMatcher(combinedSet, f -> testHasInstrumentIdMatcher(f)));
+          assertThat(
+              mergeHasInstrumentIdSetsAllowingOverlapOnSimilarItemsOnly(checker, set2, set1),
+              hasInstrumentIdSetMatcher(combinedSet, f -> testHasInstrumentIdMatcher(f)));
+        };
 
     // Merging set with itself gives itself.
     asserter.accept(setA1, setA1, setA1);
@@ -79,7 +84,6 @@ public class HasInstrumentIdSetsTest
     // Merging set with empty gives itself.
     asserter.accept(setA1, emptyHasInstrumentIdSet(), setA1);
     asserter.accept(setA1B2, emptyHasInstrumentIdSet(), setA1B2);
-    asserter.accept(emptyHasInstrumentIdSet(), setA1B2, setA1B2);
 
     // Clean merges...no overlap.
     asserter.accept(setA1, setB2, setA1B2);
@@ -88,12 +92,14 @@ public class HasInstrumentIdSetsTest
     asserter.accept(setC3, setA1B2, setA1B2C3);
     // Merges with overlap, but it's OK due to equality.
     asserter.accept(setA1B2, setB2C3, setA1B2C3);
-    asserter.accept(setA1B2, setB2C3, setA1B2C3);
 
     // Merges fail due to lack of equality.  3rd argument to the asserter doesn't matter, since it raises an exception.
-    assertIllegalArgumentException( () -> asserter.accept(setA1, setA2, setA2));
-    assertIllegalArgumentException( () -> asserter.accept(setA1B2, setA2, setA2));
-    assertIllegalArgumentException( () -> asserter.accept(setA2, setA1B2C3, setA2));
+    assertIllegalArgumentException( () ->
+        mergeHasInstrumentIdSetsAllowingOverlapOnSimilarItemsOnly(checker, setA1,   setA2));
+    assertIllegalArgumentException( () ->
+        mergeHasInstrumentIdSetsAllowingOverlapOnSimilarItemsOnly(checker, setA1B2, setA2));
+    assertIllegalArgumentException( () ->
+        mergeHasInstrumentIdSetsAllowingOverlapOnSimilarItemsOnly(checker, setA2,   setA1B2C3, setA2));
 
     // Run a couple tests with 3 items.
     assertThat(
@@ -141,11 +147,16 @@ public class HasInstrumentIdSetsTest
     HasInstrumentIdSet<TestHasInstrumentId> setBC = hasInstrumentIdSetOf(STOCK_B_ID2, STOCK_C_ID3);
     HasInstrumentIdSet<TestHasInstrumentId> setABC = hasInstrumentIdSetOf(STOCK_A_ID1, STOCK_B_ID2, STOCK_C_ID3);
 
+    // Intentionally run the assertion on (set1, set2) and (set2, set1), which tests given and reversed order.
     TriConsumer<HasInstrumentIdSet<TestHasInstrumentId>, HasInstrumentIdSet<TestHasInstrumentId>, HasInstrumentIdSet<TestHasInstrumentId>> asserter =
-        (set1, set2, combinedSet) ->
+        (set1, set2, combinedSet) -> {
             assertThat(
                 mergeHasInstrumentIdSetsDisallowingOverlap(set1, set2),
                 hasInstrumentIdSetMatcher(combinedSet, f -> testHasInstrumentIdMatcher(f)));
+          assertThat(
+              mergeHasInstrumentIdSetsDisallowingOverlap(set2, set1),
+              hasInstrumentIdSetMatcher(combinedSet, f -> testHasInstrumentIdMatcher(f)));
+    };
 
     asserter.accept(setA, setB, setAB);
     asserter.accept(emptyHasInstrumentIdSet(), setA, setA);
@@ -169,14 +180,9 @@ public class HasInstrumentIdSetsTest
     assertIllegalArgumentException( () -> mergeHasInstrumentIdSetsDisallowingOverlap(setAC, setC));
 
     // Tests with 3 and 4 items.
-    assertIllegalArgumentException( () -> mergeHasInstrumentIdSetsDisallowingOverlap(setA,  setB, setA));
-    assertIllegalArgumentException( () -> mergeHasInstrumentIdSetsDisallowingOverlap(setA,  setB, setC, setA));
-    assertIllegalArgumentException( () -> mergeHasInstrumentIdSetsDisallowingOverlap(setA,  emptyHasInstrumentIdSet(), setC, setA));
-  }
-
-  @Override
-  protected Class<HasInstrumentIdSets> getClassBeingTested() {
-    return HasInstrumentIdSets.class;
+    assertIllegalArgumentException( () -> mergeHasInstrumentIdSetsDisallowingOverlap(setA, setB, setA));
+    assertIllegalArgumentException( () -> mergeHasInstrumentIdSetsDisallowingOverlap(setA, setB, setC, setA));
+    assertIllegalArgumentException( () -> mergeHasInstrumentIdSetsDisallowingOverlap(setA, emptyHasInstrumentIdSet(), setC, setA));
   }
 
 }

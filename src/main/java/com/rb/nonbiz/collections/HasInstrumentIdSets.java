@@ -74,17 +74,19 @@ public class HasInstrumentIdSets {
       HasInstrumentIdSet<T> second,
       HasInstrumentIdSet<T> ... rest) {
     MutableIidMap<T> map = newMutableIidMap();
-    for (Iterator<HasInstrumentIdSet<T>> iter = concatenateFirstSecondAndRest(first, second, rest).iterator(); iter.hasNext();) {
-      HasInstrumentIdSet<T> thisSet = iter.next();
+    //for (Iterator<HasInstrumentIdSet<T>> iter = concatenateFirstSecondAndRest(first, second, rest).iterator(); iter.hasNext();) {
+    concatenateFirstSecondAndRest(first, second, rest).forEach(thisSet -> {
       for (TLongIterator itemIter = thisSet.getRawMapUnsafe().keySet().iterator(); itemIter.hasNext();) {
         InstrumentId key = instrumentId(itemIter.next());
         T value = thisSet.getOrThrow(key);
-        if (map.containsKey(key)) {
-          RBPreconditions.checkArgument(itemsAreSimilar.test(map.getOrThrow(key), value));
-        }
+        map.getOptional(key).ifPresent(existingValue ->
+            RBPreconditions.checkArgument(
+                itemsAreSimilar.test(existingValue, value),
+                "For key %s , we cannot replace existing value %s with 'different enough' %s",
+                key, existingValue, value));
         map.put(key, value);
       }
-    }
+    });
     return newHasInstrumentIdSet(map);
   }
 
