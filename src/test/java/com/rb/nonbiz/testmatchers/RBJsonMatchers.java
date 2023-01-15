@@ -16,6 +16,7 @@ import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.alwaysMatchingMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.numberMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
@@ -50,7 +51,7 @@ public class RBJsonMatchers {
   public static TypeSafeMatcher<JsonPrimitive> jsonPrimitiveMatcher(JsonPrimitive expected, Epsilon epsilon) {
     return lambdaSwitchMatcher(expected,
         lambdaCase(v -> v.isBoolean(), v -> v.getAsBoolean(), f -> typeSafeEqualTo(f)),
-        lambdaCase(v -> v.isString(),  v -> v.getAsString(),  f -> typeSafeEqualTo(f)),
+        lambdaCase(v -> v.isString(),  v -> v.getAsString(),  f -> stringMatcher(f)),
         lambdaCase(v -> v.isNumber(),  v -> v.getAsNumber(),  f -> numberMatcher(f, epsilon)));
   }
 

@@ -48,7 +48,13 @@ public class LambdaSwitchCase<T, V> {
   }
 
   public boolean objectsMatch(T object1, T object2) {
-    return matcherGenerator.apply(convertToTypeV(object1)).matches(convertToTypeV(object2));
+    V v1 = convertToTypeV(object1);
+    V v2 = convertToTypeV(object2);
+    boolean matches = matcherGenerator.apply(v1).matches(v2);
+    if (!matches) {
+      int dummy = 0; // this is convenient for putting in breakpoints
+    }
+    return matches;
   }
 
   @SafeVarargs
