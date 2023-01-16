@@ -68,7 +68,7 @@ public class ImmutableIndexableArrays1D {
         .forEach(array -> array.forEachEntry( (key, value) -> {
           Optional<Integer> keyPosition = keysEncountered.getOptional(key);
           if (!keyPosition.isPresent()) {
-            keysEncountered.putAssumingAbsent(key, currentPosition.get());
+            keysEncountered.putAssumingAbsent(key, currentPosition.getAsIntOrThrow());
             keysInOrder.add(key);
             valuesInOrder.add(value);
             currentPosition.increment();

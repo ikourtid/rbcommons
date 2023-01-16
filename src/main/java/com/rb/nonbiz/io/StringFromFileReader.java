@@ -6,6 +6,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Optional;
 
+import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
+
 /**
  * Reads the contents of an entire file into a single string.
  * Don't use this for files of any serious size! In most cases, you want to iterate one line at a time.
@@ -39,6 +41,13 @@ public class StringFromFileReader {
       // This IOException would get thrown by readLine, not due to a missing file, so we have to propagate it.
       throw new RuntimeException(e);
     }
+  }
+
+  public String readFromFileOrThrow(String filename) {
+    return getOrThrow(
+        readFromFile(filename),
+        "Could not read file: %s",
+        filename);
   }
 
 }
