@@ -133,6 +133,31 @@ public class RBValueMatchers {
   }
 
   /**
+   * Although we can just use typeSafeEqualTo with strings, sometimes it's convenient to use this,
+   * because for strings that are very long, sometimes it's easier to debug any differences by looking at the
+   * index of the first difference by putting a breakpoint below.
+   */
+  public static TypeSafeMatcher<String> stringMatcher(String expected) {
+    return makeMatcher(expected, actual -> {
+      boolean stringsAreEqual = expected.equals(actual);
+      if (!stringsAreEqual && expected.length() == actual.length()) {
+        for (int i = 0; i < expected.length(); i++) {
+          char expectedChar = expected.charAt(i);
+          char actualChar = actual.charAt(i);
+          if (expectedChar != actualChar) {
+            String prefixOfExpected = expected.substring(0, i);
+            String prefixOfActual = expected.substring(0, i);
+            // This is a convenient place to put breakpoints, plus it lets you view the variables in the debugger
+            int dummy = 0;
+            break;
+          }
+        }
+      }
+      return stringsAreEqual;
+    });
+  }
+
+  /**
    * hamcrest provides an equalTo, but it's a plain Matcher, not a TypeSafeMatcher
    */
   public static <T> TypeSafeMatcher<T> typeSafeEqualTo(T expected) {
