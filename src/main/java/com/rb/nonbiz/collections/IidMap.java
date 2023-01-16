@@ -400,8 +400,11 @@ public class IidMap<V> extends HasLongMap<InstrumentId, V> implements PrintsInst
     });
     if (throwOnMissingKeys) {
       RBSimilarityPreconditions.checkBothSame(
+          // We need both of the following to be of the same type for checkBothSame().
+          // We could convert the following (a long) to an int, but that would incur the cost of checking for overflow.
           totalRemoved.get(),
-          toRemove.size(),
+          // Instead, we cast the following to long, which doesn't require an overflow checks.
+          (long) toRemove.size(),
           "Not all keys requested to be removed are in the map");
     }
     return newIidMap(mutableMap);

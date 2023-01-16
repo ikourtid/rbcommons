@@ -82,7 +82,7 @@ public class BinarySearchResult<X, Y> {
 
   @Override
   public String toString() {
-    return Strings.format("[BSR: x between %s %s ; y between %s %s ; used %s iterations ; targetY %s BSR]",
+    return Strings.format("[BSR: x between %s and %s ; y between %s and %s ; used %s iterations ; targetY %s BSR]",
         lowerBoundX, upperBoundX, lowerBoundY, upperBoundY, numIterationsUsed, targetY);
   }
 
