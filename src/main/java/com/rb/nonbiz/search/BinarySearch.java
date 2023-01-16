@@ -1,6 +1,7 @@
 package com.rb.nonbiz.search;
 
 import com.rb.nonbiz.search.BinarySearchResult.BinarySearchResultBuilder;
+import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -9,6 +10,7 @@ import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.RBComparables.monotonic;
 import static com.rb.nonbiz.collections.RBComparators.nonDecreasingPerComparator;
+import static com.rb.nonbiz.text.RBLog.rbLog;
 
 /**
  * Generalized code for doing binary search.
@@ -16,6 +18,8 @@ import static com.rb.nonbiz.collections.RBComparators.nonDecreasingPerComparator
  * @see BinarySearchParameters
  */
 public class BinarySearch {
+
+  private static final RBLog log = rbLog(BinarySearch.class);
 
   public <X, Y> BinarySearchResult<X, Y> performBinarySearch(BinarySearchParameters<X, Y> parameters) {
     X lowerBoundX = parameters.getLowerBoundX();
@@ -54,11 +58,12 @@ public class BinarySearch {
             "Using midpoint of %s (between %s and %s ) we got value %s which is not between %s and %s , inclusive",
             midpointX, lowerBoundX, upperBoundX, midpointY, lowerBoundY, upperBoundY));
       }
-      int comparison = comparatorForY.compare(midpointY, targetY);
-      if (comparison < 0) {
+      int comparisonY = comparatorForY.compare(midpointY, targetY);
+      log.debug("compY %s midX %s low %s up %s", comparisonY, midpointX, lowerBoundX, upperBoundX);
+      if (comparisonY < 0) {
         lowerBoundX = midpointX;
         lowerBoundY = midpointY;
-      } else if (comparison > 0) {
+      } else if (comparisonY > 0) {
         upperBoundX = midpointX;
         upperBoundY = midpointY;
       } else {
@@ -77,10 +82,11 @@ public class BinarySearch {
       }
     }
     throw new IllegalArgumentException(Strings.format(
-        "Binary search could not finish, even within %s iterations; lower(x, y)= %s %s ; upper= %s %s",
+        "Binary search could not finish, even within %s iterations; lowerX %s ; upperX %s ; lowerY %s ; upper Y%s",
         maxIterations,
-        lowerBoundX, evaluatorOfX.apply(lowerBoundX),
-        upperBoundX, evaluatorOfX.apply(upperBoundX)));
+        lowerBoundX, upperBoundX,
+        evaluatorOfX.apply(lowerBoundX),
+        evaluatorOfX.apply(upperBoundX)));
   }
 
 }
