@@ -19,6 +19,7 @@ public class RBCachingDoubleFunctionTest {
           return Double.toString(x * x);
         },
         epsilon(1.1));
+    
     assertEquals(0, counter.get());
 
     assertEquals("16.0", cachingFunction.apply(4.0));
