@@ -18,6 +18,7 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.treeMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
@@ -27,7 +28,6 @@ import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class MutableRBDoubleKeyedMapTest {
 
@@ -203,12 +203,13 @@ public class MutableRBDoubleKeyedMapTest {
   public static <V> TypeSafeMatcher<MutableRBDoubleKeyedMap<V>> mutableRBDoubleKeyedMapMatcher(
       MutableRBDoubleKeyedMap<V> expected,
       Epsilon epsilonForDoubleKeys,
-      MatcherGenerator<V> valueMatcherGenerator) {
+      MatcherGenerator<V> valuesMatcherGenerator) {
     return makeMatcher(expected,
         match(
             v -> v.getRawTreeMapUnsafe(),
             f -> treeMapMatcher(f,
-                (key1, key2) -> epsilonForDoubleKeys.valuesAreWithin(key1, key2), valueMatcherGenerator)));
+                key -> doubleAlmostEqualsMatcher(key, epsilonForDoubleKeys),
+                valuesMatcherGenerator)));
   }
 
 }

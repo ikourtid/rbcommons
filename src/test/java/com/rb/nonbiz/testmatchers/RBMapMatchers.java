@@ -279,13 +279,12 @@ public class RBMapMatchers {
 
   public static <K, V> TypeSafeMatcher<TreeMap<K, V>> treeMapMatcher(
       TreeMap<K, V> expected,
-      BiPredicate<K, K> keysAlmostEqual,
+      MatcherGenerator<K> keysMatcherGenerator,
       MatcherGenerator<V> valuesMatcherGenerator) {
     // This is a bit trickier than rbMapMatcher, because we need inapproximate checks.
     return makeMatcher(expected,
         // First, the keys have to match; iteratorMatcher also checks that we have the same # of keys.
-        match(v -> v.descendingKeySet().iterator(), f -> iteratorMatcher(f,
-            key1 -> makeMatcher(key1, key2 -> keysAlmostEqual.test(key1, key2)))),
+        match(v -> v.descendingKeySet().iterator(), f -> iteratorMatcher(f, keysMatcherGenerator)),
 
         // Then, the values must match. Those are in a deterministic (increasing) order for both maps,
         // so this will work.
