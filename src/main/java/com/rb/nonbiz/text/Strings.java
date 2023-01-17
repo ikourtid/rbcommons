@@ -141,7 +141,7 @@ public class Strings {
 
   public static <K extends PrintsInstruments, V> String formatMapWhereKeysPrintInstruments(
       RBMap<K, V> map, String separator, Comparator<V> valuesComparator, InstrumentMaster instrumentMaster, LocalDate date) {
-    return sizePrefix(map.size()) + Joiner.on(separator).join(map.entrySet()
+    return Joiner.on(separator).join(map.entrySet()
         .stream()
         .sorted(comparingByValue(valuesComparator))
         .map(entry -> Strings.format("%s = %s",
