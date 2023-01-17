@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -19,6 +20,8 @@ import static com.google.common.collect.Maps.newTreeMap;
  * so behavior can be unexpected. </p>
  *
  * <p> This special map lets you look up values an 'almost equal' keys, subject to an epsilon. </p>
+ *
+ * <p> Unlike {@link RBDoubleKeyedMap}, this is mutable. </p>
  */
 public class MutableRBDoubleKeyedMap<V> {
 
@@ -41,6 +44,9 @@ public class MutableRBDoubleKeyedMap<V> {
     this.rawMap = rawMap;
   }
 
+  /**
+   * Our static constructors don't normally have 'new' prepended, but this parallels newMutableRBMap, newMutableIidMap, etc.
+   */
   public static <V> MutableRBDoubleKeyedMap<V> newMutableRBDoubleKeyedMap() {
     return new MutableRBDoubleKeyedMap<>(newTreeMap());
   }
@@ -141,6 +147,23 @@ public class MutableRBDoubleKeyedMap<V> {
         throw new IllegalArgumentException(Strings.format(
             "Internal error: not handled: %s", behaviorWhenTwoDoubleKeysAreClose));
     }
+  }
+
+  public int size() {
+    return rawMap.size();
+  }
+
+  // Do not use this; it's here to help the test matcher
+  @VisibleForTesting
+  TreeMap<Double, V> getRawTreeMapUnsafe() {
+    return rawMap;
+  }
+
+  @Override
+  public String toString() {
+    return Strings.format(
+        "[MRBDKM %s : %s MRBKDM]",
+        rawMap.size(), rawMap.toString());
   }
 
 }

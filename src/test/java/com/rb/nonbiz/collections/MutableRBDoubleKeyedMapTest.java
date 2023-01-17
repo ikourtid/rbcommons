@@ -1,8 +1,12 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKeysAreClose;
+import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.types.Epsilon;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
+
+import java.util.function.DoubleFunction;
 
 import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKeysAreClose.THROW_EXCEPTION;
 import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKeysAreClose.USE_CEILING;
@@ -11,15 +15,28 @@ import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoD
 import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKeysAreClose.USE_NEAREST_OR_FLOOR;
 import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.newMutableRBDoubleKeyedMap;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.treeMapMatcher;
+import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.Asserters.assertNullPointerException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class MutableRBDoubleKeyedMapTest {
+
+  public static <V> MutableRBDoubleKeyedMap<V> singletonMutableRBDoubleKeyedMap(
+      double key1, V value1) {
+    MutableRBDoubleKeyedMap<V> mutableMap = newMutableRBDoubleKeyedMap();
+    mutableMap.put(key1, value1);
+    return mutableMap;
+  }
 
   public static <V> MutableRBDoubleKeyedMap<V> mutableRBDoubleKeyedMapOf(
       double key1, V value1,
@@ -154,6 +171,44 @@ public class MutableRBDoubleKeyedMapTest {
     // and for abs(3 - 2).
     assertEquals("_1", map.getOrThrow(2.0, e, USE_NEAREST_OR_FLOOR));
     assertEquals("_3", map.getOrThrow(2.0, e, USE_NEAREST_OR_CEILING));
+  }
+
+  @Test
+  public void testMatcher() {
+    DoubleFunction<MutableRBDoubleKeyedMap<String>> maker = diff -> mutableRBDoubleKeyedMapOf(
+        1.0 + diff, "_1",
+        3.0 + diff, "_3",
+        7.0 + diff, "_7");
+
+    MutableRBDoubleKeyedMap<String> exactMap = maker.apply(0.0);
+
+    rbSetOf(-0.19, 0.0, 0.19)
+        .forEach(diff ->
+            assertThat(
+                "The map must match its exact self, plus variations of its keys within epsilon",
+                exactMap,
+                mutableRBDoubleKeyedMapMatcher(
+                    maker.apply(diff), epsilon(0.2), f -> stringMatcher(f))));
+
+    rbSetOf(-0.21, 0.21)
+        .forEach(diff ->
+            assertThat(
+                "The map must NOT match its variations where its keys are tweaked past an epsilon",
+                exactMap,
+                not(
+                    mutableRBDoubleKeyedMapMatcher(
+                        maker.apply(diff), epsilon(0.2), f -> stringMatcher(f)))));
+  }
+
+  public static <V> TypeSafeMatcher<MutableRBDoubleKeyedMap<V>> mutableRBDoubleKeyedMapMatcher(
+      MutableRBDoubleKeyedMap<V> expected,
+      Epsilon epsilonForDoubleKeys,
+      MatcherGenerator<V> valueMatcherGenerator) {
+    return makeMatcher(expected,
+        match(
+            v -> v.getRawTreeMapUnsafe(),
+            f -> treeMapMatcher(f,
+                (key1, key2) -> epsilonForDoubleKeys.valuesAreWithin(key1, key2), valueMatcherGenerator)));
   }
 
 }
