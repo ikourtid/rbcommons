@@ -77,26 +77,35 @@ public class MutableRBDoubleKeyedMap<V> {
     Entry<Double, V>   floorEntry = rawMap.floorEntry(key);
     Entry<Double, V> ceilingEntry = rawMap.ceilingEntry(key);
 
-    if (floorEntry == null && ceilingEntry == null) {
+    Entry<Double, V>   floorEntryWithinEpsilon =
+        floorEntry != null && epsilon.valuesAreWithin(floorEntry.getKey(), key)
+            ? floorEntry
+            : null;
+    Entry<Double, V> ceilingEntryWithinEpsilon =
+        ceilingEntry != null && epsilon.valuesAreWithin(ceilingEntry.getKey(), key)
+            ? ceilingEntry
+            : null;
+
+    if (floorEntryWithinEpsilon == null && ceilingEntryWithinEpsilon == null) {
       return null;
     }
-    if (floorEntry == null) { // so ceilingEntry must be non-null
-      return epsilon.valuesAreWithin(ceilingEntry.getKey(), key)
-          ? ceilingEntry.getValue()
+    if (floorEntryWithinEpsilon == null) { // so ceilingEntry must be non-null
+      return epsilon.valuesAreWithin(ceilingEntryWithinEpsilon.getKey(), key)
+          ? ceilingEntryWithinEpsilon.getValue()
           : null;
-    } else if (ceilingEntry == null) { // floorEntry is non-null
-      return epsilon.valuesAreWithin(floorEntry.getKey(), key)
-          ? floorEntry.getValue()
+    } else if (ceilingEntryWithinEpsilon == null) { // floorEntry is non-null
+      return epsilon.valuesAreWithin(floorEntryWithinEpsilon.getKey(), key)
+          ? floorEntryWithinEpsilon.getValue()
           : null;
     }
 
     // OK, at this point, we have two values to choose from - one below and one above.
     // First, check to see if it's the exact same double key (rare). If so, there's really no choice.
     // This is an intentional double comparison, so it will look like a warning in the IDE.
-    if (floorEntry.getKey() == ceilingEntry.getKey()) {
+    if (floorEntryWithinEpsilon.getKey() == ceilingEntryWithinEpsilon.getKey()) {
       return RBSimilarityPreconditions.checkBothSame(
-          floorEntry.getValue(),
-          ceilingEntry.getValue(),
+          floorEntryWithinEpsilon.getValue(),
+          ceilingEntryWithinEpsilon.getValue(),
           "Internal error; same keys but different values in the MutableRBDoubleKeyedMap");
     }
 
@@ -104,25 +113,25 @@ public class MutableRBDoubleKeyedMap<V> {
       case THROW_EXCEPTION:
         throw new IllegalArgumentException(Strings.format(
             "Lookup key %s is within epsilon %s of consecutive keys %s and %s ; throwing exception, as requested",
-            key, floorEntry.getKey(), ceilingEntry.getKey()));
+            key, floorEntryWithinEpsilon.getKey(), ceilingEntryWithinEpsilon.getKey()));
 
       case USE_FLOOR:
-        return floorEntry.getValue();
+        return floorEntryWithinEpsilon.getValue();
 
       case USE_CEILING:
-        return ceilingEntry.getValue();
+        return ceilingEntryWithinEpsilon.getValue();
 
       case USE_NEAREST_OR_FLOOR:
         // In the event both keys are equally far from each other, it's a tie, so using the floor, as per this enum.
-        return Math.abs(key - floorEntry.getKey()) <= Math.abs(key - ceilingEntry.getKey())
-            ? floorEntry.getValue()
-            : ceilingEntry.getValue();
+        return Math.abs(key - floorEntryWithinEpsilon.getKey()) <= Math.abs(key - ceilingEntryWithinEpsilon.getKey())
+            ? floorEntryWithinEpsilon.getValue()
+            : ceilingEntryWithinEpsilon.getValue();
 
       case USE_NEAREST_OR_CEILING:
         // In the event both keys are equally far from each other, it's a tie, so using the floor, as per this enum.
-        return Math.abs(key - ceilingEntry.getKey()) <= Math.abs(key - floorEntry.getKey())
-            ? ceilingEntry.getValue()
-            : floorEntry.getValue();
+        return Math.abs(key - ceilingEntryWithinEpsilon.getKey()) <= Math.abs(key - floorEntryWithinEpsilon.getKey())
+            ? ceilingEntryWithinEpsilon.getValue()
+            : floorEntryWithinEpsilon.getValue();
 
       default:
         throw new IllegalArgumentException(Strings.format(

@@ -5,10 +5,11 @@ import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.newMutableRBDoubleKeyedMap;
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class MutableRBDoubleKeyedMapTest {
 
@@ -61,13 +62,12 @@ public class MutableRBDoubleKeyedMapTest {
   }
 
   @Test
-  public void testGetOptional_allCases() {
+  public void testExactLookup() {
     MutableRBDoubleKeyedMap<String> map = mutableRBDoubleKeyedMapOf(
         1.0, "_1",
         3.0, "_3",
         7.0, "_7");
 
-    // Simple getters for the exact values
     for (BehaviorWhenTwoDoubleKeysAreClose behavior : BehaviorWhenTwoDoubleKeysAreClose.values()) {
       assertEquals("_1", map.getOrThrow(1.0, ZERO_EPSILON, behavior));
       assertEquals("_3", map.getOrThrow(3.0, ZERO_EPSILON, behavior));
@@ -77,7 +77,32 @@ public class MutableRBDoubleKeyedMapTest {
       assertOptionalEquals("_3", map.getOptional(3.0, ZERO_EPSILON, behavior));
       assertOptionalEquals("_7", map.getOptional(7.0, ZERO_EPSILON, behavior));
     }
+  }
 
+  @Test
+  public void testInexactLookup_noChoiceToBeMade() {
+    MutableRBDoubleKeyedMap<String> map = mutableRBDoubleKeyedMapOf(
+        1.0, "_1",
+        3.0, "_3",
+        7.0, "_7");
+
+    Epsilon e = epsilon(0.4);
+
+    // When the request is for a key that's either exactly the same as an existing key, OR one that's near
+    // (within epsilon), and there's never a choice to be made (where two existing keys are within epsilon of the
+    // key requested), return the value of the exact key.
+    for (BehaviorWhenTwoDoubleKeysAreClose behavior : BehaviorWhenTwoDoubleKeysAreClose.values()) {
+      rbSetOf(-0.39, 0.0, 0.39)
+          .forEach(diff -> {
+            assertEquals("_1", map.getOrThrow(1.0 + diff, e, behavior));
+            assertEquals("_3", map.getOrThrow(3.0 + diff, e, behavior));
+            assertEquals("_7", map.getOrThrow(7.0 + diff, e, behavior));
+
+            assertOptionalEquals("_1", map.getOptional(1.0 + diff, e, behavior));
+            assertOptionalEquals("_3", map.getOptional(3.0 + diff, e, behavior));
+            assertOptionalEquals("_7", map.getOptional(7.0 + diff, e, behavior));
+          });
+    }
   }
 
 }
