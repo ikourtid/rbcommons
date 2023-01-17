@@ -111,7 +111,7 @@ public class MutableRBDoubleKeyedMap<V> {
     return Optional.ofNullable(getOrNull(key, epsilon, behaviorWhenTwoDoubleKeysAreClose));
   }
 
-  // Note that we never return null, and we avoid doing that even in private methods such as this one,
+  // Note that we almost never return null, and we avoid doing that even in private methods such as this one,
   // but this makes it easy to centralize the logic so that both getOptional and getOrThrow can rely on this.
   private V getOrNull(double key, Epsilon epsilon, BehaviorWhenTwoDoubleKeysAreClose behaviorWhenTwoDoubleKeysAreClose) {
     Entry<Double, V>   floorEntry = rawMap.floorEntry(key);

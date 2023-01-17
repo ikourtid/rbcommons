@@ -281,7 +281,7 @@ public class RBMapMatchers {
       TreeMap<K, V> expected,
       BiPredicate<K, K> keysAlmostEqual,
       MatcherGenerator<V> valuesMatcherGenerator) {
-    // This is a bit trickier, because we need inapproximate checks.
+    // This is a bit trickier than rbMapMatcher, because we need inapproximate checks.
     return makeMatcher(expected,
         // First, the keys have to match; iteratorMatcher also checks that we have the same # of keys.
         match(v -> v.descendingKeySet().iterator(), f -> iteratorMatcher(f,

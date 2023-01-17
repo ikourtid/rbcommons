@@ -55,9 +55,8 @@ public class RBDoubleKeyedMap<V> {
 
   @Override
   public String toString() {
-    return Strings.format(
-        "[RBDKM %s : %s RBKDM]",
-        rawMutableMap.size(), rawMutableMap.toString());
+    // Not printing size; rawMutableMap.toString() does that already.
+    return Strings.format("[RBDKM %s RBKDM]", rawMutableMap.toString());
   }
 
 }
