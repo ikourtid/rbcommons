@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.TreeMap;
 
+import static com.google.common.collect.Maps.newTreeMap;
+
 /**
  * A map of double to some value.
  *
@@ -39,10 +41,18 @@ public class MutableRBDoubleKeyedMap<V> {
     this.rawMap = rawMap;
   }
 
-  public static <V> MutableRBDoubleKeyedMap<V> rbDoubleKeyedMap(TreeMap<Double, V> rawMap) {
-    return new MutableRBDoubleKeyedMap<>(rawMap);
+  public static <V> MutableRBDoubleKeyedMap<V> newMutableRBDoubleKeyedMap() {
+    return new MutableRBDoubleKeyedMap<>(newTreeMap());
   }
 
+  /**
+   * If an exactly equal double key exists, then this replaces what's there. Otherwise, it creates a new entry.
+   * Unlike {@link RBMap} etc., we don't do putAssumingAbsent etc., because checking whether a key already exists
+   * is somewhat expensive, plus it's not needed in the current (Jan 2023) use case. We could add that later as needed.
+   */
+  public void put(double key, V value) {
+    rawMap.put(key, value);
+  }
 
   public V getOrThrow(
       double key,
