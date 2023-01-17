@@ -13,9 +13,9 @@ import java.util.TreeMap;
 import static com.google.common.collect.Maps.newTreeMap;
 
 /**
- * A map of double to some value.
+ * A map from a double to a value.
  *
- * <p> We can't use {@link RBMap} for this. In general, it's a bad idea to use doubles as keys, because double equality
+ * <p> We can't use {@link MutableRBMap} for this. In general, it's a bad idea to use doubles as keys, because double equality
  * can be approximate in case a number is the result of a calculation (e.g. 0.8 is not the same as 0.2 * 0.4),
  * so behavior can be unexpected. </p>
  *
@@ -27,13 +27,43 @@ public class MutableRBDoubleKeyedMap<V> {
 
   /**
    * If more than one key / value pair is within epsilon of the requested double key value, what should we do?
+   *
+   * <p> For example, if say a map has keys 71.0 and 73.0, and the epsilon is 1.2. Then, if we try to get the value
+   * for key 72.0, both 71 and 73 are within 1.2 of 72, so there's more than one choice. </p>
    */
   public enum BehaviorWhenTwoDoubleKeysAreClose {
 
+    /**
+     * Throw an exception, to be safe.
+     */
     THROW_EXCEPTION,
+
+    /**
+     * Use the 'floor key'; in the example, it would be the value keyed by 71.0.
+     */
     USE_FLOOR,
+
+    /**
+     * Use the 'ceiling key'; in the example, it would be the value keyed by 73.0.
+     */
     USE_CEILING,
+
+    /**
+     * Return the value using the key with the smallest distance to that specified: for 71.9, return the value
+     * mapped by 71; for 72.1, return the value mapped by key 73.
+     *
+     * <p> If requesting the value for 72.0, which is exactly between 71 and 73 (example above), and if the double
+     * equality ends up being exact, use the value mapped by the 'floor key' - in this case, 71. </p>
+     */
     USE_NEAREST_OR_FLOOR,
+
+    /**
+     * Return the value using the key with the smallest distance to that specified: for 71.9, return the value
+     * mapped by 71; for 72.1, return the value mapped by key 73.
+     *
+     * <p> If requesting the value for 72.0, which is exactly between 71 and 73 (example above), and if the double
+     * equality ends up being exact, use the value mapped by the 'ceiling key' - in this case, 73. </p>
+     */
     USE_NEAREST_OR_CEILING
 
   }

@@ -8,7 +8,7 @@ import com.rb.nonbiz.types.Epsilon;
 import java.util.Optional;
 
 /**
- * A map of double to some value.
+ * A map from a double to a value.
  *
  * <p> We can't use {@link RBMap} for this. In general, it's a bad idea to use doubles as keys, because double equality
  * can be approximate in case a number is the result of a calculation (e.g. 0.8 is not the same as 0.2 * 0.4),
