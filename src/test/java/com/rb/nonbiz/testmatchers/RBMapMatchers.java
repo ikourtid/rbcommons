@@ -22,10 +22,13 @@ import org.hamcrest.TypeSafeMatcher;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.BiPredicate;
 
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchIidMap;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.unorderedCollectionMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.rangeMatcher;
@@ -272,6 +275,20 @@ public class RBMapMatchers {
     return makeMatcher(expected,
         match(v -> v.entrySet().iterator(), f -> iteratorMatcher(f,
             f2 -> mapEntryMatcher(f2, valuesMatcherGenerator))));
+  }
+
+  public static <K, V> TypeSafeMatcher<TreeMap<K, V>> treeMapMatcher(
+      TreeMap<K, V> expected,
+      MatcherGenerator<K> keysMatcherGenerator,
+      MatcherGenerator<V> valuesMatcherGenerator) {
+    // This is a bit trickier than rbMapMatcher, because we need inapproximate checks.
+    return makeMatcher(expected,
+        // First, the keys have to match; iteratorMatcher also checks that we have the same # of keys.
+        match(v -> v.descendingKeySet().iterator(), f -> iteratorMatcher(f, keysMatcherGenerator)),
+
+        // Then, the values must match. Those are in a deterministic (increasing) order for both maps,
+        // so this will work.
+        match(v -> v.values().iterator(), f -> iteratorMatcher(f, valuesMatcherGenerator)));
   }
 
 }
