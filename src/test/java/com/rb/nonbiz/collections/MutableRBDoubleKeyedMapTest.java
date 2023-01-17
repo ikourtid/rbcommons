@@ -4,8 +4,16 @@ import com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKe
 import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
+import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKeysAreClose.THROW_EXCEPTION;
+import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKeysAreClose.USE_CEILING;
+import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKeysAreClose.USE_FLOOR;
+import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKeysAreClose.USE_NEAREST_OR_CEILING;
+import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKeysAreClose.USE_NEAREST_OR_FLOOR;
 import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.newMutableRBDoubleKeyedMap;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.assertNullPointerException;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
@@ -103,6 +111,49 @@ public class MutableRBDoubleKeyedMapTest {
             assertOptionalEquals("_7", map.getOptional(7.0 + diff, e, behavior));
           });
     }
+    for (BehaviorWhenTwoDoubleKeysAreClose behavior : BehaviorWhenTwoDoubleKeysAreClose.values()) {
+      rbSetOf(-0.41, 0.41)
+          .forEach(diff -> {
+            assertIllegalArgumentException( () -> map.getOrThrow(1.0 + diff, e, behavior));
+            assertIllegalArgumentException( () -> map.getOrThrow(3.0 + diff, e, behavior));
+            assertIllegalArgumentException( () -> map.getOrThrow(7.0 + diff, e, behavior));
+
+            assertOptionalEmpty(map.getOptional(1.0 + diff, e, behavior));
+            assertOptionalEmpty(map.getOptional(3.0 + diff, e, behavior));
+            assertOptionalEmpty(map.getOptional(7.0 + diff, e, behavior));
+          });
+    }
+  }
+
+  @Test
+  public void testInexactLookup_choiceMustBeMade() {
+    MutableRBDoubleKeyedMap<String> map = mutableRBDoubleKeyedMapOf(
+        1.0, "_1",
+        3.0, "_3",
+        7.0, "_7");
+
+    Epsilon e = epsilon(1.8);
+
+    // 1.4 is 0.5 away from the 'floor key' 1.0, but 1.6 away from the 'ceiling' key 3.0, so now there are two choices.
+    assertEquals("_1",                    map.getOrThrow(1.5, e, USE_FLOOR));
+    assertEquals("_1",                    map.getOrThrow(1.5, e, USE_NEAREST_OR_FLOOR));
+    assertEquals("_1",                    map.getOrThrow(1.5, e, USE_NEAREST_OR_CEILING));
+    assertEquals("_3",                    map.getOrThrow(1.5, e, USE_CEILING));
+    assertIllegalArgumentException( () -> map.getOrThrow(1.5, e, THROW_EXCEPTION));
+
+    assertOptionalEquals("_1",            map.getOptional(1.5, e, USE_FLOOR));
+    assertOptionalEquals("_1",            map.getOptional(1.5, e, USE_NEAREST_OR_FLOOR));
+    assertOptionalEquals("_1",            map.getOptional(1.5, e, USE_NEAREST_OR_CEILING));
+    assertOptionalEquals("_3",            map.getOptional(1.5, e, USE_CEILING));
+    // Note that, even though this is not getOrThrow, we will still throw an exception, because there's more than
+    // one choice to be made about what to return.
+    assertIllegalArgumentException( () -> map.getOptional(1.5, e, THROW_EXCEPTION));
+
+    // Finally, let's check the case where something is exactly in the middle. This is hard to do with doubles, but
+    // thankfully the double calculation of Epsilon.valuesAreWithin ends up being exactly the same for abs(1 - 2)
+    // and for abs(3 - 2).
+    assertEquals("_1", map.getOrThrow(2.0, e, USE_NEAREST_OR_FLOOR));
+    assertEquals("_3", map.getOrThrow(2.0, e, USE_NEAREST_OR_CEILING));
   }
 
 }

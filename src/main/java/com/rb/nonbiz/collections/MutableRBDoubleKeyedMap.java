@@ -58,10 +58,14 @@ public class MutableRBDoubleKeyedMap<V> {
       double key,
       Epsilon epsilon,
       BehaviorWhenTwoDoubleKeysAreClose behaviorWhenTwoDoubleKeysAreClose) {
-    return RBPreconditions.checkNotNull(
-        getOrNull(key, epsilon, behaviorWhenTwoDoubleKeysAreClose),
+    V valueOrNull = getOrNull(key, epsilon, behaviorWhenTwoDoubleKeysAreClose);
+    // Not using checkNotNull because it's too low level for the caller to know we're using nulls this deep in the code,
+    // which we normally avoid anyway.
+    RBPreconditions.checkArgument(
+        valueOrNull != null,
         "Cannot find value using key= %s ; epsilon= %s ; behaviorOnAlmostEqualDoubleKeys= %s",
         key, epsilon, behaviorWhenTwoDoubleKeysAreClose);
+    return valueOrNull;
   }
 
   public Optional<V> getOptional(
