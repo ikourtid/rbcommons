@@ -3,7 +3,10 @@ package com.rb.nonbiz.collections;
 import com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKeysAreClose;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.types.Epsilon;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
+
+import java.util.function.DoubleFunction;
 
 import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKeysAreClose.THROW_EXCEPTION;
 import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.BehaviorWhenTwoDoubleKeysAreClose.USE_CEILING;
@@ -14,6 +17,8 @@ import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.newMutableRBDoub
 import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMapTest.mutableRBDoubleKeyedMapMatcher;
 import static com.rb.nonbiz.collections.RBDoubleKeyedMap.newRBDoubleKeyedMap;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
@@ -22,14 +27,7 @@ import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
-
-import org.hamcrest.TypeSafeMatcher;
-
-import java.util.function.DoubleFunction;
-
-import static com.rb.nonbiz.testmatchers.Match.match;
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static org.junit.Assert.assertEquals;
 
 public class RBDoubleKeyedMapTest {
 

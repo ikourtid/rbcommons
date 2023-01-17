@@ -1,10 +1,10 @@
 package com.rb;
 
 import com.rb.nonbiz.testcategories.AllTests;
-import com.rb.nonbiz.testcategories.OvernightTests;
 import com.rb.nonbiz.testcategories.DataGenerators;
 import com.rb.nonbiz.testcategories.DataPrinters;
 import com.rb.nonbiz.testcategories.EigenAnalyzers;
+import com.rb.nonbiz.testcategories.OvernightTests;
 import com.rb.nonbiz.testcategories.RealMarketDataSanityCheckTests;
 import com.rb.nonbiz.testcategories.ResearchBacktests;
 import com.rb.nonbiz.testcategories.SlowTests;

@@ -1,10 +1,8 @@
 package com.rb.nonbiz.types;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.PositiveEpsilon.positiveEpsilon;
 
 public class PositiveEpsilonTest {

@@ -23,12 +23,10 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.BiPredicate;
 
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchIidMap;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
-import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.unorderedCollectionMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.rangeMatcher;
