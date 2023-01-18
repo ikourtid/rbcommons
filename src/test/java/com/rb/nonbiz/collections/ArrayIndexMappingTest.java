@@ -116,7 +116,7 @@ public class ArrayIndexMappingTest {
     assertEquals(true, simpleArrayIndexMapping(matrixColumnIndex(0)).containsKey(matrixColumnIndex(0)));
     assertEquals(false, simpleArrayIndexMapping(matrixColumnIndex(0)).containsKey(matrixColumnIndex(2)));
 
-    // Create non-trivial mapping with 0 and 2.  It contains only zeor and two.
+    // Create non-trivial mapping with 0 and 2.  It contains only zero and two.
     SimpleArrayIndexMapping<MatrixColumnIndex> mapping02 = simpleArrayIndexMapping(matrixColumnIndex(0), matrixColumnIndex(2));
     assertEquals(true, mapping02.containsKey(matrixColumnIndex(0)));
     assertEquals(false, mapping02.containsKey(matrixColumnIndex(1)));
