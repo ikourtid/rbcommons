@@ -49,6 +49,19 @@ public interface ArrayIndexMapping<T> {
     return size() == 0;
   }
 
+  /**
+   * return true iff the arrayIndexMapping contains the key, otherwise returns false.
+   * @param key
+   * @return true or false
+   */
+  default boolean containsKey(T key) {
+    try {
+      int unused = getIndex(key);
+      return true;
+    } catch (Exception e) {}
+    return false;
+  }
+
   default List<T> getAllKeys() {
     return IntStream.range(0, size())
         .mapToObj(i -> getKey(i))
