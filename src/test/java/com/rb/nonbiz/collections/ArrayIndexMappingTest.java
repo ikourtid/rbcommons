@@ -109,19 +109,19 @@ public class ArrayIndexMappingTest {
   @Test
   public void testContainsKey() {
     // Empty contains no keys.
-    assertEquals(false, emptySimpleArrayIndexMapping().containsKey(matrixColumnIndex(0)));
-    assertEquals(false, emptySimpleArrayIndexMapping().containsKey(matrixColumnIndex(4)));
+    assertFalse(emptySimpleArrayIndexMapping().containsKey("a"));
+    assertFalse(emptySimpleArrayIndexMapping().containsKey("a"));
 
     // Singleton contains only one key.
-    assertEquals(true, simpleArrayIndexMapping(matrixColumnIndex(0)).containsKey(matrixColumnIndex(0)));
-    assertEquals(false, simpleArrayIndexMapping(matrixColumnIndex(0)).containsKey(matrixColumnIndex(2)));
+    assertTrue( simpleArrayIndexMapping("a").containsKey("a"));
+    assertFalse(simpleArrayIndexMapping("a").containsKey("b"));
 
-    // Create non-trivial mapping with 0 and 2.  It contains only zero and two.
-    SimpleArrayIndexMapping<MatrixColumnIndex> mapping02 = simpleArrayIndexMapping(matrixColumnIndex(0), matrixColumnIndex(2));
-    assertEquals(true, mapping02.containsKey(matrixColumnIndex(0)));
-    assertEquals(false, mapping02.containsKey(matrixColumnIndex(1)));
-    assertEquals(true, mapping02.containsKey(matrixColumnIndex(2)));
-    assertEquals(false, mapping02.containsKey(matrixColumnIndex(3)));
+    // Create non-trivial mapping with "a" and "c".
+    SimpleArrayIndexMapping<String> mapping02 = simpleArrayIndexMapping("a", "c");
+    assertTrue( mapping02.containsKey("a"));
+    assertFalse(mapping02.containsKey("b"));
+    assertTrue( mapping02.containsKey("c"));
+    assertFalse(mapping02.containsKey("d"));
   }
 
 }
