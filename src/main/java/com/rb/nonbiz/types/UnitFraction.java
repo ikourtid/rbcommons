@@ -182,8 +182,8 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
   }
 
   public String toBasisPoints(int scale, boolean includeSuffix) {
-    String bps = asBigDecimal().multiply(TEN_THOUSAND).setScale(scale, RoundingMode.HALF_EVEN).toString();
-    return includeSuffix ? Strings.format("%s bps", bps) : bps;
+    String bpsString = formatWithoutCommas(scale).format(asBigDecimal().multiply(TEN_THOUSAND));
+    return includeSuffix ? bpsString + " bps" : bpsString;
   }
 
   public String toBasisPoints() {
