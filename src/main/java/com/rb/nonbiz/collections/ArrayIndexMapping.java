@@ -55,6 +55,9 @@ public interface ArrayIndexMapping<T> {
    * @return true or false
    */
   default boolean containsKey(T key) {
+    // FIXME CM:
+    // Expand this interface:
+    // https://bitbucket.org/rowboatadvisors/rbcommons/pull-requests/498/add-contains-key-to-arrayindexmapping
     try {
       int unused = getIndex(key);
       return true;
