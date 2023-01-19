@@ -50,7 +50,7 @@ public interface ArrayIndexMapping<T> {
   }
 
   /**
-   * return true iff the arrayIndexMapping contains the key, otherwise returns false.
+   * Return true iff the arrayIndexMapping contains the key, otherwise returns false.
    * @param key
    * @return true or false
    */
