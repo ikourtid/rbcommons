@@ -16,6 +16,7 @@ import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndex
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -103,6 +104,24 @@ public class ArrayIndexMappingTest {
         simpleArrayIndexMapping(matrixRowIndex(0), matrixRowIndex(1), matrixRowIndex(2)))
         .forEach(arrayIndexMapping ->
             assertTrue(arrayIndexMapping.isTrivialIdentityMapping()));
+  }
+
+  @Test
+  public void testContainsKey() {
+    // Empty contains no keys.
+    assertFalse(emptySimpleArrayIndexMapping().containsKey("a"));
+    assertFalse(emptySimpleArrayIndexMapping().containsKey("a"));
+
+    // Singleton contains only one key.
+    assertTrue( simpleArrayIndexMapping("a").containsKey("a"));
+    assertFalse(simpleArrayIndexMapping("a").containsKey("b"));
+
+    // Create non-trivial mapping with "a" and "c".
+    SimpleArrayIndexMapping<String> mapping02 = simpleArrayIndexMapping("a", "c");
+    assertTrue( mapping02.containsKey("a"));
+    assertFalse(mapping02.containsKey("b"));
+    assertTrue( mapping02.containsKey("c"));
+    assertFalse(mapping02.containsKey("d"));
   }
 
 }
