@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a CSV file which has been read and loaded into memory.
+ * This contains both a {@link SimpleCsvHeaderRow} and a list of {@link SimpleCsvRow}.
+ */
 public class SimpleCsv {
 
   private final SimpleCsvHeaderRow headerRow;
