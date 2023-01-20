@@ -44,11 +44,16 @@ import static java.util.Map.Entry.comparingByValue;
 public class Strings {
 
   /**
-   * Java's String.format will throw if the arguments don't match the format - e.g. String.format("%s %s", "A")
-   * A safer thing to use is this method, which will not throw, and print something reasonable if there are
-   * missing or extra arguments after the format string.
+   * A safer version of Java's {@link String#format(String, Object...)}.
    *
-   * This is copied from Guava preconditions class, where it is package private (and therefore we can't just call it).
+   * <p> This will throw if the arguments don't match the format - e.g. {@code Strings.format("%s %s", "A")} is OK.
+   * In addition, it will not throw if an argument is null. Even though our codebase avoids using nulls, it's safer
+   * to be resilient to nulls. The idea is that you don't want the code crashing because of a malformed log statement.
+   * A safer thing to use is this method, which will not throw, and print something reasonable if there are
+   * missing or extra arguments after the format string. </p>
+   *
+   * <p> The code is copied from Guava preconditions class, where it is package private
+   * (and therefore we can't just call it). </p>
    */
   public static String format(String template, Object... args) {
     template = String.valueOf(template);
