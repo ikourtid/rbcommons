@@ -87,11 +87,11 @@ public class MatcherEpsilonsTest {
             v -> matcherEpsilons(Optional.of(v),              singletonRBMap(dummyEpsilonDesriptor, epsilon(0.123))))
         .forEach(maker -> {
           MatcherEpsilons doesNotThrow;
-          assertIllegalArgumentException(() -> maker.apply(epsilon(-1e-9)));
+          assertIllegalArgumentException( () -> maker.apply(epsilon(-1e-9)));
           doesNotThrow = maker.apply(epsilon(0));
           doesNotThrow = maker.apply(epsilon(1e-9));
           doesNotThrow = maker.apply(epsilon(99));
-          assertIllegalArgumentException(() -> maker.apply(epsilon(101)));
+          assertIllegalArgumentException( () -> maker.apply(epsilon(101)));
         });
   }
 
