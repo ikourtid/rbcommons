@@ -31,7 +31,7 @@ public class MutableIntegerIndexableArray2D<R, C> {
   }
 
   public int get(R rowKey, C columnKey) {
-    return rawArray[rowMapping.getIndex(rowKey)][columnMapping.getIndex(columnKey)];
+    return rawArray[rowMapping.getIndexOrThrow(rowKey)][columnMapping.getIndexOrThrow(columnKey)];
   }
 
   public int getByIndex(int rowIndex, int columnIndex) {
@@ -39,7 +39,7 @@ public class MutableIntegerIndexableArray2D<R, C> {
   }
 
   public void set(R rowKey, C columnKey, int value) {
-    rawArray[rowMapping.getIndex(rowKey)][columnMapping.getIndex(columnKey)] = value;
+    rawArray[rowMapping.getIndexOrThrow(rowKey)][columnMapping.getIndexOrThrow(columnKey)] = value;
   }
 
   public R getRowKey(int row) {

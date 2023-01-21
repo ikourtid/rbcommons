@@ -119,12 +119,8 @@ public class SimpleArrayIndexMapping<T> implements ArrayIndexMapping<T> {
     return objectsInOrder.get(index);
   }
 
-  public boolean containsObject(T object) {
-    return arrayIndices.containsKey(object);
-  }
-
   @Override
-  public int getIndex(T key) {
+  public int getIndexOrThrow(T key) {
     Integer index = arrayIndices.getOrThrow(
         key,
         "Object %s is not in mapping; I only have mappings for %s",

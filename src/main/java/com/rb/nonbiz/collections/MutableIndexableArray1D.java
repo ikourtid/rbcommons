@@ -48,7 +48,7 @@ public class MutableIndexableArray1D<K, V> {
   }
 
   public V get(K key) {
-    int index = arrayIndexMapping.getIndex(key);
+    int index = arrayIndexMapping.getIndexOrThrow(key);
     return rawArray[index];
   }
 
@@ -57,7 +57,7 @@ public class MutableIndexableArray1D<K, V> {
   }
 
   public int getIndexOfObject(K key) {
-    return arrayIndexMapping.getIndex(key);
+    return arrayIndexMapping.getIndexOrThrow(key);
   }
 
   public V getByIndex(int index) {
@@ -69,7 +69,7 @@ public class MutableIndexableArray1D<K, V> {
   }
 
   public void set(K key, V value) {
-    int index = arrayIndexMapping.getIndex(key);
+    int index = arrayIndexMapping.getIndexOrThrow(key);
     rawArray[index] = value;
   }
 

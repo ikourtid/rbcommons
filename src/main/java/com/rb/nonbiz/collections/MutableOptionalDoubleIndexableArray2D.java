@@ -30,23 +30,23 @@ public class MutableOptionalDoubleIndexableArray2D<R, C> extends MutableOptional
   }
 
   public OptionalDouble get(R rowKey, C columnKey) {
-    return get(rowMapping.getIndex(rowKey), columnMapping.getIndex(columnKey));
+    return get(rowMapping.getIndexOrThrow(rowKey), columnMapping.getIndexOrThrow(columnKey));
   }
 
   public void set(R rowKey, C columnKey, double value) {
-    set(rowMapping.getIndex(rowKey), columnMapping.getIndex(columnKey), value);
+    set(rowMapping.getIndexOrThrow(rowKey), columnMapping.getIndexOrThrow(columnKey), value);
   }
 
   public void setOnlyOnce(R rowKey, C columnKey, double value) {
-    setOnlyOnce(rowMapping.getIndex(rowKey), columnMapping.getIndex(columnKey), value);
+    setOnlyOnce(rowMapping.getIndexOrThrow(rowKey), columnMapping.getIndexOrThrow(columnKey), value);
   }
 
   public int numValuesPresentInRow(R rowKey) {
-    return getNumValuesPresentInRow(rowMapping.getIndex(rowKey));
+    return getNumValuesPresentInRow(rowMapping.getIndexOrThrow(rowKey));
   }
 
   public int numValuesPresentInColumn(C columnKey) {
-    return getNumValuesPresentInColumn(columnMapping.getIndex(columnKey));
+    return getNumValuesPresentInColumn(columnMapping.getIndexOrThrow(columnKey));
   }
 
   public R getRowKey(int row) {
