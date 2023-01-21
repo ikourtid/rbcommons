@@ -211,25 +211,25 @@ public class UnitFractionTest {
 
   @Test
   public void toBasisPoints() {
-    // default: print 2 digits and "bps" suffix
-    assertEquals("1234.00 bps",  unitFraction(0.1234).toBasisPoints());
-    assertEquals("10000.00 bps", UNIT_FRACTION_1.toBasisPoints());
-    assertEquals("3333.33 bps",  unitFraction(1, 3).toBasisPoints());
-    assertEquals("6666.67 bps",  unitFraction(2, 3).toBasisPoints());
+    // default: print up to 2 digits and "bps" suffix
+    assertEquals("1234 bps",    unitFraction(0.1234).toBasisPoints());
+    assertEquals("10000 bps",   UNIT_FRACTION_1.toBasisPoints());
+    assertEquals("3333.33 bps", unitFraction(1, 3).toBasisPoints());
+    assertEquals("6666.67 bps", unitFraction(2, 3).toBasisPoints());
 
-    assertEquals("1234.0 bps",  unitFraction(0.1234).toBasisPoints(1));
-    assertEquals("10000.0 bps", UNIT_FRACTION_1.toBasisPoints(1));
-    assertEquals("2000.0 bps",  unitFraction(0.2).toBasisPoints(1));
-    assertEquals("0.0 bps",     UNIT_FRACTION_0.toBasisPoints(1));
-    assertEquals("3333.3 bps",  unitFraction(1, 3).toBasisPoints(1));
-    assertEquals("6666.7 bps",  unitFraction(2, 3).toBasisPoints(1));
-    assertEquals("3333.3 bps",  unitFraction(1 / 3.0).toBasisPoints(1));
+    assertEquals("1234 bps",   unitFraction(0.1234).toBasisPoints(1));
+    assertEquals("10000 bps",  UNIT_FRACTION_1.toBasisPoints(1));
+    assertEquals("2000 bps",   unitFraction(0.2).toBasisPoints(1));
+    assertEquals("0 bps",      UNIT_FRACTION_0.toBasisPoints(1));
+    assertEquals("3333.3 bps", unitFraction(1, 3).toBasisPoints(1));
+    assertEquals("6666.7 bps", unitFraction(2, 3).toBasisPoints(1));
+    assertEquals("3333.3 bps", unitFraction(1 / 3.0).toBasisPoints(1));
 
-    // vary number of digits to print; do not print "bps" suffix
-    assertEquals("1234.00",  unitFraction(0.1234).toBasisPoints(2, false));
+    // vary number the max of digits to print; do not print "bps" suffix
+    assertEquals("1234",     unitFraction(0.1234).toBasisPoints(2, false));
     assertEquals("10000",    UNIT_FRACTION_1.toBasisPoints(0, false));
-    assertEquals("2000.0",   unitFraction(0.2).toBasisPoints(1, false));
-    assertEquals("0.0",      UNIT_FRACTION_0.toBasisPoints(1, false));
+    assertEquals("2000",     unitFraction(0.2).toBasisPoints(1, false));
+    assertEquals("0",        UNIT_FRACTION_0.toBasisPoints(1, false));
     assertEquals("3333.3",   unitFraction(1, 3).toBasisPoints(1, false));
     assertEquals("6666.7",   unitFraction(2, 3).toBasisPoints(1, false));
     assertEquals("6666.667", unitFraction(2 / 3.0).toBasisPoints(3, false));
