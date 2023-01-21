@@ -77,7 +77,7 @@ public class SimpleCsvRowParserTest extends RBTest<SimpleCsvRowParser> {
         "\"Iraklis \"\"Hercules\"\" Kourtidis\"",
         "\"Rowboat Advisors, Inc.\"",
         "\"\"")
-        .forEach(rawLine -> assertIllegalArgumentException(() ->
+        .forEach(rawLine -> assertIllegalArgumentException( () ->
             makeTestObject().parseLine(rawLine, Optional.of(inclusionFilter), OptionalInt.empty())));
   }
 

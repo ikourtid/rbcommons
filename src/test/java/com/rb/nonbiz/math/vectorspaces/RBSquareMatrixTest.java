@@ -57,15 +57,15 @@ public class RBSquareMatrixTest extends RBTestMatcher<RBSquareMatrix> {
 
   @Test
   public void notSquare_throws() {
-    assertIllegalArgumentException(() -> rbSquareMatrix(new double[][] {
+    assertIllegalArgumentException( () -> rbSquareMatrix(new double[][] {
         { 1.1 },
         { 3.1 } }));
-    assertIllegalArgumentException(() -> rbSquareMatrix(new double[][] {
+    assertIllegalArgumentException(  () -> rbSquareMatrix(new double[][] {
         { 1.1, 2.1 } }));
-    assertIllegalArgumentException(() -> rbSquareMatrix(new double[][] {
+    assertIllegalArgumentException( () -> rbSquareMatrix(new double[][] {
         { 1.1, 2.1, 3.1 },
         { 4.1, 5.1, 6.1 } }));
-    assertIllegalArgumentException(() -> rbSquareMatrix(new double[][] {
+    assertIllegalArgumentException( () -> rbSquareMatrix(new double[][] {
         { 1.1, 2.1 },
         { 3.1, 4.1 },
         { 5.1, 6.1 } }));
