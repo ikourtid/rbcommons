@@ -28,7 +28,7 @@ public class MutableIndexableBitSet2D<R, C> {
   }
 
   public boolean get(R rowKey, C columnKey) {
-    return rawBitSet.get(rowMapping.getIndex(rowKey), columnMapping.getIndex(columnKey));
+    return rawBitSet.get(rowMapping.getIndexOrThrow(rowKey), columnMapping.getIndexOrThrow(columnKey));
   }
 
   public boolean get(int rowIndex, int columnIndex) {
@@ -39,12 +39,12 @@ public class MutableIndexableBitSet2D<R, C> {
    * Like a java BitSet, we use #set to turn on a bit and #clear to turn it off.
    */
   public void set(R rowKey, C columnKey) {
-    rawBitSet.set(rowMapping.getIndex(rowKey), columnMapping.getIndex(columnKey));
+    rawBitSet.set(rowMapping.getIndexOrThrow(rowKey), columnMapping.getIndexOrThrow(columnKey));
   }
 
   public void setAssumingOff(R rowKey, C columnKey) {
-    int rowIndex = rowMapping.getIndex(rowKey);
-    int columnIndex = columnMapping.getIndex(columnKey);
+    int rowIndex = rowMapping.getIndexOrThrow(rowKey);
+    int columnIndex = columnMapping.getIndexOrThrow(columnKey);
     if (rawBitSet.get(rowIndex, columnIndex)) {
       throw new IllegalArgumentException(Strings.format(
           "You are trying to turn off the bit for ( %s , %s ) aka ( %s , %s ) but it's already on",
@@ -57,7 +57,7 @@ public class MutableIndexableBitSet2D<R, C> {
    * Like a java BitSet, we use #set to turn on a bit and #clear to turn it off.
    */
   public void clear(R rowKey, C columnKey) {
-    rawBitSet.clear(rowMapping.getIndex(rowKey), columnMapping.getIndex(columnKey));
+    rawBitSet.clear(rowMapping.getIndexOrThrow(rowKey), columnMapping.getIndexOrThrow(columnKey));
   }
 
   public R getRowKey(int row) {

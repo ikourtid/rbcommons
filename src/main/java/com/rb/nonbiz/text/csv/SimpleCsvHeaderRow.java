@@ -41,7 +41,7 @@ public class SimpleCsvHeaderRow {
   }
 
   public int getColumnIndex(String columnHeader) {
-    return arrayIndexMapping.getIndex(columnHeader);
+    return arrayIndexMapping.getIndexOrThrow(columnHeader);
   }
 
   public String getColumnHeader(int index) {

@@ -18,8 +18,8 @@ public interface IndexableDoubleDataStore2D<R, C> {
 
   default double get(R rowKey, C columnKey) {
     return getByIndex(
-        getRowMapping().getIndex(rowKey),
-        getColumnMapping().getIndex(columnKey));
+        getRowMapping().getIndexOrThrow(rowKey),
+        getColumnMapping().getIndexOrThrow(columnKey));
   }
 
   default R getRowKey(int rowIndex) {

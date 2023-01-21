@@ -62,7 +62,7 @@ public class MutableDoubleIndexableArray2D<R, C> implements IndexableDoubleDataS
   }
 
   public void set(R rowKey, C columnKey, double value) {
-    rawArray[rowMapping.getIndex(rowKey)][columnMapping.getIndex(columnKey)] = value;
+    rawArray[rowMapping.getIndexOrThrow(rowKey)][columnMapping.getIndexOrThrow(columnKey)] = value;
   }
 
   public RBMatrix toRBMatrix() {

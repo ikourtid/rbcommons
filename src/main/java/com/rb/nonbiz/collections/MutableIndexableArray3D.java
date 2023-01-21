@@ -69,7 +69,7 @@ public class MutableIndexableArray3D<X, Y, Z, V> {
   }
 
   public V get(X xKey, Y yKey, Z zKey) {
-    return rawArray[xMapping.getIndex(xKey)][yMapping.getIndex(yKey)][zMapping.getIndex(zKey)];
+    return rawArray[xMapping.getIndexOrThrow(xKey)][yMapping.getIndexOrThrow(yKey)][zMapping.getIndexOrThrow(zKey)];
   }
 
   public V getByIndex(int xIndex, int yIndex, int zIndex) {
@@ -77,7 +77,7 @@ public class MutableIndexableArray3D<X, Y, Z, V> {
   }
 
   public void set(X xKey, Y yKey, Z zKey, V value) {
-    rawArray[xMapping.getIndex(xKey)][yMapping.getIndex(yKey)][zMapping.getIndex(zKey)] = value;
+    rawArray[xMapping.getIndexOrThrow(xKey)][yMapping.getIndexOrThrow(yKey)][zMapping.getIndexOrThrow(zKey)] = value;
   }
 
   public X getXKey(int xIndex) {

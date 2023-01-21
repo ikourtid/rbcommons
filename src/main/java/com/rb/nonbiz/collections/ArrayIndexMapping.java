@@ -35,11 +35,10 @@ public interface ArrayIndexMapping<T> {
   /**
    * This should throw if the key is not in the mapping.
    */
-  int getIndex(T key);
+  int getIndexOrThrow(T key);
 
   /**
-   * #getIndex is just #getOptionalIndex(object).get(), but it's good to make it explicit
-   * when you need the Optional.
+   * This returns OptionalInt.empty() if the key is not in the mapping. Otherwise, return the index.
    */
   OptionalInt getOptionalIndex(T key);
 
@@ -55,14 +54,7 @@ public interface ArrayIndexMapping<T> {
    * @return true or false
    */
   default boolean containsKey(T key) {
-    // FIXME CM:
-    // Expand this interface:
-    // https://bitbucket.org/rowboatadvisors/rbcommons/pull-requests/498/add-contains-key-to-arrayindexmapping
-    try {
-      int unused = getIndex(key);
-      return true;
-    } catch (Exception e) {}
-    return false;
+    return getOptionalIndex(key).isPresent();
   }
 
   default List<T> getAllKeys() {

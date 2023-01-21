@@ -63,7 +63,7 @@ public class MutableIndexableArray2D<R, C, V> {
   }
 
   public V get(R rowKey, C columnKey) {
-    return rawArray[rowMapping.getIndex(rowKey)][columnMapping.getIndex(columnKey)];
+    return rawArray[rowMapping.getIndexOrThrow(rowKey)][columnMapping.getIndexOrThrow(columnKey)];
   }
 
   public V getByIndex(int rowIndex, int columnIndex) {
@@ -71,7 +71,7 @@ public class MutableIndexableArray2D<R, C, V> {
   }
 
   public void set(R rowKey, C columnKey, V value) {
-    rawArray[rowMapping.getIndex(rowKey)][columnMapping.getIndex(columnKey)] = value;
+    rawArray[rowMapping.getIndexOrThrow(rowKey)][columnMapping.getIndexOrThrow(columnKey)] = value;
   }
 
   public R getRowKey(int row) {
