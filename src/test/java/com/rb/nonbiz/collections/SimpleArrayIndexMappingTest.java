@@ -25,9 +25,9 @@ public class SimpleArrayIndexMappingTest {
     assertEquals("A", mapping.getKey(0));
     assertEquals("B", mapping.getKey(1));
     assertEquals("C", mapping.getKey(2));
-    assertEquals(0, mapping.getIndex("A"));
-    assertEquals(1, mapping.getIndex("B"));
-    assertEquals(2, mapping.getIndex("C"));
+    assertEquals(0, mapping.getIndexOrThrow("A"));
+    assertEquals(1, mapping.getIndexOrThrow("B"));
+    assertEquals(2, mapping.getIndexOrThrow("C"));
   }
 
   @Test
@@ -36,9 +36,9 @@ public class SimpleArrayIndexMappingTest {
     assertEquals("A", mapping.getKey(0));
     assertEquals("B", mapping.getKey(1));
     assertEquals("C", mapping.getKey(2));
-    assertEquals(0, mapping.getIndex("A"));
-    assertEquals(1, mapping.getIndex("B"));
-    assertEquals(2, mapping.getIndex("C"));
+    assertEquals(0, mapping.getIndexOrThrow("A"));
+    assertEquals(1, mapping.getIndexOrThrow("B"));
+    assertEquals(2, mapping.getIndexOrThrow("C"));
   }
 
   @Test
@@ -49,7 +49,7 @@ public class SimpleArrayIndexMappingTest {
         ImmutableSet.of(mapping.getKey(0), mapping.getKey(1), mapping.getKey(2)));
     assertEquals(
         ImmutableSet.of(0, 1, 2),
-        ImmutableSet.of(mapping.getIndex("A"), mapping.getIndex("B"), mapping.getIndex("C")));
+        ImmutableSet.of(mapping.getIndexOrThrow("A"), mapping.getIndexOrThrow("B"), mapping.getIndexOrThrow("C")));
   }
 
   public void testSimpleArrayIndexMappingClosedRange() {
@@ -85,7 +85,7 @@ public class SimpleArrayIndexMappingTest {
     assertEquals("_6", times2Mapping.getKey(3));
     assertEquals(6, times2Mapping.size());
     // Reverse lookup
-    assertEquals(3, times2Mapping.getIndex("_6"));
+    assertEquals(3, times2Mapping.getIndexOrThrow("_6"));
   }
 
   @Test
