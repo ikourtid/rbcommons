@@ -9,6 +9,7 @@ import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static junit.framework.TestCase.assertEquals;
 
@@ -40,6 +41,11 @@ public class PairOfSameTypeTest extends RBTestMatcher<PairOfSameType<Double>> {
   protected boolean willMatch(PairOfSameType<Double> expected, PairOfSameType<Double> actual) {
     return pairOfSameTypeMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
         .matches(actual);
+  }
+
+  public static <T>TypeSafeMatcher<PairOfSameType<T>> pairOfSameTypeEqualityMatcher(
+      PairOfSameType<T> expected) {
+    return pairOfSameTypeMatcher(expected, f -> typeSafeEqualTo(f));
   }
 
   public static <T>TypeSafeMatcher<PairOfSameType<T>> pairOfSameTypeMatcher(
