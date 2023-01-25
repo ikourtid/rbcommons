@@ -10,6 +10,13 @@ import static org.junit.Assert.assertTrue;
 
 public class RBUtilitiesTest {
 
+  /**
+   * This is handy for tests to indicate a dummy value for a specific enum class.
+   */
+  public static <E extends Enum<E>> E dummyEnumValue(Class<E> clazz) {
+    return clazz.getEnumConstants()[0];
+  }
+
   @Test
   public void makeComparator() {
     class StringAndInt {
