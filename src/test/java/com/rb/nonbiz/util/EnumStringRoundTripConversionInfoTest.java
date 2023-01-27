@@ -47,6 +47,7 @@ public class EnumStringRoundTripConversionInfoTest {
 
   }
 
+
   private enum EmptyEnum implements JsonRoundTripStringConvertibleEnum<EmptyEnum> {
 
     ;  // no enum values defined
