@@ -47,8 +47,9 @@ public class EnumStringRoundTripConversionInfoTest {
 
   }
 
-  private enum EmptyEnum implements RoundTripStringConvertibleEnum<EmptyEnum> {
 
+  private enum EmptyEnum implements RoundTripStringConvertibleEnum<EmptyEnum> {
+    
     ;  // no enum values defined
 
     private final String uniqueStableString;
