@@ -66,10 +66,9 @@ public class EnumStringRoundTripConversionInfoTest {
 
   @Test
   public void testEmptyEnum_throws() {
-
     EnumStringRoundTripConversionInfo<TestEnum> doesNotThrow = enumStringRoundTripConversionInfo(TestEnum.class);
 
-    // an enum class must have at least one enum value
+    // EnumStringRoundTripConversionInfo throws unless the enum class has at least one enum value
     assertIllegalArgumentException( () -> enumStringRoundTripConversionInfo(EmptyEnum.class));
   }
 
