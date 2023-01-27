@@ -47,6 +47,31 @@ public class EnumStringRoundTripConversionInfoTest {
 
   }
 
+  private enum EmptyEnum implements RoundTripStringConvertibleEnum<EmptyEnum> {
+
+    ;  // no enum values defined
+
+    private final String uniqueStableString;
+
+    EmptyEnum(String uniqueStableString) {
+      this.uniqueStableString = uniqueStableString;
+    }
+
+    @Override
+    public String toUniqueStableString() {
+      return uniqueStableString;
+    }
+
+  }
+
+  @Test
+  public void testEmptyEnum_throws() {
+
+    EnumStringRoundTripConversionInfo<TestEnum> doesNotThrow = enumStringRoundTripConversionInfo(TestEnum.class);
+
+    // an enum class must have at least one enum value
+    assertIllegalArgumentException( () -> enumStringRoundTripConversionInfo(EmptyEnum.class));
+  }
 
   @Test
   public void generalCase() {

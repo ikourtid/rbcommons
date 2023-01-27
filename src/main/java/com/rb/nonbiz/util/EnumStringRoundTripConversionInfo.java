@@ -31,6 +31,10 @@ public class EnumStringRoundTripConversionInfo<E extends Enum<E> & RoundTripStri
 
   public static <E extends Enum<E> & RoundTripStringConvertibleEnum<E>>
   EnumStringRoundTripConversionInfo<E> enumStringRoundTripConversionInfo(Class<E> clazz) {
+    RBPreconditions.checkArgument(
+        clazz.getEnumConstants().length > 0,
+        "Must have at least one enum defined in %s",
+        clazz);
     return new EnumStringRoundTripConversionInfo<>(rbMapFromStream(
         Arrays.stream(clazz.getEnumConstants()),
         v -> v.toUniqueStableString()));
