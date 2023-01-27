@@ -1,6 +1,7 @@
 package com.rb.nonbiz.util;
 
 import com.rb.nonbiz.collections.RBMap;
+import com.rb.nonbiz.text.Strings;
 
 import java.util.Arrays;
 
@@ -36,7 +37,12 @@ public class EnumStringRoundTripConversionInfo<E extends Enum<E> & RoundTripStri
     RBPreconditions.checkArgument(
         enumConstants.length > 0,
         "Must have at least one enum defined in class %s",
-        clazz);
+        clazz.getSimpleName());
+    RBPreconditions.checkArgument(
+        Arrays.stream(clazz.getEnumConstants())
+            .noneMatch(v -> v.toUniqueStableString().trim().equals("")),
+        "Class %s cannot have uniqueStableStrings that are empty or all white-space: %s",
+        clazz.getSimpleName(), clazz.getEnumConstants());
     return new EnumStringRoundTripConversionInfo<>(rbMapWithExpectedSizeFromStream(
         enumConstants.length,
         Arrays.stream(enumConstants),

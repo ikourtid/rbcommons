@@ -59,12 +59,36 @@ public class EnumStringRoundTripConversionInfoTest {
 
   }
 
+  private enum EnumWithWhitespaceUniqueStableString
+      implements RoundTripStringConvertibleEnum<EnumWithWhitespaceUniqueStableString> {
+
+    ENUM_VALUE_1("_1"),
+    ENUM_VALUE_2(" \t \r \n ");  // not a great uniqueStableString
+
+    private final String uniqueStableString;
+
+    EnumWithWhitespaceUniqueStableString(String uniqueStableString) {
+      this.uniqueStableString = uniqueStableString;
+    }
+
+    @Override
+    public String toUniqueStableString() {
+      return uniqueStableString;
+    }
+  }
+
+
   @Test
   public void testEmptyEnum_throws() {
     EnumStringRoundTripConversionInfo<TestEnum> doesNotThrow = enumStringRoundTripConversionInfo(TestEnum.class);
 
     // EnumStringRoundTripConversionInfo throws unless the enum class has at least one enum value
     assertIllegalArgumentException( () -> enumStringRoundTripConversionInfo(EmptyEnum.class));
+  }
+
+  @Test public void allWhitespaceUniqueStableString_throws() {
+    // UniqueStableStrings can't be entirely whitespace
+    assertIllegalArgumentException( () -> enumStringRoundTripConversionInfo(EnumWithWhitespaceUniqueStableString.class));
   }
 
   @Test
