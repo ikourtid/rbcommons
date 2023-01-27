@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class EnumStringRoundTripConversionInfoTest {
 
-  private enum TestEnum implements RoundTripStringConvertibleEnum<TestEnum> {
+  private enum TestEnum implements JsonRoundTripStringConvertibleEnum<TestEnum> {
 
     ENUM_VALUE_1("_1"),
     ENUM_VALUE_2("_2");
@@ -29,7 +29,7 @@ public class EnumStringRoundTripConversionInfoTest {
   }
 
 
-  private enum BadEnum implements RoundTripStringConvertibleEnum<BadEnum> {
+  private enum BadEnum implements JsonRoundTripStringConvertibleEnum<BadEnum> {
 
     BAD_ENUM_VALUE_1("x"),
     BAD_ENUM_VALUE_2("x");
@@ -47,7 +47,7 @@ public class EnumStringRoundTripConversionInfoTest {
 
   }
 
-  private enum EmptyEnum implements RoundTripStringConvertibleEnum<EmptyEnum> {
+  private enum EmptyEnum implements JsonRoundTripStringConvertibleEnum<EmptyEnum> {
 
     ;  // no enum values defined
 

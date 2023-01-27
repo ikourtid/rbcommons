@@ -7,7 +7,7 @@ package com.rb.nonbiz.util;
  * ever gets renamed, we don't want the string representation to change, as that will be part of an (ideally) stable
  * API. In particular, the JSON API converters should always use this approach instead of using the Java identifier. </p>
  */
-public interface RoundTripStringConvertibleEnum<E extends Enum<E>> {
+public interface JsonRoundTripStringConvertibleEnum<E extends Enum<E>> {
 
   String toUniqueStableString();
 
