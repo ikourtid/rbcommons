@@ -1,11 +1,14 @@
 package com.rb.nonbiz.util;
 
 import com.rb.nonbiz.collections.RBMap;
+import com.rb.nonbiz.text.Strings;
 
 import java.util.Arrays;
 
+import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
 import static com.rb.nonbiz.collections.RBMapConstructors.rbMapWithExpectedSizeFromStream;
+import static org.apache.commons.lang3.StringUtils.isAsciiPrintable;
 
 /**
  * Contains information about how to convert an enum (the 'convertible' kind, i.e. {@link JsonRoundTripStringConvertibleEnum})
@@ -33,10 +36,22 @@ public class EnumStringRoundTripConversionInfo<E extends Enum<E> & JsonRoundTrip
   public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>>
   EnumStringRoundTripConversionInfo<E> enumStringRoundTripConversionInfo(Class<E> clazz) {
     E[] enumConstants = clazz.getEnumConstants();
+
     RBPreconditions.checkArgument(
         enumConstants.length > 0,
         "Must have at least one enum defined in class %s",
-        clazz);
+        clazz.getSimpleName());
+    RBPreconditions.checkArgument(
+        Arrays.stream(clazz.getEnumConstants())
+            .noneMatch(v -> isAllWhiteSpace(v.toUniqueStableString())),
+        "Class %s cannot have uniqueStableStrings that are empty or all white-space: %s",
+        clazz.getSimpleName(), clazz.getEnumConstants());
+    RBPreconditions.checkArgument(
+        Arrays.stream(clazz.getEnumConstants())
+            .allMatch(v -> isAsciiPrintable(v.toUniqueStableString())),
+        "Class %s cannot have uniqueStableStrings that have non-Ascii-printable characters: %s",
+        clazz.getSimpleName(), clazz.getEnumConstants());
+
     return new EnumStringRoundTripConversionInfo<>(rbMapWithExpectedSizeFromStream(
         enumConstants.length,
         Arrays.stream(enumConstants),
