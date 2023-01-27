@@ -78,17 +78,41 @@ public class EnumStringRoundTripConversionInfoTest {
   }
 
 
+  private enum EnumWithNonAsciiUniqueStableString
+      implements RoundTripStringConvertibleEnum<EnumWithNonAsciiUniqueStableString> {
+
+    ENUM_VALUE_1("_1"),
+    ENUM_VALUE_2("ABC\u00A0XYZ");  // contains a non-breaking space
+
+    private final String uniqueStableString;
+
+    EnumWithNonAsciiUniqueStableString(String uniqueStableString) {
+      this.uniqueStableString = uniqueStableString;
+    }
+
+    @Override
+    public String toUniqueStableString() {
+      return uniqueStableString;
+    }
+  }
+
+
   @Test
   public void testEmptyEnum_throws() {
-    EnumStringRoundTripConversionInfo<TestEnum> doesNotThrow = enumStringRoundTripConversionInfo(TestEnum.class);
-
     // EnumStringRoundTripConversionInfo throws unless the enum class has at least one enum value
     assertIllegalArgumentException( () -> enumStringRoundTripConversionInfo(EmptyEnum.class));
   }
 
-  @Test public void allWhitespaceUniqueStableString_throws() {
+  @Test
+  public void allWhitespaceUniqueStableString_throws() {
     // UniqueStableStrings can't be entirely whitespace
     assertIllegalArgumentException( () -> enumStringRoundTripConversionInfo(EnumWithWhitespaceUniqueStableString.class));
+  }
+
+  @Test
+  public void UniqueStableString_hasNonAsciiChar_throws() {
+    // UniqueStableStrings can't have non-ascii chars
+    assertIllegalArgumentException( () -> enumStringRoundTripConversionInfo(EnumWithNonAsciiUniqueStableString.class));
   }
 
   @Test

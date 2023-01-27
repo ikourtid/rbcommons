@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
 import static com.rb.nonbiz.collections.RBMapConstructors.rbMapWithExpectedSizeFromStream;
+import static org.apache.commons.lang3.StringUtils.isAsciiPrintable;
 
 /**
  * Contains information about how to convert an enum (the 'convertible' kind, i.e. {@link RoundTripStringConvertibleEnum})
@@ -40,8 +41,13 @@ public class EnumStringRoundTripConversionInfo<E extends Enum<E> & RoundTripStri
         clazz.getSimpleName());
     RBPreconditions.checkArgument(
         Arrays.stream(clazz.getEnumConstants())
-            .noneMatch(v -> v.toUniqueStableString().trim().equals("")),
+            .noneMatch(v -> v.toUniqueStableString().trim().isEmpty()),
         "Class %s cannot have uniqueStableStrings that are empty or all white-space: %s",
+        clazz.getSimpleName(), clazz.getEnumConstants());
+    RBPreconditions.checkArgument(
+        Arrays.stream(clazz.getEnumConstants())
+            .allMatch(v -> isAsciiPrintable(v.toUniqueStableString().trim())),
+        "Class %s cannot have uniqueStableStrings that are have unprintable characters: %s",
         clazz.getSimpleName(), clazz.getEnumConstants());
     return new EnumStringRoundTripConversionInfo<>(rbMapWithExpectedSizeFromStream(
         enumConstants.length,
