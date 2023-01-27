@@ -48,6 +48,25 @@ public class EnumStringRoundTripConversionInfoTest {
   }
 
 
+  private enum EmptyEnum implements RoundTripStringConvertibleEnum<EmptyEnum> {
+    
+    ;  // no enum values defined
+
+    @Override
+    public String toUniqueStableString() {
+      return "noEnums";
+    }
+
+  }
+
+  @Test
+  public void testEmptyEnum_throws() {
+    EnumStringRoundTripConversionInfo<TestEnum> doesNotThrow = enumStringRoundTripConversionInfo(TestEnum.class);
+
+    // EnumStringRoundTripConversionInfo throws unless the enum class has at least one enum value
+    assertIllegalArgumentException( () -> enumStringRoundTripConversionInfo(EmptyEnum.class));
+  }
+
   @Test
   public void generalCase() {
     EnumStringRoundTripConversionInfo<TestEnum> conversionInfo = enumStringRoundTripConversionInfo(TestEnum.class);
@@ -64,6 +83,7 @@ public class EnumStringRoundTripConversionInfoTest {
 
   @Test
   public void badEnum_multipleEnumValuesMapToSameString_throws() {
+    // BadEnum has two enum values, both with "x" as their "unique" string representation.
     assertIllegalArgumentException( () -> enumStringRoundTripConversionInfo(BadEnum.class));
   }
 
