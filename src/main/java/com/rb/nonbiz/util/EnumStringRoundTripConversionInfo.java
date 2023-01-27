@@ -5,6 +5,7 @@ import com.rb.nonbiz.collections.RBMap;
 import java.util.Arrays;
 
 import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
+import static com.rb.nonbiz.collections.RBMapConstructors.rbMapWithExpectedSizeFromStream;
 
 /**
  * Contains information about how to convert an enum (the 'convertible' kind, i.e. {@link RoundTripStringConvertibleEnum})
@@ -31,12 +32,14 @@ public class EnumStringRoundTripConversionInfo<E extends Enum<E> & RoundTripStri
 
   public static <E extends Enum<E> & RoundTripStringConvertibleEnum<E>>
   EnumStringRoundTripConversionInfo<E> enumStringRoundTripConversionInfo(Class<E> clazz) {
+    E[] enumConstants = clazz.getEnumConstants();
     RBPreconditions.checkArgument(
-        clazz.getEnumConstants().length > 0,
+        enumConstants.length > 0,
         "Must have at least one enum defined in %s",
         clazz);
-    return new EnumStringRoundTripConversionInfo<>(rbMapFromStream(
-        Arrays.stream(clazz.getEnumConstants()),
+    return new EnumStringRoundTripConversionInfo<>(rbMapWithExpectedSizeFromStream(
+        enumConstants.length,
+        Arrays.stream(enumConstants),
         v -> v.toUniqueStableString()));
   }
 
