@@ -35,7 +35,7 @@ public class EnumStringRoundTripConversionInfo<E extends Enum<E> & RoundTripStri
     E[] enumConstants = clazz.getEnumConstants();
     RBPreconditions.checkArgument(
         enumConstants.length > 0,
-        "Must have at least one enum defined in %s",
+        "Must have at least one enum defined in class %s",
         clazz);
     return new EnumStringRoundTripConversionInfo<>(rbMapWithExpectedSizeFromStream(
         enumConstants.length,

@@ -52,15 +52,9 @@ public class EnumStringRoundTripConversionInfoTest {
     
     ;  // no enum values defined
 
-    private final String uniqueStableString;
-
-    EmptyEnum(String uniqueStableString) {
-      this.uniqueStableString = uniqueStableString;
-    }
-
     @Override
     public String toUniqueStableString() {
-      return uniqueStableString;
+      return "noEnums";
     }
 
   }
