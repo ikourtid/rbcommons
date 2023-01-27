@@ -60,7 +60,7 @@ public class EnumStringRoundTripConversionInfoTest {
   }
 
   private enum EnumWithWhitespaceUniqueStableString
-      implements RoundTripStringConvertibleEnum<EnumWithWhitespaceUniqueStableString> {
+      implements JsonRoundTripStringConvertibleEnum<EnumWithWhitespaceUniqueStableString> {
 
     ENUM_VALUE_1("_1"),
     ENUM_VALUE_2(" \t \r \n ");  // not a great uniqueStableString
@@ -79,7 +79,7 @@ public class EnumStringRoundTripConversionInfoTest {
 
 
   private enum EnumWithNonAsciiUniqueStableString
-      implements RoundTripStringConvertibleEnum<EnumWithNonAsciiUniqueStableString> {
+      implements JsonRoundTripStringConvertibleEnum<EnumWithNonAsciiUniqueStableString> {
 
     ENUM_VALUE_1("_1"),
     ENUM_VALUE_2("ABC\u00A0XYZ");  // contains a non-breaking space
