@@ -89,6 +89,7 @@ public class EnumStringRoundTripConversionInfoTest {
 
   @Test
   public void badEnum_multipleEnumValuesMapToSameString_throws() {
+    // BadEnum has two enum values, both with "x" as their "unique" string representation.
     assertIllegalArgumentException( () -> enumStringRoundTripConversionInfo(BadEnum.class));
   }
 
