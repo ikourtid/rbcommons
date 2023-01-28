@@ -10,6 +10,7 @@ import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.biz.types.StringFunctions.isTrimmed;
 import static com.rb.biz.types.StringFunctions.isValidJavaIdentifier;
 import static com.rb.biz.types.StringFunctions.isValidRowboatJavaIdentifier;
+import static com.rb.biz.types.StringFunctions.withUnderscores;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.arrayEqualityMatcher;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -20,14 +21,24 @@ import static org.junit.Assert.assertTrue;
 public class StringFunctionsTest {
 
   @Test
-  public void withUnderscores_positiveValues() throws Exception {
-    assertEquals("0", StringFunctions.withUnderscores(0));
-    assertEquals("1", StringFunctions.withUnderscores(1));
-    assertEquals("100", StringFunctions.withUnderscores(100));
-    assertEquals("1_000", StringFunctions.withUnderscores(1_000));
-    assertEquals("10_000", StringFunctions.withUnderscores(10_000));
-    assertEquals("1_000_000", StringFunctions.withUnderscores(1_000_000));
-    assertEquals("1_000_000_000_000", StringFunctions.withUnderscores(1_000_000_000_000L));
+  public void withUnderscores_positiveValues() {
+    assertEquals("0", withUnderscores(0));
+    assertEquals("1", withUnderscores(1));
+    assertEquals("100", withUnderscores(100));
+    assertEquals("1_000", withUnderscores(1_000));
+    assertEquals("10_000", withUnderscores(10_000));
+    assertEquals("1_000_000", withUnderscores(1_000_000));
+    assertEquals("1_000_000_000_000", withUnderscores(1_000_000_000_000L));
+  }
+
+  @Test
+  public void withUnderscores_negativeValues() {
+    assertEquals("-1", withUnderscores(-1));
+    assertEquals("-100", withUnderscores(-100));
+    assertEquals("-1_000", withUnderscores(-1_000));
+    assertEquals("-10_000", withUnderscores(-10_000));
+    assertEquals("-1_000_000", withUnderscores(-1_000_000));
+    assertEquals("-1_000_000_000_000", withUnderscores(-1_000_000_000_000L));
   }
 
   @Test
