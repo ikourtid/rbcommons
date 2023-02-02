@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 /**
  * Lets you modify the clock.
  *
- * <p> This was meant to be a layer of safety: if you need to modify the time, you need to explicitly inject
+ * <p> This is meant to be a layer of safety: if you need to modify the time, you need to explicitly inject
  * an RBClockModifier, whereas most code would just be injecting an RBClock to just look at the time. </p>
  *
- * <p> However, on Feb 2023, {@link RBClock} was changed to an interface, which means that its
- * RBClock#overwriteCurrentTime method could not be package-private anymore. So this class does not offer that
- * extra safety anymore. FIXME IAK </p>
+ * <p> Although there is a {@link RBClock#overwriteCurrentTime(RBClockModifierToken, LocalDateTime)} method,
+ * it can only be called from {@link RBClockModifier}, because of the trick of passing a
+ * {@link RBClockModifierToken} which no other code can instantiate except for {@link RBClockModifier}. </p>
  */
 @Singleton
 public class RBClockModifier {
