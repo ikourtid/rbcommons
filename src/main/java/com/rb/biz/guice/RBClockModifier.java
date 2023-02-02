@@ -18,10 +18,18 @@ import java.time.LocalDateTime;
 @Singleton
 public class RBClockModifier {
 
+  private static final RBClockModifierToken RB_CLOCK_MODIFIER_TOKEN = new RBClockModifierToken();
+
+  public final static class RBClockModifierToken {
+
+    private RBClockModifierToken() {}
+
+  }
+
   @Inject RBClock rbClock;
 
   public void overwriteCurrentTime(LocalDateTime newTime) {
-    rbClock.overwriteCurrentTime(newTime);
+    rbClock.overwriteCurrentTime(RB_CLOCK_MODIFIER_TOKEN, newTime);
   }
 
 }

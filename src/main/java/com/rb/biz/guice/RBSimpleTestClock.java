@@ -1,5 +1,8 @@
 package com.rb.biz.guice;
 
+import com.rb.biz.guice.RBClockModifier.RBClockModifierToken;
+import com.rb.nonbiz.util.RBPreconditions;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -28,11 +31,11 @@ public class RBSimpleTestClock implements RBClock {
   }
 
   /**
-   * It is only meant to be called by RBClockModifier.
-   * @see RBClockModifier
+   * This is only meant to be called (and can only be called) by {@link RBClockModifier}.
    */
   @Override
-  public void overwriteCurrentTime(LocalDateTime newTime) {
+  public void overwriteCurrentTime(RBClockModifierToken rbClockModifierToken, LocalDateTime newTime) {
+    RBPreconditions.checkNotNull(rbClockModifierToken); // see RBClock#overwriteCurrentTime for an explanation
     now = newTime;
   }
 

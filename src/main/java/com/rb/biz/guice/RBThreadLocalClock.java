@@ -1,6 +1,8 @@
 package com.rb.biz.guice;
 
 import com.google.inject.Singleton;
+import com.rb.biz.guice.RBClockModifier.RBClockModifierToken;
+import com.rb.nonbiz.util.RBPreconditions;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -62,12 +64,11 @@ public class RBThreadLocalClock implements RBClock {
   }
 
   /**
-   * This is intentionally package-private, so that users of this method (which will be outside this package)
-   * cannot call it. It is only meant to be called by RBClockModifier.
-   * @see RBClockModifier
+   * This is only meant to be called (and can only be called) by RBClockModifier.
    */
   @Override
-  public void overwriteCurrentTime(LocalDateTime newTime) {
+  public void overwriteCurrentTime(RBClockModifierToken rbClockModifierToken, LocalDateTime newTime) {
+    RBPreconditions.checkNotNull(rbClockModifierToken); // see RBClock#overwriteCurrentTime for an explanation
     getClock().now = newTime;
   }
 
