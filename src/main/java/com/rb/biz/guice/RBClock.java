@@ -33,8 +33,9 @@ public interface RBClock {
   }
 
   /**
-   * This is intentionally package-private, so that users of this method (which will be outside this package)
-   * cannot call it. It is only meant to be called by RBClockModifier.
+   * Ideally, this would have been package-private, so that users of this method (which will be outside this package)
+   * cannot call it. It is only meant to be called by RBClockModifier. However, there's no such thing as a
+   * package-private interface method. So the user has to be extra careful not to call this unless really needed.
    * @see RBClockModifier
    */
   void overwriteCurrentTime(LocalDateTime newTime);
