@@ -1,15 +1,11 @@
 package com.rb.biz.guice;
 
-import com.google.inject.Singleton;
 import com.rb.biz.guice.RBClockModifier.RBClockModifierToken;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Map;
-
-import static com.google.common.collect.Maps.newHashMap;
 
 /**
  * Tells us what time it is.
