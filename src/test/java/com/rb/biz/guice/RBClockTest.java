@@ -1,5 +1,6 @@
 package com.rb.biz.guice;
 
+import com.rb.biz.guice.RBClockModifier.RBClockModifierToken;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -33,7 +34,7 @@ public class RBClockTest {
       }
 
       @Override
-      public void overwriteCurrentTime(LocalDateTime newTime) {
+      public void overwriteCurrentTime(RBClockModifierToken rbClockModifierToken, LocalDateTime newTime) {
         throw new IllegalArgumentException("You should not be calling this when you use RBClockTest#rbClockWithDateOnly");
       }
     };
