@@ -10,7 +10,6 @@ import java.time.ZoneId;
  */
 public class RBSimpleTestClock implements RBClock {
 
-  public static final ZoneId EAST_COAST_ZONE_ID = ZoneId.of("America/New_York");
   private static final LocalDateTime START_TIME = LocalDateTime.of(1974, 4, 4, 4, 4, 4, 4);
 
   private LocalDateTime now;
