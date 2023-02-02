@@ -30,7 +30,8 @@ public class RBCommonsTestModule implements Module {
 
     binder
         .bind(RBClock.class)
-        .to(RBSimpleTestClock.class);
+        .to(RBSimpleTestClock.class)
+        .asEagerSingleton();
   }
 
   @Provides
