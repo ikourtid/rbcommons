@@ -1,13 +1,12 @@
 package com.rb.biz.guice;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 /**
- * Tells us what time it is.
- * We wrap all calls to 'what time is it?' so that we can replace 'wall clock' time (real) with
- * whatever time it happens to be during some multi-year simulation that we run.
+ * A simple {@link RBClock} that just stores a {@link LocalDateTime} and doesn't do any tricks with
+ * pre-generating thread-local clocks like {@link RBThreadLocalClock} does. We should always use this
+ * unless there's a specific need (e.g. when running parallel backtests) to use {@link RBThreadLocalClock}.
  */
 public class RBSimpleTestClock implements RBClock {
 
@@ -30,8 +29,7 @@ public class RBSimpleTestClock implements RBClock {
   }
 
   /**
-   * This is intentionally package-private, so that users of this method (which will be outside this package)
-   * cannot call it. It is only meant to be called by RBClockModifier.
+   * It is only meant to be called by RBClockModifier.
    * @see RBClockModifier
    */
   @Override

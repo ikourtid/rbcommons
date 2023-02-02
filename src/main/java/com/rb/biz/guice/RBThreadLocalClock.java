@@ -11,9 +11,7 @@ import java.util.Map;
 import static com.google.common.collect.Maps.newHashMap;
 
 /**
- * Tells us what time it is.
- * We wrap all calls to 'what time is it?' so that we can replace 'wall clock' time (real) with
- * whatever time it happens to be during some multi-year simulation that we run.
+ * A {@link RBClock} that's particularly useful when running multiple backtests in parallel.
  */
 @Singleton
 public class RBThreadLocalClock implements RBClock {
