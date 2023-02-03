@@ -168,8 +168,8 @@ public class ClosedUnitFractionRangeUtilitiesTest {
     asserter.accept(Range.closed(0.0, 1.0), 1.0, 0.6, Range.closed(0.0, 0.8));
     asserter.accept(Range.closed(0.0, 1.0), 0.6, 1.0, Range.closed(0.2, 1.0));
 
-    // Zero multiplier for upper.
-    asserter.accept(Range.closed(0.2, 0.8), 1.0, 0.0, Range.closed(0.2, 0.5));
+    // Multiplier for upper only, midpoint 0.55.
+    asserter.accept(Range.closed(0.15, 0.95), 1.0, 0.75, Range.closed(0.15, doubleExplained(0.85, 0.55 + 0.75 * 0.4)));
 
     // Mid point 0.3, half width 0.1.  Shrink bottom by half and top to 10%.
     asserter.accept(Range.closed(0.2, 0.4), 0.5, 0.1,
