@@ -11,6 +11,12 @@ public class StringFunctions {
   private static final Pattern VALID_JAVA_IDENTIFIER_PATTERN = Pattern.compile("^([a-zA-Z_$][a-zA-Z\\d_$]*)$");
 
   public static String withUnderscores(long l) {
+    return l >= 0
+        ? withUnderscoresForPositive(l)
+        : "-" + withUnderscoresForPositive(-1 * l);
+  }
+
+  private static String withUnderscoresForPositive(long l) {
     String s = Long.toString(l);
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < s.length(); i++) {

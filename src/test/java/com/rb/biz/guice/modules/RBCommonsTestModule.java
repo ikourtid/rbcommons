@@ -5,6 +5,8 @@ import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.rb.biz.guice.RBClock;
 import com.rb.biz.guice.RBClockModifier;
+import com.rb.biz.guice.RBSimpleTestClock;
+import com.rb.biz.guice.RBThreadLocalClock;
 import com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.nonbiz.text.RBLog;
@@ -28,10 +30,7 @@ public class RBCommonsTestModule implements Module {
 
     binder
         .bind(RBClock.class)
-        .asEagerSingleton();
-
-    binder
-        .bind(RBClockModifier.class)
+        .to(RBSimpleTestClock.class)
         .asEagerSingleton();
   }
 
