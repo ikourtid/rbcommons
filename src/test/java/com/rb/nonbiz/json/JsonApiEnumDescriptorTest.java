@@ -2,11 +2,10 @@ package com.rb.nonbiz.json;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
+import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import static com.rb.nonbiz.json.JavaEnumSerializationAndExplanationTest.javaEnumSerializationAndExplanationMatcher;
-import static com.rb.nonbiz.json.JsonApiEnumDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
 import static com.rb.nonbiz.json.JsonApiEnumDescriptor.jsonApiEnumDescriptor;
 import static com.rb.nonbiz.json.JsonApiEnumDescriptor.simpleJsonApiEnumDescriptor;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -14,6 +13,7 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
+import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -28,9 +28,9 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
             jsonApiEnumDescriptor(
                 TestEnumXYZ.class,
                 enumMapOf(
-                    TestEnumXYZ.X, javaEnumSerializationAndExplanation("X", documentation("test documentation for X")),
-                    TestEnumXYZ.Y, javaEnumSerializationAndExplanation("Y", documentation("test documentation for Y")),
-                    TestEnumXYZ.Z, javaEnumSerializationAndExplanation("Z", documentation("test documentation for Z"))))));
+                    TestEnumXYZ.X, documentation("test documentation for X"),
+                    TestEnumXYZ.Y, documentation("test documentation for Y"),
+                    TestEnumXYZ.Z, documentation("test documentation for Z")))));
   }
 
   @Override
@@ -38,7 +38,7 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
     return jsonApiEnumDescriptor(
         TestEnumXYZ.class,
         singletonEnumMap(
-            TestEnumXYZ.Y, javaEnumSerializationAndExplanation("_y", documentation("explanation for y"))));
+            TestEnumXYZ.Y, documentation("explanation for y")));
   }
 
   @Override
@@ -46,8 +46,8 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
     return jsonApiEnumDescriptor(
         TestEnumXYZ.class,
         enumMapOf(
-            TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", documentation("explanation for x")),
-            TestEnumXYZ.Z, javaEnumSerializationAndExplanation("_z", documentation("explanation for z"))));
+            TestEnumXYZ.X, documentation("explanation for x"),
+            TestEnumXYZ.Z, documentation("explanation for z")));
   }
 
   @Override
@@ -56,8 +56,8 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
     return jsonApiEnumDescriptor(
         TestEnumXYZ.class,
         enumMapOf(
-            TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", documentation("explanation for x")),
-            TestEnumXYZ.Z, javaEnumSerializationAndExplanation("_z", documentation("explanation for z"))));
+            TestEnumXYZ.X, documentation("explanation for x"),
+            TestEnumXYZ.Z, documentation("explanation for z")));
   }
 
   @Override
@@ -65,12 +65,13 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
     return jsonApiEnumDescriptorMatcher(expected).matches(actual);
   }
 
-  public static <E extends Enum<E>> TypeSafeMatcher<JsonApiEnumDescriptor<E>> jsonApiEnumDescriptorMatcher(
+  public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>>
+  TypeSafeMatcher<JsonApiEnumDescriptor<E>> jsonApiEnumDescriptorMatcher(
       JsonApiEnumDescriptor<E> expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getEnumClass()),
         match(           v -> v.getValidValuesToExplanations(), f -> enumMapMatcher(f,
-            f2 -> javaEnumSerializationAndExplanationMatcher(f2))));
+            f2 -> humanReadableDocumentationMatcher(f2))));
   }
 
 }

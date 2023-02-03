@@ -4,6 +4,7 @@ import com.rb.nonbiz.json.JsonApiEnumDescriptorTest;
 import com.rb.nonbiz.jsonapi.JsonApiEnumDocumentation.JsonApiEnumDocumentationBuilder;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
+import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 import org.hamcrest.TypeSafeMatcher;
 
 import static com.rb.nonbiz.json.JsonApiEnumDescriptorTest.jsonApiEnumDescriptorMatcher;
@@ -56,7 +57,7 @@ public class JsonApiEnumDocumentationTest extends RBTestMatcher<JsonApiEnumDocum
         match(v -> v.getLongDocumentation(),     f -> humanReadableDocumentationMatcher(f)));
   }
 
-  public static <E extends Enum<E>> TypeSafeMatcher<JsonApiEnumDocumentation<E>>
+  public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> TypeSafeMatcher<JsonApiEnumDocumentation<E>>
   jsonApiEnumDocumentationOfSameTypeMatcher(JsonApiEnumDocumentation<E> expected) {
     return makeMatcher(expected, actual ->
         jsonApiEnumDocumentationMatcher(expected).matches(actual));

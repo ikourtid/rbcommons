@@ -4,6 +4,7 @@ import com.rb.nonbiz.json.JsonApiEnumDescriptor;
 import com.rb.nonbiz.jsonapi.JsonApiEnumDocumentation.JsonApiEnumDocumentationBuilder;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
@@ -14,18 +15,17 @@ import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
  */
 public class JsonApiDocumentationForEnumGenerator {
 
-  public <E extends Enum<E>> JsonApiEnumDocumentation<E> generate(
+  public <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> JsonApiEnumDocumentation<E> generate(
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentationPrefix,
       JsonApiEnumDescriptor<E> jsonApiEnumDescriptor) {
     StringBuilder sb = new StringBuilder(Strings.format("<p> %s </p>\n", longDocumentationPrefix.getAsString()));
     sb.append("<p> The following values are valid:\n<ul>");
     jsonApiEnumDescriptor.getValidValuesToExplanations()
-        .values()
-        .forEach(javaEnumSerializationAndExplanation ->
+        .forEach( (enumConstant, humanReadableDocumentation) ->
             sb.append(Strings.format("<li> <strong>%s</strong> : %s </li>\n",
-                javaEnumSerializationAndExplanation.getJsonSerialization(),
-                javaEnumSerializationAndExplanation.getExplanation().getAsString())));
+                enumConstant.toUniqueStableString(),
+                humanReadableDocumentation.getAsString())));
     sb.append("</ul></p>\n");
     return JsonApiEnumDocumentationBuilder.<E>jsonApiEnumDocumentationBuilder()
         .setJsonApiEnumDescriptor(jsonApiEnumDescriptor)
