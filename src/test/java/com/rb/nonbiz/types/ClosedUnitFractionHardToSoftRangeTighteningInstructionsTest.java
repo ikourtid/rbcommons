@@ -13,6 +13,7 @@ import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static org.junit.Assert.assertEquals;
 
 public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
     extends RBTestMatcher<ClosedUnitFractionHardToSoftRangeTighteningInstructions> {
@@ -27,7 +28,13 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
         closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(1e-7), unitFraction(1e-7));
   }
 
-
+  @Test
+  public void testToString() {
+    assertEquals(
+        "[CUFHTSRTI 40.00 % 60.00 % CUFHTSRTI]",
+        closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(0.4), unitFraction(0.6)).toString());
+  }
+  
   @Override
   public ClosedUnitFractionHardToSoftRangeTighteningInstructions makeTrivialObject() {
     return setClosedUnitFractionSoftRangeToSameAsHard();
