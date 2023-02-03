@@ -20,10 +20,12 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
 
   @Test
   public void throwsForZeroOrAlmostZero() {
-    // Lower
+    // Don't allow multiplier of zero.
     assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_0, UNIT_FRACTION_0));
     assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_0, UNIT_FRACTION_1));
+    assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_1, UNIT_FRACTION_0));
     assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(1e-9), UNIT_FRACTION_1));
+    assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_1, unitFraction(1e-9)));
     ClosedUnitFractionHardToSoftRangeTighteningInstructions doesNotThrow =
         closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(1e-7), unitFraction(1e-7));
   }
@@ -31,10 +33,10 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
   @Test
   public void testToString() {
     assertEquals(
-        "[CUFHTSRTI 40.00 % 60.00 % CUFHTSRTI]",
+        "[CUFHTSRTI lower=40.00 %, upper=60.00 % CUFHTSRTI]",
         closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(0.4), unitFraction(0.6)).toString());
   }
-  
+
   @Override
   public ClosedUnitFractionHardToSoftRangeTighteningInstructions makeTrivialObject() {
     return setClosedUnitFractionSoftRangeToSameAsHard();
