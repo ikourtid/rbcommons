@@ -4,6 +4,7 @@ import com.rb.nonbiz.json.JsonApiEnumDescriptor;
 import com.rb.nonbiz.jsonapi.JsonApiEnumDocumentation.JsonApiEnumDocumentationBuilder;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
@@ -14,7 +15,7 @@ import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
  */
 public class JsonApiDocumentationForEnumGenerator {
 
-  public <E extends Enum<E>> JsonApiEnumDocumentation<E> generate(
+  public <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> JsonApiEnumDocumentation<E> generate(
       HumanReadableDocumentation singleLineSummary,
       HumanReadableDocumentation longDocumentationPrefix,
       JsonApiEnumDescriptor<E> jsonApiEnumDescriptor) {
