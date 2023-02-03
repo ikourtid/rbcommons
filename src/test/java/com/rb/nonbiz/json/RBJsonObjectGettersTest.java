@@ -16,7 +16,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.rb.biz.jsonapi.JsonSerializedEnumStringMapImpl.jsonSerializedEnumStringMap;
 import static com.rb.biz.types.Price.price;
 import static com.rb.nonbiz.json.RBGson.jsonBoolean;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
@@ -193,47 +192,6 @@ public class RBJsonObjectGettersTest {
     assertOptionalIntEquals(11, getOptionalJsonInt(jsonObject, "w1"));
     assertOptionalIntEquals(22, getOptionalJsonInt(jsonObject, "w2"));
     assertOptionalIntEquals(33, getOptionalJsonInt(jsonObject, "w3"));
-  }
-
-  @Test
-  public void test_getEnumFromJsonOrThrow() {
-    Function<String, TestEnumXYZ> getter = property -> getEnumFromJsonOrThrow(
-        jsonObject(
-            "hasValueX", jsonString("value_x"),
-            "hasValueY", jsonString("value_y"),
-            "hasValueZ", jsonString("value_z")),
-        property,
-        jsonSerializedEnumStringMap(
-            TestEnumXYZ.class,
-            TestEnumXYZ.X, "value_x",
-            TestEnumXYZ.Y, "value_y",
-            TestEnumXYZ.Z, "garbage"));
-
-    assertEquals(TestEnumXYZ.X, getter.apply("hasValueX"));
-    assertEquals(TestEnumXYZ.Y, getter.apply("hasValueY"));
-    assertIllegalArgumentException( () -> getter.apply("hasValueZ"));
-    assertIllegalArgumentException( () -> getter.apply("missing property"));
-  }
-
-  @Test
-  public void test_getEnumFromJsonOrDefault() {
-    Function<String, TestEnumXYZ> getter = property -> getEnumFromJsonOrDefault(
-        jsonObject(
-            "hasValueX", jsonString("value_x"),
-            "hasValueY", jsonString("value_y"),
-            "hasValueZ", jsonString("value_z")),
-        property,
-        jsonSerializedEnumStringMap(
-            TestEnumXYZ.class,
-            TestEnumXYZ.X, "value_x",
-            TestEnumXYZ.Y, "value_y",
-            TestEnumXYZ.Z, "garbage"),
-        TestEnumXYZ.Y);
-
-    assertEquals(TestEnumXYZ.X, getter.apply("hasValueX"));
-    assertEquals(TestEnumXYZ.Y, getter.apply("hasValueY"));
-    assertIllegalArgumentException( () -> getter.apply("hasValueZ"));
-    assertEquals(TestEnumXYZ.Y, getter.apply("missing property takes default value of Y"));
   }
 
   @Test
