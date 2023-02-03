@@ -5,7 +5,6 @@ import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 import com.rb.nonbiz.util.RBPreconditions;
-import com.rb.nonbiz.util.RoundTripStringConvertibleEnum;
 
 import java.util.EnumMap;
 

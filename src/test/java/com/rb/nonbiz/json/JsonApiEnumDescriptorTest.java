@@ -2,6 +2,7 @@ package com.rb.nonbiz.json;
 
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
+import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
@@ -65,7 +66,8 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
     return jsonApiEnumDescriptorMatcher(expected).matches(actual);
   }
 
-  public static <E extends Enum<E>> TypeSafeMatcher<JsonApiEnumDescriptor<E>> jsonApiEnumDescriptorMatcher(
+  public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>>
+  TypeSafeMatcher<JsonApiEnumDescriptor<E>> jsonApiEnumDescriptorMatcher(
       JsonApiEnumDescriptor<E> expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getEnumClass()),
