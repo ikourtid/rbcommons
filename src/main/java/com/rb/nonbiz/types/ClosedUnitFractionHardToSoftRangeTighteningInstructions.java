@@ -61,7 +61,7 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructions {
   @Override
   public String toString() {
     return Strings.format(
-        "[CUFHTSRTI %s CUFHTSRTI]",
+        "[CUFHTSRTI %s %s CUFHTSRTI]",
         rawMultiplierForLowerEndPoint,
         rawMultiplierForUpperEndPoint);
   }
