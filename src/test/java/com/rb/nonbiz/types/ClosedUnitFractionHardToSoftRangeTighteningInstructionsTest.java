@@ -11,19 +11,31 @@ import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningIns
 import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.setClosedUnitFractionSoftRangeToSameAsHard;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
+import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static org.junit.Assert.assertEquals;
 
 public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
     extends RBTestMatcher<ClosedUnitFractionHardToSoftRangeTighteningInstructions> {
 
   @Test
   public void throwsForZeroOrAlmostZero() {
-    assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_0));
-    assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(1e-9)));
+    // Don't allow multiplier of zero.
+    assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_0, UNIT_FRACTION_0));
+    assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_0, UNIT_FRACTION_1));
+    assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_1, UNIT_FRACTION_0));
+    assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(1e-9), UNIT_FRACTION_1));
+    assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_1, unitFraction(1e-9)));
     ClosedUnitFractionHardToSoftRangeTighteningInstructions doesNotThrow =
-        closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(1e-7));
+        closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(1e-7), unitFraction(1e-7));
   }
 
+  @Test
+  public void testToString() {
+    assertEquals(
+        "[CUFHTSRTI lower=40.00 %, upper=60.00 % CUFHTSRTI]",
+        closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(0.4), unitFraction(0.6)).toString());
+  }
 
   @Override
   public ClosedUnitFractionHardToSoftRangeTighteningInstructions makeTrivialObject() {
@@ -32,13 +44,13 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
 
   @Override
   public ClosedUnitFractionHardToSoftRangeTighteningInstructions makeNontrivialObject() {
-    return closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(0.123));
+    return closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(0.123), unitFraction(.456));
   }
 
   @Override
   public ClosedUnitFractionHardToSoftRangeTighteningInstructions makeMatchingNontrivialObject() {
     double e = 1e-9; // epsilon
-    return closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(0.123 + e));
+    return closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(0.123 + e), unitFraction(0.456 + e));
   }
 
   @Override
@@ -51,7 +63,8 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
   closedUnitFractionHardToSoftRangeTighteningInstructionsMatcher(
       ClosedUnitFractionHardToSoftRangeTighteningInstructions expected) {
     return makeMatcher(expected,
-        matchUsingAlmostEquals(v -> v.getRawMultiplier(), DEFAULT_EPSILON_1e_8));
+        matchUsingAlmostEquals(v -> v.getRawMultiplierForLowerEndPoint(), DEFAULT_EPSILON_1e_8),
+        matchUsingAlmostEquals(v -> v.getRawMultiplierForUpperEndPoint(), DEFAULT_EPSILON_1e_8));
   }
 
 }
