@@ -22,11 +22,10 @@ public class JsonApiDocumentationForEnumGenerator {
     StringBuilder sb = new StringBuilder(Strings.format("<p> %s </p>\n", longDocumentationPrefix.getAsString()));
     sb.append("<p> The following values are valid:\n<ul>");
     jsonApiEnumDescriptor.getValidValuesToExplanations()
-        .values()
-        .forEach(javaEnumSerializationAndExplanation ->
+        .forEach( (enumConstant, humanReadableDocumentation) ->
             sb.append(Strings.format("<li> <strong>%s</strong> : %s </li>\n",
-                javaEnumSerializationAndExplanation.getJsonSerialization(),
-                javaEnumSerializationAndExplanation.getExplanation().getAsString())));
+                enumConstant.toUniqueStableString(),
+                humanReadableDocumentation.getAsString())));
     sb.append("</ul></p>\n");
     return JsonApiEnumDocumentationBuilder.<E>jsonApiEnumDocumentationBuilder()
         .setJsonApiEnumDescriptor(jsonApiEnumDescriptor)

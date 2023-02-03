@@ -6,9 +6,9 @@ import com.rb.nonbiz.testutils.RBTest;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.junit.Test;
 
-import static com.rb.nonbiz.json.JsonApiEnumDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
 import static com.rb.nonbiz.json.JsonApiEnumDescriptor.jsonApiEnumDescriptor;
 import static com.rb.nonbiz.jsonapi.JsonApiEnumDocumentationTest.jsonApiEnumDocumentationMatcher;
+import static com.rb.nonbiz.testutils.Asserters.valueExplained;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
@@ -21,8 +21,15 @@ public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocu
     JsonApiEnumDescriptor<TestEnumXYZ> jsonApiEnumDescriptor = jsonApiEnumDescriptor(
         TestEnumXYZ.class,
         enumMapOf(
-            TestEnumXYZ.X, javaEnumSerializationAndExplanation("_x", documentation("explanation for x")),
-            TestEnumXYZ.Y, javaEnumSerializationAndExplanation("_y", documentation("explanation for y"))));
+            TestEnumXYZ.X, documentation("explanation for x"),
+            TestEnumXYZ.Y, documentation("explanation for y")));
+
+    valueExplained("_X", TestEnumXYZ.X.toUniqueStableString());
+    valueExplained("_Y", TestEnumXYZ.Y.toUniqueStableString());
+
+    valueExplained("test documentation for X", TestEnumXYZ.X.getDocumentation().getAsString());
+    valueExplained("test documentation for Y", TestEnumXYZ.Y.getDocumentation().getAsString());
+
     assertThat(
         makeTestObject().generate(
             documentation("Summary for XYZ."),
@@ -35,8 +42,9 @@ public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocu
                 .setLongDocumentation(documentation(asSingleLine(
                     "<p> Description for XYZ. </p>\n",
                     "<p> The following values are valid:\n<ul>",
-                    "<li> <strong>_x</strong> : explanation for x </li>\n",
-                    "<li> <strong>_y</strong> : explanation for y </li>\n",
+                    // see valueExplained above for what should go in here.
+                    "<li> <strong>_X</strong> : explanation for x </li>\n",
+                    "<li> <strong>_Y</strong> : explanation for y </li>\n",
                     "</ul></p>\n")))
                 .build()));
   }
@@ -45,5 +53,5 @@ public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocu
   protected JsonApiDocumentationForEnumGenerator makeTestObject() {
     return new JsonApiDocumentationForEnumGenerator();
   }
-  
+
 }
