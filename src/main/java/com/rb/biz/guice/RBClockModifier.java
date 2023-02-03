@@ -20,6 +20,9 @@ public class RBClockModifier {
 
   private static final RBClockModifierToken RB_CLOCK_MODIFIER_TOKEN = new RBClockModifierToken();
 
+  /**
+   * This class holds nothing and does nothing. See {@link RBClock#overwriteCurrentTime} for more.
+   */
   public final static class RBClockModifierToken {
 
     private RBClockModifierToken() {}
