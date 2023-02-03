@@ -3,6 +3,7 @@ package com.rb.nonbiz.json;
 import com.rb.nonbiz.text.HasHumanReadableDocumentation;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RoundTripStringConvertibleEnum;
 
@@ -20,7 +21,7 @@ import static com.rb.nonbiz.util.RBEnumMaps.enumMapCoveringAllEnumValues;
  *
  * <p> For those JSON properties, we should be using this. </p>
  */
-public class JsonApiEnumDescriptor<E extends Enum<E> & RoundTripStringConvertibleEnum<E>> {
+public class JsonApiEnumDescriptor<E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> {
 
   /**
    * Not all enum values are guaranteed to be serializable. Ideally the API would support everything, but there are
@@ -78,7 +79,7 @@ public class JsonApiEnumDescriptor<E extends Enum<E> & RoundTripStringConvertibl
     this.validValuesToExplanations = validValuesToExplanations;
   }
 
-  public static <E extends Enum<E> & RoundTripStringConvertibleEnum<E>> JsonApiEnumDescriptor<E> jsonApiEnumDescriptor(
+  public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> JsonApiEnumDescriptor<E> jsonApiEnumDescriptor(
       Class<E> enumClass,
       EnumMap<E, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
     // The 1 in the following precondition (vs. e.g. 2+)
@@ -116,7 +117,7 @@ public class JsonApiEnumDescriptor<E extends Enum<E> & RoundTripStringConvertibl
    * Java identifiers of the enum values, where the enum class itself specifies its own documentation, and when
    * the JSON API semantics are such that we want to expose all enum values, not just a subset.
    */
-  public static <E extends Enum<E>  & RoundTripStringConvertibleEnum<E> & HasHumanReadableDocumentation>
+  public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E> & HasHumanReadableDocumentation>
   JsonApiEnumDescriptor<E> simpleJsonApiEnumDescriptor(
       Class<E> enumClass) {
     return jsonApiEnumDescriptor(enumClass, enumMapCoveringAllEnumValues(

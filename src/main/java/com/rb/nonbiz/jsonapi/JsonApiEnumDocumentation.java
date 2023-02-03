@@ -5,7 +5,7 @@ import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
-import com.rb.nonbiz.util.RoundTripStringConvertibleEnum;
+import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 
 /**
  * This is (mostly) human-readable text that explains how a Java enum of this type
@@ -15,7 +15,7 @@ import com.rb.nonbiz.util.RoundTripStringConvertibleEnum;
  *
  * @see JsonApiDocumentation
  */
-public class JsonApiEnumDocumentation<E extends Enum<E> & RoundTripStringConvertibleEnum<E>> extends JsonApiDocumentation {
+public class JsonApiEnumDocumentation<E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> extends JsonApiDocumentation {
 
   private final JsonApiEnumDescriptor<E> jsonApiEnumDescriptor;
   private final HumanReadableDocumentation singleLineSummary;
@@ -70,7 +70,7 @@ public class JsonApiEnumDocumentation<E extends Enum<E> & RoundTripStringConvert
   }
 
 
-  public static class JsonApiEnumDocumentationBuilder<E extends Enum<E> & RoundTripStringConvertibleEnum<E>>
+  public static class JsonApiEnumDocumentationBuilder<E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>>
       implements RBBuilder<JsonApiEnumDocumentation<E>> {
 
     private JsonApiEnumDescriptor<E> jsonApiEnumDescriptor;
@@ -79,7 +79,7 @@ public class JsonApiEnumDocumentation<E extends Enum<E> & RoundTripStringConvert
 
     private JsonApiEnumDocumentationBuilder() {}
 
-    public static <E extends Enum<E> & RoundTripStringConvertibleEnum<E>>
+    public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>>
     JsonApiEnumDocumentationBuilder<E> jsonApiEnumDocumentationBuilder() {
       return new JsonApiEnumDocumentationBuilder<>();
     }
