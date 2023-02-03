@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.Range;
+import com.rb.nonbiz.functional.QuadriConsumer;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import org.junit.Test;
@@ -148,13 +149,47 @@ public class ClosedUnitFractionRangeUtilitiesTest {
   }
 
   @Test
+  public void testTightenClosedUnitFractionRangeUpperAndLower() {
+    // Using Range<Double> allows each test case to fit in a single line & therefore align vertically.
+    QuadriConsumer<Range<Double>, Double, Double, Range<Double>> asserter =
+        (initialRange, multiplierOnLower, multiplierOnUpper, expectedResult) -> assertThat(
+            tightenClosedUnitFractionRangeProportionally(
+                closedUnitFractionRange(transformRange(initialRange, v -> unitFraction(v))),
+                closedUnitFractionHardToSoftRangeTighteningInstructions(
+                    unitFraction(multiplierOnLower),
+                    unitFraction(multiplierOnUpper))),
+            closedUnitFractionRangeMatcher(
+                closedUnitFractionRange(transformRange(expectedResult, v -> unitFraction(v)))));
+    // Unit multiplier...no change.
+    asserter.accept(Range.closed(0.0, 1.0),   1.0, 1.0, Range.closed(0.0,  1.0));
+    asserter.accept(Range.closed(0.25, 0.75), 1.0, 1.0, Range.closed(0.25, 0.75));
+
+    // Upper only and lower only. Shrink around the midpoint of 0.5.
+    asserter.accept(Range.closed(0.0, 1.0), 1.0, 0.6, Range.closed(0.0, 0.8));
+    asserter.accept(Range.closed(0.0, 1.0), 0.6, 1.0, Range.closed(0.2, 1.0));
+
+    // Zero multiplier for upper.
+    asserter.accept(Range.closed(0.2, 0.8), 1.0, 0.0, Range.closed(0.2, 0.5));
+
+    // Mid point 0.3, half width 0.1.  Shrink bottom by half and top to 10%.
+    asserter.accept(Range.closed(0.2, 0.4), 0.5, 0.1,
+        Range.closed(doubleExplained(0.25, 0.3 - 0.5 * 0.1), doubleExplained(0.31, 0.3 + 0.1 * 0.1)));
+
+    // Mid point is 0.7, half width 0.1.
+    asserter.accept(Range.closed(0.6, 0.8), 0.2, 0.5,
+        Range.closed(doubleExplained(0.68, 0.7 - 0.2 * 0.1), doubleExplained(0.75, 0.7 + 0.5 * 0.1)));
+ }
+
+  @Test
   public void testTightenClosedUnitFractionRangeProportionally() {
     // Using Range<Double> allows each test case to fit in a single line & therefore align vertically.
     TriConsumer<Range<Double>, Double, Range<Double>> asserter =
         (initialRange, multiplierOnInitialRangeWidth, expectedResult) -> assertThat(
             tightenClosedUnitFractionRangeProportionally(
                 closedUnitFractionRange(transformRange(initialRange, v -> unitFraction(v))),
-                closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(multiplierOnInitialRangeWidth))),
+                closedUnitFractionHardToSoftRangeTighteningInstructions(
+                    unitFraction(multiplierOnInitialRangeWidth),
+                    unitFraction(multiplierOnInitialRangeWidth))),
             closedUnitFractionRangeMatcher(
                 closedUnitFractionRange(transformRange(expectedResult, v -> unitFraction(v)))));
     asserter.accept(Range.closed(0.0, 1.0), 1.0, Range.closed(0.0,  1.0));

@@ -19,19 +19,26 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
  */
 public class ClosedUnitFractionHardToSoftRangeTighteningInstructions {
 
-  private final UnitFraction rawMultiplier;
+  private final UnitFraction rawMultiplierForLowerEndPoint;
+  private final UnitFraction rawMultiplierForUpperEndPoint;
 
-  private ClosedUnitFractionHardToSoftRangeTighteningInstructions(UnitFraction rawMultiplier) {
-    this.rawMultiplier = rawMultiplier;
+  private ClosedUnitFractionHardToSoftRangeTighteningInstructions(
+      UnitFraction rawMultiplierForLowerEndPoint,
+      UnitFraction rawMultiplierForUpperEndPoint) {
+    this.rawMultiplierForLowerEndPoint = rawMultiplierForLowerEndPoint;
+    this.rawMultiplierForUpperEndPoint = rawMultiplierForUpperEndPoint;
   }
 
   public static ClosedUnitFractionHardToSoftRangeTighteningInstructions closedUnitFractionHardToSoftRangeTighteningInstructions(
-      UnitFraction rawMultiplier) {
+      UnitFraction rawMultiplierForLowerEndPoint,
+      UnitFraction rawMultiplierForUpperEndPoint) {
     RBPreconditions.checkArgument(
-        !rawMultiplier.isAlmostZero(DEFAULT_EPSILON_1e_8),
-        "You can't have the soft range be a singleton (or almost singleton) range: %s",
-        rawMultiplier);
-    return new ClosedUnitFractionHardToSoftRangeTighteningInstructions(rawMultiplier);
+        !rawMultiplierForLowerEndPoint.isAlmostZero(DEFAULT_EPSILON_1e_8),
+        "You can't have the lower multiplier range be zero (or almost zero): lower multiplier: %s",
+        rawMultiplierForLowerEndPoint);
+    return new ClosedUnitFractionHardToSoftRangeTighteningInstructions(
+        rawMultiplierForLowerEndPoint,
+        rawMultiplierForUpperEndPoint);
   }
 
   /**
@@ -41,16 +48,22 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructions {
    * and takes a {@link ClosedUnitFractionHardAndSoftRange} as an input.
    */
   public static ClosedUnitFractionHardToSoftRangeTighteningInstructions setClosedUnitFractionSoftRangeToSameAsHard() {
-    return closedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_1);
+    return closedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_1, UNIT_FRACTION_1);
   }
 
-  public UnitFraction getRawMultiplier() {
-    return rawMultiplier;
+  public UnitFraction getRawMultiplierForLowerEndPoint() {
+    return rawMultiplierForLowerEndPoint;
+  }
+  public UnitFraction getRawMultiplierForUpperEndPoint() {
+    return rawMultiplierForUpperEndPoint;
   }
 
   @Override
   public String toString() {
-    return Strings.format("[CUFHTSRTI %s CUFHTSRTI]", rawMultiplier);
+    return Strings.format(
+        "[CUFHTSRTI %s CUFHTSRTI]",
+        rawMultiplierForLowerEndPoint,
+        rawMultiplierForUpperEndPoint);
   }
 
 }
