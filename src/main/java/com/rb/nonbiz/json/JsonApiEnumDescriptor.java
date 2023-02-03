@@ -9,7 +9,6 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.EnumMap;
 
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
-import static com.rb.nonbiz.json.JsonApiEnumDescriptor.JavaEnumSerializationAndExplanation.javaEnumSerializationAndExplanation;
 import static com.rb.nonbiz.util.RBEnumMaps.enumMapCoveringAllEnumValues;
 
 /**
@@ -22,65 +21,19 @@ import static com.rb.nonbiz.util.RBEnumMaps.enumMapCoveringAllEnumValues;
  */
 public class JsonApiEnumDescriptor<E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> {
 
-  /**
-   * Not all enum values are guaranteed to be serializable. Ideally the API would support everything, but there are
-   * sometimes old deprecated enum values that we expressly do not want to be part of the API.
-   *
-   * <p> For those enum values that get serialized, this will store the string value to use in the JSON API,
-   * as well as the human-readable explanation. </p>
-   */
-  public static class JavaEnumSerializationAndExplanation {
-
-    private final String jsonSerialization;
-    private final HumanReadableDocumentation explanation;
-
-    private JavaEnumSerializationAndExplanation(String jsonSerialization, HumanReadableDocumentation explanation) {
-      this.jsonSerialization = jsonSerialization;
-      this.explanation = explanation;
-    }
-
-    public static JavaEnumSerializationAndExplanation javaEnumSerializationAndExplanation(
-        String jsonSerialization, HumanReadableDocumentation explanation) {
-      RBPreconditions.checkArgument(
-          !jsonSerialization.isEmpty(),
-          "We can't use an empty string for serialization; explanation is: %s",
-          explanation);
-      RBPreconditions.checkArgument(
-          !explanation.getAsString().isEmpty(),
-          "Explanation can't be empty for enum value= %s",
-          jsonSerialization);
-      return new JavaEnumSerializationAndExplanation(jsonSerialization, explanation);
-    }
-
-    public String getJsonSerialization() {
-      return jsonSerialization;
-    }
-
-    public HumanReadableDocumentation getExplanation() {
-      return explanation;
-    }
-
-    @Override
-    public String toString() {
-      return Strings.format("[JESAE %s %s JESAE]", jsonSerialization, explanation);
-    }
-
-  }
-
-
   private final Class<E> enumClass;
-  private final EnumMap<E, JavaEnumSerializationAndExplanation> validValuesToExplanations;
+  private final EnumMap<E, HumanReadableDocumentation> validValuesToExplanations;
 
   private JsonApiEnumDescriptor(
       Class<E> enumClass,
-      EnumMap<E, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
+      EnumMap<E, HumanReadableDocumentation> validValuesToExplanations) {
     this.enumClass = enumClass;
     this.validValuesToExplanations = validValuesToExplanations;
   }
 
   public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> JsonApiEnumDescriptor<E> jsonApiEnumDescriptor(
       Class<E> enumClass,
-      EnumMap<E, JavaEnumSerializationAndExplanation> validValuesToExplanations) {
+      EnumMap<E, HumanReadableDocumentation> validValuesToExplanations) {
     // The 1 in the following precondition (vs. e.g. 2+)
     // is for the rare cases where we only allow one value of the enum in the JSON API.
     // You might wonder - why bother serializing such an enum in the first place? Well, this would allow us to
@@ -90,14 +43,13 @@ public class JsonApiEnumDescriptor<E extends Enum<E> & JsonRoundTripStringConver
         "There must be at least 1 item here: %s",
         validValuesToExplanations);
     validValuesToExplanations
-        .values()
-        .forEach(javaEnumSerializationAndExplanation -> {
+        .forEach( (enumConstant, documentation) -> {
           RBPreconditions.checkArgument(
-              !isAllWhiteSpace(javaEnumSerializationAndExplanation.getJsonSerialization()),
+              !isAllWhiteSpace(enumConstant.toUniqueStableString()),
               "No Java enum serialized string representation in the API may be all whitespace (which includes the empty string): %s",
               validValuesToExplanations);
           RBPreconditions.checkArgument(
-              !isAllWhiteSpace(javaEnumSerializationAndExplanation.getExplanation().getAsString()),
+              !isAllWhiteSpace(documentation.getAsString()),
               "No explanation may be all whitespace (which includes the empty string): %s",
               validValuesToExplanations);
         });
@@ -112,25 +64,22 @@ public class JsonApiEnumDescriptor<E extends Enum<E> & JsonRoundTripStringConver
   }
 
   /**
-   * Creates a {@link JsonApiEnumDescriptor} for the cases where our JSON API serialization uses the
-   * Java identifiers of the enum values, where the enum class itself specifies its own documentation, and when
-   * the JSON API semantics are such that we want to expose all enum values, not just a subset.
+   * Creates a {@link JsonApiEnumDescriptor} for the cases where the enum class themselves specify their own
+   * documentation, and when the JSON API semantics are such that we want to expose all enum values, not just a subset.
    */
   public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E> & HasHumanReadableDocumentation>
   JsonApiEnumDescriptor<E> simpleJsonApiEnumDescriptor(
       Class<E> enumClass) {
     return jsonApiEnumDescriptor(enumClass, enumMapCoveringAllEnumValues(
         enumClass,
-        enumValue -> javaEnumSerializationAndExplanation(
-            enumValue.name(),
-            enumValue.getDocumentation())));
+        enumValue -> enumValue.getDocumentation()));
   }
 
   public Class<E> getEnumClass() {
     return enumClass;
   }
 
-  public EnumMap<? extends Enum<?>, JavaEnumSerializationAndExplanation> getValidValuesToExplanations() {
+  public EnumMap<E, HumanReadableDocumentation> getValidValuesToExplanations() {
     return validValuesToExplanations;
   }
 
