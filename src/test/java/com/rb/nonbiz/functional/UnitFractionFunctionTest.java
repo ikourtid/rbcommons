@@ -16,8 +16,8 @@ import static com.rb.nonbiz.functional.UnitFractionFunction.unitFractionFunction
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_LABEL;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_MULTIPLIER;
-import static com.rb.nonbiz.types.PositiveMultiplier.POSITIVE_MULTIPLIER_1;
 import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
@@ -54,22 +54,32 @@ public class UnitFractionFunctionTest extends RBTestMatcher<UnitFractionFunction
 
   @Override
   public UnitFractionFunction<PositiveMultiplier> makeTrivialObject() {
-    return unitFractionFunction(RBNumericFunction.<UnitFraction, PositiveMultiplier>rbIdentityNumericFunction(
-        v -> POSITIVE_MULTIPLIER_1));
+    // Unfortunately, we cannot use rbIdentityNumericFunction here, because UNIT_FRACTION_0 is a valid UnitFraction,
+    // but PositiveMultiplier can only be positive. So the trivial object will look a bit less trivial here.
+    return unitFractionFunction(
+        RBNumericFunction.<UnitFraction, PositiveMultiplier>rbNumericFunction(
+            DUMMY_LABEL,
+            v -> 1 + v,
+            v -> positiveMultiplier(v)));
   }
 
   @Override
   public UnitFractionFunction<PositiveMultiplier> makeNontrivialObject() {
-    return unitFractionFunction(RBNumericFunction.<UnitFraction, PositiveMultiplier>rbIdentityNumericFunction(
-        v -> positiveMultiplier(0.123 + 0.456 * v)));
+    return unitFractionFunction(
+        RBNumericFunction.<UnitFraction, PositiveMultiplier>rbNumericFunction(
+            DUMMY_LABEL,
+            v -> 0.123 + 0.456 * v,
+            v -> positiveMultiplier(v)));
   }
 
   @Override
   public UnitFractionFunction<PositiveMultiplier> makeMatchingNontrivialObject() {
     double e = 1e-9; // epsilon
-    // Here, we cheat a little. We want to tweak the a * x + b
-    return unitFractionFunction(RBNumericFunction.<UnitFraction, PositiveMultiplier>rbIdentityNumericFunction(
-        v -> positiveMultiplier(0.123 + e + (0.456 + 10_000 * e) * v)));
+    return unitFractionFunction(
+        RBNumericFunction.<UnitFraction, PositiveMultiplier>rbNumericFunction(
+            DUMMY_LABEL,
+            v -> 0.123 + 0.456 * v + 1e-9,
+            v -> positiveMultiplier(v)));
   }
 
   @Override
