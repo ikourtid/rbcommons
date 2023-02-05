@@ -19,9 +19,9 @@ import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
 /**
  * A {@link Function} from {@link UnitFraction} to any arbitrary {@link RBNumeric} type.
  *
- * <p> The function must produce values for the entire range from {@link UnitFraction#UNIT_FRACTION_0}
- * to {@link UnitFraction#UNIT_FRACTION_1}. There's a precondition that checks for that, although it's a
- * 'best efforts' check. </p>
+ * <p> There are additional semantics that function must produce values for the entire domain of {@link UnitFraction},
+ * from {@link UnitFraction#UNIT_FRACTION_0} to {@link UnitFraction#UNIT_FRACTION_1}.
+ * There's a precondition that checks for that, although it's a 'best efforts' check. </p>
  */
 public class UnitFractionFunction<Y extends RBNumeric<? super Y>>
     implements Function<UnitFraction, Y>, HasHumanReadableLabel {
