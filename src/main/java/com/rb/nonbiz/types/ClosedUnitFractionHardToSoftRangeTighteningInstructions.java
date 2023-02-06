@@ -43,6 +43,13 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructions {
         rawMultiplierForUpperEndPoint);
   }
 
+  public static ClosedUnitFractionHardToSoftRangeTighteningInstructions symmetricClosedUnitFractionHardToSoftRangeTighteningInstructions(
+      UnitFraction rawMultiplierForUpperAndLowerEndPoints) {
+    return closedUnitFractionHardToSoftRangeTighteningInstructions(
+        rawMultiplierForUpperAndLowerEndPoints,
+        rawMultiplierForUpperAndLowerEndPoints);
+  }
+
   /**
    * This is for the cases where you want the soft range to be the same as hard -
    * not tighter, like you might want in a more general case. It's particularly useful for situations where you

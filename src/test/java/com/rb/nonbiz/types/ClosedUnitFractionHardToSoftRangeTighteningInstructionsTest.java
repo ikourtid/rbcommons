@@ -9,11 +9,14 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.closedUnitFractionHardToSoftRangeTighteningInstructions;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.setClosedUnitFractionSoftRangeToSameAsHard;
+import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.symmetricClosedUnitFractionHardToSoftRangeTighteningInstructions;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
     extends RBTestMatcher<ClosedUnitFractionHardToSoftRangeTighteningInstructions> {
@@ -28,6 +31,19 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
     assertIllegalArgumentException( () -> closedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_1, unitFraction(1e-9)));
     ClosedUnitFractionHardToSoftRangeTighteningInstructions doesNotThrow =
         closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(1e-7), unitFraction(1e-7));
+  }
+
+  public void testConstructors() {
+    // Zero always throws
+    assertIllegalArgumentException( () -> symmetricClosedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_0));
+
+    // Test that symmetric constructor works.
+    assertThat(
+        symmetricClosedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(0.7)),
+        closedUnitFractionHardToSoftRangeTighteningInstructionsMatcher(
+            closedUnitFractionHardToSoftRangeTighteningInstructions(
+                unitFraction(0.7),
+                unitFraction(0.7))));
   }
 
   @Test
