@@ -258,10 +258,23 @@ public class RBPreconditions {
   }
 
   /**
+   * Throws if the {@link Runnable} throws an exception, but returns a cleaner error message.
+   */
+  public static <E extends Exception> void checkDoesNotThrowException(
+      Runnable runnable, String format, Object ... errorMessageArgs) {
+    try {
+      runnable.run();
+    } catch (Exception e) {
+      throw new IllegalArgumentException(Strings.format(format, errorMessageArgs), e);
+    }
+  }
+
+  /**
    * Throws if the {@link Runnable} does not throw an exception of the specified type.
    * Does nothing otherwise.
    */
   public static void checkThrows(Runnable runnable, String format, Object ... errorMessageArgs) {
     checkThrowsThisException(runnable, Exception.class, format, errorMessageArgs);
   }
+
 }
