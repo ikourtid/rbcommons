@@ -78,7 +78,7 @@ public class UnitFractionFunctionTest extends RBTestMatcher<UnitFractionFunction
     return unitFractionFunction(
         RBNumericFunction.<UnitFraction, PositiveMultiplier>rbNumericFunction(
             DUMMY_LABEL,
-            v -> 0.123 + 0.456 * v + 1e-9,
+            v -> 0.123 + 0.456 * v + e,
             v -> positiveMultiplier(v)));
   }
 
