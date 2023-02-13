@@ -262,4 +262,13 @@ public class RBSets {
         .collect(Collectors.toSet()));
   }
 
+  /**
+   * For a base class B and a subclass S, Java will always let you use an S instead of a B,
+   * but it will not let you use an {@code RBSet<S>} instead of an {@code RBSet<B>}. This will make that conversion.
+   */
+  @SuppressWarnings("unchecked")
+  public static <S, B> RBSet<B> castRBSet(RBSet<S> originalSet) {
+    return originalSet.transform(v -> (B) v);
+  }
+
 }
