@@ -15,6 +15,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -215,6 +216,17 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
     checkPropertyNotAlreadySet(property);
     maybeValue.ifPresent(v ->
         jsonObject.add(property, jsonInteger(v)));
+    return this;
+  }
+
+  /**
+   * Adds { property : jsonDouble } to jsonObject if OptionalDouble is present.
+   * Throws if 'property' already exists in jsonObject.
+   */
+  public RBJsonObjectBuilder setIfOptionalDoublePresent(String property, OptionalDouble maybeValue) {
+    checkPropertyNotAlreadySet(property);
+    maybeValue.ifPresent(v ->
+        jsonObject.add(property, jsonDouble(v)));
     return this;
   }
 
