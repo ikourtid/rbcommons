@@ -14,5 +14,4 @@ public class SmartFormatter {
     return smartFormatterHelper.format(template, args);
   }
 
-
 }

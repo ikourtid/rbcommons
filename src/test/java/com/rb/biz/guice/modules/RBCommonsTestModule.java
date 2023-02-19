@@ -10,6 +10,7 @@ import com.rb.biz.guice.RBThreadLocalClock;
 import com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.nonbiz.text.RBLog;
+import com.rb.nonbiz.text.SmartFormatterHelper;
 import com.rb.nonbiz.util.RBMapPreconditions;
 import com.rb.nonbiz.util.RBOrderingPreconditions;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -28,6 +29,7 @@ public class RBCommonsTestModule implements Module {
   @Override
   public void configure(Binder binder) {
     binder.requestStaticInjection(RBLog.class);
+    binder.requestStaticInjection(SmartFormatterHelper.class);
 
     binder
         .bind(InstrumentMaster.class)
