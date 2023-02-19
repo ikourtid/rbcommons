@@ -1,22 +1,18 @@
 package com.rb.nonbiz.util;
 
-import com.google.inject.Inject;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSets;
-import com.rb.nonbiz.text.PrintableMessageFormatterForInstruments;
-import com.rb.nonbiz.text.Strings;
 
 import java.util.Set;
 
 import static com.rb.nonbiz.collections.IidSetOperations.differenceOfIidSets;
 import static com.rb.nonbiz.collections.IidSetOperations.isSubsetOf;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 public class RBSubsetPreconditions {
-
-  @Inject static PrintableMessageFormatterForInstruments printableMessageFormatterForInstruments;
 
   // You could just use RBPreconditions.checkArgument(IidSets.isSubsetOf(expectedSubset, expectedSuperset))
   // but this takes care of printing what the problem was, if there is a problem.
@@ -77,12 +73,6 @@ public class RBSubsetPreconditions {
   public static <T> void checkIsSubset(
       Set<T> expectedSubset, RBSet<T> expectedSuperset, String format, Object...args) {
     checkIsSubset(newRBSet(expectedSubset), expectedSuperset, format, args);
-  }
-
-  private static String smartFormat(String template, Object... args) {
-    return printableMessageFormatterForInstruments == null
-        ? Strings.format(template, args)
-        : printableMessageFormatterForInstruments.formatWithTimePrepended(template, args);
   }
 
 }

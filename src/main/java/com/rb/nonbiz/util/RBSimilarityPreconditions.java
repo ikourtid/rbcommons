@@ -1,11 +1,8 @@
 package com.rb.nonbiz.util;
 
 import com.google.common.collect.ImmutableList;
-import com.google.inject.Inject;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.RBStreams;
-import com.rb.nonbiz.text.PrintableMessageFormatterForInstruments;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
 
@@ -20,11 +17,10 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.RBRanges.getMinMaxClosedRange;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.function.Function.identity;
 
 public class RBSimilarityPreconditions {
-
-  @Inject static PrintableMessageFormatterForInstruments printableMessageFormatterForInstruments;
 
   /**
    * Throws if the items in the collection, after being transformed by a function, are not all the same.
@@ -266,12 +262,6 @@ public class RBSimilarityPreconditions {
         IntStream
             .range(0, size)
             .allMatch(i -> epsilon.valuesAreWithin(array1[i], array2[i])));
-  }
-
-  private static String smartFormat(String template, Object... args) {
-    return printableMessageFormatterForInstruments == null
-        ? Strings.format(template, args)
-        : printableMessageFormatterForInstruments.formatWithTimePrepended(template, args);
   }
 
 }

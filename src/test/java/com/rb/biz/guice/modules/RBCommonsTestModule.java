@@ -28,11 +28,6 @@ public class RBCommonsTestModule implements Module {
   @Override
   public void configure(Binder binder) {
     binder.requestStaticInjection(RBLog.class);
-    binder.requestStaticInjection(RBPreconditions.class);
-    binder.requestStaticInjection(RBSimilarityPreconditions.class);
-    binder.requestStaticInjection(RBSubsetPreconditions.class);
-    binder.requestStaticInjection(RBMapPreconditions.class);
-    binder.requestStaticInjection(RBOrderingPreconditions.class);
 
     binder
         .bind(InstrumentMaster.class)

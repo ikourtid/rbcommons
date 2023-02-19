@@ -2,10 +2,8 @@ package com.rb.nonbiz.util;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Range;
-import com.google.inject.Inject;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBLists;
-import com.rb.nonbiz.text.PrintableMessageFormatterForInstruments;
 import com.rb.nonbiz.text.Strings;
 
 import java.util.Collection;
@@ -19,12 +17,11 @@ import java.util.stream.Stream;
 import static com.rb.nonbiz.collections.RBIterators.getFirstNonUniqueIteratorItem;
 import static com.rb.nonbiz.collections.RBOptionals.findOnlyPresentOptional;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 public class RBPreconditions {
 
   private static final Pattern PATTERN_WITH_NON_CONTIGUOUS_TRUE = Pattern.compile("F*T+F+T+F*");
-
-  @Inject static PrintableMessageFormatterForInstruments printableMessageFormatterForInstruments;
 
   /**
    * This is handy because it saves you from having to mention 'value' twice at the point where you're calling this,
@@ -283,12 +280,6 @@ public class RBPreconditions {
    */
   public static void checkThrows(Runnable runnable, String format, Object ... errorMessageArgs) {
     checkThrowsThisException(runnable, Exception.class, format, errorMessageArgs);
-  }
-
-  private static String smartFormat(String template, Object... args) {
-    return printableMessageFormatterForInstruments == null
-        ? Strings.format(template, args)
-        : printableMessageFormatterForInstruments.formatWithTimePrepended(template, args);
   }
 
 }

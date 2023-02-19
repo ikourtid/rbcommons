@@ -1,11 +1,8 @@
 package com.rb.nonbiz.util;
 
-import com.google.inject.Inject;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.PartialComparator;
 import com.rb.nonbiz.collections.PartiallyComparable;
-import com.rb.nonbiz.text.PrintableMessageFormatterForInstruments;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Epsilon;
 
 import java.util.Comparator;
@@ -16,10 +13,9 @@ import java.util.function.BiPredicate;
 import static com.rb.nonbiz.collections.RBIterables.consecutivePairs;
 import static com.rb.nonbiz.collections.RBIterables.forEachUnequalPairInList;
 import static com.rb.nonbiz.collections.RBIterators.consecutivePairsIterator;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 public class RBOrderingPreconditions {
-
-  @Inject static PrintableMessageFormatterForInstruments printableMessageFormatterForInstruments;
 
   /**
    * For n items, throw if any of the n-1 pairs of consecutive items
@@ -205,7 +201,6 @@ public class RBOrderingPreconditions {
   public static <T> void checkConsecutiveClosedDoubleRanges(
       Iterator<ClosedRange<Double>> rangesIterator, Epsilon epsilon) {
     consecutivePairs( () -> rangesIterator)
-        .stream()
         .forEach(pair -> {
           ClosedRange<Double> range1 = pair.getLeft();
           ClosedRange<Double> range2 = pair.getRight();
@@ -214,12 +209,6 @@ public class RBOrderingPreconditions {
               "Ranges must be consecutive using epsilon %s but that was not the case for %s -> %s",
               epsilon, range1, range2);
         });
-  }
-
-  private static String smartFormat(String template, Object... args) {
-    return printableMessageFormatterForInstruments == null
-        ? Strings.format(template, args)
-        : printableMessageFormatterForInstruments.formatWithTimePrepended(template, args);
   }
 
 }

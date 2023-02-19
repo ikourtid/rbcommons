@@ -1,10 +1,11 @@
 package com.rb.nonbiz.text;
 
-import com.google.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.function.Supplier;
+
+import static com.rb.nonbiz.text.SmartFormatter.smartFormatWithTimePrepended;
 
 /**
  * Every class FooBarBaz that wants to log should have this, at the top:
@@ -21,8 +22,6 @@ import java.util.function.Supplier;
 public class RBLog {
 
   private final Logger logger;
-
-  @Inject static PrintableMessageFormatterForInstruments printableMessageFormatterForInstruments;
 
   private RBLog(Logger logger) {
     this.logger = logger;
@@ -112,9 +111,7 @@ public class RBLog {
   }
 
   private String formatWithTime(String template, Object... args) {
-    return printableMessageFormatterForInstruments == null
-        ? Strings.format(template, args)
-        : printableMessageFormatterForInstruments.formatWithTimePrepended(template, args);
+    return smartFormatWithTimePrepended(template, args);
   }
 
 }
