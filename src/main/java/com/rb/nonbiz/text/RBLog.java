@@ -22,7 +22,7 @@ public class RBLog {
 
   private final Logger logger;
 
-  @Inject static PrintMessageFormatterForInstruments printMessageFormatterForInstruments;
+  @Inject static PrintableMessageFormatterForInstruments printableMessageFormatterForInstruments;
 
   private RBLog(Logger logger) {
     this.logger = logger;
@@ -112,7 +112,9 @@ public class RBLog {
   }
 
   private String formatWithTime(String template, Object... args) {
-    return printMessageFormatterForInstruments.formatWithTimePrepended(template, args);
+    return printableMessageFormatterForInstruments == null
+        ? Strings.format(template, args)
+        : printableMessageFormatterForInstruments.formatWithTimePrepended(template, args);
   }
 
 }

@@ -1,9 +1,11 @@
 package com.rb.nonbiz.util;
 
+import com.google.inject.Inject;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidSet;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSets;
+import com.rb.nonbiz.text.PrintableMessageFormatterForInstruments;
 import com.rb.nonbiz.text.Strings;
 
 import java.util.Set;
@@ -14,6 +16,8 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 
 public class RBSubsetPreconditions {
 
+  @Inject static PrintableMessageFormatterForInstruments printableMessageFormatterForInstruments;
+
   // You could just use RBPreconditions.checkArgument(IidSets.isSubsetOf(expectedSubset, expectedSuperset))
   // but this takes care of printing what the problem was, if there is a problem.
   public static void checkIidsAreSubset(
@@ -22,12 +26,12 @@ public class RBSubsetPreconditions {
       return;
     }
     IidSet badInstrumentIds = differenceOfIidSets(expectedSubset, expectedSuperset);
-    throw new IllegalArgumentException(Strings.format(
+    throw new IllegalArgumentException(smartFormat(
         "%s iids ( %s ) are in left but not right set, so %s -item iid left set ( %s ) is not a subset of %s -item right iid set ( %s ): %s",
         badInstrumentIds.size(), badInstrumentIds,
         expectedSubset.size(), expectedSubset,
         expectedSuperset.size(), expectedSuperset,
-        Strings.format(format, args)));
+        smartFormat(format, args)));
   }
 
   public static void checkIidsAreSubset(
@@ -36,12 +40,12 @@ public class RBSubsetPreconditions {
       return;
     }
     IidSet badInstrumentIds = differenceOfIidSets(expectedSubset, expectedSuperset);
-    throw new IllegalArgumentException(Strings.format(
+    throw new IllegalArgumentException(smartFormat(
         "%s iids in the %s -iid left set (expected subset) are not in the %s -iid right set (expected superset)."
             + " Iids: %s ; left set= %s ; right set= %s : %s",
         badInstrumentIds.size(), expectedSubset.size(), expectedSuperset.size(),
         badInstrumentIds, expectedSubset, expectedSuperset,
-        Strings.format(format, args)));
+        smartFormat(format, args)));
   }
 
   // You could just to RBPreconditions.checkArgument(RBSets.isSubsetOf(expectedSubset, expectedSuperset))
@@ -52,10 +56,10 @@ public class RBSubsetPreconditions {
       return;
     }
     RBSet<T> badItems = RBSets.difference(expectedSubset, expectedSuperset);
-    throw new IllegalArgumentException(Strings.format(
+    throw new IllegalArgumentException(smartFormat(
         "%s : %s items in the %s -item left set (expected subset) are not in the %s -item right set (expected superset)."
             + " Items: %s ; left set= %s ; right set= %s : %s",
-        Strings.format(format, args),
+        smartFormat(format, args),
         badItems.size(), expectedSubset.size(), expectedSuperset.size(),
         badItems, expectedSubset, expectedSuperset));
   }
@@ -73,6 +77,12 @@ public class RBSubsetPreconditions {
   public static <T> void checkIsSubset(
       Set<T> expectedSubset, RBSet<T> expectedSuperset, String format, Object...args) {
     checkIsSubset(newRBSet(expectedSubset), expectedSuperset, format, args);
+  }
+
+  private static String smartFormat(String template, Object... args) {
+    return printableMessageFormatterForInstruments == null
+        ? Strings.format(template, args)
+        : printableMessageFormatterForInstruments.formatWithTimePrepended(template, args);
   }
 
 }

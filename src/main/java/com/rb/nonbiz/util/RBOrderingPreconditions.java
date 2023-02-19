@@ -1,8 +1,10 @@
 package com.rb.nonbiz.util;
 
+import com.google.inject.Inject;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.PartialComparator;
 import com.rb.nonbiz.collections.PartiallyComparable;
+import com.rb.nonbiz.text.PrintableMessageFormatterForInstruments;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Epsilon;
 
@@ -16,6 +18,8 @@ import static com.rb.nonbiz.collections.RBIterables.forEachUnequalPairInList;
 import static com.rb.nonbiz.collections.RBIterators.consecutivePairsIterator;
 
 public class RBOrderingPreconditions {
+
+  @Inject static PrintableMessageFormatterForInstruments printableMessageFormatterForInstruments;
 
   /**
    * For n items, throw if any of the n-1 pairs of consecutive items
@@ -36,8 +40,8 @@ public class RBOrderingPreconditions {
           T item2 = pair.getRight();
           if (!sanityChecker.test(item1, item2)) {
             StringBuilder sb = new StringBuilder();
-            sb.append(Strings.format(format, args));
-            sb.append(Strings.format(" : %s -> %s", item1, item2));
+            sb.append(smartFormat(format, args));
+            sb.append(smartFormat(" : %s -> %s", item1, item2));
             throw new IllegalArgumentException(sb.toString());
           }
         });
@@ -211,5 +215,11 @@ public class RBOrderingPreconditions {
               epsilon, range1, range2);
         });
   }
-  
+
+  private static String smartFormat(String template, Object... args) {
+    return printableMessageFormatterForInstruments == null
+        ? Strings.format(template, args)
+        : printableMessageFormatterForInstruments.formatWithTimePrepended(template, args);
+  }
+
 }

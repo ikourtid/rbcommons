@@ -6,10 +6,10 @@ import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 
 import java.util.Arrays;
 
-public class PrintMessageFormatterForInstruments {
+public class PrintableMessageFormatterForInstruments {
 
-  @Inject static InstrumentMaster instrumentMaster;
-  @Inject static RBClock rbClock;
+  @Inject InstrumentMaster instrumentMaster;
+  @Inject RBClock rbClock;
 
   public String formatWithTimePrepended(String template, Object... args) {
     return formatHelper(true, template, args);

@@ -1,8 +1,10 @@
 package com.rb.nonbiz.util;
 
 import com.google.common.collect.ImmutableList;
+import com.google.inject.Inject;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.RBStreams;
+import com.rb.nonbiz.text.PrintableMessageFormatterForInstruments;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
@@ -21,6 +23,8 @@ import static com.rb.nonbiz.collections.RBRanges.getMinMaxClosedRange;
 import static java.util.function.Function.identity;
 
 public class RBSimilarityPreconditions {
+
+  @Inject static PrintableMessageFormatterForInstruments printableMessageFormatterForInstruments;
 
   /**
    * Throws if the items in the collection, after being transformed by a function, are not all the same.
@@ -103,7 +107,7 @@ public class RBSimilarityPreconditions {
   public static <T, V> V checkAllSameUsingPredicate(
       Iterator<T> iterator, Function<T, V> valueExtractor, BiPredicate<V, V> samenessPredicate, String format, Object...args) {
     if (!iterator.hasNext()) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Empty collection in checkAllSame: message would have been: " + format,
           args));
     }
@@ -111,8 +115,9 @@ public class RBSimilarityPreconditions {
     while (iterator.hasNext()) {
       V thisValue = valueExtractor.apply(iterator.next());
       if (!samenessPredicate.test(thisValue, sharedValue)) {
-        throw new IllegalArgumentException(Strings.format("%s : shared value so far %s ; encountered different value of %s",
-            Strings.format(format, args), sharedValue, thisValue));
+        throw new IllegalArgumentException(smartFormat(
+            "%s : shared value so far %s ; encountered different value of %s",
+            smartFormat(format, args), sharedValue, thisValue));
       }
     }
     return sharedValue;
@@ -261,6 +266,12 @@ public class RBSimilarityPreconditions {
         IntStream
             .range(0, size)
             .allMatch(i -> epsilon.valuesAreWithin(array1[i], array2[i])));
+  }
+
+  private static String smartFormat(String template, Object... args) {
+    return printableMessageFormatterForInstruments == null
+        ? Strings.format(template, args)
+        : printableMessageFormatterForInstruments.formatWithTimePrepended(template, args);
   }
 
 }
