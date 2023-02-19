@@ -21,6 +21,7 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.singletonIidSet;
 import static com.rb.nonbiz.collections.IidSetTest.iidSetMatcher;
@@ -123,9 +124,14 @@ public class Asserters {
   }
 
   public static void assertThrowsAnyException(Runnable runnable) {
+    assertThrowsAnyException(runnable, exception -> true);
+  }
+
+  public static void assertThrowsAnyException(Runnable runnable, Predicate<Exception> exceptionExpectation) {
     try {
       runnable.run();
     } catch (Exception exception) {
+      assertTrue(exceptionExpectation.test(exception));
       return;
     }
     fail("Expected exception of any type; got no exception");
