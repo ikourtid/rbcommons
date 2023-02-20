@@ -40,10 +40,10 @@ public class SmartFormatter {
    * That is, a list and an {@link RBSet} will look the same; the output will not show the type.
    */
   public static <T> String smartFormatCollection(Collection<T> collection) {
-    return Joiner.on(" , ").join(collection
+    return '[' + Joiner.on(" , ").join(collection
         .stream()
         .map(v -> smartFormatterHelper.formatSingleObject(v))
-        .iterator());
+        .iterator()) + ']';
   }
 
 }
