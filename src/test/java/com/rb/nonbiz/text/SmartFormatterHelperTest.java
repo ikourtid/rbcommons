@@ -1,9 +1,5 @@
 package com.rb.nonbiz.text;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Stage;
-import com.rb.biz.guice.RBClockModifier;
 import com.rb.biz.guice.RBSimpleTestClock;
 import com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster;
 import com.rb.biz.types.asset.InstrumentId;
@@ -15,7 +11,6 @@ import java.time.LocalDateTime;
 import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.hardCodedInstrumentMaster;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
-import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -43,7 +38,7 @@ public class SmartFormatterHelperTest extends RBTest<SmartFormatterHelper> {
   @Test
   public void testFormatWithTimePrepended() {
     assertThat(
-        makeTestObject().formatWithTimePrepended("Message with %s and %s", I_11, I_22),
+        makeTestObject().formatWithDatePrepended("Message with %s and %s", I_11, I_22),
         stringMatcher("1974-04-04 Message with I.11 (iid 11 ) and I.22 (iid 22 )"));
   }
 

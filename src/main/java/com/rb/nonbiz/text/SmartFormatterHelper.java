@@ -22,7 +22,7 @@ public class SmartFormatterHelper {
   @Inject InstrumentMaster instrumentMaster;
   @Inject RBClock rbClock;
 
-  String formatWithTimePrepended(String template, Object ... args) {
+  String formatWithDatePrepended(String template, Object ... args) {
     return formatHelper(true, template, args);
   }
 
@@ -40,12 +40,12 @@ public class SmartFormatterHelper {
         : obj.toString();
   }
 
-  private String formatHelper(boolean prependTime, String template, Object ... args) {
+  private String formatHelper(boolean prependDate, String template, Object ... args) {
     StringBuilder sb = new StringBuilder();
     // We never allow for values to stay null. This is an exception. Otherwise,
     // every unit test for code that logs would have to set the RBClock, which is a pain,
     // OR we would have to hook up Guice modules for every RBTest - also a pain, and also would make the tests slower.
-    if (prependTime) {
+    if (prependDate) {
       sb.append(rbClock == null ? "0000-00-00 " : Strings.format("%s ", rbClock.today()));
     }
 

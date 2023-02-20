@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.function.Supplier;
 
-import static com.rb.nonbiz.text.SmartFormatter.smartFormatWithTimePrepended;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormatWithDatePrepended;
 
 /**
  * Every class FooBarBaz that wants to log should have this, at the top:
@@ -40,7 +40,7 @@ public class RBLog {
   }
 
   public void error(String template, Object... args) {
-    logger.error( () -> formatWithTime(template, args));
+    logger.error( () -> formatWithDate(template, args));
   }
 
   public void error(Supplier<String> messageSupplier) {
@@ -50,7 +50,7 @@ public class RBLog {
   }
 
   public void warn(String template, Object... args) {
-    logger.warn( () -> formatWithTime(template, args));
+    logger.warn( () -> formatWithDate(template, args));
   }
 
   public void warn(Supplier<String> messageSupplier) {
@@ -60,7 +60,7 @@ public class RBLog {
   }
 
   public void info(String template, Object... args) {
-    logger.info( () -> formatWithTime(template, args));
+    logger.info( () -> formatWithDate(template, args));
   }
 
   public void info(Supplier<String> messageSupplier) {
@@ -70,7 +70,7 @@ public class RBLog {
   }
 
   public void debug(String template, Object... args) {
-    logger.debug( () -> formatWithTime(template, args));
+    logger.debug( () -> formatWithDate(template, args));
   }
 
   public void debug(Supplier<String> stringSupplier) {
@@ -80,7 +80,7 @@ public class RBLog {
   }
 
   public void trace(String template, Object... args) {
-    logger.trace( () -> formatWithTime(template, args));
+    logger.trace( () -> formatWithDate(template, args));
   }
 
   public void trace(Supplier<String> stringSupplier) {
@@ -110,8 +110,8 @@ public class RBLog {
     return logger.isTraceEnabled();
   }
 
-  private String formatWithTime(String template, Object... args) {
-    return smartFormatWithTimePrepended(template, args);
+  private String formatWithDate(String template, Object... args) {
+    return smartFormatWithDatePrepended(template, args);
   }
 
 }
