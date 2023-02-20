@@ -21,11 +21,11 @@ public class SmartFormatter {
 
   @Inject static SmartFormatterHelper smartFormatterHelper;
 
-  public static String smartFormatWithDatePrepended(String template, Object... args) {
+  public static String smartFormatWithDatePrepended(String template, Object ... args) {
     return smartFormatterHelper.formatWithDatePrepended(template, args);
   }
 
-  public static String smartFormat(String template, Object... args) {
+  public static String smartFormat(String template, Object ... args) {
     return smartFormatterHelper.format(template, args);
   }
 
