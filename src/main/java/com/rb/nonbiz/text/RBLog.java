@@ -1,13 +1,11 @@
 package com.rb.nonbiz.text;
 
-import com.google.inject.Inject;
-import com.rb.biz.guice.RBClock;
-import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
 import java.util.function.Supplier;
+
+import static com.rb.nonbiz.text.SmartFormatter.smartFormatWithDatePrepended;
 
 /**
  * Every class FooBarBaz that wants to log should have this, at the top:
@@ -24,9 +22,6 @@ import java.util.function.Supplier;
 public class RBLog {
 
   private final Logger logger;
-
-  @Inject static InstrumentMaster instrumentMaster;
-  @Inject static RBClock rbClock;
 
   private RBLog(Logger logger) {
     this.logger = logger;
@@ -45,7 +40,7 @@ public class RBLog {
   }
 
   public void error(String template, Object... args) {
-    logger.error( () -> formatWithTime(template, args));
+    logger.error( () -> formatWithDate(template, args));
   }
 
   public void error(Supplier<String> messageSupplier) {
@@ -55,7 +50,7 @@ public class RBLog {
   }
 
   public void warn(String template, Object... args) {
-    logger.warn( () -> formatWithTime(template, args));
+    logger.warn( () -> formatWithDate(template, args));
   }
 
   public void warn(Supplier<String> messageSupplier) {
@@ -65,7 +60,7 @@ public class RBLog {
   }
 
   public void info(String template, Object... args) {
-    logger.info( () -> formatWithTime(template, args));
+    logger.info( () -> formatWithDate(template, args));
   }
 
   public void info(Supplier<String> messageSupplier) {
@@ -75,7 +70,7 @@ public class RBLog {
   }
 
   public void debug(String template, Object... args) {
-    logger.debug( () -> formatWithTime(template, args));
+    logger.debug( () -> formatWithDate(template, args));
   }
 
   public void debug(Supplier<String> stringSupplier) {
@@ -85,7 +80,7 @@ public class RBLog {
   }
 
   public void trace(String template, Object... args) {
-    logger.trace( () -> formatWithTime(template, args));
+    logger.trace( () -> formatWithDate(template, args));
   }
 
   public void trace(Supplier<String> stringSupplier) {
@@ -115,24 +110,8 @@ public class RBLog {
     return logger.isTraceEnabled();
   }
 
-  private String formatWithTime(String template, Object... args) {
-    StringBuilder sb = new StringBuilder();
-    // We never allow for values to stay null. This is an exception. Otherwise,
-    // every unit test for code that logs would have to set the RBClock, which is a pain,
-    // OR we would have to hook up Guice modules for every RBTest - also a pain, and also would make the tests slower.
-    sb.append(rbClock == null ? "0000-00-00 " : Strings.format("%s ", rbClock.today()));
-    if (instrumentMaster == null || rbClock == null) {
-      sb.append(Strings.format(template, args));
-      return sb.toString();
-    }
-
-    Object[] newArgs = new Object[args.length];
-    Arrays.setAll(newArgs, i ->
-        PrintsInstruments.class.isAssignableFrom(args[i].getClass())
-            ? ((PrintsInstruments) args[i]).toString(instrumentMaster, rbClock.today())
-            : args[i]);
-    sb.append(Strings.format(template, newArgs));
-    return sb.toString();
+  private String formatWithDate(String template, Object... args) {
+    return smartFormatWithDatePrepended(template, args);
   }
 
 }

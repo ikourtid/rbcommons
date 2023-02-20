@@ -10,6 +10,13 @@ import com.rb.biz.guice.RBThreadLocalClock;
 import com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.nonbiz.text.RBLog;
+import com.rb.nonbiz.text.SmartFormatter;
+import com.rb.nonbiz.text.SmartFormatterHelper;
+import com.rb.nonbiz.util.RBMapPreconditions;
+import com.rb.nonbiz.util.RBOrderingPreconditions;
+import com.rb.nonbiz.util.RBPreconditions;
+import com.rb.nonbiz.util.RBSimilarityPreconditions;
+import com.rb.nonbiz.util.RBSubsetPreconditions;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +30,10 @@ public class RBCommonsTestModule implements Module {
   @Override
   public void configure(Binder binder) {
     binder.requestStaticInjection(RBLog.class);
+    // ExcludeSlowTestsSuiteRBCommons still gives us 4 failing tests if we run it by itself
+    // (instead of ExcludeSlowTestsSuite), but without the following two lines, there would be way more failures.
+    binder.requestStaticInjection(SmartFormatter.class);
+    binder.requestStaticInjection(SmartFormatterHelper.class);
 
     binder
         .bind(InstrumentMaster.class)
