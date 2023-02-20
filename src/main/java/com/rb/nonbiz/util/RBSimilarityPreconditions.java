@@ -3,7 +3,6 @@ package com.rb.nonbiz.util;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.RBStreams;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
 
@@ -18,6 +17,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.RBRanges.getMinMaxClosedRange;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.function.Function.identity;
 
 public class RBSimilarityPreconditions {
@@ -103,7 +103,7 @@ public class RBSimilarityPreconditions {
   public static <T, V> V checkAllSameUsingPredicate(
       Iterator<T> iterator, Function<T, V> valueExtractor, BiPredicate<V, V> samenessPredicate, String format, Object...args) {
     if (!iterator.hasNext()) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Empty collection in checkAllSame: message would have been: " + format,
           args));
     }
@@ -111,8 +111,9 @@ public class RBSimilarityPreconditions {
     while (iterator.hasNext()) {
       V thisValue = valueExtractor.apply(iterator.next());
       if (!samenessPredicate.test(thisValue, sharedValue)) {
-        throw new IllegalArgumentException(Strings.format("%s : shared value so far %s ; encountered different value of %s",
-            Strings.format(format, args), sharedValue, thisValue));
+        throw new IllegalArgumentException(smartFormat(
+            "%s : shared value so far %s ; encountered different value of %s",
+            smartFormat(format, args), sharedValue, thisValue));
       }
     }
     return sharedValue;
