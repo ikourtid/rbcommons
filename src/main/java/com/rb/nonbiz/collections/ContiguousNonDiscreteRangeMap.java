@@ -130,7 +130,8 @@ public class ContiguousNonDiscreteRangeMap<K extends Comparable<? super K>, V> {
     Optional<V> value = getOptional(key);
     if (!value.isPresent()) {
       throw new IllegalArgumentException(Strings.format(
-          "Cannot find a value for key %s ; it is outside the range"));    }
+          "Cannot find a value for key %s ; it is outside the range", key));
+    }
     return value.get();
   }
 

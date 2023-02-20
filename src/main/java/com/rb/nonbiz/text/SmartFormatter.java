@@ -26,7 +26,10 @@ public class SmartFormatter {
   }
 
   public static String smartFormat(String template, Object ... args) {
-    return smartFormatterHelper.format(template, args);
+    // Unfortunately, we need this null check for unit tests in certain cases.
+    return smartFormatterHelper == null
+        ? Strings.format(template, args)
+        : smartFormatterHelper.format(template, args);
   }
 
   /**
