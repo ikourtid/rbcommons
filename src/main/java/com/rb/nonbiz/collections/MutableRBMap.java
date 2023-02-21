@@ -13,6 +13,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+
 /**
  * This is one of the rare mutable data classes in the codebase.
  * Typically, we will build a MutableRBMap and then 'lock' it into an RBMap in the same method, and then return it.
@@ -107,7 +109,7 @@ public class MutableRBMap<K, V> {
     }
     V value = rawMap.get(key);
     if (value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "no value exists in the map for key %s ; map is %s",
           key, this));
     }
@@ -200,7 +202,7 @@ public class MutableRBMap<K, V> {
    */
   public V put(K key, V value) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
           key, value));
     }
@@ -214,7 +216,7 @@ public class MutableRBMap<K, V> {
    */
   public void putIfAbsent(K key, V value) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
           key, value));
     }
@@ -228,7 +230,7 @@ public class MutableRBMap<K, V> {
    */
   public void putIfAbsent(K key, Supplier<V> valueSupplier) {
     if (key == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Key cannot be null in a MutableRBMap; value was ( %s ) ",
           valueSupplier.get()));
     }
@@ -247,13 +249,13 @@ public class MutableRBMap<K, V> {
    */
   public void putAssumingAbsent(K key, V value) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
           key, value));
     }
     V previousValue = put(key, value);
     if (previousValue != null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Trying to add value %s to key %s which already maps to %s",
           value, key, previousValue));
     }
@@ -267,13 +269,13 @@ public class MutableRBMap<K, V> {
    */
   public void putAssumingAbsentAllowingNullValue(K key, V value) {
     if (key == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Key ( %s ) cannot be null in a MutableRBMap; value was %s",
           key, value));
     }
     V previousValue = rawMap.put(key, value);
     if (previousValue != null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Trying to add value %s to key %s which already maps to %s",
           value, key, previousValue));
     }
@@ -287,13 +289,13 @@ public class MutableRBMap<K, V> {
    */
   public void putAssumingPresent(K key, V value) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
           key, value));
     }
     V previousValue = put(key, value);
     if (previousValue == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Trying to add value %s to key %s which is not there yet",
           value, key));
     }
