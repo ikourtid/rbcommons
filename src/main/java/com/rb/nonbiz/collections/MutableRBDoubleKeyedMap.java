@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import static com.google.common.collect.Maps.newTreeMap;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * A map from a double to a value.

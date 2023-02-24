@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.singletonList;
 
 /**

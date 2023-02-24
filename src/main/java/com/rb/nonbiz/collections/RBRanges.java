@@ -26,6 +26,7 @@ import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.RBIterables.consecutivePairsForEach;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.POSITIVE_INFINITY;

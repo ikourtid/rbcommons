@@ -1,5 +1,7 @@
 package com.rb.nonbiz.text.csv;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+
 /**
  * Splits a single line of text into comma-separated components, while allowing
  * the possibility of commas being escaped inside doublequotes.

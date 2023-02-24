@@ -3,6 +3,8 @@ package com.rb.nonbiz.collections;
 import java.util.Iterator;
 import java.util.Optional;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+
 public class DoubleArraysAverager {
 
   public Optional<double[]> calculateAverageArray(Iterator<double[]> arraysIterator,

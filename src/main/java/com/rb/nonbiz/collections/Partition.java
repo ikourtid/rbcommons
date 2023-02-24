@@ -23,6 +23,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
 import static com.rb.nonbiz.collections.SignedPartition.signedPartition;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.PreciseValue.sumToBigDecimal;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;

@@ -10,6 +10,7 @@ import java.util.function.Function;
 import static com.rb.nonbiz.collections.RBComparables.monotonic;
 import static com.rb.nonbiz.collections.RBComparators.nonDecreasingPerComparator;
 import static com.rb.nonbiz.text.RBLog.rbLog;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Generalized code for doing binary search.

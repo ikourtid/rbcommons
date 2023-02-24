@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.RBIterators.consecutiveNonOverlappingPairsIterator;
 import static com.rb.nonbiz.collections.RBIterators.consecutivePairsIterator;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Various static methods pertaining to Iterable objects.

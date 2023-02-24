@@ -20,6 +20,7 @@ import static com.rb.nonbiz.collections.RBArrays.arrayIterator;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBOptionals.toSpecializedOptionalInt;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.emptyList;
 
 /**

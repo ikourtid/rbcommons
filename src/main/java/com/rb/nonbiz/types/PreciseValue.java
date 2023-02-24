@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.lang.Double.isNaN;
 import static java.math.RoundingMode.HALF_UP;
 

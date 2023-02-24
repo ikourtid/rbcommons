@@ -14,6 +14,7 @@ import static com.rb.biz.types.OnesBasedReturn.onesBasedReturn;
 import static com.rb.biz.types.SignedMoney.signedMoney;
 import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 import static com.rb.nonbiz.math.RBBigDecimals.bigDecimalAverage;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Holds a price.

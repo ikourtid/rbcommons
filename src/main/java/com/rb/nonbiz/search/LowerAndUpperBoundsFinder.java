@@ -5,6 +5,8 @@ import com.google.common.collect.Range;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+
 public class LowerAndUpperBoundsFinder {
 
   public <X extends Comparable, Y extends Comparable> Range<X>

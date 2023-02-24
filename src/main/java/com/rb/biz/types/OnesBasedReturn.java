@@ -10,6 +10,7 @@ import java.math.RoundingMode;
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.biz.investing.quality.AnnuallyCompoundedAnnualizedReturn.annuallyCompoundedAnnualizedReturn;
 import static com.rb.nonbiz.math.RBBigDecimals.bigDecimalInvert;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Returns expressed so that 1.0 means 'no increase or decrease', 1.02 means "+ 2%",

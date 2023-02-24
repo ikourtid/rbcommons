@@ -4,6 +4,7 @@ import com.rb.nonbiz.text.Strings;
 
 import java.util.OptionalDouble;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 /**

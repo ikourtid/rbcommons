@@ -20,6 +20,7 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.PreciseValue.sumToBigDecimal;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;

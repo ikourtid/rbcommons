@@ -16,6 +16,7 @@ import java.util.Iterator;
 
 import static com.rb.nonbiz.collections.RBIterators.transformToDoubleIterator;
 import static com.rb.nonbiz.math.stats.ZScore.zScore;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 public class RBStats {
 

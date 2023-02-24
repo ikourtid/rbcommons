@@ -13,6 +13,7 @@ import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONT
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 

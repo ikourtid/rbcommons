@@ -28,6 +28,7 @@ import static com.rb.nonbiz.collections.RBMaps.getWhenUpToOneRBMapIsNonEmpty;
 import static com.rb.nonbiz.collections.RBOptionals.filterPresentOptionalsInStream;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 public class RBMapMergers {

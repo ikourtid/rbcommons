@@ -20,6 +20,7 @@ import static com.rb.biz.types.Price.price;
 import static com.rb.biz.types.SignedMoney.signedMoney;
 import static com.rb.biz.types.trading.BuyQuantity.buyQuantity;
 import static com.rb.biz.types.trading.NonNegativeQuantity.nonNegativeQuantity;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Represents a non-negative dollar amount.

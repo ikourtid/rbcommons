@@ -14,6 +14,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.LongStream;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+
 /**
  * This is a special implementation of an RBMap (SORT OF) for the cases where the key class
  * implements HasLongRepresentation. In those cases, we can key off of the long, and can therefore use

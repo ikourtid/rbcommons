@@ -3,6 +3,8 @@ package com.rb.nonbiz.date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+
 /**
  * Methods pertaining to calendar day calculations (vs. market days).
  */

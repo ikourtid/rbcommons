@@ -2,6 +2,8 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+
 /**
  * See #MutableIndexableArray2D.
  *

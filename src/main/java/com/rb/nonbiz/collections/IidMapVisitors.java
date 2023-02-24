@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static com.rb.nonbiz.collections.IidSetOperations.unionOfIidSets;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 public class IidMapVisitors {
 

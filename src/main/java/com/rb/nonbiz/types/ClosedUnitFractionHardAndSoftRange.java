@@ -3,6 +3,7 @@ package com.rb.nonbiz.types;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
 
 public class ClosedUnitFractionHardAndSoftRange {

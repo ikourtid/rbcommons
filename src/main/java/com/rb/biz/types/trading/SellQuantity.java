@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * The share quantity to <i>sell</i> for a single instrument.

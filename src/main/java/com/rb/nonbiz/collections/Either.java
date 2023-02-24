@@ -7,6 +7,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.Optional;
 
 import static com.rb.nonbiz.collections.RBOptionals.optionalsEqual;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * A mini-collection that represents a pair where either the 'left' or the 'right' object exists,

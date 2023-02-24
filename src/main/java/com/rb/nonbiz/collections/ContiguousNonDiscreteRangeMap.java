@@ -11,6 +11,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.List;
 import java.util.Optional;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.singletonList;
 
 /**

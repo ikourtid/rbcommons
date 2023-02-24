@@ -7,6 +7,7 @@ import java.util.Map;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Removes some items from a partition, and normalizes the remaining ones to add to 1

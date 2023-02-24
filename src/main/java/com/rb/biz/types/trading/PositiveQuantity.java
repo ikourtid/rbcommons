@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.stream.Stream;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+
 /**
  * Holds a positive quantity of shares. That is, holds a value x such that {@code x > 0}.
  *

@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 import java.util.Collection;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.UnitFraction.isValidUnitFraction;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 

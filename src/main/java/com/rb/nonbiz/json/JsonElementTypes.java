@@ -9,6 +9,7 @@ import static com.rb.nonbiz.json.JsonElementType.JSON_NULL;
 import static com.rb.nonbiz.json.JsonElementType.JSON_NUMBER;
 import static com.rb.nonbiz.json.JsonElementType.JSON_OBJECT;
 import static com.rb.nonbiz.json.JsonElementType.JSON_STRING;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Methods related to getting the type of a {@link JsonElement}.

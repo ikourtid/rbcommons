@@ -11,6 +11,7 @@ import java.util.List;
 
 import static com.rb.biz.types.asset.CashId.CASH_ID;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.emptyList;
 
 /**

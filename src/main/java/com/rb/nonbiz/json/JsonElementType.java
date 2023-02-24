@@ -1,5 +1,7 @@
 package com.rb.nonbiz.json;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+
 /**
  * Different types that a JsonElement could be.
  * Note that JSON only supports a single number, not double/long/integer. So all those get lumped under JSON_NUMBER.

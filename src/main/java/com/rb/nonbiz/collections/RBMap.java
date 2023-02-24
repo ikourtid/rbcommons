@@ -31,6 +31,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Comparator.comparing;
 
 /**

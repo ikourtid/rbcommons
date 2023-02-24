@@ -20,6 +20,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PreciseValue.sumToBigDecimal;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;

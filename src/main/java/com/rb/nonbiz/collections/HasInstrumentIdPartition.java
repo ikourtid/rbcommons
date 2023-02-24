@@ -27,6 +27,7 @@ import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 import static com.rb.nonbiz.text.RBLog.rbLog;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;

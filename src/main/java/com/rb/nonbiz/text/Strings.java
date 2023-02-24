@@ -30,6 +30,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.rb.biz.marketdata.instrumentmaster.InstrumentMasters.displaySymbol;
 import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_INSTRUMENT_MASTER;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.lang.Character.isAlphabetic;
 import static java.lang.Character.isUpperCase;
 import static java.util.Comparator.comparing;

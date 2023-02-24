@@ -8,6 +8,7 @@ import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBVoid.rbVoid;
 import static com.rb.nonbiz.math.RBBigDecimals.epsilonCompareBigDecimals;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 /**

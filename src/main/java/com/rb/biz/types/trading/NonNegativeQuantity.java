@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 import static com.rb.biz.types.Money.money;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Holds a non-negative quantity. That is, holds a value x such that {@code x >= 0}.

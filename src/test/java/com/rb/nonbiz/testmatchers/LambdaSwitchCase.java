@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * This is useful for matching objects that can belong to more than one type.
