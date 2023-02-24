@@ -1,13 +1,10 @@
 package com.rb.biz.guice;
 
 import com.rb.biz.guice.RBClockModifier.RBClockModifierToken;
-import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-
-import static junit.framework.TestCase.assertEquals;
 
 public class RBClockTest {
 

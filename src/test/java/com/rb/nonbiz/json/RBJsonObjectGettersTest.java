@@ -5,7 +5,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.rb.nonbiz.testutils.TestEnumXYZ;
 import com.rb.nonbiz.text.Strings;
 import org.junit.Test;
 

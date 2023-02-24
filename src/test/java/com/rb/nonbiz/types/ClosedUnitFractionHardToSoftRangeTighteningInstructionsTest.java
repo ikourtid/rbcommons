@@ -16,7 +16,6 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
     extends RBTestMatcher<ClosedUnitFractionHardToSoftRangeTighteningInstructions> {

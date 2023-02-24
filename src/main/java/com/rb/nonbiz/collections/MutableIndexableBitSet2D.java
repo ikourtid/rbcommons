@@ -1,7 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.rb.nonbiz.text.Strings;
 
 /**
  * See #MutableIndexableArray2D.

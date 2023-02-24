@@ -1,7 +1,5 @@
 package com.rb.nonbiz.text.csv;
 
-import com.rb.nonbiz.text.Strings;
-
 /**
  * Splits a single line of text into comma-separated components, while allowing
  * the possibility of commas being escaped inside doublequotes.

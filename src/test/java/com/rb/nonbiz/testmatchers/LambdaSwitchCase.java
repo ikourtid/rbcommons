@@ -1,7 +1,6 @@
 package com.rb.nonbiz.testmatchers;
 
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
-import com.rb.nonbiz.text.Strings;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.util.List;

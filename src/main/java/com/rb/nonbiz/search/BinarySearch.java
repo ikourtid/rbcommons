@@ -2,7 +2,6 @@ package com.rb.nonbiz.search;
 
 import com.rb.nonbiz.search.BinarySearchResult.BinarySearchResultBuilder;
 import com.rb.nonbiz.text.RBLog;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Comparator;

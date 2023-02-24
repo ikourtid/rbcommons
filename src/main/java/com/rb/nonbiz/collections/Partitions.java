@@ -1,6 +1,5 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.SignedFraction;
 import com.rb.nonbiz.types.UnitFraction;
