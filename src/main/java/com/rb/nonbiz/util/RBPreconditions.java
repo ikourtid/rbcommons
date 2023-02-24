@@ -249,7 +249,7 @@ public class RBPreconditions {
 
       if (!isCorrectExceptionType) {
         String originalMessage = smartFormat(format, errorMessageArgs);
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Expected an exception of type %s , but got one of type %s ; original error message is: %s",
             exceptionClass, e.getClass(), originalMessage));
       }

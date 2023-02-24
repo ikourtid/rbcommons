@@ -35,7 +35,7 @@ public enum JsonElementType {
       case JSON_STRING:  return visitor.visitJsonString();
       case JSON_OBJECT:  return visitor.visitJsonObject();
       default:
-        throw new IllegalArgumentException(Strings.format("Unsupported type %s", this));
+        throw new IllegalArgumentException(smartFormat("Unsupported type %s", this));
     }
   }
 

@@ -881,7 +881,7 @@ public class RBRanges {
       // starting value is higher than the upper endpoint of range
       return range.upperEndpoint();
     }
-    throw new IllegalArgumentException(Strings.format(
+    throw new IllegalArgumentException(smartFormat(
         "We should never be here in getNearestValueInRange: range= %s ; startingValue= %s",
         range, startingValue));
   }

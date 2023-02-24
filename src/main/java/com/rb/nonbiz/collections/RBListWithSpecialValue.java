@@ -89,7 +89,7 @@ public class RBListWithSpecialValue<T> {
         if (rest[i] == null) {
           int index = i + 1;
           indexOfSpecialValue.ifPresent( v -> {
-                throw new IllegalArgumentException(Strings.format(
+                throw new IllegalArgumentException(smartFormat(
                     "We have multiple 'null' markers, in locations %s and %s", v, index));
               });
           indexOfSpecialValue = OptionalInt.of(index);

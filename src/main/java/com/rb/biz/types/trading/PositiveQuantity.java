@@ -27,7 +27,7 @@ public class PositiveQuantity extends NonNegativeQuantity {
 
   public static PositiveQuantity positiveQuantity(BigDecimal quantity) {
     if (quantity.signum() < 1) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Attempt to construct a PositiveQuantity with %s <= 0", quantity));
     }
     return new PositiveQuantity(quantity);

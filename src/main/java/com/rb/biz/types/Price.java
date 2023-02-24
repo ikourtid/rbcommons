@@ -39,14 +39,14 @@ public class Price extends PreciseValue<Price> {
 
   public static Price price(double priceAsDouble) {
     if (priceAsDouble <= 0) {
-      throw new IllegalArgumentException(Strings.format("price must be >0 but was %s", priceAsDouble));
+      throw new IllegalArgumentException(smartFormat("price must be >0 but was %s", priceAsDouble));
     }
     return new Price(BigDecimal.valueOf(priceAsDouble), priceAsDouble);
   }
 
   public static Price price(BigDecimal price) {
     if (price.signum() < 1) {
-      throw new IllegalArgumentException(Strings.format("price must be >0 but was %s", price));
+      throw new IllegalArgumentException(smartFormat("price must be >0 but was %s", price));
     }
     return new Price(price);
   }

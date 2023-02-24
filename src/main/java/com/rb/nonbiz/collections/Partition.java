@@ -224,7 +224,7 @@ public class Partition<K> {
   public UnitFraction getFraction(K key) {
     Optional<UnitFraction> fraction = fractions.getOptional(key);
     if (!fraction.isPresent()) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Key %s is not contained in partition's keys : %s",
           key, Joiner.on(',').join(fractions.keySet())));
     }

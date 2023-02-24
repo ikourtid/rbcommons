@@ -25,7 +25,7 @@ public class LowerAndUpperBoundsFinder {
           return Range.closed(lowerBound, upperBound);
         }
       }
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "After %s iterations, our lower bound of %s produces a value %s that's still above the target of %s",
           maxIterations, lowerBound, evaluateInput.apply(lowerBound), target));
     } else if (comparison < 0) {
@@ -37,7 +37,7 @@ public class LowerAndUpperBoundsFinder {
           return Range.closed(lowerBound, upperBound);
         }
       }
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "After %s iterations, our upper bound of %s produces a value %s that's still below the target of %s",
           maxIterations, upperBound, evaluateInput.apply(upperBound), target));
     } else {

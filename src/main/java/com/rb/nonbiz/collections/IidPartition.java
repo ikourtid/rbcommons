@@ -68,7 +68,7 @@ public class IidPartition implements PrintsInstruments {
   public static <V extends PreciseValue<V>> IidPartition iidPartitionFromWeights(IidMap<V> weightsMap) {
     BigDecimal sum = sumToBigDecimal(weightsMap.values());
     if (sum.signum() != 1) {
-      throw new IllegalArgumentException(Strings.format("Sum of weights must be >0. Input was %s", weightsMap));
+      throw new IllegalArgumentException(smartFormat("Sum of weights must be >0. Input was %s", weightsMap));
     }
     MutableIidMap<UnitFraction> fractionsMap = newMutableIidMapWithExpectedSize(weightsMap.size());
     weightsMap.forEachEntry( (key, value) -> {

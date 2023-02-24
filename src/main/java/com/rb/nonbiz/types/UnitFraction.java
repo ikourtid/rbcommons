@@ -284,7 +284,7 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
 
   public UnitFraction divide(BigDecimal other) {
     if (other.compareTo(BigDecimal.ZERO) == 0) {
-      throw new IllegalArgumentException(Strings.format("Cannot divide %s by zero", asBigDecimal()));
+      throw new IllegalArgumentException(smartFormat("Cannot divide %s by zero", asBigDecimal()));
     }
     return unitFraction(asBigDecimal().divide(other, DEFAULT_MATH_CONTEXT));
   }

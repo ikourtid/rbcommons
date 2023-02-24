@@ -112,7 +112,7 @@ public class SimpleArrayIndexMapping<T> implements ArrayIndexMapping<T> {
   @Override
   public T getKey(int index) {
     if (index < 0 || index >= objectsInOrder.size()) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Index %s is not valid; should be 0 to %s , inclusive, corresponding to items %s through %s",
           index, objectsInOrder.size() - 1, objectsInOrder.get(0), objectsInOrder.get(objectsInOrder.size() - 1)));
     }

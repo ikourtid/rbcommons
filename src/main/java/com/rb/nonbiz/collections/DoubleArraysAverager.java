@@ -32,7 +32,7 @@ public class DoubleArraysAverager {
 
   private void addToLeft(double[] left, double[] right) {
     if (left.length != right.length) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Not all arrays to be averaged have the same length - e.g. %s vs %s",
           left.length, right.length));
     }

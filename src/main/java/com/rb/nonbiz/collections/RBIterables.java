@@ -60,7 +60,7 @@ public class RBIterables {
   public static double weightedAverage(List<Double> values, List<Double> weights) {
     double sumOfWeights = 0;
     if (values.size() != weights.size()) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "There are %s values but %s weights in the weighted average. Values= %s ; weights= %s",
           values.size(), weights.size(), values, weights));
     }
@@ -71,7 +71,7 @@ public class RBIterables {
     for (int i = 0; i < values.size(); i++) {
       double weight = weights.get(i);
       if (weight < 0) {
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Only non-negative weights are allowed; not %s ; values= %s ; weights= %s",
             weight, values, weights));
       }
@@ -79,7 +79,7 @@ public class RBIterables {
       sumOfWeights += weight;
     }
     if (sumOfWeights <= 0) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Sum of weights must be >= 0. Values= %s ; weights= %s",
           values, weights));
     }

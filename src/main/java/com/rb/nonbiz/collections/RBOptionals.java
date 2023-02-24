@@ -38,21 +38,21 @@ public class RBOptionals {
     if (optional.isPresent()) {
       return optional.get();
     }
-    throw new IllegalArgumentException(Strings.format(template, args));
+    throw new IllegalArgumentException(smartFormat(template, args));
   }
 
   public static int getIntOrThrow(OptionalInt optional, String template, Object... args) {
     if (optional.isPresent()) {
       return optional.getAsInt();
     }
-    throw new IllegalArgumentException(Strings.format(template, args));
+    throw new IllegalArgumentException(smartFormat(template, args));
   }
 
   public static double getDoubleOrThrow(OptionalDouble optional, String template, Object... args) {
     if (optional.isPresent()) {
       return optional.getAsDouble();
     }
-    throw new IllegalArgumentException(Strings.format(template, args));
+    throw new IllegalArgumentException(smartFormat(template, args));
   }
 
   /**

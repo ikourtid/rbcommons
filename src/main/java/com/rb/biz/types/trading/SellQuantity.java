@@ -30,7 +30,7 @@ public class SellQuantity extends PositiveQuantity {
 
   public static SellQuantity sellQuantity(BigDecimal quantity) {
     if (quantity.signum() < 1) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Attempt to construct a SellQuantity with quantity %s <= 0", quantity));
     }
     return new SellQuantity(quantity);

@@ -85,7 +85,7 @@ public class HasInstrumentIdPartition<T extends HasInstrumentId> implements Prin
     double e = 1e-12;
     double sum = weightsMap.valuesStream().mapToDouble(v -> v).sum();
     if (sum <= e) {
-      throw new IllegalArgumentException(Strings.format("Sum of weights must be >0 (actually, 1e-12). Input was %s", weightsMap));
+      throw new IllegalArgumentException(smartFormat("Sum of weights must be >0 (actually, 1e-12). Input was %s", weightsMap));
     }
 
     log.debug( () -> String.format("sum of weights %.4f %% normalization %.4f %%", 100 * sum, 100 / sum));

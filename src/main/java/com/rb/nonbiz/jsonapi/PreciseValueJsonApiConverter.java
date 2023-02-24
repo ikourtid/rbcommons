@@ -29,13 +29,13 @@ public class PreciseValueJsonApiConverter {
     Optional<InstrumentId> instrumentId = jsonTickerMap.getOptionalInstrumentId(jsonTicker);
     BigDecimal value = valueAsJsonElementDouble.getAsBigDecimal();
     if (!instrumentId.isPresent()) {
-      throw new IllegalArgumentException(Strings.format("Error converting unknown ticker %s (value= %s )",
+      throw new IllegalArgumentException(smartFormat("Error converting unknown ticker %s (value= %s )",
               jsonTicker, value));
     }
     try {
       return converter.apply(value);
     } catch (Exception e) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Error converting known ticker %s (instrumentId %s ): %s",
               jsonTicker, instrumentId.get().asLong(), e.getMessage()));
     }

@@ -42,7 +42,7 @@ public class SingleSimplePartitionModificationApplier {
           new EpsilonComparisonVisitor<RBVoid>() {
             @Override
             public RBVoid visitRightIsGreater(double ignored) {
-              throw new IllegalArgumentException(Strings.format(
+              throw new IllegalArgumentException(smartFormat(
                   "Original fraction for %s is %s , so if we subtract %s , we'll get a negative number. Partition: %s",
                   key, originalFraction, fractionToSubtract, originalPartition));
             }

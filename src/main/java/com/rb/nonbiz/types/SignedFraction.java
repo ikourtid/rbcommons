@@ -157,7 +157,7 @@ public class SignedFraction extends PreciseValue<SignedFraction> {
 
   public SignedFraction divide(BigDecimal other) {
     if (other.compareTo(BigDecimal.ZERO) == 0) {
-      throw new IllegalArgumentException(Strings.format("Cannot divide %s by zero", asBigDecimal()));
+      throw new IllegalArgumentException(smartFormat("Cannot divide %s by zero", asBigDecimal()));
     }
     return signedFraction(asBigDecimal().divide(other, DEFAULT_MATH_CONTEXT));
   }

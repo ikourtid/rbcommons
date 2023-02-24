@@ -36,7 +36,7 @@ public class EitherTest {
 
       @Override
       public L visitRight(R right) {
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Expected an Either.left, but there is a right value of %s", right));
       }
     });
@@ -53,7 +53,7 @@ public class EitherTest {
     return either.visit(new Visitor<L, R, R>() {
       @Override
       public R visitLeft(L left) {
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Expected an Either.right, but there is a left value of %s", left));
       }
 

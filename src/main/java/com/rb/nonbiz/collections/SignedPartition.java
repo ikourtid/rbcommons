@@ -69,7 +69,7 @@ public class SignedPartition<K> {
   public static <K, V extends PreciseValue<V>> SignedPartition<K> signedPartitionFromWeights(RBMap<K, V> weightsMap) {
     BigDecimal sum = sumToBigDecimal(weightsMap.values());
     if (sum.signum() != 1) {
-      throw new IllegalArgumentException(Strings.format("Sum of weights must be >0. Input was %s", weightsMap));
+      throw new IllegalArgumentException(smartFormat("Sum of weights must be >0. Input was %s", weightsMap));
     }
     MutableRBMap<K, SignedFraction> signedFractionsMap = newMutableRBMapWithExpectedSize(weightsMap.size());
     weightsMap.forEachEntry( (key, value) -> {
@@ -105,7 +105,7 @@ public class SignedPartition<K> {
   public SignedFraction getFraction(K key) {
     Optional<SignedFraction> signedFraction = signedFractions.getOptional(key);
     if (!signedFraction.isPresent()) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Key %s is not contained in partition's keys : %s",
           key, Joiner.on(',').join(signedFractions.keySet())));
     }

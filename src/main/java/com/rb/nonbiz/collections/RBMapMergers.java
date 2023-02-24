@@ -40,7 +40,7 @@ public class RBMapMergers {
    */
   public static <K, L, R> RBMap<K, Either<L, R>> mergeIntoEithersMap(RBMap<K, L> leftMap, RBMap<K, R> rightMap) {
     if (!RBSets.noSharedItems(leftMap.keySet(), rightMap.keySet())) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Shared keys exist between maps to be merged: %s and %s",
           leftMap, rightMap));
     }

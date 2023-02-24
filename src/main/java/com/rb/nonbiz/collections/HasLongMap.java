@@ -120,7 +120,7 @@ public abstract class HasLongMap<K extends HasLongRepresentation, V> {
   public V getOrThrow(K key, String template, Object...args) {
     Optional<V> value = getOptional(key);
     if (!value.isPresent()) {
-      throw new IllegalArgumentException(Strings.format(template, args));
+      throw new IllegalArgumentException(smartFormat(template, args));
     }
     return value.get();
   }

@@ -12,7 +12,7 @@ public class CalendarDays {
 
   public static int countWeekdaysBetween(LocalDate startDate, LocalDate endDate) {
     if (endDate.isBefore(startDate)) {
-      throw new IllegalArgumentException(Strings.format("Dates are reversed: %s -> %s", startDate, endDate));
+      throw new IllegalArgumentException(smartFormat("Dates are reversed: %s -> %s", startDate, endDate));
     }
     // This could be more efficient but whatever
     int numWeekdays = 0;

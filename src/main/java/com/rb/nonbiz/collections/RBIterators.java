@@ -231,7 +231,7 @@ public class RBIterators {
         } else if (numHasNext == 3) {
           return true;
         }
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "The 3 iterators are of unequal sizes; %s of 3 have hasNext() be true. Should be all or none",
             numHasNext));
       }
@@ -264,7 +264,7 @@ public class RBIterators {
         } else if (numHasNext == 4) {
           return true;
         }
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "The 4 iterators are of unequal sizes; %s of 4 have hasNext() be true. Should be all or none",
             numHasNext));
       }
@@ -298,7 +298,7 @@ public class RBIterators {
         } else if (numHasNext == 5) {
           return true;
         }
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "The 5 iterators are of unequal sizes; %s of 5 have hasNext() be true. Should be all or none",
             numHasNext));
       }
@@ -334,7 +334,7 @@ public class RBIterators {
         } else if (numHasNext == 6) {
           return true;
         }
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "The 6 iterators are of unequal sizes; %s of 6 have hasNext() be true. Should be all or none",
             numHasNext));
       }
@@ -364,7 +364,7 @@ public class RBIterators {
         } else if (numHasNext == allIterators.size()) {
           return true;
         }
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Iterators are of unequal sizes; %s of %s have hasNext() be true. Should be all or neither",
             numHasNext, allIterators.size()));
       }

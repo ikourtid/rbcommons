@@ -54,7 +54,7 @@ public class BinarySearch {
       boolean isBetweenLowerAndUpperInclusive = nonDecreasingPerComparator(
           comparatorForY, lowerBoundY, midpointY, upperBoundY);
       if (!isBetweenLowerAndUpperInclusive) {
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Using midpoint of %s (between %s and %s ) we got value %s which is not between %s and %s , inclusive",
             midpointX, lowerBoundX, upperBoundX, midpointY, lowerBoundY, upperBoundY));
       }
@@ -81,7 +81,7 @@ public class BinarySearch {
             .build();
       }
     }
-    throw new IllegalArgumentException(Strings.format(
+    throw new IllegalArgumentException(smartFormat(
         "Binary search could not finish, even within %s iterations; lowerX %s ; upperX %s ; lowerY %s ; upper Y%s",
         maxIterations,
         lowerBoundX, upperBoundX,

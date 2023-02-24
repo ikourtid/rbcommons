@@ -143,7 +143,7 @@ public class RBMap<K, V> {
     }
     V valueOrNull = rawMap.get(key);
     if (valueOrNull == null) {
-      throw new IllegalArgumentException(Strings.format("%s : %s map keys are: %s",
+      throw new IllegalArgumentException(smartFormat("%s : %s map keys are: %s",
           Strings.format(template, args), rawMap.size(), rawMap.keySet()));
     }
     return valueOrNull;
@@ -165,7 +165,7 @@ public class RBMap<K, V> {
       throw new IllegalArgumentException("An RBMap does not allow null keys");
     }
     if (!rawMap.containsKey(key)) {
-      throw new IllegalArgumentException(Strings.format("%s : %s map keys do not contain %s ; keys are %s",
+      throw new IllegalArgumentException(smartFormat("%s : %s map keys do not contain %s ; keys are %s",
           Strings.format(template, args), rawMap.size(), key, rawMap.keySet()));
     }
     return rawMap.get(key);

@@ -76,7 +76,7 @@ public class LambdaSwitchCase<T, V> {
         }
       }
 
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Unknown case of expected= %s , actual= %s", expected, actual));
     });
   }

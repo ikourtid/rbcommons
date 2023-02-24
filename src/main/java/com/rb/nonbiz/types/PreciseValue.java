@@ -171,7 +171,7 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
    */
   public <S extends T> boolean almostEquals(S other, Epsilon epsilon) {
     if (other == null) {
-      throw new IllegalArgumentException(Strings.format("almostEquals(%s, %s) cannot have a null 'other' argument", other, epsilon));
+      throw new IllegalArgumentException(smartFormat("almostEquals(%s, %s) cannot have a null 'other' argument", other, epsilon));
     }
     if (this == other) return true;
 

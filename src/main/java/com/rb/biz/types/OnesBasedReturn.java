@@ -48,12 +48,12 @@ public class OnesBasedReturn extends PreciseValue<OnesBasedReturn> {
    */
   public static OnesBasedReturn onesBasedReturn(BigDecimal onesBasedReturn) {
     if (onesBasedReturn.compareTo(MIN_ALLOWABLE_RETURN_BIGDECIMAL) < 0) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "OnesBasedReturn= %s < %s (safest min return allowed)",
           onesBasedReturn, MIN_ALLOWABLE_RETURN_BIGDECIMAL));
     }
     if (onesBasedReturn.compareTo(MAX_ALLOWABLE_RETURN_BIGDECIMAL) > 0) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "OnesBasedReturn= %s > %s (safest max return allowed)",
           onesBasedReturn, MAX_ALLOWABLE_RETURN_BIGDECIMAL));
     }

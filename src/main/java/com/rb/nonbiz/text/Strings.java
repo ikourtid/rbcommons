@@ -552,7 +552,7 @@ public class Strings {
           break;
 
         default:
-          throw new IllegalArgumentException(Strings.format("Cannot handle lower bound type %s", range.lowerBoundType()));
+          throw new IllegalArgumentException(smartFormat("Cannot handle lower bound type %s", range.lowerBoundType()));
       }
       sb.append(boundToString.apply(range.lowerEndpoint()));
     }
@@ -571,7 +571,7 @@ public class Strings {
           break;
 
         default:
-          throw new IllegalArgumentException(Strings.format("Cannot handle upper bound type %s", range.upperBoundType()));
+          throw new IllegalArgumentException(smartFormat("Cannot handle upper bound type %s", range.upperBoundType()));
       }
     }
     return sb.toString();

@@ -105,7 +105,7 @@ public class ClosedUnitFractionHardAndSoftRange {
     } else if (pointToInclude.isLessThan(softRange.lowerEndpoint())) {
       return closedUnitFractionRange(pointToInclude, softRange.upperEndpoint());
     }
-    throw new IllegalArgumentException(Strings.format(
+    throw new IllegalArgumentException(smartFormat(
         "Internal error: we should never be here per the constructor preconditions: pointToInclude= %s ; CUFHASR= %s",
         pointToInclude, this));
   }

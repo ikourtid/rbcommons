@@ -33,13 +33,13 @@ public class CsvLineSplitter {
       boolean isLast = fieldNum == (numFields - 1);
       if (isLast) {
         if (nextSeparatorIndex >= 0) {
-          throw new IllegalArgumentException(Strings.format("Too many fields (over %s ) in line %s",
+          throw new IllegalArgumentException(smartFormat("Too many fields (over %s ) in line %s",
               numFields, line));
         }
         end = line.length();
       } else {
         if (nextSeparatorIndex < 0) {
-          throw new IllegalArgumentException(Strings.format("Too few fields ( %s instead of %s ) in line %s",
+          throw new IllegalArgumentException(smartFormat("Too few fields ( %s instead of %s ) in line %s",
               fieldNum, numFields, line));
         }
         end = nextSeparatorIndex;

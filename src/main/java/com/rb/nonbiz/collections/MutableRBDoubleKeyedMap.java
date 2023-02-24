@@ -151,7 +151,7 @@ public class MutableRBDoubleKeyedMap<V> {
 
     switch (behaviorWhenTwoDoubleKeysAreClose) {
       case THROW_EXCEPTION:
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Lookup key %s is within epsilon %s of consecutive keys %s and %s ; throwing exception, as requested",
             key, floorEntryWithinEpsilon.getKey(), ceilingEntryWithinEpsilon.getKey()));
 
@@ -174,7 +174,7 @@ public class MutableRBDoubleKeyedMap<V> {
             : floorEntryWithinEpsilon.getValue();
 
       default:
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Internal error: not handled: %s", behaviorWhenTwoDoubleKeysAreClose));
     }
   }

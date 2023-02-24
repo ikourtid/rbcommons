@@ -46,7 +46,7 @@ public class MutableIndexableBitSet2D<R, C> {
     int rowIndex = rowMapping.getIndexOrThrow(rowKey);
     int columnIndex = columnMapping.getIndexOrThrow(columnKey);
     if (rawBitSet.get(rowIndex, columnIndex)) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "You are trying to turn off the bit for ( %s , %s ) aka ( %s , %s ) but it's already on",
           rowKey, columnKey, rowIndex, columnIndex));
     }

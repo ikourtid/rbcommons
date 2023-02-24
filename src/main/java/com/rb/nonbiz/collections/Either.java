@@ -75,7 +75,7 @@ public class Either<L, R> {
           item1.right, item2.left);
       return bothVisitor.visitRights(item1.right.get(), item2.right.get());
     }
-    throw new IllegalArgumentException(Strings.format(
+    throw new IllegalArgumentException(smartFormat(
         "Internal error; should not get here; item1= %s ; item2= %s",
         item1, item2));
   }

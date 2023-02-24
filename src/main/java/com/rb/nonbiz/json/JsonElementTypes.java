@@ -31,7 +31,7 @@ public class JsonElementTypes {
       if (jsonPrimitive.isString()) {
         return JSON_STRING;
       }
-      throw new IllegalArgumentException(Strings.format("Unknown JsonElement primitive type: %s", jsonElement));
+      throw new IllegalArgumentException(smartFormat("Unknown JsonElement primitive type: %s", jsonElement));
     }
     if (jsonElement.isJsonObject()) {
       return JSON_OBJECT;
@@ -39,7 +39,7 @@ public class JsonElementTypes {
     if (jsonElement.isJsonArray()) {
       return JSON_ARRAY;
     }
-    throw new IllegalArgumentException(Strings.format("Unknown JsonElement non-primitive type: %s", jsonElement));
+    throw new IllegalArgumentException(smartFormat("Unknown JsonElement non-primitive type: %s", jsonElement));
   }
 
 }

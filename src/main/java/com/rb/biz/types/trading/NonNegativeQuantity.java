@@ -36,7 +36,7 @@ public class NonNegativeQuantity extends SignedQuantity {
       return ZERO_NON_NEGATIVE_QUANTITY;
     }
     if (quantity.signum() == -1) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Attempt to construct a NonNegativeQuantity with %s < 0", quantity));
     }
     return new NonNegativeQuantity(quantity);

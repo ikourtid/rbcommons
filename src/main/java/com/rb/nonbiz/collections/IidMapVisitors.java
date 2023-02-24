@@ -137,13 +137,13 @@ public class IidMapVisitors {
       if (maybeRightValue.isPresent()) {
         triConsumer.accept(leftKey, leftValue, maybeRightValue.get());
       } else {
-        throw new IllegalArgumentException(Strings.format("%s appears in left map only: %s vs %s",
+        throw new IllegalArgumentException(smartFormat("%s appears in left map only: %s vs %s",
             leftKey, leftMap, rightMap));
       }
     });
     rightMap.forEachEntry( (rightKey, rightValue) -> {
       if (!leftMap.containsKey(rightKey)) {
-        throw new IllegalArgumentException(Strings.format("%s appears in right map only: %s vs %s",
+        throw new IllegalArgumentException(smartFormat("%s appears in right map only: %s vs %s",
             rightKey, leftMap, rightMap));
       }
     });

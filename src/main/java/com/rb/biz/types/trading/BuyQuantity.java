@@ -31,7 +31,7 @@ public class BuyQuantity extends PositiveQuantity {
 
   public static BuyQuantity buyQuantity(BigDecimal quantity) {
     if (quantity.signum() < 1) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Attempt to construct a BuyQuantity with quantity %s <= 0", quantity));
     }
     return new BuyQuantity(quantity);
