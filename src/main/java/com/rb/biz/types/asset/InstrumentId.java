@@ -11,6 +11,7 @@ import java.util.List;
 
 import static com.rb.biz.types.asset.CashId.CASH_ID;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.emptyList;
 
 /**
@@ -68,11 +69,11 @@ public class InstrumentId extends AssetId {
 
   private static InstrumentId instrumentIdAlwaysConstructed(long rawId) {
     if (rawId == CASH_ID) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "ID %s cannot be used as an instrument ID; it is reserved to mean cash", rawId));
     }
     if (rawId < 0) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Instrument ID %s cannot be negative", rawId));
     }
     return new InstrumentId(rawId);

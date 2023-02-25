@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.OptionalInt;
 
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -89,7 +90,7 @@ public class RBListWithSpecialValue<T> {
         if (rest[i] == null) {
           int index = i + 1;
           indexOfSpecialValue.ifPresent( v -> {
-                throw new IllegalArgumentException(Strings.format(
+                throw new IllegalArgumentException(smartFormat(
                     "We have multiple 'null' markers, in locations %s and %s", v, index));
               });
           indexOfSpecialValue = OptionalInt.of(index);

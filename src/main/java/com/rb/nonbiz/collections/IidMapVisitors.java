@@ -5,12 +5,12 @@ import com.rb.nonbiz.collections.RBMapVisitors.PairOfRBSetAndRBMapVisitor;
 import com.rb.nonbiz.collections.RBMapVisitors.TwoRBMapsVisitor;
 import com.rb.nonbiz.functional.QuadriConsumer;
 import com.rb.nonbiz.functional.TriConsumer;
-import com.rb.nonbiz.text.Strings;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static com.rb.nonbiz.collections.IidSetOperations.unionOfIidSets;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 public class IidMapVisitors {
 
@@ -137,13 +137,13 @@ public class IidMapVisitors {
       if (maybeRightValue.isPresent()) {
         triConsumer.accept(leftKey, leftValue, maybeRightValue.get());
       } else {
-        throw new IllegalArgumentException(Strings.format("%s appears in left map only: %s vs %s",
+        throw new IllegalArgumentException(smartFormat("%s appears in left map only: %s vs %s",
             leftKey, leftMap, rightMap));
       }
     });
     rightMap.forEachEntry( (rightKey, rightValue) -> {
       if (!leftMap.containsKey(rightKey)) {
-        throw new IllegalArgumentException(Strings.format("%s appears in right map only: %s vs %s",
+        throw new IllegalArgumentException(smartFormat("%s appears in right map only: %s vs %s",
             rightKey, leftMap, rightMap));
       }
     });

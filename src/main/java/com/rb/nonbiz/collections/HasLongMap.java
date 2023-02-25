@@ -1,7 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.HasLongRepresentation;
 import gnu.trove.iterator.TLongIterator;
 import gnu.trove.iterator.TLongObjectIterator;
@@ -14,6 +13,8 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.LongStream;
+
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * This is a special implementation of an RBMap (SORT OF) for the cases where the key class
@@ -120,7 +121,7 @@ public abstract class HasLongMap<K extends HasLongRepresentation, V> {
   public V getOrThrow(K key, String template, Object...args) {
     Optional<V> value = getOptional(key);
     if (!value.isPresent()) {
-      throw new IllegalArgumentException(Strings.format(template, args));
+      throw new IllegalArgumentException(smartFormat(template, args));
     }
     return value.get();
   }

@@ -1,9 +1,9 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.text.Strings;
-
 import java.util.Iterator;
 import java.util.Optional;
+
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 public class DoubleArraysAverager {
 
@@ -32,7 +32,7 @@ public class DoubleArraysAverager {
 
   private void addToLeft(double[] left, double[] right) {
     if (left.length != right.length) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Not all arrays to be averaged have the same length - e.g. %s vs %s",
           left.length, right.length));
     }

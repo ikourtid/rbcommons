@@ -1,11 +1,12 @@
 package com.rb.biz.types.trading;
 
 import com.google.common.collect.Iterables;
-import com.rb.nonbiz.text.Strings;
 
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.stream.Stream;
+
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Holds a positive quantity of shares. That is, holds a value x such that {@code x > 0}.
@@ -27,7 +28,7 @@ public class PositiveQuantity extends NonNegativeQuantity {
 
   public static PositiveQuantity positiveQuantity(BigDecimal quantity) {
     if (quantity.signum() < 1) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Attempt to construct a PositiveQuantity with %s <= 0", quantity));
     }
     return new PositiveQuantity(quantity);

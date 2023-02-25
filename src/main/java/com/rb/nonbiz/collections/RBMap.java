@@ -31,6 +31,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Comparator.comparing;
 
 /**
@@ -143,7 +144,7 @@ public class RBMap<K, V> {
     }
     V valueOrNull = rawMap.get(key);
     if (valueOrNull == null) {
-      throw new IllegalArgumentException(Strings.format("%s : %s map keys are: %s",
+      throw new IllegalArgumentException(smartFormat("%s : %s map keys are: %s",
           Strings.format(template, args), rawMap.size(), rawMap.keySet()));
     }
     return valueOrNull;
@@ -165,7 +166,7 @@ public class RBMap<K, V> {
       throw new IllegalArgumentException("An RBMap does not allow null keys");
     }
     if (!rawMap.containsKey(key)) {
-      throw new IllegalArgumentException(Strings.format("%s : %s map keys do not contain %s ; keys are %s",
+      throw new IllegalArgumentException(smartFormat("%s : %s map keys do not contain %s ; keys are %s",
           Strings.format(template, args), rawMap.size(), key, rawMap.keySet()));
     }
     return rawMap.get(key);

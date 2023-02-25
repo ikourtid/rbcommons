@@ -12,6 +12,7 @@ import static com.rb.nonbiz.collections.RBSets.noSharedItems;
 import static com.rb.nonbiz.collections.SetInclusionExclusionPredicateEvaluator.SetInclusionExclusionInstructions.BehaviorForRest.EXCLUDE;
 import static com.rb.nonbiz.collections.SetInclusionExclusionPredicateEvaluator.SetInclusionExclusionInstructions.BehaviorForRest.INCLUDE;
 import static com.rb.nonbiz.collections.SetInclusionExclusionPredicateEvaluator.SetInclusionExclusionInstructions.BehaviorForRest.USE_RULES;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Tells us if a specific item should be included or excluded as per the SetInclusionExclusionInstructions.
@@ -41,7 +42,7 @@ public class SetInclusionExclusionPredicateEvaluator {
         return Optional.empty();
       default:
         throw new IllegalArgumentException(
-            Strings.format("enum value %s not handled", instructions.getBehaviorForRest()));
+            smartFormat("enum value %s not handled", instructions.getBehaviorForRest()));
     }
   }
 

@@ -16,6 +16,7 @@ import java.util.Iterator;
 
 import static com.rb.nonbiz.collections.RBIterators.transformToDoubleIterator;
 import static com.rb.nonbiz.math.stats.ZScore.zScore;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 public class RBStats {
 
@@ -92,7 +93,7 @@ public class RBStats {
     // in which case using an epsilon of e.g. 1e-8 will cause us to throw on calculating those z-scores.
     // Therefore, I'll be throwing on 0 (obviously - it's a divide by zero exception) but not on e.g. 1e-8.
     if (stdDev == 0) { // rare double equality, but might as well
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "You are trying to take a z-score for value= %s when the std dev is 0 : %s",
           statisticalSummary, formatStatisticalSummary(statisticalSummary)));
     }

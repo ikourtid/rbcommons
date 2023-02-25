@@ -1,11 +1,10 @@
 package com.rb.biz.types.trading;
 
-import com.rb.nonbiz.text.Strings;
-
 import java.math.BigDecimal;
 import java.util.Iterator;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 
 /**
@@ -31,7 +30,7 @@ public class BuyQuantity extends PositiveQuantity {
 
   public static BuyQuantity buyQuantity(BigDecimal quantity) {
     if (quantity.signum() < 1) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Attempt to construct a BuyQuantity with quantity %s <= 0", quantity));
     }
     return new BuyQuantity(quantity);

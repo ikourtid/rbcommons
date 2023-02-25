@@ -2,7 +2,6 @@ package com.rb.nonbiz.json;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import com.rb.nonbiz.text.Strings;
 
 import static com.rb.nonbiz.json.JsonElementType.JSON_ARRAY;
 import static com.rb.nonbiz.json.JsonElementType.JSON_BOOLEAN;
@@ -10,6 +9,7 @@ import static com.rb.nonbiz.json.JsonElementType.JSON_NULL;
 import static com.rb.nonbiz.json.JsonElementType.JSON_NUMBER;
 import static com.rb.nonbiz.json.JsonElementType.JSON_OBJECT;
 import static com.rb.nonbiz.json.JsonElementType.JSON_STRING;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Methods related to getting the type of a {@link JsonElement}.
@@ -31,7 +31,7 @@ public class JsonElementTypes {
       if (jsonPrimitive.isString()) {
         return JSON_STRING;
       }
-      throw new IllegalArgumentException(Strings.format("Unknown JsonElement primitive type: %s", jsonElement));
+      throw new IllegalArgumentException(smartFormat("Unknown JsonElement primitive type: %s", jsonElement));
     }
     if (jsonElement.isJsonObject()) {
       return JSON_OBJECT;
@@ -39,7 +39,7 @@ public class JsonElementTypes {
     if (jsonElement.isJsonArray()) {
       return JSON_ARRAY;
     }
-    throw new IllegalArgumentException(Strings.format("Unknown JsonElement non-primitive type: %s", jsonElement));
+    throw new IllegalArgumentException(smartFormat("Unknown JsonElement non-primitive type: %s", jsonElement));
   }
 
 }

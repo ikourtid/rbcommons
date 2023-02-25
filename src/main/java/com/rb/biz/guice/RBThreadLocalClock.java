@@ -4,7 +4,6 @@ import com.google.inject.Singleton;
 import com.rb.biz.guice.RBClockModifier.RBClockModifierToken;
 import com.rb.nonbiz.util.RBPreconditions;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

@@ -20,6 +20,7 @@ import static com.rb.biz.types.Price.price;
 import static com.rb.biz.types.SignedMoney.signedMoney;
 import static com.rb.biz.types.trading.BuyQuantity.buyQuantity;
 import static com.rb.biz.types.trading.NonNegativeQuantity.nonNegativeQuantity;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Represents a non-negative dollar amount.
@@ -49,7 +50,7 @@ public class Money extends PreciseValue<Money> {
 
   public static Money money(BigDecimal amount) {
     if (amount.signum() == -1) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Money cannot be negative at %s; use SignedMoney if you want that", amount));
     }
     return new Money(amount);
@@ -61,7 +62,7 @@ public class Money extends PreciseValue<Money> {
     // since they came from a valid SignedMoney.
     // We do check for doubleValue < 0 though, since that's a cheap check .
     if (doubleValue < 0) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Money cannot be negative at %s; use SignedMoney if you want that", amount));
     }
     return new Money(amount, doubleValue);
@@ -237,7 +238,7 @@ public class Money extends PreciseValue<Money> {
 
   public BigDecimal divide(Money denominator) {
     if (denominator.isZero()) {
-      throw new IllegalArgumentException(Strings.format("Cannot divide %s by $0", this));
+      throw new IllegalArgumentException(smartFormat("Cannot divide %s by $0", this));
     }
     return asBigDecimal().divide(denominator.asBigDecimal(), DEFAULT_MATH_CONTEXT);
   }

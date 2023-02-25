@@ -2,7 +2,6 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.SignedFraction;
 import com.rb.nonbiz.types.UnitFraction;
@@ -21,6 +20,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.PreciseValue.sumToBigDecimal;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
@@ -57,7 +57,7 @@ public class SignedPartition<K> {
     BigDecimal sum = sumToBigDecimal(signedFractions.values());
     if (sum.subtract(BigDecimal.ONE).abs(DEFAULT_MATH_CONTEXT).compareTo(BigDecimal.valueOf(1e-8)) > 0) {
       throw new IllegalArgumentException(
-          String.format("Fractions should add to EXACTLY 1 but add to %.30f", sum));
+          smartFormat("Fractions should add to EXACTLY 1 but add to %.30f", sum));
     }
     return new SignedPartition<K>(signedFractions);
   }
@@ -69,7 +69,7 @@ public class SignedPartition<K> {
   public static <K, V extends PreciseValue<V>> SignedPartition<K> signedPartitionFromWeights(RBMap<K, V> weightsMap) {
     BigDecimal sum = sumToBigDecimal(weightsMap.values());
     if (sum.signum() != 1) {
-      throw new IllegalArgumentException(Strings.format("Sum of weights must be >0. Input was %s", weightsMap));
+      throw new IllegalArgumentException(smartFormat("Sum of weights must be >0. Input was %s", weightsMap));
     }
     MutableRBMap<K, SignedFraction> signedFractionsMap = newMutableRBMapWithExpectedSize(weightsMap.size());
     weightsMap.forEachEntry( (key, value) -> {
@@ -105,7 +105,7 @@ public class SignedPartition<K> {
   public SignedFraction getFraction(K key) {
     Optional<SignedFraction> signedFraction = signedFractions.getOptional(key);
     if (!signedFraction.isPresent()) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Key %s is not contained in partition's keys : %s",
           key, Joiner.on(',').join(signedFractions.keySet())));
     }

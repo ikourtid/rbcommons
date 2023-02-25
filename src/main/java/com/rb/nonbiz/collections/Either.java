@@ -7,6 +7,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.Optional;
 
 import static com.rb.nonbiz.collections.RBOptionals.optionalsEqual;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * A mini-collection that represents a pair where either the 'left' or the 'right' object exists,
@@ -75,7 +76,7 @@ public class Either<L, R> {
           item1.right, item2.left);
       return bothVisitor.visitRights(item1.right.get(), item2.right.get());
     }
-    throw new IllegalArgumentException(Strings.format(
+    throw new IllegalArgumentException(smartFormat(
         "Internal error; should not get here; item1= %s ; item2= %s",
         item1, item2));
   }

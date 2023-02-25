@@ -20,6 +20,7 @@ import static com.rb.nonbiz.collections.RBArrays.arrayIterator;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBOptionals.toSpecializedOptionalInt;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.emptyList;
 
 /**
@@ -112,7 +113,7 @@ public class SimpleArrayIndexMapping<T> implements ArrayIndexMapping<T> {
   @Override
   public T getKey(int index) {
     if (index < 0 || index >= objectsInOrder.size()) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Index %s is not valid; should be 0 to %s , inclusive, corresponding to items %s through %s",
           index, objectsInOrder.size() - 1, objectsInOrder.get(0), objectsInOrder.get(objectsInOrder.size() - 1)));
     }

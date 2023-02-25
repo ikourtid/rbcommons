@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.rb.nonbiz.functional.QuadriFunction;
 import com.rb.nonbiz.functional.TriFunction;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
@@ -29,6 +28,7 @@ import static com.rb.nonbiz.collections.RBMaps.getWhenUpToOneRBMapIsNonEmpty;
 import static com.rb.nonbiz.collections.RBOptionals.filterPresentOptionalsInStream;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 public class RBMapMergers {
@@ -40,7 +40,7 @@ public class RBMapMergers {
    */
   public static <K, L, R> RBMap<K, Either<L, R>> mergeIntoEithersMap(RBMap<K, L> leftMap, RBMap<K, R> rightMap) {
     if (!RBSets.noSharedItems(leftMap.keySet(), rightMap.keySet())) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Shared keys exist between maps to be merged: %s and %s",
           leftMap, rightMap));
     }

@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 
 import static com.google.common.collect.Maps.newTreeMap;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * A map from a double to a value.
@@ -151,7 +152,7 @@ public class MutableRBDoubleKeyedMap<V> {
 
     switch (behaviorWhenTwoDoubleKeysAreClose) {
       case THROW_EXCEPTION:
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Lookup key %s is within epsilon %s of consecutive keys %s and %s ; throwing exception, as requested",
             key, floorEntryWithinEpsilon.getKey(), ceilingEntryWithinEpsilon.getKey()));
 
@@ -174,7 +175,7 @@ public class MutableRBDoubleKeyedMap<V> {
             : floorEntryWithinEpsilon.getValue();
 
       default:
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Internal error: not handled: %s", behaviorWhenTwoDoubleKeysAreClose));
     }
   }

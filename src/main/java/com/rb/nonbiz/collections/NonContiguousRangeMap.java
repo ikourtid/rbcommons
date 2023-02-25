@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import static com.rb.nonbiz.collections.RBRanges.rangeIsAtLeast;
 import static com.rb.nonbiz.collections.RBRanges.rangeIsClosed;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.singletonList;
 
 /**
@@ -128,7 +129,7 @@ public class NonContiguousRangeMap<K extends Comparable<? super K>, V> {
   public V getOrThrow(K key) {
     Optional<V> value = getOptional(key);
     if (!value.isPresent()) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Cannot find a value for key %s ; it is outside the range"));    }
     return value.get();
   }

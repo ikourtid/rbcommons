@@ -1,6 +1,5 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.SignedFraction;
 import com.rb.nonbiz.types.UnitFraction;
@@ -12,6 +11,7 @@ import static com.rb.nonbiz.collections.NonZeroDeviations.nonZeroDeviations;
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBMapMergers.mergeRBMapsByValue;
 import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 public class Partitions {
@@ -23,7 +23,7 @@ public class Partitions {
   public static <K> Partition<K> partitionFromApproximateFractions(RBMap<K, UnitFraction> approximatePartition, Epsilon epsilon) {
     BigDecimal sumOfFractions = sumAsBigDecimals(approximatePartition.values());
     if (!epsilon.valuesAreWithin(sumOfFractions.doubleValue(), 1)) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Fractions add up to %s which is too far from 1 within an epsilon of %s : %s",
           sumOfFractions, epsilon, approximatePartition));
     }

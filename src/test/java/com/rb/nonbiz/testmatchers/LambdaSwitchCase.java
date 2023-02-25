@@ -1,7 +1,6 @@
 package com.rb.nonbiz.testmatchers;
 
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
-import com.rb.nonbiz.text.Strings;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.function.Predicate;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * This is useful for matching objects that can belong to more than one type.
@@ -76,7 +76,7 @@ public class LambdaSwitchCase<T, V> {
         }
       }
 
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Unknown case of expected= %s , actual= %s", expected, actual));
     });
   }

@@ -11,6 +11,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.List;
 import java.util.Optional;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.singletonList;
 
 /**
@@ -129,7 +130,7 @@ public class ContiguousNonDiscreteRangeMap<K extends Comparable<? super K>, V> {
   public V getOrThrow(K key) {
     Optional<V> value = getOptional(key);
     if (!value.isPresent()) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Cannot find a value for key %s ; it is outside the range", key));
     }
     return value.get();

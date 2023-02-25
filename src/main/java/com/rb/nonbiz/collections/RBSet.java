@@ -19,7 +19,6 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
-import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormatCollection;
 import static com.rb.nonbiz.text.Strings.sizePrefix;
 

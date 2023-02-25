@@ -4,7 +4,6 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.Iterators;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.nonbiz.text.PrintsInstruments;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.time.LocalDate;
@@ -27,6 +26,7 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.singletonList;
 
 /**
@@ -38,21 +38,21 @@ public class RBOptionals {
     if (optional.isPresent()) {
       return optional.get();
     }
-    throw new IllegalArgumentException(Strings.format(template, args));
+    throw new IllegalArgumentException(smartFormat(template, args));
   }
 
   public static int getIntOrThrow(OptionalInt optional, String template, Object... args) {
     if (optional.isPresent()) {
       return optional.getAsInt();
     }
-    throw new IllegalArgumentException(Strings.format(template, args));
+    throw new IllegalArgumentException(smartFormat(template, args));
   }
 
   public static double getDoubleOrThrow(OptionalDouble optional, String template, Object... args) {
     if (optional.isPresent()) {
       return optional.getAsDouble();
     }
-    throw new IllegalArgumentException(Strings.format(template, args));
+    throw new IllegalArgumentException(smartFormat(template, args));
   }
 
   /**

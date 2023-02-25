@@ -30,6 +30,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.rb.biz.marketdata.instrumentmaster.InstrumentMasters.displaySymbol;
 import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_INSTRUMENT_MASTER;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.lang.Character.isAlphabetic;
 import static java.lang.Character.isUpperCase;
 import static java.util.Comparator.comparing;
@@ -552,7 +553,7 @@ public class Strings {
           break;
 
         default:
-          throw new IllegalArgumentException(Strings.format("Cannot handle lower bound type %s", range.lowerBoundType()));
+          throw new IllegalArgumentException(smartFormat("Cannot handle lower bound type %s", range.lowerBoundType()));
       }
       sb.append(boundToString.apply(range.lowerEndpoint()));
     }
@@ -571,7 +572,7 @@ public class Strings {
           break;
 
         default:
-          throw new IllegalArgumentException(Strings.format("Cannot handle upper bound type %s", range.upperBoundType()));
+          throw new IllegalArgumentException(smartFormat("Cannot handle upper bound type %s", range.upperBoundType()));
       }
     }
     return sb.toString();

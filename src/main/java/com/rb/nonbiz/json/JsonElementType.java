@@ -1,6 +1,6 @@
 package com.rb.nonbiz.json;
 
-import com.rb.nonbiz.text.Strings;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Different types that a JsonElement could be.
@@ -35,7 +35,7 @@ public enum JsonElementType {
       case JSON_STRING:  return visitor.visitJsonString();
       case JSON_OBJECT:  return visitor.visitJsonObject();
       default:
-        throw new IllegalArgumentException(Strings.format("Unsupported type %s", this));
+        throw new IllegalArgumentException(smartFormat("Unsupported type %s", this));
     }
   }
 

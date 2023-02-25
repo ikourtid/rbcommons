@@ -2,13 +2,13 @@ package com.rb.biz.types.trading;
 
 import com.rb.biz.types.Money;
 import com.rb.biz.types.Price;
-import com.rb.nonbiz.text.Strings;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
 import static com.rb.biz.types.Money.money;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Holds a non-negative quantity. That is, holds a value x such that {@code x >= 0}.
@@ -36,7 +36,7 @@ public class NonNegativeQuantity extends SignedQuantity {
       return ZERO_NON_NEGATIVE_QUANTITY;
     }
     if (quantity.signum() == -1) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Attempt to construct a NonNegativeQuantity with %s < 0", quantity));
     }
     return new NonNegativeQuantity(quantity);

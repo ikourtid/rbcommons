@@ -18,7 +18,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.google.common.primitives.Ints.checkedCast;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional2;
 import static com.rb.nonbiz.collections.RBOptionals.toSpecializedOptionalDouble;
 import static com.rb.nonbiz.date.RBDates.dateFromYyyyMmDd;
