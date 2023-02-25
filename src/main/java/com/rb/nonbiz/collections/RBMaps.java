@@ -163,9 +163,18 @@ public class RBMaps {
   }
 
   public static <K, V> RBMap<K, V> filterPresentOptionalsInRBMapCopy(RBMap<K, Optional<V>> originalMap) {
-    return originalMap
-        .filterValues(v -> v.isPresent())
-        .transformValuesCopy(v -> v.get());
+    /* We could have done the following as well, but no need to create two intermediate maps:
+        return originalMap
+            .filterValues(v -> v.isPresent())
+            .transformValuesCopy(v -> v.get());
+     */
+    // original size is a hint. Using an upper bound here to avoid the cost of counting the non-empty optionals,
+    // at the expense of memory.
+    MutableRBMap<K, V> mutableMap = newMutableRBMapWithExpectedSize(originalMap.size());
+    originalMap.forEachEntry( (key, optionalValue) ->
+        optionalValue.ifPresent(v ->
+        mutableMap.putAssumingAbsent(key, v)));
+    return newRBMap(mutableMap);
   }
 
 }
