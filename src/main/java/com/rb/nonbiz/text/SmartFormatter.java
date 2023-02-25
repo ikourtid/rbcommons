@@ -46,4 +46,10 @@ public class SmartFormatter {
         .iterator()) + ']';
   }
 
+  public static void resetSmartFormatter() {
+    if (smartFormatterHelper != null) {
+
+    }
+  }
+
 }
