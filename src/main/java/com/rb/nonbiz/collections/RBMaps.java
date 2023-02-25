@@ -162,4 +162,10 @@ public class RBMaps {
         });
   }
 
+  public static <K, V> RBMap<K, V> filterPresentOptionalsInRBMapCopy(RBMap<K, Optional<V>> originalMap) {
+    return originalMap
+        .filterValues(v -> v.isPresent())
+        .transformValuesCopy(v -> v.get());
+  }
+
 }
