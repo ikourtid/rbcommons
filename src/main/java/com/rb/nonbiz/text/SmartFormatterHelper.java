@@ -1,5 +1,6 @@
 package com.rb.nonbiz.text;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.rb.biz.guice.RBClock;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
@@ -54,6 +55,10 @@ public class SmartFormatterHelper {
   // an infinite recursion.
   private final int MAX_STACK_DEPTH = 10;
 
+  /**
+   * This is useful in situations where the same thread can throw exceptions but not terminate, such as when
+   * we process JSON API requests in the JSON API site. We need to call this before every optimization request.
+   */
   void reset() {
     lock.lock();
     try {
@@ -91,6 +96,13 @@ public class SmartFormatterHelper {
     } finally {
       lock.unlock();
     }
+  }
+
+  // As the name makes it amply clear, do not use this in prod code. Unfortunately there's no better way to test
+  // the 'stack overflow prevention' logic.
+  @VisibleForTesting
+  long unsafeTestOnlyGetStackDepth() {
+    return stackDepthByThread.get().get();
   }
 
   private String formatHelper(boolean prependDate, String template, Object ... args) {

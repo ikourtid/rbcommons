@@ -13,6 +13,8 @@ import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SmartFormatterHelperTest extends RBTest<SmartFormatterHelper> {
 
@@ -63,6 +65,48 @@ public class SmartFormatterHelperTest extends RBTest<SmartFormatterHelper> {
               smartFormatterHelper.formatSingleObject(I_11),
               stringMatcher("iid 11"));
         });
+  }
+
+  @Test
+  public void testStackOverflowPreventionMechanism() {
+    SmartFormatterHelper smartFormatterHelper = makeTestObject();
+    assertEquals(0, smartFormatterHelper.unsafeTestOnlyGetStackDepth());
+
+    // These should increment and then decrement this 'stack depth' counter, all inside this call:
+    assertThat(
+        smartFormatterHelper.formatWithDatePrepended("Message with %s and %s", I_11, I_22),
+        stringMatcher("1974-04-04 Message with I.11 (iid 11 ) and I.22 (iid 22 )"));
+    assertEquals(0, smartFormatterHelper.unsafeTestOnlyGetStackDepth());
+
+    assertThat(
+        smartFormatterHelper.format("Message with %s and %s", I_11, I_22),
+        stringMatcher("Message with I.11 (iid 11 ) and I.22 (iid 22 )"));
+    assertEquals(0, smartFormatterHelper.unsafeTestOnlyGetStackDepth());
+
+    assertThat(
+        smartFormatterHelper.formatSingleObject(I_11),
+        stringMatcher("I.11 (iid 11 )"));
+    assertEquals(0, smartFormatterHelper.unsafeTestOnlyGetStackDepth());
+
+
+    boolean threwException = false;
+    try {
+      smartFormatterHelper.formatSingleObject(
+          (PrintsInstruments) (instrumentMaster, date) ->
+              // 33 is not in the InstrumentMaster, so this will throw an exception, and the creation of the exception
+              // text will itself will call smartFormatter.
+              smartFormatterHelper.formatSingleObject(instrumentId(33)));
+    } catch (Exception intentionallyIgnored) {
+      // do nothing here
+      threwException = true;
+    }
+    assertTrue(threwException);
+    // So the exception above will leave this counter in a non-zero state...
+    assertEquals(2, smartFormatterHelper.unsafeTestOnlyGetStackDepth());
+
+    // ... but then, if we reset it, it will go back to zero.
+    smartFormatterHelper.reset();
+    assertEquals(0, smartFormatterHelper.unsafeTestOnlyGetStackDepth());
   }
 
   @Override

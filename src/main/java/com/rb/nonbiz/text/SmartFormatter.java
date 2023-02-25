@@ -48,7 +48,7 @@ public class SmartFormatter {
 
   public static void resetSmartFormatter() {
     if (smartFormatterHelper != null) {
-
+      smartFormatterHelper.reset();
     }
   }
 
