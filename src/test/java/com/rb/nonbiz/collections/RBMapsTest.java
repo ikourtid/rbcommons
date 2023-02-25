@@ -16,15 +16,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
-import static com.rb.nonbiz.collections.RBMaps.filterForPresentValuesAndTransformValuesCopy;
-import static com.rb.nonbiz.collections.RBMaps.filterMapKeys;
-import static com.rb.nonbiz.collections.RBMaps.getWhenUpToOneRBMapIsNonEmpty;
-import static com.rb.nonbiz.collections.RBMaps.impreciseValueMapsAlmostEqual;
-import static com.rb.nonbiz.collections.RBMaps.lockValues;
-import static com.rb.nonbiz.collections.RBMaps.mapEntrySet;
-import static com.rb.nonbiz.collections.RBMaps.mapEntrySetToDouble;
-import static com.rb.nonbiz.collections.RBMaps.preciseValueMapsAlmostEqual;
-import static com.rb.nonbiz.collections.RBMaps.sharedItemMap;
+import static com.rb.nonbiz.collections.RBMaps.*;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListEqualityMatcher;
@@ -213,9 +205,9 @@ public class RBMapsTest {
     assertFalse(preciseValueMapsAlmostEqual(map1, singletonRBMap("A", money(1.11)), DEFAULT_EPSILON_1e_8));
     assertFalse(preciseValueMapsAlmostEqual(map1, singletonRBMap("B", money(2.22)), DEFAULT_EPSILON_1e_8));
     assertFalse(preciseValueMapsAlmostEqual(map1, rbMapOf(
-        "A", money(1.11),
-        "B", money(2.22),
-        "C", money(3.33)),
+            "A", money(1.11),
+            "B", money(2.22),
+            "C", money(3.33)),
         DEFAULT_EPSILON_1e_8));
 
     // also works on empty maps
@@ -246,9 +238,9 @@ public class RBMapsTest {
     assertFalse(impreciseValueMapsAlmostEqual(map1, singletonRBMap("A", positiveMultiplier(1.11)), DEFAULT_EPSILON_1e_8));
     assertFalse(impreciseValueMapsAlmostEqual(map1, singletonRBMap("B", positiveMultiplier(2.22)), DEFAULT_EPSILON_1e_8));
     assertFalse(impreciseValueMapsAlmostEqual(map1, rbMapOf(
-        "A", positiveMultiplier(1.11),
-        "B", positiveMultiplier(2.22),
-        "C", positiveMultiplier(3.33)),
+            "A", positiveMultiplier(1.11),
+            "B", positiveMultiplier(2.22),
+            "C", positiveMultiplier(3.33)),
         DEFAULT_EPSILON_1e_8));
 
     // also works on empty maps
@@ -268,6 +260,41 @@ public class RBMapsTest {
     RBMap<String, Integer> doesNotThrow = rbMapOf(
         "a", DUMMY_POSITIVE_INTEGER,
         "b", DUMMY_POSITIVE_INTEGER);
+  }
+
+  @Test
+  public void testFilterPresentOptionalsInRBMapCopy() {
+    BiConsumer<RBMap<Integer, Optional<String>>, RBMap<Integer, String>> asserter = (withOptionals, withPresentValues) ->
+        assertThat(
+            filterPresentOptionalsInRBMapCopy(
+                withOptionals),
+            rbMapMatcher(
+                withPresentValues,
+                f -> typeSafeEqualTo(f)));
+
+    asserter.accept(
+        rbMapOf(
+            1, Optional.of("_1"),
+            2, Optional.empty(),
+            3, Optional.of("_3")),
+        rbMapOf(
+            1, "_1",
+            3, "_3"));
+    asserter.accept(
+        rbMapOf(
+            1, Optional.of("_1"),
+            3, Optional.of("_3")),
+        rbMapOf(
+            1, "_1",
+            3, "_3"));
+    asserter.accept(
+        rbMapOf(
+            1, Optional.empty(),
+            2, Optional.empty()),
+        emptyRBMap());
+    asserter.accept(
+        emptyRBMap(),
+        emptyRBMap());
   }
 
 }
