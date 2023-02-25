@@ -22,6 +22,8 @@ public class SmartFormatterHelper {
   @Inject InstrumentMaster instrumentMaster;
   @Inject RBClock rbClock;
 
+  private Long stackDepth = 0L;
+
   String formatWithDatePrepended(String template, Object ... args) {
     return formatHelper(true, template, args);
   }
@@ -30,34 +32,48 @@ public class SmartFormatterHelper {
     return formatHelper(false, template, args);
   }
 
-  String formatSingleObject(Object obj) {
-    if (instrumentMaster == null || rbClock == null) {
-      return obj.toString();
-    }
+  synchronized String formatSingleObject(Object obj) {
+    stackDepth++;
+    try {
+      if (instrumentMaster == null || rbClock == null) {
+        return obj.toString();
+      }
 
-    return PrintsInstruments.class.isAssignableFrom(obj.getClass())
-        ? ((PrintsInstruments) obj).toString(instrumentMaster, rbClock.today())
-        : obj.toString();
+      return PrintsInstruments.class.isAssignableFrom(obj.getClass()) && stackDepth < 10
+          ? ((PrintsInstruments) obj).toString(instrumentMaster, rbClock.today())
+          : obj.toString();
+    } finally {
+      stackDepth--;
+    }
   }
 
-  private String formatHelper(boolean prependDate, String template, Object ... args) {
-    StringBuilder sb = new StringBuilder();
-    // We never allow for values to stay null. This is an exception. Otherwise,
-    // every unit test for code that logs would have to set the RBClock, which is a pain,
-    // OR we would have to hook up Guice modules for every RBTest - also a pain, and also would make the tests slower.
-    if (prependDate) {
-      sb.append(rbClock == null ? "0000-00-00 " : Strings.format("%s ", rbClock.today()));
-    }
+  synchronized private String formatHelper(boolean prependDate, String template, Object ... args) {
+    stackDepth++;
+    try {
+      StringBuilder sb = new StringBuilder();
+      // We never allow for values to stay null. This is an exception. Otherwise,
+      // every unit test for code that logs would have to set the RBClock, which is a pain,
+      // OR we would have to hook up Guice modules for every RBTest - also a pain, and also would make the tests slower.
+      if (prependDate) {
+        sb.append(rbClock == null ? "0000-00-00 " : Strings.format("%s ", rbClock.today()));
+      }
 
-    if (instrumentMaster == null || rbClock == null) {
-      sb.append(Strings.format(template, args));
+      if (instrumentMaster == null || rbClock == null) {
+        sb.append(Strings.format(template, args));
+        return sb.toString();
+      }
+
+      if (stackDepth >= 10) {
+        sb.append(Strings.format(template, args));
+      } else {
+        Object[] newArgs = new Object[args.length];
+        Arrays.setAll(newArgs, i -> formatSingleObject(args[i]));
+        sb.append(Strings.format(template, newArgs));
+      }
       return sb.toString();
+    } finally {
+      stackDepth--;
     }
-
-    Object[] newArgs = new Object[args.length];
-    Arrays.setAll(newArgs, i -> formatSingleObject(args[i]));
-    sb.append(Strings.format(template, newArgs));
-    return sb.toString();
   }
 
 }
