@@ -8,6 +8,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.List;
 
 import static com.rb.nonbiz.collections.LinearCombination.trivialLinearCombinationOfOneItem;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.WeightedByUnitFraction.weightedByUnitFraction;
 
@@ -37,7 +38,7 @@ public class NodeWithWeightedChildren<N, L> {
     }
     if (Math.abs(sum - 1) > 1e-8) {
       throw new IllegalArgumentException(
-          String.format("Weights should add to EXACTLY 1 but add to %.30f", sum));
+          smartFormat("Weights should add to EXACTLY 1 but add to %.30f", sum));
     }
     return new NodeWithWeightedChildren<>(node, weightedChildren);
   }

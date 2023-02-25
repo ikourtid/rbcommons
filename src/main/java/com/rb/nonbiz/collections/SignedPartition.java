@@ -57,7 +57,7 @@ public class SignedPartition<K> {
     BigDecimal sum = sumToBigDecimal(signedFractions.values());
     if (sum.subtract(BigDecimal.ONE).abs(DEFAULT_MATH_CONTEXT).compareTo(BigDecimal.valueOf(1e-8)) > 0) {
       throw new IllegalArgumentException(
-          String.format("Fractions should add to EXACTLY 1 but add to %.30f", sum));
+          smartFormat("Fractions should add to EXACTLY 1 but add to %.30f", sum));
     }
     return new SignedPartition<K>(signedFractions);
   }

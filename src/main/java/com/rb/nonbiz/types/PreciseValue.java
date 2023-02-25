@@ -172,7 +172,8 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
    */
   public <S extends T> boolean almostEquals(S other, Epsilon epsilon) {
     if (other == null) {
-      throw new IllegalArgumentException(smartFormat("almostEquals(%s, %s) cannot have a null 'other' argument", other, epsilon));
+      throw new IllegalArgumentException(
+          smartFormat("almostEquals(%s, %s) cannot have a null 'other' argument", other, epsilon));
     }
     if (this == other) return true;
 
@@ -186,7 +187,7 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
   public static boolean bigDecimalsAlmostEqual(BigDecimal bd1, BigDecimal bd2, Epsilon epsilon) {
     if (bd1 == null || bd2 == null) {
       throw new IllegalArgumentException(
-          Strings.format("bigDecimalsAlmostEqual(%s, %s, %s) cannot have a null argument", bd1, bd2, epsilon));
+          smartFormat("bigDecimalsAlmostEqual(%s, %s, %s) cannot have a null argument", bd1, bd2, epsilon));
     }
 
     if (bd1.equals(bd2)) {
