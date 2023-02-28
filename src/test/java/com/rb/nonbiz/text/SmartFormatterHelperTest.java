@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 
+import static com.rb.biz.guice.RBSimpleTestClock.rbSimpleTestClock;
 import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.hardCodedInstrumentMaster;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
@@ -24,7 +25,7 @@ public class SmartFormatterHelperTest extends RBTest<SmartFormatterHelper> {
   private final HardCodedInstrumentMaster INSTRUMENT_MASTER = hardCodedInstrumentMaster(
       I_11, "I.11",
       I_22, "I.22");
-  private final RBSimpleTestClock RB_CLOCK = new RBSimpleTestClock(LocalDateTime.of(1974, 4, 4, 4, 4, 4));
+  private final RBSimpleTestClock RB_CLOCK = rbSimpleTestClock(LocalDateTime.of(1974, 4, 4, 4, 4, 4));
 
   @Test
   public void automaticallyConvertsSimpleInstruments_hasMessage() {

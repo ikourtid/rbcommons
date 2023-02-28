@@ -37,23 +37,22 @@ public class SmartFormatterHelper {
    * depth by passing around a parameter, because the new calls to {@link SmartFormatter} will be made from other
    * places in the code, which won't know that we're already called {@link SmartFormatter}.
    *
-   * The {@link ThreadLocal} is necessary to avoid that we don't have cross-contamination across threads. Note that the
+   * <p> The {@link ThreadLocal} is necessary to avoid that we don't have cross-contamination across threads. Note that the
    * methods that use stackDepthByThread will first increment it, and only decrement it after the string to be returned
    * has been generated, which means that no more exceptions (which could cause the {@link StackOverflowError} can
-   * be thrown.
+   * be thrown. </p>
    *
-   * I think this is not perfect, and will result in the value of stackDepthByThread (for this thread) being non-0
+   * <p> I think this is not perfect, and will result in the value of stackDepthByThread (for this thread) being non-0
    * after an exception is thrown. However, we almost always terminate if there is an exception in our code, so this
    * should not be a problem. Worst case, if the count hits the upper limit, then any strings being printed will not
-   * do the automatic conversion of instrument ids to symbols, which is the entire point of {@link SmartFormatter}.
-   *
+   * do the automatic conversion of instrument ids to symbols, which is the entire point of {@link SmartFormatter}. </p>
    */
   private ThreadLocal<LongCounter> stackDepthByThread = ThreadLocal.withInitial( () -> longCounter());
   private final Lock lock = new ReentrantLock();
 
   // The maximum stack depth (only counting calls to SmartFormatter) beyond which we will consider having
   // an infinite recursion.
-  private final int MAX_STACK_DEPTH = 10;
+  private final int MAX_SMART_FORMATTER_STACK_DEPTH = 10;
 
   /**
    * This is useful in situations where the same thread can throw exceptions but not terminate, such as when
@@ -62,7 +61,7 @@ public class SmartFormatterHelper {
   void reset() {
     lock.lock();
     try {
-      stackDepthByThread = ThreadLocal.withInitial(() -> longCounter());
+      stackDepthByThread = ThreadLocal.withInitial( () -> longCounter());
     } finally {
       lock.unlock();
     }
@@ -88,7 +87,7 @@ public class SmartFormatterHelper {
     lock.lock();
     try {
       LongCounter stackDepth = stackDepthByThread.get().increment(); // see definition of stackDepthByThread for more
-      String toReturn = PrintsInstruments.class.isAssignableFrom(obj.getClass()) && stackDepth.get() < MAX_STACK_DEPTH
+      String toReturn = PrintsInstruments.class.isAssignableFrom(obj.getClass()) && stackDepth.get() < MAX_SMART_FORMATTER_STACK_DEPTH
           ? ((PrintsInstruments) obj).toString(instrumentMaster, rbClock.today())
           : obj.toString();
       stackDepth.decrement();
@@ -123,7 +122,7 @@ public class SmartFormatterHelper {
     try {
       LongCounter stackDepth = stackDepthByThread.get().increment(); // see definition of stackDepthByThread for more
 
-      if (stackDepth.get() < MAX_STACK_DEPTH) {
+      if (stackDepth.get() < MAX_SMART_FORMATTER_STACK_DEPTH) {
         Object[] newArgs = new Object[args.length];
         Arrays.setAll(newArgs, i -> formatSingleObject(args[i]));
         sb.append(Strings.format(template, newArgs));

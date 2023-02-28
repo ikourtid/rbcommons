@@ -22,6 +22,7 @@ public class RBThreadLocalClock implements RBClock {
 
   private static final Map<Long, ThreadLocalClock> clocks = newHashMap();
 
+
   private static class ThreadLocalClock {
 
     private LocalDateTime now;
@@ -31,6 +32,7 @@ public class RBThreadLocalClock implements RBClock {
     }
 
   }
+
 
   synchronized public ThreadLocalClock getClock() {
     long threadId = Thread.currentThread().getId();
