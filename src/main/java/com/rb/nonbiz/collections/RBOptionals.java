@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -44,6 +45,13 @@ public class RBOptionals {
   public static int getIntOrThrow(OptionalInt optional, String template, Object... args) {
     if (optional.isPresent()) {
       return optional.getAsInt();
+    }
+    throw new IllegalArgumentException(smartFormat(template, args));
+  }
+
+  public static long getLongOrThrow(OptionalLong optional, String template, Object... args) {
+    if (optional.isPresent()) {
+      return optional.getAsLong();
     }
     throw new IllegalArgumentException(smartFormat(template, args));
   }

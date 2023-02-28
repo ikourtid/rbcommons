@@ -1,5 +1,7 @@
 package com.rb.biz.guice;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.inject.Guice;
 import com.rb.biz.guice.RBClockModifier.RBClockModifierToken;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -16,12 +18,23 @@ public class RBSimpleTestClock implements RBClock {
 
   private LocalDateTime now;
 
+  /**
+   * Unlike most data classes, RBClock gets injected (Guice), so we have to have a public no-arg constructor.
+   * Other code is discouraged from using this. At any rate, you usually need to specify a starting time,
+   * so this is not very useful. This is marked {@link VisibleForTesting} just so we can flag any prod usages,
+   * but in reality we don't even want any direct usages in tests. It's just here for Guice.
+   */
+  @VisibleForTesting
   public RBSimpleTestClock() {
     this(START_TIME);
   }
 
-  public RBSimpleTestClock(LocalDateTime now) {
+  private RBSimpleTestClock(LocalDateTime now) {
     this.now = now;
+  }
+
+  public static RBSimpleTestClock rbSimpleTestClock(LocalDateTime now) {
+    return new RBSimpleTestClock(now);
   }
 
   @Override

@@ -95,6 +95,16 @@ public class LongCounterTest extends RBTestMatcher<LongCounter> {
     assertThrowsAnyException( () -> longCounter.getAsIntOrThrow());
   }
 
+  @Test
+  public void simpleTestIncrementAndDecrement() {
+    LongCounter longCounter = longCounter(10);
+    assertEquals(10, longCounter.get());
+    longCounter.decrement();
+    assertEquals(9, longCounter.get());
+    longCounter.increment();
+    assertEquals(10, longCounter.get());
+  }
+
   @Override
   public LongCounter makeTrivialObject() {
     return longCounter();

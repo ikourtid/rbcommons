@@ -46,6 +46,10 @@ public class SmartFormatter {
         .iterator()) + ']';
   }
 
+  /**
+   * This is useful in situations where the same thread can throw exceptions but not terminate, such as when
+   * we process JSON API requests in the JSON API site. We need to call this before every optimization request.
+   */
   public static void resetSmartFormatter() {
     if (smartFormatterHelper != null) {
       smartFormatterHelper.reset();
