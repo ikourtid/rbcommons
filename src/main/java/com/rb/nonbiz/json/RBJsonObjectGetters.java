@@ -158,7 +158,7 @@ public class RBJsonObjectGetters {
   /**
    * From 'jsonObject', get the value of 'property' and check that it is a number, and that the number
    * can be cast to an int without changing its value.
-   * If missing or is not a int, throw an exception.
+   * If missing or is not an int, throw an exception.
    * Return as an int.
    */
   public static int getJsonIntOrThrow(
@@ -338,7 +338,7 @@ public class RBJsonObjectGetters {
     JsonElement jsonElement = getJsonElementOrThrow(jsonObject, property);
     RBPreconditions.checkArgument(
         jsonElement.isJsonArray(),
-        "JSON obect property ( %s ) is not a JsonArray: %s",
+        "JSON object property ( %s ) is not a JsonArray: %s",
         property, jsonElement);
     return jsonElement.getAsJsonArray();
   }
@@ -360,7 +360,7 @@ public class RBJsonObjectGetters {
   /**
    * Convenience method for use in extracting a "nested" (inner) jsonObject:
    * Use instead of:
-   * jsonObject.getAsJsonObect(property1).getAsJsonObject(property2).getAsJsonObject(property3)
+   * jsonObject.getAsJsonObject(property1).getAsJsonObject(property2).getAsJsonObject(property3)
    */
   public static JsonObject getNestedJsonObjectOrThrow(
       JsonObject jsonObject,
