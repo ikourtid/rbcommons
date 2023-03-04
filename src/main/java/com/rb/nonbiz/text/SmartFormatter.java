@@ -42,7 +42,9 @@ public class SmartFormatter {
   public static <T> String smartFormatCollection(Collection<T> collection) {
     return '[' + Joiner.on(" , ").join(collection
         .stream()
-        .map(v -> smartFormatterHelper.formatSingleObject(v))
+        .map(v -> smartFormatterHelper == null
+            ? v.toString()
+            : smartFormatterHelper.formatSingleObject(v))
         .iterator()) + ']';
   }
 
