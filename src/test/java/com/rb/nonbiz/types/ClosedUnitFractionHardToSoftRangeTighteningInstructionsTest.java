@@ -32,6 +32,7 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
         closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(1e-7), unitFraction(1e-7));
   }
 
+  @Test
   public void testConstructors() {
     // Zero always throws
     assertIllegalArgumentException( () -> symmetricClosedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_0));
