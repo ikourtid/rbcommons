@@ -35,7 +35,7 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructions {
     RBPreconditions.checkArgument(
         !rawMultiplierForLowerEndPoint.isAlmostZero(DEFAULT_EPSILON_1e_8) &&
             !rawMultiplierForUpperEndPoint.isAlmostZero(DEFAULT_EPSILON_1e_8),
-        "You can't have the a multiplier or zero: lower multiplier %s, upper multiplier %s",
+        "You can't have a multiplier of zero (or almost zero): lower multiplier %s, upper multiplier %s",
         rawMultiplierForLowerEndPoint,
         rawMultiplierForUpperEndPoint);
     return new ClosedUnitFractionHardToSoftRangeTighteningInstructions(
@@ -71,7 +71,7 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructions {
   @Override
   public String toString() {
     return Strings.format(
-        "[CUFHTSRTI lower=%s, upper=%s CUFHTSRTI]",
+        "[CUFHTSRTI lower= %s ; upper= %s CUFHTSRTI]",
         rawMultiplierForLowerEndPoint,
         rawMultiplierForUpperEndPoint);
   }

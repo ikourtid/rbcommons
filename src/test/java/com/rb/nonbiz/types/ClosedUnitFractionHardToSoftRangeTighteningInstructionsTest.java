@@ -32,6 +32,7 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
         closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(1e-7), unitFraction(1e-7));
   }
 
+  @Test
   public void testConstructors() {
     // Zero always throws
     assertIllegalArgumentException( () -> symmetricClosedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_0));
@@ -48,7 +49,7 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
   @Test
   public void testToString() {
     assertEquals(
-        "[CUFHTSRTI lower=40.00 %, upper=60.00 % CUFHTSRTI]",
+        "[CUFHTSRTI lower= 40.00 % ; upper= 60.00 % CUFHTSRTI]",
         closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(0.4), unitFraction(0.6)).toString());
   }
 
