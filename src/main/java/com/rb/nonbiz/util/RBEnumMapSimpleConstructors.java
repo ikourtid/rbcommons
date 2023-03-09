@@ -6,10 +6,6 @@ import java.util.EnumMap;
 
 public class RBEnumMapSimpleConstructors {
 
-  public static <E extends Enum<E>, V> EnumMap<E, V> emptyEnumMap() {
-    return new EnumMap<>(ImmutableMap.<E, V>of());
-  }
-
   public static <E extends Enum<E>, V> EnumMap<E, V> singletonEnumMap(E onlyEnumKey, V onlyValue) {
     return new EnumMap<>(ImmutableMap.of(onlyEnumKey, onlyValue));
   }
