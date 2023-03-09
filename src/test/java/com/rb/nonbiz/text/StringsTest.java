@@ -11,16 +11,27 @@ import org.junit.Test;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
+import static com.rb.biz.marketdata.instrumentmaster.HardCodedAllowingEmptyInstrumentMaster.hardCodedAllowingEmptyInstrumentMaster;
 import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.singletonHardCodedInstrumentMaster;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
+import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromRBMap;
+import static com.rb.nonbiz.collections.IidPartition.iidPartition;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
+import static com.rb.nonbiz.json.JsonElementType.JSON_STRING;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DATE;
 import static com.rb.nonbiz.text.Strings.*;
 import static com.rb.nonbiz.types.PreciseValue.formatWithoutCommas;
+import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.reverseOrder;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -228,6 +239,21 @@ public class StringsTest {
 
     rbSetOf("x", " x", "!x", "xy")
         .forEach(v -> assertTrue("Problem with " + v, lastCharacterIsAlphabetic(v)));
+  }
+
+  @Test
+  public void testFormatEnumMapWhereValuesPrintInstruments() {
+    InstrumentMaster instrumentMaster = hardCodedAllowingEmptyInstrumentMaster(
+        STOCK_A, "STOCK_A",
+        STOCK_B, "STOCK_B");
+    assertThat(
+        // The mapping here, from JsonElementType to partition, isn't useful for practical reasons, but it
+        // serves to test the formatEnumMap... function because partitions print instruments.
+        formatEnumMapWhereValuesPrintInstruments(singletonEnumMap(JSON_STRING, iidPartition(iidMapFromRBMap(rbMapOf(
+            STOCK_A, unitFraction(0.5),
+            STOCK_B, unitFraction(0.5))))), instrumentMaster, DUMMY_DATE),
+        stringMatcher("JSON_STRING = 50 % STOCK_B ; 50 % STOCK_A"));
+
   }
 
 }
