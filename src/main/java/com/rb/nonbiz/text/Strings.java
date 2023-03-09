@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -176,6 +177,19 @@ public class Strings {
         .iterator());
   }
 
+  public static <E extends Enum<E>, V extends PrintsInstruments> String formatEnumMapWhereValuesPrintInstruments(
+      EnumMap<E, V> enumMap, InstrumentMaster instrumentMaster, LocalDate date) {
+    return sizePrefix(enumMap.size()) + Joiner.on(" , ").join(
+        enumMap
+            .entrySet()
+            .stream()
+            .sorted(comparingByKey())
+            .map(entry -> Strings.format("%s = %s",
+                entry.getKey(),
+                entry.getValue().toString(instrumentMaster, date)))
+            .iterator());
+  }
+
   public static <K extends PrintsInstruments, V extends PrintsInstruments>
   String formatMapOfPrintsInstrumentsToPrintsInstruments(
       RBMap<K, V> map, InstrumentMaster instrumentMaster, LocalDate date) {
@@ -286,9 +300,9 @@ public class Strings {
       IidMap<V> map, String joiningString, InstrumentMaster instrumentMaster, LocalDate date, boolean printInstrumentIds) {
     return sizePrefix(map.size()) + Joiner.on(joiningString).join(
         map.toIidSortedTransformedEntriesStream(
-            (instrumentId, value) -> Strings.format("%s = %s",
-                displaySymbol(instrumentId, instrumentMaster, date, printInstrumentIds),
-                value.toString(instrumentMaster, date)))
+                (instrumentId, value) -> Strings.format("%s = %s",
+                    displaySymbol(instrumentId, instrumentMaster, date, printInstrumentIds),
+                    value.toString(instrumentMaster, date)))
             .iterator());
   }
 
@@ -296,10 +310,10 @@ public class Strings {
       IidMap<V> map, Comparator<V> comparator, InstrumentMaster instrumentMaster, LocalDate date, boolean printInstrumentIds) {
     return sizePrefix(map.size()) + Joiner.on(" , ").join(
         map.toSortedTransformedEntriesStream(
-            (instrumentId, value) -> Strings.format("%s = %s",
-                displaySymbol(instrumentId, instrumentMaster, date, printInstrumentIds),
-                value.toString(instrumentMaster, date)),
-            comparator)
+                (instrumentId, value) -> Strings.format("%s = %s",
+                    displaySymbol(instrumentId, instrumentMaster, date, printInstrumentIds),
+                    value.toString(instrumentMaster, date)),
+                comparator)
             .iterator());
   }
 
@@ -346,7 +360,7 @@ public class Strings {
       IidMap<V> map, InstrumentMaster instrumentMaster, LocalDate date) {
     return Joiner.on(" , ").join(
         map.toIidSortedTransformedEntriesStream(
-            (instrumentId, value) -> value.toString(instrumentMaster, date))
+                (instrumentId, value) -> value.toString(instrumentMaster, date))
             .iterator());
   }
 
