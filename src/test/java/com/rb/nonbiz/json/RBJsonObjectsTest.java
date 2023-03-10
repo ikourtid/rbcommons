@@ -13,6 +13,8 @@ import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
+import com.rb.nonbiz.jsonapi.RangeJsonApiConverter;
+import com.rb.nonbiz.testutils.TestEnumXYZ;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.TestHasUniqueId;
@@ -37,7 +39,6 @@ import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
-import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
@@ -59,8 +60,8 @@ import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatche
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
-import static com.rb.nonbiz.testutils.TestEnumXYZ.X;
 import static com.rb.nonbiz.text.RBSetOfHasUniqueId.rbSetOfHasUniqueId;
 import static com.rb.nonbiz.text.RBSetOfHasUniqueIdTest.rbSetOfHasUniqueIdMatcher;
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueId;
@@ -72,6 +73,7 @@ import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
 import static com.rb.nonbiz.util.RBEnumMapsTest.newEnumMap;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -135,12 +137,51 @@ public class RBJsonObjectsTest {
   @Test
   public void testJsonObjectToEnumMap() {
     assertThat(
-        // Create single enumMap to string
-        enumMapToJsonObject(newEnumMap(singletonRBMap(X, "String1")), v -> jsonString(v)),
-        // Match with an object build from scratch.
+        // Create single enumMap to a String.
+        enumMapToJsonObject(singletonEnumMap(TestEnumXYZ.X, "String1"), v -> jsonString(v)),
+        // Match with an object built from scratch.
         jsonObjectEpsilonMatcher(
             rbJsonObjectBuilder()
-                .setJsonElement(X.toUniqueStableString(), jsonString("String1"))
+                .setJsonElement(TestEnumXYZ.X.toUniqueStableString(), jsonString("String1"))
+                .build()));
+
+    assertThat(
+        // Create enumMap with 3 elements, each to a String.
+        enumMapToJsonObject(
+            newEnumMap(rbMapOf(
+                TestEnumXYZ.X, "String1",
+                TestEnumXYZ.Z, "String3")),
+            v -> jsonString(v)),
+        // Match with an object built from scratch.
+        jsonObjectEpsilonMatcher(
+            rbJsonObjectBuilder()
+                .setJsonElement(TestEnumXYZ.X.toUniqueStableString(), jsonString("String1"))
+                .setJsonElement(TestEnumXYZ.Z.toUniqueStableString(), jsonString("String3"))
+                .build()));
+
+    RangeJsonApiConverter converter = makeRealObject(RangeJsonApiConverter.class);
+    assertThat(
+        // Create enumMap with 3 elements, each to a Range.
+        // We use Range in this test because it requires its own JSON API converter.
+        enumMapToJsonObject(
+            newEnumMap(rbMapOf(
+                TestEnumXYZ.X, Range.atLeast(money(111)),
+                TestEnumXYZ.Y, Range.atMost( money(222)),
+                TestEnumXYZ.Z, Range.closed( money(100), money(200)))
+            ), v -> converter.toJsonObject(v, v2 -> jsonDouble(v2.doubleValue()))),
+        jsonObjectEpsilonMatcher(
+            rbJsonObjectBuilder()
+                .setJsonElement(
+                    TestEnumXYZ.X.toUniqueStableString(),
+                     singletonJsonObject("min", jsonDouble(111.0)))
+                .setJsonElement(
+                    TestEnumXYZ.Y.toUniqueStableString(),
+                    singletonJsonObject("max", jsonDouble(222.0)))
+                .setJsonElement(
+                    TestEnumXYZ.Z.toUniqueStableString(),
+                    jsonObject(
+                        "min", jsonDouble(100.0),
+                        "max", jsonDouble(200.0)))
                 .build()));
   }
 
