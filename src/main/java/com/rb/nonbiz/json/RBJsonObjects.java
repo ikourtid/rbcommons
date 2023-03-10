@@ -18,8 +18,11 @@ import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
 import com.rb.nonbiz.text.HasUniqueId;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
+import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 import com.rb.nonbiz.util.RBPreconditions;
+import org.checkerframework.checker.units.qual.K;
 
+import java.util.EnumMap;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -90,6 +93,15 @@ public class RBJsonObjects {
     // because InstrumentId keys are unique, and they get serialized in a standardized way.
     return jsonObject(
         map.transformKeysAndValuesCopy(keySerializer, valueSerializer));
+  }
+
+  public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>, V> JsonObject enumMapToJsonObject(
+      EnumMap<E, V> enumMap,
+      Function<V, JsonElement> valueSerializer) {
+    JsonObject jsonObject = new JsonObject();
+    enumMap.forEach( (enumConstantKey, jsonElement) -> jsonObject.add(
+        enumConstantKey.toUniqueStableString(), valueSerializer.apply(jsonElement)));
+    return jsonObject;
   }
 
   /**
