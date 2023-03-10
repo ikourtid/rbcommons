@@ -13,6 +13,7 @@ import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
+import com.rb.nonbiz.jsonapi.RangeJsonApiConverter;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
 import com.rb.nonbiz.text.Strings;
@@ -60,8 +61,8 @@ import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatche
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
+import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
-import static com.rb.nonbiz.testutils.TestEnumXYZ.X;
 import static com.rb.nonbiz.text.RBSetOfHasUniqueId.rbSetOfHasUniqueId;
 import static com.rb.nonbiz.text.RBSetOfHasUniqueIdTest.rbSetOfHasUniqueIdMatcher;
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueId;
@@ -160,6 +161,28 @@ public class RBJsonObjectsTest {
                 .setJsonElement(TestEnumXYZ.Z.toUniqueStableString(), jsonString("String3"))
                 .build()));
 
+    RangeJsonApiConverter converter = makeRealObject(RangeJsonApiConverter.class);
+    assertThat(
+        // Create enumMap with 3 elements, each to a Range.
+        // We use Range in this test because it requires its own JSON API converter.
+        enumMapToJsonObject(
+            newEnumMap(rbMapOf(
+                TestEnumXYZ.X, Range.atLeast(money(111)),
+                TestEnumXYZ.Y, Range.atMost( money(222)),
+                TestEnumXYZ.Z, Range.closed( money(100), money(200)))
+            ), v -> converter.toJsonObject(v, v2 -> jsonDouble(v2.doubleValue()))),
+        jsonObjectEpsilonMatcher(
+            rbJsonObjectBuilder()
+                .setJsonElement(
+                    TestEnumXYZ.X.toUniqueStableString(),
+                    converter.toJsonObject(Range.atLeast(money(111)), v -> jsonDouble(v.doubleValue())))
+                .setJsonElement(
+                    TestEnumXYZ.Y.toUniqueStableString(),
+                    converter.toJsonObject(Range.atMost(money(222)), v -> jsonDouble(v.doubleValue())))
+                .setJsonElement(
+                    TestEnumXYZ.Z.toUniqueStableString(),
+                    converter.toJsonObject(Range.closed(money(100), money(200)), v -> jsonDouble(v.doubleValue())))
+                .build()));
   }
 
   @Test
