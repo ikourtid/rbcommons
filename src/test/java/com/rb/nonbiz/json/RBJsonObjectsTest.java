@@ -37,6 +37,7 @@ import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
@@ -45,6 +46,7 @@ import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonPercentage;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
+import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
@@ -58,6 +60,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.testutils.TestEnumXYZ.X;
 import static com.rb.nonbiz.text.RBSetOfHasUniqueId.rbSetOfHasUniqueId;
 import static com.rb.nonbiz.text.RBSetOfHasUniqueIdTest.rbSetOfHasUniqueIdMatcher;
 import static com.rb.nonbiz.text.TestHasUniqueId.testHasUniqueId;
@@ -69,6 +72,7 @@ import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static com.rb.nonbiz.util.RBEnumMapsTest.newEnumMap;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -126,6 +130,18 @@ public class RBJsonObjectsTest {
     assertIllegalArgumentException( () -> closedRangeToJsonObject(
         Range.open(UNIT_FRACTION_0, UNIT_FRACTION_1),
         v -> jsonDouble(v)));
+  }
+
+  @Test
+  public void testJsonObjectToEnumMap() {
+    assertThat(
+        // Create single enumMap to string
+        enumMapToJsonObject(newEnumMap(singletonRBMap(X, "String1")), v -> jsonString(v)),
+        // Match with an object build from scratch.
+        jsonObjectEpsilonMatcher(
+            rbJsonObjectBuilder()
+                .setJsonElement(X.toUniqueStableString(), jsonString("String1"))
+                .build()));
   }
 
   @Test
