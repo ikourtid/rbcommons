@@ -13,6 +13,7 @@ import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
+import com.rb.nonbiz.testutils.TestEnumXYZ;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.text.TestHasUniqueId;
@@ -135,13 +136,30 @@ public class RBJsonObjectsTest {
   @Test
   public void testJsonObjectToEnumMap() {
     assertThat(
-        // Create single enumMap to string
-        enumMapToJsonObject(newEnumMap(singletonRBMap(X, "String1")), v -> jsonString(v)),
-        // Match with an object build from scratch.
+        // Create single enumMap to a String.
+        enumMapToJsonObject(newEnumMap(singletonRBMap(TestEnumXYZ.X, "String1")), v -> jsonString(v)),
+        // Match with an object built from scratch.
         jsonObjectEpsilonMatcher(
             rbJsonObjectBuilder()
-                .setJsonElement(X.toUniqueStableString(), jsonString("String1"))
+                .setJsonElement(TestEnumXYZ.X.toUniqueStableString(), jsonString("String1"))
                 .build()));
+
+    assertThat(
+        // Create enumMap with 3 elements, each to a String.
+        enumMapToJsonObject(
+            newEnumMap(rbMapOf(
+                TestEnumXYZ.X, "String1",
+                TestEnumXYZ.Y, "String2",
+                TestEnumXYZ.Z, "String3")),
+            v -> jsonString(v)),
+        // Match with an object built from scratch.
+        jsonObjectEpsilonMatcher(
+            rbJsonObjectBuilder()
+                .setJsonElement(TestEnumXYZ.X.toUniqueStableString(), jsonString("String1"))
+                .setJsonElement(TestEnumXYZ.Y.toUniqueStableString(), jsonString("String2"))
+                .setJsonElement(TestEnumXYZ.Z.toUniqueStableString(), jsonString("String3"))
+                .build()));
+
   }
 
   @Test
