@@ -39,7 +39,6 @@ import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
-import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
@@ -74,6 +73,7 @@ import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
 import static com.rb.nonbiz.util.RBEnumMapsTest.newEnumMap;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -138,7 +138,7 @@ public class RBJsonObjectsTest {
   public void testJsonObjectToEnumMap() {
     assertThat(
         // Create single enumMap to a String.
-        enumMapToJsonObject(newEnumMap(singletonRBMap(TestEnumXYZ.X, "String1")), v -> jsonString(v)),
+        enumMapToJsonObject(singletonEnumMap(TestEnumXYZ.X, "String1"), v -> jsonString(v)),
         // Match with an object built from scratch.
         jsonObjectEpsilonMatcher(
             rbJsonObjectBuilder()
@@ -150,14 +150,12 @@ public class RBJsonObjectsTest {
         enumMapToJsonObject(
             newEnumMap(rbMapOf(
                 TestEnumXYZ.X, "String1",
-                TestEnumXYZ.Y, "String2",
                 TestEnumXYZ.Z, "String3")),
             v -> jsonString(v)),
         // Match with an object built from scratch.
         jsonObjectEpsilonMatcher(
             rbJsonObjectBuilder()
                 .setJsonElement(TestEnumXYZ.X.toUniqueStableString(), jsonString("String1"))
-                .setJsonElement(TestEnumXYZ.Y.toUniqueStableString(), jsonString("String2"))
                 .setJsonElement(TestEnumXYZ.Z.toUniqueStableString(), jsonString("String3"))
                 .build()));
 
@@ -175,13 +173,15 @@ public class RBJsonObjectsTest {
             rbJsonObjectBuilder()
                 .setJsonElement(
                     TestEnumXYZ.X.toUniqueStableString(),
-                    converter.toJsonObject(Range.atLeast(money(111)), v -> jsonDouble(v.doubleValue())))
+                     singletonJsonObject("min", jsonDouble(111.0)))
                 .setJsonElement(
                     TestEnumXYZ.Y.toUniqueStableString(),
-                    converter.toJsonObject(Range.atMost(money(222)), v -> jsonDouble(v.doubleValue())))
+                    singletonJsonObject("max", jsonDouble(222.0)))
                 .setJsonElement(
                     TestEnumXYZ.Z.toUniqueStableString(),
-                    converter.toJsonObject(Range.closed(money(100), money(200)), v -> jsonDouble(v.doubleValue())))
+                    jsonObject(
+                        "min", jsonDouble(100.0),
+                        "max", jsonDouble(200.0)))
                 .build()));
   }
 
