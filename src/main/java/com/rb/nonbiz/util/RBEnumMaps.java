@@ -15,6 +15,10 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 
 public class RBEnumMaps {
 
+  public static <E extends Enum<E>, V> EnumMap<E, V> newEnumMap(RBMap<E, V> map) {
+    return new EnumMap<>(map.asMap());
+  }
+
   /**
    * Transforms an EnumMap's map values, without looking at the enum value itself.
    */
