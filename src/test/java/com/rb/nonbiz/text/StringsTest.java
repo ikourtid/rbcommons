@@ -249,11 +249,13 @@ public class StringsTest {
     assertThat(
         // The mapping here, from JsonElementType to partition, isn't useful for practical reasons, but it
         // serves to test the formatEnumMap... function because partitions print instruments.
-        formatEnumMapWhereValuesPrintInstruments(singletonEnumMap(JSON_STRING, iidPartition(iidMapFromRBMap(rbMapOf(
-            STOCK_A, unitFraction(0.5),
-            STOCK_B, unitFraction(0.5))))), instrumentMaster, DUMMY_DATE),
+        formatEnumMapWhereValuesPrintInstruments(
+            singletonEnumMap(JSON_STRING, iidPartition(iidMapFromRBMap(rbMapOf(
+                STOCK_A, unitFraction(0.5),
+                STOCK_B, unitFraction(0.5))))),
+            instrumentMaster,
+            DUMMY_DATE),
         stringMatcher("JSON_STRING = 50 % STOCK_B ; 50 % STOCK_A"));
-
   }
 
 }
