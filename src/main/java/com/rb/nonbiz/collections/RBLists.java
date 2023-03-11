@@ -242,6 +242,7 @@ public class RBLists {
       // would ever be true, since there are no consecutive pairs to begin with!
       return OptionalInt.empty();
     }
+    // We need the -1 so that i can be all valid indices of a consecutive pair in the list.
     for (int i = 0; i < list.size() - 1; i++) {
       if (consecutivePairPredicate.test(list.get(i), list.get(i + 1))) {
         return OptionalInt.of(i);
@@ -251,8 +252,11 @@ public class RBLists {
   }
 
   /**
-   * The 'reduce' part of map/reduce is about creating a single item from a collection. This handles the case where
-   * only some consecutive items can be reduced.
+   * Returns a copy of the initial list where consecutive items may be 'reduced' (as in map/reduce).
+   *
+   * <p> This is different than 'reducing' a list, e.g. adding a bunch of numbers, which results in a single number.
+   * Instead, this returns a list (not a scalar), where certain sublists inside it may be reduced into a single value.
+   * The tests may explain this better. </p>
    */
   public static <T> List<T> possiblyReduceConsecutiveItems(
       List<T> list,
@@ -268,10 +272,12 @@ public class RBLists {
     // Even if we could run the predicate on every consecutive pair of items, we still wouldn't know how big the
     // final list would be. Say e.g. the 4th, 5th, and 6th items are called A, B, C. If A can be reduced with B,
     // then we'd still need to know if the reduced (merged) result AB can itself be merged with C.
-    // Therefore, we could just create a list with no size hint. However, given that the initial usage of this method
+    // Therefore, we could just create a list with no size hint, and expect newArrayList to auto-reallocate (and copy,
+    // which is expensive). However, given that the initial usage of this method
     // (March 2023) is to merge tax lots that only differ in their size, it's very likely that the final list size
     // will be only slightly smaller than the original one. So let's just use a list of the same size.
-    List<T> reducedList = newArrayListWithExpectedSize(list.size());
+    // We'll do -1 because we know for sure there will be at least one reduction.
+    List<T> reducedList = newArrayListWithExpectedSize(list.size() - 1);
 
     // Copy everything until the point of the first reduction; this is a one-off operation so that we can
     // utilize (and not waste) the result of findIndexOfFirstConsecutivePair()
@@ -291,7 +297,7 @@ public class RBLists {
         // Just modify the last item in the reducedList
         reducedList.set(indexOfLast, reducer.apply(previousItem, thisItem));
       } else {
-        // We can't reduce this against the last item in the reducedList, so just add it
+        // We can't reduce this against the last item in the reducedList, so we will just add it.
         reducedList.add(thisItem);
       }
     }
