@@ -303,7 +303,7 @@ public class RBLists {
         // We stopped reducing items, so let's store the item that was being reduced...
         reducedList.add(reducedItem);
         // ... and also store the item that we know won't be reduced.
-        reducedList.add(previousItem);
+        reducedList.add(thisItem);
       }
     }
 
