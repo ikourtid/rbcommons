@@ -273,7 +273,7 @@ public class RBLists {
 
     // Copy everything until the point of the first reduction; this is a one-off operation so that we can
     // utilize (and not waste) the result of findIndexOfFirstConsecutivePair()
-    for (int i = 0; i < indexOfFirstReduction.getAsInt() - 1; i++) {
+    for (int i = 0; i < indexOfFirstReduction.getAsInt(); i++) {
       reducedList.add(list.get(i));
     }
     T reducedItem = reducer.apply(
