@@ -1,7 +1,5 @@
 package com.rb.nonbiz.collections;
 
-import com.google.common.collect.Iterables;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -236,13 +234,14 @@ public class RBLists {
    */
   public static <T> OptionalInt findIndexOfFirstConsecutivePair(
       List<T> list,
+      int startingIndex,
       BiPredicate<T, T> consecutivePairPredicate) {
-    if (list.size() <= 1) {
+    if (list.size() - startingIndex <= 1) {
       // If there isn't any room to have any consecutive pairs starting at startingIndex, there's no way the predicate
       // would ever be true, since there are no consecutive pairs to begin with!
       return OptionalInt.empty();
     }
-    for (int i = 0; i < list.size() - 1; i++) {
+    for (int i = startingIndex; i < list.size() - 1; i++) {
       if (consecutivePairPredicate.test(list.get(i), list.get(i + 1))) {
         return OptionalInt.of(i);
       }
@@ -272,50 +271,67 @@ public class RBLists {
     // (March 2023) is to merge tax lots that only differ in their size, it's very likely that the final list size
     // will be only slightly smaller than the original one. So let's just use a list of the same size.
     List<T> reducedList = newArrayListWithExpectedSize(list.size());
-    int currentIndex = indexOfFirstReduction.getAsInt();
-    for (int i = 0; i < currentIndex - 1; i++) {
+
+    // Copy everything until the point of the first reduction
+    for (int i = 0; i < indexOfFirstReduction.getAsInt() - 1; i++) {
       reducedList.add(list.get(i));
     }
 
-    T reducedItem = reducer.apply(list.get(currentIndex), list.get(currentIndex + 1));
+    possiblyReduceConsecutiveItemsHelper(
+        list, reducedList, indexOfFirstReduction.getAsInt(), mustReduceItems, reducer);
+
+    return reducedList;
+  }
+
+  // This assumes that the first two items are to be reduced.
+  private static <T> void possiblyReduceConsecutiveItemsHelper(
+      List<T> list,
+      List<T> reducedList,
+      int currentPairIndex,
+      BiPredicate<T, T> mustReduceItems,
+      BinaryOperator<T> reducer) {
+    // Per the semantics of this class, the first item is special
+    T reducedItem = reducer.apply(list.get(currentPairIndex), list.get(currentPairIndex + 1));
+    currentPairIndex++;
 
     int lastValidPairStart = list.size() - 1;
 
-    while (currentIndex < lastValidPairStart) {
-      currentIndex++;
-      // a) Keep reducing, in the event that the consecutive items can also be reduced
-      for (;
-           currentIndex < lastValidPairStart
-               && mustReduceItems.test(reducedItem, list.get(currentIndex + 1));
-           currentIndex++) {
-        reducedItem = reducer.apply(reducedItem, list.get(currentIndex + 1));
-      }
-
-      // b) Store the (possibly multiply) reduced item
-      reducedList.add(reducedItem);
-
-      // c) Skip to next reduction point (if applicable), or end of list,
-      // and add all items up to that point.
-      for (; currentIndex < lastValidPairStart; currentIndex++) {
-        if (!mustReduceItems.test(list.get(currentIndex), list.get(currentIndex + 1))) {
-          reducedList.add(list.get(currentIndex));
-        }
-      }
-
-      if (currentIndex >= lastValidPairStart) {
-        // We're done here; just add the last item in the list, which we haven't looked at yet.
-        reducedList.add(Iterables.getLast(list));
+    // a) Keep reducing, in the event that the consecutive items can also be reduced
+    while (currentPairIndex < lastValidPairStart) {
+      if (!mustReduceItems.test(reducedItem, list.get(currentPairIndex + 1))) {
         break;
-      } else {
-        // The logic in this method is a bit clunky, because of the performance optimization: we don't want to
-        // regenerate a copy of the original list if it ends up that no two consecutive items can be reduced.
-        // However, we also don't want to discard the check for that first reduction; it may matter for CPU
-        // performance, if that check is slow.
-        reducedItem = reducer.apply(list.get(currentIndex), list.get(currentIndex + 1));
-        currentIndex++;
+      }
+
+      reducedItem = reducer.apply(reducedItem, list.get(currentPairIndex + 1));
+      currentPairIndex++;
+    }
+
+    // b) No more reductions can be done, so store the (possibly multiply) reduced item
+    reducedList.add(reducedItem);
+
+    findIndexOfFirstConsecutivePair(list, currentPairIndex, mustReduceItems);
+    // c) Skip to next reduction point (if applicable), or end of list,
+    // and add all items up to that point.
+    for (; currentPairIndex < lastValidPairStart; currentPairIndex++) {
+      if (!mustReduceItems.test(list.get(currentPairIndex), list.get(currentPairIndex + 1))) {
+        reducedList.add(list.get(currentPairIndex));
       }
     }
-    return reducedList;
+
+    if (currentPairIndex >= lastValidPairStart) {
+      // We're done here; just add the last item in the list, which we haven't looked at yet.
+//        reducedList.add(Iterables.getLast(list));
+      break;
+    } else {
+      // The logic in this method is a bit clunky, because of the performance optimization: we don't want to
+      // regenerate a copy of the original list if it ends up that no two consecutive items can be reduced.
+      // However, we also don't want to discard the check for that first reduction; it may matter for CPU
+      // performance, if that check is slow.
+      reducedItem = reducer.apply(list.get(currentPairIndex), list.get(currentPairIndex + 1));
+      currentPairIndex++;
+    }
   }
+    return reducedList;
+}
 
 }
