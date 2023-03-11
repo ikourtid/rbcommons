@@ -229,16 +229,18 @@ public class RBLists {
     return pasteIntoStream(list1, list2, pasteTransformer).collect(Collectors.toList());
   }
 
+  /**
+   * For a list of 2+ items, find the first index i such that items i and i+1 match a predicate.
+   */
   public static <T> OptionalInt findIndexOfFirstConsecutivePair(
       List<T> list,
-      int startingIndex,
       BiPredicate<T, T> consecutivePairPredicate) {
-    if (list.size() - startingIndex <= 1) {
+    if (list.size() <= 1) {
       // If there isn't any room to have any consecutive pairs starting at startingIndex, there's no way the predicate
       // would ever be true, since there are no consecutive pairs to begin with!
       return OptionalInt.empty();
     }
-    for (int i = startingIndex; i < list.size() - 1; i++) {
+    for (int i = 0; i < list.size() - 1; i++) {
       if (consecutivePairPredicate.test(list.get(i), list.get(i + 1))) {
         return OptionalInt.of(i);
       }
@@ -254,7 +256,7 @@ public class RBLists {
       List<T> list,
       BiPredicate<T, T> mustReduceItems,
       BinaryOperator<T> reducer) {
-    OptionalInt indexOfFirstReduction = findIndexOfFirstConsecutivePair(list, 0, mustReduceItems);
+    OptionalInt indexOfFirstReduction = findIndexOfFirstConsecutivePair(list, mustReduceItems);
     if (!indexOfFirstReduction.isPresent()) {
       // performance optimization; if no consecutive items need to be reduced, just return the original list.
       // This saves us from having to generate a new list, which would just be a copy of the original one in this case.
@@ -268,65 +270,22 @@ public class RBLists {
     // (March 2023) is to merge tax lots that only differ in their size, it's very likely that the final list size
     // will be only slightly smaller than the original one. So let's just use a list of the same size.
     List<T> reducedList = newArrayListWithExpectedSize(list.size());
-    int startingIndex = indexOfFirstReduction.getAsInt();
-    for (int i = 0; i < startingIndex; i++) {
+    int currentIndex = indexOfFirstReduction.getAsInt();
+    for (int i = 0; i < currentIndex - 1; i++) {
       reducedList.add(list.get(i));
     }
 
-    possiblyReduceConsecutiveItemsHelper(
-        list,
-        reducedList,
-        // need the + 1 because the callee will already start with the first 'reducable' consecutive pair having
-        // already been reduced (see reducer.apply below).
-        startingIndex + 1,
-        reducer.apply(list.get(startingIndex), list.get(startingIndex + 1)),
-        mustReduceItems,
-        reducer);
+    T reducedItem = reducer.apply(list.get(currentIndex), list.get(currentIndex + 1));
+    currentIndex++;
+    for (; currentIndex < list.size() - 1; currentIndex++) {
+      // Keep going, in the event that the consecutive items can also be reduced
+      if (mustReduceItems.test(reducedItem, list.get(currentIndex + 1))) {
+        reducedItem = reducer.apply(reducedItem, list.get(currentIndex + 1));
+      } else {
+        reducedList.add(reducedItem);
+      }
+    }
     return reducedList;
-  }
-
-  private static <T> void possiblyReduceConsecutiveItemsHelper(
-      List<T> originalList,
-      List<T> reducedListToAddTo,
-      int currentIndex,
-      T reducedStartingItem,
-      BiPredicate<T, T> mustReduceItems,
-      BinaryOperator<T> reducer) {
-
-    // Keep going until there are more pairs
-    while (currentIndex < originalList.size() - 1) {
-      T nextItem = originalList.get(currentIndex);
-      if (!mustReduceItems.test(reducedStartingItem, nextItem)) {
-        break;
-      }
-      reducedStartingItem = reducer.apply(reducedStartingItem, nextItem);
-      currentIndex++;
-    }
-
-    // OK, by this point we have reduced all the consecutive items together, and there will be a 'gap' for a while
-    // before we can do more reductions (if any). So let's copy this.
-    reducedListToAddTo.add(reducedStartingItem);
-
-    OptionalInt indexOfFirstConsecutivePair =
-        findIndexOfFirstConsecutivePair(originalList, currentIndex, mustReduceItems);
-    if (!indexOfFirstConsecutivePair.isPresent()) {
-      for (int i = currentIndex; i < originalList.size(); i++) {
-        reducedListToAddTo.add(originalList.get(currentIndex));
-      }
-      return;
-    }
-
-    int indexOfFirstReduction = indexOfFirstConsecutivePair.getAsInt();
-    // Copy all the items in the 'gap' to the output list
-    for (int i = currentIndex; i < indexOfFirstReduction; i++) {
-      reducedListToAddTo.add(originalList.get(i));
-    }
-    possiblyReduceConsecutiveItemsHelper(
-        originalList,
-        reducedListToAddTo,
-        indexOfFirstReduction,
-        
-    );
   }
 
 }

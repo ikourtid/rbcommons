@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -20,6 +21,8 @@ import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEmpty;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEquals;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
@@ -273,6 +276,22 @@ public class RBListsTest {
             emptyList(),
             emptyList(),
             (intValue, booleanValue) -> Strings.format("%s_%s", intValue, booleanValue)));
+  }
+
+  @Test
+  public void testFindIndexOfFirstConsecutivePair() {
+    Function<List<Double>, OptionalInt> findFirstDecrease = list ->
+        findIndexOfFirstConsecutivePair(list, (v1, v2) -> v1 > v2);
+
+    assertOptionalIntEmpty(findFirstDecrease.apply(emptyList()));
+    assertOptionalIntEmpty(findFirstDecrease.apply(singletonList(7.7)));
+    assertOptionalIntEmpty(findFirstDecrease.apply(ImmutableList.of(7.7, 8.8)));
+    assertOptionalIntEmpty(findFirstDecrease.apply(ImmutableList.of(7.7, 8.8, 9.9)));
+
+    assertOptionalIntEquals(0, findFirstDecrease.apply(ImmutableList.of(7.7, 6.6, 9.9)));
+    assertOptionalIntEquals(0, findFirstDecrease.apply(ImmutableList.of(7.7, 6.6, 5.5)));
+
+    assertOptionalIntEquals(1, findFirstDecrease.apply(ImmutableList.of(7.7, 9.9, 8.8)));
   }
 
 }
