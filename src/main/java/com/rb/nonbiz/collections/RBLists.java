@@ -285,12 +285,13 @@ public class RBLists {
 
     for (int i = indexOfFirstReduction.getAsInt() + 2; i < list.size(); i++) {
       int indexOfLast = reducedList.size() - 1;
-      T previousItem = list.get(indexOfLast);
+      T previousItem = reducedList.get(indexOfLast);
       T thisItem = list.get(i);
       if (mustReduceItems.test(previousItem, thisItem)) {
         // Just modify the last item in the reducedList
         reducedList.set(indexOfLast, reducer.apply(previousItem, thisItem));
       } else {
+        // We can't reduce this against the last item in the reducedList, so just add it
         reducedList.add(thisItem);
       }
     }
