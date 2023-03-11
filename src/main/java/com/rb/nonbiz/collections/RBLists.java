@@ -1,5 +1,7 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.Iterables;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -276,36 +278,22 @@ public class RBLists {
     for (int i = 0; i < indexOfFirstReduction.getAsInt(); i++) {
       reducedList.add(list.get(i));
     }
-    T reducedItem = reducer.apply(
+    // Then add the result of the first reduction (even if this may be further reduced later)
+    reducedList.add(reducer.apply(
         list.get(indexOfFirstReduction.getAsInt()),
-        list.get(indexOfFirstReduction.getAsInt() + 1));
-    int lastIndex = list.size() - 1;
+        list.get(indexOfFirstReduction.getAsInt() + 1)));
 
-    // Special case; it's a bit uglier this way, but we avoid wasting the findIndexOfFirstConsecutivePair() call.
-    if (indexOfFirstReduction.getAsInt() + 1 == lastIndex) {
-      reducedList.add(reducedItem);
-      return reducedList;
-    }
-
-    // currentIndex will be the index in 'list' of the *right* element in a consecutive pair of items.
-    for (int currentIndex = indexOfFirstReduction.getAsInt() + 2;
-         currentIndex < list.size();
-         currentIndex++) {
-      T thisItem = list.get(currentIndex);
-      if (mustReduceItems.test(reducedItem, thisItem)) {
-        reducedItem = reducer.apply(reducedItem, thisItem);
-        if (currentIndex == lastIndex) {
-          reducedList.add(reducedItem);
-          return reducedList;
-        }
+    for (int i = indexOfFirstReduction.getAsInt() + 2; i < list.size(); i++) {
+      int indexOfLast = reducedList.size() - 1;
+      T previousItem = list.get(indexOfLast);
+      T thisItem = list.get(i);
+      if (mustReduceItems.test(previousItem, thisItem)) {
+        // Just modify the last item in the reducedList
+        reducedList.set(indexOfLast, reducer.apply(previousItem, thisItem));
       } else {
-        // We stopped reducing items, so let's store the item that was being reduced...
-        reducedList.add(reducedItem);
-        // ... and also store the item that we know won't be reduced.
         reducedList.add(thisItem);
       }
     }
-
     return reducedList;
   }
 
