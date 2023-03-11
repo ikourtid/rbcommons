@@ -1,5 +1,7 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.Iterables;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -276,13 +278,41 @@ public class RBLists {
     }
 
     T reducedItem = reducer.apply(list.get(currentIndex), list.get(currentIndex + 1));
-    currentIndex++;
-    for (; currentIndex < list.size() - 1; currentIndex++) {
-      // Keep going, in the event that the consecutive items can also be reduced
-      if (mustReduceItems.test(reducedItem, list.get(currentIndex + 1))) {
+
+    int lastValidPairStart = list.size() - 1;
+
+    while (currentIndex < lastValidPairStart) {
+      currentIndex++;
+      // a) Keep reducing, in the event that the consecutive items can also be reduced
+      for (;
+           currentIndex < lastValidPairStart
+               && mustReduceItems.test(reducedItem, list.get(currentIndex + 1));
+           currentIndex++) {
         reducedItem = reducer.apply(reducedItem, list.get(currentIndex + 1));
+      }
+
+      // b) Store the (possibly multiply) reduced item
+      reducedList.add(reducedItem);
+
+      // c) Skip to next reduction point (if applicable), or end of list,
+      // and add all items up to that point.
+      for (; currentIndex < lastValidPairStart; currentIndex++) {
+        if (!mustReduceItems.test(list.get(currentIndex), list.get(currentIndex + 1))) {
+          reducedList.add(list.get(currentIndex));
+        }
+      }
+
+      if (currentIndex >= lastValidPairStart) {
+        // We're done here; just add the last item in the list, which we haven't looked at yet.
+        reducedList.add(Iterables.getLast(list));
+        break;
       } else {
-        reducedList.add(reducedItem);
+        // The logic in this method is a bit clunky, because of the performance optimization: we don't want to
+        // regenerate a copy of the original list if it ends up that no two consecutive items can be reduced.
+        // However, we also don't want to discard the check for that first reduction; it may matter for CPU
+        // performance, if that check is slow.
+        reducedItem = reducer.apply(list.get(currentIndex), list.get(currentIndex + 1));
+        currentIndex++;
       }
     }
     return reducedList;
