@@ -1,12 +1,17 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.Iterables;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -224,6 +229,79 @@ public class RBLists {
    */
   public static <T, T1, T2> List<T> pasteLists(List<T1> list1, List<T2> list2, BiFunction<T1, T2, T> pasteTransformer) {
     return pasteIntoStream(list1, list2, pasteTransformer).collect(Collectors.toList());
+  }
+
+  /**
+   * For a list of 2+ items, find the first index i such that items i and i+1 match a predicate.
+   */
+  public static <T> OptionalInt findIndexOfFirstConsecutivePair(
+      List<T> list,
+      BiPredicate<T, T> consecutivePairPredicate) {
+    if (list.size() <= 1) {
+      // If there isn't any room to have any consecutive pairs starting at startingIndex, there's no way the predicate
+      // would ever be true, since there are no consecutive pairs to begin with!
+      return OptionalInt.empty();
+    }
+    // We need the -1 so that i can be all valid indices of a consecutive pair in the list.
+    for (int i = 0; i < list.size() - 1; i++) {
+      if (consecutivePairPredicate.test(list.get(i), list.get(i + 1))) {
+        return OptionalInt.of(i);
+      }
+    }
+    return OptionalInt.empty();
+  }
+
+  /**
+   * Returns a copy of the initial list where consecutive items may be 'reduced' (as in map/reduce).
+   *
+   * <p> This is different than 'reducing' a list, e.g. adding a bunch of numbers, which results in a single number.
+   * Instead, this returns a list (not a scalar), where certain sublists inside it may be reduced into a single value.
+   * The tests may explain this better. </p>
+   */
+  public static <T> List<T> possiblyReduceConsecutiveItems(
+      List<T> list,
+      BiPredicate<T, T> mustReduceItems,
+      BinaryOperator<T> reducer) {
+    OptionalInt indexOfFirstReduction = findIndexOfFirstConsecutivePair(list, mustReduceItems);
+    if (!indexOfFirstReduction.isPresent()) {
+      // performance optimization; if no consecutive items need to be reduced, just return the original list.
+      // This saves us from having to generate a new list, which would just be a copy of the original one in this case.
+      return list;
+    }
+
+    // Even if we could run the predicate on every consecutive pair of items, we still wouldn't know how big the
+    // final list would be. Say e.g. the 4th, 5th, and 6th items are called A, B, C. If A can be reduced with B,
+    // then we'd still need to know if the reduced (merged) result AB can itself be merged with C.
+    // Therefore, we could just create a list with no size hint, and expect newArrayList to auto-reallocate (and copy,
+    // which is expensive). However, given that the initial usage of this method
+    // (March 2023) is to merge tax lots that only differ in their size, it's very likely that the final list size
+    // will be only slightly smaller than the original one. So let's just use a list of the same size.
+    // We'll do -1 because we know for sure there will be at least one reduction.
+    List<T> reducedList = newArrayListWithExpectedSize(list.size() - 1);
+
+    // Copy everything until the point of the first reduction; this is a one-off operation so that we can
+    // utilize (and not waste) the result of findIndexOfFirstConsecutivePair()
+    for (int i = 0; i < indexOfFirstReduction.getAsInt(); i++) {
+      reducedList.add(list.get(i));
+    }
+    // Then add the result of the first reduction (even if this may be further reduced later)
+    reducedList.add(reducer.apply(
+        list.get(indexOfFirstReduction.getAsInt()),
+        list.get(indexOfFirstReduction.getAsInt() + 1)));
+
+    for (int i = indexOfFirstReduction.getAsInt() + 2; i < list.size(); i++) {
+      int indexOfLast = reducedList.size() - 1;
+      T previousItem = reducedList.get(indexOfLast);
+      T thisItem = list.get(i);
+      if (mustReduceItems.test(previousItem, thisItem)) {
+        // Just modify the last item in the reducedList
+        reducedList.set(indexOfLast, reducer.apply(previousItem, thisItem));
+      } else {
+        // We can't reduce this against the last item in the reducedList, so we will just add it.
+        reducedList.add(thisItem);
+      }
+    }
+    return reducedList;
   }
 
 }

@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.rb.nonbiz.text.Strings;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,24 +11,35 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.OptionalInt;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.rb.nonbiz.collections.Pair.pair;
+import static com.rb.nonbiz.collections.PairTest.pairEqualityMatcher;
 import static com.rb.nonbiz.collections.RBLists.*;
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEmpty;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEquals;
+import static com.rb.nonbiz.testutils.Asserters.intExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyListIterator;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 public class RBListsTest {
 
@@ -273,6 +285,177 @@ public class RBListsTest {
             emptyList(),
             emptyList(),
             (intValue, booleanValue) -> Strings.format("%s_%s", intValue, booleanValue)));
+  }
+
+  @Test
+  public void testFindIndexOfFirstConsecutivePair() {
+    Function<List<Double>, OptionalInt> findFirstDecrease = list ->
+        findIndexOfFirstConsecutivePair(list, (v1, v2) -> v1 > v2);
+
+    assertOptionalIntEmpty(findFirstDecrease.apply(emptyList()));
+    assertOptionalIntEmpty(findFirstDecrease.apply(singletonList(7.7)));
+    assertOptionalIntEmpty(findFirstDecrease.apply(ImmutableList.of(7.7, 8.8)));
+    assertOptionalIntEmpty(findFirstDecrease.apply(ImmutableList.of(7.7, 8.8, 9.9)));
+
+    assertOptionalIntEquals(0, findFirstDecrease.apply(ImmutableList.of(7.7, 6.6, 9.9)));
+    assertOptionalIntEquals(0, findFirstDecrease.apply(ImmutableList.of(7.7, 6.6, 5.5)));
+
+    assertOptionalIntEquals(1, findFirstDecrease.apply(ImmutableList.of(7.7, 9.9, 8.8)));
+  }
+
+  @Test
+  public void testPossiblyReduceConsecutiveItems() {
+    BiConsumer<List<Pair<String, Integer>>, List<Pair<String, Integer>>> asserter = (inputList, expectedReducedList) ->
+        assertThat(
+            possiblyReduceConsecutiveItems(
+                inputList,
+                (v1, v2) -> v1.getLeft().equals(v2.getLeft()),
+                (v1, v2) -> pair(v1.getLeft(), v1.getRight() + v2.getRight())),
+            orderedListMatcher(
+                expectedReducedList,
+                f -> pairEqualityMatcher(f)));
+
+    // Simple cases of no reduction
+    rbSetOf(
+        Collections.<Pair<String, Integer>>emptyList(),
+        ImmutableList.of(pair("a", 100)),
+        ImmutableList.of(pair("a", 100), pair("b", 101)),
+        ImmutableList.of(pair("a", 100), pair("b", 100)),
+        ImmutableList.of(pair("a", 100), pair("b", 101), pair("c", 102)),
+        ImmutableList.of(pair("a", 100), pair("b", 100), pair("c", 102)),
+        ImmutableList.of(pair("a", 100), pair("b", 101), pair("c", 101)),
+        ImmutableList.of(pair("a", 100), pair("b", 100), pair("c", 100)))
+        .forEach(unchangedList ->
+            asserter.accept(unchangedList, unchangedList));
+
+    // Single reduction on first item only
+    asserter.accept(
+        ImmutableList.of(
+            pair("a", 100),
+            pair("a", 101)),
+        singletonList(
+            pair("a", intExplained(201, 100 + 101))));
+    asserter.accept(
+        ImmutableList.of(
+            pair("a", 100),
+            pair("a", 101),
+            pair("b", 777)),
+        ImmutableList.of(
+            pair("a", intExplained(201, 100 + 101)),
+            pair("b", 777)));
+
+    // Single reduction on second first item only
+    asserter.accept(
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", 100),
+            pair("a", 101)),
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", intExplained(201, 100 + 101))));
+    asserter.accept(
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", 100),
+            pair("a", 101),
+            pair("y", 888)),
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", intExplained(201, 100 + 101)),
+            pair("y", 888)));
+
+    // Multiple reductions on first item
+    asserter.accept(
+        ImmutableList.of(
+            pair("a", 100),
+            pair("a", 101),
+            pair("a", 102)),
+        singletonList(
+            pair("a", intExplained(303, 100 + 101 + 102))));
+    asserter.accept(
+        ImmutableList.of(
+            pair("a", 100),
+            pair("a", 101),
+            pair("a", 102),
+            pair("y", 888)),
+        ImmutableList.of(
+            pair("a", intExplained(303, 100 + 101 + 102)),
+            pair("y", 888)));
+
+    // Multiple reductions on second item
+    asserter.accept(
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", 100),
+            pair("a", 101),
+            pair("a", 102)),
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", intExplained(303, 100 + 101 + 102))));
+    asserter.accept(
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", 100),
+            pair("a", 101),
+            pair("a", 102),
+            pair("y", 888)),
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", intExplained(303, 100 + 101 + 102)),
+            pair("y", 888)));
+
+    // Most general case: two sets of multiple reductions in the middle
+    asserter.accept(
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", 100),
+            pair("a", 101),
+            pair("a", 102),
+            pair("y", 888),
+            pair("a", 200),
+            pair("a", 201),
+            pair("a", 202)),
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", intExplained(303, 100 + 101 + 102)),
+            pair("y", 888),
+            pair("a", intExplained(603, 200 + 201 + 202))));
+    asserter.accept(
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", 100),
+            pair("a", 101),
+            pair("a", 102),
+            pair("y", 888),
+            pair("a", 200),
+            pair("a", 201),
+            pair("a", 202),
+            pair("z", 999)),
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", intExplained(303, 100 + 101 + 102)),
+            pair("y", 888),
+            pair("a", intExplained(603, 200 + 201 + 202)),
+            pair("z", 999)));
+    asserter.accept(
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", 100),
+            pair("a", 101),
+            pair("a", 102),
+            pair("y", 888),
+            pair("q", 555),
+            pair("a", 200),
+            pair("a", 201),
+            pair("a", 202),
+            pair("z", 999)),
+        ImmutableList.of(
+            pair("x", 777),
+            pair("a", intExplained(303, 100 + 101 + 102)),
+            pair("y", 888),
+            pair("q", 555),
+            pair("a", intExplained(603, 200 + 201 + 202)),
+            pair("z", 999)));
   }
 
 }
