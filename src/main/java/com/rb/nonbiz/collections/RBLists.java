@@ -291,10 +291,9 @@ public class RBLists {
     for (int currentIndex = indexOfFirstReduction.getAsInt() + 2;
          currentIndex < list.size();
          currentIndex++) {
-      T previousItem = list.get(currentIndex - 1);
       T thisItem = list.get(currentIndex);
-      if (mustReduceItems.test(previousItem, thisItem)) {
-        reducedItem = reducer.apply(previousItem, thisItem);
+      if (mustReduceItems.test(reducedItem, thisItem)) {
+        reducedItem = reducer.apply(reducedItem, thisItem);
         if (currentIndex == lastIndex) {
           reducedList.add(reducedItem);
           return reducedList;
