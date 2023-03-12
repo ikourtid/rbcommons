@@ -146,7 +146,7 @@ public class RBJsonObjectsTest {
                 .build()));
 
     assertThat(
-        // Create enumMap with 3 elements, each to a String.
+        // Create enumMap with 2 elements, each to a String.
         enumMapToJsonObject(
             newEnumMap(rbMapOf(
                 TestEnumXYZ.X, "String1",
@@ -167,8 +167,8 @@ public class RBJsonObjectsTest {
             newEnumMap(rbMapOf(
                 TestEnumXYZ.X, Range.atLeast(money(111)),
                 TestEnumXYZ.Y, Range.atMost( money(222)),
-                TestEnumXYZ.Z, Range.closed( money(100), money(200)))
-            ), v -> converter.toJsonObject(v, v2 -> jsonDouble(v2.doubleValue()))),
+                TestEnumXYZ.Z, Range.closed( money(100), money(200)))),
+            v -> converter.toJsonObject(v, v2 -> jsonDouble(v2.doubleValue()))),
         jsonObjectEpsilonMatcher(
             rbJsonObjectBuilder()
                 .setJsonElement(
