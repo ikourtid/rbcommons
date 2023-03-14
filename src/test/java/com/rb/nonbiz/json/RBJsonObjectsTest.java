@@ -143,7 +143,8 @@ public class RBJsonObjectsTest {
         enumMapToJsonObject(singletonEnumMap(TestEnumXYZ.X, "String1"), v -> jsonString(v)),
         // Match with an object built from scratch.
         jsonObjectEpsilonMatcher(
-            singletonJsonObject(TestEnumXYZ.X.toUniqueStableString(), jsonString("String1"))));
+            // "_X" is TestEnumXYZ.X.toUniqueStableString().
+            singletonJsonObject("_X", jsonString("String1"))));
 
     assertThat(
         // Create enumMap with 2 elements, each to a String.
@@ -155,8 +156,9 @@ public class RBJsonObjectsTest {
         // Match with an object built from scratch.
         jsonObjectEpsilonMatcher(
             jsonObject(
-                TestEnumXYZ.X.toUniqueStableString(), jsonString("String1"),
-                TestEnumXYZ.Z.toUniqueStableString(), jsonString("String3"))));
+                // "_X" and "_Z" are TestEnumXYZ.X.toUniqueStableString() and TestEnumXYZ.Z.toUniqueStableString().
+                "_X", jsonString("String1"),
+                "_Z", jsonString("String3"))));
 
     RangeJsonApiConverter converter = makeRealObject(RangeJsonApiConverter.class);
     assertThat(
@@ -170,9 +172,10 @@ public class RBJsonObjectsTest {
             v -> converter.toJsonObject(v, v2 -> jsonDouble(v2.doubleValue()))),
         jsonObjectEpsilonMatcher(
             jsonObject(
-                TestEnumXYZ.X.toUniqueStableString(), singletonJsonObject("min", jsonDouble(111.0)),
-                TestEnumXYZ.Y.toUniqueStableString(), singletonJsonObject("max", jsonDouble(222.0)),
-                TestEnumXYZ.Z.toUniqueStableString(), jsonObject(
+                // "_X", "_Y", and "_Z" are the toUniqueStableString() representations of TestEnumXYZ.
+                "_X", singletonJsonObject("min", jsonDouble(111.0)),
+                "_Y", singletonJsonObject("max", jsonDouble(222.0)),
+                "_Z", jsonObject(
                     "min", jsonDouble(100.0),
                     "max", jsonDouble(200.0)))));
   }
@@ -182,7 +185,8 @@ public class RBJsonObjectsTest {
     // Create json object for a single enumMap to a String.
     assertThat(
         jsonObjectToEnumMap(
-            singletonJsonObject(TestEnumXYZ.X.toUniqueStableString(), jsonString("String1")),
+            // "_X" is TestEnumXYZ.X.toUniqueStableString().
+            singletonJsonObject("_X", jsonString("String1")),
             k -> TestEnumXYZ.fromUniqueStableString(k),
             v -> v.getAsString()),
         enumMapMatcher(singletonEnumMap(TestEnumXYZ.X, "String1"), f -> stringMatcher(f)));
@@ -191,8 +195,9 @@ public class RBJsonObjectsTest {
     assertThat(
         jsonObjectToEnumMap(
             jsonObject(
-                TestEnumXYZ.X.toUniqueStableString(), jsonString("String1"),
-                TestEnumXYZ.Z.toUniqueStableString(), jsonString("String3")),
+                // "_X" and "_Z" are TestEnumXYZ.X.toUniqueStableString() and TestEnumXYZ.Z.toUniqueStableString().
+                "_X", jsonString("String1"),
+                "_Z", jsonString("String3")),
             k -> TestEnumXYZ.fromUniqueStableString(k),
             v -> v.getAsString()),
         enumMapMatcher(
@@ -206,10 +211,10 @@ public class RBJsonObjectsTest {
     RangeJsonApiConverter converter = makeRealObject(RangeJsonApiConverter.class);
     assertThat(
         jsonObjectToEnumMap(jsonObject(
-                // TestEnumXYZ is seldom used and "X" is not a descriptive name, so we intentionally don't static import.
-                TestEnumXYZ.X.toUniqueStableString(), singletonJsonObject("min", jsonDouble(111.0)),
-                TestEnumXYZ.Y.toUniqueStableString(), singletonJsonObject("max", jsonDouble(222.0)),
-                TestEnumXYZ.Z.toUniqueStableString(), jsonObject(
+                // "_X", "_Y", and "_Z" are the toUniqueStableString() representations of TestEnumXYZ.
+                "_X", singletonJsonObject("min", jsonDouble(111.0)),
+                "_Y", singletonJsonObject("max", jsonDouble(222.0)),
+                "_Z", jsonObject(
                     "min", jsonDouble(100.0),
                     "max", jsonDouble(200.0))),
             k -> TestEnumXYZ.fromUniqueStableString(k),
