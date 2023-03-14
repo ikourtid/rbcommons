@@ -234,7 +234,7 @@ public class RBJsonObjectsTest {
                         "max", jsonDouble(200.0)))
                 .build(),
             k -> TestEnumXYZ.fromUniqueStableString(k),
-            v1 -> converter.fromJsonObject((JsonObject) v1, jsonPrimitive -> money(jsonPrimitive.getAsDouble()))),
+            v -> converter.fromJsonObject((JsonObject) v, jsonPrimitive -> money(jsonPrimitive.getAsDouble()))),
         enumMapMatcher(
             newEnumMap(rbMapOf(
                 TestEnumXYZ.X, Range.atLeast(money(111)),
