@@ -58,6 +58,7 @@ import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatcher;
+import static com.rb.nonbiz.testmatchers.RBRangeMatchers.rangeEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -189,8 +190,8 @@ public class RBJsonObjectsTest {
 
   @Test
   public void testJsonObjectToEnumMap() {
+    // Create json object for a single enumMap to a String.
     assertThat(
-        // Create json object for a single enumMap to a String.
         jsonObjectToEnumMap(
             rbJsonObjectBuilder()
                 .setJsonElement(TestEnumXYZ.X.toUniqueStableString(), jsonString("String1"))
@@ -199,8 +200,8 @@ public class RBJsonObjectsTest {
             v -> v.getAsString()),
         enumMapMatcher(singletonEnumMap(TestEnumXYZ.X, "String1"), f -> stringMatcher(f)));
 
+    // Create json object for enumMap with 2 elements, each to a String.
     assertThat(
-        // Create json object for enumMap with 2 elements, each to a String.
         jsonObjectToEnumMap(
             rbJsonObjectBuilder()
                 .setJsonElement(TestEnumXYZ.X.toUniqueStableString(), jsonString("String1"))
@@ -213,6 +214,34 @@ public class RBJsonObjectsTest {
                 TestEnumXYZ.X, "String1",
                 TestEnumXYZ.Z, "String3")),
             f -> stringMatcher(f)));
+
+    // Create json object for an enumMap with 3 elements, each to a Range.
+    // We use Range in this test because it requires its own JSON API converter.
+    RangeJsonApiConverter converter = makeRealObject(RangeJsonApiConverter.class);
+    assertThat(
+        jsonObjectToEnumMap(rbJsonObjectBuilder()
+                .setJsonElement(
+                    // TestEnumXYZ is seldom used and "X" is not a descriptive name, so we intentionally don't static import.
+                    TestEnumXYZ.X.toUniqueStableString(),
+                    singletonJsonObject("min", jsonDouble(111.0)))
+                .setJsonElement(
+                    TestEnumXYZ.Y.toUniqueStableString(),
+                    singletonJsonObject("max", jsonDouble(222.0)))
+                .setJsonElement(
+                    TestEnumXYZ.Z.toUniqueStableString(),
+                    jsonObject(
+                        "min", jsonDouble(100.0),
+                        "max", jsonDouble(200.0)))
+                .build(),
+            k -> TestEnumXYZ.fromUniqueStableString(k),
+            v1 -> converter.fromJsonObject((JsonObject) v1, jsonPrimitive -> money(jsonPrimitive.getAsDouble()))),
+        enumMapMatcher(
+            newEnumMap(rbMapOf(
+                TestEnumXYZ.X, Range.atLeast(money(111)),
+                TestEnumXYZ.Y, Range.atMost( money(222)),
+                TestEnumXYZ.Z, Range.closed( money(100), money(200)))),
+            // For this test we're OK to do exact value matching.
+            v -> rangeEqualityMatcher(v)));
   }
 
   @Test
