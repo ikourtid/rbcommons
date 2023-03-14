@@ -52,12 +52,14 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjects.*;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
@@ -135,7 +137,7 @@ public class RBJsonObjectsTest {
   }
 
   @Test
-  public void testJsonObjectToEnumMap() {
+  public void testEnumMapToJsonObject() {
     assertThat(
         // Create single enumMap to a String.
         enumMapToJsonObject(singletonEnumMap(TestEnumXYZ.X, "String1"), v -> jsonString(v)),
@@ -183,6 +185,34 @@ public class RBJsonObjectsTest {
                         "min", jsonDouble(100.0),
                         "max", jsonDouble(200.0)))
                 .build()));
+  }
+
+  @Test
+  public void testJsonObjectToEnumMap() {
+    assertThat(
+        // Create json object for a single enumMap to a String.
+        jsonObjectToEnumMap(
+            rbJsonObjectBuilder()
+                .setJsonElement(TestEnumXYZ.X.toUniqueStableString(), jsonString("String1"))
+                .build(),
+            k -> TestEnumXYZ.fromUniqueStableString(k),
+            v -> v.getAsString()),
+        enumMapMatcher(singletonEnumMap(TestEnumXYZ.X, "String1"), f -> stringMatcher(f)));
+
+    assertThat(
+        // Create json object for enumMap with 2 elements, each to a String.
+        jsonObjectToEnumMap(
+            rbJsonObjectBuilder()
+                .setJsonElement(TestEnumXYZ.X.toUniqueStableString(), jsonString("String1"))
+                .setJsonElement(TestEnumXYZ.Z.toUniqueStableString(), jsonString("String3"))
+                .build(),
+            k -> TestEnumXYZ.fromUniqueStableString(k),
+            v -> v.getAsString()),
+        enumMapMatcher(
+            newEnumMap(rbMapOf(
+                TestEnumXYZ.X, "String1",
+                TestEnumXYZ.Z, "String3")),
+            f -> stringMatcher(f)));
   }
 
   @Test
@@ -329,7 +359,7 @@ public class RBJsonObjectsTest {
 
   @Test
   public void rbSetToJsonObject_serializationCreatesSameKey_throws() {
-    RBMap<InstrumentId, Money> map = rbMapOf(
+    RBMap<InstrumentId, Money> doesNotThrow = rbMapOf(
         instrumentId(1), money(1.1),
         instrumentId(2), money(2.2));
     assertIllegalArgumentException( () ->
