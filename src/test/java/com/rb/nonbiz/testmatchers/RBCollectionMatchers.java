@@ -1,5 +1,6 @@
 package com.rb.nonbiz.testmatchers;
 
+import com.google.common.collect.ImmutableMap;
 import com.rb.nonbiz.collections.MutableRBSortedSet;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSortedSet;
@@ -217,6 +218,23 @@ public class RBCollectionMatchers {
 
   public static <E extends Enum<E>, V> TypeSafeMatcher<EnumMap<E, V>> enumMapMatcher(
       EnumMap<E, V> expected, MatcherGenerator<V> valueMatcherGenerator) {
+    return makeMatcher(expected, actual -> {
+      if (!expected.keySet().equals(actual.keySet())) {
+        return false;
+      }
+      for (Entry<E, V> entryInExpected : expected.entrySet()) {
+        E enumKey = entryInExpected.getKey();
+        V valueInExpected = entryInExpected.getValue();
+        if (!valueMatcherGenerator.apply(valueInExpected).matches(actual.get(enumKey))) {
+          return false;
+        }
+      }
+      return true; // no mismatch found for any of the enum keys.
+    });
+  }
+
+  public static <E extends Enum<E>, V> TypeSafeMatcher<ImmutableMap<E, V>> immutableMapMatcher(
+      ImmutableMap<E, V> expected, MatcherGenerator<V> valueMatcherGenerator) {
     return makeMatcher(expected, actual -> {
       if (!expected.keySet().equals(actual.keySet())) {
         return false;

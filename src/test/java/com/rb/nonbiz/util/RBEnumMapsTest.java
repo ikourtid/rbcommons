@@ -1,12 +1,14 @@
 package com.rb.nonbiz.util;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.junit.Test;
 
 import java.util.EnumMap;
 
+import static com.google.common.collect.Maps.immutableEnumMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
@@ -50,6 +52,13 @@ public class RBEnumMapsTest {
         TestEnumXYZ.Y, "_y",
         TestEnumXYZ.Z, "_z"));
   }
+
+  @Test
+  public void testImmutableEnumMap() {
+    ImmutableMap<TestEnumXYZ, String> myEnumMap = immutableEnumMap(ImmutableMap.of(
+        TestEnumXYZ.X, "A",
+        TestEnumXYZ.Y, "B"));
+  };
 
   @Test
   public void testTransformEnumMap() {
