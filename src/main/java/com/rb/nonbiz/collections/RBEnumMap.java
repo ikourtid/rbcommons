@@ -39,6 +39,7 @@ public class RBEnumMap<E extends Enum<E>, V> {
   private final EnumMap<E, V> rawMap;
 
   private RBEnumMap(EnumMap<E, V> rawMap) {
+    // Creating a new enum map ensures immutability.
     this.rawMap = newEnumMap(rawMap);
   }
 
