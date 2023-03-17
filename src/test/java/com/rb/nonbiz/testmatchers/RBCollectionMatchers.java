@@ -1,6 +1,5 @@
 package com.rb.nonbiz.testmatchers;
 
-import com.google.common.collect.ImmutableMap;
 import com.rb.nonbiz.collections.MutableRBSortedSet;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSortedSet;
@@ -232,7 +231,6 @@ public class RBCollectionMatchers {
       return true; // no mismatch found for any of the enum keys.
     });
   }
-
   
   public static <E extends Enum<E>, V> TypeSafeMatcher<EnumMap<E, V>> enumMapEqualityMatcher(EnumMap<E, V> expected) {
     return enumMapMatcher(expected, f -> typeSafeEqualTo(f));
