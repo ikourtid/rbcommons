@@ -119,9 +119,9 @@ public class RBEnumMapTest extends TestCase {
     assertOptionalEmpty(RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Z));
 
     // Three item map has 3 values.
-    assertEquals( RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.X), Optional.of("String_X"));
-    assertEquals( RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Y), Optional.of("String_Y"));
-    assertEquals( RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Z), Optional.of("String_Z"));
+    assertEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.X), Optional.of("String_X"));
+    assertEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Y), Optional.of("String_Y"));
+    assertEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Z), Optional.of("String_Z"));
   }
 
   @Test
