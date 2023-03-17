@@ -231,7 +231,7 @@ public class RBCollectionMatchers {
       return true; // no mismatch found for any of the enum keys.
     });
   }
-  
+
   public static <E extends Enum<E>, V> TypeSafeMatcher<EnumMap<E, V>> enumMapEqualityMatcher(EnumMap<E, V> expected) {
     return enumMapMatcher(expected, f -> typeSafeEqualTo(f));
   }
