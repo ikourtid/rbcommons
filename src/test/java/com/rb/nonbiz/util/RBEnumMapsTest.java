@@ -1,14 +1,12 @@
 package com.rb.nonbiz.util;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.junit.Test;
 
 import java.util.EnumMap;
 
-import static com.google.common.collect.Maps.immutableEnumMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
