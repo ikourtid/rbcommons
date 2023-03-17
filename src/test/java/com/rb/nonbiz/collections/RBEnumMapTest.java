@@ -113,7 +113,7 @@ public class RBEnumMapTest extends TestCase {
     assertOptionalEmpty(EMPTY_RB_ENUM_MAP.getOptional(TestEnumXYZ.Y));
     assertOptionalEmpty(EMPTY_RB_ENUM_MAP.getOptional(TestEnumXYZ.Z));
 
-    //One item map has 1 value.
+    // One item map has 1 value.
     assertEquals( RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.X), Optional.of("String_X"));
     assertOptionalEmpty(RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Y));
     assertOptionalEmpty(RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Z));
