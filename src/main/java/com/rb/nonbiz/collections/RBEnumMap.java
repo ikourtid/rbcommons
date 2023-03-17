@@ -20,7 +20,7 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
  * </p>
  *
  * <p> Guava ImmutableMap implements the Map interface, but its put() method will throw at runtime.
- * However, RBMap intentionally has NO methods to modify it. That offers compile-time safety. </p>
+ * However, RBEnumMap intentionally has NO methods to modify it. That offers compile-time safety. </p>
  *
  * <p> Another advantage: #get on a regular Map returns null if the value is not there. We don't like nulls in the codebase,
  * plus that behavior is confusing to someone new to Java. </p>
@@ -103,7 +103,7 @@ public class RBEnumMap<E extends Enum<E>, V> {
    */
   public V getOrThrow(E key, String template, Object...args) {
     if (key == null) {
-      throw new IllegalArgumentException("An RBMap does not allow null keys");
+      throw new IllegalArgumentException("An RBEnumMap does not allow null keys");
     }
     V valueOrNull = rawMap.get(key);
     if (valueOrNull == null) {
@@ -122,7 +122,7 @@ public class RBEnumMap<E extends Enum<E>, V> {
   }
 
   /**
-   * This is a nice shorthand for iterating through an RBMap's entries.
+   * This is a nice shorthand for iterating through an RBEnumMap's entries.
    */
   public void forEachEntry(BiConsumer<E, V> biConsumer) {
     rawMap.entrySet().forEach(entry -> biConsumer.accept(entry.getKey(), entry.getValue()));
