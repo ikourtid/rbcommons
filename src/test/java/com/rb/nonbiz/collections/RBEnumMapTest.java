@@ -145,7 +145,7 @@ public class RBEnumMapTest extends TestCase {
     assertIllegalArgumentException( () -> EMPTY_RB_ENUM_MAP.getOrThrow(TestEnumXYZ.Y));
     assertIllegalArgumentException( () -> EMPTY_RB_ENUM_MAP.getOrThrow(TestEnumXYZ.Z));
 
-    assertEquals("String_X", RB_ENUM_MAP_1_ITEMS.getOrThrow(TestEnumXYZ.X));
+    assertEquals("String_X",              RB_ENUM_MAP_1_ITEMS.getOrThrow(TestEnumXYZ.X));
     assertIllegalArgumentException( () -> RB_ENUM_MAP_1_ITEMS.getOrThrow(TestEnumXYZ.Y));
     assertIllegalArgumentException( () -> RB_ENUM_MAP_1_ITEMS.getOrThrow(TestEnumXYZ.Z));
 
