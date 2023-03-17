@@ -1,23 +1,15 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBEnumMaps;
 
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.Maps.newEnumMap;
-import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
-import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
-import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
@@ -38,26 +30,25 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
  *   <li> #getOrThrow, which assumes the value is there, and returns {@link Optional}.of(...). </li>
  * </ol>
  *
- * @see RBMaps for some handy static methods.
+ * @see RBEnumMaps for some handy static methods.
  * @see MutableRBMap for a class that helps you initialize an RBMap.
  */
-public class RBEnumMap<K extends Enum<K>, V> {
+public class RBEnumMap<E extends Enum<E>, V> {
 
-  private final EnumMap<K, V> rawMap;
+  private final EnumMap<E, V> rawMap;
 
-  protected RBEnumMap(EnumMap<K, V> rawMap) {
+  private RBEnumMap(EnumMap<E, V> rawMap) {
     this.rawMap = newEnumMap(rawMap);
   }
 
-  /**
-   * Use this if you want the standard java.util.Map interface, e.g. to use it in some library that
-   * can manipulate maps.
-   *
-   * <p> Be careful with this, because you are exposing the guts of the RBEnumMap, and you have no guarantee that the
-   * caller won't modify the map, which would break the convention that RBEnumMap is immutable. </p>
-   */
-  public Map<K, V> asEnumMap() {
-    return rawMap;
+  // Create an RBEnumMap from a raw map.
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMap(EnumMap rawMap) {
+    return new RBEnumMap<E, V>(rawMap);
+  }
+
+  // Get a copy of the raw map.  This is not efficient but it preserves immutability.
+  public EnumMap getCopyOfRawMap() {
+    return rawMap.clone();
   }
 
   public int size() {
@@ -68,7 +59,7 @@ public class RBEnumMap<K extends Enum<K>, V> {
     return rawMap.isEmpty();
   }
 
-  public boolean containsKey(K key) {
+  public boolean containsKey(E key) {
     return rawMap.containsKey(key);
   }
 
@@ -80,7 +71,7 @@ public class RBEnumMap<K extends Enum<K>, V> {
    * Returns Optional.empty() if there is no value for the key,
    * otherwise Optional.of(value under key).
    */
-  public Optional<V> getOptional(K key) {
+  public Optional<V> getOptional(E key) {
     if (key == null) {
       throw new IllegalArgumentException("An RBEnumMap does not allow null keys");
     }
@@ -90,7 +81,7 @@ public class RBEnumMap<K extends Enum<K>, V> {
   /**
    * Returns the value under the key (if present), otherwise the defaultValue.
    */
-  public V getOrDefault(K key, V defaultValue) {
+  public V getOrDefault(E key, V defaultValue) {
     if (key == null) {
       throw new IllegalArgumentException("An RBEnumMap does not allow null keys");
     }
@@ -101,14 +92,14 @@ public class RBEnumMap<K extends Enum<K>, V> {
   /**
    * Returns the value under the key (if present). Throws an exception otherwise.
    */
-  public V getOrThrow(K key) {
+  public V getOrThrow(E key) {
     return getOrThrow(key, "Key %s does not exist in enumMap", key);
   }
 
   /**
    * Returns the value under the key (if present). Throws an exception otherwise, with the specified message.
    */
-  public V getOrThrow(K key, String template, Object...args) {
+  public V getOrThrow(E key, String template, Object...args) {
     if (key == null) {
       throw new IllegalArgumentException("An RBMap does not allow null keys");
     }
@@ -120,69 +111,19 @@ public class RBEnumMap<K extends Enum<K>, V> {
     return valueOrNull;
   }
 
-  public Set<K> keySet() {
+  public Set<E> keySet() {
     return rawMap.keySet();
   }
 
-  public Collection<V> values() {
-    return rawMap.values();
-  }
-
-  public Set<Map.Entry<K, V>> entrySet() {
+  public Set<Map.Entry<E, V>> entrySet() {
     return rawMap.entrySet();
   }
 
   /**
    * This is a nice shorthand for iterating through an RBMap's entries.
    */
-  public void forEachEntry(BiConsumer<K, V> biConsumer) {
-    entrySet().forEach(entry -> biConsumer.accept(entry.getKey(), entry.getValue()));
-  }
-
-  /**
-   * This is a nice shorthand for iterating through an RBMap's entries.
-   */
-  public void forEachSortedEntry(
-      Comparator<Map.Entry<K, V>> comparator,
-      BiConsumer<K, V> biConsumer) {
-    entrySet()
-        .stream()
-        .sorted(comparator)
-        .forEach(entry -> biConsumer.accept(entry.getKey(), entry.getValue()));
-  }
-
-  /**
-   * Creates a new map whose keys are the same, and whose values are a transformation
-   * of the values of the original map, when you don't care about they key when doing the transformation.
-   */
-  public <V1> RBMap<K, V1> transformValuesCopy(Function<V, V1> valueTransformer) {
-    return filterKeysAndTransformValuesCopy(valueTransformer, v -> true);
-  }
-
-  /**
-   * Creates a new map whose keys are the same, and whose values are a transformation
-   * of the values of the original map, when you don't care about they key when doing the transformation.
-   * ADDITIONALLY, it may filter keys so that the final map may be smaller than the original.
-   */
-  public <V1> RBMap<K, V1> filterKeysAndTransformValuesCopy(Function<V, V1> valueTransformer, Predicate<K> mustKeepKey) {
-    return filterKeysAndTransformEntriesCopy( (ignoredKey, value) -> valueTransformer.apply(value), mustKeepKey);
-  }
-
-  /**
-   * Creates a new map whose keys are the same, and whose values are a transformation
-   * of the keys AND values of the original map - i.e. you do care about they key when doing the transformation.
-   * Additionally, it may filter keys so that the final map may be smaller than the original.
-   */
-  public <V1> RBMap<K, V1> filterKeysAndTransformEntriesCopy(BiFunction<K, V, V1> valueTransformer, Predicate<K> mustKeepKey) {
-    MutableRBMap<K, V1> mutableMap = newMutableRBMapWithExpectedSize(size());
-    forEachEntry( (key, originalValue) -> {
-      if (!mustKeepKey.test(key)) {
-        return;
-      }
-      V1 transformedValue = valueTransformer.apply(key, originalValue);
-      mutableMap.putAssumingAbsent(key, transformedValue);
-    });
-    return newRBMap(mutableMap);
+  public void forEachEntry(BiConsumer<E, V> biConsumer) {
+    rawMap.entrySet().forEach(entry -> biConsumer.accept(entry.getKey(), entry.getValue()));
   }
 
   // IDE-generated
@@ -205,7 +146,7 @@ public class RBEnumMap<K extends Enum<K>, V> {
 
   @Override
   public String toString() {
-    return asEnumMap().toString();
+    return rawMap.toString();
   }
 
 }
