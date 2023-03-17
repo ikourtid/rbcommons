@@ -94,15 +94,15 @@ public class RBEnumMapTest extends TestCase {
     assertFalse(EMPTY_RB_ENUM_MAP.containsValue("NO_VALUE"));
 
     // One item map has only X.
-    assertTrue(RB_ENUM_MAP_1_ITEMS.containsValue("String_X"));
+    assertTrue( RB_ENUM_MAP_1_ITEMS.containsValue("String_X"));
     assertFalse(RB_ENUM_MAP_1_ITEMS.containsValue("String_Y"));
     assertFalse(RB_ENUM_MAP_1_ITEMS.containsValue("String_Z"));
     assertFalse(RB_ENUM_MAP_1_ITEMS.containsValue("NO_VALUE"));
-    
+
     // Three item map has X, Y, Z.
-    assertTrue(RB_ENUM_MAP_3_ITEMS.containsValue("String_X"));
-    assertTrue(RB_ENUM_MAP_3_ITEMS.containsValue("String_Y"));
-    assertTrue(RB_ENUM_MAP_3_ITEMS.containsValue("String_Z"));
+    assertTrue( RB_ENUM_MAP_3_ITEMS.containsValue("String_X"));
+    assertTrue( RB_ENUM_MAP_3_ITEMS.containsValue("String_Y"));
+    assertTrue( RB_ENUM_MAP_3_ITEMS.containsValue("String_Z"));
     assertFalse(RB_ENUM_MAP_3_ITEMS.containsValue("NO_VALUE"));
   }
 
