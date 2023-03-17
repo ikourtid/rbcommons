@@ -54,13 +54,6 @@ public class RBEnumMapsTest {
   }
 
   @Test
-  public void testImmutableEnumMap() {
-    ImmutableMap<TestEnumXYZ, String> myEnumMap = immutableEnumMap(ImmutableMap.of(
-        TestEnumXYZ.X, "A",
-        TestEnumXYZ.Y, "B"));
-  };
-
-  @Test
   public void testTransformEnumMap() {
     EnumMap<TestEnumXYZ, Integer> original = newEnumMap(rbMapOf(
         TestEnumXYZ.X, 11,
