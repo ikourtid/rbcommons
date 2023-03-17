@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBEnumMapSimpleConstructors;
 import com.rb.nonbiz.util.RBEnumMaps;
 
 import java.util.EnumMap;
@@ -15,7 +16,7 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 /**
  * Similar to java.util.EnumMap. However, it is meant to be immutable.
  *
- * <p>Always prefer RBEnumMap to a java.util.Map, especially on an interface, but even inside a method's body, when possible.
+ * <p>Always prefer RBEnumMap to a java.util.EnumMap, especially on an interface, but even inside a method's body, when possible.
  * </p>
  *
  * <p> Guava ImmutableMap implements the Map interface, but its put() method will throw at runtime.
@@ -31,7 +32,7 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
  * </ol>
  *
  * @see RBEnumMaps for some handy static methods.
- * @see MutableRBMap for a class that helps you initialize an RBMap.
+ * @see RBEnumMapSimpleConstructors for some helpful constructors.
  */
 public class RBEnumMap<E extends Enum<E>, V> {
 
