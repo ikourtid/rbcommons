@@ -1,6 +1,7 @@
 package com.rb.nonbiz.testmatchers;
 
 import com.rb.nonbiz.collections.MutableRBSortedSet;
+import com.rb.nonbiz.collections.RBEnumMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSortedSet;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
@@ -23,6 +24,7 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.intArrayMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbEnumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
@@ -234,6 +236,10 @@ public class RBCollectionMatchers {
 
   public static <E extends Enum<E>, V> TypeSafeMatcher<EnumMap<E, V>> enumMapEqualityMatcher(EnumMap<E, V> expected) {
     return enumMapMatcher(expected, f -> typeSafeEqualTo(f));
+  }
+
+  public static <E extends Enum<E>, V> TypeSafeMatcher<RBEnumMap<E, V>> rbEnumMapEqualityMatcher(RBEnumMap<E, V> expected) {
+    return rbEnumMapMatcher(expected, f -> typeSafeEqualTo(f));
   }
 
 }

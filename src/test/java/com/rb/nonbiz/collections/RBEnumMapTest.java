@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.nonbiz.testmatchers.RBCollectionMatchers;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -12,7 +13,10 @@ import static com.rb.nonbiz.collections.RBSet.rbSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapEqualityMatcher;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbEnumMapEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbEnumMapMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
@@ -47,6 +51,28 @@ public class RBEnumMapTest extends TestCase {
           rbEnumMap(enum_map).getCopyOfRawMap(),
           enumMapEqualityMatcher(enum_map));
     }
+  }
+
+  @Test
+  public void testImmutability() {
+    EnumMap<TestEnumXYZ, String> enumMap = singletonEnumMap(TestEnumXYZ.X, "X");
+    RBEnumMap<TestEnumXYZ, String> rbEnumMap = rbEnumMap(enumMap);
+
+    // Changing the map we're constructed with doesn't change the rbmap.
+    enumMap.put(TestEnumXYZ.Z, "Z");
+    enumMap.replace(TestEnumXYZ.X, "X", "A");
+    // RBEnumMap should be unchanged.
+    assertEquals(1, rbEnumMap.size());
+    assertEquals("X", rbEnumMap.getOrThrow(TestEnumXYZ.X));
+
+    // Now call getRawMap and change the map.
+    EnumMap<TestEnumXYZ, String> retrievedMap = rbEnumMap.getCopyOfRawMap();
+    retrievedMap.put(TestEnumXYZ.Z, "Z");
+    retrievedMap.replace(TestEnumXYZ.X, "X", "A");
+    // The RBEnumMap should be unchanged.
+    assertEquals(2, retrievedMap.size());
+    assertEquals(1, rbEnumMap.size());
+    assertEquals("X", rbEnumMap.getOrThrow(TestEnumXYZ.X));
   }
 
   @Test
