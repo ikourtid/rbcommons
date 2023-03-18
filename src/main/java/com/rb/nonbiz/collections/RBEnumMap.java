@@ -14,15 +14,15 @@ import static com.google.common.collect.Maps.newEnumMap;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
- * Similar to java.util.EnumMap. However, it is meant to be immutable.
+ * Similar to {@link java.util.EnumMap}. However, it is meant to be immutable.
  *
- * <p>Always prefer RBEnumMap to a java.util.EnumMap, especially on an interface, but even inside a method's body, when possible.
+ * <p>Always prefer {@link RBEnumMap} to a java.util.EnumMap, especially on an interface, but even inside a method's body, when possible.
  * </p>
  *
  * <p> Guava ImmutableMap implements the Map interface, but its put() method will throw at runtime.
- * However, RBEnumMap intentionally has NO methods to modify it. That offers compile-time safety. </p>
+ * However, {@link RBEnumMap} intentionally has NO methods to modify it. That offers compile-time safety. </p>
  *
- * <p> Another advantage: #get on a regular Map returns null if the value is not there. We don't like nulls in the codebase,
+ * <p> Another advantage: #get on a regular {@link Map} returns null if the value is not there. We don't like nulls in the codebase,
  * plus that behavior is confusing to someone new to Java. </p>
  *
  * <p> Instead, RBEnumMap has: </p>
