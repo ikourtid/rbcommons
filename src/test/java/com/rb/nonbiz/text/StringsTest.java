@@ -27,7 +27,7 @@ import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DATE;
 import static com.rb.nonbiz.text.Strings.*;
 import static com.rb.nonbiz.types.PreciseValue.formatWithoutCommas;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
-import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonRBEnumMap;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.reverseOrder;
 import static java.util.Collections.singletonList;
@@ -249,8 +249,8 @@ public class StringsTest {
     assertThat(
         // The mapping here, from JsonElementType to partition, isn't useful for practical reasons, but it
         // serves to test the formatEnumMap... function because partitions print instruments.
-        formatEnumMapWhereValuesPrintInstruments(
-            singletonEnumMap(JSON_STRING, iidPartition(iidMapFromRBMap(rbMapOf(
+        formatRBEnumMapWhereValuesPrintInstruments(
+            singletonRBEnumMap(JSON_STRING, iidPartition(iidMapFromRBMap(rbMapOf(
                 STOCK_A, unitFraction(0.5),
                 STOCK_B, unitFraction(0.5))))),
             instrumentMaster,

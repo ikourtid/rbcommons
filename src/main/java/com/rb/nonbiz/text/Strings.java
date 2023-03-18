@@ -13,6 +13,7 @@ import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.ImmutableIndexableArray1D;
 import com.rb.nonbiz.collections.NonZeroDeviations;
 import com.rb.nonbiz.collections.Partition;
+import com.rb.nonbiz.collections.RBEnumMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.types.UnitFraction;
 
@@ -20,7 +21,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -177,8 +177,8 @@ public class Strings {
         .iterator());
   }
 
-  public static <E extends Enum<E>, V extends PrintsInstruments> String formatEnumMapWhereValuesPrintInstruments(
-      EnumMap<E, V> enumMap, InstrumentMaster instrumentMaster, LocalDate date) {
+  public static <E extends Enum<E>, V extends PrintsInstruments> String formatRBEnumMapWhereValuesPrintInstruments(
+      RBEnumMap<E, V> enumMap, InstrumentMaster instrumentMaster, LocalDate date) {
     return sizePrefix(enumMap.size()) + Joiner.on(" , ").join(
         enumMap
             .entrySet()
