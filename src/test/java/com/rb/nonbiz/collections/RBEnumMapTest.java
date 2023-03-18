@@ -209,6 +209,9 @@ public class RBEnumMapTest {
 
   @Test
   public void testForEachEntry() {
+
+    // This Consumer will take an rbEnumMap, run forEachEntry, and put each entry into a new mutable enumMap.
+    // Then it will assert that the newly constructed enumMap equals the original one from the rbMap.
     Consumer<RBEnumMap<TestEnumXYZ, String>> asserter = rbEnumMap -> {
       EnumMap<TestEnumXYZ, String> enumMapFromForEachEntry = new EnumMap<TestEnumXYZ, String>(TestEnumXYZ.class);
       rbEnumMap.forEachEntry((enumKey, value) -> enumMapFromForEachEntry.put(enumKey, value));
