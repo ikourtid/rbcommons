@@ -177,7 +177,6 @@ public class RBMapMatchers {
       if (!expected.keySet().equals(actual.keySet())) {
         return false;
       }
-      //for (Entry<E, V> entryInExpected : expected.entrySet()) {
       for (Entry<E, V> entryInExpected : expected.entrySet()) {
         E enumKey = entryInExpected.getKey();
         V valueInExpected = entryInExpected.getValue();
