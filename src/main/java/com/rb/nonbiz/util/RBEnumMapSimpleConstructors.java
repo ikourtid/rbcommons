@@ -1,8 +1,11 @@
 package com.rb.nonbiz.util;
 
 import com.google.common.collect.ImmutableMap;
+import com.rb.nonbiz.collections.RBEnumMap;
 
 import java.util.EnumMap;
+
+import static com.rb.nonbiz.collections.RBEnumMap.rbEnumMap;
 
 public class RBEnumMapSimpleConstructors {
 
@@ -10,10 +13,23 @@ public class RBEnumMapSimpleConstructors {
     return new EnumMap<>(ImmutableMap.of(onlyEnumKey, onlyValue));
   }
 
+  // Create a singleton RBEnumMap.
+  public static <K extends Enum<K>, V> RBEnumMap<K, V> singletonRBEnumMap(K onlyEnumKey, V onlyValue) {
+    return rbEnumMap(singletonEnumMap(onlyEnumKey, onlyValue));
+  }
+
   public static <E extends Enum<E>, V> EnumMap<E, V> enumMapOf(
       E enumKey1, V value1,
       E enumKey2, V value2) {
     return new EnumMap<>(ImmutableMap.of(
+        enumKey1, value1,
+        enumKey2, value2));
+  }
+
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMapOf(
+      E enumKey1, V value1,
+      E enumKey2, V value2) {
+    return rbEnumMap(enumMapOf(
         enumKey1, value1,
         enumKey2, value2));
   }
