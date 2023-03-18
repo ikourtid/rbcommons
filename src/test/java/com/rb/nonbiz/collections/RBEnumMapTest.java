@@ -17,6 +17,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.emptyRbEnumMap;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -39,7 +40,7 @@ public class RBEnumMapTest {
       TestEnumXYZ.Z, "String_Z");
   private final RBSet<EnumMap> ENUM_MAPS = rbSetOf(EMPTY_ENUM_MAP, ENUM_MAP_1_ITEM, ENUM_MAP_2_ITEMS, ENUM_MAP_3_ITEMS);
 
-  private final RBEnumMap<TestEnumXYZ, String> EMPTY_RB_ENUM_MAP   = newRBEnumMap(EMPTY_ENUM_MAP);
+  private final RBEnumMap<TestEnumXYZ, String> EMPTY_RB_ENUM_MAP   = emptyRbEnumMap(TestEnumXYZ.class);
   private final RBEnumMap<TestEnumXYZ, String> RB_ENUM_MAP_1_ITEMS = newRBEnumMap(ENUM_MAP_1_ITEM);
   private final RBEnumMap<TestEnumXYZ, String> RB_ENUM_MAP_2_ITEMS = newRBEnumMap(ENUM_MAP_2_ITEMS);
   private final RBEnumMap<TestEnumXYZ, String> RB_ENUM_MAP_3_ITEMS = newRBEnumMap(ENUM_MAP_3_ITEMS);
