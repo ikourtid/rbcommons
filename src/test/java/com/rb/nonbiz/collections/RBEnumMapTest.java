@@ -49,11 +49,10 @@ public class RBEnumMapTest {
   public void testGetCopyOfRawMap() {
 
     // Test round trip conversion all maps.
-    for (EnumMap enumMap : ENUM_MAPS) {
-      assertThat(
-          newRBEnumMap(enumMap).getCopyOfRawMap(),
-          enumMapEqualityMatcher(enumMap));
-    }
+    ENUM_MAPS.forEach( enumMap ->
+        assertThat(
+            newRBEnumMap(enumMap).getCopyOfRawMap(),
+            enumMapEqualityMatcher(enumMap)));
   }
 
   @Test
@@ -200,12 +199,11 @@ public class RBEnumMapTest {
   @Test
   public void testEntrySet() {
     // Test RBEnumMap's entry set is the same as the raw enumMap.
-    for (EnumMap enumMap : ENUM_MAPS) {
-      assertThat(
-          // Below we use rbSet wrappers so we can use an rbSet equality matcher.
-          rbSet(newRBEnumMap(enumMap).entrySet()),
-          rbSetEqualsMatcher(rbSet(enumMap.entrySet())));
-    }
+    ENUM_MAPS.forEach( enumMap ->
+        assertThat(
+            // Below we use rbSet wrappers so we can use an rbSet equality matcher.
+            rbSet(newRBEnumMap(enumMap).entrySet()),
+            rbSetEqualsMatcher(rbSet(enumMap.entrySet()))));
   }
 
   @Test
@@ -215,7 +213,7 @@ public class RBEnumMapTest {
     // Then it will assert that the newly constructed enumMap equals the original one from the rbMap.
     Consumer<RBEnumMap<TestEnumXYZ, String>> asserter = rbEnumMap -> {
       EnumMap<TestEnumXYZ, String> enumMapFromForEachEntry = new EnumMap<TestEnumXYZ, String>(TestEnumXYZ.class);
-      rbEnumMap.forEachEntry((enumKey, value) -> enumMapFromForEachEntry.put(enumKey, value));
+      rbEnumMap.forEachEntry( (enumKey, value) -> enumMapFromForEachEntry.put(enumKey, value));
       assertThat(
           enumMapFromForEachEntry,
           enumMapEqualityMatcher(rbEnumMap.getCopyOfRawMap()));
