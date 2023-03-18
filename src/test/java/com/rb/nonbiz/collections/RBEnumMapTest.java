@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.EnumMap;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
 import static com.rb.nonbiz.collections.RBSet.rbSet;
@@ -21,6 +22,7 @@ import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -196,27 +198,46 @@ public class RBEnumMapTest {
 
   @Test
   public void testEntrySet() {
-    fail("Chris to implement");
+    // Test RBEnumMap's entry set is the same as the raw enumMap.
+    for (EnumMap enumMap : ENUM_MAPS) {
+      assertThat(
+          // Below we use rbSet wrappers so we can use an rbSet equality matcher.
+          rbSet(newRBEnumMap(enumMap).entrySet()),
+          rbSetEqualsMatcher(rbSet(enumMap.entrySet())));
+    }
   }
 
   @Test
   public void testForEachEntry() {
-   fail("Chris to implement");
-  }
 
-  @Test
-  public void testTestEquals() {
-    fail("Chris to implement");
+    // This Consumer will take an rbEnumMap, run forEachEntry, and put each entry into a new mutable enumMap.
+    // Then it will assert that the newly constructed enumMap equals the original one from the rbMap.
+    Consumer<RBEnumMap<TestEnumXYZ, String>> asserter = rbEnumMap -> {
+      EnumMap<TestEnumXYZ, String> enumMapFromForEachEntry = new EnumMap<TestEnumXYZ, String>(TestEnumXYZ.class);
+      rbEnumMap.forEachEntry((enumKey, value) -> enumMapFromForEachEntry.put(enumKey, value));
+      assertThat(
+          enumMapFromForEachEntry,
+          enumMapEqualityMatcher(rbEnumMap.getCopyOfRawMap()));
+    };
+    for( EnumMap enumMap : ENUM_MAPS ) {
+      asserter.accept(newRBEnumMap(enumMap));
+    }
   }
 
   @Test
   public void testTestHashCode() {
-    fail("Chris to implement");
+    assertNotEquals(RB_ENUM_MAP_1_ITEMS.hashCode(), EMPTY_RB_ENUM_MAP.hashCode());
+    assertEquals(   RB_ENUM_MAP_1_ITEMS.hashCode(), RB_ENUM_MAP_1_ITEMS.hashCode());
+    assertNotEquals(RB_ENUM_MAP_1_ITEMS.hashCode(), RB_ENUM_MAP_2_ITEMS.hashCode());
+    assertNotEquals(RB_ENUM_MAP_1_ITEMS.hashCode(), RB_ENUM_MAP_3_ITEMS.hashCode());
   }
 
   @Test
   public void testTestToString() {
-    fail("Chris to implement");
+    assertEquals("{}", EMPTY_RB_ENUM_MAP.toString());
+    assertEquals("{X=String_X}", RB_ENUM_MAP_1_ITEMS.toString());
+    assertEquals("{X=String_X, Y=String_Y}", RB_ENUM_MAP_2_ITEMS.toString());
+    assertEquals("{X=String_X, Y=String_Y, Z=String_Z}", RB_ENUM_MAP_3_ITEMS.toString());
   }
 
 }
