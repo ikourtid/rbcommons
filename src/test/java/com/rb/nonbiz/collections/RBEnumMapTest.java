@@ -1,30 +1,30 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.testmatchers.RBCollectionMatchers;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.EnumMap;
 import java.util.Optional;
 
-import static com.rb.nonbiz.collections.RBEnumMap.rbEnumMap;
+import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
 import static com.rb.nonbiz.collections.RBSet.rbSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapEqualityMatcher;
-import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbEnumMapEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
-import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbEnumMapMatcher;
-import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-public class RBEnumMapTest extends TestCase {
+public class RBEnumMapTest {
 
   private final EnumMap<TestEnumXYZ, String> EMPTY_ENUM_MAP = new EnumMap<TestEnumXYZ, String>(TestEnumXYZ.class);
   private final EnumMap<TestEnumXYZ, String> ENUM_MAP_1_ITEM =  singletonEnumMap(TestEnumXYZ.X, "String_X");
@@ -37,26 +37,26 @@ public class RBEnumMapTest extends TestCase {
       TestEnumXYZ.Z, "String_Z");
   private final RBSet<EnumMap> ENUM_MAPS = rbSetOf(EMPTY_ENUM_MAP, ENUM_MAP_1_ITEM, ENUM_MAP_2_ITEMS, ENUM_MAP_3_ITEMS);
 
-  private final RBEnumMap<TestEnumXYZ, String> EMPTY_RB_ENUM_MAP   = rbEnumMap(EMPTY_ENUM_MAP);
-  private final RBEnumMap<TestEnumXYZ, String> RB_ENUM_MAP_1_ITEMS = rbEnumMap(ENUM_MAP_1_ITEM);
-  private final RBEnumMap<TestEnumXYZ, String> RB_ENUM_MAP_2_ITEMS = rbEnumMap(ENUM_MAP_2_ITEMS);
-  private final RBEnumMap<TestEnumXYZ, String> RB_ENUM_MAP_3_ITEMS = rbEnumMap(ENUM_MAP_3_ITEMS);
+  private final RBEnumMap<TestEnumXYZ, String> EMPTY_RB_ENUM_MAP   = newRBEnumMap(EMPTY_ENUM_MAP);
+  private final RBEnumMap<TestEnumXYZ, String> RB_ENUM_MAP_1_ITEMS = newRBEnumMap(ENUM_MAP_1_ITEM);
+  private final RBEnumMap<TestEnumXYZ, String> RB_ENUM_MAP_2_ITEMS = newRBEnumMap(ENUM_MAP_2_ITEMS);
+  private final RBEnumMap<TestEnumXYZ, String> RB_ENUM_MAP_3_ITEMS = newRBEnumMap(ENUM_MAP_3_ITEMS);
 
   @Test
   public void testGetCopyOfRawMap() {
 
     // Test round trip conversion all maps.
-    for (EnumMap enum_map : ENUM_MAPS) {
+    for (EnumMap enumMap : ENUM_MAPS) {
       assertThat(
-          rbEnumMap(enum_map).getCopyOfRawMap(),
-          enumMapEqualityMatcher(enum_map));
+          newRBEnumMap(enumMap).getCopyOfRawMap(),
+          enumMapEqualityMatcher(enumMap));
     }
   }
 
   @Test
   public void testImmutability() {
     EnumMap<TestEnumXYZ, String> enumMap = singletonEnumMap(TestEnumXYZ.X, "X");
-    RBEnumMap<TestEnumXYZ, String> rbEnumMap = rbEnumMap(enumMap);
+    RBEnumMap<TestEnumXYZ, String> rbEnumMap = newRBEnumMap(enumMap);
 
     // Changing the map we're constructed with doesn't change the rbmap.
     enumMap.put(TestEnumXYZ.Z, "Z");
@@ -77,10 +77,10 @@ public class RBEnumMapTest extends TestCase {
 
   @Test
   public void testSize() {
-    assertEquals(0, rbEnumMap(EMPTY_ENUM_MAP).size());
-    assertEquals(1, rbEnumMap(ENUM_MAP_1_ITEM).size());
-    assertEquals(2, rbEnumMap(ENUM_MAP_2_ITEMS).size());
-    assertEquals(3, rbEnumMap(ENUM_MAP_3_ITEMS).size());
+    assertEquals(0, newRBEnumMap(EMPTY_ENUM_MAP).size());
+    assertEquals(1, newRBEnumMap(ENUM_MAP_1_ITEM).size());
+    assertEquals(2, newRBEnumMap(ENUM_MAP_2_ITEMS).size());
+    assertEquals(3, newRBEnumMap(ENUM_MAP_3_ITEMS).size());
   }
 
   @Test
@@ -140,14 +140,14 @@ public class RBEnumMapTest extends TestCase {
     assertOptionalEmpty(EMPTY_RB_ENUM_MAP.getOptional(TestEnumXYZ.Z));
 
     // One item map has 1 value.
-    assertEquals( RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.X), Optional.of("String_X"));
-    assertOptionalEmpty(RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Y));
-    assertOptionalEmpty(RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Z));
+    assertOptionalEquals(RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.X), Optional.of("String_X"));
+    assertOptionalEmpty( RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Y));
+    assertOptionalEmpty( RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Z));
 
     // Three item map has 3 values.
-    assertEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.X), Optional.of("String_X"));
-    assertEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Y), Optional.of("String_Y"));
-    assertEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Z), Optional.of("String_Z"));
+    assertOptionalEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.X), Optional.of("String_X"));
+    assertOptionalEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Y), Optional.of("String_Y"));
+    assertOptionalEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Z), Optional.of("String_Z"));
   }
 
   @Test

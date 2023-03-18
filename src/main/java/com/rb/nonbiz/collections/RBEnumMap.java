@@ -44,7 +44,7 @@ public class RBEnumMap<E extends Enum<E>, V> {
   }
 
   // Create an RBEnumMap from a raw map.
-  public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMap(EnumMap rawMap) {
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> newRBEnumMap(EnumMap rawMap) {
     return new RBEnumMap<E, V>(rawMap);
   }
 
