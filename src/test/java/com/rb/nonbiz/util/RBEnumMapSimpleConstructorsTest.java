@@ -9,7 +9,7 @@ import java.util.EnumMap;
 import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbEnumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
-import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.emptyRbEnumMap;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.emptyRBEnumMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -18,13 +18,13 @@ public class RBEnumMapSimpleConstructorsTest {
   @Test
   public void testEmptyRbEnumMap() {
     // Empty Constructor gives zero-size map.
-    assertEquals(0, emptyRbEnumMap(TestEnumXYZ.class).size());
+    assertEquals(0, emptyRBEnumMap(TestEnumXYZ.class).size());
 
     // Constructor from empty map gives same as the explicit empty constructor.
     // The variable below cannot be inlined.
     RBEnumMap<TestEnumXYZ, String> emptyRBEnumMap = newRBEnumMap(new EnumMap<TestEnumXYZ, String>(TestEnumXYZ.class));
     assertThat(
-        emptyRbEnumMap(TestEnumXYZ.class),
+        emptyRBEnumMap(TestEnumXYZ.class),
         rbEnumMapMatcher(
             emptyRBEnumMap,
             f -> stringMatcher(f)));

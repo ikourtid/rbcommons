@@ -9,7 +9,7 @@ import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
 
 public class RBEnumMapSimpleConstructors {
 
-  public static <E extends Enum<E>, V> RBEnumMap<E, V> emptyRbEnumMap(Class<E> enumClass) {
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> emptyRBEnumMap(Class<E> enumClass) {
     return newRBEnumMap(new EnumMap<>(enumClass));
   }
 
