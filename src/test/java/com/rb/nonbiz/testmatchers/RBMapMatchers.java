@@ -170,7 +170,7 @@ public class RBMapMatchers {
     };
   }
 
-  public static <E extends Enum<E>, V> TypeSafeMatcher<RBEnumMap> rbEnumMapMatcher(
+  public static <E extends Enum<E>, V> TypeSafeMatcher<RBEnumMap<E, V>> rbEnumMapMatcher(
       RBEnumMap<E, V> expected,
       MatcherGenerator<V> valueMatcherGenerator) {
     return makeMatcher(expected, actual -> {
