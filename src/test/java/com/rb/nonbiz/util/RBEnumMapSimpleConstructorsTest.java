@@ -29,4 +29,5 @@ public class RBEnumMapSimpleConstructorsTest {
             emptyRBEnumMap,
             f -> stringMatcher(f)));
   }
+  
 }
