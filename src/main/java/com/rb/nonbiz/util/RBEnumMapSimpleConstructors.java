@@ -9,6 +9,10 @@ import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
 
 public class RBEnumMapSimpleConstructors {
 
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> emptyRBEnumMap(Class<E> enumClass) {
+    return newRBEnumMap(new EnumMap<>(enumClass));
+  }
+
   public static <E extends Enum<E>, V> EnumMap<E, V> singletonEnumMap(E onlyEnumKey, V onlyValue) {
     return new EnumMap<>(ImmutableMap.of(onlyEnumKey, onlyValue));
   }
