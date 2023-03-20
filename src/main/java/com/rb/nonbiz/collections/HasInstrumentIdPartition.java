@@ -121,7 +121,7 @@ public class HasInstrumentIdPartition<T extends HasInstrumentId> implements Prin
   }
 
   /**
-   * Use forEachEntry instead, if you don't care about the order you will iterate over the map; it's faster.
+   * Use forEachEntryInKeyOrder instead, if you don't care about the order you will iterate over the map; it's faster.
    */
   public void forEachInInstrumentIdOrder(BiConsumer<T, UnitFraction> biConsumer) {
     rawMap.forEachInInstrumentIdOrder(biConsumer);

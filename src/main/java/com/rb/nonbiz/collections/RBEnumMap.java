@@ -124,7 +124,7 @@ public class RBEnumMap<E extends Enum<E>, V> {
   /**
    * This is a nice shorthand for iterating through an RBEnumMap's entries.
    */
-  public void forEachEntry(BiConsumer<E, V> biConsumer) {
+  public void forEachEntryInKeyOrder(BiConsumer<E, V> biConsumer) {
     rawMap.entrySet().forEach(entry -> biConsumer.accept(entry.getKey(), entry.getValue()));
   }
 
