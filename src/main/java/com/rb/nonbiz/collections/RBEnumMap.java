@@ -49,7 +49,7 @@ public class RBEnumMap<E extends Enum<E>, V> {
   }
 
   // Get a copy of the raw map.  This is not efficient but it preserves immutability.
-  public EnumMap getCopyOfRawMap() {
+  public EnumMap<E, V> getCopyOfRawMap() {
     return rawMap.clone();
   }
 
