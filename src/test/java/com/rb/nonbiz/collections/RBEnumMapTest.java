@@ -148,8 +148,8 @@ public class RBEnumMapTest {
 
     // One item map has 1 value.
     assertOptionalEquals("String_X", RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.X));
-    assertOptionalEmpty( RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Y));
-    assertOptionalEmpty( RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Z));
+    assertOptionalEmpty(             RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Y));
+    assertOptionalEmpty(             RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Z));
 
     // Three item map has 3 values.
     assertOptionalEquals("String_X", RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.X));
