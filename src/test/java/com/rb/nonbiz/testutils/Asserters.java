@@ -344,6 +344,16 @@ public class Asserters {
     return expected;
   }
 
+  public static <V extends ImpreciseValue<? super V>> V impreciseValueExplained(V expected, V actual) {
+    assertAlmostEquals(
+        Strings.format(
+            "You have a mistake in your calculations (hopefully not in the test itself) for value= %s", expected),
+        expected,
+        actual,
+        DEFAULT_EPSILON_1e_8);
+    return expected;
+  }
+
   // Like valueExplained, but for cases where we can't rely on #equals, and we have to use a matcher.
   public static <T> T valueExplainedByMatcher(T expected, TypeSafeMatcher<T> matcher) {
     assertThat(
