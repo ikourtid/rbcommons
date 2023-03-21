@@ -5,7 +5,6 @@ import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.junit.Test;
 
 import java.util.EnumMap;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -148,14 +147,14 @@ public class RBEnumMapTest {
     assertOptionalEmpty(EMPTY_RB_ENUM_MAP.getOptional(TestEnumXYZ.Z));
 
     // One item map has 1 value.
-    assertOptionalEquals(RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.X), Optional.of("String_X"));
+    assertOptionalEquals("String_X", RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.X));
     assertOptionalEmpty( RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Y));
     assertOptionalEmpty( RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Z));
 
     // Three item map has 3 values.
-    assertOptionalEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.X), Optional.of("String_X"));
-    assertOptionalEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Y), Optional.of("String_Y"));
-    assertOptionalEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Z), Optional.of("String_Z"));
+    assertOptionalEquals("String_X", RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.X));
+    assertOptionalEquals("String_Y", RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Y));
+    assertOptionalEquals("String_Z", RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Z));
   }
 
   @Test
