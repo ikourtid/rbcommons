@@ -50,7 +50,7 @@ public class RBEnumMap<E extends Enum<E>, V> {
   }
 
   // Get a copy of the raw map.  This is not efficient but it preserves immutability.
-  public EnumMap getCopyOfRawMap() {
+  public EnumMap<E, V> getCopyOfRawMap() {
     return rawMap.clone();
   }
 
@@ -139,7 +139,7 @@ public class RBEnumMap<E extends Enum<E>, V> {
    * This is a nice shorthand for iterating through an RBEnumMap's entries.
    * Note that this operates in enum key order.
    */
-  public void forEachEntry(BiConsumer<E, V> biConsumer) {
+  public void forEachEntryInKeyOrder(BiConsumer<E, V> biConsumer) {
     rawMap.entrySet().forEach(entry -> biConsumer.accept(entry.getKey(), entry.getValue()));
   }
 
