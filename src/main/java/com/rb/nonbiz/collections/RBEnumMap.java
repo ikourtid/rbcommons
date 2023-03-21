@@ -4,6 +4,7 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBEnumMapSimpleConstructors;
 import com.rb.nonbiz.util.RBEnumMaps;
 
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -113,16 +114,30 @@ public class RBEnumMap<E extends Enum<E>, V> {
     return valueOrNull;
   }
 
+  /**
+   * Note that this returns items in enum declaration order.
+   */
   public Set<E> keySet() {
     return rawMap.keySet();
   }
 
+  /**
+   * Note that this returns items in enum declaration order.
+   */
+  public Collection<V> values() {
+    return rawMap.values();
+  }
+
+  /**
+   * Note that this returns items in enum declaration order.
+   */
   public Set<Map.Entry<E, V>> entrySet() {
     return rawMap.entrySet();
   }
 
   /**
    * This is a nice shorthand for iterating through an RBEnumMap's entries.
+   * Note that this operates in enum key order.
    */
   public void forEachEntryInKeyOrder(BiConsumer<E, V> biConsumer) {
     rawMap.entrySet().forEach(entry -> biConsumer.accept(entry.getKey(), entry.getValue()));

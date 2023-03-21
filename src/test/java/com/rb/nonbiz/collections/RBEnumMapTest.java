@@ -1,17 +1,22 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import org.junit.Test;
 
 import java.util.EnumMap;
-import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
+import static com.rb.nonbiz.collections.RBEnumMapTest.TestEnum.*;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapEqualityMatcher;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -20,12 +25,12 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.emptyRBEnumMap;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
+import static com.rb.nonbiz.util.RBEnumMaps.enumMapCoveringAllEnumValues;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class RBEnumMapTest {
 
@@ -142,14 +147,14 @@ public class RBEnumMapTest {
     assertOptionalEmpty(EMPTY_RB_ENUM_MAP.getOptional(TestEnumXYZ.Z));
 
     // One item map has 1 value.
-    assertOptionalEquals(RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.X), Optional.of("String_X"));
-    assertOptionalEmpty( RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Y));
-    assertOptionalEmpty( RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Z));
+    assertOptionalEquals("String_X", RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.X));
+    assertOptionalEmpty(             RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Y));
+    assertOptionalEmpty(             RB_ENUM_MAP_1_ITEMS.getOptional(TestEnumXYZ.Z));
 
     // Three item map has 3 values.
-    assertOptionalEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.X), Optional.of("String_X"));
-    assertOptionalEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Y), Optional.of("String_Y"));
-    assertOptionalEquals(RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Z), Optional.of("String_Z"));
+    assertOptionalEquals("String_X", RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.X));
+    assertOptionalEquals("String_Y", RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Y));
+    assertOptionalEquals("String_Z", RB_ENUM_MAP_3_ITEMS.getOptional(TestEnumXYZ.Z));
   }
 
   @Test
@@ -237,6 +242,58 @@ public class RBEnumMapTest {
     assertEquals("{X=String_X}", RB_ENUM_MAP_1_ITEMS.toString());
     assertEquals("{X=String_X, Y=String_Y}", RB_ENUM_MAP_2_ITEMS.toString());
     assertEquals("{X=String_X, Y=String_Y, Z=String_Z}", RB_ENUM_MAP_3_ITEMS.toString());
+  }
+
+  // We never define enums this succinctly, but this is just to help the next test method,
+  // and local enums are not supported in Java 8 apparently.
+  enum TestEnum { A, B, C, D, E, F, G, H, I, J }
+
+  @Test
+  public void testAccessIsInEnumOrder() {
+    RBEnumMap<TestEnum, String> rbEnumMap = newRBEnumMap(enumMapCoveringAllEnumValues(TestEnum.class, rbMapOf(
+        A, "_A",
+        C, "_C",
+        E, "_E",
+        G, "_G",
+        I, "_I",
+        B, "_B",
+        D, "_D",
+        F, "_F",
+        H, "_H",
+        J, "_J")));
+
+    assertThat(
+        newArrayList(rbEnumMap.keySet()),
+        orderedListEqualityMatcher(
+            ImmutableList.of(A, B, C, D, E, F, G, H, I, J)));
+
+    assertThat(
+        rbEnumMap.entrySet().stream().map(v -> v.getKey()).collect(Collectors.toList()),
+        orderedListEqualityMatcher(
+            ImmutableList.of(A, B, C, D, E, F, G, H, I, J)));
+
+    assertThat(
+        newArrayList(rbEnumMap.values()),
+        orderedListEqualityMatcher(
+            ImmutableList.of("_A", "_B", "_C", "_D", "_E", "_F", "_G", "_H", "_I", "_J")));
+
+    assertThat(
+        rbEnumMap.entrySet().stream().map(v -> v.getValue()).collect(Collectors.toList()),
+        orderedListEqualityMatcher(
+            ImmutableList.of("_A", "_B", "_C", "_D", "_E", "_F", "_G", "_H", "_I", "_J")));
+
+    StringBuilder keys = new StringBuilder();
+    StringBuilder values = new StringBuilder();
+    rbEnumMap.forEachEntryInKeyOrder( (enumConstantKey, value) -> {
+      keys.append(enumConstantKey);
+      values.append(value);
+    });
+    assertEquals(
+        keys.toString(),
+        "ABCDEFGHIJ");
+    assertEquals(
+        values.toString(),
+        "_A_B_C_D_E_F_G_H_I_J");
   }
 
 }
