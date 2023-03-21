@@ -285,7 +285,7 @@ public class RBEnumMapTest {
 
     StringBuilder keys = new StringBuilder();
     StringBuilder values = new StringBuilder();
-    rbEnumMap.forEachEntry( (enumConstantKey, value) -> {
+    rbEnumMap.forEachEntryInKeyOrder( (enumConstantKey, value) -> {
       keys.append(enumConstantKey);
       values.append(value);
     });
