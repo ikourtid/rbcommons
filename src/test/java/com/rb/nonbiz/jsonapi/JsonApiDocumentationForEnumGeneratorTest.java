@@ -12,6 +12,7 @@ import static com.rb.nonbiz.testutils.Asserters.valueExplained;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.rbEnumMapOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocumentationForEnumGenerator> {
@@ -20,7 +21,7 @@ public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocu
   public void testTextGeneration() {
     JsonApiEnumDescriptor<TestEnumXYZ> jsonApiEnumDescriptor = jsonApiEnumDescriptor(
         TestEnumXYZ.class,
-        enumMapOf(
+        rbEnumMapOf(
             TestEnumXYZ.X, documentation("explanation for x"),
             TestEnumXYZ.Y, documentation("explanation for y")));
 

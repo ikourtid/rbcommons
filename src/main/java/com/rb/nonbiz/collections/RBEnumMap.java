@@ -1,18 +1,16 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBEnumMapSimpleConstructors;
 import com.rb.nonbiz.util.RBEnumMaps;
 
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import static com.google.common.collect.Maps.newEnumMap;
-import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMap;
+import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMapFromPlainRBMap;
 
 /**
  * Similar to {@link java.util.EnumMap}. However, it is meant to be immutable.
@@ -37,37 +35,43 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
  */
 public class RBEnumMap<E extends Enum<E>, V> {
 
-  private final EnumMap<E, V> rawMap;
+  private final MutableRBEnumMap<E, V> mutableRBEnumMap;
 
-  private RBEnumMap(EnumMap<E, V> rawMap) {
+  private RBEnumMap(MutableRBEnumMap<E, V> mutableRBEnumMap) {
     // Creating a new enum map ensures immutability.
-    this.rawMap = newEnumMap(rawMap);
+    this.mutableRBEnumMap = mutableRBEnumMap;
   }
 
-  // Create an RBEnumMap from a raw map.
-  public static <E extends Enum<E>, V> RBEnumMap<E, V> newRBEnumMap(EnumMap rawMap) {
-    return new RBEnumMap<E, V>(rawMap);
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> newRBEnumMap(MutableRBEnumMap<E, V> mutableMap) {
+    return new RBEnumMap<E, V>(mutableMap);
   }
 
-  // Get a copy of the raw map.  This is not efficient but it preserves immutability.
-  public EnumMap<E, V> getCopyOfRawMap() {
-    return rawMap.clone();
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> newRBEnumMap(Class<E> enumClass, RBMap<E, V> rbMap) {
+    return newRBEnumMap(newMutableRBEnumMapFromPlainRBMap(enumClass, rbMap));
+  }
+
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> emptyRBEnumMap(Class<E> enumClass) {
+    return new RBEnumMap<E, V>(newMutableRBEnumMap(enumClass));
+  }
+
+  public Class<E> getEnumClass() {
+    return mutableRBEnumMap.getEnumClass();
   }
 
   public int size() {
-    return rawMap.size();
+    return mutableRBEnumMap.size();
   }
 
   public boolean isEmpty() {
-    return rawMap.isEmpty();
+    return mutableRBEnumMap.isEmpty();
   }
 
   public boolean containsKey(E key) {
-    return rawMap.containsKey(key);
+    return mutableRBEnumMap.containsKey(key);
   }
 
   public boolean containsValue(V value) {
-    return rawMap.containsValue(value);
+    return mutableRBEnumMap.containsValue(value);
   }
 
   /**
@@ -75,21 +79,14 @@ public class RBEnumMap<E extends Enum<E>, V> {
    * otherwise Optional.of(value under key).
    */
   public Optional<V> getOptional(E key) {
-    if (key == null) {
-      throw new IllegalArgumentException("An RBEnumMap does not allow null keys");
-    }
-    return Optional.ofNullable(rawMap.get(key));
+    return mutableRBEnumMap.getOptional(key);
   }
 
   /**
    * Returns the value under the key (if present), otherwise the defaultValue.
    */
   public V getOrDefault(E key, V defaultValue) {
-    if (key == null) {
-      throw new IllegalArgumentException("An RBEnumMap does not allow null keys");
-    }
-
-    return rawMap.getOrDefault(key, defaultValue);
+    return mutableRBEnumMap.getOrDefault(key, defaultValue);
   }
 
   /**
@@ -103,36 +100,28 @@ public class RBEnumMap<E extends Enum<E>, V> {
    * Returns the value under the key (if present). Throws an exception otherwise, with the specified message.
    */
   public V getOrThrow(E key, String template, Object...args) {
-    if (key == null) {
-      throw new IllegalArgumentException("An RBEnumMap does not allow null keys");
-    }
-    V valueOrNull = rawMap.get(key);
-    if (valueOrNull == null) {
-      throw new IllegalArgumentException(smartFormat("%s : %s map keys are: %s",
-          Strings.format(template, args), rawMap.size(), rawMap.keySet()));
-    }
-    return valueOrNull;
+    return mutableRBEnumMap.getOrThrow(key, template, args);
   }
 
   /**
    * Note that this returns items in enum declaration order.
    */
   public Set<E> keySet() {
-    return rawMap.keySet();
+    return mutableRBEnumMap.keySet();
   }
 
   /**
    * Note that this returns items in enum declaration order.
    */
   public Collection<V> values() {
-    return rawMap.values();
+    return mutableRBEnumMap.values();
   }
 
   /**
    * Note that this returns items in enum declaration order.
    */
   public Set<Map.Entry<E, V>> entrySet() {
-    return rawMap.entrySet();
+    return mutableRBEnumMap.entrySet();
   }
 
   /**
@@ -140,7 +129,7 @@ public class RBEnumMap<E extends Enum<E>, V> {
    * Note that this operates in enum key order.
    */
   public void forEachEntryInKeyOrder(BiConsumer<E, V> biConsumer) {
-    rawMap.entrySet().forEach(entry -> biConsumer.accept(entry.getKey(), entry.getValue()));
+    mutableRBEnumMap.entrySet().forEach(entry -> biConsumer.accept(entry.getKey(), entry.getValue()));
   }
 
   // IDE-generated
@@ -151,19 +140,19 @@ public class RBEnumMap<E extends Enum<E>, V> {
 
     RBEnumMap<?, ?> rbEnumMap = (RBEnumMap<?, ?>) o;
 
-    return rawMap.equals(rbEnumMap.rawMap);
+    return mutableRBEnumMap.equals(rbEnumMap.mutableRBEnumMap);
 
   }
 
   // IDE-generated
   @Override
   public int hashCode() {
-    return rawMap.hashCode();
+    return mutableRBEnumMap.hashCode();
   }
 
   @Override
   public String toString() {
-    return rawMap.toString();
+    return mutableRBEnumMap.toString();
   }
 
 }
