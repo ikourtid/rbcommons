@@ -22,17 +22,11 @@ import static com.google.common.collect.Iterators.singletonIterator;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
-import static com.rb.nonbiz.collections.RBEnumMapMergers.dotProductOfRBEnumMaps;
-import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeIntoEithersEnumMap;
-import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeRBEnumMapEntriesExpectingSameKeys;
-import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeRBEnumMapValuesExpectingSameKeys;
-import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeRBEnumMapsByTransformedValue;
-import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeRBEnumMapsByValue;
-import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeRBEnumMapsDisallowingOverlap;
-import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeSortedRBEnumMapEntriesExpectingSameKeys;
-import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeSortedRBEnumMapValuesExpectingSameKeys;
+import static com.rb.nonbiz.collections.RBEnumMapMergers.*;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbEnumMapMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
@@ -77,14 +71,14 @@ public class RBEnumMapMergersTest {
             LocalTestEnum.E1, Either.left(1),
             LocalTestEnum.E2, Either.right(LocalTestEnum.E2 ),
             LocalTestEnum.E3, Either.left(3),
-            LocalTestEnum.E4, Either.right("d")),
+            LocalTestEnum.E4, Either.right("E4")),
         mergeIntoEithersEnumMap(
-            rbEnumMapOf(
+            rbEnumMapOf(abcdefghi
                 LocalTestEnum.E1, LocalTestEnum.E1,
                 LocalTestEnum.E3, 3),
             rbEnumMapOf(
                 LocalTestEnum.E2, LocalTestEnum.E2,
-                LocalTestEnum.E4, "d")));
+                LocalTestEnum.E4, "E4")));
   }
 
   @Test
@@ -121,32 +115,32 @@ public class RBEnumMapMergersTest {
         rbEnumMapOf(
             LocalTestEnum.E1, "a1b1",
             LocalTestEnum.E2, "a2",
-            LocalTestEnum.E3, "b3"),
+            LocalTestEnum.E3, "E23"),
         mergeRBEnumMapsByValue(
             joiner,
             rbEnumMapOf(
                 LocalTestEnum.E1, "a1",
                 LocalTestEnum.E2, "a2"),
             rbEnumMapOf(
-                LocalTestEnum.E1, "b1",
-                LocalTestEnum.E3, "b3")));
+                LocalTestEnum.E1, "E21",
+                LocalTestEnum.E3, "E23")));
     assertEquals(
         rbEnumMapOf(
             LocalTestEnum.E1, "a1b1c1",
             LocalTestEnum.E2, "a2",
-            LocalTestEnum.E3, "b3",
-            LocalTestEnum.E4, "c4"),
+            LocalTestEnum.E3, "E23",
+            LocalTestEnum.E4, "E34"),
         mergeRBEnumMapsByValue(
             joiner,
             rbEnumMapOf(
                 LocalTestEnum.E1, "a1",
                 LocalTestEnum.E2, "a2"),
             rbEnumMapOf(
-                LocalTestEnum.E1, "b1",
-                LocalTestEnum.E3, "b3"),
+                LocalTestEnum.E1, "E21",
+                LocalTestEnum.E3, "E23"),
             rbEnumMapOf(
-                LocalTestEnum.E1, "c1",
-                LocalTestEnum.E4, "c4")));
+                LocalTestEnum.E1, "E31",
+                LocalTestEnum.E4, "E34")));
   }
 
   @Test
@@ -237,19 +231,19 @@ public class RBEnumMapMergersTest {
                 LocalTestEnum.E1, "a1",
                 LocalTestEnum.E2, "a2"),
             rbEnumMapOf(
-                LocalTestEnum.E1, "b1",
-                LocalTestEnum.E3, "b3")));
+                LocalTestEnum.E1, "E21",
+                LocalTestEnum.E3, "E23")));
     assertIllegalArgumentException( () ->
         mergeRBEnumMapsDisallowingOverlap(
             rbEnumMapOf(
                 LocalTestEnum.E1, "a1",
                 LocalTestEnum.E2, "a2"),
             rbEnumMapOf(
-                LocalTestEnum.E1, "b1",
-                LocalTestEnum.E3, "b3"),
+                LocalTestEnum.E1, "E21",
+                LocalTestEnum.E3, "E23"),
             rbEnumMapOf(
-                LocalTestEnum.E4, "c4",
-                LocalTestEnum.E5, "c5")));
+                LocalTestEnum.E4, "E34",
+                LocalTestEnum.E5, "E35")));
   }
 
   @Test
@@ -286,7 +280,7 @@ public class RBEnumMapMergersTest {
             LocalTestEnum.E2, 4.4),
         rbEnumMapOf(
             LocalTestEnum.E1, "a:1_2.2",
-            LocalTestEnum.E2, "b:3_4.4"));
+            LocalTestEnum.E2, "E2:3_4.4"));
 
     // if the maps have different numbers of keys, an exception will be thrown
     assertIllegalArgumentException( () -> mergeRBEnumMapEntriesExpectingSameKeys(
@@ -367,15 +361,15 @@ public class RBEnumMapMergersTest {
     // but it does show that the merging works.
     assertEquals(
         newRBEnumMap(LocalTestEnum.class, rbMapOf(
-            LocalTestEnum.E1, "a:1_1.1",
-            LocalTestEnum.E2, "b:2_2.2",
-            LocalTestEnum.E3, "c:3_3.3",
-            LocalTestEnum.E4, "d:4_4.4",
-            LocalTestEnum.E5, "e:5_5.5",
-            LocalTestEnum.E6, "f:6_6.6",
-            LocalTestEnum.E7, "g:7_7.7",
-            LocalTestEnum.E8, "h:8_8.8",
-            LocalTestEnum.E9, "i:9_9.9")),
+            LocalTestEnum.E1, "E1:1_1.1",
+            LocalTestEnum.E2, "E2:2_2.2",
+            LocalTestEnum.E3, "E3:3_3.3",
+            LocalTestEnum.E4, "E4:4_4.4",
+            LocalTestEnum.E5, "E5:5_5.5",
+            LocalTestEnum.E6, "E6:6_6.6",
+            LocalTestEnum.E7, "E7:7_7.7",
+            LocalTestEnum.E8, "E8:8_8.8",
+            LocalTestEnum.E9, "E9:9_9.9")),
         // The map entries are inserted in a sorted order, which in practice seem to imply they will come out in
         // the same order. This is convenient, e.g. when printing.
         mergeSortedRBEnumMapEntriesExpectingSameKeys(
@@ -403,7 +397,7 @@ public class RBEnumMapMergersTest {
 
     // check that the entries were inserted in order
     assertEquals(
-        "abcdefghi",
+        "E1E2E3E4E5E6E7E8E9",
         stringBuilder.toString());
   }
 
@@ -453,7 +447,7 @@ public class RBEnumMapMergersTest {
                 LocalTestEnum.E2, 2.2,
                 LocalTestEnum.E1, 1.1,
                 LocalTestEnum.E6, 6.6,
-                LocalTestEnum.E3, 3.3)));
+                LocalTestEnum.E3, 3.3))));
 
     // check that the entries were inserted in order
     assertEquals(
@@ -485,7 +479,7 @@ public class RBEnumMapMergersTest {
         singletonRBEnumMap(LocalTestEnum.E1, 1),
         singletonRBEnumMap(LocalTestEnum.E1, 2.2),
         singletonRBEnumMap(LocalTestEnum.E1, false),
-        singletonRBEnumMap(LocalTestEnum.E1, "a:1_2.2[false]"));
+        singletonRBEnumMap(LocalTestEnum.E1, "E1:1_2.2[false]"));
     asserter.accept(
         rbEnumMapOf(
             LocalTestEnum.E1, 1,
@@ -497,8 +491,8 @@ public class RBEnumMapMergersTest {
             LocalTestEnum.E1, false,
             LocalTestEnum.E2, true),
         rbEnumMapOf(
-            LocalTestEnum.E1, "a:1_2.2[false]",
-            LocalTestEnum.E2, "b:3_4.4[true]"));
+            LocalTestEnum.E1, "E1:1_2.2[false]",
+            LocalTestEnum.E2, "E2:3_4.4[true]"));
 
     // if the maps have different numbers of keys, an exception will be thrown
     assertIllegalArgumentException( () -> mergeRBEnumMapEntriesExpectingSameKeys(
@@ -623,8 +617,8 @@ public class RBEnumMapMergersTest {
                 LocalTestEnum.E1, 1,
                 LocalTestEnum.E2, 2)),
         rbEnumMapOf(
-            LocalTestEnum.E1, "a=1",
-            LocalTestEnum.E2, "b=2"));
+            LocalTestEnum.E1, "E1=1",
+            LocalTestEnum.E2, "E2=2"));
 
     // merging multiple overlapping maps
     asserter.accept(
@@ -637,9 +631,9 @@ public class RBEnumMapMergersTest {
                 LocalTestEnum.E3, 4),
             emptyRBEnumMap(LocalTestEnum.class)),     // contributes nothing to the merged result
         rbEnumMapOf(
-            LocalTestEnum.E1, "a=1",
-            LocalTestEnum.E2, "b=2:3",
-            LocalTestEnum.E3, "c=4"));
+            LocalTestEnum.E1, "E1=1",
+            LocalTestEnum.E2, "E2=2:3",
+            LocalTestEnum.E3, "E3=4"));
   }
 
   @Test
@@ -653,7 +647,7 @@ public class RBEnumMapMergersTest {
             v -> v * 10,
             v -> v * 100,
             rbEnumMapOf(
-                LocalTestEnum.E1, LocalTestEnum.E1,
+                LocalTestEnum.E1, 1,
                 LocalTestEnum.E2, 2),
             singletonRBEnumMap(
                 LocalTestEnum.E3, 3)));
@@ -674,7 +668,7 @@ public class RBEnumMapMergersTest {
             mergeRBEnumMapsAllowingOverlapOnSimilarItemsOnly(
                 iidMapIterator,
                 (v1, v2) -> v1.almostEquals(v2, DEFAULT_EPSILON_1e_8)),
-            rbEnumMapPreciseValueMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
+            rbEnumMapMatcher(expectedResult, f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8)));
 
     asserter.accept(emptyIterator(), emptyRBEnumMap(LocalTestEnum.class));
     asserter.accept(singletonIterator(emptyRBEnumMap(LocalTestEnum.class)), emptyRBEnumMap(LocalTestEnum.class));

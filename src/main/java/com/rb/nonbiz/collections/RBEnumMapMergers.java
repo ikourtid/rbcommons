@@ -8,10 +8,12 @@ import com.rb.nonbiz.types.Pointer;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -202,22 +204,34 @@ public class RBEnumMapMergers {
    * and similarity is 'values similar to an epsilon of 1e-8', then the resulting map will show money(100)
    * in the final value for "A", NOT money(100 + 1e-9) or money(100 - 1e-9)
    */
-//  public static <E extends Enum<E>, V> RBEnumMap<E, V> mergeRBEnumMapsAllowingOverlapOnSimilarItemsOnly(
-//      Iterator<RBEnumMap<E, V>> mapsIterator, BiPredicate<V, V> itemsAreSimilar) {
-//    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap();
-//    mapsIterator
-//        .forEachRemaining(map -> map.forEachEntryInKeyOrder(
-//            (key, newValue) -> {
-//              mutableMap.getOptional(key)
-//                  .ifPresent(existingValue -> RBPreconditions.checkArgument(
-//                      itemsAreSimilar.test(existingValue, newValue),
-//                      "We do not allow overlap in the IidMaps when items are dissimilar: %s has %s but trying to put %s",
-//                      key, existingValue, newValue));
-//              mutableMap.putIfAbsent(key, newValue);
-//            }));
-//    return newRBEnumMap(mutableMap);
-//  }
-// FIXME IAK
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> mergeRBEnumMapsAllowingOverlapOnSimilarItemsOnly(
+      Iterator<RBEnumMap<E, V>> mapsIterator, BiPredicate<V, V> itemsAreSimilar) {
+    Pointer<MutableRBEnumMap<E, V>> mutableMapPointer = uninitializedPointer();
+    mapsIterator
+        .forEachRemaining(map -> {
+          map.forEachEntryInKeyOrder(
+              (key, newValue) -> {
+                // This trickery with the side effect (which we rarely use) is required so that we won't have to pass in
+                // the enum class, and will instead get it off of the first RBEnumMap object. This means that the stream
+                // passed in must have at least one map in it.
+                if (!mutableMapPointer.isInitialized()) {
+                  mutableMapPointer.setAssumingUninitialized(newMutableRBEnumMap(map.getEnumClass()));
+                }
+                MutableRBEnumMap<E, V> mutableMap = mutableMapPointer.getOrThrow();
+
+                mutableMap.getOptional(key)
+                    .ifPresent(existingValue -> RBPreconditions.checkArgument(
+                        itemsAreSimilar.test(existingValue, newValue),
+                        "We do not allow overlap in the IidMaps when items are dissimilar: %s has %s but trying to put %s",
+                        key, existingValue, newValue));
+                mutableMap.putIfAbsent(key, newValue);
+              });
+        });
+    RBPreconditions.checkArgument(
+        mutableMapPointer.isInitialized(),
+        "mergeRBEnumMapsByValue must be called with a stream of at least one map");
+    return newRBEnumMap(mutableMapPointer.getOrThrow());
+  }
 
   /**
    * Merges a bunch of maps into a single one.
