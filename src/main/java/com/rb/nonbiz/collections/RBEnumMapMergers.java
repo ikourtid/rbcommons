@@ -7,7 +7,6 @@ import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBPreconditions;
 
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +118,6 @@ public class RBEnumMapMergers {
 
   public static <E extends Enum<E>, V1, V2, V> RBEnumMap<E, V> mergeSortedRBEnumMapEntriesExpectingSameKeys(
       TriFunction<E, V1, V2, V> merger,
-      Comparator<E> keyComparator,
       RBEnumMap<E, V1> map1,
       RBEnumMap<E, V2> map2) {
     checkBothSame(
@@ -138,7 +136,6 @@ public class RBEnumMapMergers {
     // appear in map2 (hence the getOrThrow, which will throw otherwise), then there's no way map2 could have an entry
     // for a key that doesn't appear in map1, since their sizes are the same.
     map1.forEachEntryInKeyOrder(
-        (entry1, entry2) -> keyComparator.compare(entry1.getKey(), entry2.getKey()),
         (key, v1) -> mutableMerged.putAssumingAbsent(key, merger.apply(key, v1, map2.getOrThrow(key))));
     return newRBEnumMap(mutableMerged);
   }
@@ -153,11 +150,10 @@ public class RBEnumMapMergers {
 
   public static <E extends Enum<E>, V1, V2, V> RBEnumMap<E, V> mergeSortedRBEnumMapValuesExpectingSameKeys(
       BiFunction<V1, V2, V> merger,
-      Comparator<E> keyComparator,
       RBEnumMap<E, V1> map1,
       RBEnumMap<E, V2> map2) {
     return mergeSortedRBEnumMapEntriesExpectingSameKeys(
-        (ignoredKey, v1, v2) -> merger.apply(v1, v2), keyComparator, map1, map2);
+        (ignoredKey, v1, v2) -> merger.apply(v1, v2), map1, map2);
   }
 
   public static <E extends Enum<E>, V1, V2, V3, V> RBEnumMap<E, V> mergeRBEnumMapEntriesExpectingSameKeys(
@@ -165,12 +161,16 @@ public class RBEnumMapMergers {
       RBEnumMap<E, V2> map2,
       RBEnumMap<E, V3> map3,
       QuadriFunction<E, V1, V2, V3, V> merger) {
+    List<RBEnumMap<E, ?>> maps = ImmutableList.of(map1, map2, map3);
     checkAllSame(
-        ImmutableList.of(map1, map2, map3),
+        maps,
         map -> map.size(),
         "We can only merge maps with the same keys, which implies same # of entries: %s %s %s",
         map1, map2, map3);
-    MutableRBEnumMap<E, V> mutableMerged = newMutableRBEnumMap();
+    Class<E> sharedEnumClass = checkAllSame(
+        maps,
+        v -> v.getEnumClass());
+    MutableRBEnumMap<E, V> mutableMerged = newMutableRBEnumMap(sharedEnumClass);
 
     // We don't need to check for the *keys* to be the same. If we iterate over 'size' items of map1, and all of them
     // appear in map2 (hence the getOrThrow, which will throw otherwise), then there's no way map2 could have an entry
@@ -269,10 +269,10 @@ public class RBEnumMapMergers {
   public static <E extends Enum<E>, V1, V2> RBEnumMap<E, V2> mergeRBEnumMapsByTransformedValue(
       BiFunction<E, List<V1>, V2> mergeFunction,
       List<RBEnumMap<E, V1>> mapsList) {
+    MutableRBEnumMap<E, V2> mutableMap = newMutableRBEnumMap();
     RBSet<E> allKeys = RBSets.union(
         mapsList.stream().map(rBEnumMap -> newRBSet(rBEnumMap.keySet())).iterator());
 
-    MutableRBEnumMap<E, V2> mutableMap = newMutableRBEnumMapWithExpectedSize(allKeys.size());
     allKeys.forEach(key ->
         mutableMap.putAssumingAbsent(key, mergeFunction.apply(
             key,
