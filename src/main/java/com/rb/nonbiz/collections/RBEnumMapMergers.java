@@ -7,6 +7,7 @@ import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.types.Pointer;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBPreconditions;
+import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.Iterator;
 import java.util.List;
@@ -113,6 +114,11 @@ public class RBEnumMapMergers {
     // We don't need to check for the *keys* to be the same. If we iterate over 'size' items of map1, and all of them
     // appear in map2 (hence the getOrThrow, which will throw otherwise), then there's no way map2 could have an entry
     // for a key that doesn't appear in map1, since their sizes are the same.
+    checkBothSame(
+        map1.size(),
+        map2.size(),
+        "Map sizes must be the same: %s %s",
+        map1, map2);
     map1.forEachEntryInKeyOrder( (key, v1) ->
         mutableMerged.putAssumingAbsent(key, merger.apply(key, v1, map2.getOrThrow(key))));
     return newRBEnumMap(mutableMerged);

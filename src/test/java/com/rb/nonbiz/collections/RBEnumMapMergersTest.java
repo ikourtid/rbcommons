@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 import static com.google.common.collect.Iterators.singletonIterator;
 import static com.rb.biz.types.Money.ZERO_MONEY;
@@ -69,16 +70,16 @@ public class RBEnumMapMergersTest {
     assertEquals(
         rbEnumMapOf(
             LocalTestEnum.E1, Either.left(1),
-            LocalTestEnum.E2, Either.right(LocalTestEnum.E2 ),
+            LocalTestEnum.E2, Either.right("v2"),
             LocalTestEnum.E3, Either.left(3),
-            LocalTestEnum.E4, Either.right("E4")),
+            LocalTestEnum.E4, Either.right("v4")),
         mergeIntoEithersEnumMap(
-            rbEnumMapOf(abcdefghi
-                LocalTestEnum.E1, LocalTestEnum.E1,
+            rbEnumMapOf(
+                LocalTestEnum.E1, 1,
                 LocalTestEnum.E3, 3),
             rbEnumMapOf(
-                LocalTestEnum.E2, LocalTestEnum.E2,
-                LocalTestEnum.E4, "E4")));
+                LocalTestEnum.E2, "v2",
+                LocalTestEnum.E4, "v4")));
   }
 
   @Test
@@ -93,54 +94,54 @@ public class RBEnumMapMergersTest {
             emptyStringMap));
     assertEquals(
         rbEnumMapOf(
-            LocalTestEnum.E1, "a1",
-            LocalTestEnum.E2, "a2"),
+            LocalTestEnum.E1, "v1",
+            LocalTestEnum.E2, "v2"),
         mergeRBEnumMapsByValue(
             joiner,
             rbEnumMapOf(
-                LocalTestEnum.E1, "a1",
-                LocalTestEnum.E2, "a2"),
+                LocalTestEnum.E1, "v1",
+                LocalTestEnum.E2, "v2"),
             emptyStringMap));
     assertEquals(
         rbEnumMapOf(
-            LocalTestEnum.E1, "a1",
-            LocalTestEnum.E2, "a2"),
+            LocalTestEnum.E1, "v1",
+            LocalTestEnum.E2, "v2"),
         mergeRBEnumMapsByValue(
             joiner,
             emptyStringMap,
             rbEnumMapOf(
-                LocalTestEnum.E1, "a1",
-                LocalTestEnum.E2, "a2")));
+                LocalTestEnum.E1, "v1",
+                LocalTestEnum.E2, "v2")));
     assertEquals(
         rbEnumMapOf(
-            LocalTestEnum.E1, "a1b1",
-            LocalTestEnum.E2, "a2",
-            LocalTestEnum.E3, "E23"),
+            LocalTestEnum.E1, "v1av1b",
+            LocalTestEnum.E2, "v2",
+            LocalTestEnum.E3, "v3"),
         mergeRBEnumMapsByValue(
             joiner,
             rbEnumMapOf(
-                LocalTestEnum.E1, "a1",
-                LocalTestEnum.E2, "a2"),
+                LocalTestEnum.E1, "v1a",
+                LocalTestEnum.E2, "v2"),
             rbEnumMapOf(
-                LocalTestEnum.E1, "E21",
-                LocalTestEnum.E3, "E23")));
+                LocalTestEnum.E1, "v1b",
+                LocalTestEnum.E3, "v3")));
     assertEquals(
         rbEnumMapOf(
-            LocalTestEnum.E1, "a1b1c1",
-            LocalTestEnum.E2, "a2",
-            LocalTestEnum.E3, "E23",
-            LocalTestEnum.E4, "E34"),
+            LocalTestEnum.E1, "v1av1bv1c",
+            LocalTestEnum.E2, "v2",
+            LocalTestEnum.E3, "v3",
+            LocalTestEnum.E4, "v4"),
         mergeRBEnumMapsByValue(
             joiner,
             rbEnumMapOf(
-                LocalTestEnum.E1, "a1",
-                LocalTestEnum.E2, "a2"),
+                LocalTestEnum.E1, "v1a",
+                LocalTestEnum.E2, "v2"),
             rbEnumMapOf(
-                LocalTestEnum.E1, "E21",
-                LocalTestEnum.E3, "E23"),
+                LocalTestEnum.E1, "v1b",
+                LocalTestEnum.E3, "v3"),
             rbEnumMapOf(
-                LocalTestEnum.E1, "E31",
-                LocalTestEnum.E4, "E34")));
+                LocalTestEnum.E1, "v1c",
+                LocalTestEnum.E4, "v4")));
   }
 
   @Test
@@ -270,7 +271,7 @@ public class RBEnumMapMergersTest {
     asserter.accept(
         singletonRBEnumMap(LocalTestEnum.E1, 1),
         singletonRBEnumMap(LocalTestEnum.E1, 2.2),
-        singletonRBEnumMap(LocalTestEnum.E1, "a:1_2.2"));
+        singletonRBEnumMap(LocalTestEnum.E1, "E1:1_2.2"));
     asserter.accept(
         rbEnumMapOf(
             LocalTestEnum.E1, 1,
@@ -279,7 +280,7 @@ public class RBEnumMapMergersTest {
             LocalTestEnum.E1, 2.2,
             LocalTestEnum.E2, 4.4),
         rbEnumMapOf(
-            LocalTestEnum.E1, "a:1_2.2",
+            LocalTestEnum.E1, "E1:1_2.2",
             LocalTestEnum.E2, "E2:3_4.4"));
 
     // if the maps have different numbers of keys, an exception will be thrown
@@ -589,18 +590,19 @@ public class RBEnumMapMergersTest {
 
   @Test
   public void mergeRBEnumMapsByTransformedValue_listOfRBEnumMapsOverload() {
-    BiConsumer<List<RBEnumMap<LocalTestEnum, Integer>>, RBEnumMap<LocalTestEnum, String>> asserter = (listOfRBEnumMaps, expectedMergedMap) ->
-        assertEquals(
-            expectedMergedMap,
-            mergeRBEnumMapsByTransformedValue(
-                (key, valueList) ->
-                    Strings.format("%s=%s", key, StringUtils.join(valueList, ":")),
-                listOfRBEnumMaps));
+    Function<List<RBEnumMap<LocalTestEnum, Integer>>, RBEnumMap<LocalTestEnum, String>> maker =
+        listOfRBEnumMaps -> mergeRBEnumMapsByTransformedValue(
+            (key, valueList) ->
+                Strings.format("%s=%s", key, StringUtils.join(valueList, ":")),
+            listOfRBEnumMaps);
 
-    // merging an empty list of maps gives an empty map
-    asserter.accept(
-        emptyList(),
-        emptyRBEnumMap(LocalTestEnum.class));
+    BiConsumer<List<RBEnumMap<LocalTestEnum, Integer>>, RBEnumMap<LocalTestEnum, String>> asserter =
+        (listOfRBEnumMaps, expectedMergedMap) ->
+            assertEquals(
+                expectedMergedMap, maker.apply(listOfRBEnumMaps));
+
+    // merging an empty list of maps throws an exception (unlike the RBMap equivalent)
+    assertIllegalArgumentException( () -> maker.apply(emptyList()));
 
     // merging empty maps gives an empty map
     asserter.accept(
@@ -663,14 +665,18 @@ public class RBEnumMapMergersTest {
 
   @Test
   public void test_mergeRBEnumMapsAllowingOverlapOnSimilarItemsOnly() {
-    BiConsumer<Iterator<RBEnumMap<LocalTestEnum, Money>>, RBEnumMap<LocalTestEnum, Money>> asserter = (iidMapIterator, expectedResult) ->
-        assertThat(
-            mergeRBEnumMapsAllowingOverlapOnSimilarItemsOnly(
-                iidMapIterator,
-                (v1, v2) -> v1.almostEquals(v2, DEFAULT_EPSILON_1e_8)),
-            rbEnumMapMatcher(expectedResult, f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8)));
+    Function<Iterator<RBEnumMap<LocalTestEnum, Money>>, RBEnumMap<LocalTestEnum, Money>> maker = iidMapIterator ->
+        mergeRBEnumMapsAllowingOverlapOnSimilarItemsOnly(
+            iidMapIterator,
+            (v1, v2) -> v1.almostEquals(v2, DEFAULT_EPSILON_1e_8));
 
-    asserter.accept(emptyIterator(), emptyRBEnumMap(LocalTestEnum.class));
+    BiConsumer<Iterator<RBEnumMap<LocalTestEnum, Money>>, RBEnumMap<LocalTestEnum, Money>> asserter =
+        (iidMapIterator, expectedResult) ->
+            assertThat(
+                maker.apply(iidMapIterator),
+                rbEnumMapMatcher(expectedResult, f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8)));
+
+    assertIllegalArgumentException( () -> maker.apply(emptyIterator()));
     asserter.accept(singletonIterator(emptyRBEnumMap(LocalTestEnum.class)), emptyRBEnumMap(LocalTestEnum.class));
     asserter.accept(ImmutableList.<RBEnumMap<LocalTestEnum, Money>>of(emptyRBEnumMap(LocalTestEnum.class), emptyRBEnumMap(LocalTestEnum.class)).iterator(), emptyRBEnumMap(LocalTestEnum.class));
 
@@ -729,8 +735,8 @@ public class RBEnumMapMergersTest {
 
     assertEquals(
         rbEnumMapOf(
-            LocalTestEnum.E1, "1._1.true",
-            LocalTestEnum.E2, "2._2.false"),
+            LocalTestEnum.E1, "E1._1.true",
+            LocalTestEnum.E2, "E2._2.false"),
         merger.apply(
             rbEnumMapOf(
                 LocalTestEnum.E1, "_1",
@@ -740,7 +746,7 @@ public class RBEnumMapMergersTest {
                 LocalTestEnum.E2, false)));
 
     assertEquals(
-        singletonRBEnumMap(LocalTestEnum.E1, "1._1.true"),
+        singletonRBEnumMap(LocalTestEnum.E1, "E1._1.true"),
         merger.apply(
             singletonRBEnumMap(LocalTestEnum.E1, "_1"),
             singletonRBEnumMap(LocalTestEnum.E1, true)));
