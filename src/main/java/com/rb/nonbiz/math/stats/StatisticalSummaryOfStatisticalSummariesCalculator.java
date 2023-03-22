@@ -2,15 +2,14 @@ package com.rb.nonbiz.math.stats;
 
 import com.rb.nonbiz.collections.MutableRBEnumMap;
 import com.rb.nonbiz.collections.RBEnumMap;
-import com.rb.nonbiz.util.RBEnumMaps;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
-import java.util.EnumMap;
 import java.util.Iterator;
 
 import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMap;
+import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.getStatisticalSummaryField;
 import static com.rb.nonbiz.util.RBEnumMaps.transformRBEnumMap;
 
@@ -94,8 +93,8 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
     // Unfortunately we have to 'transform' the values here, even though it's just a cast from SummaryStatistics
     // to its interface, StatisticalSummary.
     return new StatisticalSummaryOfStatisticalSummaries(
-        RBEnumMaps.transformRBEnumMap(
-            byStatisticalSummaryAspect, summaryStatistics -> (StatisticalSummary) summaryStatistics),
+        transformRBEnumMap(
+            newRBEnumMap(byStatisticalSummaryAspect), summaryStatistics -> (StatisticalSummary) summaryStatistics),
         numStatisticalSummaries);
   }
 
