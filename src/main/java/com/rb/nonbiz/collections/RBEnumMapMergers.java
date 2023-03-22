@@ -4,15 +4,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.rb.nonbiz.functional.QuadriFunction;
 import com.rb.nonbiz.functional.TriFunction;
+import com.rb.nonbiz.types.Pointer;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBPreconditions;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -25,6 +24,7 @@ import static com.rb.nonbiz.collections.RBOptionals.filterPresentOptionalsInStre
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static com.rb.nonbiz.util.RBEnumMaps.getWhenUpToOneRBEnumMapIsNonEmpty;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkAllSame;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
@@ -202,21 +202,22 @@ public class RBEnumMapMergers {
    * and similarity is 'values similar to an epsilon of 1e-8', then the resulting map will show money(100)
    * in the final value for "A", NOT money(100 + 1e-9) or money(100 - 1e-9)
    */
-  public static <E extends Enum<E>, V> RBEnumMap<E, V> mergeRBEnumMapsAllowingOverlapOnSimilarItemsOnly(
-      Iterator<RBEnumMap<E, V>> mapsIterator, BiPredicate<V, V> itemsAreSimilar) {
-    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap();
-    mapsIterator
-        .forEachRemaining(map -> map.forEachEntryInKeyOrder(
-            (key, newValue) -> {
-              mutableMap.getOptional(key)
-                  .ifPresent(existingValue -> RBPreconditions.checkArgument(
-                      itemsAreSimilar.test(existingValue, newValue),
-                      "We do not allow overlap in the IidMaps when items are dissimilar: %s has %s but trying to put %s",
-                      key, existingValue, newValue));
-              mutableMap.putIfAbsent(key, newValue);
-            }));
-    return newRBEnumMap(mutableMap);
-  }
+//  public static <E extends Enum<E>, V> RBEnumMap<E, V> mergeRBEnumMapsAllowingOverlapOnSimilarItemsOnly(
+//      Iterator<RBEnumMap<E, V>> mapsIterator, BiPredicate<V, V> itemsAreSimilar) {
+//    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap();
+//    mapsIterator
+//        .forEachRemaining(map -> map.forEachEntryInKeyOrder(
+//            (key, newValue) -> {
+//              mutableMap.getOptional(key)
+//                  .ifPresent(existingValue -> RBPreconditions.checkArgument(
+//                      itemsAreSimilar.test(existingValue, newValue),
+//                      "We do not allow overlap in the IidMaps when items are dissimilar: %s has %s but trying to put %s",
+//                      key, existingValue, newValue));
+//              mutableMap.putIfAbsent(key, newValue);
+//            }));
+//    return newRBEnumMap(mutableMap);
+//  }
+// FIXME IAK
 
   /**
    * Merges a bunch of maps into a single one.
@@ -247,14 +248,21 @@ public class RBEnumMapMergers {
       UnaryOperator<V> onlyLeftPresent,
       UnaryOperator<V> onlyRightPresent,
       RBEnumMap<E, V> leftMap, RBEnumMap<E, V> rightMap) {
-    return newRBSet(Sets.union(leftMap.keySet(), rightMap.keySet()))
-        .toRBEnumMap(key -> {
-          Optional<V> leftItem = leftMap.getOptional(key);
-          Optional<V> rightItem = rightMap.getOptional(key);
-          return !leftItem.isPresent() ? onlyRightPresent.apply(rightItem.get()) :
-              !rightItem.isPresent() ? onlyLeftPresent.apply(leftItem.get()) :
-                  mergeFunction.apply(leftItem.get(), rightItem.get());
-        });
+    Class<E> sharedEnumClass = checkBothSame(
+        leftMap.getEnumClass(),
+        rightMap.getEnumClass(),
+        "Internal error; enum classes must be the same; this should have been caught by the compiler: %s %s",
+        leftMap, rightMap);
+    return newRBEnumMap(
+        sharedEnumClass,
+        newRBSet(Sets.union(leftMap.keySet(), rightMap.keySet()))
+            .toRBMap(key -> {
+              Optional<V> leftItem = leftMap.getOptional(key);
+              Optional<V> rightItem = rightMap.getOptional(key);
+              return !leftItem.isPresent() ? onlyRightPresent.apply(rightItem.get()) :
+                  !rightItem.isPresent() ? onlyLeftPresent.apply(leftItem.get()) :
+                      mergeFunction.apply(leftItem.get(), rightItem.get());
+            }));
   }
 
   /**
@@ -269,7 +277,14 @@ public class RBEnumMapMergers {
   public static <E extends Enum<E>, V1, V2> RBEnumMap<E, V2> mergeRBEnumMapsByTransformedValue(
       BiFunction<E, List<V1>, V2> mergeFunction,
       List<RBEnumMap<E, V1>> mapsList) {
-    MutableRBEnumMap<E, V2> mutableMap = newMutableRBEnumMap();
+    RBPreconditions.checkArgument(
+        !mapsList.isEmpty(),
+        "There must be at least one RBEnumMap passed in");
+    // This will be the same for all maps (compiler-enforced), but let's play it extra safe.
+    Class<E> sharedEnumClass = checkAllSame(
+        mapsList,
+        v -> v.getEnumClass());
+    MutableRBEnumMap<E, V2> mutableMap = newMutableRBEnumMap(sharedEnumClass);
     RBSet<E> allKeys = RBSets.union(
         mapsList.stream().map(rBEnumMap -> newRBSet(rBEnumMap.keySet())).iterator());
 
@@ -296,36 +311,54 @@ public class RBEnumMapMergers {
       Function<V1, V3> onlyLeftPresent,
       Function<V2, V3> onlyRightPresent,
       RBEnumMap<E, V1> leftMap, RBEnumMap<E, V2> rightMap) {
-    return newRBSet(Sets.union(leftMap.keySet(), rightMap.keySet()))
-        .toRBEnumMap(key -> {
+    Class<E> sharedEnumClass = checkBothSame(
+        leftMap.getEnumClass(),
+        rightMap.getEnumClass(),
+        "Internal error; enum classes must be the same; this should have been caught by the compiler: %s %s",
+        leftMap, rightMap);
+
+    return newRBEnumMap(sharedEnumClass, newRBSet(Sets.union(leftMap.keySet(), rightMap.keySet()))
+        .toRBMap(key -> {
           Optional<V1> leftItem = leftMap.getOptional(key);
           Optional<V2> rightItem = rightMap.getOptional(key);
           return !leftItem.isPresent() ? onlyRightPresent.apply(rightItem.get()) :
               !rightItem.isPresent() ? onlyLeftPresent.apply(leftItem.get()) :
                   mergeFunction.apply(leftItem.get(), rightItem.get());
-        });
+        }));
   }
 
   /**
    * Merges a bunch of maps into a single one.
    *
-   * In the event a key appears in more than one map, apply a binary operator (e.g. '+') to merge
+   * <p> In the event a key appears in more than one map, apply a binary operator (e.g. '+') to merge
    * the values. This doesn't *assume* that the operator is commutative, but it probably should be.
-   * Otherwise, your result will depend on the order you pass the maps in the stream, which will be confusing.
+   * Otherwise, your result will depend on the order you pass the maps in the stream, which will be confusing. </p>
    */
   public static <E extends Enum<E>, V> RBEnumMap<E, V> mergeRBEnumMapsByValue(
       BinaryOperator<V> mergeFunction, Stream<RBEnumMap<E, V>> mapsStream) {
-    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap();
+    Pointer<MutableRBEnumMap<E, V>> mutableMapPointer = uninitializedPointer();
     mapsStream
-        .flatMap(map -> map.entrySet().stream())
+        .flatMap(map -> {
+          // This trickery with the side effect (which we rarely use) is required so that we won't have to pass in
+          // the enum class, and will instead get it off of the first RBEnumMap object. This means that the stream
+          // passed in must have at least one map in it.
+          if (!mutableMapPointer.isInitialized()) {
+            mutableMapPointer.setAssumingUninitialized(newMutableRBEnumMap(map.getEnumClass()));
+          }
+          return map.entrySet().stream();
+        })
         .forEach(entry -> {
           E key = entry.getKey();
           V value = entry.getValue();
+          MutableRBEnumMap<E, V> mutableMap = mutableMapPointer.getOrThrow();
           mutableMap.put(key, mutableMap.containsKey(key)
               ? mergeFunction.apply(mutableMap.getOrThrow(key), value)
               : value);
         });
-    return newRBEnumMap(mutableMap);
+    RBPreconditions.checkArgument(
+        mutableMapPointer.isInitialized(),
+        "mergeRBEnumMapsByValue must be called with a stream of at least one map");
+    return newRBEnumMap(mutableMapPointer.getOrThrow());
   }
 
   /**
@@ -353,7 +386,6 @@ public class RBEnumMapMergers {
       sum += value1.doubleValue() * map2.getOrThrow(key).doubleValue();
     }
     return sum;
-
   }
 
 }
