@@ -51,7 +51,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjects.*;
-import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapMatcher;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbEnumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
@@ -75,8 +75,8 @@ import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.rbEnumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonRBEnumMap;
-import static com.rb.nonbiz.util.RBEnumMapsTest.newEnumMap;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -148,10 +148,10 @@ public class RBJsonObjectsTest {
 
     assertThat(
         // Create enumMap with 2 elements, each to a String.
-        enumMapToJsonObject(
-            newEnumMap(rbMapOf(
+        rbEnumMapToJsonObject(
+            rbEnumMapOf(
                 TestEnumXYZ.X, "String1",
-                TestEnumXYZ.Z, "String3")),
+                TestEnumXYZ.Z, "String3"),
             v -> jsonString(v)),
         // Match with an object built from scratch.
         jsonObjectEpsilonMatcher(
@@ -165,10 +165,10 @@ public class RBJsonObjectsTest {
         // Create enumMap with 3 elements, each to a Range.
         // We use Range in this test because it requires its own JSON API converter.
         rbEnumMapToJsonObject(
-            newEnumMap(rbMapOf(
+            rbEnumMapOf(
                 TestEnumXYZ.X, Range.atLeast(money(111)),
                 TestEnumXYZ.Y, Range.atMost( money(222)),
-                TestEnumXYZ.Z, Range.closed( money(100), money(200)))),
+                TestEnumXYZ.Z, Range.closed( money(100), money(200))),
             v -> converter.toJsonObject(v, v2 -> jsonDouble(v2.doubleValue()))),
         jsonObjectEpsilonMatcher(
             jsonObject(
@@ -184,46 +184,51 @@ public class RBJsonObjectsTest {
   public void testJsonObjectToEnumMap() {
     // Create json object for a single enumMap to a String.
     assertThat(
-        jsonObjectToEnumMap(
+        jsonObjectToRBEnumMap(
             // "_X" is TestEnumXYZ.X.toUniqueStableString().
             singletonJsonObject("_X", jsonString("String1")),
+            TestEnumXYZ.class,
             k -> TestEnumXYZ.fromUniqueStableString(k),
             v -> v.getAsString()),
-        enumMapMatcher(singletonEnumMap(TestEnumXYZ.X, "String1"), f -> stringMatcher(f)));
+        rbEnumMapMatcher(
+            singletonRBEnumMap(
+                TestEnumXYZ.X, "String1"), f -> stringMatcher(f)));
 
     // Create json object for enumMap with 2 elements, each to a String.
     assertThat(
-        jsonObjectToEnumMap(
+        jsonObjectToRBEnumMap(
             jsonObject(
                 // "_X" and "_Z" are TestEnumXYZ.X.toUniqueStableString() and TestEnumXYZ.Z.toUniqueStableString().
                 "_X", jsonString("String1"),
                 "_Z", jsonString("String3")),
+            TestEnumXYZ.class,
             k -> TestEnumXYZ.fromUniqueStableString(k),
             v -> v.getAsString()),
-        enumMapMatcher(
-            newEnumMap(rbMapOf(
+        rbEnumMapMatcher(
+            rbEnumMapOf(
                 TestEnumXYZ.X, "String1",
-                TestEnumXYZ.Z, "String3")),
+                TestEnumXYZ.Z, "String3"),
             f -> stringMatcher(f)));
 
     // Create json object for an enumMap with 3 elements, each to a Range.
     // We use Range in this test because it requires its own JSON API converter.
     RangeJsonApiConverter converter = makeRealObject(RangeJsonApiConverter.class);
     assertThat(
-        jsonObjectToEnumMap(jsonObject(
+        jsonObjectToRBEnumMap(jsonObject(
                 // "_X", "_Y", and "_Z" are the toUniqueStableString() representations of TestEnumXYZ.
                 "_X", singletonJsonObject("min", jsonDouble(111.0)),
                 "_Y", singletonJsonObject("max", jsonDouble(222.0)),
                 "_Z", jsonObject(
                     "min", jsonDouble(100.0),
                     "max", jsonDouble(200.0))),
+            TestEnumXYZ.class,
             k -> TestEnumXYZ.fromUniqueStableString(k),
             v -> converter.fromJsonObject((JsonObject) v, jsonPrimitive -> money(jsonPrimitive.getAsDouble()))),
-        enumMapMatcher(
-            newEnumMap(rbMapOf(
+        rbEnumMapMatcher(
+            rbEnumMapOf(
                 TestEnumXYZ.X, Range.atLeast(money(111)),
                 TestEnumXYZ.Y, Range.atMost( money(222)),
-                TestEnumXYZ.Z, Range.closed( money(100), money(200)))),
+                TestEnumXYZ.Z, Range.closed( money(100), money(200))),
             // For this test we're OK to do exact value matching.
             v -> rangeEqualityMatcher(v)));
   }
@@ -292,8 +297,8 @@ public class RBJsonObjectsTest {
 
     Consumer<JsonObject> assertThrows = invalidJsonObject -> assertIllegalArgumentException( () ->
         RBJsonObjects.<UnitFraction>jsonObjectToClosedRange(
-                invalidJsonObject,
-                v -> unitFraction(v.getAsDouble())));
+            invalidJsonObject,
+            v -> unitFraction(v.getAsDouble())));
     assertThrows.accept(emptyJsonObject());
     assertThrows.accept(
         singletonJsonObject("min", jsonDouble(0.1)));
@@ -449,7 +454,7 @@ public class RBJsonObjectsTest {
         singletonJsonObject(
             // "S1" is filtered out
             "S2", jsonString("iid 2 : $ 2.20")));
-    
+
     asserter.accept(
         emptyIidMap(),
         emptyJsonObject());

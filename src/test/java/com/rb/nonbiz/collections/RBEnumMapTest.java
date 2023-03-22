@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBEnumMaps;
 import org.junit.Test;
 
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.emptyRBEnumMap;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.rbEnumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonRBEnumMap;
-import static com.rb.nonbiz.util.RBEnumMaps.enumMapCoveringAllEnumValues;
+import static com.rb.nonbiz.util.RBEnumMaps.rbEnumMapCoveringAllEnumValues;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -215,7 +216,7 @@ public class RBEnumMapTest {
   public void testAccessIsInEnumOrder() {
     RBEnumMap<TestEnum, String> rbEnumMap = newRBEnumMap(
         TestEnum.class,
-        enumMapCoveringAllEnumValues(
+        RBEnumMaps.rbEnumMapCoveringAllEnumValues(
             TestEnum.class, rbMapOf(
                 A, "_A",
                 C, "_C",

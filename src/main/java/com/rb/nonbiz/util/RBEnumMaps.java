@@ -39,7 +39,7 @@ public class RBEnumMaps {
    * Creates an RBEnumMap using the convenient RBMap constructors, while also asserting that every enum constant
    * appears in the map.
    */
-  public static <E extends Enum<E>, V> RBEnumMap<E, V> enumMapCoveringAllEnumValues(
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMapCoveringAllEnumValues(
       Class<E> enumClass,
       RBMap<E, V> valuesMap) {
     RBPreconditions.checkArgument(enumClass.isEnum());
@@ -56,7 +56,7 @@ public class RBEnumMaps {
    * Creates an RBEnumMap such that every enum constant appears in the map.
    * Each value is a function of the key specified.
    */
-  public static <E extends Enum<E>, V> RBEnumMap<E, V> enumMapCoveringAllEnumValues(
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMapCoveringAllEnumValues(
       Class<E> enumClass,
       Function<E, V> valueGenerator) {
     RBPreconditions.checkArgument(enumClass.isEnum());

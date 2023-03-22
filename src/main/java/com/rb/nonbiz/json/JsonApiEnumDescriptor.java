@@ -9,7 +9,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.EnumMap;
 
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
-import static com.rb.nonbiz.util.RBEnumMaps.enumMapCoveringAllEnumValues;
+import static com.rb.nonbiz.util.RBEnumMaps.rbEnumMapCoveringAllEnumValues;
 
 /**
  * We often serialize a Java enum by using strings that are similar in meaning to the Java identifier, but
@@ -70,7 +70,7 @@ public class JsonApiEnumDescriptor<E extends Enum<E> & JsonRoundTripStringConver
   public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E> & HasHumanReadableDocumentation>
   JsonApiEnumDescriptor<E> simpleJsonApiEnumDescriptor(
       Class<E> enumClass) {
-    return jsonApiEnumDescriptor(enumClass, enumMapCoveringAllEnumValues(
+    return jsonApiEnumDescriptor(enumClass, rbEnumMapCoveringAllEnumValues(
         enumClass,
         enumValue -> enumValue.getDocumentation()));
   }
