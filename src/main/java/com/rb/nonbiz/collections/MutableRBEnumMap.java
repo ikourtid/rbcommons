@@ -1,12 +1,9 @@
 package com.rb.nonbiz.collections;
 
-import com.google.common.collect.Maps;
 import com.rb.nonbiz.util.RBPreconditions;
-import org.checkerframework.checker.units.qual.K;
 
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -24,30 +21,48 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
  */
 public class MutableRBEnumMap<E extends Enum<E>, V> {
 
+  private final Class<E> enumClass;
   private final EnumMap<E, V> rawMap;
 
-  private MutableRBEnumMap(EnumMap<E, V> rawMap) {
+  private MutableRBEnumMap(Class<E> enumClass, EnumMap<E, V> rawMap) {
+    this.enumClass = enumClass;
     this.rawMap = rawMap;
   }
 
   public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMap(Class<E> enumClass) {
-    return new MutableRBEnumMap<>(new EnumMap<>(enumClass));
+    return new MutableRBEnumMap<>(enumClass, new EnumMap<>(enumClass));
   }
   
-  public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMap(
-      Class<E> enumClass,
+  public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableNonEmptyRBEnumMap(
       RBSet<? extends E> keys,
       Supplier<V> value) {
-    MutableRBEnumMap<E, V> mutableRBEnumMap = new MutableRBEnumMap<E, V>(new EnumMap<E, V>(enumClass));
+    RBPreconditions.checkArgument(
+        !keys.isEmpty(),
+        "Keys must be nonempty");
+    Class<E> enumClass = keys.iterator().next().getDeclaringClass();
+    MutableRBEnumMap<E, V> mutableRBEnumMap = new MutableRBEnumMap<E, V>(enumClass, new EnumMap<E, V>(enumClass));
     keys.forEach(key -> mutableRBEnumMap.put(key, value.get()));
     return mutableRBEnumMap;
   }
 
   public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMap(
-      Class<E> enumClass,
       RBEnumMap<E, V> initialValues) {
-    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap(enumClass);
+    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap(initialValues.getEnumClass());
     mutableMap.addAllAssumingNoOverlap(initialValues);
+    return mutableMap;
+  }
+
+  public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMapFromPlainEnumMap(
+      Class<E> enumClass, EnumMap<E, V> enumMap) {
+    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap(enumClass);
+    enumMap.forEach( (enumKey, value) -> mutableMap.put(enumKey, value));
+    return mutableMap;
+  }
+
+  public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMapFromPlainRBMap(
+      Class<E> enumClass, RBMap<E, V> rbMap) {
+    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap(enumClass);
+    rbMap.forEachEntry( (enumKey, value) -> mutableMap.put(enumKey, value));
     return mutableMap;
   }
 
@@ -57,6 +72,10 @@ public class MutableRBEnumMap<E extends Enum<E>, V> {
    */
   public void addAllAssumingNoOverlap(RBEnumMap<E, V> additionalValues) {
     additionalValues.forEachEntryInKeyOrder( (key, value) -> putAssumingAbsent(key, value));
+  }
+
+  public Class<E> getEnumClass() {
+    return enumClass;
   }
 
   public Map<E, V> asMap() {

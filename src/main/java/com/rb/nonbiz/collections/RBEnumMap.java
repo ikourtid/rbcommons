@@ -1,17 +1,18 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBEnumMapSimpleConstructors;
 import com.rb.nonbiz.util.RBEnumMaps;
 
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import static com.google.common.collect.Maps.newEnumMap;
-import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMap;
+import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMapFromPlainEnumMap;
+import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMapFromPlainRBMap;
 
 /**
  * Similar to {@link java.util.EnumMap}. However, it is meant to be immutable.
@@ -43,9 +44,24 @@ public class RBEnumMap<E extends Enum<E>, V> {
     this.mutableRBEnumMap = mutableRBEnumMap;
   }
 
-  // Create an RBEnumMap from a raw map.
   public static <E extends Enum<E>, V> RBEnumMap<E, V> newRBEnumMap(MutableRBEnumMap<E, V> mutableMap) {
     return new RBEnumMap<E, V>(mutableMap);
+  }
+
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> newRBEnumMap(Class<E> enumClass, EnumMap<E, V> enumMap) {
+    return newRBEnumMap(newMutableRBEnumMapFromPlainEnumMap(enumClass, enumMap));
+  }
+
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> newRBEnumMap(Class<E> enumClass, RBMap<E, V> rbMap) {
+    return newRBEnumMap(newMutableRBEnumMapFromPlainRBMap(enumClass, rbMap));
+  }
+
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> emptyRBEnumMap(Class<E> enumClass) {
+    return new RBEnumMap<E, V>(newMutableRBEnumMap(enumClass));
+  }
+
+  public Class<E> getEnumClass() {
+    return mutableRBEnumMap.getEnumClass();
   }
 
   public int size() {

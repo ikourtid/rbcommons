@@ -7,15 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.asset.InstrumentId;
-import com.rb.nonbiz.collections.ArrayIndexMapping;
-import com.rb.nonbiz.collections.ClosedRange;
-import com.rb.nonbiz.collections.IidMap;
-import com.rb.nonbiz.collections.MutableIidMap;
-import com.rb.nonbiz.collections.MutableRBMap;
-import com.rb.nonbiz.collections.MutableRBSet;
-import com.rb.nonbiz.collections.RBMap;
-import com.rb.nonbiz.collections.RBSet;
-import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
+import com.rb.nonbiz.collections.*;
 import com.rb.nonbiz.text.HasUniqueId;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
 import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
@@ -95,11 +87,11 @@ public class RBJsonObjects {
         map.transformKeysAndValuesCopy(keySerializer, valueSerializer));
   }
 
-  public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>, V> JsonObject enumMapToJsonObject(
-      EnumMap<E, V> enumMap,
+  public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>, V> JsonObject rbEnumMapToJsonObject(
+      RBEnumMap<E, V> rbEnumMap,
       Function<V, JsonElement> valueSerializer) {
     JsonObject jsonObject = new JsonObject();
-    enumMap.forEach( (enumConstantKey, jsonElement) -> jsonObject.add(
+    rbEnumMap.forEachEntryInKeyOrder( (enumConstantKey, jsonElement) -> jsonObject.add(
         enumConstantKey.toUniqueStableString(), valueSerializer.apply(jsonElement)));
     return jsonObject;
   }

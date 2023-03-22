@@ -8,7 +8,7 @@ import java.util.EnumMap;
 import java.util.Iterator;
 
 import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.getStatisticalSummaryField;
-import static com.rb.nonbiz.util.RBEnumMaps.transformEnumMap;
+import static com.rb.nonbiz.util.RBEnumMaps.transformRBEnumMap;
 
 /**
  * @see StatisticalSummaryOfStatisticalSummaries
@@ -90,7 +90,7 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
     // Unfortunately we have to 'transform' the values here, even though it's just a cast from SummaryStatistics
     // to its interface, StatisticalSummary.
     return new StatisticalSummaryOfStatisticalSummaries(
-        transformEnumMap(
+        transformRBEnumMap(
             byStatisticalSummaryAspect, summaryStatistics -> (StatisticalSummary) summaryStatistics),
         numStatisticalSummaries);
   }

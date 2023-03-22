@@ -75,7 +75,7 @@ import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
-import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonRBEnumMap;
 import static com.rb.nonbiz.util.RBEnumMapsTest.newEnumMap;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -140,7 +140,7 @@ public class RBJsonObjectsTest {
   public void testEnumMapToJsonObject() {
     assertThat(
         // Create single enumMap to a String.
-        enumMapToJsonObject(singletonEnumMap(TestEnumXYZ.X, "String1"), v -> jsonString(v)),
+        rbEnumMapToJsonObject(singletonRBEnumMap(TestEnumXYZ.X, "String1"), v -> jsonString(v)),
         // Match with an object built from scratch.
         jsonObjectEpsilonMatcher(
             // "_X" is TestEnumXYZ.X.toUniqueStableString().
@@ -164,7 +164,7 @@ public class RBJsonObjectsTest {
     assertThat(
         // Create enumMap with 3 elements, each to a Range.
         // We use Range in this test because it requires its own JSON API converter.
-        enumMapToJsonObject(
+        rbEnumMapToJsonObject(
             newEnumMap(rbMapOf(
                 TestEnumXYZ.X, Range.atLeast(money(111)),
                 TestEnumXYZ.Y, Range.atMost( money(222)),

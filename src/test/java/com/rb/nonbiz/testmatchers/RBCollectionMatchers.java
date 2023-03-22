@@ -15,16 +15,15 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.intArrayMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
-import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbEnumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
@@ -217,8 +216,8 @@ public class RBCollectionMatchers {
         match(v -> v.iterator(), f -> iteratorMatcher(f, matcherGenerator)));
   }
 
-  public static <E extends Enum<E>, V> TypeSafeMatcher<EnumMap<E, V>> enumMapMatcher(
-      EnumMap<E, V> expected, MatcherGenerator<V> valueMatcherGenerator) {
+  public static <E extends Enum<E>, V> TypeSafeMatcher<RBEnumMap<E, V>> rbEnumMapMatcher(
+      RBEnumMap<E, V> expected, MatcherGenerator<V> valueMatcherGenerator) {
     return makeMatcher(expected, actual -> {
       if (!expected.keySet().equals(actual.keySet())) {
         return false;
@@ -226,16 +225,16 @@ public class RBCollectionMatchers {
       for (Entry<E, V> entryInExpected : expected.entrySet()) {
         E enumKey = entryInExpected.getKey();
         V valueInExpected = entryInExpected.getValue();
-        if (!valueMatcherGenerator.apply(valueInExpected).matches(actual.get(enumKey))) {
+        Optional<V> valueInActual = actual.getOptional(enumKey);
+        if (!valueInActual.isPresent()) {
+          return false;
+        }
+        if (!valueMatcherGenerator.apply(valueInExpected).matches(valueInActual.get())) {
           return false;
         }
       }
       return true; // no mismatch found for any of the enum keys.
     });
-  }
-
-  public static <E extends Enum<E>, V> TypeSafeMatcher<EnumMap<E, V>> enumMapEqualityMatcher(EnumMap<E, V> expected) {
-    return enumMapMatcher(expected, f -> typeSafeEqualTo(f));
   }
 
   public static <E extends Enum<E>, V> TypeSafeMatcher<RBEnumMap<E, V>> rbEnumMapEqualityMatcher(RBEnumMap<E, V> expected) {
