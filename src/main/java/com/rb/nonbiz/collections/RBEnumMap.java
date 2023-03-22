@@ -4,14 +4,12 @@ import com.rb.nonbiz.util.RBEnumMapSimpleConstructors;
 import com.rb.nonbiz.util.RBEnumMaps;
 
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMap;
-import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMapFromPlainEnumMap;
 import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMapFromPlainRBMap;
 
 /**

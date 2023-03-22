@@ -169,7 +169,7 @@ public class RBEnumMapTest {
   @Test
   public void testEntrySet() {
     // Test RBEnumMap's entry set is the same as the raw RBEnumMap.
-    ENUM_MAPS.forEach( rbEnumMap ->
+    ENUM_MAPS.forEach(rbEnumMap ->
         assertThat(
             // Below we use rbSet wrappers so we can use an rbSet equality matcher.
             rbSet(rbEnumMap.entrySet()),
