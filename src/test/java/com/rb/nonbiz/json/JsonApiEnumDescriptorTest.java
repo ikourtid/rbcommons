@@ -11,11 +11,14 @@ import static com.rb.nonbiz.json.JsonApiEnumDescriptor.simpleJsonApiEnumDescript
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapMatcher;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbEnumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.rbEnumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonRBEnumMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescriptor<TestEnumXYZ>> {
@@ -27,7 +30,7 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
         jsonApiEnumDescriptorMatcher(
             jsonApiEnumDescriptor(
                 TestEnumXYZ.class,
-                enumMapOf(
+                rbEnumMapOf(
                     TestEnumXYZ.X, documentation("test documentation for X"),
                     TestEnumXYZ.Y, documentation("test documentation for Y"),
                     TestEnumXYZ.Z, documentation("test documentation for Z")))));
@@ -37,7 +40,7 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
   public JsonApiEnumDescriptor<TestEnumXYZ> makeTrivialObject() {
     return jsonApiEnumDescriptor(
         TestEnumXYZ.class,
-        singletonEnumMap(
+        singletonRBEnumMap(
             TestEnumXYZ.Y, documentation("explanation for y")));
   }
 
@@ -45,7 +48,7 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
   public JsonApiEnumDescriptor<TestEnumXYZ> makeNontrivialObject() {
     return jsonApiEnumDescriptor(
         TestEnumXYZ.class,
-        enumMapOf(
+        rbEnumMapOf(
             TestEnumXYZ.X, documentation("explanation for x"),
             TestEnumXYZ.Z, documentation("explanation for z")));
   }
@@ -55,7 +58,7 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
     // Nothing to tweak here
     return jsonApiEnumDescriptor(
         TestEnumXYZ.class,
-        enumMapOf(
+        rbEnumMapOf(
             TestEnumXYZ.X, documentation("explanation for x"),
             TestEnumXYZ.Z, documentation("explanation for z")));
   }
@@ -70,7 +73,7 @@ public class JsonApiEnumDescriptorTest extends RBTestMatcher<JsonApiEnumDescript
       JsonApiEnumDescriptor<E> expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getEnumClass()),
-        match(           v -> v.getValidValuesToExplanations(), f -> enumMapMatcher(f,
+        match(           v -> v.getValidValuesToExplanations(), f -> rbEnumMapMatcher(f,
             f2 -> humanReadableDocumentationMatcher(f2))));
   }
 

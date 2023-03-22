@@ -1,5 +1,6 @@
 package com.rb.nonbiz.math.stats;
 
+import com.rb.nonbiz.collections.RBEnumMap;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
@@ -26,11 +27,11 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
    */
   public static class StatisticalSummaryOfStatisticalSummaries {
 
-    private final EnumMap<StatisticalSummaryAspect, StatisticalSummary> byStatisticalSummaryAspect;
+    private final RBEnumMap<StatisticalSummaryAspect, StatisticalSummary> byStatisticalSummaryAspect;
     private final int numStatisticalSummaries;
 
     private StatisticalSummaryOfStatisticalSummaries(
-        EnumMap<StatisticalSummaryAspect, StatisticalSummary> byStatisticalSummaryAspect,
+        RBEnumMap<StatisticalSummaryAspect, StatisticalSummary> byStatisticalSummaryAspect,
         int numStatisticalSummaries) {
       this.byStatisticalSummaryAspect = byStatisticalSummaryAspect;
       this.numStatisticalSummaries = numStatisticalSummaries;
@@ -39,7 +40,7 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
     /**
      * Avoid using this when you can use the clearer getters below.
      */
-    public EnumMap<StatisticalSummaryAspect, StatisticalSummary> getRawEnumMap() {
+    public RBEnumMap<StatisticalSummaryAspect, StatisticalSummary> getRawEnumMap() {
       return byStatisticalSummaryAspect;
     }
 
@@ -53,7 +54,7 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
     }
 
     public StatisticalSummary getStatisticalSummary(StatisticalSummaryAspect statisticalSummaryAspect) {
-      return byStatisticalSummaryAspect.get(statisticalSummaryAspect);
+      return byStatisticalSummaryAspect.getOrThrow(statisticalSummaryAspect);
     }
 
     /**

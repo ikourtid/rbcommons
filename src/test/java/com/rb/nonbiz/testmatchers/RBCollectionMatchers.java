@@ -216,29 +216,4 @@ public class RBCollectionMatchers {
         match(v -> v.iterator(), f -> iteratorMatcher(f, matcherGenerator)));
   }
 
-  public static <E extends Enum<E>, V> TypeSafeMatcher<RBEnumMap<E, V>> rbEnumMapMatcher(
-      RBEnumMap<E, V> expected, MatcherGenerator<V> valueMatcherGenerator) {
-    return makeMatcher(expected, actual -> {
-      if (!expected.keySet().equals(actual.keySet())) {
-        return false;
-      }
-      for (Entry<E, V> entryInExpected : expected.entrySet()) {
-        E enumKey = entryInExpected.getKey();
-        V valueInExpected = entryInExpected.getValue();
-        Optional<V> valueInActual = actual.getOptional(enumKey);
-        if (!valueInActual.isPresent()) {
-          return false;
-        }
-        if (!valueMatcherGenerator.apply(valueInExpected).matches(valueInActual.get())) {
-          return false;
-        }
-      }
-      return true; // no mismatch found for any of the enum keys.
-    });
-  }
-
-  public static <E extends Enum<E>, V> TypeSafeMatcher<RBEnumMap<E, V>> rbEnumMapEqualityMatcher(RBEnumMap<E, V> expected) {
-    return rbEnumMapMatcher(expected, f -> typeSafeEqualTo(f));
-  }
-
 }

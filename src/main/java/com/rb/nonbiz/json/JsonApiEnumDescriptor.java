@@ -1,5 +1,6 @@
 package com.rb.nonbiz.json;
 
+import com.rb.nonbiz.collections.RBEnumMap;
 import com.rb.nonbiz.text.HasHumanReadableDocumentation;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.Strings;
@@ -22,18 +23,18 @@ import static com.rb.nonbiz.util.RBEnumMaps.rbEnumMapCoveringAllEnumValues;
 public class JsonApiEnumDescriptor<E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> {
 
   private final Class<E> enumClass;
-  private final EnumMap<E, HumanReadableDocumentation> validValuesToExplanations;
+  private final RBEnumMap<E, HumanReadableDocumentation> validValuesToExplanations;
 
   private JsonApiEnumDescriptor(
       Class<E> enumClass,
-      EnumMap<E, HumanReadableDocumentation> validValuesToExplanations) {
+      RBEnumMap<E, HumanReadableDocumentation> validValuesToExplanations) {
     this.enumClass = enumClass;
     this.validValuesToExplanations = validValuesToExplanations;
   }
 
   public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> JsonApiEnumDescriptor<E> jsonApiEnumDescriptor(
       Class<E> enumClass,
-      EnumMap<E, HumanReadableDocumentation> validValuesToExplanations) {
+      RBEnumMap<E, HumanReadableDocumentation> validValuesToExplanations) {
     // The 1 in the following precondition (vs. e.g. 2+)
     // is for the rare cases where we only allow one value of the enum in the JSON API.
     // You might wonder - why bother serializing such an enum in the first place? Well, this would allow us to
@@ -43,7 +44,7 @@ public class JsonApiEnumDescriptor<E extends Enum<E> & JsonRoundTripStringConver
         "There must be at least 1 item here: %s",
         validValuesToExplanations);
     validValuesToExplanations
-        .forEach( (enumConstant, documentation) -> {
+        .forEachEntryInKeyOrder( (enumConstant, documentation) -> {
           RBPreconditions.checkArgument(
               !isAllWhiteSpace(enumConstant.toUniqueStableString()),
               "No Java enum serialized string representation in the API may be all whitespace (which includes the empty string): %s",
@@ -79,7 +80,7 @@ public class JsonApiEnumDescriptor<E extends Enum<E> & JsonRoundTripStringConver
     return enumClass;
   }
 
-  public EnumMap<E, HumanReadableDocumentation> getValidValuesToExplanations() {
+  public RBEnumMap<E, HumanReadableDocumentation> getValidValuesToExplanations() {
     return validValuesToExplanations;
   }
 
