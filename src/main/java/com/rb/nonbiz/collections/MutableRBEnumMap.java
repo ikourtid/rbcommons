@@ -36,7 +36,7 @@ public class MutableRBEnumMap<E extends Enum<E>, V> {
   
   public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMap(
       Class<E> enumClass,
-      EnumSet<? extends E> keys,
+      RBSet<? extends E> keys,
       Supplier<V> value) {
     MutableRBEnumMap<E, V> mutableRBEnumMap = new MutableRBEnumMap<E, V>(new EnumMap<E, V>(enumClass));
     keys.forEach(key -> mutableRBEnumMap.put(key, value.get()));

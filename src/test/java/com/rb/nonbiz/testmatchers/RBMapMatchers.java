@@ -32,6 +32,7 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.rangeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.epsilonForNumericsElseEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
@@ -186,6 +187,11 @@ public class RBMapMatchers {
       }
       return true; // no mismatch found for any of the enum keys.
     });
+  }
+
+  public static <E extends Enum<E>, V> TypeSafeMatcher<RBEnumMap<E, V>> rbEnumMapEqualityMatcher(
+      RBEnumMap<E, V> expected) {
+    return rbEnumMapMatcher(expected, f -> typeSafeEqualTo(f));
   }
 
   public static <K extends Comparable, V> TypeSafeMatcher<RangeMap<K, V>> rangeMapGeneralMatcher(
