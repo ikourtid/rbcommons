@@ -258,10 +258,10 @@ public class RBEnumMapMergers {
   }
 
   /**
-   * Merges two maps into a single one.
+   * Merges two {@link RBEnumMap}s into a single one.
    *
-   * For the 3 separate cases of a key appearing in the left map / right map / both maps,
-   * modify the values based on the functions passed in.
+   * <p> For the 3 separate cases of a key appearing in the left map / right map / both maps,
+   * modify the values based on the functions passed in. </p>
    */
   public static <E extends Enum<E>, V> RBEnumMap<E, V> mergeRBEnumMapsByValue(
       BinaryOperator<V> mergeFunction,
@@ -283,6 +283,24 @@ public class RBEnumMapMergers {
                   !rightItem.isPresent() ? onlyLeftPresent.apply(leftItem.get()) :
                       mergeFunction.apply(leftItem.get(), rightItem.get());
             }));
+  }
+
+  /**
+   * Merges two {@link RBEnumMap}s into a single one.
+   *
+   * <p> If a key only appears in one of the maps, we copy the corresponding value. Otherwise we use the supplied
+   * merge function. </p>
+   */
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> mergeRBEnumMapsByValue(
+      BinaryOperator<V> mergeFunction,
+      RBEnumMap<E, V> leftMap,
+      RBEnumMap<E, V> rightMap) {
+    return mergeRBEnumMapsByValue(
+        mergeFunction,
+        v -> v,
+        v -> v,
+        leftMap,
+        rightMap);
   }
 
   /**
