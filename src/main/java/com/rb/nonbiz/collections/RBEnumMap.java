@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMap;
 import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMapFromPlainRBMap;
 
 /**
@@ -48,10 +47,6 @@ public class RBEnumMap<E extends Enum<E>, V> {
 
   public static <E extends Enum<E>, V> RBEnumMap<E, V> newRBEnumMap(Class<E> enumClass, RBMap<E, V> rbMap) {
     return newRBEnumMap(newMutableRBEnumMapFromPlainRBMap(enumClass, rbMap));
-  }
-
-  public static <E extends Enum<E>, V> RBEnumMap<E, V> emptyRBEnumMap(Class<E> enumClass) {
-    return new RBEnumMap<E, V>(newMutableRBEnumMap(enumClass));
   }
 
   public Class<E> getEnumClass() {
