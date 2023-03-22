@@ -3,13 +3,11 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import com.rb.nonbiz.text.Strings;
-import com.rb.nonbiz.util.RBEnumMaps;
 import org.junit.Test;
 
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
 import static com.rb.nonbiz.collections.RBEnumMapTest.TestEnum.*;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSet;
@@ -214,20 +212,18 @@ public class RBEnumMapTest {
 
   @Test
   public void testAccessIsInEnumOrder() {
-    RBEnumMap<TestEnum, String> rbEnumMap = newRBEnumMap(
-        TestEnum.class,
-        RBEnumMaps.rbEnumMapCoveringAllEnumValues(
-            TestEnum.class, rbMapOf(
-                A, "_A",
-                C, "_C",
-                E, "_E",
-                G, "_G",
-                I, "_I",
-                B, "_B",
-                D, "_D",
-                F, "_F",
-                H, "_H",
-                J, "_J")));
+    RBEnumMap<TestEnum, String> rbEnumMap = rbEnumMapCoveringAllEnumValues(
+        TestEnum.class, rbMapOf(
+            A, "_A",
+            C, "_C",
+            E, "_E",
+            G, "_G",
+            I, "_I",
+            B, "_B",
+            D, "_D",
+            F, "_F",
+            H, "_H",
+            J, "_J"));
 
     assertThat(
         newArrayList(rbEnumMap.keySet()),

@@ -176,7 +176,7 @@ public class MutableRBEnumMapTest {
     mutableMap.putIfAbsent(TestEnumXYZ.X, "x1");
     assertEquals("x1", mutableMap.getOrThrow(TestEnumXYZ.X));
     mutableMap.putIfAbsent(TestEnumXYZ.X, "x2");
-    assertEquals("x1", mutableMap.getOrThrow(TestEnumXYZ.Y));
+    assertEquals("x1", mutableMap.getOrThrow(TestEnumXYZ.X));
     mutableMap.put(TestEnumXYZ.X, "x3");
     assertEquals("x3", mutableMap.getOrThrow(TestEnumXYZ.X));
 

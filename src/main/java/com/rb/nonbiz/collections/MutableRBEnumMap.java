@@ -5,6 +5,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BinaryOperator;
@@ -32,14 +33,11 @@ public class MutableRBEnumMap<E extends Enum<E>, V> {
   public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMap(Class<E> enumClass) {
     return new MutableRBEnumMap<>(enumClass, new EnumMap<>(enumClass));
   }
-  
-  public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableNonEmptyRBEnumMap(
+
+  public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMap(
+      Class<E> enumClass,
       RBSet<? extends E> keys,
       Supplier<V> value) {
-    RBPreconditions.checkArgument(
-        !keys.isEmpty(),
-        "Keys must be nonempty");
-    Class<E> enumClass = keys.iterator().next().getDeclaringClass();
     MutableRBEnumMap<E, V> mutableRBEnumMap = new MutableRBEnumMap<E, V>(enumClass, new EnumMap<E, V>(enumClass));
     keys.forEach(key -> mutableRBEnumMap.put(key, value.get()));
     return mutableRBEnumMap;
@@ -407,6 +405,21 @@ public class MutableRBEnumMap<E extends Enum<E>, V> {
   @Override
   public String toString() {
     return rawMap.toString();
+  }
+
+  // IDE-generated
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    MutableRBEnumMap<?, ?> that = (MutableRBEnumMap<?, ?>) o;
+    return enumClass.equals(that.enumClass) && rawMap.equals(that.rawMap);
+  }
+
+  // IDE-generated
+  @Override
+  public int hashCode() {
+    return Objects.hash(enumClass, rawMap);
   }
 
 }

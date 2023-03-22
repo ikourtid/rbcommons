@@ -10,14 +10,11 @@ import static com.rb.nonbiz.json.JsonApiEnumDescriptor.jsonApiEnumDescriptor;
 import static com.rb.nonbiz.json.JsonApiEnumDescriptor.simpleJsonApiEnumDescriptor;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
-import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbEnumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.HumanReadableDocumentationTest.humanReadableDocumentationMatcher;
-import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.rbEnumMapOf;
-import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonEnumMap;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonRBEnumMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 
