@@ -50,13 +50,6 @@ public class MutableRBEnumMap<E extends Enum<E>, V> {
     return mutableMap;
   }
 
-  public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMapFromPlainEnumMap(
-      Class<E> enumClass, EnumMap<E, V> enumMap) {
-    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap(enumClass);
-    enumMap.forEach( (enumKey, value) -> mutableMap.put(enumKey, value));
-    return mutableMap;
-  }
-
   public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMapFromPlainRBMap(
       Class<E> enumClass, RBMap<E, V> rbMap) {
     MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap(enumClass);

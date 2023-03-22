@@ -48,10 +48,6 @@ public class RBEnumMap<E extends Enum<E>, V> {
     return new RBEnumMap<E, V>(mutableMap);
   }
 
-  public static <E extends Enum<E>, V> RBEnumMap<E, V> newRBEnumMap(Class<E> enumClass, EnumMap<E, V> enumMap) {
-    return newRBEnumMap(newMutableRBEnumMapFromPlainEnumMap(enumClass, enumMap));
-  }
-
   public static <E extends Enum<E>, V> RBEnumMap<E, V> newRBEnumMap(Class<E> enumClass, RBMap<E, V> rbMap) {
     return newRBEnumMap(newMutableRBEnumMapFromPlainRBMap(enumClass, rbMap));
   }
