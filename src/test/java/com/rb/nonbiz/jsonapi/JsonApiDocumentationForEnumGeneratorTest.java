@@ -11,7 +11,7 @@ import static com.rb.nonbiz.jsonapi.JsonApiEnumDocumentationTest.jsonApiEnumDocu
 import static com.rb.nonbiz.testutils.Asserters.valueExplained;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
-import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.enumMapOf;
+import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.rbEnumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.rbEnumMapOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 

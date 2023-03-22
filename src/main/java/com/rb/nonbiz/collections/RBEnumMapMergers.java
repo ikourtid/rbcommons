@@ -36,7 +36,7 @@ public class RBEnumMapMergers {
    * and items on the right map become 'right eithers'.
    * Throws if a key appears in both maps.
    */
-  public static <E extends Enum<E>, L, R> RBEnumMap<E, Either<L, R>> mergeIntoEithersMap(
+  public static <E extends Enum<E>, L, R> RBEnumMap<E, Either<L, R>> mergeIntoEithersEnumMap(
       RBEnumMap<E, L> leftMap, RBEnumMap<E, R> rightMap) {
     if (!RBSets.noSharedItems(leftMap.keySet(), rightMap.keySet())) {
       throw new IllegalArgumentException(smartFormat(
