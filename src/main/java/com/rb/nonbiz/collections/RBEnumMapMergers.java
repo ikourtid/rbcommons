@@ -215,14 +215,14 @@ public class RBEnumMapMergers {
     Pointer<MutableRBEnumMap<E, V>> mutableMapPointer = uninitializedPointer();
     mapsIterator
         .forEachRemaining(map -> {
+          // This trickery with the side effect (which we rarely use) is required so that we won't have to pass in
+          // the enum class, and will instead get it off of the first RBEnumMap object. This means that the stream
+          // passed in must have at least one map in it.
+          if (!mutableMapPointer.isInitialized()) {
+            mutableMapPointer.setAssumingUninitialized(newMutableRBEnumMap(map.getEnumClass()));
+          }
           map.forEachEntryInKeyOrder(
               (key, newValue) -> {
-                // This trickery with the side effect (which we rarely use) is required so that we won't have to pass in
-                // the enum class, and will instead get it off of the first RBEnumMap object. This means that the stream
-                // passed in must have at least one map in it.
-                if (!mutableMapPointer.isInitialized()) {
-                  mutableMapPointer.setAssumingUninitialized(newMutableRBEnumMap(map.getEnumClass()));
-                }
                 MutableRBEnumMap<E, V> mutableMap = mutableMapPointer.getOrThrow();
 
                 mutableMap.getOptional(key)
