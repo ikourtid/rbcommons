@@ -46,7 +46,7 @@ public class RBEnumMapSimpleConstructors {
 
   // We need this because onlyEnumKey.getClass() returns a {@code Class<? extends Enum>}, not a {@code Class<E>}.
   @SuppressWarnings("unchecked")
-  public static <E extends Enum<E>, V> RBEnumMap<E, V> enumMapOf(
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMapOf(
       E enumKey1, V value1,
       E enumKey2, V value2,
       E enumKey3, V value3,
@@ -61,7 +61,7 @@ public class RBEnumMapSimpleConstructors {
 
   // We need this because onlyEnumKey.getClass() returns a {@code Class<? extends Enum>}, not a {@code Class<E>}.
   @SuppressWarnings("unchecked")
-  public static <E extends Enum<E>, V> RBEnumMap<E, V> enumMapOf(
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMapOf(
       E enumKey1, V value1,
       E enumKey2, V value2,
       E enumKey3, V value3,
