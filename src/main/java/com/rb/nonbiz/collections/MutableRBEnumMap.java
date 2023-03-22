@@ -2,8 +2,11 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.Maps;
 import com.rb.nonbiz.util.RBPreconditions;
+import org.checkerframework.checker.units.qual.K;
 
 import java.util.Collection;
+import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -16,33 +19,34 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * This is one of the rare mutable data classes in the codebase.
- * Typically, we will build a {@link MutableRBMap} and then 'lock' it into an {@link RBMap} in the same method,
- * and then return it. We should (almost) never pass around a {@link MutableRBMap}.
+ * Typically, we will build a {@link MutableRBEnumMap} and then 'lock' it into an {@link RBEnumMap} in the same method,
+ * and then return it. We should (almost) never pass around a {@link MutableRBEnumMap}.
  */
-public class MutableRBMap<K, V> {
+public class MutableRBEnumMap<E extends Enum<E>, V> {
 
-  private final Map<K, V> rawMap;
+  private final EnumMap<E, V> rawMap;
 
-  private MutableRBMap(Map<K, V> rawMap) {
+  private MutableRBEnumMap(EnumMap<E, V> rawMap) {
     this.rawMap = rawMap;
   }
 
-  public static <K, V> MutableRBMap<K, V> newMutableRBMap() {
-    return new MutableRBMap<>(Maps.newHashMap());
+  public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMap(Class<E> enumClass) {
+    return new MutableRBEnumMap<>(new EnumMap<>(enumClass));
+  }
+  
+  public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMap(
+      Class<E> enumClass,
+      EnumSet<? extends E> keys,
+      Supplier<V> value) {
+    MutableRBEnumMap<E, V> mutableRBEnumMap = new MutableRBEnumMap<E, V>(new EnumMap<E, V>(enumClass));
+    keys.forEach(key -> mutableRBEnumMap.put(key, value.get()));
+    return mutableRBEnumMap;
   }
 
-  public static <K, V> MutableRBMap<K, V> newMutableRBMapWithExpectedSize(int expectedSize) {
-    return new MutableRBMap<>(Maps.newHashMapWithExpectedSize(expectedSize));
-  }
-
-  public static <K, V> MutableRBMap<K, V> newMutableRBMap(RBSet<? extends K> keys, Supplier<V> value) {
-    MutableRBMap<K, V> mutableRBMap = new MutableRBMap<>(Maps.newHashMapWithExpectedSize(keys.size()));
-    keys.forEach(key -> mutableRBMap.put(key, value.get()));
-    return mutableRBMap;
-  }
-
-  public static <K, V> MutableRBMap<K, V> newMutableRBMap(RBMap<K, V> initialValues) {
-    MutableRBMap<K, V> mutableMap = newMutableRBMapWithExpectedSize(initialValues.size());
+  public static <E extends Enum<E>, V> MutableRBEnumMap<E, V> newMutableRBEnumMap(
+      Class<E> enumClass,
+      RBEnumMap<E, V> initialValues) {
+    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap(enumClass);
     mutableMap.addAllAssumingNoOverlap(initialValues);
     return mutableMap;
   }
@@ -51,11 +55,11 @@ public class MutableRBMap<K, V> {
    * Creates a copy of this map, but also adds the contents of the specified map.
    * Throws if any key appears in both maps.
    */
-  public void addAllAssumingNoOverlap(RBMap<K, V> additionalValues) {
-    additionalValues.forEachEntry( (key, value) -> putAssumingAbsent(key, value));
+  public void addAllAssumingNoOverlap(RBEnumMap<E, V> additionalValues) {
+    additionalValues.forEachEntryInKeyOrder( (key, value) -> putAssumingAbsent(key, value));
   }
 
-  public Map<K, V> asMap() {
+  public Map<E, V> asMap() {
     return rawMap;
   }
 
@@ -67,7 +71,7 @@ public class MutableRBMap<K, V> {
     return rawMap.isEmpty();
   }
 
-  public boolean containsKey(K key) {
+  public boolean containsKey(E key) {
     return rawMap.containsKey(key);
   }
 
@@ -78,16 +82,16 @@ public class MutableRBMap<K, V> {
   /**
    * #get on a regular Map returns null if the value is not there. We don't like nulls in the codebase,
    * plus that behavior is confusing to someone new to Java.
-   * Instead, {@link MutableRBMap} has:
+   * Instead, {@link MutableRBEnumMap} has:
    * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
    * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
    *
-   * Ideally, since we should never be passing a {@link MutableRBMap} around, you should use this sparingly
-   * and only get values from the 'locked' {@link RBMap} that you'll convert the {@link MutableRBMap} to.
+   * Ideally, since we should never be passing a {@link MutableRBEnumMap} around, you should use this sparingly
+   * and only get values from the 'locked' {@link RBEnumMap} that you'll convert the MutableRBEnumMap to.
    */
-  public Optional<V> getOptional(K key) {
+  public Optional<V> getOptional(E key) {
     if (key == null) {
-      throw new IllegalArgumentException("A MutableRBMap does not allow null keys");
+      throw new IllegalArgumentException("A MutableRBEnumMap does not allow null keys");
     }
     return Optional.ofNullable(rawMap.get(key));
   }
@@ -95,16 +99,16 @@ public class MutableRBMap<K, V> {
   /**
    * #get on a regular Map returns null if the value is not there. We don't like nulls in the codebase,
    * plus that behavior is confusing to someone new to Java.
-   * Instead, MutableRBMap has:
+   * Instead, {@link MutableRBEnumMap} has:
    * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
    * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
    *
-   * Ideally, since we should never be passing a MutableRBMap around, you should use this sparingly
-   * and only get values from the 'locked' RBMap that you'll convert the MutableRBMap to.
+   * Ideally, since we should never be passing a {@link MutableRBEnumMap} around, you should use this sparingly
+   * and only get values from the 'locked' {@link RBEnumMap} that you'll convert the {@link MutableRBEnumMap} to.
    */
-  public V getOrThrow(K key) {
+  public V getOrThrow(E key) {
     if (key == null) {
-      throw new IllegalArgumentException("A MutableRBMap does not allow null keys");
+      throw new IllegalArgumentException("A MutableRBEnumMap does not allow null keys");
     }
     V value = rawMap.get(key);
     if (value == null) {
@@ -118,20 +122,20 @@ public class MutableRBMap<K, V> {
   /**
    * Same as getOrThrow above, but lets you specify the error message if a key is missing.
    */
-  public V getOrThrow(K key, String template, Object...args) {
+  public V getOrThrow(E key, String template, Object...args) {
     if (key == null) {
-      throw new IllegalArgumentException("A MutableRBMap does not allow null keys");
+      throw new IllegalArgumentException("A MutableRBEnumMap does not allow null keys");
     }
     Optional<V> value = getOptional(key);
     RBPreconditions.checkArgument(value.isPresent(), template, args);
     return value.get();
   }
 
-  public V remove(K key) {
+  public V remove(E key) {
     return rawMap.remove(key);
   }
 
-  public void putAll(Map<? extends K, ? extends V> m) {
+  public void putAll(Map<? extends E, ? extends V> m) {
     rawMap.putAll(m);
   }
 
@@ -139,7 +143,7 @@ public class MutableRBMap<K, V> {
     rawMap.clear();
   }
 
-  public Set<K> keySet() {
+  public Set<E> keySet() {
     return rawMap.keySet();
   }
 
@@ -147,7 +151,7 @@ public class MutableRBMap<K, V> {
     return rawMap.values();
   }
 
-  public Set<Map.Entry<K, V>> entrySet() {
+  public Set<Map.Entry<E, V>> entrySet() {
     return rawMap.entrySet();
   }
 
@@ -155,10 +159,10 @@ public class MutableRBMap<K, V> {
    * Get a value for a key.
    * If it doesn't exist, return defaultValue, but don't modify the map to add a key {@code ->} defaultValue mapping.
    */
-  public V getOrDefault(K key, V defaultValue) {
+  public V getOrDefault(E key, V defaultValue) {
     RBPreconditions.checkArgument(
         key != null,
-        "A MutableRBMap does not allow null keys");
+        "A MutableRBEnumMap does not allow null keys");
     return rawMap.getOrDefault(key, defaultValue);
   }
 
@@ -166,10 +170,10 @@ public class MutableRBMap<K, V> {
    * Get a value for a key.
    * If it doesn't exist, return defaultValue, but don't modify the map to add a key {@code ->} defaultValue mapping.
    */
-  public V getOrDefault(K key, Supplier<V> defaultValue) {
+  public V getOrDefault(E key, Supplier<V> defaultValue) {
     RBPreconditions.checkArgument(
         key != null,
-        "A MutableRBMap does not allow null keys");
+        "A MutableRBEnumMap does not allow null keys");
     V value = rawMap.get(key);
     return value == null
         ? defaultValue.get()
@@ -179,10 +183,10 @@ public class MutableRBMap<K, V> {
   /**
    * Get a value for a key. If it doesn't exist, add the key {@code ->} defaultValue mapping, and return defaultValue.
    */
-  public V getIfPresentElsePut(K key, Supplier<V> defaultValue) {
+  public V getIfPresentElsePut(E key, Supplier<V> defaultValue) {
     RBPreconditions.checkArgument(
         key != null,
-        "A MutableRBMap does not allow null keys");
+        "A MutableRBEnumMap does not allow null keys");
     V value = rawMap.get(key);
     if (value != null) {
       return value;
@@ -199,10 +203,10 @@ public class MutableRBMap<K, V> {
    * You can also use #put for performance-critical code, where you are OK with the diminished safety of
    * not checking if you are trying to overwrite an existing value.
    */
-  public V put(K key, V value) {
+  public V put(E key, V value) {
     if (key == null || value == null) {
       throw new IllegalArgumentException(smartFormat(
-          "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
+          "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBEnumMap",
           key, value));
     }
     return rawMap.put(key, value);
@@ -213,10 +217,10 @@ public class MutableRBMap<K, V> {
    *
    * Use this instead of #put for extra safety, when applicable.
    */
-  public void putIfAbsent(K key, V value) {
+  public void putIfAbsent(E key, V value) {
     if (key == null || value == null) {
       throw new IllegalArgumentException(smartFormat(
-          "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
+          "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBEnumMap",
           key, value));
     }
     rawMap.putIfAbsent(key, value);
@@ -227,10 +231,10 @@ public class MutableRBMap<K, V> {
    *
    * Use this instead of #put for extra safety, when applicable.
    */
-  public void putIfAbsent(K key, Supplier<V> valueSupplier) {
+  public void putIfAbsent(E key, Supplier<V> valueSupplier) {
     if (key == null) {
       throw new IllegalArgumentException(smartFormat(
-          "Key cannot be null in a MutableRBMap; value was ( %s ) ",
+          "Key cannot be null in a MutableRBEnumMap; value was ( %s ) ",
           valueSupplier.get()));
     }
     if (!rawMap.containsKey(key)) {
@@ -246,10 +250,10 @@ public class MutableRBMap<K, V> {
    *
    * Use this instead of #put for extra safety, when applicable - which is pretty much all the time.
    */
-  public void putAssumingAbsent(K key, V value) {
+  public void putAssumingAbsent(E key, V value) {
     if (key == null || value == null) {
       throw new IllegalArgumentException(smartFormat(
-          "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
+          "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBEnumMap",
           key, value));
     }
     V previousValue = put(key, value);
@@ -266,10 +270,10 @@ public class MutableRBMap<K, V> {
    *
    * Use this instead of #put for extra safety, when applicable - which is pretty much all the time.
    */
-  public void putAssumingAbsentAllowingNullValue(K key, V value) {
+  public void putAssumingAbsentAllowingNullValue(E key, V value) {
     if (key == null) {
       throw new IllegalArgumentException(smartFormat(
-          "Key ( %s ) cannot be null in a MutableRBMap; value was %s",
+          "Key ( %s ) cannot be null in a MutableRBEnumMap; value was %s",
           key, value));
     }
     V previousValue = rawMap.put(key, value);
@@ -286,10 +290,10 @@ public class MutableRBMap<K, V> {
    *
    * Use this instead of #put for extra safety, when applicable.
    */
-  public void putAssumingPresent(K key, V value) {
+  public void putAssumingPresent(E key, V value) {
     if (key == null || value == null) {
       throw new IllegalArgumentException(smartFormat(
-          "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
+          "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBEnumMap",
           key, value));
     }
     V previousValue = put(key, value);
@@ -305,7 +309,7 @@ public class MutableRBMap<K, V> {
    * e.g. if you have a map whose values are e.g. numbers that need to be added to,
    * and where the first time around there's nothing in the map.
    */
-  public void putOrModifyExisting(K key, V value, BinaryOperator<V> whenPresent) {
+  public void putOrModifyExisting(E key, V value, BinaryOperator<V> whenPresent) {
     Optional<V> existingValue = getOptional(key);
     put(key, existingValue.isPresent() ? whenPresent.apply(existingValue.get(), value) : value);
   }
@@ -313,14 +317,14 @@ public class MutableRBMap<K, V> {
   /**
    * Similar to putOrModifyExisting, except that this is most useful for situations where you always want to initialize
    * with a non-trivial object (e.g. an empty array list), and then perform operations on it.
-   * E.g. {@code MutableRBMap<AssetClass, List<?>>}
+   * E.g. {@code MutableRBEnumMap<AssetClass, List<?>>}
    * We use a {@code Supplier<V>} instead of just V, so that we won't always need to initialize e.g. a newArrayList()
    * even for those cases where there's already a value under the key.
    *
    * Unlike eitherInitializeOrUpdate, if we need to initialize the value for this key, we will still call the update
    * operator.
    */
-  public void possiblyInitializeAndThenUpdate(K key, Supplier<V> initialValueIfNoneExists, UnaryOperator<V> modifierIfValueExists) {
+  public void possiblyInitializeAndThenUpdate(E key, Supplier<V> initialValueIfNoneExists, UnaryOperator<V> modifierIfValueExists) {
     Optional<V> maybeExisting = getOptional(key);
     put(key, modifierIfValueExists.apply(maybeExisting.isPresent()
         ? maybeExisting.get()
@@ -347,7 +351,7 @@ public class MutableRBMap<K, V> {
    *                     {@code list -> { list.add(taxLot); return list; })}
    * </pre>
    */
-  public void possiblyInitializeAndThenUpdateInPlace(K key, Supplier<V> initialEmptyValueIfNoneExists, Consumer<V> modifierInPlace) {
+  public void possiblyInitializeAndThenUpdateInPlace(E key, Supplier<V> initialEmptyValueIfNoneExists, Consumer<V> modifierInPlace) {
     Optional<V> maybeExisting = getOptional(key);
     if (maybeExisting.isPresent()) {
       modifierInPlace.accept(maybeExisting.get());
@@ -362,22 +366,22 @@ public class MutableRBMap<K, V> {
    * Similar to possiblyInitializeAndThenUpdate, except that we EITHER initialize if there is no existing value,
    * OR modify the existing value. If we have to initialize, we will NOT additionally modify the initialized value afterwards.
    */
-  public void eitherInitializeOrUpdate(K key, Supplier<V> initialValueIfNoneExists, UnaryOperator<V> modifierIfValueExists) {
+  public void eitherInitializeOrUpdate(E key, Supplier<V> initialValueIfNoneExists, UnaryOperator<V> modifierIfValueExists) {
     Optional<V> maybeExisting = getOptional(key);
     put(key, maybeExisting.isPresent()
         ? modifierIfValueExists.apply(maybeExisting.get())
         : initialValueIfNoneExists.get());
   }
 
-  public boolean remove(K key, V value) {
+  public boolean remove(E key, V value) {
     return rawMap.remove(key, value);
   }
 
-  public boolean replace(K key, V oldValue, V newValue) {
+  public boolean replace(E key, V oldValue, V newValue) {
     return rawMap.replace(key, oldValue, newValue);
   }
 
-  public V replace(K key, V value) {
+  public V replace(E key, V value) {
     return rawMap.replace(key, value);
   }
 
