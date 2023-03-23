@@ -34,6 +34,12 @@ import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMapFrom
  */
 public class RBEnumMap<E extends Enum<E>, V> {
 
+  /**
+   * In theory, this is mutable, but the assumption is that once it’s passed to the constructor,
+   * the caller will know not to modify it. There is no way to enforce this with a 100% guarantee, but in practice we
+   * never pass {@link MutableRBEnumMap} as an argument, or return it from a method. So the code - whatever creates an
+   * empty map, adds items to it, and then returns an immutable map - is contained enough for this not to happen.
+   */
   private final MutableRBEnumMap<E, V> mutableRBEnumMap;
 
   private RBEnumMap(MutableRBEnumMap<E, V> mutableRBEnumMap) {

@@ -21,7 +21,7 @@ import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkAllSame;
 public class RBEnumMaps {
 
   /**
-   * Transforms an RBEnumMap's map values, without looking at the enum value itself.
+   * Transforms an {@link RBEnumMap}'s map values, without looking at the enum value itself.
    */
   public static <E extends Enum<E>, V1, V2> RBEnumMap<E, V2> transformRBEnumMap(
       RBEnumMap<E, V1> original, Function<V1, V2> transformer) {
@@ -29,7 +29,7 @@ public class RBEnumMaps {
   }
 
   /**
-   * Transforms an RBEnumMap's map values, but the transformation can also look at the enum value as well.
+   * Transforms an {@link RBEnumMap}'s map values, but the transformation can also look at the enum value as well.
    */
   public static <E extends Enum<E>, V1, V2> RBEnumMap<E, V2> transformRBEnumMap(
       RBEnumMap<E, V1> original, BiFunction<E, V1, V2> transformer) {
@@ -40,8 +40,8 @@ public class RBEnumMaps {
   }
 
   /**
-   * Creates an RBEnumMap using the convenient RBMap constructors, while also asserting that every enum constant
-   * appears in the map.
+   * Creates an {@link RBEnumMap} using the convenient {@link RBMap} constructors,
+   * while also asserting that every enum constant appears in the map.
    */
   public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMapCoveringAllEnumValues(
       Class<E> enumClass,
@@ -57,7 +57,7 @@ public class RBEnumMaps {
   }
 
   /**
-   * Creates an RBEnumMap such that every enum constant appears in the map.
+   * Creates an {@link RBEnumMap} such that every enum constant appears in the map.
    * Each value is a function of the key specified.
    */
   public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMapCoveringAllEnumValues(
