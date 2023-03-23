@@ -5,7 +5,7 @@ import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidBiMap;
 import com.rb.nonbiz.collections.IidMap;
-import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.collections.IidSet;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -15,7 +15,7 @@ import static com.rb.nonbiz.collections.IidBiMap.iidBiMap;
 import static com.rb.nonbiz.collections.IidBiMaps.emptyIidBiMap;
 import static com.rb.nonbiz.collections.IidBiMaps.iidBiMapOf;
 import static com.rb.nonbiz.collections.IidBiMaps.singletonIidBiMap;
-import static com.rb.nonbiz.collections.RBSet.newRBSet;
+import static com.rb.nonbiz.collections.IidSetSimpleConstructors.newIidSet;
 
 /**
  * This is useful in test when we want to create an {@link InstrumentMaster} with some mappings hardcoded,
@@ -94,8 +94,8 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
   }
 
   //FIXME CM Change to IidSet and add test
-  public RBSet<InstrumentId> getAllInstrumentIdsAsRBSet() {
-    return newRBSet(hardCodedSymbolBiMap.getInstrumentIdFromItem().values());
+  public IidSet getAllInstrumentIdsAsIidSet() {
+    return newIidSet(hardCodedSymbolBiMap.getInstrumentIdFromItem().values());
   }
 
   @Override
