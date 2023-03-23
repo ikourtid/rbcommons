@@ -79,16 +79,14 @@ public class MutableRBMap<K, V> {
    * #get on a regular Map returns null if the value is not there. We don't like nulls in the codebase,
    * plus that behavior is confusing to someone new to Java.
    * Instead, {@link MutableRBMap} has:
-   * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
-   * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
+   * {@link #getOptional(Object)} (which will return an Optional.empty() if there is no value for the specified key),
+   * {@link #getOrThrow(Object)}, which assumes the value is there (throws otherwise), and returns the value
    *
-   * Ideally, since we should never be passing a {@link MutableRBMap} around, you should use this sparingly
-   * and only get values from the 'locked' {@link RBMap} that you'll convert the {@link MutableRBMap} to.
+   * <p> Ideally, since we should never be passing a {@link MutableRBMap} around, you should use this sparingly
+   * and only get values from the 'locked' {@link RBMap} that you'll convert the {@link MutableRBMap} to. </p>
    */
   public Optional<V> getOptional(K key) {
-    if (key == null) {
-      throw new IllegalArgumentException("A MutableRBMap does not allow null keys");
-    }
+    checkKeyIsNotNull(key);
     return Optional.ofNullable(rawMap.get(key));
   }
 
@@ -96,16 +94,14 @@ public class MutableRBMap<K, V> {
    * #get on a regular Map returns null if the value is not there. We don't like nulls in the codebase,
    * plus that behavior is confusing to someone new to Java.
    * Instead, MutableRBMap has:
-   * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
-   * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
+   * {@link #getOptional(Object)} (which will return an Optional.empty() if there is no value for the specified key),
+   * {@link #getOrThrow(Object)}, which assumes the value is there (throws otherwise), and returns the value
    *
-   * Ideally, since we should never be passing a MutableRBMap around, you should use this sparingly
-   * and only get values from the 'locked' RBMap that you'll convert the MutableRBMap to.
+   * <p> Ideally, since we should never be passing a MutableRBMap around, you should use this sparingly
+   * and only get values from the 'locked' RBMap that you'll convert the MutableRBMap to. </p>
    */
   public V getOrThrow(K key) {
-    if (key == null) {
-      throw new IllegalArgumentException("A MutableRBMap does not allow null keys");
-    }
+    checkKeyIsNotNull(key);
     V value = rawMap.get(key);
     if (value == null) {
       throw new IllegalArgumentException(smartFormat(
@@ -119,9 +115,7 @@ public class MutableRBMap<K, V> {
    * Same as getOrThrow above, but lets you specify the error message if a key is missing.
    */
   public V getOrThrow(K key, String template, Object...args) {
-    if (key == null) {
-      throw new IllegalArgumentException("A MutableRBMap does not allow null keys");
-    }
+    checkKeyIsNotNull(key);
     Optional<V> value = getOptional(key);
     RBPreconditions.checkArgument(value.isPresent(), template, args);
     return value.get();
@@ -384,6 +378,12 @@ public class MutableRBMap<K, V> {
   @Override
   public String toString() {
     return rawMap.toString();
+  }
+
+  private void checkKeyIsNotNull(K key) {
+    if (key == null) {
+      throw new IllegalArgumentException("A MutableRBMap does not allow null keys");
+    }
   }
 
 }
