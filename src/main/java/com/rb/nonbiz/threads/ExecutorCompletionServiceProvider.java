@@ -20,9 +20,9 @@ public class ExecutorCompletionServiceProvider implements AbstractExecutionCompl
   // This will be 12 for a hexa-core machine and 8 for a quad-core.
   // This currently works (March 2023) because all machines this runs on have Intel processors with hyperthreading.
   public static final int NUM_CORES_INCLUDING_HYPERTHREADING = Runtime.getRuntime().availableProcessors();
-  public static final int NUM_PHYSICAL_CORES = NUM_CORES_INCLUDING_HYPERTHREADING / 2;
+  public static final int NUM_PHYSICAL_CORES = Math.max(1, NUM_CORES_INCLUDING_HYPERTHREADING / 2);
 
-  public static final int THREAD_POOL_SIZE = NUM_CORES_INCLUDING_HYPERTHREADING - 1;
+  public static final int THREAD_POOL_SIZE = Math.max(1, NUM_CORES_INCLUDING_HYPERTHREADING - 1);
 
   @Override
   public <T> ExecutorCompletionService<T> getExecutorCompletionService(OptionalInt maybeNumThreads) {
