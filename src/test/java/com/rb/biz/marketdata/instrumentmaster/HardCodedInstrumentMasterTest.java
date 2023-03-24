@@ -4,12 +4,10 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.hardCodedInstrumentMaster;
-import static com.rb.biz.types.Symbol.symbol;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.IidBiMap.iidBiMap;
 import static com.rb.nonbiz.collections.IidBiMapTest.iidBiMapMatcher;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
-import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.emptyIidSet;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.iidSetOf;
 import static com.rb.nonbiz.collections.IidSetTest.iidSetMatcher;
@@ -31,11 +29,10 @@ public class HardCodedInstrumentMasterTest {
     // for all instrument IDs.
     assertThat(
         hardCodedInstrumentMaster(
-            iidBiMap(iidMapOf(
-                instrumentId(1),   symbol("AAPL"),
-                instrumentId(2),   symbol("BAC"),
-                instrumentId(11),  symbol("C"),
-                instrumentId(12),  symbol("DOW")))).getAllInstrumentIdsAsIidSet(),
+                instrumentId(1),  "STOCK_A",
+                instrumentId(2),  "STOCK_B",
+                instrumentId(11), "STOCK_C",
+                instrumentId(12), "STOCK_D").getAllInstrumentIdsAsIidSet(),
         iidSetMatcher(iidSetOf(instrumentId(1), instrumentId(2), instrumentId(11), instrumentId(12))));
   }
 
