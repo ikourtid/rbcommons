@@ -1,17 +1,13 @@
 package com.rb.biz.marketdata.instrumentmaster;
 
-import com.rb.biz.types.asset.InstrumentId;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
 import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.hardCodedInstrumentMaster;
-import static com.rb.biz.types.Symbol.symbol;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.IidBiMap.iidBiMap;
 import static com.rb.nonbiz.collections.IidBiMapTest.iidBiMapMatcher;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
-import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.emptyIidSet;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.iidSetOf;
 import static com.rb.nonbiz.collections.IidSetTest.iidSetMatcher;
