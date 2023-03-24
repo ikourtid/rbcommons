@@ -34,7 +34,7 @@ import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 public class RBMapMergers {
 
   /**
-   * Creates a map of 'eithers' (see Either class), where items on the left map become 'left eithers',
+   * Creates a map of 'eithers' (see {@link Either}), where items on the left map become 'left eithers',
    * and items on the right map become 'right eithers'.
    * Throws if a key appears in both maps.
    */
@@ -77,9 +77,11 @@ public class RBMapMergers {
    * Merges a bunch of maps into a single one, but lets you put modified values in the merged map.
    * Throws if a key appears in more than one map.
    */
-  public static <K, V> RBMap<K, V> mergeRBMapsDisallowingOverlap(UnaryOperator<V> left,
-                                                                 UnaryOperator<V> right,
-                                                                 RBMap<K, V> leftMap, RBMap<K, V> rightMap) {
+  public static <K, V> RBMap<K, V> mergeRBMapsDisallowingOverlap(
+      UnaryOperator<V> left,
+      UnaryOperator<V> right,
+      RBMap<K, V> leftMap,
+      RBMap<K, V> rightMap) {
     MutableRBMap<K, V> merged = newMutableRBMapWithExpectedSize(leftMap.size() + rightMap.size());
     leftMap.forEachEntry(  (key, value) -> merged.putAssumingAbsent(key, left.apply(value)));
     rightMap.forEachEntry( (key, value) -> merged.putAssumingAbsent(key, right.apply(value)));
@@ -224,10 +226,12 @@ public class RBMapMergers {
    * For the 3 separate cases of a key appearing in the left map / right map / both maps,
    * modify the values based on the functions passed in.
    */
-  public static <K, V> RBMap<K, V> mergeRBMapsByValue(BinaryOperator<V> mergeFunction,
-                                                      UnaryOperator<V> onlyLeftPresent,
-                                                      UnaryOperator<V> onlyRightPresent,
-                                                      RBMap<K, V> leftMap, RBMap<K, V> rightMap) {
+  public static <K, V> RBMap<K, V> mergeRBMapsByValue(
+      BinaryOperator<V> mergeFunction,
+      UnaryOperator<V> onlyLeftPresent,
+      UnaryOperator<V> onlyRightPresent,
+      RBMap<K, V> leftMap,
+      RBMap<K, V> rightMap) {
     return newRBSet(Sets.union(leftMap.keySet(), rightMap.keySet()))
         .toRBMap(key -> {
           Optional<V> leftItem = leftMap.getOptional(key);
@@ -276,7 +280,8 @@ public class RBMapMergers {
       BiFunction<V1, V2, V3> mergeFunction,
       Function<V1, V3> onlyLeftPresent,
       Function<V2, V3> onlyRightPresent,
-      RBMap<K, V1> leftMap, RBMap<K, V2> rightMap) {
+      RBMap<K, V1> leftMap,
+      RBMap<K, V2> rightMap) {
     return newRBSet(Sets.union(leftMap.keySet(), rightMap.keySet()))
         .toRBMap(key -> {
           Optional<V1> leftItem = leftMap.getOptional(key);
