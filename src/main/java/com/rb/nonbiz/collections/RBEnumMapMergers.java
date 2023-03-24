@@ -7,7 +7,6 @@ import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.types.Pointer;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBPreconditions;
-import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.Iterator;
 import java.util.List;
@@ -35,12 +34,13 @@ import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 public class RBEnumMapMergers {
 
   /**
-   * Creates a map of 'eithers' (see Either class), where items on the left map become 'left eithers',
+   * Creates a map of 'eithers' (see {@link Either}), where items on the left map become 'left eithers',
    * and items on the right map become 'right eithers'.
    * Throws if a key appears in both maps.
    */
   public static <E extends Enum<E>, L, R> RBEnumMap<E, Either<L, R>> mergeIntoEithersEnumMap(
-      RBEnumMap<E, L> leftMap, RBEnumMap<E, R> rightMap) {
+      RBEnumMap<E, L> leftMap,
+      RBEnumMap<E, R> rightMap) {
     if (!RBSets.noSharedItems(leftMap.keySet(), rightMap.keySet())) {
       throw new IllegalArgumentException(smartFormat(
           "Shared keys exist between maps to be merged: %s and %s",
@@ -63,7 +63,9 @@ public class RBEnumMapMergers {
    */
   @SafeVarargs
   public static <E extends Enum<E>, V> RBEnumMap<E, V> mergeRBEnumMapsDisallowingOverlap(
-      RBEnumMap<E, V> first, RBEnumMap<E, V> second, RBEnumMap<E, V>...rest) {
+      RBEnumMap<E, V> first,
+      RBEnumMap<E, V> second,
+      RBEnumMap<E, V>...rest) {
     Optional<RBEnumMap<E, V>> onlyNonEmptyMap = getWhenUpToOneRBEnumMapIsNonEmpty(first, second, rest);
     if (onlyNonEmptyMap.isPresent()) {
       // The union of N items where only 1 is nonempty is equal to that 1 nonempty item.
@@ -88,7 +90,8 @@ public class RBEnumMapMergers {
   public static <E extends Enum<E>, V> RBEnumMap<E, V> mergeRBEnumMapsDisallowingOverlap(
       UnaryOperator<V> left,
       UnaryOperator<V> right,
-      RBEnumMap<E, V> leftMap, RBEnumMap<E, V> rightMap) {
+      RBEnumMap<E, V> leftMap,
+      RBEnumMap<E, V> rightMap) {
     Class<E> sharedEnumClass = checkBothSame(
         leftMap.getEnumClass(),
         rightMap.getEnumClass(),
@@ -124,43 +127,11 @@ public class RBEnumMapMergers {
     return newRBEnumMap(mutableMerged);
   }
 
-  public static <E extends Enum<E>, V1, V2, V> RBEnumMap<E, V> mergeSortedRBEnumMapEntriesExpectingSameKeys(
-      TriFunction<E, V1, V2, V> merger,
-      RBEnumMap<E, V1> map1,
-      RBEnumMap<E, V2> map2) {
-    checkBothSame(
-        map1.size(),
-        map2.size(),
-        "We can only merge maps with the same keys, which implies same # of entries: %s %s",
-        map1, map2);
-    Class<E> sharedEnumClass = checkBothSame(
-        map1.getEnumClass(),
-        map2.getEnumClass(),
-        "Internal error; enum classes must be the same; this should have been caught by the compiler: %s %s",
-        map1, map2);
-    MutableRBEnumMap<E, V> mutableMerged = newMutableRBEnumMap(sharedEnumClass);
-
-    // We don't need to check for the *keys* to be the same. If we iterate over 'size' items of map1, and all of them
-    // appear in map2 (hence the getOrThrow, which will throw otherwise), then there's no way map2 could have an entry
-    // for a key that doesn't appear in map1, since their sizes are the same.
-    map1.forEachEntryInKeyOrder(
-        (key, v1) -> mutableMerged.putAssumingAbsent(key, merger.apply(key, v1, map2.getOrThrow(key))));
-    return newRBEnumMap(mutableMerged);
-  }
-
   public static <E extends Enum<E>, V1, V2, V> RBEnumMap<E, V> mergeRBEnumMapValuesExpectingSameKeys(
       BiFunction<V1, V2, V> merger,
       RBEnumMap<E, V1> map1,
       RBEnumMap<E, V2> map2) {
     return mergeRBEnumMapEntriesExpectingSameKeys(
-        (ignoredKey, v1, v2) -> merger.apply(v1, v2), map1, map2);
-  }
-
-  public static <E extends Enum<E>, V1, V2, V> RBEnumMap<E, V> mergeSortedRBEnumMapValuesExpectingSameKeys(
-      BiFunction<V1, V2, V> merger,
-      RBEnumMap<E, V1> map1,
-      RBEnumMap<E, V2> map2) {
-    return mergeSortedRBEnumMapEntriesExpectingSameKeys(
         (ignoredKey, v1, v2) -> merger.apply(v1, v2), map1, map2);
   }
 
@@ -267,7 +238,8 @@ public class RBEnumMapMergers {
       BinaryOperator<V> mergeFunction,
       UnaryOperator<V> onlyLeftPresent,
       UnaryOperator<V> onlyRightPresent,
-      RBEnumMap<E, V> leftMap, RBEnumMap<E, V> rightMap) {
+      RBEnumMap<E, V> leftMap,
+      RBEnumMap<E, V> rightMap) {
     Class<E> sharedEnumClass = checkBothSame(
         leftMap.getEnumClass(),
         rightMap.getEnumClass(),
@@ -348,7 +320,8 @@ public class RBEnumMapMergers {
       BiFunction<V1, V2, V3> mergeFunction,
       Function<V1, V3> onlyLeftPresent,
       Function<V2, V3> onlyRightPresent,
-      RBEnumMap<E, V1> leftMap, RBEnumMap<E, V2> rightMap) {
+      RBEnumMap<E, V1> leftMap,
+      RBEnumMap<E, V2> rightMap) {
     Class<E> sharedEnumClass = checkBothSame(
         leftMap.getEnumClass(),
         rightMap.getEnumClass(),
