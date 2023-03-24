@@ -33,11 +33,10 @@ public class HardCodedInstrumentMasterTest {
     // for all instrument IDs.
     assertThat(
         hardCodedInstrumentMaster(
-            iidBiMap(iidMapOf(
-                instrumentId(1),   symbol("STOCK_A"),
-                instrumentId(2),   symbol("STOCK_B"),
-                instrumentId(11),  symbol("STOCK_C"),
-                instrumentId(12),  symbol("STOCK_D")))).getAllInstrumentIdsAsIidSet(),
+                instrumentId(1),  "STOCK_A",
+                instrumentId(2),  "STOCK_B",
+                instrumentId(11), "STOCK_C",
+                instrumentId(12), "STOCK_D").getAllInstrumentIdsAsIidSet(),
         iidSetMatcher(iidSetOf(instrumentId(1), instrumentId(2), instrumentId(11), instrumentId(12))));
   }
 
