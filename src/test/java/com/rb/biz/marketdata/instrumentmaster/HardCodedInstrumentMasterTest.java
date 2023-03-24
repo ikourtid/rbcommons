@@ -1,8 +1,10 @@
 package com.rb.biz.marketdata.instrumentmaster;
 
+import com.rb.biz.types.asset.InstrumentId;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
 import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.hardCodedInstrumentMaster;
 import static com.rb.biz.types.Symbol.symbol;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
@@ -32,10 +34,10 @@ public class HardCodedInstrumentMasterTest {
     assertThat(
         hardCodedInstrumentMaster(
             iidBiMap(iidMapOf(
-                instrumentId(1),   symbol("AAPL"),
-                instrumentId(2),   symbol("BAC"),
-                instrumentId(11),  symbol("C"),
-                instrumentId(12),  symbol("DOW")))).getAllInstrumentIdsAsIidSet(),
+                instrumentId(1),   symbol("STOCK_A"),
+                instrumentId(2),   symbol("STOCK_B"),
+                instrumentId(11),  symbol("STOCK_C"),
+                instrumentId(12),  symbol("STOCK_D")))).getAllInstrumentIdsAsIidSet(),
         iidSetMatcher(iidSetOf(instrumentId(1), instrumentId(2), instrumentId(11), instrumentId(12))));
   }
 
