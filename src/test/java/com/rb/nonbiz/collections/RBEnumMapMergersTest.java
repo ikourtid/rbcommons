@@ -23,7 +23,14 @@ import static com.google.common.collect.Iterators.singletonIterator;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
-import static com.rb.nonbiz.collections.RBEnumMapMergers.*;
+import static com.rb.nonbiz.collections.RBEnumMapMergers.dotProductOfRBEnumMaps;
+import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeIntoEithersEnumMap;
+import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeRBEnumMapEntriesExpectingSameKeys;
+import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeRBEnumMapValuesExpectingSameKeys;
+import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeRBEnumMapsAllowingOverlapOnSimilarItemsOnly;
+import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeRBEnumMapsByTransformedValue;
+import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeRBEnumMapsByValue;
+import static com.rb.nonbiz.collections.RBEnumMapMergers.mergeRBEnumMapsDisallowingOverlap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbEnumMapMatcher;
@@ -349,7 +356,7 @@ public class RBEnumMapMergersTest {
   }
 
   @Test
-  public void testMergeSortedRBEnumMapEntriesExpectingSameKeys() {
+  public void testMergeRBEnumMapEntriesExpectingSameKeys_larger() {
     // use a StringBuilder to keep track of the order in which the keys are inserted into the RBEnumMap
     StringBuilder stringBuilder = new StringBuilder();
 
@@ -373,7 +380,7 @@ public class RBEnumMapMergersTest {
             LocalTestEnum.E9, "E9:9_9.9")),
         // The map entries are inserted in a sorted order, which in practice seem to imply they will come out in
         // the same order. This is convenient, e.g. when printing.
-        mergeSortedRBEnumMapEntriesExpectingSameKeys(
+        mergeRBEnumMapEntriesExpectingSameKeys(
             (key, v1, v2) -> merger.apply(key, v1, v2),
             newRBEnumMap(LocalTestEnum.class, rbMapOf( // map1 in random key order
                 LocalTestEnum.E6, 6,
@@ -403,7 +410,7 @@ public class RBEnumMapMergersTest {
   }
 
   @Test
-  public void testMergeSortedRBEnumMapValuesExpectingSameKeys() {
+  public void testMergeRBEnumMapValuesExpectingSameKeys_larger() {
     // use a StringBuilder to keep track of the order in which the keys are inserted into the RBEnumMap
     StringBuilder stringBuilder = new StringBuilder();
 
@@ -427,7 +434,7 @@ public class RBEnumMapMergersTest {
             LocalTestEnum.E9, "9_9.9")),
         // The map entries are inserted in a sorted order, which in practice seems to imply that they will come
         // out in the same order. This is convenient, e.g. when printing.
-        mergeSortedRBEnumMapValuesExpectingSameKeys(
+        mergeRBEnumMapValuesExpectingSameKeys(
             (v1, v2) -> merger.apply(v1, v2),
             newRBEnumMap(LocalTestEnum.class, rbMapOf( // map1 in random key order
                 LocalTestEnum.E6, 6,

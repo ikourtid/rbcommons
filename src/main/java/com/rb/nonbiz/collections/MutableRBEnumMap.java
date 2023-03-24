@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.util.RBPreconditions;
+import org.checkerframework.checker.units.qual.K;
 
 import java.util.Collection;
 import java.util.EnumMap;
@@ -94,15 +95,13 @@ public class MutableRBEnumMap<E extends Enum<E>, V> {
    * plus that behavior is confusing to someone new to Java.
    * Instead, {@link MutableRBEnumMap} has:
    * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
-   * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
+   * #getOrThrow, which assumes the value is there (throws otherwise), and returns the value
    *
-   * Ideally, since we should never be passing a {@link MutableRBEnumMap} around, you should use this sparingly
-   * and only get values from the 'locked' {@link RBEnumMap} that you'll convert the MutableRBEnumMap to.
+   * <p> Ideally, since we should never be passing a {@link MutableRBEnumMap} around, you should use this sparingly
+   * and only get values from the 'locked' {@link RBEnumMap} that you'll convert the MutableRBEnumMap to. </p>
    */
   public Optional<V> getOptional(E key) {
-    if (key == null) {
-      throw new IllegalArgumentException("A MutableRBEnumMap does not allow null keys");
-    }
+    checkKeyIsNotNull(key);
     return Optional.ofNullable(rawMap.get(key));
   }
 
@@ -111,15 +110,13 @@ public class MutableRBEnumMap<E extends Enum<E>, V> {
    * plus that behavior is confusing to someone new to Java.
    * Instead, {@link MutableRBEnumMap} has:
    * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
-   * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
+   * #getOrThrow, which assumes the value is there (throws otherwise), and returns the value
    *
-   * Ideally, since we should never be passing a {@link MutableRBEnumMap} around, you should use this sparingly
-   * and only get values from the 'locked' {@link RBEnumMap} that you'll convert the {@link MutableRBEnumMap} to.
+   * <p> Ideally, since we should never be passing a {@link MutableRBEnumMap} around, you should use this sparingly
+   * and only get values from the 'locked' {@link RBEnumMap} that you'll convert the {@link MutableRBEnumMap} to. </p>
    */
   public V getOrThrow(E key) {
-    if (key == null) {
-      throw new IllegalArgumentException("A MutableRBEnumMap does not allow null keys");
-    }
+    checkKeyIsNotNull(key);
     V value = rawMap.get(key);
     if (value == null) {
       throw new IllegalArgumentException(smartFormat(
@@ -133,9 +130,7 @@ public class MutableRBEnumMap<E extends Enum<E>, V> {
    * Same as getOrThrow above, but lets you specify the error message if a key is missing.
    */
   public V getOrThrow(E key, String template, Object...args) {
-    if (key == null) {
-      throw new IllegalArgumentException("A MutableRBEnumMap does not allow null keys");
-    }
+    checkKeyIsNotNull(key);
     Optional<V> value = getOptional(key);
     RBPreconditions.checkArgument(value.isPresent(), template, args);
     return value.get();
@@ -400,6 +395,9 @@ public class MutableRBEnumMap<E extends Enum<E>, V> {
     return rawMap.toString();
   }
 
+  // We normally do not implement equals/hashCode, but we do for our more basic collection classes.
+  // We rarely (if ever) need to compare two mutable maps for equality (we only need to do that for immutable maps),
+  // but RBEnumMap includes a MutableRBEnumMap, and it relies on this equals/hashCode in order to work.
   // IDE-generated
   @Override
   public boolean equals(Object o) {
@@ -409,10 +407,19 @@ public class MutableRBEnumMap<E extends Enum<E>, V> {
     return enumClass.equals(that.enumClass) && rawMap.equals(that.rawMap);
   }
 
+  // We normally do not implement equals/hashCode, but we do for our more basic collection classes.
+  // We rarely (if ever) need to compare two mutable maps for equality (we only need to do that for immutable maps),
+  // but RBEnumMap includes a MutableRBEnumMap, and it relies on this equals/hashCode in order to work.
   // IDE-generated
   @Override
   public int hashCode() {
     return Objects.hash(enumClass, rawMap);
+  }
+
+  private void checkKeyIsNotNull(E key) {
+    if (key == null) {
+      throw new IllegalArgumentException("A MutableRBEnumMap does not allow null keys");
+    }
   }
 
 }
