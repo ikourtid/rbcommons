@@ -3,6 +3,10 @@ package com.rb.biz.marketdata.instrumentmaster;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_C;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
 import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.hardCodedInstrumentMaster;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.IidBiMap.iidBiMap;
@@ -29,11 +33,11 @@ public class HardCodedInstrumentMasterTest {
     // for all instrument IDs.
     assertThat(
         hardCodedInstrumentMaster(
-                instrumentId(1),  "STOCK_A",
-                instrumentId(2),  "STOCK_B",
-                instrumentId(11), "STOCK_C",
-                instrumentId(12), "STOCK_D").getAllInstrumentIdsAsIidSet(),
-        iidSetMatcher(iidSetOf(instrumentId(1), instrumentId(2), instrumentId(11), instrumentId(12))));
+            STOCK_A, "STOCK_A",
+            STOCK_B, "STOCK_B",
+            STOCK_C, "STOCK_C",
+            STOCK_D, "STOCK_D").getAllInstrumentIdsAsIidSet(),
+        iidSetMatcher(iidSetOf(STOCK_A, STOCK_B, STOCK_C, STOCK_D)));
   }
 
   public static TypeSafeMatcher<HardCodedInstrumentMaster> hardCodedInstrumentMasterMatcher(
