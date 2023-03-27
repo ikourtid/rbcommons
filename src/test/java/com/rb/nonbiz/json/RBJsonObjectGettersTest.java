@@ -23,6 +23,7 @@ import static com.rb.nonbiz.json.RBGson.jsonLong;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
+import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonArray;
 import static com.rb.nonbiz.json.RBJsonArraysTest.jsonArrayExactMatcher;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.*;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
@@ -481,6 +482,34 @@ public class RBJsonObjectGettersTest {
     // if the property exists but is not a JsonArray, an exception will be thrown
     assertIllegalArgumentException( () -> getJsonArrayOrThrow(jsonObject0, "key2"));
     assertIllegalArgumentException( () -> getJsonArrayOrThrow(jsonObject0, "subObject"));
+  }
+
+  @Test
+  public void test_getJsonArrayOrDefaultSingleton() {
+    JsonArray jsonArray1 = jsonArray(ImmutableList.of(
+        jsonString("element1"),
+        jsonString("element2"),
+        jsonString("element3")));
+    JsonObject jsonObject0 = jsonObject(
+        "key1", jsonArray1,
+        "key2", jsonString("notAnArray"),
+        "subObject",  singletonJsonObject("subKey", jsonDouble(7.89)));
+
+    assertThat(
+        getJsonArrayOrDefaultSingleton(jsonObject0, "key1", jsonString("unusedDefault")),
+        jsonArrayExactMatcher(jsonArray1));
+
+    // if the property doesn't exist (or if the jsonObject is empty), a singleton JsonArray will be returned
+    assertThat(
+        getJsonArrayOrDefaultSingleton(emptyJsonObject(), "emptyJsonHasNoProperties", jsonString("theDefaultString")),
+        jsonArrayExactMatcher(singletonJsonArray(jsonString("theDefaultString"))));
+    assertThat(
+        getJsonArrayOrDefaultSingleton(jsonObject0, "missingProperty", jsonString("theDefaultString")),
+        jsonArrayExactMatcher(singletonJsonArray(jsonString("theDefaultString"))));
+
+    // if the property exists but is not a JsonArray, an exception will be thrown
+    assertIllegalArgumentException( () -> getJsonArrayOrDefaultSingleton(jsonObject0, "key2",      jsonString("unusedDefault")));
+    assertIllegalArgumentException( () -> getJsonArrayOrDefaultSingleton(jsonObject0, "subObject", jsonString("unusedDefault")));
   }
 
   @Test

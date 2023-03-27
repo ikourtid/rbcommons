@@ -23,6 +23,7 @@ import static com.rb.nonbiz.collections.RBOptionals.toSpecializedOptionalDouble;
 import static com.rb.nonbiz.date.RBDates.dateFromYyyyMmDd;
 import static com.rb.nonbiz.json.RBGson.PERCENTAGE_TO_FRACTION;
 import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
+import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.RBDoubles.getDoubleAsLongAssumingIsRound;
@@ -353,6 +354,21 @@ public class RBJsonObjectGetters {
       String property) {
     if (!jsonObject.has(property)) {
       return emptyJsonArray();
+    }
+    return getJsonArrayOrThrow(jsonObject, property);
+  }
+
+  /**
+   * From 'jsonObject', get the value of 'property'.
+   * If 'property' is missing, return an singleton JsonArray consisting of the defaultElement.
+   * If it is present, verify that it is a JsonArray and return it.
+   */
+  public static JsonArray getJsonArrayOrDefaultSingleton(
+      JsonObject jsonObject,
+      String property,
+      JsonElement defaultElement) {
+    if (!jsonObject.has(property)) {
+      return singletonJsonArray(defaultElement);
     }
     return getJsonArrayOrThrow(jsonObject, property);
   }
