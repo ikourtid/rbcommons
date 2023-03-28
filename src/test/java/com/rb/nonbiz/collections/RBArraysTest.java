@@ -98,7 +98,7 @@ public class RBArraysTest {
 
     // Negative and zero size not allowed.
     assertIllegalArgumentException( () -> intArrayWithNCopies(-2, 4));
-    assertIllegalArgumentException( () -> intArrayWithNCopies(0, 4));
+    assertIllegalArgumentException( () -> intArrayWithNCopies(0,  4));
   }
 
 }
