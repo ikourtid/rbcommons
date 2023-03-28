@@ -97,6 +97,140 @@ public class RBJsonObjectSimpleConstructorsTest {
         jsonObjectEpsilonMatcher(jsonObject8));
   }
 
+  // More tests after additional constructors added
+  @Test
+  public void testConstructors2() {
+    JsonObject jsonObject20 = rbJsonObjectBuilder()
+        .setInt("k1", 1)
+        .setInt("k2", 2)
+        .setInt("k3", 3)
+        .setInt("k4", 4)
+        .setInt("k5", 5)
+        .setInt("k6", 6)
+        .setInt("k7", 7)
+        .setInt("k8", 8)
+        .setInt("k9", 9)
+        .setInt("k10", 10)
+        .setInt("k11", 11)
+        .setInt("k12", 12)
+        .setInt("k13", 13)
+        .setInt("k14", 14)
+        .setInt("k15", 15)
+        .setInt("k16", 16)
+        .setInt("k17", 17)
+        .setInt("k18", 18)
+        .setInt("k19", 19)
+        .setInt("k20", 20)
+        .build();
+
+    assertThat(
+        addAllAssumingNoOverlap(
+            singletonJsonObject("k1", jsonInteger(1)),
+            jsonObject(
+                "k2",  jsonInteger(2),  "k3",  jsonInteger(3),  "k4",  jsonInteger(4),  "k5",  jsonInteger(5),
+                "k6",  jsonInteger(6),  "k7",  jsonInteger(7),  "k8",  jsonInteger(8),  "k9",  jsonInteger(9),
+                "k10", jsonInteger(10), "k11", jsonInteger(11), "k12", jsonInteger(12), "k13", jsonInteger(13),
+                "k14", jsonInteger(14), "k15", jsonInteger(15), "k16", jsonInteger(16), "k17", jsonInteger(17),
+                "k18", jsonInteger(18), "k19", jsonInteger(19), "k20", jsonInteger(20))),
+        jsonObjectEpsilonMatcher(jsonObject20));
+    assertThat(
+        addAllAssumingNoOverlap(
+            jsonObject("k1", jsonInteger(1), "k2", jsonInteger(2)),
+            jsonObject(
+                "k3",  jsonInteger(3),  "k4",  jsonInteger(4),  "k5",  jsonInteger(5),
+                "k6",  jsonInteger(6),  "k7",  jsonInteger(7),  "k8",  jsonInteger(8),  "k9",  jsonInteger(9),
+                "k10", jsonInteger(10), "k11", jsonInteger(11), "k12", jsonInteger(12), "k13", jsonInteger(13),
+                "k14", jsonInteger(14), "k15", jsonInteger(15), "k16", jsonInteger(16), "k17", jsonInteger(17),
+                "k18", jsonInteger(18), "k19", jsonInteger(19), "k20", jsonInteger(20))),
+        jsonObjectEpsilonMatcher(jsonObject20));
+    assertThat(
+        addAllAssumingNoOverlap(
+            jsonObject("k1", jsonInteger(1), "k2", jsonInteger(2), "k3",  jsonInteger(3)),
+            jsonObject(
+                "k4",  jsonInteger(4),  "k5",  jsonInteger(5),
+                "k6",  jsonInteger(6),  "k7",  jsonInteger(7),  "k8",  jsonInteger(8),  "k9",  jsonInteger(9),
+                "k10", jsonInteger(10), "k11", jsonInteger(11), "k12", jsonInteger(12), "k13", jsonInteger(13),
+                "k14", jsonInteger(14), "k15", jsonInteger(15), "k16", jsonInteger(16), "k17", jsonInteger(17),
+                "k18", jsonInteger(18), "k19", jsonInteger(19), "k20", jsonInteger(20))),
+        jsonObjectEpsilonMatcher(jsonObject20));
+    assertThat(
+        addAllAssumingNoOverlap(
+            jsonObject("k1", jsonInteger(1), "k2", jsonInteger(2), "k3",  jsonInteger(3), "k4",  jsonInteger(4)),
+            jsonObject(
+                "k5",  jsonInteger(5),
+                "k6",  jsonInteger(6),  "k7",  jsonInteger(7),  "k8",  jsonInteger(8),  "k9",  jsonInteger(9),
+                "k10", jsonInteger(10), "k11", jsonInteger(11), "k12", jsonInteger(12), "k13", jsonInteger(13),
+                "k14", jsonInteger(14), "k15", jsonInteger(15), "k16", jsonInteger(16), "k17", jsonInteger(17),
+                "k18", jsonInteger(18), "k19", jsonInteger(19), "k20", jsonInteger(20))),
+        jsonObjectEpsilonMatcher(jsonObject20));
+    assertThat(
+        addAllAssumingNoOverlap(
+            jsonObject(
+                "k1",  jsonInteger(1),  "k2",  jsonInteger(2),  "k3",  jsonInteger(3),  "k4",  jsonInteger(4),
+                "k5",  jsonInteger(5)),
+            jsonObject(
+                "k6",  jsonInteger(6),  "k7",  jsonInteger(7),  "k8",  jsonInteger(8),  "k9",  jsonInteger(9),
+                "k10", jsonInteger(10), "k11", jsonInteger(11), "k12", jsonInteger(12), "k13", jsonInteger(13),
+                "k14", jsonInteger(14), "k15", jsonInteger(15), "k16", jsonInteger(16), "k17", jsonInteger(17),
+                "k18", jsonInteger(18), "k19", jsonInteger(19), "k20", jsonInteger(20))),
+        jsonObjectEpsilonMatcher(jsonObject20));
+    assertThat(
+        addAllAssumingNoOverlap(
+            jsonObject(
+                "k1",  jsonInteger(1),  "k2",  jsonInteger(2),  "k3",  jsonInteger(3),  "k4",  jsonInteger(4),
+                "k5",  jsonInteger(5),  "k6",  jsonInteger(6)),
+            jsonObject(
+                "k7",  jsonInteger(7),  "k8",  jsonInteger(8),  "k9",  jsonInteger(9),
+                "k10", jsonInteger(10), "k11", jsonInteger(11), "k12", jsonInteger(12), "k13", jsonInteger(13),
+                "k14", jsonInteger(14), "k15", jsonInteger(15), "k16", jsonInteger(16), "k17", jsonInteger(17),
+                "k18", jsonInteger(18), "k19", jsonInteger(19), "k20", jsonInteger(20))),
+        jsonObjectEpsilonMatcher(jsonObject20));
+    assertThat(
+        addAllAssumingNoOverlap(
+            jsonObject(
+                "k1",  jsonInteger(1),  "k2",  jsonInteger(2),  "k3",  jsonInteger(3),  "k4",  jsonInteger(4),
+                "k5",  jsonInteger(5),  "k6",  jsonInteger(6),  "k7",  jsonInteger(7)),
+            jsonObject(
+                "k8",  jsonInteger(8),  "k9",  jsonInteger(9),
+                "k10", jsonInteger(10), "k11", jsonInteger(11), "k12", jsonInteger(12), "k13", jsonInteger(13),
+                "k14", jsonInteger(14), "k15", jsonInteger(15), "k16", jsonInteger(16), "k17", jsonInteger(17),
+                "k18", jsonInteger(18), "k19", jsonInteger(19), "k20", jsonInteger(20))),
+        jsonObjectEpsilonMatcher(jsonObject20));
+    assertThat(
+        addAllAssumingNoOverlap(
+            jsonObject(
+                "k1", jsonInteger(1),   "k2",  jsonInteger(2),  "k3",  jsonInteger(3),  "k4",  jsonInteger(4),
+                "k5", jsonInteger(5),   "k6",  jsonInteger(6),  "k7",  jsonInteger(7),  "k8",  jsonInteger(8) ),
+            jsonObject(
+                "k9",  jsonInteger(9),
+                "k10", jsonInteger(10), "k11", jsonInteger(11), "k12", jsonInteger(12), "k13", jsonInteger(13),
+                "k14", jsonInteger(14), "k15", jsonInteger(15), "k16", jsonInteger(16), "k17", jsonInteger(17),
+                "k18", jsonInteger(18), "k19", jsonInteger(19), "k20", jsonInteger(20))),
+        jsonObjectEpsilonMatcher(jsonObject20));
+    assertThat(
+        addAllAssumingNoOverlap(
+            jsonObject(
+                "k1",  jsonInteger(1),  "k2",  jsonInteger(2),  "k3",  jsonInteger(3),  "k4",  jsonInteger(4),
+                "k5",  jsonInteger(5),  "k6",  jsonInteger(6),  "k7",  jsonInteger(7),  "k8",  jsonInteger(8),
+                "k9",  jsonInteger(9)),
+            jsonObject(
+                "k10", jsonInteger(10), "k11", jsonInteger(11), "k12", jsonInteger(12), "k13", jsonInteger(13),
+                "k14", jsonInteger(14), "k15", jsonInteger(15), "k16", jsonInteger(16), "k17", jsonInteger(17),
+                "k18", jsonInteger(18), "k19", jsonInteger(19), "k20", jsonInteger(20))),
+        jsonObjectEpsilonMatcher(jsonObject20));
+    assertThat(
+        addAllAssumingNoOverlap(
+            jsonObject(
+                "k1",  jsonInteger(1),  "k2",  jsonInteger(2),  "k3",  jsonInteger(3),  "k4",  jsonInteger(4),
+                "k5",  jsonInteger(5),  "k6",  jsonInteger(6),  "k7",  jsonInteger(7),  "k8",  jsonInteger(8),
+                "k9",  jsonInteger(9),  "k10", jsonInteger(10)),
+            jsonObject(
+                "k11", jsonInteger(11), "k12", jsonInteger(12), "k13", jsonInteger(13),
+                "k14", jsonInteger(14), "k15", jsonInteger(15), "k16", jsonInteger(16), "k17", jsonInteger(17),
+                "k18", jsonInteger(18), "k19", jsonInteger(19), "k20", jsonInteger(20))),
+        jsonObjectEpsilonMatcher(jsonObject20));
+  }
+
   @Test
   public void duplicateEntries_throws() {
     Function<String, JsonObject> maker = key1 -> jsonObject(
