@@ -89,7 +89,7 @@ public class RBMapSimpleConstructorsTest {
         rbMap12);
   }
 
-  // More tests after constructors with more arguments were added.
+  // More tests after additional constructors with more arguments were added.
   @Test
   public void testMultiArgumentConstructors_part2() {
     RBMap<String, Integer> rbMap20 = rbMapOf(
@@ -178,7 +178,7 @@ public class RBMapSimpleConstructorsTest {
     doesNotThrow = maker.apply("X");
     doesNotThrow = maker.apply("Y");
 
-    // the following inserts duplicate keys
+    // the following would insert duplicate keys
     assertIllegalArgumentException( () -> maker.apply("B"));
     assertIllegalArgumentException( () -> maker.apply("C"));
   }
