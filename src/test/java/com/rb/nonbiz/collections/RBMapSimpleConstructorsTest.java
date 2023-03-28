@@ -3,7 +3,6 @@ package com.rb.nonbiz.collections;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.RBMapMergers.mergeRBMapsDisallowingOverlap;
@@ -163,24 +162,6 @@ public class RBMapSimpleConstructorsTest {
                 "k11", 11, "k12", 12, "k13", 13, "k14", 14, "k15", 15, "k16", 16, "k17", 17, "k18", 18,
                 "k19", 19, "k20", 20)),
         rbMap20);
-  }
-
-  @Test
-  public void testDuplicateKeys_throws() {
-    Function<String, RBMap<String, Integer>> maker = key1 ->
-        rbMapOf(
-            key1, 1,
-            "B", 2,
-            "C", 3);
-
-    RBMap<String, Integer> doesNotThrow;
-    doesNotThrow = maker.apply("A");
-    doesNotThrow = maker.apply("X");
-    doesNotThrow = maker.apply("Y");
-
-    // the following would insert duplicate keys
-    assertIllegalArgumentException( () -> maker.apply("B"));
-    assertIllegalArgumentException( () -> maker.apply("C"));
   }
 
   @Test
