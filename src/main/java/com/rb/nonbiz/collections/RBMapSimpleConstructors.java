@@ -1,7 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 
 import java.util.Map;
 
@@ -57,7 +56,7 @@ public class RBMapSimpleConstructors {
   }
 
   public static <K, V> RBMap<K, V> rbMapOf(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -69,7 +68,7 @@ public class RBMapSimpleConstructors {
 
   public static <K, V> RBMap<K, V> rbMapOf(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                            K k6, V v6, K k7, V v7) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -82,7 +81,7 @@ public class RBMapSimpleConstructors {
 
   public static <K, V> RBMap<K, V> rbMapOf(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                            K k6, V v6, K k7, V v7, K k8, V v8) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -96,7 +95,7 @@ public class RBMapSimpleConstructors {
 
   public static <K, V> RBMap<K, V> rbMapOf(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                            K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -111,7 +110,7 @@ public class RBMapSimpleConstructors {
 
   public static <K, V> RBMap<K, V> rbMapOf(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                            K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -128,7 +127,7 @@ public class RBMapSimpleConstructors {
   public static <K, V> RBMap<K, V> rbMapOf(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                            K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10,
                                            K k11, V v11) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -146,7 +145,7 @@ public class RBMapSimpleConstructors {
   public static <K, V> RBMap<K, V> rbMapOf(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                            K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10,
                                            K k11, V v11, K k12, V v12) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -165,7 +164,7 @@ public class RBMapSimpleConstructors {
   public static <K, V> RBMap<K, V> rbMapOf(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                            K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10,
                                            K k11, V v11, K k12, V v12, K k13, V v13) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -185,7 +184,7 @@ public class RBMapSimpleConstructors {
   public static <K, V> RBMap<K, V> rbMapOf(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                            K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10,
                                            K k11, V v11, K k12, V v12, K k13, V v13, K k14, V v14) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -206,7 +205,7 @@ public class RBMapSimpleConstructors {
   public static <K, V> RBMap<K, V> rbMapOf(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                            K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10,
                                            K k11, V v11, K k12, V v12, K k13, V v13, K k14, V v14, K k15, V v15) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -229,7 +228,7 @@ public class RBMapSimpleConstructors {
                                            K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10,
                                            K k11, V v11, K k12, V v12, K k13, V v13, K k14, V v14,
                                            K k15, V v15, K k16, V v16) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -253,7 +252,7 @@ public class RBMapSimpleConstructors {
                                            K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10,
                                            K k11, V v11, K k12, V v12, K k13, V v13, K k14, V v14,
                                            K k15, V v15, K k16, V v16, K k17, V v17) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -278,7 +277,7 @@ public class RBMapSimpleConstructors {
                                            K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10,
                                            K k11, V v11, K k12, V v12, K k13, V v13, K k14, V v14,
                                            K k15, V v15, K k16, V v16, K k17, V v17, K k18, V v18) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -305,7 +304,7 @@ public class RBMapSimpleConstructors {
                                            K k11, V v11, K k12, V v12, K k13, V v13, K k14, V v14,
                                            K k15, V v15, K k16, V v16, K k17, V v17, K k18, V v18,
                                            K k19, V v19) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
@@ -333,7 +332,7 @@ public class RBMapSimpleConstructors {
                                            K k11, V v11, K k12, V v12, K k13, V v13, K k14, V v14,
                                            K k15, V v15, K k16, V v16, K k17, V v17, K k18, V v18,
                                            K k19, V v19, K k20, V v20) {
-    return newRBMap(new Builder<K, V>()
+    return newRBMap(new ImmutableMap.Builder<K, V>()
         .put(k1, v1)
         .put(k2, v2)
         .put(k3, v3)
