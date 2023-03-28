@@ -28,14 +28,14 @@ public class RBMapSimpleConstructorsTest {
 
   @Test
   public void testSingletonConstructor() {
-    RBMap singletonRBMap = singletonRBMap("key1", 111);
+    RBMap<String, Integer> singletonRBMap = singletonRBMap("key1", 111);
     assertEquals("key1", singletonRBMap.keySet().toArray()[0]);
     assertEquals(111,    singletonRBMap.values().toArray()[0]);
   }
 
   @Test
   public void testMultiArgumentConstructors() {
-    RBMap rbMap12 = rbMapOf(
+    RBMap<String, Integer> rbMap12 = rbMapOf(
         "k1", 1,
         "k2", 2,
         "k3", 3,
@@ -86,6 +86,82 @@ public class RBMapSimpleConstructorsTest {
             rbMapOf("k1", 1, "k2", 2, "k3", 3, "k4", 4, "k5", 5, "k6", 6),
             rbMapOf("k7", 7, "k8", 8, "k9", 9, "k10", 10, "k11", 11, "k12", 12)),
         rbMap12);
+  }
+
+  // More tests after additional constructors with more arguments were added.
+  @Test
+  public void testMultiArgumentConstructors_part2() {
+    RBMap<String, Integer> rbMap20 = rbMapOf(
+        "k1", 1,
+        "k2", 2,
+        "k3", 3,
+        "k4", 4,
+        "k5", 5,
+        "k6", 6,
+        "k7", 7,
+        "k8", 8,
+        "k9", 9,
+        "k10", 10,
+        "k11", 11,
+        "k12", 12,
+        "k13", 13,
+        "k14", 14,
+        "k15", 15,
+        "k16", 16,
+        "k17", 17,
+        "k18", 18,
+        "k19", 19,
+        "k20", 20);
+
+    assertEquals(
+        mergeRBMapsDisallowingOverlap(
+            singletonRBMap("k1", 1),
+            rbMapOf("k2", 2, "k3", 3, "k4", 4, "k5", 5, "k6", 6, "k7", 7, "k8", 8, "k9", 9, "k10", 10,
+                "k11", 11, "k12", 12, "k13", 13, "k14", 14, "k15", 15, "k16", 16, "k17", 17, "k18", 18,
+                "k19", 19, "k20", 20)),
+        rbMap20);
+    assertEquals(
+        mergeRBMapsDisallowingOverlap(
+            rbMapOf("k1", 1, "k2", 2),
+            rbMapOf("k3", 3, "k4", 4, "k5", 5, "k6", 6, "k7", 7, "k8", 8, "k9", 9, "k10", 10,
+                "k11", 11, "k12", 12, "k13", 13, "k14", 14, "k15", 15, "k16", 16, "k17", 17, "k18", 18,
+                "k19", 19, "k20", 20)),
+        rbMap20);
+    assertEquals(
+        mergeRBMapsDisallowingOverlap(
+            rbMapOf("k1", 1, "k2", 2, "k3", 3),
+            rbMapOf("k4", 4, "k5", 5, "k6", 6, "k7", 7, "k8", 8, "k9", 9, "k10", 10,
+                "k11", 11, "k12", 12, "k13", 13, "k14", 14, "k15", 15, "k16", 16, "k17", 17, "k18", 18,
+                "k19", 19, "k20", 20)),
+        rbMap20);
+    assertEquals(
+        mergeRBMapsDisallowingOverlap(
+            rbMapOf("k1", 1, "k2", 2, "k3", 3, "k4", 4),
+            rbMapOf("k5", 5, "k6", 6, "k7", 7, "k8", 8, "k9", 9, "k10", 10,
+                "k11", 11, "k12", 12, "k13", 13, "k14", 14, "k15", 15, "k16", 16, "k17", 17, "k18", 18,
+                "k19", 19, "k20", 20)),
+        rbMap20);
+    assertEquals(
+        mergeRBMapsDisallowingOverlap(
+            rbMapOf("k1", 1, "k2", 2, "k3", 3, "k4", 4, "k5", 5),
+            rbMapOf("k6", 6, "k7", 7, "k8", 8, "k9", 9, "k10", 10,
+                "k11", 11, "k12", 12, "k13", 13, "k14", 14, "k15", 15, "k16", 16, "k17", 17, "k18", 18,
+                "k19", 19, "k20", 20)),
+        rbMap20);
+    assertEquals(
+        mergeRBMapsDisallowingOverlap(
+            rbMapOf("k1", 1, "k2", 2, "k3", 3, "k4", 4, "k5", 5, "k6", 6),
+            rbMapOf("k7", 7, "k8", 8, "k9", 9, "k10", 10,
+                "k11", 11, "k12", 12, "k13", 13, "k14", 14, "k15", 15, "k16", 16, "k17", 17, "k18", 18,
+                "k19", 19, "k20", 20)),
+        rbMap20);
+    assertEquals(
+        mergeRBMapsDisallowingOverlap(
+            rbMapOf("k1", 1, "k2", 2, "k3", 3, "k4", 4, "k5", 5, "k6", 6, "k7", 7),
+            rbMapOf("k8", 8, "k9", 9, "k10", 10,
+                "k11", 11, "k12", 12, "k13", 13, "k14", 14, "k15", 15, "k16", 16, "k17", 17, "k18", 18,
+                "k19", 19, "k20", 20)),
+        rbMap20);
   }
 
   @Test
