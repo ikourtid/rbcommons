@@ -58,9 +58,9 @@ public class RBArrays {
     return array;
   }
 
-  public static int[] intArrayWithNCopies(int size, int value) {
+  public static int[] intArrayWithNCopies(int size, int sharedValue) {
     RBPreconditions.checkArgument(size > 0, "The size argument must be greater than zero.");
-    return Collections.nCopies(size, value).stream().mapToInt(i -> i).toArray();
+    return Collections.nCopies(size, sharedValue).stream().mapToInt(i -> i).toArray();
   }
 
 }
