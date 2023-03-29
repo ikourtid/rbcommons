@@ -85,16 +85,22 @@ public class RBArraysTest {
   public void testintArrayWithNCopies() {
     assertThat(
         intArrayWithNCopies(10, 4),
-        intArrayMatcher(new int[] {4, 4, 4, 4, 4, 4, 4, 4, 4, 4}));
+        intArrayMatcher(new int[] { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 }));
     assertThat(
         intArrayWithNCopies(4, 10),
-        intArrayMatcher(new int[] {10, 10, 10, 10}));
+        intArrayMatcher(new int[] { 10, 10, 10, 10 }));
     assertThat(
         intArrayWithNCopies(2, 0),
-        intArrayMatcher(new int[] {0, 0}));
+        intArrayMatcher(new int[] { 0, 0 }));
     assertThat(
         intArrayWithNCopies(4, -11),
-        intArrayMatcher(new int[] {-11, -11, -11, -11}));
+        intArrayMatcher(new int[] { -11, -11, -11, -11 }));
+    assertThat(
+        intArrayWithNCopies(1, -2),
+        intArrayMatcher(new int[] { -2 }));
+    assertThat(
+        intArrayWithNCopies(1, 0),
+        intArrayMatcher(new int[] { 0 }));
 
     // Negative and zero size not allowed.
     assertIllegalArgumentException( () -> intArrayWithNCopies(-2, 4));
