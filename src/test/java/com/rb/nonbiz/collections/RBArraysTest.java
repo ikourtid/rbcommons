@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBArrays.cutFromArray;
+import static com.rb.nonbiz.collections.RBArrays.intArrayWithNCopies;
 import static com.rb.nonbiz.collections.RBArrays.spliceIntoArray;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.intArrayMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -78,6 +79,32 @@ public class RBArraysTest {
       assertThat(spliceIntoArray(arr, 2, 99), intArrayMatcher(new int[] { 70, 71, 99, 72 }));
       assertThat(spliceIntoArray(arr, 3, 99), intArrayMatcher(new int[] { 70, 71, 72, 99 }));
     }
+  }
+
+  @Test
+  public void testintArrayWithNCopies() {
+    assertThat(
+        intArrayWithNCopies(10, 4),
+        intArrayMatcher(new int[] { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 }));
+    assertThat(
+        intArrayWithNCopies(4, 10),
+        intArrayMatcher(new int[] { 10, 10, 10, 10 }));
+    assertThat(
+        intArrayWithNCopies(2, 0),
+        intArrayMatcher(new int[] { 0, 0 }));
+    assertThat(
+        intArrayWithNCopies(4, -11),
+        intArrayMatcher(new int[] { -11, -11, -11, -11 }));
+    assertThat(
+        intArrayWithNCopies(1, -2),
+        intArrayMatcher(new int[] { -2 }));
+    assertThat(
+        intArrayWithNCopies(1, 0),
+        intArrayMatcher(new int[] { 0 }));
+
+    // Negative and zero size not allowed.
+    assertIllegalArgumentException( () -> intArrayWithNCopies(-2, 4));
+    assertIllegalArgumentException( () -> intArrayWithNCopies(0,  4));
   }
 
 }
