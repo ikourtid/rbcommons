@@ -234,6 +234,21 @@ public class IidMapMergersTest {
                 STOCK_A3, "3x"),
             iidMapOf(
                 STOCK_A1, "1y",
+                STOCK_A2, "2y")),
+        iidMapEqualityMatcher(
+            iidMapOf(
+                STOCK_A1, "1y",
+                STOCK_A2, "2y",
+                STOCK_A3, "3x")));
+
+    assertThat(
+        mergeIidMapsInOrderAllowingOverwriting(
+            iidMapOf(
+                STOCK_A1, "1x",
+                STOCK_A2, "2x",
+                STOCK_A3, "3x"),
+            iidMapOf(
+                STOCK_A1, "1y",
                 STOCK_A2, "2y"),
             singletonIidMap(
                 STOCK_A1, "1z")),
