@@ -23,6 +23,7 @@ import static com.rb.nonbiz.collections.IidSetOperations.unionOfIidSets;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.collections.RBOptionals.filterPresentOptionalsInStream;
+import static com.rb.nonbiz.collections.RBOptionals.getIntOrThrow;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 
 public class IidMapMergers {
@@ -301,6 +302,35 @@ public class IidMapMergers {
             mutableMap.putAssumingAbsent(keyInBothMaps, mergeFunction.apply(valueInLeftMap, valueInRightMap));
           }
         });
+    return newIidMap(mutableMap);
+  }
+
+  /**
+   * It is rare that we overwrite map entries, but sometimes we want to merge maps in the order they are supplied.
+   *
+   * <p> This returns a map whose keys are the set union of the keys in the maps supplied, and
+   * corresponding value for every such key is the value for the latest map in the arguments supplied. </p>
+   */
+  @SafeVarargs
+  public static <V> IidMap<V> mergeIidMapsInOrderAllowingOverwriting(
+      IidMap<V> first, IidMap<V> second, IidMap<V> ... rest) {
+    // We could use:
+    // max size of any map (underestimate, but less wasted storage)
+    // sum of sizes of all maps (overestimate, but better performance)
+    // size of set union of keys (exact, but worst performance, because we'd need to calculate it.
+    // We'll just go with 'max'.
+    MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(
+        getIntOrThrow(
+            concatenateFirstSecondAndRest(first, second, rest)
+                .mapToInt(v -> v.size())
+                .max(),
+            "Internal error - we know there are at least 2 maps here"));
+
+    concatenateFirstSecondAndRest(first, second, rest).forEach(
+        map -> map.forEachEntry(
+            // We rarely use put; it's usually putAssumingAbsent, putAssumingPresent, etc.
+            // However, given the semantics of this method, it makes sense.
+            (instrumentId, v) -> mutableMap.put(instrumentId, v)));
     return newIidMap(mutableMap);
   }
 

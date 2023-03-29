@@ -23,6 +23,7 @@ import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsAllowingOverlapOnSimilarItemsOnly;
 import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsByTransformedValue;
+import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsInOrderAllowingOverwriting;
 import static com.rb.nonbiz.collections.IidMapMergers.mergeThreeIidMapsByTransformedEntry;
 import static com.rb.nonbiz.collections.IidMapMergers.mergeThreeIidMapsByTransformedValue;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
@@ -58,12 +59,12 @@ public class IidMapMergersTest {
     rbSetOf(-1e-9, 0.0, 1e-9).forEach(epsilon -> {
       asserter.accept(
           ImmutableList.of(
-              iidMapOf(
-                  STOCK_A1, money(100),
-                  STOCK_A2, money(200)),
-              iidMapOf(
-                  STOCK_A2, money(200 + epsilon),
-                  STOCK_A3, money(300)))
+                  iidMapOf(
+                      STOCK_A1, money(100),
+                      STOCK_A2, money(200)),
+                  iidMapOf(
+                      STOCK_A2, money(200 + epsilon),
+                      STOCK_A3, money(300)))
               .iterator(),
           iidMapOf(
               STOCK_A1, money(100),
@@ -71,13 +72,13 @@ public class IidMapMergersTest {
               STOCK_A3, money(300)));
       asserter.accept(
           ImmutableList.of(
-              iidMapOf(
-                  STOCK_A1, money(100),
-                  // This value gets processed first, so it ends up in the return value - NOT 200 below
-                  STOCK_A2, money(200 + epsilon)),
-              iidMapOf(
-                  STOCK_A2, money(200),
-                  STOCK_A3, money(300)))
+                  iidMapOf(
+                      STOCK_A1, money(100),
+                      // This value gets processed first, so it ends up in the return value - NOT 200 below
+                      STOCK_A2, money(200 + epsilon)),
+                  iidMapOf(
+                      STOCK_A2, money(200),
+                      STOCK_A3, money(300)))
               .iterator(),
           iidMapOf(
               STOCK_A1, money(100),
@@ -89,12 +90,12 @@ public class IidMapMergersTest {
         assertIllegalArgumentException( () ->
             mergeIidMapsAllowingOverlapOnSimilarItemsOnly(
                 ImmutableList.of(
-                    iidMapOf(
-                        STOCK_A1, money(100),
-                        STOCK_A2, money(200)),
-                    iidMapOf(
-                        STOCK_A2, money(200 + largeEpsilon),
-                        STOCK_A3, money(300)))
+                        iidMapOf(
+                            STOCK_A1, money(100),
+                            STOCK_A2, money(200)),
+                        iidMapOf(
+                            STOCK_A2, money(200 + largeEpsilon),
+                            STOCK_A3, money(300)))
                     .iterator(),
                 (v1, v2) -> v1.almostEquals(v2, DEFAULT_EPSILON_1e_8))));
   }
@@ -213,6 +214,49 @@ public class IidMapMergersTest {
                 STOCK_1, "11_true_X",
                 STOCK_2, "22_false_*",
                 STOCK_3, "33_*_*")));
+  }
+
+  @Test
+  public void testMergeIidMapsInOrderAllowingOverwriting() {
+    assertThat(
+        mergeIidMapsInOrderAllowingOverwriting(emptyIidMap(), emptyIidMap()),
+        iidMapEqualityMatcher(emptyIidMap()));
+
+    assertThat(
+        mergeIidMapsInOrderAllowingOverwriting(emptyIidMap(), emptyIidMap(), emptyIidMap()),
+        iidMapEqualityMatcher(emptyIidMap()));
+
+    assertThat(
+        mergeIidMapsInOrderAllowingOverwriting(
+            iidMapOf(
+                STOCK_A1, "1x",
+                STOCK_A2, "2x",
+                STOCK_A3, "3x"),
+            iidMapOf(
+                STOCK_A1, "1y",
+                STOCK_A2, "2y")),
+        iidMapEqualityMatcher(
+            iidMapOf(
+                STOCK_A1, "1y",
+                STOCK_A2, "2y",
+                STOCK_A3, "3x")));
+
+    assertThat(
+        mergeIidMapsInOrderAllowingOverwriting(
+            iidMapOf(
+                STOCK_A1, "1x",
+                STOCK_A2, "2x",
+                STOCK_A3, "3x"),
+            iidMapOf(
+                STOCK_A1, "1y",
+                STOCK_A2, "2y"),
+            singletonIidMap(
+                STOCK_A1, "1z")),
+        iidMapEqualityMatcher(
+            iidMapOf(
+                STOCK_A1, "1z",
+                STOCK_A2, "2y",
+                STOCK_A3, "3x")));
   }
 
 }
