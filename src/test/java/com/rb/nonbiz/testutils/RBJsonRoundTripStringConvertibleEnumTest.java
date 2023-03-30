@@ -15,6 +15,15 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
 import static com.rb.nonbiz.util.RBPreconditions.checkUnique;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+/**
+ * For enums that implement {@link JsonRoundTripStringConvertibleEnum},
+ * if we want to test the conversion back and forth to a 'unique stable string', the test class for that enum
+ * should extend this. Just like with {@link RBTestMatcher}, some tests will be automatically created and run
+ * to confirm that all enums are covered, and that the string representations are all unique and equal to whatever
+ * values are returned by {@link #getEnumConstantsToRepresentations()}.
+ *
+ * <p> We use a lot of reflection to get this to work, because there are static methods involved here. </p>
+ */
 public abstract class RBJsonRoundTripStringConvertibleEnumTest<E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> {
 
   protected abstract RBMap<E, String> getEnumConstantsToRepresentations();
@@ -44,7 +53,7 @@ public abstract class RBJsonRoundTripStringConvertibleEnumTest<E extends Enum<E>
       // There is no way to enforce via an interface that all Enums that implement JsonRoundTripStringConvertibleEnum
       // also have a static method called fromUniqueStableString, since it's static. But we have that convention.
       // It's reasonable to expect it in tests.
-      Method fromUniqueStableString = enumClass.getMethod("fromUniqueStableString");
+      Method fromUniqueStableString = enumClass.getMethod("fromUniqueStableString", String.class);
 
       enumConstantsToRepresentations.forEachEntry( (enumConstant, expectedUniqueStableString) -> {
         try {
