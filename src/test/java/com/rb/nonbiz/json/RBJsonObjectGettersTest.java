@@ -490,13 +490,13 @@ public class RBJsonObjectGettersTest {
         jsonString("element1"),
         jsonString("element2"),
         jsonString("element3")));
-    JsonObject jsonObject0 = jsonObject(
+    JsonObject jsonObject = jsonObject(
         "key1", jsonArray1,
         "key2", jsonString("notAnArray"),
         "subObject",  singletonJsonObject("subKey", jsonDouble(7.89)));
 
     assertThat(
-        getJsonArrayOrDefaultSingleton(jsonObject0, "key1", jsonString("unusedDefault")),
+        getJsonArrayOrDefaultSingleton(jsonObject, "key1", jsonString("unusedDefault")),
         jsonArrayExactMatcher(jsonArray1));
 
     // if the property doesn't exist (or if the jsonObject is empty), a singleton JsonArray will be returned
@@ -504,12 +504,12 @@ public class RBJsonObjectGettersTest {
         getJsonArrayOrDefaultSingleton(emptyJsonObject(), "emptyJsonHasNoProperties", jsonString("theDefaultString")),
         jsonArrayExactMatcher(singletonJsonArray(jsonString("theDefaultString"))));
     assertThat(
-        getJsonArrayOrDefaultSingleton(jsonObject0, "missingProperty", jsonString("theDefaultString")),
+        getJsonArrayOrDefaultSingleton(jsonObject, "missingProperty", jsonString("theDefaultString")),
         jsonArrayExactMatcher(singletonJsonArray(jsonString("theDefaultString"))));
 
     // if the property exists but is not a JsonArray, an exception will be thrown
-    assertIllegalArgumentException( () -> getJsonArrayOrDefaultSingleton(jsonObject0, "key2",      jsonString("unusedDefault")));
-    assertIllegalArgumentException( () -> getJsonArrayOrDefaultSingleton(jsonObject0, "subObject", jsonString("unusedDefault")));
+    assertIllegalArgumentException( () -> getJsonArrayOrDefaultSingleton(jsonObject, "key2",      jsonString("unusedDefault")));
+    assertIllegalArgumentException( () -> getJsonArrayOrDefaultSingleton(jsonObject, "subObject", jsonString("unusedDefault")));
   }
 
   @Test
