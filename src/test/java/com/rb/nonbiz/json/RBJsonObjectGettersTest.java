@@ -23,7 +23,9 @@ import static com.rb.nonbiz.json.RBGson.jsonLong;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
+import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
 import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonArray;
+import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonStringArray;
 import static com.rb.nonbiz.json.RBJsonArraysTest.jsonArrayExactMatcher;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.*;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
@@ -486,14 +488,11 @@ public class RBJsonObjectGettersTest {
 
   @Test
   public void test_getJsonArrayOrDefaultSingleton() {
-    JsonArray jsonArray1 = jsonArray(ImmutableList.of(
-        jsonString("element1"),
-        jsonString("element2"),
-        jsonString("element3")));
+    JsonArray jsonArray1 = jsonStringArray("element1", "element2", "element3");
     JsonObject jsonObject = jsonObject(
         "key1", jsonArray1,
         "key2", jsonString("notAnArray"),
-        "subObject",  singletonJsonObject("subKey", jsonDouble(7.89)));
+        "subObject", singletonJsonObject("subKey", jsonDouble(7.89)));
 
     assertThat(
         getJsonArrayOrDefaultSingleton(jsonObject, "key1", jsonString("unusedDefault")),
@@ -502,10 +501,10 @@ public class RBJsonObjectGettersTest {
     // if the property doesn't exist (or if the jsonObject is empty), a singleton JsonArray will be returned
     assertThat(
         getJsonArrayOrDefaultSingleton(emptyJsonObject(), "emptyJsonHasNoProperties", jsonString("theDefaultString")),
-        jsonArrayExactMatcher(singletonJsonArray(jsonString("theDefaultString"))));
+        jsonArrayExactMatcher(singletonJsonStringArray("theDefaultString")));
     assertThat(
         getJsonArrayOrDefaultSingleton(jsonObject, "missingProperty", jsonString("theDefaultString")),
-        jsonArrayExactMatcher(singletonJsonArray(jsonString("theDefaultString"))));
+        jsonArrayExactMatcher(singletonJsonStringArray("theDefaultString")));
 
     // if the property exists but is not a JsonArray, an exception will be thrown
     assertIllegalArgumentException( () -> getJsonArrayOrDefaultSingleton(jsonObject, "key2",      jsonString("unusedDefault")));
