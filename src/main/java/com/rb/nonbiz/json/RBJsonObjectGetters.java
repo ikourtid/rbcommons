@@ -360,8 +360,8 @@ public class RBJsonObjectGetters {
 
   /**
    * From 'jsonObject', get the value of 'property'.
-   * If 'property' is missing, return an singleton JsonArray consisting of the defaultElement.
-   * If it is present, verify that it is a JsonArray and return it.
+   * If 'property' is missing, return a singleton JsonArray consisting of the defaultElement.
+   * If 'property' is present, verify that it is a JsonArray and return it.
    */
   public static JsonArray getJsonArrayOrDefaultSingleton(
       JsonObject jsonObject,
