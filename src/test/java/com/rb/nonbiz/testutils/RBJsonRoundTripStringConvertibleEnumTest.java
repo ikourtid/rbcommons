@@ -1,6 +1,8 @@
-package com.rb.nonbiz.util;
+package com.rb.nonbiz.testutils;
 
 import com.rb.nonbiz.collections.RBMap;
+import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
+import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -13,10 +15,13 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
 import static com.rb.nonbiz.util.RBPreconditions.checkUnique;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class JsonRoundTripStringConvertibleEnumTest {
+public abstract class RBJsonRoundTripStringConvertibleEnumTest<E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> {
 
-  public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> void testJsonRoundTripStringConvertibleEnum(
-      RBMap<E, String> enumConstantsToRepresentations) {
+  protected abstract RBMap<E, String> getEnumConstantsToRepresentations();
+
+  @Test
+  public void testJsonRoundTripStringConvertibleEnum() {
+    RBMap<E, String> enumConstantsToRepresentations = getEnumConstantsToRepresentations();
     try {
       Class<E> enumClass = getOrThrow(
           enumConstantsToRepresentations.keySet().stream().findFirst(),
