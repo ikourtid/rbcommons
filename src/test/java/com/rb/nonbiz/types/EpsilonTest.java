@@ -3,6 +3,8 @@ package com.rb.nonbiz.types;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import static com.rb.biz.types.Money.money;
+import static com.rb.nonbiz.math.stats.ZScore.zScore;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
@@ -29,12 +31,32 @@ public class EpsilonTest {
   }
 
   @Test
-  public void testWithin() {
+  public void testValuesAreWithin_double() {
     assertTrue(DEFAULT_EPSILON_1e_8.valuesAreWithin(100, 100 + 1e-9));
     assertTrue(DEFAULT_EPSILON_1e_8.valuesAreWithin(100 + 1e-9, 100));
 
     assertFalse(DEFAULT_EPSILON_1e_8.valuesAreWithin(100, 100 + 1e-7));
     assertFalse(DEFAULT_EPSILON_1e_8.valuesAreWithin(100 + 1e-7, 100));
+  }
+
+  @Test
+  public void testValuesAreWithin_PreciseValue() {
+    // Nothing special about Money - it's just some sample ImpreciseValue we can use for this test.
+    assertTrue(DEFAULT_EPSILON_1e_8.valuesAreWithin(money(100), money(100 + 1e-9)));
+    assertTrue(DEFAULT_EPSILON_1e_8.valuesAreWithin(money(100 + 1e-9), money(100)));
+
+    assertFalse(DEFAULT_EPSILON_1e_8.valuesAreWithin(money(100), money(100 + 1e-7)));
+    assertFalse(DEFAULT_EPSILON_1e_8.valuesAreWithin(money(100 + 1e-7), money(100)));
+  }
+
+  @Test
+  public void testValuesAreWithin_ImpreciseValue() {
+    // Nothing special about ZScore - it's just some sample ImpreciseValue we can use for this test.
+    assertTrue(DEFAULT_EPSILON_1e_8.valuesAreWithin(zScore(100), zScore(100 + 1e-9)));
+    assertTrue(DEFAULT_EPSILON_1e_8.valuesAreWithin(zScore(100 + 1e-9), zScore(100)));
+
+    assertFalse(DEFAULT_EPSILON_1e_8.valuesAreWithin(zScore(100), zScore(100 + 1e-7)));
+    assertFalse(DEFAULT_EPSILON_1e_8.valuesAreWithin(zScore(100 + 1e-7), zScore(100)));
   }
 
   /**
