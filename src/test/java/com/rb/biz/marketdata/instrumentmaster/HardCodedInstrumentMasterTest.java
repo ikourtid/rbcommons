@@ -29,7 +29,7 @@ public class HardCodedInstrumentMasterTest {
         hardCodedInstrumentMaster(iidBiMap(emptyIidMap())).getAllInstrumentIdsAsIidSet(),
         iidSetMatcher(emptyIidSet()));
 
-    // Create instrument master with IDs 1, 2, 11, and 12, and check we get that back when we ask
+    // Create instrument master with IDs for STOCK_A, STOCK_B, STOCK_C, and STOCK_D, and check we get that same set when we ask
     // for all instrument IDs.
     assertThat(
         hardCodedInstrumentMaster(

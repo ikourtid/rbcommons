@@ -93,7 +93,6 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
         instrumentId5, symbol(symbol5)));
   }
 
-  //FIXME CM Change to IidSet and add test
   public IidSet getAllInstrumentIdsAsIidSet() {
     return newIidSet(hardCodedSymbolBiMap.getInstrumentIdFromItem().values());
   }
