@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -166,6 +167,49 @@ public class RBJsonArraysTest {
     asserter.accept(
         emptyList(),
         emptyJsonArray());
+  }
+
+  @Test
+  public void testListOfOptionalsToJsonArray() {
+    BiConsumer<List<Optional<String>>, JsonArray> asserter = (javaList, jsonArray) ->
+      assertThat(
+          listOfOptionalsToJsonArray(
+              javaList,
+              string -> jsonString(string)),
+          jsonArrayExactMatcher(jsonArray));
+
+    asserter.accept(
+        emptyList(),
+        emptyJsonArray());
+
+    // Optional.empty()'s are removed
+    asserter.accept(
+        ImmutableList.of(
+            Optional.empty(),
+            Optional.empty()),
+        emptyJsonArray());
+
+    asserter.accept(
+        ImmutableList.of(
+            Optional.of("a"),
+            Optional.of("b")),
+        jsonArray(jsonString("a"), jsonString("b")));
+
+    asserter.accept(
+        ImmutableList.of(
+            Optional.of("a"),
+            Optional.empty(),
+            Optional.of("b")),
+        jsonArray(jsonString("a"), jsonString("b")));
+
+    // duplicates are allowed
+    asserter.accept(
+        ImmutableList.of(
+            Optional.empty(),
+            Optional.of("a"),
+            Optional.empty(),
+            Optional.of("a")),
+        jsonArray(jsonString("a"), jsonString("a")));
   }
 
   @Test

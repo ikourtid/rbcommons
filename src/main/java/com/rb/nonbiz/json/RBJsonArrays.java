@@ -175,6 +175,14 @@ public class RBJsonArrays {
     return iteratorToJsonArray(list.size(), list.iterator(), itemSerializer);
   }
 
+  /**
+   * Convert a List of Optionals into a JsonArray consisting only of the list elements that are not Optional.empty()
+   */
+  public static <T> JsonArray listOfOptionalsToJsonArray(List<Optional<T>> list, Function<T, JsonElement> itemSerializer) {
+    List<T> itemList = list.stream().filter(v -> v.isPresent()).map(v -> v.get()).collect(Collectors.toList());
+    return iteratorToJsonArray(list.size(), itemList.iterator(), itemSerializer);
+  }
+
   public static <T> JsonArray streamToJsonArray(int size, Stream<T> stream, Function<T, JsonElement> itemSerializer) {
     return iteratorToJsonArray(size, stream.iterator(), itemSerializer);
   }
