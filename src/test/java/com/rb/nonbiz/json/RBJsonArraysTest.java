@@ -171,12 +171,12 @@ public class RBJsonArraysTest {
 
   @Test
   public void testListOfOptionalsToJsonArray() {
-    BiConsumer<List<Optional<String>>, JsonArray> asserter = (javaList, jsonArray) ->
+    BiConsumer<List<Optional<String>>, JsonArray> asserter = (javaList, expectedJsonArray) ->
       assertThat(
           listOfOptionalsToJsonArray(
               javaList,
               string -> jsonString(string)),
-          jsonArrayExactMatcher(jsonArray));
+          jsonArrayExactMatcher(expectedJsonArray));
 
     asserter.accept(
         emptyList(),
