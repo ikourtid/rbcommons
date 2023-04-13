@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromStream;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
+import static com.rb.nonbiz.collections.RBOptionals.filterPresentOptionals;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonDoubleRoundedTo6Digits;
@@ -178,13 +179,10 @@ public class RBJsonArrays {
   /**
    * Convert a List of Optionals into a JsonArray consisting only of the list elements that are not Optional.empty().
    */
-  public static <T> JsonArray listOfOptionalsToJsonArray(List<Optional<T>> list, Function<T, JsonElement> itemSerializer) {
-    List<T> itemList = list
-        .stream()
-        .filter(v -> v.isPresent())
-        .map(v -> v.get())
-        .collect(Collectors.toList());
-    return iteratorToJsonArray(itemList.size(), itemList.iterator(), itemSerializer);
+  public static <T> JsonArray listOfOptionalsToJsonArray(
+      List<Optional<T>> list,
+      Function<T, JsonElement> itemSerializer) {
+    return listToJsonArray(filterPresentOptionals(list), itemSerializer);
   }
 
   public static <T> JsonArray streamToJsonArray(int size, Stream<T> stream, Function<T, JsonElement> itemSerializer) {
