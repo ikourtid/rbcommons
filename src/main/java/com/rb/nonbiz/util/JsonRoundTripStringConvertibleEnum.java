@@ -15,6 +15,9 @@ public interface JsonRoundTripStringConvertibleEnum<E extends Enum<E>> {
 
   String toUniqueStableString();
 
+  /**
+   * Just a shorthand for cases where we want this as a JSON string.
+   */
   default JsonPrimitive toUniqueStableJsonString() {
     return jsonString(toUniqueStableString());
   }
