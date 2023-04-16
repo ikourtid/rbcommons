@@ -1,5 +1,9 @@
 package com.rb.nonbiz.util;
 
+import com.google.gson.JsonPrimitive;
+
+import static com.rb.nonbiz.json.RBGson.jsonString;
+
 /**
  * A generic interface that lets us mark enums as being convertible back and forth to strings.
  *
@@ -10,5 +14,9 @@ package com.rb.nonbiz.util;
 public interface JsonRoundTripStringConvertibleEnum<E extends Enum<E>> {
 
   String toUniqueStableString();
+
+  default JsonPrimitive toUniqueStableJsonString() {
+    return jsonString(toUniqueStableString());
+  }
 
 }
