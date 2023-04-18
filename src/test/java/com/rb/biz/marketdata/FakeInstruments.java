@@ -71,7 +71,11 @@ public class FakeInstruments {
   public static InstrumentId STOCK_L4 = instrumentIdGenerator.generate(symbol("STOCK_L4"));
   public static InstrumentId STOCK_L5 = instrumentIdGenerator.generate(symbol("STOCK_L5"));
 
-  /** You can use these for stocks where you want to specify that their lots get short-term tax treatment (hence S) */
+  /**
+   * You can use these for stocks where you want to specify that their lots get short-term tax treatment (hence S).
+   * Additionally, if you want to make a distinction between stocks we are buying (or expecting to buy) and selling,
+   * you can use STOCK_B* for buys and the STOCK_S* below for sells.
+   */
   public static InstrumentId STOCK_S1 = instrumentIdGenerator.generate(symbol("STOCK_S1"));
   public static InstrumentId STOCK_S2 = instrumentIdGenerator.generate(symbol("STOCK_S2"));
   public static InstrumentId STOCK_S3 = instrumentIdGenerator.generate(symbol("STOCK_S3"));
