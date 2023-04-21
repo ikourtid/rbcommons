@@ -66,6 +66,37 @@ public class CoordinatesTest extends RBTestMatcher<Coordinates> {
     assertThrowsAnyException( () -> twoD.getSubset(-1, 1));
   }
 
+  @Test
+  public void test_copyWithChangedNthItem() {
+    Coordinates coordinates = coordinates(4, 3, 2, 1, 0);
+    assertThat(
+        coordinates.copyWithChangedNthItem(0, 11),
+        coordinatesMatcher(coordinates(11, 3, 2, 1, 0)));
+    assertThat(
+        coordinates.copyWithChangedNthItem(1, 11),
+        coordinatesMatcher(coordinates(4, 11, 2, 1, 0)));
+    assertThat(
+        coordinates.copyWithChangedNthItem(2, 11),
+        coordinatesMatcher(coordinates(4, 3, 11, 1, 0)));
+    assertThat(
+        coordinates.copyWithChangedNthItem(3, 11),
+        coordinatesMatcher(coordinates(4, 3, 2, 11, 0)));
+    assertThat(
+        coordinates.copyWithChangedNthItem(4, 11),
+        coordinatesMatcher(coordinates(4, 3, 2, 1, 11)));
+
+    // Make sure we didn't change the original object.
+    assertThat(
+        coordinates,
+        coordinatesMatcher(coordinates(4, 3, 2, 1, 0)));
+
+    // Check some illegal arguments.
+    assertIllegalArgumentException( () -> coordinates.copyWithChangedNthItem(-1, 0)); // Negative index
+    assertIllegalArgumentException( () -> coordinates.copyWithChangedNthItem(5, 0));  // Index too big by 1
+    assertIllegalArgumentException( () -> coordinates.copyWithChangedNthItem(50, 0)); // Index too big by a lot
+    assertIllegalArgumentException( () -> coordinates.copyWithChangedNthItem(0, -1)); // Set to negative value
+  }
+
   @Override
   public Coordinates makeTrivialObject() {
     return coordinates(0);
