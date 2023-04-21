@@ -70,8 +70,19 @@ public class NonNegativeQuantity extends SignedQuantity {
     return q1.isLessThan(q2) ? q1 : q2;
   }
 
-  public static NonNegativeQuantity sumNonNegativeQuantities(NonNegativeQuantity q1, NonNegativeQuantity q2) {
-    return q1.add(q2);
+  public static NonNegativeQuantity sumNonNegativeQuantities(
+      NonNegativeQuantity first,
+      NonNegativeQuantity second,
+      NonNegativeQuantity...rest) {
+    // optimization
+    if (rest.length == 0) {
+      return first.add(second);
+    }
+    BigDecimal sum = first.asBigDecimal().add(second.asBigDecimal());
+    for (NonNegativeQuantity item : rest) {
+      sum = sum.add(item.asBigDecimal());
+    }
+    return nonNegativeQuantity(sum);
   }
 
   public static NonNegativeQuantity sumNonNegativeQuantities(Stream<NonNegativeQuantity> stream) {
