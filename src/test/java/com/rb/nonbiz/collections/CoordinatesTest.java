@@ -94,7 +94,7 @@ public class CoordinatesTest extends RBTestMatcher<Coordinates> {
     assertIllegalArgumentException( () -> coordinates.copyWithChangedNthItem(-1, 0)); // Negative index
     assertIllegalArgumentException( () -> coordinates.copyWithChangedNthItem(5, 0));  // Index too big by 1
     assertIllegalArgumentException( () -> coordinates.copyWithChangedNthItem(50, 0)); // Index too big by a lot
-    assertIllegalArgumentException( () -> coordinates.copyWithChangedNthItem(0, -1)); // Set to negaive value
+    assertIllegalArgumentException( () -> coordinates.copyWithChangedNthItem(0, -1)); // Set to negative value
   }
 
   @Override

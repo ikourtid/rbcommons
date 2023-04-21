@@ -46,7 +46,7 @@ public class Coordinates {
   }
 
   public Coordinates copyWithChangedNthItem(int index, int newValue) {
-    RBPreconditions.checkArgument((index >= 0) && (index < rawCoordinatesArray.length));
+    RBPreconditions.checkValidArrayElement(index, rawCoordinatesArray.length);
     RBPreconditions.checkArgument(newValue >= 0);
     int[] newArray = rawCoordinatesArray.clone();
     newArray[index] = newValue;
