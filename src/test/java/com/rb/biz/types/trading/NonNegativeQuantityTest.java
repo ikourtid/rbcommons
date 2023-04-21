@@ -84,6 +84,8 @@ public class NonNegativeQuantityTest {
     asserter.accept(nonNegativeQuantity(0.0),  nonNegativeQuantity(0.0),  nonNegativeQuantity(0.0));
     asserter.accept(nonNegativeQuantity(10.0), nonNegativeQuantity(0.0),  nonNegativeQuantity(10.0));
     asserter.accept(nonNegativeQuantity(12.0), nonNegativeQuantity(34.0), nonNegativeQuantity(46.0));
+    asserter.accept(nonNegativeQuantity(0.5),  nonNegativeQuantity(1.5),  nonNegativeQuantity(2.0));
+    asserter.accept(nonNegativeQuantity(12.3), nonNegativeQuantity(45.6), nonNegativeQuantity(57.9));
   }
 
   @Test
