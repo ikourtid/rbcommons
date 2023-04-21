@@ -17,6 +17,7 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.Asserters.valueExplained;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.junit.Assert.assertEquals;
@@ -76,16 +77,42 @@ public class NonNegativeQuantityTest {
 
   @Test
   public void test_sumUsingNumbers() {
+    // Tests with two arguments.
     TriConsumer<NonNegativeQuantity, NonNegativeQuantity, NonNegativeQuantity> asserter =
         (q1, q2, total) -> {
           assertAlmostEquals(sumNonNegativeQuantities(q1, q2), total, DEFAULT_EPSILON_1e_8);
           assertAlmostEquals(sumNonNegativeQuantities(q2, q1), total, DEFAULT_EPSILON_1e_8);
         };
-    asserter.accept(nonNegativeQuantity(0.0),  nonNegativeQuantity(0.0),  nonNegativeQuantity(0.0));
-    asserter.accept(nonNegativeQuantity(10.0), nonNegativeQuantity(0.0),  nonNegativeQuantity(10.0));
-    asserter.accept(nonNegativeQuantity(12.0), nonNegativeQuantity(34.0), nonNegativeQuantity(46.0));
-    asserter.accept(nonNegativeQuantity(0.5),  nonNegativeQuantity(1.5),  nonNegativeQuantity(2.0));
-    asserter.accept(nonNegativeQuantity(12.3), nonNegativeQuantity(45.6), nonNegativeQuantity(57.9));
+    asserter.accept(ZERO_NON_NEGATIVE_QUANTITY, ZERO_NON_NEGATIVE_QUANTITY, ZERO_NON_NEGATIVE_QUANTITY);
+    asserter.accept(nonNegativeQuantity(10.0),  ZERO_NON_NEGATIVE_QUANTITY, nonNegativeQuantity(10.0));
+    asserter.accept(nonNegativeQuantity(12.0),  nonNegativeQuantity(34.0),  nonNegativeQuantity(46.0));
+    asserter.accept(nonNegativeQuantity(0.5),   nonNegativeQuantity(1.5),   nonNegativeQuantity(2.0));
+    asserter.accept(nonNegativeQuantity(12.3),  nonNegativeQuantity(45.6),  nonNegativeQuantity(57.9));
+
+    // Tests with more than 2 arguments.
+    // All zeroes...trivial
+    assertAlmostEquals(
+        ZERO_NON_NEGATIVE_QUANTITY,
+        sumNonNegativeQuantities(ZERO_NON_NEGATIVE_QUANTITY, ZERO_NON_NEGATIVE_QUANTITY, ZERO_NON_NEGATIVE_QUANTITY),
+    DEFAULT_EPSILON_1e_8);
+
+    // Test a few more scenarios with 3 and 4 arguments, with decimals.
+    assertAlmostEquals(
+        nonNegativeQuantity(doubleExplained(10.2, 1.2 + 3.4 + 5.6)),
+        sumNonNegativeQuantities(nonNegativeQuantity(1.2), nonNegativeQuantity(3.4), nonNegativeQuantity(5.6)),
+        DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(
+        nonNegativeQuantity(doubleExplained(111.0, 11.1 + 22.2 + 33.3 + 44.4)),
+        sumNonNegativeQuantities(
+            nonNegativeQuantity(11.1),
+            nonNegativeQuantity(22.2),
+            nonNegativeQuantity(33.3),
+            nonNegativeQuantity(44.4)),
+        DEFAULT_EPSILON_1e_8);
+    assertAlmostEquals(
+        nonNegativeQuantity(doubleExplained(55.5, 0.0 + 0.0 + 55.5)),
+        sumNonNegativeQuantities(ZERO_NON_NEGATIVE_QUANTITY, ZERO_NON_NEGATIVE_QUANTITY, nonNegativeQuantity(55.5)),
+        DEFAULT_EPSILON_1e_8);
   }
 
   @Test
