@@ -45,6 +45,14 @@ public class Coordinates {
     return coordinates(Arrays.copyOfRange(rawCoordinatesArray, startInclusive, endExclusive));
   }
 
+  public Coordinates copyWithChangedNthItem(int index, int newValue) {
+    RBPreconditions.checkArgument((index >= 0) && (index < rawCoordinatesArray.length));
+    RBPreconditions.checkArgument(newValue >= 0);
+    int[] newArray = rawCoordinatesArray.clone();
+    newArray[index] = newValue;
+    return coordinates(newArray);
+  }
+
   @Override
   public String toString() {
     return Strings.format("[Coordinates: %s ]", Joiner.on(' ').join(Arrays.stream(rawCoordinatesArray).iterator()));
