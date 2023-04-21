@@ -70,6 +70,10 @@ public class NonNegativeQuantity extends SignedQuantity {
     return q1.isLessThan(q2) ? q1 : q2;
   }
 
+  public static NonNegativeQuantity sumNonNegativeQuantities(NonNegativeQuantity q1, NonNegativeQuantity q2) {
+    return q1.add(q2);
+  }
+
   public static NonNegativeQuantity sumNonNegativeQuantities(Stream<NonNegativeQuantity> stream) {
     return sumNonNegativeQuantities(stream.iterator());
   }

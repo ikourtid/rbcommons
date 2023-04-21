@@ -1,6 +1,7 @@
 package com.rb.biz.types.trading;
 
 import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.types.PreciseValue;
 import org.junit.Test;
 
@@ -14,8 +15,10 @@ import static com.rb.biz.types.trading.SignedQuantity.signedQuantity;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
+import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.valueExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -69,6 +72,20 @@ public class NonNegativeQuantityTest {
     assertEquals(large, NonNegativeQuantity.max(small, large));
     assertEquals(large, NonNegativeQuantity.max(large, small));
     assertEquals(large, NonNegativeQuantity.max(large, large));
+  }
+
+  @Test
+  public void test_sumUsingNumbers() {
+    TriConsumer<NonNegativeQuantity, NonNegativeQuantity, NonNegativeQuantity> asserter =
+        (q1, q2, total) -> {
+          assertAlmostEquals(sumNonNegativeQuantities(q1, q2), total, DEFAULT_EPSILON_1e_8);
+          assertAlmostEquals(sumNonNegativeQuantities(q2, q1), total, DEFAULT_EPSILON_1e_8);
+        };
+    asserter.accept(nonNegativeQuantity(0.0),  nonNegativeQuantity(0.0),  nonNegativeQuantity(0.0));
+    asserter.accept(nonNegativeQuantity(10.0), nonNegativeQuantity(0.0),  nonNegativeQuantity(10.0));
+    asserter.accept(nonNegativeQuantity(12.0), nonNegativeQuantity(34.0), nonNegativeQuantity(46.0));
+    asserter.accept(nonNegativeQuantity(0.5),  nonNegativeQuantity(1.5),  nonNegativeQuantity(2.0));
+    asserter.accept(nonNegativeQuantity(12.3), nonNegativeQuantity(45.6), nonNegativeQuantity(57.9));
   }
 
   @Test
