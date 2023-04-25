@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.rb.nonbiz.text.PrintsMultilineString;
 import com.rb.nonbiz.text.Strings;
 import org.apache.commons.math3.util.MultidimensionalCounter;
 
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
  *
  * @see MutableMultiDimensionalArray
  */
-public class MultiDimensionalArray<T> implements Iterable<T> {
+public class MultiDimensionalArray<T> implements Iterable<T>, PrintsMultilineString {
 
   private final MutableMultiDimensionalArray<T> rawMutableArray;
 
@@ -47,6 +48,11 @@ public class MultiDimensionalArray<T> implements Iterable<T> {
   @Override
   public String toString() {
     return Strings.format("[MDA %s MDA]", rawMutableArray.toString());
+  }
+
+  @Override
+  public String toMultilineString() {
+    return Strings.format("[MDA\n%s\nMDA]", rawMutableArray.toMultilineString());
   }
 
   @Override
