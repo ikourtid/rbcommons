@@ -5,6 +5,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.Coordinates.coordinates;
+import static com.rb.nonbiz.collections.Coordinates.coordinatesAllZero;
 import static com.rb.nonbiz.testmatchers.Match.matchIntArray;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -95,6 +96,24 @@ public class CoordinatesTest extends RBTestMatcher<Coordinates> {
     assertIllegalArgumentException( () -> coordinates.copyWithChangedNthItem(5, 0));  // Index too big by 1
     assertIllegalArgumentException( () -> coordinates.copyWithChangedNthItem(50, 0)); // Index too big by a lot
     assertIllegalArgumentException( () -> coordinates.copyWithChangedNthItem(0, -1)); // Set to negative value
+  }
+
+  @Test
+  public void test_coordinatesOfNZeroes() {
+    assertThat(
+        coordinatesAllZero(1),
+        coordinatesMatcher(coordinates(0)));
+    assertThat(
+        coordinatesAllZero(2),
+        coordinatesMatcher(coordinates(0, 0)));
+    assertThat(
+        coordinatesAllZero(8),
+        coordinatesMatcher(coordinates(0, 0, 0, 0, 0, 0, 0, 0)));
+
+    // Check some illegal arguments.
+    assertIllegalArgumentException( () -> coordinatesAllZero(0));
+    assertIllegalArgumentException( () -> coordinatesAllZero(-1));
+
   }
 
   @Override

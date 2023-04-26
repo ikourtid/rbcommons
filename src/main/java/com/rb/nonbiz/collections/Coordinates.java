@@ -27,6 +27,11 @@ public class Coordinates {
     return new Coordinates(rawCoordinatesArray);
   }
 
+  public static Coordinates coordinatesAllZero(int numberOfDimensions) {
+    RBPreconditions.checkArgument(numberOfDimensions >= 1);
+    return coordinates(new int[numberOfDimensions]);
+  }
+
   public int[] getRawCoordinatesArray() {
     return rawCoordinatesArray;
   }
