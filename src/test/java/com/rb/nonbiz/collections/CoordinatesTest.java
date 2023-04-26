@@ -113,7 +113,6 @@ public class CoordinatesTest extends RBTestMatcher<Coordinates> {
     // Check some illegal arguments.
     assertIllegalArgumentException( () -> coordinatesAllZero(0));
     assertIllegalArgumentException( () -> coordinatesAllZero(-1));
-
   }
 
   @Override
