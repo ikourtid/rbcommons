@@ -61,7 +61,7 @@ public class ClosedUnitFractionRangesJsonApiConverter implements HasJsonApiDocum
         .setSingleLineSummary(documentation(
             "Holds a map of keys to `ClosedUnitFractionRange`s."))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
-            "The keys can be of any type, but the values are `ClosedUnitFractionRange`s.")))
+            "The keys can be of any type, but the values must be `ClosedUnitFractionRange`s.")))
         .hasSingleChildJsonApiConverter(rangeJsonApiConverter)
         .setNontrivialSampleJson(jsonObject(
             "US_Software", jsonObject(
