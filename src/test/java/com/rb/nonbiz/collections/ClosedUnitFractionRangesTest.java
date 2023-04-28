@@ -12,7 +12,10 @@ import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.emptyClosedUnit
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.nonEmptyClosedUnitFractionRanges;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
+import static com.rb.nonbiz.collections.RBSet.rbSet;
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.optionalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
@@ -69,6 +72,17 @@ public class ClosedUnitFractionRangesTest extends RBTestMatcher<ClosedUnitFracti
 
     assertOptionalEmpty(
         closedUnitFractionRanges.getClosedRange("X"));
+  }
+
+  @Test
+  public void testGetKeySet() {
+    ClosedUnitFractionRanges<String> closedUnitFractionRanges = closedUnitFractionRanges(rbMapOf(
+        "a", closedUnitFractionRange(unitFraction(0.4), unitFraction(0.6)),
+        "b", closedUnitFractionRange(unitFraction(0.5), unitFraction(0.5))));
+
+    assertThat(
+        rbSet(closedUnitFractionRanges.keySet()),
+        rbSetEqualsMatcher(rbSetOf("a", "b")));
   }
 
   @Test
