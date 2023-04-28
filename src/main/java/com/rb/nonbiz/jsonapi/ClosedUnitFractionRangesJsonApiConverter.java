@@ -1,50 +1,74 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.google.common.collect.Range;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.google.inject.Inject;
 import com.rb.nonbiz.collections.ClosedUnitFractionRanges;
-import com.rb.nonbiz.json.JsonValidationInstructions;
-import com.rb.nonbiz.json.JsonValidator;
+import com.rb.nonbiz.types.ClosedUnitFractionRange;
 
 import java.util.function.Function;
 
-import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
-import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
-import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
-import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
+import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.closedUnitFractionRanges;
+import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
+import static com.rb.nonbiz.json.RBGson.jsonDouble;
+import static com.rb.nonbiz.json.RBGson.jsonPercentage;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.json.RBJsonObjects.jsonObjectToRBMap;
+import static com.rb.nonbiz.json.RBJsonObjects.rbMapToJsonObject;
+import static com.rb.nonbiz.jsonapi.JsonApiClassWithNonFixedPropertiesDocumentation.JsonApiClassWithNonFixedPropertiesDocumentationBuilder.jsonApiClassWithNonFixedPropertiesDocumentationBuilder;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
+import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
+import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
+/**
+ * Converts a {@link ClosedUnitFractionRanges} back and forth to JSON for our public API.
+ */
 public class ClosedUnitFractionRangesJsonApiConverter implements HasJsonApiDocumentation {
 
-  private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
-      .hasNoRequiredProperties()
-      .setOptionalProperties(rbMapOf(
-          "min", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR,
-          "max", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR))
-      .build();
-
-  @Inject JsonValidator jsonValidator;
   @Inject RangeJsonApiConverter rangeJsonApiConverter;
 
   public <C extends Comparable<? super C>> JsonObject toJsonObject(
       ClosedUnitFractionRanges<C> closedUnitFractionRanges,
-      Function<C, JsonPrimitive> serializer) {
-    return null;
+      Function<C, String> keySerializer) {
+    return rbMapToJsonObject(
+        closedUnitFractionRanges.getRawMap(),
+        keySerializer,
+        v -> rangeJsonApiConverter.toJsonObject(
+            v.asClosedRangeOfUnitFraction().asRange(),
+            unitFraction -> jsonPercentage(unitFraction.doubleValue())));
   }
 
-  public <C extends Comparable<? super C>> Range<C> fromJsonObject(
+  public <C extends Comparable<? super C>> ClosedUnitFractionRanges<C> fromJsonObject(
       JsonObject jsonObject,
-      Function<JsonPrimitive, C> deserializer) {
-    jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
-    return closedUnitFractionRange();
+      Function<String, C> keyDeserializer) {
+    return closedUnitFractionRanges(
+        jsonObjectToRBMap(
+            jsonObject,
+            keyDeserializer,
+            jsonElement -> closedUnitFractionRange(
+                rangeJsonApiConverter.fromJsonObject(
+                    jsonElement.getAsJsonObject(),
+                    v -> unitFraction(v.getAsDouble())))));
   }
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return jsonApiClassDocumentationBuilder()
-        .setClass(ClosedUnitFractionRanges.class)
+    return jsonApiClassWithNonFixedPropertiesDocumentationBuilder()
+        .setClassBeingDocumented(ClosedUnitFractionRanges.class)
+        .setKeyClass(UNKNOWN_CLASS_OF_JSON_PROPERTY)
+        .setValueClass(ClosedUnitFractionRange.class)
+        .setSingleLineSummary(documentation(
+            "Holds a map of keys to `ClosedUnitFractionRange`s."))
+        .setLongDocumentation(documentation(asSingleLineWithNewlines(
+            "The keys can be of any type, but the values are `ClosedUnitFractionRange`s.")))
+        .hasSingleChildJsonApiConverter(rangeJsonApiConverter)
+        .setNontrivialSampleJson(jsonObject(
+            "US_Software", jsonObject(
+                "min", jsonDouble(0.10),
+                "max", jsonDouble(0.30)),
+            "US_Financials", jsonObject(
+                "min", jsonDouble(0.15),
+                "max", jsonDouble(0.35))))
         .build();
   }
 
