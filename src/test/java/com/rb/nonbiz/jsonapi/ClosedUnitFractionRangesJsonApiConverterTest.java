@@ -18,10 +18,9 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
-import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectMatcher;
+import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
-import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
 import static java.lang.Long.parseLong;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -90,14 +89,14 @@ public class ClosedUnitFractionRangesJsonApiConverterTest extends RBTest<ClosedU
       JsonObject closedUnitFractionRangesJsonObject,
       Function<C, String> keySerializer,
       Function<String, C> keyDeserializer) {
+    
     // check the conversion toJsonObject()
     assertThat(
         makeTestObject().toJsonObject(
             closedUnitFractionRanges,
             v -> keySerializer.apply(v)),
-        jsonObjectMatcher(
-            closedUnitFractionRangesJsonObject,
-            DEFAULT_EPSILON_1e_8));
+        jsonObjectEpsilonMatcher(
+            closedUnitFractionRangesJsonObject));
 
     // check the conversion fromJsonObject()
     assertThat(
