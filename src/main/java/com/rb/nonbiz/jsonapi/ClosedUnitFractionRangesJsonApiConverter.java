@@ -18,7 +18,6 @@ import static com.rb.nonbiz.jsonapi.JsonApiClassWithNonFixedPropertiesDocumentat
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
-import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
 
 /**
@@ -36,7 +35,7 @@ public class ClosedUnitFractionRangesJsonApiConverter implements HasJsonApiDocum
         keySerializer,
         v -> rangeJsonApiConverter.toJsonObject(
             v.asClosedRangeOfUnitFraction().asRange(),
-            unitFraction -> jsonPercentage(unitFraction.doubleValue())));
+            unitFraction -> jsonPercentage(unitFraction)));
   }
 
   public <C extends Comparable<? super C>> ClosedUnitFractionRanges<C> fromJsonObject(

@@ -5,8 +5,6 @@ import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import java.util.Optional;
-
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.closedUnitFractionRanges;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.emptyClosedUnitFractionRanges;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.nonEmptyClosedUnitFractionRanges;
@@ -17,7 +15,7 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
-import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.optionalMatcher;
+import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.nonEmptyOptionalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
@@ -66,9 +64,9 @@ public class ClosedUnitFractionRangesTest extends RBTestMatcher<ClosedUnitFracti
 
     assertThat(
         closedUnitFractionRanges.getClosedRange("a"),
-        optionalMatcher(
-            Optional.of(closedUnitFractionRange(unitFraction(0.4), unitFraction(0.6))),
-            f -> closedUnitFractionRangeMatcher(f)));
+        nonEmptyOptionalMatcher(
+            closedUnitFractionRangeMatcher(
+                closedUnitFractionRange(unitFraction(0.4), unitFraction(0.6)))));
 
     assertOptionalEmpty(
         closedUnitFractionRanges.getClosedRange("X"));
