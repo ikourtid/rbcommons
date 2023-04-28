@@ -19,6 +19,7 @@ import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
 
 /**
  * Converts a {@link ClosedUnitFractionRanges} back and forth to JSON for our public API.
@@ -48,7 +49,7 @@ public class ClosedUnitFractionRangesJsonApiConverter implements HasJsonApiDocum
             jsonElement -> closedUnitFractionRange(
                 rangeJsonApiConverter.fromJsonObject(
                     jsonElement.getAsJsonObject(),
-                    v -> unitFraction(v.getAsDouble())))));
+                    v -> unitFractionInPct(v.getAsDouble())))));
   }
 
   @Override
