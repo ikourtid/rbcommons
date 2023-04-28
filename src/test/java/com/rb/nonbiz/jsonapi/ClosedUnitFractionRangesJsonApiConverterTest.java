@@ -24,19 +24,18 @@ import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
 import static java.lang.Long.parseLong;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ClosedUnitFractionRangesJsonApiConverterTest
-    extends RBTest<ClosedUnitFractionRangesJsonApiConverter> {
+public class ClosedUnitFractionRangesJsonApiConverterTest extends RBTest<ClosedUnitFractionRangesJsonApiConverter> {
 
   @Test
   public void testEmptyMap() {
-    testAssetClassRoundTripConversionHelper(
+    testInstrumentIdRoundTripConversionHelper(
         emptyClosedUnitFractionRanges(),
         emptyJsonObject());
   }
 
   @Test
-  public void testRoundTrip() {
-    testAssetClassRoundTripConversionHelper(
+  public void testRoundTrip_instrumentIds() {
+    testInstrumentIdRoundTripConversionHelper(
         closedUnitFractionRanges(rbMapOf(
             instrumentId(111L), closedUnitFractionRange(
                 unitFractionInPct(10),
@@ -53,7 +52,28 @@ public class ClosedUnitFractionRangesJsonApiConverterTest
                 "max", jsonDouble(21.0))));
   }
 
-  private void testAssetClassRoundTripConversionHelper(
+  @Test
+  public void testRoundTrip_strings() {
+    testRoundTripConversionHelper(
+        closedUnitFractionRanges(rbMapOf(
+            "US_Financials", closedUnitFractionRange(
+                unitFractionInPct(10),
+                unitFractionInPct(11)),
+            "US_Software", closedUnitFractionRange(
+                unitFractionInPct(20),
+                unitFractionInPct(21)))),
+        jsonObject(
+            "US_Financials", jsonObject(
+                "min", jsonDouble(10.0),
+                "max", jsonDouble(11.0)),
+            "US_Software", jsonObject(
+                "min", jsonDouble(20.0),
+                "max", jsonDouble(21.0))),
+        key -> key,   // trivial key serializer
+        key -> key);  // trivial key deserializer
+  }
+
+  private void testInstrumentIdRoundTripConversionHelper(
       ClosedUnitFractionRanges<InstrumentId> closedUnitFractionRanges,
       JsonObject jsonObject) {
     testRoundTripConversionHelper(
