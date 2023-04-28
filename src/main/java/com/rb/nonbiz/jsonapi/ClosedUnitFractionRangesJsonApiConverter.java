@@ -65,11 +65,11 @@ public class ClosedUnitFractionRangesJsonApiConverter implements HasJsonApiDocum
         .hasSingleChildJsonApiConverter(rangeJsonApiConverter)
         .setNontrivialSampleJson(jsonObject(
             "US_Software", jsonObject(
-                "min", jsonDouble(0.10),
-                "max", jsonDouble(0.30)),
+                "min", jsonDouble(10.0),
+                "max", jsonDouble(30.0)),
             "US_Financials", jsonObject(
-                "min", jsonDouble(0.15),
-                "max", jsonDouble(0.35))))
+                "min", jsonDouble(15.0),
+                "max", jsonDouble(35.0))))
         .build();
   }
 

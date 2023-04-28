@@ -1,8 +1,10 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ClosedUnitFractionRanges;
+import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.testutils.RBTest;
 import org.junit.Test;
 
@@ -104,6 +106,22 @@ public class ClosedUnitFractionRangesJsonApiConverterTest extends RBTest<ClosedU
             jsonElement -> keyDeserializer.apply(jsonElement)),
         closedUnitFractionRangesMatcher(
             closedUnitFractionRanges));
+  }
+
+  @Test
+  public void testValidSampleJson() {
+    ClosedUnitFractionRangesJsonApiConverter realObject =
+        makeRealObject(ClosedUnitFractionRangesJsonApiConverter.class);
+
+    JsonElement sampleJson = RBOptionals.getOrThrow(
+        // have to cast because not all JsonApiDocumentation classes have NontrivialSampleJson
+        ((JsonApiClassWithNonFixedPropertiesDocumentation) realObject.getJsonApiDocumentation()).getNontrivialSampleJson(),
+        "Internal error - should have a sample JSON");
+
+    // Check that the sample JSON can be successfully processed by fromJsonObject().
+    ClosedUnitFractionRanges<String> doesNotThrow = realObject.fromJsonObject(
+        sampleJson.getAsJsonObject(),
+        v -> v);
   }
 
   @Override
