@@ -307,8 +307,11 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
    * similarity predicate is inexact, such as if it uses an epsilon. In that case, the actual value under the key
    * would be different between the two semantics. At any rate, we will choose the 'don't replace if similar'
    * semantics. </p>
+   *
+   * <p> Returns true if a new value was added, and false if we were trying to replace a 'similar' value
+   * per the {@link BiPredicate} supplied. </p>
    */
-  public void putAssumingNoChange(K key, V value, BiPredicate<V, V> valuesAreSimilar) {
+  public boolean putAssumingNoChange(K key, V value, BiPredicate<V, V> valuesAreSimilar) {
     if (key == null || value == null) {
       throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
@@ -317,13 +320,14 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
     V previousValue = rawMap.get(key.asLong());
     if (previousValue == null) {
       put(key, value);
-      return;
+      return true;
     }
 
     RBPreconditions.checkArgument(
         valuesAreSimilar.test(previousValue, value),
         "In putAssumingNoChange: key %s has value %s which is different than new value %s",
         key, previousValue, value);
+    return false;
   }
 
   /**
