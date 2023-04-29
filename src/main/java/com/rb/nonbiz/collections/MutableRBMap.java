@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -292,6 +293,39 @@ public class MutableRBMap<K, V> {
           "Trying to add value %s to key %s which is not there yet",
           value, key));
     }
+  }
+
+  /**
+   * Adds a key/value mapping.
+   *
+   * <p> If a value already exists for the supplied key, it will not get replaced, but this will throw an
+   * exception if the new value is different than the existing value per the predicate supplied.
+   * This is useful for objects that do not implement equals/hashCode, and for which we need to pass in a lambda
+   * to define what equality means. It is also useful for objects that do implement equals/hashCode, but for which
+   * we want to use different criteria for equality than the default equals/hashCode. </p>
+   *
+   * <p> For the case where the new value is similar to the old value (per the {@link BiPredicate}), we could
+   * also have chosen the semantics of 'always replace existing value'. This will make a difference in cases where the
+   * similarity predicate is inexact, such as if it uses an epsilon. In that case, the actual value under the key
+   * would be different between the two semantics. At any rate, we will choose the 'don't replace if similar'
+   * semantics. </p>
+   */
+  public void putAssumingNoChange(K key, V value, BiPredicate<V, V> valuesAreSimilar) {
+    if (key == null || value == null) {
+      throw new IllegalArgumentException(smartFormat(
+          "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
+          key, value));
+    }
+    V previousValue = rawMap.get(key);
+    if (previousValue == null) {
+      put(key, value);
+      return;
+    }
+
+    RBPreconditions.checkArgument(
+        valuesAreSimilar.test(previousValue, value),
+        "In putAssumingNoChange: key %s has value %s which is different than new value %s",
+        key, previousValue, value);
   }
 
   /**
