@@ -12,7 +12,8 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 
 /**
- * A map whose values are ClosedUnitFractionRange.
+ * An {@link RBMap} whose keys are of arbitrary type, but whose values are {@link ClosedUnitFractionRange}s.
+ *
  * @see ClosedUnitFractionRange
  */
 public class ClosedUnitFractionRanges<K> {
@@ -70,4 +71,5 @@ public class ClosedUnitFractionRanges<K> {
   public String toString() {
     return rangesMap.toString();
   }
+
 }
