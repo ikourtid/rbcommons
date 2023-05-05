@@ -14,6 +14,7 @@ import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -302,6 +303,22 @@ public class RBLists {
       }
     }
     return reducedList;
+  }
+
+  /**
+   * This is similar to {@link List} equality, except that, instead of using the default {@link Object#equals(Object)}
+   * method to compare two items for equality, it uses the supplied {@link BiPredicate}.
+   *
+   * <p> We typically avoid implementing equals/hashCode in our codebase, because prod code rarely needs it,
+   * and test code uses hamcrest matchers. So this is useful in cases where plain list equality wouldn't work. </p>
+   */
+  public static <T> boolean listsAreSimilar(List<T> list1, List<T> list2, BiPredicate<T, T> itemsAreSimilar) {
+    int size = list1.size();
+    if (size != list2.size()) {
+      return false;
+    }
+    return IntStream.range(0, size)
+        .allMatch(i -> itemsAreSimilar.test(list1.get(i), list2.get(i)));
   }
 
 }
