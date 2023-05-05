@@ -3,7 +3,6 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.rb.nonbiz.text.Strings;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,6 +14,7 @@ import java.util.OptionalInt;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,7 +30,9 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEquals;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyListIterator;
@@ -39,7 +41,6 @@ import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
 
 public class RBListsTest {
 
@@ -456,6 +457,28 @@ public class RBListsTest {
             pair("q", 555),
             pair("a", intExplained(603, 200 + 201 + 202)),
             pair("z", 999)));
+  }
+
+  @Test
+  public void testListsAreSimilar() {
+    Predicate<List<Double>> predicate = list ->
+        listsAreSimilar(ImmutableList.of(1.1, 3.3), list, (v1, v2) -> DEFAULT_EPSILON_1e_8.valuesAreWithin(v1, v2));
+
+    rbSetOf(
+        ImmutableList.of(1.1, 3.3),
+        ImmutableList.of(1.1 - 1e-9, 3.3 - 1e-9),
+        ImmutableList.of(1.1 + 1e-9, 3.3 + 1e-9))
+        .forEach(list -> assertTrue(predicate.test(list)));
+
+    rbSetOf(
+        ImmutableList.of(1.1 - 1e-7, 3.3 - 1e-7),
+        ImmutableList.of(1.1 + 1e-7, 3.3 + 1e-7),
+        ImmutableList.of(1.1,        3.3 + 1e-7),
+        ImmutableList.of(1.1 + 1e-7, 3.3),
+        Collections.<Double>emptyList(),
+        singletonList(1.1),
+        ImmutableList.of(1.1, 3.3, DUMMY_DOUBLE))
+        .forEach(list -> assertFalse(predicate.test(list)));
   }
 
 }
