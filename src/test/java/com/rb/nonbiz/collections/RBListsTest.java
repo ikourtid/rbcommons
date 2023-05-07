@@ -22,6 +22,7 @@ import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairTest.pairEqualityMatcher;
 import static com.rb.nonbiz.collections.RBLists.*;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -479,6 +480,24 @@ public class RBListsTest {
         singletonList(1.1),
         ImmutableList.of(1.1, 3.3, DUMMY_DOUBLE))
         .forEach(list -> assertFalse(predicate.test(list)));
+  }
+
+  @Test
+  public void testTransformUsingBothIndexAndValue() {
+    BiConsumer<List<Boolean>, List<String>> asserter = (starting, transformed) ->
+        assertThat(
+            transformUsingBothIndexAndValue(
+                starting,
+                (i, str) -> Strings.format("%s_%s", i, str)),
+            orderedListEqualityMatcher(
+                transformed));
+
+    asserter.accept(
+        ImmutableList.of(true, false),
+        ImmutableList.of("0_true", "1_false"));
+    asserter.accept(
+        emptyList(),
+        emptyList());
   }
 
 }
