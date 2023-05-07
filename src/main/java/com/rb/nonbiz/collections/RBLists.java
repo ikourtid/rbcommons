@@ -1,7 +1,5 @@
 package com.rb.nonbiz.collections;
 
-import com.google.common.collect.Iterables;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -319,6 +317,22 @@ public class RBLists {
     }
     return IntStream.range(0, size)
         .allMatch(i -> itemsAreSimilar.test(list1.get(i), list2.get(i)));
+  }
+
+  /**
+   * Transforms a list to a different one using 'external iteration', i.e. knowledge of both the value
+   * being transformed, but also the numeric index that we're in.
+   */
+  public static <T1, T2> List<T2> transformUsingBothIndexAndValue(
+      List<T1> list,
+      BiFunction<Integer, T1, T2> externalIterationTransformer) {
+    // We'd normally do this fluently, but since this is infrastructure / rbcommons code whose implementation
+    // is not exposed, we might as well choose the slightly more performant version where we just use an array.
+    List<T2> newList = newArrayListWithExpectedSize(list.size());
+    for (int i = 0; i < list.size(); i++) {
+      newList.add(externalIterationTransformer.apply(i, list.get(i)));
+    }
+    return newList;
   }
 
 }
