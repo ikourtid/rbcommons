@@ -427,7 +427,7 @@ public class PreciseValueTest {
     // can also check rounding to a number of digits < 0
     assertTrue( signedMoney(456_001.23).isAlmostRoundToScale(roundingScale(-3), roundingScale(-2)));
     assertTrue( signedMoney(456_001.23).isAlmostRoundToScale(roundingScale(-3), roundingScale(-1)));
-    
+
     assertFalse(signedMoney(456_001.23).isAlmostRoundToScale(roundingScale(-3), roundingScale( 0)));
     assertFalse(signedMoney(456_001.23).isAlmostRoundToScale(roundingScale(-3), roundingScale( 1)));
   }
