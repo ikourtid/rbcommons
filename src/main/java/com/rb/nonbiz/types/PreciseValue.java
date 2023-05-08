@@ -305,6 +305,23 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
   }
 
   /**
+   * Check if the BigDecimal is rounded "close enough" to the first rounding scale.
+   *
+   * <p> This rounds the BigDecimal to both the first ('coarse') and to the second ('fine') rounding
+   * scales, and compares the two rounded versions. It they match, then 'true' is returned (otherwise 'false'). </p>
+   */
+  public boolean isAlmostRoundToScale(RoundingScale roundingScaleCoarse, RoundingScale roundingScaleFine) {
+    RBPreconditions.checkArgument(
+        roundingScaleCoarse.getRawInt() < roundingScaleFine.getRawInt(),
+        "The 'coarse' rounding scale %s must be less than the 'fine' rounding scale %s",
+        roundingScaleCoarse, roundingScaleFine);
+
+    BigDecimal roundedCoarse = asBigDecimal().setScale(roundingScaleCoarse.getRawInt(), HALF_UP);
+    BigDecimal roundedFine   = asBigDecimal().setScale(roundingScaleFine.getRawInt(),   HALF_UP);
+    return roundedCoarse.compareTo(roundedFine) == 0;
+  }
+
+  /**
    * Returns true if this is a round number, and not just round subject to epsilon.
    */
   public boolean isExactlyRound() {
