@@ -309,12 +309,17 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
   }
 
   /**
-   * Check if the BigDecimal is rounded "close enough" to a given rounding scale.
+   * Check if the BigDecimal is rounded to the same number using two different rounding scales.
+   *
+   * <p> The purpose is to see if the number has been "rounded enough" to the coarse scale. E.g. 12.30001
+   * is "pretty close" to being rounded to 0.1. </p>
    *
    * <p> This rounds the BigDecimal to both the first ('coarse') and to the second ('fine') rounding
    * scales, and compares the two rounded versions. It they match, then 'true' is returned (otherwise 'false'). </p>
    */
-  public boolean isAlmostRoundToScale(RoundingScale roundingScaleCoarse, RoundingScale roundingScaleFine) {
+  public boolean coarseScaleRoundingSameAsFineScale(
+      RoundingScale roundingScaleCoarse,
+      RoundingScale roundingScaleFine) {
     RBPreconditions.checkArgument(
         roundingScaleCoarse.getRawInt() < roundingScaleFine.getRawInt(),
         "The 'coarse' rounding scale %s must be less than the 'fine' rounding scale %s",
