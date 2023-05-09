@@ -10,7 +10,8 @@ import java.util.Set;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 
 /**
- * A map whose values are ClosedSignedFractionRange.
+ * A map whose values are {@link ClosedSignedFractionRange}s.
+ *
  * @see ClosedSignedFractionRange
  */
 public class ClosedSignedFractionRanges<K> {

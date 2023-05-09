@@ -48,7 +48,8 @@ public class ClosedUnitFractionRangeUtilities {
   }
 
   /**
-   * "Stretches" a {@link ClosedUnitFractionRange} to become bigger on each side by a fixed UnitFraction, up to [0, 1].
+   * "Stretches" a {@link ClosedUnitFractionRange} to become bigger on each side by a
+   * fixed UnitFraction, up to [0, 1].
    */
   public static ClosedUnitFractionRange loosenClosedUnitFractionRangeByFixedAmount(
       ClosedUnitFractionRange initialRange,
@@ -65,8 +66,9 @@ public class ClosedUnitFractionRangeUtilities {
    * E.g. [40%, 50%] tightened using a multiplier of 0.8 for upper and lower will give [ 41%, 49% ]
    * using a multiplier of 0 for upper and lower, this would become [ 45%, 45% ].
    *
-   * <p> Using an upper multiplier of 0.5 and a lower multiplier of 0.8 would give [ 41%, 47.5% ].
-   * There is no combination of inputs that should result in throwing an exception. </p>
+   * <p> Using an upper multiplier of 0.5 and a lower multiplier of 0.8 would give [ 41%, 47.5% ]. </p>
+   *
+   * <p> There is no combination of inputs that should result in throwing an exception. </p>
    */
   public static ClosedUnitFractionRange tightenClosedUnitFractionRangeProportionally(
       ClosedUnitFractionRange initialRange,
@@ -96,7 +98,7 @@ public class ClosedUnitFractionRangeUtilities {
   /**
    * If a ClosedUnitFractionRange does not already contain a point, we will 'loosen' it to contain it.
    *
-   * For instance, [0.3, 0.7] will be changed to [0.2, 0.7] using pointToContain = 0.2.
+   * <p> For instance, [0.3, 0.7] will be changed to [0.2, 0.7] using pointToContain = 0.2. </p>
    */
   public static ClosedUnitFractionRange possiblyLoosenToContainPoint(
       ClosedUnitFractionRange initialRange,

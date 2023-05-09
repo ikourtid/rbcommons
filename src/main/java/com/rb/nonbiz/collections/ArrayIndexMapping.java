@@ -8,22 +8,27 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * A map is a mapping of key to value. You can further break down this abstraction
- * a) the mapping from key to int (starting at 0)
- * b) the collection of values being mapped
+ * A map is a mapping of key to value. You can further break down this abstraction:
+ * <ol type="a">
+ *   <li> The mapping from key to int (starting at 0). </li>
+ *   <li> The collection of values being mapped. </li>
+ * </ol>
  *
- * This class represents just (a).
- * If we share only the mapping part across multiple maps, then we only need to specify the values in each map.
- * This trick allows us to create of maps that are
- * a) more memory-efficient: all the objects are in an array (i.e. consecutive)
- * b) faster, because there are no map lookups (even O(1) ones like in a hashmap) - only array lookups
- *    (in the cases where we know the int positions - e.g. because we stored them).
- * c) possibly faster, if the implementing class does some tricks to make lookup faster. This is the case with
- *    MarketDaysIntMapping.
+ * <p> This class represents just (a). </p>
  *
- * The various classes with 'IndexableArray' in their name use this.
+ * <p> If we share only the mapping part across multiple maps, then we only need to specify the values in each map.
+ * This trick allows us to create of maps that are: </p>
+ * <ol type="a">
+ *   <li> More memory-efficient: all the objects are in an array (i.e. consecutive). </li>
+ *   <li> Faster, because there are no map lookups (even O(1) ones like in a hashmap) - only array lookups
+ *        (in the cases where we know the int positions - e.g. because we stored them). </li>
+ *    <li> Possibly faster, if the implementing class does some tricks to make lookup faster. This is the case with
+ *    {@code MarketDaysIntMapping}. </li>
+ * </ol>
  *
- * Of course, this is only applicable when the keys are unique.
+ * <p> The various classes with 'IndexableArray' in their name use this. </p>
+ *
+ * <p> Of course, this is only applicable when the keys are unique. </p>
  */
 public interface ArrayIndexMapping<T> {
 

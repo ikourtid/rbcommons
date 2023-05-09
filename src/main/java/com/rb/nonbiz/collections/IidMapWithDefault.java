@@ -15,7 +15,7 @@ import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 
 /**
  * Basically just an {@link IidMap}, but it also stores a default value, with the semantics that the default value applies
- * when a value for a given InstrumentId is missing.
+ * when a value for a given {@link InstrumentId} is missing.
  *
  * @see IidMap
  */

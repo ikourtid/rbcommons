@@ -12,21 +12,28 @@ import static com.rb.nonbiz.collections.RBSet.rbSet;
  * Check the top-level properties only, and make sure that the required
  * ones are present, and that no properties are present that are
  * neither required nor optional.
- * If all checks pass, return the original jsonObject unchanged.
  *
- * Here, we do something non-standard: the main code is in a static method. This is because there are a few rare cases
+ * <p> If all checks pass, return the original jsonObject unchanged. </p>
+ *
+ * <p> Here, we do something non-standard: the main code is in a static method. This is because there are a few rare cases
  * where we need to call this validator from another static method, where we cannot Inject a JsonValidator.
  * However, in almost all cases, we can (and should) inject a JsonValidator.
- * Hopefully the clunky name 'staticValidate' should prevent you from accidentally using it instead of plain 'validate'.
+ * Hopefully the clunky name 'staticValidate' should prevent you from accidentally using it instead of plain 'validate'. </p>
  */
 public class JsonValidator {
 
+  /**
+   * Validate a JsonObject according to supplied {@link JsonValidationInstructions}.
+   */
   public JsonObject validate(
       JsonObject jsonObject,
       JsonValidationInstructions jsonValidationInstructions) {
     return staticValidate(jsonObject, jsonValidationInstructions);
   }
 
+  /**
+   * The static version of validating a JsonObject according to supplied {@link JsonValidationInstructions}.
+   */
   public static JsonObject staticValidate(
       JsonObject jsonObject,
       JsonValidationInstructions jsonValidationInstructions) {
