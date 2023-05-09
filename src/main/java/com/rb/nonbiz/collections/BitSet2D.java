@@ -8,7 +8,7 @@ import java.util.BitSet;
 /**
  * This is effectively a space-optimized 2-dimensional boolean array.
  *
- * This isn't truly a 2D bitset, but there's constant-time access for row/column
+ * <p> This isn't truly a 2D bitset, but there's constant-time access for row/column. </p>
  */
 public class BitSet2D {
 

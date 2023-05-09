@@ -9,13 +9,13 @@ import static com.rb.nonbiz.collections.RBSets.setUnionOfFirstAndRest;
 /**
  * Helps us check whether a string is one of a set of valid values, but we don't care about capitalization.
  *
- * Internally, we do a trick where we actually only store uppercase strings, and when asked whether a string matches
+ * <p> Internally, we do a trick where we actually only store uppercase strings, and when asked whether a string matches
  * the filter, we check whether the uppercase string matches. We could have chosen lowercase just as well; we just
- * need to be consistent.
+ * need to be consistent. </p>
  *
- * This is the reason why, unlike RBSet, we do not expose the contents of this class as a set. That's also why we call
+ * <p> This is the reason why, unlike {@link RBSet}, we do not expose the contents of this class as a set. That's also why we call
  * this a 'filter' instead of a 'set' - to imply that we don't care about its contents, but rather only about whether
- * a given string matches the filter or not.
+ * a given string matches the filter or not. </p>
  */
 public class CaseInsensitiveStringFilter {
 

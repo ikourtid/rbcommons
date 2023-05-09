@@ -15,9 +15,12 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 
 /**
- * @see ClosedUnitFractionHardAndSoftRanges
+ * Similar to {@link ClosedUnitFractionHardAndSoftRanges}.
  *
- * This is the same, except that it uses the IidMap infrastructure, which is faster than RBMap.
+ * <p> This is the same, except that it uses the {@link IidMap} infrastructure,
+ * which is faster than {@link RBMap}. </p>
+ *
+ * @see ClosedUnitFractionHardAndSoftRange
  */
 public class ClosedUnitFractionIidHardAndSoftRanges implements PrintsInstruments {
 
