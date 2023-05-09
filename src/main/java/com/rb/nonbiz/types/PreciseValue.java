@@ -141,9 +141,10 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
     return snapToRound(unsnapped.asBigDecimal());
   }
   /**
-   * If super very near 0, return 0, otherwise return whatever number was passed.
-   * This is useful e.g. for results of subtraction of 2 quantities that can be slightly off because
-   * of numeric reasons.
+   * If very near 0, return 0, otherwise return whatever number was passed.
+   *
+   * <p> This is useful e.g. for results of subtraction of 2 quantities that can be slightly off because
+   * of numeric reasons. </p>
    */
   public static BigDecimal snapToZero(BigDecimal unsnapped) {
     BigDecimal snapped = snapToRound(unsnapped);
@@ -154,9 +155,10 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
   }
 
   /**
-   * If super very near 0, return 0, otherwise return whatever number was passed.
-   * This is useful e.g. for results of subtraction of 2 quantities that can be slightly off because
-   * of numeric reasons.
+   * If very near 0, return 0, otherwise return whatever number was passed.
+   *
+   * <p> This is useful e.g. for results of subtraction of 2 quantities that can be slightly off because
+   * of numeric reasons. </p>
    */
   public static <T extends PreciseValue<T>> BigDecimal snapToZero(T unsnapped) {
     return snapToZero(unsnapped.asBigDecimal());
@@ -165,10 +167,12 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
   /**
    * Assuming it's possible to do so and not restricted by the generics mechanism
    * (e.g. a comparison between Money and BuyQuantity),
-   * this will compare the BigDecimal values. There's a few cases where this is counterintuitive, e.g.
+   * this will compare the BigDecimal values.
+   *
+   * <p> There's a few cases where this is counterintuitive, e.g.
    * buyQuantity(10).almostEquals(sellQuantity(10), 1e-8) is true.
    * The upside is fewer conversions and fewer cases where we have an unexpected result because
-   * we forgot to do some conversion.
+   * we forgot to do some conversion. </p>
    */
   public <S extends T> boolean almostEquals(S other, Epsilon epsilon) {
     if (other == null) {
@@ -244,8 +248,8 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
    * it is possible that it is 'functionally equal' to its upper bound, but just epsilon above it.
    * In those cases, we want to use #isSafelyLessThan with a tiny epsilon
    *
-   * Note that there is no isSafelyLessThanOrEqualTo; once we start adding a double non-zero epsilon,
-   * that itself will cause some tiny numerical inaccuracy, so it doesn't make sense to do equality comparisons.
+   * <p> Note that there is no isSafelyLessThanOrEqualTo; once we start adding a double non-zero epsilon,
+   * that itself will cause some tiny numerical inaccuracy, so it doesn't make sense to do equality comparisons. </p>
    */
   public boolean isSafelyLessThan(T other, Epsilon epsilon) {
     return this.doubleValue() < other.doubleValue() + epsilon.doubleValue();
@@ -305,7 +309,7 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
   }
 
   /**
-   * Check if the BigDecimal is rounded "close enough" to the first rounding scale.
+   * Check if the BigDecimal is rounded "close enough" to a given rounding scale.
    *
    * <p> This rounds the BigDecimal to both the first ('coarse') and to the second ('fine') rounding
    * scales, and compares the two rounded versions. It they match, then 'true' is returned (otherwise 'false'). </p>
