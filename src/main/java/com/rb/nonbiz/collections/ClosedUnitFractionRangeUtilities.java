@@ -17,11 +17,10 @@ import static com.rb.nonbiz.types.Interpolator.interpolateUsingPreference;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 /**
- * Various static functions pertaining to ClosedUnitFractionRanges objects.
+ * Various static functions pertaining to {@link ClosedUnitFractionRange} objects.
  *
- * <p> We would normally have named it as the plural of {@link ClosedUnitFractionRange},
- * to follow the usual convention,
- * but ClosedUnitFractionRanges already an existing class. </p>
+ * We would normally have named this as the plural of ClosedUnitFractionRange, to follow the usual convention,
+ * but {@link ClosedUnitFractionRanges} already an existing class.
  */
 public class ClosedUnitFractionRangeUtilities {
 
