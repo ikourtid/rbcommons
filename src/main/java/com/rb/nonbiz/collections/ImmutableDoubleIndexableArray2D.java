@@ -79,7 +79,7 @@ public class ImmutableDoubleIndexableArray2D<R, C> implements IndexableDoubleDat
    * and also the row keys are the same as the column keys, and appear in the same numeric order.
    *
    * <p> Note that the row and value types must be the same, and that type must implement a non-trivial equals
-   * & hashCode method, which is true here (it's not an assumption), because otherwise they could not be keys
+   * and hashCode method, which is true here (it's not an assumption), because otherwise they could not be keys
    * to the {@link ArrayIndexMapping} that specifies the positions of the row keys and column keys in the 2d array. </p>
    *
    * <p> Here is an example that would return true: </p>

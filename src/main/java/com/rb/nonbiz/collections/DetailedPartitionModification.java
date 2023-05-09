@@ -44,7 +44,7 @@ import static java.util.Map.Entry.comparingByValue;
  *
  *   <p> See the getters for explanations on the epsilons. They are not the same, intentionally. If, for example,
  *   each individual item to be removed has precision in the single bps (e.g. due to rounding), i.e. it is
- *   imprecise to 0.5 bps, then it's possible that many such < 0.5 bps deviations (assuming they don't cancel out)
+ *   imprecise to 0.5 bps, then it's possible that many such &lt; 0.5 bps deviations (assuming they don't cancel out)
  *   add up to much more than 1 bps, in which case {@link #getEpsilonForNetAdditionSanityCheck()} should be larger
  *   than {@link #getEpsilonForRemovalSanityChecks()}. </p>
  */

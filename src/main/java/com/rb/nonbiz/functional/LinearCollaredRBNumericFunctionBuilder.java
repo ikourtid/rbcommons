@@ -24,11 +24,11 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  * <p> In ASCII art: </p>
  * <pre>
  *                 (maxX, maxY)
- *                      *--------------->
+ *                      *----------------
  *                     /
  *                    /
  *                   /
- * <----------------*
+ * -----------------*
  *             (minX, minY)
  * </pre>
  *
@@ -40,11 +40,11 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  * <p> If <i>minY</i> > <i>maxY</i>, the upwardly-slanted line drawn above would slant downwards: </p>
  * <pre>
  *            (minX, minY)
- * <---------------*
+ * ----------------*
  *                  \
  *                   \
  *                    \
- *                     *--------------->
+ *                     *----------------
  *                (maxX, maxY)
  * </pre>
 
