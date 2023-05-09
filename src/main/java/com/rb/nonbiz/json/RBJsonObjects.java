@@ -7,17 +7,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.asset.InstrumentId;
-import com.rb.nonbiz.collections.ArrayIndexMapping;
-import com.rb.nonbiz.collections.ClosedRange;
-import com.rb.nonbiz.collections.IidMap;
-import com.rb.nonbiz.collections.MutableIidMap;
-import com.rb.nonbiz.collections.MutableRBMap;
-import com.rb.nonbiz.collections.MutableRBSet;
-import com.rb.nonbiz.collections.RBMap;
-import com.rb.nonbiz.collections.RBSet;
-import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
+import com.rb.nonbiz.collections.*;
 import com.rb.nonbiz.text.HasUniqueId;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
+import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Map.Entry;
@@ -37,6 +30,7 @@ import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpect
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
 import static com.rb.nonbiz.collections.Pair.pair;
+import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
@@ -90,6 +84,15 @@ public class RBJsonObjects {
     // because InstrumentId keys are unique, and they get serialized in a standardized way.
     return jsonObject(
         map.transformKeysAndValuesCopy(keySerializer, valueSerializer));
+  }
+
+  public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>, V> JsonObject rbEnumMapToJsonObject(
+      RBEnumMap<E, V> rbEnumMap,
+      Function<V, JsonElement> valueSerializer) {
+    JsonObject jsonObject = new JsonObject();
+    rbEnumMap.forEachEntryInKeyOrder( (enumConstantKey, jsonElement) -> jsonObject.add(
+        enumConstantKey.toUniqueStableString(), valueSerializer.apply(jsonElement)));
+    return jsonObject;
   }
 
   /**
@@ -219,6 +222,16 @@ public class RBJsonObjects {
     return jsonObject.entrySet()
         .stream()
         .map(entry -> deserializer.apply(entry.getKey(), entry.getValue()));
+  }
+
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> jsonObjectToRBEnumMap(
+      JsonObject jsonObject,
+      Class<E> enumClass,
+      Function<String, E> keyDeserializer,
+      Function<JsonElement, V> valueDeserializer) {
+    return newRBEnumMap(
+        enumClass,
+        jsonObjectToRBMap(jsonObject, keyDeserializer, valueDeserializer));
   }
 
   public static <K, V> RBMap<K, V> jsonObjectToRBMap(

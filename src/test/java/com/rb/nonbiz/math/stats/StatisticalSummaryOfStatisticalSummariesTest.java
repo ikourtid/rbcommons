@@ -12,7 +12,7 @@ import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.makeTestStatisticalSummary;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.statisticalSummaryMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
-import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.enumMapMatcher;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbEnumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
@@ -99,7 +99,7 @@ public class StatisticalSummaryOfStatisticalSummariesTest extends RBTestMatcher<
   public static TypeSafeMatcher<StatisticalSummaryOfStatisticalSummaries> statisticalSummaryOfStatisticalSummariesMatcher(
       StatisticalSummaryOfStatisticalSummaries expected) {
     return makeMatcher(expected,
-        match(v -> v.getRawEnumMap(), f -> enumMapMatcher(f, f2 -> statisticalSummaryMatcher(f2, DEFAULT_EPSILON_1e_8))));
+        match(v -> v.getRawEnumMap(), f -> rbEnumMapMatcher(f, f2 -> statisticalSummaryMatcher(f2, DEFAULT_EPSILON_1e_8))));
   }
 
 }

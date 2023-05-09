@@ -1,22 +1,24 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.Maps;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+
 /**
  * This is one of the rare mutable data classes in the codebase.
- * Typically, we will build a MutableRBMap and then 'lock' it into an RBMap in the same method, and then return it.
- * We should (almost) never pass around a MutableRBMap.
+ * Typically, we will build a {@link MutableRBMap} and then 'lock' it into an {@link RBMap} in the same method,
+ * and then return it. We should (almost) never pass around a {@link MutableRBMap}.
  */
 public class MutableRBMap<K, V> {
 
@@ -77,17 +79,15 @@ public class MutableRBMap<K, V> {
   /**
    * #get on a regular Map returns null if the value is not there. We don't like nulls in the codebase,
    * plus that behavior is confusing to someone new to Java.
-   * Instead, MutableRBMap has:
-   * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
-   * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
+   * Instead, {@link MutableRBMap} has:
+   * {@link #getOptional(Object)} (which will return an Optional.empty() if there is no value for the specified key),
+   * {@link #getOrThrow(Object)}, which assumes the value is there (throws otherwise), and returns the value
    *
-   * Ideally, since we should never be passing a MutableRBMap around, you should use this sparingly
-   * and only get values from the 'locked' RBMap that you'll convert the MutableRBMap to.
+   * <p> Ideally, since we should never be passing a {@link MutableRBMap} around, you should use this sparingly
+   * and only get values from the 'locked' {@link RBMap} that you'll convert the {@link MutableRBMap} to. </p>
    */
   public Optional<V> getOptional(K key) {
-    if (key == null) {
-      throw new IllegalArgumentException("A MutableRBMap does not allow null keys");
-    }
+    checkKeyIsNotNull(key);
     return Optional.ofNullable(rawMap.get(key));
   }
 
@@ -95,19 +95,17 @@ public class MutableRBMap<K, V> {
    * #get on a regular Map returns null if the value is not there. We don't like nulls in the codebase,
    * plus that behavior is confusing to someone new to Java.
    * Instead, MutableRBMap has:
-   * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
-   * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
+   * {@link #getOptional(Object)} (which will return an Optional.empty() if there is no value for the specified key),
+   * {@link #getOrThrow(Object)}, which assumes the value is there (throws otherwise), and returns the value
    *
-   * Ideally, since we should never be passing a MutableRBMap around, you should use this sparingly
-   * and only get values from the 'locked' RBMap that you'll convert the MutableRBMap to.
+   * <p> Ideally, since we should never be passing a MutableRBMap around, you should use this sparingly
+   * and only get values from the 'locked' RBMap that you'll convert the MutableRBMap to. </p>
    */
   public V getOrThrow(K key) {
-    if (key == null) {
-      throw new IllegalArgumentException("A MutableRBMap does not allow null keys");
-    }
+    checkKeyIsNotNull(key);
     V value = rawMap.get(key);
     if (value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "no value exists in the map for key %s ; map is %s",
           key, this));
     }
@@ -118,9 +116,7 @@ public class MutableRBMap<K, V> {
    * Same as getOrThrow above, but lets you specify the error message if a key is missing.
    */
   public V getOrThrow(K key, String template, Object...args) {
-    if (key == null) {
-      throw new IllegalArgumentException("A MutableRBMap does not allow null keys");
-    }
+    checkKeyIsNotNull(key);
     Optional<V> value = getOptional(key);
     RBPreconditions.checkArgument(value.isPresent(), template, args);
     return value.get();
@@ -200,7 +196,7 @@ public class MutableRBMap<K, V> {
    */
   public V put(K key, V value) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
           key, value));
     }
@@ -214,7 +210,7 @@ public class MutableRBMap<K, V> {
    */
   public void putIfAbsent(K key, V value) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
           key, value));
     }
@@ -228,7 +224,7 @@ public class MutableRBMap<K, V> {
    */
   public void putIfAbsent(K key, Supplier<V> valueSupplier) {
     if (key == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Key cannot be null in a MutableRBMap; value was ( %s ) ",
           valueSupplier.get()));
     }
@@ -247,13 +243,13 @@ public class MutableRBMap<K, V> {
    */
   public void putAssumingAbsent(K key, V value) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
           key, value));
     }
     V previousValue = put(key, value);
     if (previousValue != null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Trying to add value %s to key %s which already maps to %s",
           value, key, previousValue));
     }
@@ -267,13 +263,13 @@ public class MutableRBMap<K, V> {
    */
   public void putAssumingAbsentAllowingNullValue(K key, V value) {
     if (key == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Key ( %s ) cannot be null in a MutableRBMap; value was %s",
           key, value));
     }
     V previousValue = rawMap.put(key, value);
     if (previousValue != null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Trying to add value %s to key %s which already maps to %s",
           value, key, previousValue));
     }
@@ -287,16 +283,53 @@ public class MutableRBMap<K, V> {
    */
   public void putAssumingPresent(K key, V value) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
           key, value));
     }
     V previousValue = put(key, value);
     if (previousValue == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Trying to add value %s to key %s which is not there yet",
           value, key));
     }
+  }
+
+  /**
+   * Adds a key/value mapping.
+   *
+   * <p> If a value already exists for the supplied key, it will not get replaced, but this will throw an
+   * exception if the new value is different than the existing value per the predicate supplied.
+   * This is useful for objects that do not implement equals/hashCode, and for which we need to pass in a lambda
+   * to define what equality means. It is also useful for objects that do implement equals/hashCode, but for which
+   * we want to use different criteria for equality than the default equals/hashCode. </p>
+   *
+   * <p> For the case where the new value is similar to the old value (per the {@link BiPredicate}), we could
+   * also have chosen the semantics of 'always replace existing value'. This will make a difference in cases where the
+   * similarity predicate is inexact, such as if it uses an epsilon. In that case, the actual value under the key
+   * would be different between the two semantics. At any rate, we will choose the 'don't replace if similar'
+   * semantics. </p>
+   *
+   * <p> Returns true if a new value was added, and false if we were trying to replace a 'similar' value
+   * per the {@link BiPredicate} supplied. </p>
+   */
+  public boolean putAssumingNoChange(K key, V value, BiPredicate<V, V> valuesAreSimilar) {
+    if (key == null || value == null) {
+      throw new IllegalArgumentException(smartFormat(
+          "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
+          key, value));
+    }
+    V previousValue = rawMap.get(key);
+    if (previousValue == null) {
+      put(key, value);
+      return true;
+    }
+
+    RBPreconditions.checkArgument(
+        valuesAreSimilar.test(previousValue, value),
+        "In putAssumingNoChange: key %s has value %s which is different than new value %s",
+        key, previousValue, value);
+    return false;
   }
 
   /**
@@ -383,6 +416,12 @@ public class MutableRBMap<K, V> {
   @Override
   public String toString() {
     return rawMap.toString();
+  }
+
+  private void checkKeyIsNotNull(K key) {
+    if (key == null) {
+      throw new IllegalArgumentException("A MutableRBMap does not allow null keys");
+    }
   }
 
 }

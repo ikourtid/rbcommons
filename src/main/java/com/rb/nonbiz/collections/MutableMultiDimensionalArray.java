@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+import com.rb.nonbiz.text.PrintsMultilineString;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
@@ -22,7 +23,7 @@ import java.util.stream.Stream;
  *
  * The iterator iterates in the order defined by the MultidimensionalCounter.
  */
-public class MutableMultiDimensionalArray<T> implements Iterable<T> {
+public class MutableMultiDimensionalArray<T> implements Iterable<T>, PrintsMultilineString {
 
   private final MultidimensionalCounter multidimensionalCounter;
   private final T[] values;
@@ -83,6 +84,13 @@ public class MutableMultiDimensionalArray<T> implements Iterable<T> {
     return Strings.format("[MMDA dimensions: %s ; %s MMDA]",
         Joiner.on(' ').join(IntStream.of(multidimensionalCounter.getSizes()).iterator()),
         Joiner.on(' ').join(Stream.of(values).iterator()));
+  }
+
+  @Override
+  public String toMultilineString() {
+    return Strings.format("[MMDA dimensions:\n%s\n ; \n%s\nMMDA]",
+        Joiner.on('\n').join(IntStream.of(multidimensionalCounter.getSizes()).iterator()),
+        Joiner.on('\n').join(Stream.of(values).iterator()));
   }
 
   @Override

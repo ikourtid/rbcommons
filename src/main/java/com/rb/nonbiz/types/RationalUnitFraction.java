@@ -4,6 +4,7 @@ import com.rb.nonbiz.text.Strings;
 
 import java.util.OptionalDouble;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 /**
@@ -37,7 +38,7 @@ public class RationalUnitFraction extends PreciseValue<RationalUnitFraction> {
 
   public static RationalUnitFraction rationalUnitFraction(int numerator, int denominator) {
     if (numerator < 0 || denominator <= 0) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "A rational unitFraction must have numerator >= 0 and denominator > 0; got %s / %s",
           numerator, denominator));
     }

@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.Range;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.stream.IntStream;
 
@@ -55,6 +56,11 @@ public class RBArrays {
     double[] array = new double[size];
     array[indexOfItemWithValue1] = 1;
     return array;
+  }
+
+  public static int[] intArrayWithNCopies(int size, int sharedValue) {
+    RBPreconditions.checkArgument(size > 0, "The size argument must be greater than zero.");
+    return Collections.nCopies(size, sharedValue).stream().mapToInt(i -> i).toArray();
   }
 
 }

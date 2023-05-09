@@ -4,7 +4,6 @@ import com.google.inject.Singleton;
 import com.rb.biz.guice.RBClockModifier.RBClockModifierToken;
 import com.rb.nonbiz.util.RBPreconditions;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -19,9 +18,13 @@ import static com.google.common.collect.Maps.newHashMap;
 public class RBThreadLocalClock implements RBClock {
 
   public static final ZoneId EAST_COAST_ZONE_ID = ZoneId.of("America/New_York");
-  private static final LocalDateTime START_TIME = LocalDateTime.of(1974, 4, 4, 4, 4, 4, 4);
+
+  // This value should not matter, but we need some valid value for the clock to be set to when it is instantiated
+  // with the no-arg constructor by Guice.
+  private static final LocalDateTime START_TIME = LocalDateTime.of(1975, 5, 5, 5, 5, 5, 5);
 
   private static final Map<Long, ThreadLocalClock> clocks = newHashMap();
+
 
   private static class ThreadLocalClock {
 
@@ -32,6 +35,7 @@ public class RBThreadLocalClock implements RBClock {
     }
 
   }
+
 
   synchronized public ThreadLocalClock getClock() {
     long threadId = Thread.currentThread().getId();

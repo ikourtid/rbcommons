@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 import java.util.Collection;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.UnitFraction.isValidUnitFraction;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
@@ -157,7 +158,7 @@ public class SignedFraction extends PreciseValue<SignedFraction> {
 
   public SignedFraction divide(BigDecimal other) {
     if (other.compareTo(BigDecimal.ZERO) == 0) {
-      throw new IllegalArgumentException(Strings.format("Cannot divide %s by zero", asBigDecimal()));
+      throw new IllegalArgumentException(smartFormat("Cannot divide %s by zero", asBigDecimal()));
     }
     return signedFraction(asBigDecimal().divide(other, DEFAULT_MATH_CONTEXT));
   }

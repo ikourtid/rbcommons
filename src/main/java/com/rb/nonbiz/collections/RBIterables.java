@@ -1,7 +1,5 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.text.Strings;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +11,7 @@ import java.util.function.Predicate;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.RBIterators.consecutiveNonOverlappingPairsIterator;
 import static com.rb.nonbiz.collections.RBIterators.consecutivePairsIterator;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Various static methods pertaining to Iterable objects.
@@ -60,7 +59,7 @@ public class RBIterables {
   public static double weightedAverage(List<Double> values, List<Double> weights) {
     double sumOfWeights = 0;
     if (values.size() != weights.size()) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "There are %s values but %s weights in the weighted average. Values= %s ; weights= %s",
           values.size(), weights.size(), values, weights));
     }
@@ -71,7 +70,7 @@ public class RBIterables {
     for (int i = 0; i < values.size(); i++) {
       double weight = weights.get(i);
       if (weight < 0) {
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Only non-negative weights are allowed; not %s ; values= %s ; weights= %s",
             weight, values, weights));
       }
@@ -79,7 +78,7 @@ public class RBIterables {
       sumOfWeights += weight;
     }
     if (sumOfWeights <= 0) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Sum of weights must be >= 0. Values= %s ; weights= %s",
           values, weights));
     }

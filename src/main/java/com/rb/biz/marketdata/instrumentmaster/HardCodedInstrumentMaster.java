@@ -5,6 +5,7 @@ import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidBiMap;
 import com.rb.nonbiz.collections.IidMap;
+import com.rb.nonbiz.collections.IidSet;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import static com.rb.nonbiz.collections.IidBiMap.iidBiMap;
 import static com.rb.nonbiz.collections.IidBiMaps.emptyIidBiMap;
 import static com.rb.nonbiz.collections.IidBiMaps.iidBiMapOf;
 import static com.rb.nonbiz.collections.IidBiMaps.singletonIidBiMap;
+import static com.rb.nonbiz.collections.IidSetSimpleConstructors.newIidSet;
 
 /**
  * This is useful in test when we want to create an {@link InstrumentMaster} with some mappings hardcoded,
@@ -89,6 +91,10 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
         instrumentId3, symbol(symbol3),
         instrumentId4, symbol(symbol4),
         instrumentId5, symbol(symbol5)));
+  }
+
+  public IidSet getAllInstrumentIdsAsIidSet() {
+    return newIidSet(hardCodedSymbolBiMap.getInstrumentIdFromItem().values());
   }
 
   @Override

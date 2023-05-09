@@ -2,19 +2,25 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.rb.nonbiz.functional.TriConsumer;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
+import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
+import static com.rb.nonbiz.collections.PairOfSameTypeTest.pairOfSameTypeEqualityMatcher;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertNullPointerException;
@@ -27,6 +33,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNot.not;
 import static org.jmock.AbstractExpectations.same;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class MutableRBMapTest {
@@ -198,6 +205,38 @@ public class MutableRBMapTest {
     assertEquals(
         singletonRBMap(123, ImmutableList.of("x", "y")),
         newRBMap(mutableMap));
+  }
+
+  @Test
+  public void testPutAssumingNoChange() {
+    MutableRBMap<Integer, PairOfSameType<String>> mutableMap = newMutableRBMap();
+    BiFunction<String, String, Boolean> adder = (str1, str2) -> mutableMap.putAssumingNoChange(
+        123,
+        pairOfSameType(str1, str2),
+        // For this test, we are intentionally only checking the left side of the pair.
+        (pair1, pair2) -> pair1.getLeft().equals(pair2.getLeft()));
+    BiConsumer<String, String> checker = (str1, str2) -> assertThat(
+        newRBMap(mutableMap),
+        rbMapMatcher(
+            singletonRBMap(
+                123, pairOfSameType(str1, str2)),
+            f -> pairOfSameTypeEqualityMatcher(f)));
+
+    assertTrue(
+        "true means value will be added",
+        adder.apply("l1", "r1"));
+    checker.accept("l1", "r1");
+
+    // Cannot add a pair with a different left value, because the comparison predicate will count it as a change
+    assertIllegalArgumentException( () -> adder.apply("l2", "r1"));
+    checker.accept("l1", "r1");
+
+    // OK to add a pair with a different *right* value, because the comparison predicate only looks at the left item
+    assertFalse(
+        "false means value will not be added",
+        adder.apply("l1", "r2"));
+    // However, per the semantics of putAssumingNoChange, the value will not be replaced.
+    checker.accept("l1", "r1");
   }
 
 }

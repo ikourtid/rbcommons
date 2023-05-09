@@ -26,6 +26,7 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_MONEY;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.PreciseValue.*;
@@ -387,6 +388,48 @@ public class PreciseValueTest {
     assertFalse(signedMoney(1.23).isRoundToScale(roundingScale(1)));
     assertTrue( signedMoney(1.23).isRoundToScale(roundingScale(2)));
     assertTrue( signedMoney(1.23).isRoundToScale(roundingScale(3)));
+  }
+
+  @Test
+  public void testCoarseRoundingSameAsFineScale() {
+    // the first rounding scale must be < the second rounding scale
+    assertIllegalArgumentException( () -> DUMMY_MONEY.coarseScaleRoundingSameAsFineScale(roundingScale(-2), roundingScale(-2)));
+    assertIllegalArgumentException( () -> DUMMY_MONEY.coarseScaleRoundingSameAsFineScale(roundingScale(-2), roundingScale(-3)));
+
+    assertIllegalArgumentException( () -> DUMMY_MONEY.coarseScaleRoundingSameAsFineScale(roundingScale(2), roundingScale(2)));
+    assertIllegalArgumentException( () -> DUMMY_MONEY.coarseScaleRoundingSameAsFineScale(roundingScale(3), roundingScale(2)));
+
+    // Rounding to 3 digits gives the same result as rounding to some larger number of digits
+    assertTrue(signedMoney(1.229_999).coarseScaleRoundingSameAsFineScale(roundingScale(2), roundingScale(3)));
+    assertTrue(signedMoney(1.229_99 ).coarseScaleRoundingSameAsFineScale(roundingScale(2), roundingScale(3)));
+    assertTrue(signedMoney(1.23     ).coarseScaleRoundingSameAsFineScale(roundingScale(2), roundingScale(3)));
+    assertTrue(signedMoney(1.230_01 ).coarseScaleRoundingSameAsFineScale(roundingScale(2), roundingScale(3)));
+    assertTrue(signedMoney(1.230_001).coarseScaleRoundingSameAsFineScale(roundingScale(2), roundingScale(3)));
+
+    assertFalse(signedMoney(1.23    ).coarseScaleRoundingSameAsFineScale(roundingScale(1), roundingScale(2)));
+    assertFalse(signedMoney(1.23    ).coarseScaleRoundingSameAsFineScale(roundingScale(1), roundingScale(5)));
+
+    // try large numbers
+    // Rounding to 3 digits gives the same result as rounding to some larger number of digits
+    assertTrue( signedMoney(-123_456_789_012.129_999).coarseScaleRoundingSameAsFineScale(roundingScale(3), roundingScale(8)));
+    assertTrue( signedMoney(-123_456_789_012.129_999).coarseScaleRoundingSameAsFineScale(roundingScale(3), roundingScale(5)));
+    assertTrue( signedMoney(-123_456_789_012.129_999).coarseScaleRoundingSameAsFineScale(roundingScale(3), roundingScale(4)));
+    assertTrue( signedMoney(-123_456_789_012.123_001).coarseScaleRoundingSameAsFineScale(roundingScale(3), roundingScale(8)));
+    assertTrue( signedMoney(-123_456_789_012.123_001).coarseScaleRoundingSameAsFineScale(roundingScale(3), roundingScale(5)));
+    assertTrue( signedMoney(-123_456_789_012.123_001).coarseScaleRoundingSameAsFineScale(roundingScale(3), roundingScale(4)));
+
+    // rounding to N digits gives a different answer from rounding to M digits.
+    assertFalse(signedMoney(-123_456_789_012.123).coarseScaleRoundingSameAsFineScale(roundingScale(-1), roundingScale(0)));
+    assertFalse(signedMoney(-123_456_789_012.123).coarseScaleRoundingSameAsFineScale(roundingScale( 0), roundingScale(1)));
+    assertFalse(signedMoney(-123_456_789_012.123).coarseScaleRoundingSameAsFineScale(roundingScale( 1), roundingScale(2)));
+    assertFalse(signedMoney(-123_456_789_012.123).coarseScaleRoundingSameAsFineScale(roundingScale( 2), roundingScale(3)));
+
+    // can also check rounding to a number of digits < 0
+    assertTrue( signedMoney(456_001.23).coarseScaleRoundingSameAsFineScale(roundingScale(-3), roundingScale(-2)));
+    assertTrue( signedMoney(456_001.23).coarseScaleRoundingSameAsFineScale(roundingScale(-3), roundingScale(-1)));
+
+    assertFalse(signedMoney(456_001.23).coarseScaleRoundingSameAsFineScale(roundingScale(-3), roundingScale( 0)));
+    assertFalse(signedMoney(456_001.23).coarseScaleRoundingSameAsFineScale(roundingScale(-3), roundingScale( 1)));
   }
 
   @Test

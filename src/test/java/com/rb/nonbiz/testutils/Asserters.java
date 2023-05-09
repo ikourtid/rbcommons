@@ -21,6 +21,7 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.singletonIidSet;
 import static com.rb.nonbiz.collections.IidSetTest.iidSetMatcher;
@@ -123,9 +124,14 @@ public class Asserters {
   }
 
   public static void assertThrowsAnyException(Runnable runnable) {
+    assertThrowsAnyException(runnable, exception -> true);
+  }
+
+  public static void assertThrowsAnyException(Runnable runnable, Predicate<Exception> exceptionExpectation) {
     try {
       runnable.run();
     } catch (Exception exception) {
+      assertTrue(exceptionExpectation.test(exception));
       return;
     }
     fail("Expected exception of any type; got no exception");
@@ -329,6 +335,16 @@ public class Asserters {
   }
 
   public static <P extends PreciseValue<? super P>> P preciseValueExplained(P expected, P actual) {
+    assertAlmostEquals(
+        Strings.format(
+            "You have a mistake in your calculations (hopefully not in the test itself) for value= %s", expected),
+        expected,
+        actual,
+        DEFAULT_EPSILON_1e_8);
+    return expected;
+  }
+
+  public static <V extends ImpreciseValue<? super V>> V impreciseValueExplained(V expected, V actual) {
     assertAlmostEquals(
         Strings.format(
             "You have a mistake in your calculations (hopefully not in the test itself) for value= %s", expected),

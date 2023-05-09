@@ -1,14 +1,17 @@
 package com.rb.nonbiz.math.stats;
 
+import com.rb.nonbiz.collections.MutableRBEnumMap;
+import com.rb.nonbiz.collections.RBEnumMap;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
-import java.util.EnumMap;
 import java.util.Iterator;
 
+import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMap;
+import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.getStatisticalSummaryField;
-import static com.rb.nonbiz.util.RBEnumMaps.transformEnumMap;
+import static com.rb.nonbiz.util.RBEnumMaps.transformRBEnumMap;
 
 /**
  * @see StatisticalSummaryOfStatisticalSummaries
@@ -26,11 +29,11 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
    */
   public static class StatisticalSummaryOfStatisticalSummaries {
 
-    private final EnumMap<StatisticalSummaryAspect, StatisticalSummary> byStatisticalSummaryAspect;
+    private final RBEnumMap<StatisticalSummaryAspect, StatisticalSummary> byStatisticalSummaryAspect;
     private final int numStatisticalSummaries;
 
     private StatisticalSummaryOfStatisticalSummaries(
-        EnumMap<StatisticalSummaryAspect, StatisticalSummary> byStatisticalSummaryAspect,
+        RBEnumMap<StatisticalSummaryAspect, StatisticalSummary> byStatisticalSummaryAspect,
         int numStatisticalSummaries) {
       this.byStatisticalSummaryAspect = byStatisticalSummaryAspect;
       this.numStatisticalSummaries = numStatisticalSummaries;
@@ -39,7 +42,7 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
     /**
      * Avoid using this when you can use the clearer getters below.
      */
-    public EnumMap<StatisticalSummaryAspect, StatisticalSummary> getRawEnumMap() {
+    public RBEnumMap<StatisticalSummaryAspect, StatisticalSummary> getRawEnumMap() {
       return byStatisticalSummaryAspect;
     }
 
@@ -53,7 +56,7 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
     }
 
     public StatisticalSummary getStatisticalSummary(StatisticalSummaryAspect statisticalSummaryAspect) {
-      return byStatisticalSummaryAspect.get(statisticalSummaryAspect);
+      return byStatisticalSummaryAspect.getOrThrow(statisticalSummaryAspect);
     }
 
     /**
@@ -70,8 +73,8 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
     RBPreconditions.checkArgument(
         iterator.hasNext(),
         "You cannot call StatisticalSummaryOfStatisticalSummaries#calculate on an empty iterator");
-    EnumMap<StatisticalSummaryAspect, SummaryStatistics> byStatisticalSummaryAspect =
-        new EnumMap<>(StatisticalSummaryAspect.class);
+    MutableRBEnumMap<StatisticalSummaryAspect, SummaryStatistics> byStatisticalSummaryAspect =
+        newMutableRBEnumMap(StatisticalSummaryAspect.class);
     for (StatisticalSummaryAspect statisticalSummaryAspect : StatisticalSummaryAspect.values()) {
       byStatisticalSummaryAspect.put(statisticalSummaryAspect, new SummaryStatistics());
     }
@@ -82,7 +85,7 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
       // The naming is supposed to reflect e.g. 'min of averages'.
       for (StatisticalSummaryAspect ofStatisticalSummaryAspect : StatisticalSummaryAspect.values()) {
         // This is e.g. for all the mins
-        SummaryStatistics statisticalSummaryForAspect = byStatisticalSummaryAspect.get(ofStatisticalSummaryAspect);
+        SummaryStatistics statisticalSummaryForAspect = byStatisticalSummaryAspect.getOrThrow(ofStatisticalSummaryAspect);
         double inputValueForThisItem = getStatisticalSummaryField(inputStatisticalSummary, ofStatisticalSummaryAspect);
         statisticalSummaryForAspect.addValue(inputValueForThisItem);
       }
@@ -90,8 +93,8 @@ public class StatisticalSummaryOfStatisticalSummariesCalculator {
     // Unfortunately we have to 'transform' the values here, even though it's just a cast from SummaryStatistics
     // to its interface, StatisticalSummary.
     return new StatisticalSummaryOfStatisticalSummaries(
-        transformEnumMap(
-            byStatisticalSummaryAspect, summaryStatistics -> (StatisticalSummary) summaryStatistics),
+        transformRBEnumMap(
+            newRBEnumMap(byStatisticalSummaryAspect), summaryStatistics -> (StatisticalSummary) summaryStatistics),
         numStatisticalSummaries);
   }
 

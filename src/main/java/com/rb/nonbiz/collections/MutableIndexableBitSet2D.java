@@ -1,7 +1,8 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.rb.nonbiz.text.Strings;
+
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * See #MutableIndexableArray2D.
@@ -46,7 +47,7 @@ public class MutableIndexableBitSet2D<R, C> {
     int rowIndex = rowMapping.getIndexOrThrow(rowKey);
     int columnIndex = columnMapping.getIndexOrThrow(columnKey);
     if (rawBitSet.get(rowIndex, columnIndex)) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "You are trying to turn off the bit for ( %s , %s ) aka ( %s , %s ) but it's already on",
           rowKey, columnKey, rowIndex, columnIndex));
     }

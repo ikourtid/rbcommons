@@ -5,6 +5,7 @@ import com.google.common.collect.RangeMap;
 import com.rb.nonbiz.collections.HasLongMap;
 import com.rb.nonbiz.collections.HasLongSet;
 import com.rb.nonbiz.collections.IidMap;
+import com.rb.nonbiz.collections.RBEnumMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
@@ -22,6 +23,8 @@ import org.hamcrest.TypeSafeMatcher;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -30,6 +33,7 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.rangeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.epsilonForNumericsElseEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
@@ -168,6 +172,28 @@ public class RBMapMatchers {
     };
   }
 
+  public static <E extends Enum<E>, V> TypeSafeMatcher<RBEnumMap<E, V>> rbEnumMapMatcher(
+      RBEnumMap<E, V> expected,
+      MatcherGenerator<V> valueMatcherGenerator) {
+    return makeMatcher(expected, actual -> {
+      if (!expected.keySet().equals(actual.keySet())) {
+        return false;
+      }
+      for (Entry<E, V> entryInExpected : expected.entrySet()) {
+        E enumKey = entryInExpected.getKey();
+        V valueInExpected = entryInExpected.getValue();
+        if (!valueMatcherGenerator.apply(valueInExpected).matches(actual.getOrThrow(enumKey))) {
+          return false;
+        }
+      }
+      return true; // no mismatch found for any of the enum keys.
+    });
+  }
+
+  public static <E extends Enum<E>, V> TypeSafeMatcher<RBEnumMap<E, V>> rbEnumMapEqualityMatcher(
+      RBEnumMap<E, V> expected) {
+    return rbEnumMapMatcher(expected, f -> typeSafeEqualTo(f));
+  }
 
   public static <K extends Comparable, V> TypeSafeMatcher<RangeMap<K, V>> rangeMapGeneralMatcher(
       RangeMap<K, V> expected, MatcherGenerator<K> keysMatcherGenerator, MatcherGenerator<V> valuesMatcherGenerator) {

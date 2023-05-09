@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.IidMapConstructors.iidMapFromStream;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
+import static com.rb.nonbiz.collections.RBOptionals.filterPresentOptionals;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonDoubleRoundedTo6Digits;
@@ -175,6 +176,15 @@ public class RBJsonArrays {
     return iteratorToJsonArray(list.size(), list.iterator(), itemSerializer);
   }
 
+  /**
+   * Convert a List of Optionals into a JsonArray consisting only of the list elements that are not Optional.empty().
+   */
+  public static <T> JsonArray listOfOptionalsToJsonArray(
+      List<Optional<T>> list,
+      Function<T, JsonElement> itemSerializer) {
+    return listToJsonArray(filterPresentOptionals(list), itemSerializer);
+  }
+
   public static <T> JsonArray streamToJsonArray(int size, Stream<T> stream, Function<T, JsonElement> itemSerializer) {
     return iteratorToJsonArray(size, stream.iterator(), itemSerializer);
   }
@@ -272,9 +282,9 @@ public class RBJsonArrays {
     // values at each point, and strings don't make sense.
     return
         Number        .class.isAssignableFrom(sharedClass) ? toJsonArrayIfNotAllZeros(list, v -> ((Number)         v).doubleValue()) :
-            PreciseValue  .class.isAssignableFrom(sharedClass) ? toJsonArrayIfNotAllZeros(list, v -> ((PreciseValue)   v).doubleValue()) :
-                ImpreciseValue.class.isAssignableFrom(sharedClass) ? toJsonArrayIfNotAllZeros(list, v -> ((ImpreciseValue) v).doubleValue()) :
-                    Optional.of(jsonArray(list.size(), list.stream().map(v -> jsonString(v.toString()))));
+        PreciseValue  .class.isAssignableFrom(sharedClass) ? toJsonArrayIfNotAllZeros(list, v -> ((PreciseValue)   v).doubleValue()) :
+        ImpreciseValue.class.isAssignableFrom(sharedClass) ? toJsonArrayIfNotAllZeros(list, v -> ((ImpreciseValue) v).doubleValue()) :
+        Optional.of(jsonArray(list.size(), list.stream().map(v -> jsonString(v.toString()))));
   }
 
   private static <T> Optional<JsonArray> toJsonArrayIfNotAllZeros(List<T> list, ToDoubleFunction<T> converter) {
@@ -282,10 +292,10 @@ public class RBJsonArrays {
         .map(v -> converter.applyAsDouble(v))
         .collect(Collectors.toList());
     return numericValues.stream().allMatch(v -> Math.abs(v) < 1e-8)
-        ? Optional.empty()
-        : Optional.of(jsonArray(
-        numericValues.size(),
-        numericValues.stream().map(v -> jsonDoubleRoundedTo6Digits(v))));
+           ? Optional.empty()
+           : Optional.of(jsonArray(
+               numericValues.size(),
+               numericValues.stream().map(v -> jsonDoubleRoundedTo6Digits(v))));
   }
 
 }

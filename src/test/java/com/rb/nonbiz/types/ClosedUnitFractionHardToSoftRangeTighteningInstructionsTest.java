@@ -9,10 +9,12 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.closedUnitFractionHardToSoftRangeTighteningInstructions;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.setClosedUnitFractionSoftRangeToSameAsHard;
+import static com.rb.nonbiz.types.ClosedUnitFractionHardToSoftRangeTighteningInstructions.symmetricClosedUnitFractionHardToSoftRangeTighteningInstructions;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
@@ -31,9 +33,23 @@ public class ClosedUnitFractionHardToSoftRangeTighteningInstructionsTest
   }
 
   @Test
+  public void testConstructors() {
+    // Zero always throws
+    assertIllegalArgumentException( () -> symmetricClosedUnitFractionHardToSoftRangeTighteningInstructions(UNIT_FRACTION_0));
+
+    // Test that symmetric constructor works.
+    assertThat(
+        symmetricClosedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(0.7)),
+        closedUnitFractionHardToSoftRangeTighteningInstructionsMatcher(
+            closedUnitFractionHardToSoftRangeTighteningInstructions(
+                unitFraction(0.7),
+                unitFraction(0.7))));
+  }
+
+  @Test
   public void testToString() {
     assertEquals(
-        "[CUFHTSRTI lower=40.00 %, upper=60.00 % CUFHTSRTI]",
+        "[CUFHTSRTI lower= 40.00 % ; upper= 60.00 % CUFHTSRTI]",
         closedUnitFractionHardToSoftRangeTighteningInstructions(unitFraction(0.4), unitFraction(0.6)).toString());
   }
 

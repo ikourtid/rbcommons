@@ -2,7 +2,6 @@ package com.rb.biz.types;
 
 import com.rb.biz.types.trading.NonNegativeQuantity;
 import com.rb.biz.types.trading.SignedQuantity;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -15,6 +14,7 @@ import static com.rb.biz.types.OnesBasedReturn.onesBasedReturn;
 import static com.rb.biz.types.SignedMoney.signedMoney;
 import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 import static com.rb.nonbiz.math.RBBigDecimals.bigDecimalAverage;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Holds a price.
@@ -39,14 +39,14 @@ public class Price extends PreciseValue<Price> {
 
   public static Price price(double priceAsDouble) {
     if (priceAsDouble <= 0) {
-      throw new IllegalArgumentException(Strings.format("price must be >0 but was %s", priceAsDouble));
+      throw new IllegalArgumentException(smartFormat("price must be >0 but was %s", priceAsDouble));
     }
     return new Price(BigDecimal.valueOf(priceAsDouble), priceAsDouble);
   }
 
   public static Price price(BigDecimal price) {
     if (price.signum() < 1) {
-      throw new IllegalArgumentException(Strings.format("price must be >0 but was %s", price));
+      throw new IllegalArgumentException(smartFormat("price must be >0 but was %s", price));
     }
     return new Price(price);
   }

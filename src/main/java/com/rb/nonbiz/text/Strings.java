@@ -13,6 +13,7 @@ import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.ImmutableIndexableArray1D;
 import com.rb.nonbiz.collections.NonZeroDeviations;
 import com.rb.nonbiz.collections.Partition;
+import com.rb.nonbiz.collections.RBEnumMap;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.types.UnitFraction;
 
@@ -30,6 +31,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.rb.biz.marketdata.instrumentmaster.InstrumentMasters.displaySymbol;
 import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_INSTRUMENT_MASTER;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.lang.Character.isAlphabetic;
 import static java.lang.Character.isUpperCase;
 import static java.util.Comparator.comparing;
@@ -175,6 +177,19 @@ public class Strings {
         .iterator());
   }
 
+  public static <E extends Enum<E>, V extends PrintsInstruments> String formatRBEnumMapWhereValuesPrintInstruments(
+      RBEnumMap<E, V> enumMap, InstrumentMaster instrumentMaster, LocalDate date) {
+    return sizePrefix(enumMap.size()) + Joiner.on(" , ").join(
+        enumMap
+            .entrySet()
+            .stream()
+            .sorted(comparingByKey())
+            .map(entry -> Strings.format("%s = %s",
+                entry.getKey(),
+                entry.getValue().toString(instrumentMaster, date)))
+            .iterator());
+  }
+
   public static <K extends PrintsInstruments, V extends PrintsInstruments>
   String formatMapOfPrintsInstrumentsToPrintsInstruments(
       RBMap<K, V> map, InstrumentMaster instrumentMaster, LocalDate date) {
@@ -285,9 +300,9 @@ public class Strings {
       IidMap<V> map, String joiningString, InstrumentMaster instrumentMaster, LocalDate date, boolean printInstrumentIds) {
     return sizePrefix(map.size()) + Joiner.on(joiningString).join(
         map.toIidSortedTransformedEntriesStream(
-            (instrumentId, value) -> Strings.format("%s = %s",
-                displaySymbol(instrumentId, instrumentMaster, date, printInstrumentIds),
-                value.toString(instrumentMaster, date)))
+                (instrumentId, value) -> Strings.format("%s = %s",
+                    displaySymbol(instrumentId, instrumentMaster, date, printInstrumentIds),
+                    value.toString(instrumentMaster, date)))
             .iterator());
   }
 
@@ -295,10 +310,10 @@ public class Strings {
       IidMap<V> map, Comparator<V> comparator, InstrumentMaster instrumentMaster, LocalDate date, boolean printInstrumentIds) {
     return sizePrefix(map.size()) + Joiner.on(" , ").join(
         map.toSortedTransformedEntriesStream(
-            (instrumentId, value) -> Strings.format("%s = %s",
-                displaySymbol(instrumentId, instrumentMaster, date, printInstrumentIds),
-                value.toString(instrumentMaster, date)),
-            comparator)
+                (instrumentId, value) -> Strings.format("%s = %s",
+                    displaySymbol(instrumentId, instrumentMaster, date, printInstrumentIds),
+                    value.toString(instrumentMaster, date)),
+                comparator)
             .iterator());
   }
 
@@ -345,7 +360,7 @@ public class Strings {
       IidMap<V> map, InstrumentMaster instrumentMaster, LocalDate date) {
     return Joiner.on(" , ").join(
         map.toIidSortedTransformedEntriesStream(
-            (instrumentId, value) -> value.toString(instrumentMaster, date))
+                (instrumentId, value) -> value.toString(instrumentMaster, date))
             .iterator());
   }
 
@@ -552,7 +567,7 @@ public class Strings {
           break;
 
         default:
-          throw new IllegalArgumentException(Strings.format("Cannot handle lower bound type %s", range.lowerBoundType()));
+          throw new IllegalArgumentException(smartFormat("Cannot handle lower bound type %s", range.lowerBoundType()));
       }
       sb.append(boundToString.apply(range.lowerEndpoint()));
     }
@@ -571,7 +586,7 @@ public class Strings {
           break;
 
         default:
-          throw new IllegalArgumentException(Strings.format("Cannot handle upper bound type %s", range.upperBoundType()));
+          throw new IllegalArgumentException(smartFormat("Cannot handle upper bound type %s", range.upperBoundType()));
       }
     }
     return sb.toString();

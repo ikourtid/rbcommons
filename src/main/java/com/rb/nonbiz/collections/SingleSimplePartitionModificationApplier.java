@@ -1,6 +1,5 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.RBDoubles.EpsilonComparisonVisitor;
 import com.rb.nonbiz.types.UnitFraction;
 
@@ -9,6 +8,7 @@ import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBVoid.rbVoid;
 import static com.rb.nonbiz.math.RBBigDecimals.epsilonCompareBigDecimals;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 /**
@@ -42,7 +42,7 @@ public class SingleSimplePartitionModificationApplier {
           new EpsilonComparisonVisitor<RBVoid>() {
             @Override
             public RBVoid visitRightIsGreater(double ignored) {
-              throw new IllegalArgumentException(Strings.format(
+              throw new IllegalArgumentException(smartFormat(
                   "Original fraction for %s is %s , so if we subtract %s , we'll get a negative number. Partition: %s",
                   key, originalFraction, fractionToSubtract, originalPartition));
             }

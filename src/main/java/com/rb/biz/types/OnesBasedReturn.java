@@ -1,7 +1,6 @@
 package com.rb.biz.types;
 
 import com.rb.biz.investing.quality.AnnuallyCompoundedAnnualizedReturn;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -11,6 +10,7 @@ import java.math.RoundingMode;
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.biz.investing.quality.AnnuallyCompoundedAnnualizedReturn.annuallyCompoundedAnnualizedReturn;
 import static com.rb.nonbiz.math.RBBigDecimals.bigDecimalInvert;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Returns expressed so that 1.0 means 'no increase or decrease', 1.02 means "+ 2%",
@@ -48,12 +48,12 @@ public class OnesBasedReturn extends PreciseValue<OnesBasedReturn> {
    */
   public static OnesBasedReturn onesBasedReturn(BigDecimal onesBasedReturn) {
     if (onesBasedReturn.compareTo(MIN_ALLOWABLE_RETURN_BIGDECIMAL) < 0) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "OnesBasedReturn= %s < %s (safest min return allowed)",
           onesBasedReturn, MIN_ALLOWABLE_RETURN_BIGDECIMAL));
     }
     if (onesBasedReturn.compareTo(MAX_ALLOWABLE_RETURN_BIGDECIMAL) > 0) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "OnesBasedReturn= %s > %s (safest max return allowed)",
           onesBasedReturn, MAX_ALLOWABLE_RETURN_BIGDECIMAL));
     }

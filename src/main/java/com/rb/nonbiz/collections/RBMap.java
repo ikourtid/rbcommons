@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -30,6 +31,7 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Comparator.comparing;
 
 /**
@@ -142,7 +144,7 @@ public class RBMap<K, V> {
     }
     V valueOrNull = rawMap.get(key);
     if (valueOrNull == null) {
-      throw new IllegalArgumentException(Strings.format("%s : %s map keys are: %s",
+      throw new IllegalArgumentException(smartFormat("%s : %s map keys are: %s",
           Strings.format(template, args), rawMap.size(), rawMap.keySet()));
     }
     return valueOrNull;
@@ -164,7 +166,7 @@ public class RBMap<K, V> {
       throw new IllegalArgumentException("An RBMap does not allow null keys");
     }
     if (!rawMap.containsKey(key)) {
-      throw new IllegalArgumentException(Strings.format("%s : %s map keys do not contain %s ; keys are %s",
+      throw new IllegalArgumentException(smartFormat("%s : %s map keys do not contain %s ; keys are %s",
           Strings.format(template, args), rawMap.size(), key, rawMap.keySet()));
     }
     return rawMap.get(key);
@@ -500,6 +502,16 @@ public class RBMap<K, V> {
   public RBMap<K, V> withItemAddedAssumingAbsent(K key, V value) {
     MutableRBMap<K, V> mutableMap = newMutableRBMap(this);
     mutableMap.putAssumingAbsent(key, value);
+    return newRBMap(mutableMap);
+  }
+
+  /**
+   * This does NOT modify this RBMap! It creates a copy, but with an extra key/value pair possibly added
+   * - or modified, as per {@link MutableRBMap#putOrModifyExisting}.
+   */
+  public RBMap<K, V> copyWithPutOrModifyExisting(K key, V value, BinaryOperator<V> whenPresent) {
+    MutableRBMap<K, V> mutableMap = newMutableRBMap(this);
+    mutableMap.putOrModifyExisting(key, value, whenPresent);
     return newRBMap(mutableMap);
   }
 

@@ -20,6 +20,7 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.PreciseValue.sumToBigDecimal;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
@@ -68,7 +69,7 @@ public class IidPartition implements PrintsInstruments {
   public static <V extends PreciseValue<V>> IidPartition iidPartitionFromWeights(IidMap<V> weightsMap) {
     BigDecimal sum = sumToBigDecimal(weightsMap.values());
     if (sum.signum() != 1) {
-      throw new IllegalArgumentException(Strings.format("Sum of weights must be >0. Input was %s", weightsMap));
+      throw new IllegalArgumentException(smartFormat("Sum of weights must be >0. Input was %s", weightsMap));
     }
     MutableIidMap<UnitFraction> fractionsMap = newMutableIidMapWithExpectedSize(weightsMap.size());
     weightsMap.forEachEntry( (key, value) -> {

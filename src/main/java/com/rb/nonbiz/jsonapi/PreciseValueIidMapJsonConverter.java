@@ -55,7 +55,7 @@ public class PreciseValueIidMapJsonConverter {
 
   public <V extends PreciseValue<? super V>> JsonObject toJsonObject(IidMap<V> map, JsonTickerMap jsonTickerMap) {
     JsonObject jsonObject = new JsonObject();
-    // Using forEachIidSortedEntry instead of forEachEntry because JsonObject seems to be printing out key-value pairs
+    // Using forEachIidSortedEntry instead of forEachEntryInKeyOrder because JsonObject seems to be printing out key-value pairs
     // in the order they got added. This makes the serialization of pretty JSON deterministic,
     // so it's easier to read the JSON files, which will use increasing InstrumentId order wherever applicable.
     map.forEachKeySortedEntry( (iid, value) ->

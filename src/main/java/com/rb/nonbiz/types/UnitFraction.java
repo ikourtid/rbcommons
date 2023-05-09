@@ -5,7 +5,6 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -14,6 +13,7 @@ import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONT
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 
@@ -284,7 +284,7 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
 
   public UnitFraction divide(BigDecimal other) {
     if (other.compareTo(BigDecimal.ZERO) == 0) {
-      throw new IllegalArgumentException(Strings.format("Cannot divide %s by zero", asBigDecimal()));
+      throw new IllegalArgumentException(smartFormat("Cannot divide %s by zero", asBigDecimal()));
     }
     return unitFraction(asBigDecimal().divide(other, DEFAULT_MATH_CONTEXT));
   }

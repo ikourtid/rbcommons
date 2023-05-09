@@ -16,7 +16,7 @@ public class JsonFileWriter {
     try {
       directoryCreator.makeAllDirs(outputFile);
       BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
-      new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject, writer);
+      new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create().toJson(jsonObject, writer);
       writer.close();
     } catch (IOException e) {
       throw new RuntimeException(e);

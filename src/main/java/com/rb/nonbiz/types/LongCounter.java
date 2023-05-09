@@ -37,6 +37,11 @@ import static java.lang.Math.toIntExact;
     return this;
   }
 
+  public LongCounter decrement() {
+    this.currentValue--;
+    return this;
+  }
+
   public long getAndThenIncrement() {
     return this.currentValue++;
   }

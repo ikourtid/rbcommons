@@ -3,7 +3,6 @@ package com.rb.nonbiz.collections;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.rb.biz.types.Money;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.SignedFraction;
@@ -24,6 +23,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
 import static com.rb.nonbiz.collections.SignedPartition.signedPartition;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.PreciseValue.sumToBigDecimal;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
@@ -224,7 +224,7 @@ public class Partition<K> {
   public UnitFraction getFraction(K key) {
     Optional<UnitFraction> fraction = fractions.getOptional(key);
     if (!fraction.isPresent()) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Key %s is not contained in partition's keys : %s",
           key, Joiner.on(',').join(fractions.keySet())));
     }

@@ -5,6 +5,8 @@ import com.rb.biz.types.Price;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -14,9 +16,16 @@ import static com.rb.biz.types.Price.price;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
+import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
+import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
+import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
+import static com.rb.nonbiz.collections.PairOfSameTypeTest.pairOfSameTypeEqualityMatcher;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
@@ -26,6 +35,7 @@ import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -127,4 +137,36 @@ public class MutableIidMapTest {
     assertAlmostEquals(price(10.0009), mutableIidMap.getOrThrow(STOCK_A), DEFAULT_EPSILON_1e_8);
   }
 
+  @Test
+  public void testPutAssumingNoChange() {
+    MutableIidMap<PairOfSameType<String>> mutableMap = newMutableIidMap();
+    BiFunction<String, String, Boolean> adder = (str1, str2) -> mutableMap.putAssumingNoChange(
+        STOCK_A,
+        pairOfSameType(str1, str2),
+        // For this test, we are intentionally only checking the left side of the pair.
+        (pair1, pair2) -> pair1.getLeft().equals(pair2.getLeft()));
+    BiConsumer<String, String> checker = (str1, str2) -> assertThat(
+        newIidMap(mutableMap),
+        iidMapMatcher(
+            singletonIidMap(
+                STOCK_A, pairOfSameType(str1, str2)),
+            f -> pairOfSameTypeEqualityMatcher(f)));
+
+    assertTrue(
+        "true means value will be added",
+        adder.apply("l1", "r1"));
+    checker.accept("l1", "r1");
+
+    // Cannot add a pair with a different left value, because the comparison predicate will count it as a change
+    assertIllegalArgumentException( () -> adder.apply("l2", "r1"));
+    checker.accept("l1", "r1");
+
+    // OK to add a pair with a different *right* value, because the comparison predicate only looks at the left item
+    assertFalse(
+        "false means value will not be added",
+        adder.apply("l1", "r2"));
+    // However, per the semantics of putAssumingNoChange, the value will not be replaced.
+    checker.accept("l1", "r1");
+  }
+  
 }

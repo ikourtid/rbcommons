@@ -3,7 +3,6 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.BoundType;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Range;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
@@ -27,6 +26,7 @@ import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.RBIterables.consecutivePairsForEach;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.POSITIVE_INFINITY;
@@ -881,7 +881,7 @@ public class RBRanges {
       // starting value is higher than the upper endpoint of range
       return range.upperEndpoint();
     }
-    throw new IllegalArgumentException(Strings.format(
+    throw new IllegalArgumentException(smartFormat(
         "We should never be here in getNearestValueInRange: range= %s ; startingValue= %s",
         range, startingValue));
   }

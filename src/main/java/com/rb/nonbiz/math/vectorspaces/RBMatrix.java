@@ -243,7 +243,7 @@ public class RBMatrix {
   }
 
   /**
-   * Apply an arbitrary transform for every element based on its position in the matrix (row & column),
+   * Apply an arbitrary transform for every element based on its position in the matrix (row and column),
    * and return a copy of this matrix.
    *
    * <p> The first two arguments in the supplied {@link TriFunction} give the position of the matrix element.

@@ -18,6 +18,7 @@ import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -691,6 +692,33 @@ public class RBMapTest {
   }
 
   @Test
+  public void test_copyWithPutOrModifyExisting() {
+    BinaryOperator<Integer> binaryOperator = (i1, i2) -> i1 + i2;
+
+    // Nothing existing in the initial map
+    BiConsumer<RBMap<String, Integer>, RBMap<String, Integer>> asserter = (startingMap, endingMap) ->
+        assertEquals(
+            endingMap,
+            startingMap.copyWithPutOrModifyExisting("a", 100, binaryOperator));
+
+    asserter.accept(
+        emptyRBMap(),
+        singletonRBMap("a", 100));
+
+    asserter.accept(
+        singletonRBMap("a", 1),
+        singletonRBMap("a", intExplained(101, 1 + 100)));
+
+    asserter.accept(
+        rbMapOf(
+            "a", 1,
+            "b", 2),
+        rbMapOf(
+            "a", intExplained(101, 1 + 100),
+            "b", 2));
+  }
+
+  @Test
   public void testAllowingNull() {
     MutableRBMap<String, Long> mutableMap = newMutableRBMap();
     mutableMap.putAssumingAbsentAllowingNullValue("a", 1L);
@@ -751,9 +779,9 @@ public class RBMapTest {
   @Test
   public void testToRBSet() {
     BiConsumer<RBMap<String, Integer>, RBSet<String>> asserter = (map, expectedSet) ->
-    assertThat(
-        map.toRBSet( (stringKey, intValue) -> Strings.format("%s_%s", stringKey, intValue)),
-        rbSetEqualsMatcher(expectedSet));
+        assertThat(
+            map.toRBSet( (stringKey, intValue) -> Strings.format("%s_%s", stringKey, intValue)),
+            rbSetEqualsMatcher(expectedSet));
 
     asserter.accept(
         rbMapOf(
@@ -771,7 +799,7 @@ public class RBMapTest {
         rbMapOf(
             "a", 1,
             "b", 2)
-        .toRBSet( (ignoredStringKey, ignoredIntValue) -> "same_value"),
+            .toRBSet( (ignoredStringKey, ignoredIntValue) -> "same_value"),
         rbSetEqualsMatcher(singletonRBSet("same_value")));
 
     assertThat(
@@ -787,14 +815,14 @@ public class RBMapTest {
   @Test
   public void test_filterValuesAndTransformKeysAndValuesCopy() {
     BiConsumer<RBMap<Integer, String>, RBMap<String, String>> asserter = (startingMap, expectedMap) ->
-      assertThat(
-          startingMap
-              .filterValuesAndTransformKeysAndValuesCopy(
-                  intKey -> "_" + intKey.toString(),
-                  (newKey, value) -> value.length() == 2
-                      ? Optional.empty()
-                      : Optional.of(Strings.format("%s/%s", newKey, value))),
-          rbMapMatcher(expectedMap, f -> typeSafeEqualTo(f)));
+        assertThat(
+            startingMap
+                .filterValuesAndTransformKeysAndValuesCopy(
+                    intKey -> "_" + intKey.toString(),
+                    (newKey, value) -> value.length() == 2
+                        ? Optional.empty()
+                        : Optional.of(Strings.format("%s/%s", newKey, value))),
+            rbMapMatcher(expectedMap, f -> typeSafeEqualTo(f)));
 
     asserter.accept(
         rbMapOf(

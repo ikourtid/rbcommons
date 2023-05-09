@@ -1,6 +1,5 @@
 package com.rb.nonbiz.collections;
 
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.HasLongRepresentation;
 import com.rb.nonbiz.util.RBPreconditions;
 import gnu.trove.iterator.TLongIterator;
@@ -14,17 +13,20 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+
 /**
  * This is one of the rare mutable data classes in the codebase.
- * Typically, we will build a MutableHasLongMap and then 'lock' it into an RBMap in the same method, and then return it.
- * We should (almost) never pass around a MutableHasLongMap.
+ *
+ * <p> Typically, we will build a MutableHasLongMap and then 'lock' it into an {@link RBMap} in the same method, and then return it.
+ * We should (almost) never pass around a MutableHasLongMap. </p>
  */
 public class MutableHasLongMap<K extends HasLongRepresentation, V> {
 
   // optimizes for speed vs space
   protected static final float DEFAULT_LOAD_FACTOR = 0.5f;
 
-  // 10 is the default in many java non-Rowboat-Advisors classes
+  // 10 is the default in many Java non-Rowboat-Advisors classes
   protected static final int DEFAULT_INITIAL_SIZE = 10;
 
   private final TLongObjectHashMap<V> rawMap;
@@ -81,8 +83,8 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
    * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
    * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
    *
-   * Ideally, since we should never be passing a MutableHasLongMap around, you should use this sparingly
-   * and only get values from the 'locked' HasLongMap that you'll convert the MutableHasLongMap to.
+   * <p> Ideally, since we should never be passing a MutableHasLongMap around, you should use this sparingly
+   * and only get values from the 'locked' HasLongMap that you'll convert the MutableHasLongMap to. </p>
    */
   public Optional<V> getOptional(K key) {
     if (key == null) {
@@ -107,8 +109,8 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
    * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
    * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
    *
-   * Ideally, since we should never be passing a MutableHasLongMap around, you should use this sparingly
-   * and only get values from the 'locked' HasLongMap that you'll convert the MutableHasLongMap to.
+   * <p> Ideally, since we should never be passing a MutableHasLongMap around, you should use this sparingly
+   * and only get values from the 'locked' HasLongMap that you'll convert the MutableHasLongMap to. </p>
    */
   public V getOrThrow(K key) {
     if (key == null) {
@@ -116,7 +118,7 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
     }
     V value = rawMap.get(key.asLong());
     if (value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "no value exists in the map for key %s ; map is %s",
           key, this));
     }
@@ -187,12 +189,12 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
    * There are very few cases where, while constructing a map, you actually want to put a value twice.
    * Use #put if you actually want that. For all other cases, use #putIfAbsent and #putAssumingAbsent.
    *
-   * You can also use #put for performance-critical code, where you are OK with the diminished safety of
-   * not checking if you are trying to overwrite an existing value.
+   * <p> You can also use #put for performance-critical code, where you are OK with the diminished safety of
+   * not checking if you are trying to overwrite an existing value. </p>
    */
   public V put(K key, V value) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableHasLongMap",
           key, value));
     }
@@ -202,11 +204,11 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
   /**
    * Adds a key/value mapping ONLY if there's no value for this key yet.
    *
-   * Use this instead of #put for extra safety, when applicable.
+   * <p> Use this instead of #put for extra safety, when applicable. </p>
    */
   public void putIfAbsent(K key, V value) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableHasLongMap",
           key, value));
     }
@@ -216,11 +218,11 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
   /**
    * Adds a key/value mapping ONLY if there's no value for this key yet.
    *
-   * Use this instead of #put for extra safety, when applicable.
+   * <p> Use this instead of #put for extra safety, when applicable. </p>
    */
   public void putIfAbsent(K key, Supplier<V> valueSupplier) {
     if (key == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Key cannot be null in a MutableHasLongMap; value was ( %s ) ",
           valueSupplier.get()));
     }
@@ -239,13 +241,13 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
    */
   public void putAssumingAbsent(K key, V value) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableHasLongMap",
           key, value));
     }
     V previousValue = put(key, value);
     if (previousValue != null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Trying to add value %s to key %s which already maps to %s",
           value, key, previousValue));
     }
@@ -254,19 +256,19 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
   /**
    * Adds a key/value mapping.
    * Throws if there already is a value for this key AND the existing value is not equal
-   * (subject to the {@link BiPredicate)} to the one supplied.
+   * (subject to the {@link BiPredicate}) to the one supplied.
    *
    * <p> Use this instead of #put for extra safety, when applicable - which is pretty much all the time. </p>
    */
   public void putAssumingAbsentOrEqual(K key, V value, BiPredicate<V, V> equalityPredicate) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableHasLongMap",
           key, value));
     }
     V previousValue = put(key, value);
     if (previousValue != null && !equalityPredicate.test(previousValue, value)) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Trying to add value %s to key %s which already maps to the (unequal) value of %s",
           value, key, previousValue));
     }
@@ -280,16 +282,53 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
    */
   public void putAssumingPresent(K key, V value) {
     if (key == null || value == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Neither key ( %s ) nor value ( %s ) can be null in a MutableHasLongMap",
           key, value));
     }
     V previousValue = put(key, value);
     if (previousValue == null) {
-      throw new IllegalArgumentException(Strings.format(
+      throw new IllegalArgumentException(smartFormat(
           "Trying to add value %s to key %s which is not there yet",
           value, key));
     }
+  }
+
+  /**
+   * Adds a key/value mapping.
+   *
+   * <p> If a value already exists for the supplied key, it will not get replaced, but this will throw an
+   * exception if the new value is different than the existing value per the predicate supplied.
+   * This is useful for objects that do not implement equals/hashCode, and for which we need to pass in a lambda
+   * to define what equality means. It is also useful for objects that do implement equals/hashCode, but for which
+   * we want to use different criteria for equality than the default equals/hashCode. </p>
+   *
+   * <p> For the case where the new value is similar to the old value (per the {@link BiPredicate}), we could
+   * also have chosen the semantics of 'always replace existing value'. This will make a difference in cases where the
+   * similarity predicate is inexact, such as if it uses an epsilon. In that case, the actual value under the key
+   * would be different between the two semantics. At any rate, we will choose the 'don't replace if similar'
+   * semantics. </p>
+   *
+   * <p> Returns true if a new value was added, and false if we were trying to replace a 'similar' value
+   * per the {@link BiPredicate} supplied. </p>
+   */
+  public boolean putAssumingNoChange(K key, V value, BiPredicate<V, V> valuesAreSimilar) {
+    if (key == null || value == null) {
+      throw new IllegalArgumentException(smartFormat(
+          "Neither key ( %s ) nor value ( %s ) can be null in a MutableRBMap",
+          key, value));
+    }
+    V previousValue = rawMap.get(key.asLong());
+    if (previousValue == null) {
+      put(key, value);
+      return true;
+    }
+
+    RBPreconditions.checkArgument(
+        valuesAreSimilar.test(previousValue, value),
+        "In putAssumingNoChange: key %s has value %s which is different than new value %s",
+        key, previousValue, value);
+    return false;
   }
 
   /**

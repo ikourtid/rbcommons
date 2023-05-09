@@ -18,12 +18,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.google.common.primitives.Ints.checkedCast;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional2;
 import static com.rb.nonbiz.collections.RBOptionals.toSpecializedOptionalDouble;
 import static com.rb.nonbiz.date.RBDates.dateFromYyyyMmDd;
 import static com.rb.nonbiz.json.RBGson.PERCENTAGE_TO_FRACTION;
 import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
+import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.RBDoubles.getDoubleAsLongAssumingIsRound;
@@ -159,7 +159,7 @@ public class RBJsonObjectGetters {
   /**
    * From 'jsonObject', get the value of 'property' and check that it is a number, and that the number
    * can be cast to an int without changing its value.
-   * If missing or is not a int, throw an exception.
+   * If missing or is not an int, throw an exception.
    * Return as an int.
    */
   public static int getJsonIntOrThrow(
@@ -339,7 +339,7 @@ public class RBJsonObjectGetters {
     JsonElement jsonElement = getJsonElementOrThrow(jsonObject, property);
     RBPreconditions.checkArgument(
         jsonElement.isJsonArray(),
-        "JSON obect property ( %s ) is not a JsonArray: %s",
+        "JSON object property ( %s ) is not a JsonArray: %s",
         property, jsonElement);
     return jsonElement.getAsJsonArray();
   }
@@ -359,9 +359,24 @@ public class RBJsonObjectGetters {
   }
 
   /**
+   * From 'jsonObject', get the value of 'property'.
+   * If 'property' is missing, return a singleton JsonArray consisting of the defaultElement.
+   * If 'property' is present, verify that it is a JsonArray and return it.
+   */
+  public static JsonArray getJsonArrayOrDefaultSingleton(
+      JsonObject jsonObject,
+      String property,
+      JsonElement defaultElement) {
+    if (!jsonObject.has(property)) {
+      return singletonJsonArray(defaultElement);
+    }
+    return getJsonArrayOrThrow(jsonObject, property);
+  }
+
+  /**
    * Convenience method for use in extracting a "nested" (inner) jsonObject:
    * Use instead of:
-   * jsonObject.getAsJsonObect(property1).getAsJsonObject(property2).getAsJsonObject(property3)
+   * jsonObject.getAsJsonObject(property1).getAsJsonObject(property2).getAsJsonObject(property3)
    */
   public static JsonObject getNestedJsonObjectOrThrow(
       JsonObject jsonObject,

@@ -1,61 +1,79 @@
 package com.rb.nonbiz.util;
 
-import com.google.common.collect.ImmutableMap;
+import com.rb.nonbiz.collections.MutableRBEnumMap;
+import com.rb.nonbiz.collections.RBEnumMap;
 
-import java.util.EnumMap;
+import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMap;
+import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
 
 public class RBEnumMapSimpleConstructors {
 
-  public static <E extends Enum<E>, V> EnumMap<E, V> emptyEnumMap() {
-    return new EnumMap<>(ImmutableMap.<E, V>of());
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> emptyRBEnumMap(Class<E> enumClass) {
+    return newRBEnumMap(newMutableRBEnumMap(enumClass));
   }
 
-  public static <E extends Enum<E>, V> EnumMap<E, V> singletonEnumMap(E onlyEnumKey, V onlyValue) {
-    return new EnumMap<>(ImmutableMap.of(onlyEnumKey, onlyValue));
+  // We need this because onlyEnumKey.getClass() returns a {@code Class<? extends Enum>}, not a {@code Class<E>}.
+  @SuppressWarnings("unchecked")
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> singletonRBEnumMap(E onlyEnumKey, V onlyValue) {
+    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap(onlyEnumKey.getClass());
+    mutableMap.put(onlyEnumKey, onlyValue);
+    return newRBEnumMap(mutableMap);
   }
 
-  public static <E extends Enum<E>, V> EnumMap<E, V> enumMapOf(
+  // We need this because onlyEnumKey.getClass() returns a {@code Class<? extends Enum>}, not a {@code Class<E>}.
+  @SuppressWarnings("unchecked")
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMapOf(
       E enumKey1, V value1,
       E enumKey2, V value2) {
-    return new EnumMap<>(ImmutableMap.of(
-        enumKey1, value1,
-        enumKey2, value2));
+    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap(enumKey1.getClass());
+    mutableMap.putAssumingAbsent(enumKey1, value1);
+    mutableMap.putAssumingAbsent(enumKey2, value2);
+    return newRBEnumMap(mutableMap);
   }
 
-  public static <E extends Enum<E>, V> EnumMap<E, V> enumMapOf(
+  // We need this because onlyEnumKey.getClass() returns a {@code Class<? extends Enum>}, not a {@code Class<E>}.
+  @SuppressWarnings("unchecked")
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMapOf(
       E enumKey1, V value1,
       E enumKey2, V value2,
       E enumKey3, V value3) {
-    return new EnumMap<>(ImmutableMap.of(
-        enumKey1, value1,
-        enumKey2, value2,
-        enumKey3, value3));
+    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap(enumKey1.getClass());
+    mutableMap.putAssumingAbsent(enumKey1, value1);
+    mutableMap.putAssumingAbsent(enumKey2, value2);
+    mutableMap.putAssumingAbsent(enumKey3, value3);
+    return newRBEnumMap(mutableMap);
   }
 
-  public static <E extends Enum<E>, V> EnumMap<E, V> enumMapOf(
+  // We need this because onlyEnumKey.getClass() returns a {@code Class<? extends Enum>}, not a {@code Class<E>}.
+  @SuppressWarnings("unchecked")
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMapOf(
       E enumKey1, V value1,
       E enumKey2, V value2,
       E enumKey3, V value3,
       E enumKey4, V value4) {
-    return new EnumMap<>(ImmutableMap.of(
-        enumKey1, value1,
-        enumKey2, value2,
-        enumKey3, value3,
-        enumKey4, value4));
+    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap(enumKey1.getClass());
+    mutableMap.putAssumingAbsent(enumKey1, value1);
+    mutableMap.putAssumingAbsent(enumKey2, value2);
+    mutableMap.putAssumingAbsent(enumKey3, value3);
+    mutableMap.putAssumingAbsent(enumKey4, value4);
+    return newRBEnumMap(mutableMap);
   }
 
-  public static <E extends Enum<E>, V> EnumMap<E, V> enumMapOf(
+  // We need this because onlyEnumKey.getClass() returns a {@code Class<? extends Enum>}, not a {@code Class<E>}.
+  @SuppressWarnings("unchecked")
+  public static <E extends Enum<E>, V> RBEnumMap<E, V> rbEnumMapOf(
       E enumKey1, V value1,
       E enumKey2, V value2,
       E enumKey3, V value3,
       E enumKey4, V value4,
       E enumKey5, V value5) {
-    return new EnumMap<>(ImmutableMap.of(
-        enumKey1, value1,
-        enumKey2, value2,
-        enumKey3, value3,
-        enumKey4, value4,
-        enumKey5, value5));
+    MutableRBEnumMap<E, V> mutableMap = newMutableRBEnumMap(enumKey1.getClass());
+    mutableMap.putAssumingAbsent(enumKey1, value1);
+    mutableMap.putAssumingAbsent(enumKey2, value2);
+    mutableMap.putAssumingAbsent(enumKey3, value3);
+    mutableMap.putAssumingAbsent(enumKey4, value4);
+    mutableMap.putAssumingAbsent(enumKey5, value5);
+    return newRBEnumMap(mutableMap);
   }
 
 }

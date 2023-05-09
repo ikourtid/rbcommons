@@ -27,6 +27,12 @@ public class Coordinates {
     return new Coordinates(rawCoordinatesArray);
   }
 
+  public static Coordinates coordinatesAllZero(int numberOfDimensions) {
+    RBPreconditions.checkArgument(numberOfDimensions >= 1);
+    // int has a default value of zero.
+    return coordinates(new int[numberOfDimensions]);
+  }
+
   public int[] getRawCoordinatesArray() {
     return rawCoordinatesArray;
   }
@@ -43,6 +49,14 @@ public class Coordinates {
     RBPreconditions.checkArgument(
         0 < endExclusive && endExclusive <= rawCoordinatesArray.length);
     return coordinates(Arrays.copyOfRange(rawCoordinatesArray, startInclusive, endExclusive));
+  }
+
+  public Coordinates copyWithChangedNthItem(int index, int newValue) {
+    RBPreconditions.checkValidArrayElement(index, rawCoordinatesArray.length);
+    RBPreconditions.checkArgument(newValue >= 0);
+    int[] newArray = rawCoordinatesArray.clone();
+    newArray[index] = newValue;
+    return coordinates(newArray);
   }
 
   @Override

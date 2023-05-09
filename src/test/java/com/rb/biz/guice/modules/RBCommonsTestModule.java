@@ -4,12 +4,12 @@ import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.rb.biz.guice.RBClock;
-import com.rb.biz.guice.RBClockModifier;
 import com.rb.biz.guice.RBSimpleTestClock;
-import com.rb.biz.guice.RBThreadLocalClock;
 import com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.nonbiz.text.RBLog;
+import com.rb.nonbiz.text.SmartFormatter;
+import com.rb.nonbiz.text.SmartFormatterHelper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +23,10 @@ public class RBCommonsTestModule implements Module {
   @Override
   public void configure(Binder binder) {
     binder.requestStaticInjection(RBLog.class);
+    // ExcludeSlowTestsSuiteRBCommons still gives us 4 failing tests if we run it by itself
+    // (instead of ExcludeSlowTestsSuite), but without the following two lines, there would be way more failures.
+    binder.requestStaticInjection(SmartFormatter.class);
+    binder.requestStaticInjection(SmartFormatterHelper.class);
 
     binder
         .bind(InstrumentMaster.class)

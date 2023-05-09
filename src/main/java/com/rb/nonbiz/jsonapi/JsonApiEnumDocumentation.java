@@ -3,9 +3,9 @@ package com.rb.nonbiz.jsonapi;
 import com.rb.nonbiz.json.JsonApiEnumDescriptor;
 import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
-import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 
 /**
  * This is (mostly) human-readable text that explains how a Java enum of this type

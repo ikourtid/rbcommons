@@ -4,7 +4,6 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Range;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBLists;
-import com.rb.nonbiz.text.Strings;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -17,6 +16,7 @@ import java.util.stream.Stream;
 import static com.rb.nonbiz.collections.RBIterators.getFirstNonUniqueIteratorItem;
 import static com.rb.nonbiz.collections.RBOptionals.findOnlyPresentOptional;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 public class RBPreconditions {
 
@@ -142,8 +142,11 @@ public class RBPreconditions {
   public static <T> void checkUnique(Iterator<T> iterator, String format, Object...args) {
     Optional<T> firstNonUniqueIteratorItem = getFirstNonUniqueIteratorItem(iterator);
     if (firstNonUniqueIteratorItem.isPresent()) {
-      throw new IllegalArgumentException(Strings.format("non-unique item of %s : %s",
-          firstNonUniqueIteratorItem.get(), Strings.format(format, args)));
+      throw new IllegalArgumentException(
+          smartFormat(
+              "non-unique item of %s : %s",
+              firstNonUniqueIteratorItem.get(),
+              smartFormat(format, args)));
     }
   }
 
@@ -183,7 +186,7 @@ public class RBPreconditions {
 
   public static void checkArgument(boolean expression, String format, Object ... args) {
     if (!expression) {
-      throw new IllegalArgumentException(Strings.format(format, args));
+      throw new IllegalArgumentException(smartFormat(format, args));
     }
   }
 
@@ -207,7 +210,8 @@ public class RBPreconditions {
   // copied from guava Preconditions
   public static <T> T checkNotNull(T reference, String errorMessageTemplate, Object... errorMessageArgs) {
     if (reference == null) {
-      throw new NullPointerException(Strings.format(errorMessageTemplate, errorMessageArgs));
+      throw new NullPointerException(
+          smartFormat(errorMessageTemplate, errorMessageArgs));
     } else {
       return reference;
     }
@@ -243,8 +247,8 @@ public class RBPreconditions {
       boolean isCorrectExceptionType = exceptionClass.isAssignableFrom(e.getClass());// isAssignableFrom means 'is superclass of'
 
       if (!isCorrectExceptionType) {
-        String originalMessage = Strings.format(format, errorMessageArgs);
-        throw new IllegalArgumentException(Strings.format(
+        String originalMessage = smartFormat(format, errorMessageArgs);
+        throw new IllegalArgumentException(smartFormat(
             "Expected an exception of type %s , but got one of type %s ; original error message is: %s",
             exceptionClass, e.getClass(), originalMessage));
       }
@@ -254,7 +258,7 @@ public class RBPreconditions {
     // If we got to this point, then it means that the runnable that was passed in
     // didn't throw an exception as expected (whether of the type we expected, or another exception type),
     // so that's wrong. Let's throw our own exception to indicate that.
-    throw new IllegalArgumentException(Strings.format(format, errorMessageArgs));
+    throw new IllegalArgumentException(smartFormat(format, errorMessageArgs));
   }
 
   /**
@@ -265,7 +269,7 @@ public class RBPreconditions {
     try {
       runnable.run();
     } catch (Exception e) {
-      throw new IllegalArgumentException(Strings.format(format, errorMessageArgs), e);
+      throw new IllegalArgumentException(smartFormat(format, errorMessageArgs), e);
     }
   }
 

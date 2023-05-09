@@ -17,8 +17,8 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  * This lets you build a simple step function with one y-value Y0 below a specified X0, and another
  * value Y1 at X0 or above:
  * <ul>
- *   <li> y = y0 for x <  x0. </li>
- *   <li> y = y1 for x >= x0. </li>
+ *   <li> y = y0 for x &lt; x0. </li>
+ *   <li> y = y1 for x &ge; x0. </li>
  * </ul>
 
  *
@@ -29,7 +29,7 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  *                |
  *                |
  *                |
- * <--------------O
+ * ---------------O
  *             (x0, y0)
  * </pre>
  *
@@ -38,17 +38,17 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  *
  * <p> This class can also model the opposite choice for y when x = x0: </p>
  * <ul>
- *   <li> y = y0 for x <= x0. </li>
- *   <li> y = y1 for x >  x0. </li>
+ *   <li> y = y0 for x &le; x0. </li>
+ *   <li> y = y1 for x &gt;  x0. </li>
  * </ul>
  *
  * <pre>
  *               (x0, y0)
- * <--------------*
+ * ---------------*
  *                |
  *                |
  *                |
- *                O-------------->
+ *                O---------------
  *             (x0, y1)
  * </pre>
  *

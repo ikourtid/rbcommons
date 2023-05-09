@@ -3,12 +3,12 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.rb.nonbiz.collections.Either.Visitor;
-import com.rb.nonbiz.text.Strings;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Set;
 
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -36,7 +36,7 @@ public class EitherTest {
 
       @Override
       public L visitRight(R right) {
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Expected an Either.left, but there is a right value of %s", right));
       }
     });
@@ -53,7 +53,7 @@ public class EitherTest {
     return either.visit(new Visitor<L, R, R>() {
       @Override
       public R visitLeft(L left) {
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Expected an Either.right, but there is a left value of %s", left));
       }
 

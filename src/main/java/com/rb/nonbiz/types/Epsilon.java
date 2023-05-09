@@ -45,6 +45,26 @@ public class Epsilon extends ImpreciseValue<Epsilon> {
   }
 
   /**
+   * Returns true if the two {@link PreciseValue}s are within this epsilon.
+   *
+   * <p> {@link PreciseValue} already has a method for this, but having a method under {@link Epsilon} can sometimes
+   * make the syntax easier to read. </p>
+   */
+  public <T extends PreciseValue<T>> boolean valuesAreWithin(T value1, T value2) {
+    return value1.almostEquals(value2, this);
+  }
+
+  /**
+   * Returns true if the two {@link PreciseValue}s are within this epsilon.
+   *
+   * <p> {@link ImpreciseValue} already has a method for this, but having a method under {@link Epsilon} can sometimes
+   * make the syntax easier to read. </p>
+   */
+  public <T extends ImpreciseValue<T>> boolean valuesAreWithin(T value1, T value2) {
+    return value1.almostEquals(value2, this);
+  }
+
+  /**
    * Returns true if the two numbers are within this epsilon.
    */
   public boolean isAlmostZero(double value) {

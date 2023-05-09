@@ -2,7 +2,6 @@ package com.rb.nonbiz.search;
 
 import com.rb.nonbiz.search.BinarySearchResult.BinarySearchResultBuilder;
 import com.rb.nonbiz.text.RBLog;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Comparator;
@@ -11,6 +10,7 @@ import java.util.function.Function;
 import static com.rb.nonbiz.collections.RBComparables.monotonic;
 import static com.rb.nonbiz.collections.RBComparators.nonDecreasingPerComparator;
 import static com.rb.nonbiz.text.RBLog.rbLog;
+import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Generalized code for doing binary search.
@@ -54,7 +54,7 @@ public class BinarySearch {
       boolean isBetweenLowerAndUpperInclusive = nonDecreasingPerComparator(
           comparatorForY, lowerBoundY, midpointY, upperBoundY);
       if (!isBetweenLowerAndUpperInclusive) {
-        throw new IllegalArgumentException(Strings.format(
+        throw new IllegalArgumentException(smartFormat(
             "Using midpoint of %s (between %s and %s ) we got value %s which is not between %s and %s , inclusive",
             midpointX, lowerBoundX, upperBoundX, midpointY, lowerBoundY, upperBoundY));
       }
@@ -81,7 +81,7 @@ public class BinarySearch {
             .build();
       }
     }
-    throw new IllegalArgumentException(Strings.format(
+    throw new IllegalArgumentException(smartFormat(
         "Binary search could not finish, even within %s iterations; lowerX %s ; upperX %s ; lowerY %s ; upper Y%s",
         maxIterations,
         lowerBoundX, upperBoundX,
