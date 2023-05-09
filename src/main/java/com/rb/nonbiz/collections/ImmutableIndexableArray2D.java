@@ -8,11 +8,11 @@ import static com.rb.nonbiz.collections.MutableIndexableArray2D.mutableIndexable
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 
 /**
- * Just like MutableIndexableArray2D, except immutable.
+ * Just like {@link MutableIndexableArray2D}, except immutable.
  *
- * Note that someone can modify the underlying object if they have a handle to it via getRawArrayUnsafe()
+ * <p> Note that someone can modify the underlying object if they have a handle to it via getRawArrayUnsafe()
  * but at least they can't modify it through THIS object; there's no set() method here.
- * Plus, getRawArrayUnsafe is package-private, for extra safety.
+ * Plus, getRawArrayUnsafe is package-private, for extra safety. </p>
  */
 public class ImmutableIndexableArray2D<R, C, V> {
 

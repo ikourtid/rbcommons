@@ -3,6 +3,12 @@ package com.rb.nonbiz.collections;
 import com.rb.biz.types.asset.InstrumentId;
 import gnu.trove.map.hash.TLongObjectHashMap;
 
+/**
+ * Like an {@link IidMap}, but mutable.
+ *
+ * <p> Since we rarely pass mutable objects around, this is mostly used to build up a map and then "lock" it
+ * in place as an immutable {@link IidMap}. </p>
+ */
 public class MutableIidMap<V> extends MutableHasLongMap<InstrumentId, V> {
 
   private MutableIidMap(TLongObjectHashMap<V> rawMap) {

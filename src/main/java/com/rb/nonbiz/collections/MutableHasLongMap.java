@@ -17,15 +17,16 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * This is one of the rare mutable data classes in the codebase.
- * Typically, we will build a MutableHasLongMap and then 'lock' it into an RBMap in the same method, and then return it.
- * We should (almost) never pass around a MutableHasLongMap.
+ *
+ * <p> Typically, we will build a MutableHasLongMap and then 'lock' it into an {@link RBMap} in the same method, and then return it.
+ * We should (almost) never pass around a MutableHasLongMap. </p>
  */
 public class MutableHasLongMap<K extends HasLongRepresentation, V> {
 
   // optimizes for speed vs space
   protected static final float DEFAULT_LOAD_FACTOR = 0.5f;
 
-  // 10 is the default in many java non-Rowboat-Advisors classes
+  // 10 is the default in many Java non-Rowboat-Advisors classes
   protected static final int DEFAULT_INITIAL_SIZE = 10;
 
   private final TLongObjectHashMap<V> rawMap;
@@ -82,8 +83,8 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
    * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
    * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
    *
-   * Ideally, since we should never be passing a MutableHasLongMap around, you should use this sparingly
-   * and only get values from the 'locked' HasLongMap that you'll convert the MutableHasLongMap to.
+   * <p> Ideally, since we should never be passing a MutableHasLongMap around, you should use this sparingly
+   * and only get values from the 'locked' HasLongMap that you'll convert the MutableHasLongMap to. </p>
    */
   public Optional<V> getOptional(K key) {
     if (key == null) {
@@ -108,8 +109,8 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
    * #getOptional (which will return an Optional.empty() if there is no value for the specified key),
    * #getOrThrow, which assumes the value is there, and returns Optional.of(...)
    *
-   * Ideally, since we should never be passing a MutableHasLongMap around, you should use this sparingly
-   * and only get values from the 'locked' HasLongMap that you'll convert the MutableHasLongMap to.
+   * <p> Ideally, since we should never be passing a MutableHasLongMap around, you should use this sparingly
+   * and only get values from the 'locked' HasLongMap that you'll convert the MutableHasLongMap to. </p>
    */
   public V getOrThrow(K key) {
     if (key == null) {
@@ -188,8 +189,8 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
    * There are very few cases where, while constructing a map, you actually want to put a value twice.
    * Use #put if you actually want that. For all other cases, use #putIfAbsent and #putAssumingAbsent.
    *
-   * You can also use #put for performance-critical code, where you are OK with the diminished safety of
-   * not checking if you are trying to overwrite an existing value.
+   * <p> You can also use #put for performance-critical code, where you are OK with the diminished safety of
+   * not checking if you are trying to overwrite an existing value. </p>
    */
   public V put(K key, V value) {
     if (key == null || value == null) {
@@ -203,7 +204,7 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
   /**
    * Adds a key/value mapping ONLY if there's no value for this key yet.
    *
-   * Use this instead of #put for extra safety, when applicable.
+   * <p> Use this instead of #put for extra safety, when applicable. </p>
    */
   public void putIfAbsent(K key, V value) {
     if (key == null || value == null) {
@@ -217,7 +218,7 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
   /**
    * Adds a key/value mapping ONLY if there's no value for this key yet.
    *
-   * Use this instead of #put for extra safety, when applicable.
+   * <p> Use this instead of #put for extra safety, when applicable. </p>
    */
   public void putIfAbsent(K key, Supplier<V> valueSupplier) {
     if (key == null) {
@@ -255,7 +256,7 @@ public class MutableHasLongMap<K extends HasLongRepresentation, V> {
   /**
    * Adds a key/value mapping.
    * Throws if there already is a value for this key AND the existing value is not equal
-   * (subject to the {@link BiPredicate)} to the one supplied.
+   * (subject to the {@link BiPredicate}) to the one supplied.
    *
    * <p> Use this instead of #put for extra safety, when applicable - which is pretty much all the time. </p>
    */
