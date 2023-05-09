@@ -28,6 +28,9 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.RBDoubles.getDoubleAsLongAssumingIsRound;
 
+/**
+ * Utilities for extracting data from Json objects.
+ */
 public class RBJsonObjectGetters {
 
   /**

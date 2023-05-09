@@ -38,8 +38,14 @@ import static com.rb.nonbiz.json.RBGson.jsonInteger;
 import static com.rb.nonbiz.json.RBGson.jsonLong;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 
+/**
+ * Utility methods for {@link JsonArray}s.
+ */
 public class RBJsonArrays {
 
+  /**
+   * Create an empty {@link JsonArray}.
+   */
   public static JsonArray emptyJsonArray() {
     return new JsonArray();
   }
@@ -60,6 +66,9 @@ public class RBJsonArrays {
     return jsonArray;
   }
 
+  /**
+   * Create a single-item array.
+   */
   public static JsonArray singletonJsonArray(JsonElement item) {
     JsonArray jsonArray = new JsonArray(1);
     jsonArray.add(item);
