@@ -179,6 +179,24 @@ public class IidMapTest extends RBTestMatcher<IidMap<Money>> {
   }
 
   @Test
+  public void testForEachSortedValue() {
+    List<String> list = newArrayList();
+    // Adding elements in a shuffled order so it's less likely that they will all end up ordered by accident.
+    iidMapOf(
+        instrumentId(10), 1,
+        instrumentId(60), 6,
+        instrumentId(20), 2,
+        instrumentId(40), 4,
+        instrumentId(50), 5,
+        instrumentId(30), 3)
+        .forEachIidSortedValue( str -> list.add(
+            Strings.format("value=%s", str)));
+    assertEquals(
+        ImmutableList.of("value=1", "value=2", "value=3", "value=4", "value=5", "value=6"),
+        list);
+  }
+
+  @Test
   public void testForEachValueSortedEntry() {
     List<String> list = newArrayList();
     // I am adding elements in a shuffled order so it's less likely that they will all end up ordered by accident.
