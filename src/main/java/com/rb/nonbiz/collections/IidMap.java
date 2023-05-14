@@ -180,7 +180,7 @@ public class IidMap<V> extends HasLongMap<InstrumentId, V> implements PrintsInst
   }
 
   /**
-   * Processes each IidMap value in increasing instrument ID order.
+   * Processes each IidMap value in increasing instrument ID key order.
    */
   public void forEachIidSortedValue(Consumer<V> consumer) {
     sortedInstrumentIdStream()
