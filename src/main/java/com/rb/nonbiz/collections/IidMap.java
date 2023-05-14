@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -176,6 +177,14 @@ public class IidMap<V> extends HasLongMap<InstrumentId, V> implements PrintsInst
   public void forEachIidSortedEntry(BiConsumer<InstrumentId, V> biConsumer) {
     sortedInstrumentIdStream()
         .forEach(instrumentId -> biConsumer.accept(instrumentId, getOrThrow(instrumentId)));
+  }
+
+  /**
+   * Processes each IidMap value in increasing instrument ID key order.
+   */
+  public void forEachIidSortedValue(Consumer<V> consumer) {
+    sortedInstrumentIdStream()
+        .forEach(instrumentId -> consumer.accept(getOrThrow(instrumentId)));
   }
 
   /**
