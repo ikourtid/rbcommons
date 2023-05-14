@@ -189,7 +189,7 @@ public class IidMapTest extends RBTestMatcher<IidMap<Money>> {
         instrumentId(40), 4,
         instrumentId(50), 5,
         instrumentId(30), 3)
-        .forEachIidSortedValue( str -> list.add(
+        .forEachIidSortedValue(str -> list.add(
             Strings.format("value=%s", str)));
     assertEquals(
         ImmutableList.of("value=1", "value=2", "value=3", "value=4", "value=5", "value=6"),
