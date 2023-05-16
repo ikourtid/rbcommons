@@ -34,10 +34,10 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
   @VisibleForTesting
   public static final BigDecimal EPSILON_FOR_SNAPPING_TO_ROUND_NUMBER = BigDecimal.valueOf(1e-12);
 
-  protected static NumberFormat formatWithCommas(int maxPrecision) {
+  public static NumberFormat formatWithCommas(int maxPrecision) {
     return formatWithCommas(0, maxPrecision);
   }
-  protected static NumberFormat formatWithCommas(int minPrecision, int maxPrecision) {
+  public static NumberFormat formatWithCommas(int minPrecision, int maxPrecision) {
     DecimalFormat format = new DecimalFormat();
     format.setMinimumFractionDigits(minPrecision);
     format.setMaximumFractionDigits(maxPrecision);
