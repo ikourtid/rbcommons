@@ -41,6 +41,7 @@ import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonStringOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.doubleArrayMatcher;
+import static com.rb.nonbiz.testmatchers.RBArrayMatchers.intArrayMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -236,12 +237,23 @@ public class RBJsonArraysTest {
 
   @Test
   public void testJsonArrayToDoubleArray() {
-    JsonArray jsonArray = jsonArray(jsonDouble(1.23), jsonDouble(4.56), jsonDouble(7.89));
     assertThat(
-        jsonArrayToDoubleArray(jsonArray, v -> v.getAsDouble()),
+        jsonArrayToDoubleArray(
+            jsonArray(jsonDouble(1.23), jsonDouble(4.56), jsonDouble(7.89)),
+            v -> v.getAsDouble()),
         doubleArrayMatcher(
-            new double[] {1.23, 4.56, 7.89},
+            new double[] { 1.23, 4.56, 7.89 },
             DEFAULT_EPSILON_1e_8));
+  }
+
+  @Test
+  public void testJsonArrayToIntArray() {
+    assertThat(
+        jsonArrayToIntArray(
+            jsonArray(jsonInteger(123), jsonInteger(456), jsonInteger(789)),
+            v -> v.getAsInt()),
+        intArrayMatcher(
+            new int[] { 123, 456, 789 }));
   }
 
   @Test
