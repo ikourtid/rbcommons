@@ -1,20 +1,14 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.rb.nonbiz.collections.MultiDimensionalArray;
-import com.rb.nonbiz.collections.MultiDimensionalArrayTest;
 import com.rb.nonbiz.collections.MutableMultiDimensionalArray;
-import com.rb.nonbiz.json.RBJsonArrays;
-import com.rb.nonbiz.testmatchers.RBValueMatchers;
 import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
-import com.rb.nonbiz.testutils.RBTest;
-import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.Coordinates.coordinates;
 import static com.rb.nonbiz.collections.MultiDimensionalArray.newMultiDimensionalArray;
 import static com.rb.nonbiz.collections.MultiDimensionalArrayTest.multiDimensionalArrayMatcher;
+import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonDoubleArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonIntegerArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
@@ -22,18 +16,12 @@ import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
 import static com.rb.nonbiz.jsonapi.JsonApiTestPair.jsonApiTestPair;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
-import static org.junit.Assert.*;
-
-import org.hamcrest.TypeSafeMatcher;
-
-import static com.rb.nonbiz.testmatchers.Match.match;
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class MultiDimensionalArrayJsonApiConverterTest
     extends RBCommonsIntegrationTest<MultiDimensionalArrayJsonApiConverter> {
 
   @Test
-  public void testBackAndForth() {
+  public void testRoundTripConversions() {
     JsonApiTestData<MultiDimensionalArray<Double>> jsonApiTestData = jsonApiTestData(
         f -> multiDimensionalArrayMatcher(f, f2 -> doubleAlmostEqualsMatcher(f2, DEFAULT_EPSILON_1e_8)),
 
@@ -57,7 +45,10 @@ public class MultiDimensionalArrayJsonApiConverterTest
                     1_001.0,
                     1_001.1,
                     1_001.2))));
-    // FIXME IAK
+
+    jsonApiTestData.testRoundTripConversions(
+        multiDimensionalArray -> makeRealObject().toJsonObject(multiDimensionalArray, v -> jsonDouble(v)),
+        jsonObject            -> makeRealObject().fromJsonObject(jsonObject, v -> v.getAsDouble()));
   }
 
   @Override
