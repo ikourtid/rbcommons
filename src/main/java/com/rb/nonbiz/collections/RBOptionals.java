@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
@@ -250,6 +251,12 @@ public class RBOptionals {
     return streamOfOptionals
         .filter(v -> v.isPresent())
         .map(v -> v.get());
+  }
+
+  public static DoubleStream filterPresentOptionalDoublesInStream(Stream<OptionalDouble> streamOfOptionals) {
+    return streamOfOptionals
+        .filter(v -> v.isPresent())
+        .mapToDouble(v -> v.getAsDouble());
   }
 
   /**

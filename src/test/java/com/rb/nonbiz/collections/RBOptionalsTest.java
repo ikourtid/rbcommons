@@ -32,6 +32,7 @@ import static com.rb.nonbiz.collections.RBOptionalTransformers.transformPairOfOp
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformPairOfOptionalInts;
 import static com.rb.nonbiz.collections.RBOptionals.*;
 import static com.rb.nonbiz.math.stats.ZScore.zScore;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.doubleListMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.optionalMatcher;
@@ -45,6 +46,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEquals;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_LONG;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Pointer.initializedPointer;
 import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static java.util.Collections.emptyIterator;
@@ -272,7 +274,29 @@ public class RBOptionalsTest {
         emptyList(),
         filterPresentOptionalsInStream(Stream.of(Optional.empty(), Optional.empty(), Optional.empty()))
             .collect(Collectors.toList()));
+  }
 
+  @Test
+  public void testFilterPresentOptionalDoublesInStream() {
+    BiConsumer<Stream<OptionalDouble>, List<Double>> asserter = (inputList, expectedReturnValue) ->
+        assertThat(
+            filterPresentOptionalDoublesInStream(inputList)
+                .boxed()
+                .collect(Collectors.toList()),
+            doubleListMatcher(expectedReturnValue, DEFAULT_EPSILON_1e_8));
+
+    asserter.accept(
+        Stream.empty(),
+        emptyList());
+    asserter.accept(
+        Stream.of(OptionalDouble.of(1.1), OptionalDouble.empty(), OptionalDouble.of(2.2)),
+        ImmutableList.of(1.1, 2.2));
+    asserter.accept(
+        Stream.of(OptionalDouble.of(1.1), OptionalDouble.of(2.2)),
+        ImmutableList.of(1.1, 2.2));
+    asserter.accept(
+        Stream.of(OptionalDouble.empty(), OptionalDouble.empty(), OptionalDouble.empty()),
+        emptyList());
   }
 
   @Test
@@ -505,7 +529,7 @@ public class RBOptionalsTest {
     asserter.accept(ImmutableList.of(3, 7, 4, 6), Optional.of("7"));
     asserter.accept(ImmutableList.of(7, 3, 4, 6), Optional.of("7"));
   }
-  
+
   @Test
   public void test_findOnlyPresentOptional_twoArgOverload() {
     assertIllegalArgumentException( () -> findOnlyPresentOptional(Optional.empty(), Optional.empty()));
