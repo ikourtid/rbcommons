@@ -1,6 +1,7 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.rb.nonbiz.collections.MultiDimensionalArray;
+import com.rb.nonbiz.collections.MultiDimensionalArrayTest;
 import com.rb.nonbiz.collections.MutableMultiDimensionalArray;
 import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import org.junit.Test;
@@ -8,9 +9,14 @@ import org.junit.Test;
 import static com.rb.nonbiz.collections.Coordinates.coordinates;
 import static com.rb.nonbiz.collections.MultiDimensionalArray.newMultiDimensionalArray;
 import static com.rb.nonbiz.collections.MultiDimensionalArrayTest.multiDimensionalArrayMatcher;
+import static com.rb.nonbiz.collections.MultiDimensionalArrayTest.singleDimensionMultiDimensionalArray;
+import static com.rb.nonbiz.collections.MultiDimensionalArrayTest.singleItemMultiDimensionalArray;
+import static com.rb.nonbiz.collections.MultiDimensionalArrayTest.twoDimensionalMultiDimensionalArray;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonDoubleArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonIntegerArray;
+import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonDoubleArray;
+import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonIntegerArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
 import static com.rb.nonbiz.jsonapi.JsonApiTestPair.jsonApiTestPair;
@@ -24,6 +30,30 @@ public class MultiDimensionalArrayJsonApiConverterTest
   public void testRoundTripConversions() {
     JsonApiTestData<MultiDimensionalArray<Double>> jsonApiTestData = jsonApiTestData(
         f -> multiDimensionalArrayMatcher(f, f2 -> doubleAlmostEqualsMatcher(f2, DEFAULT_EPSILON_1e_8)),
+
+        jsonApiTestPair(
+            singleItemMultiDimensionalArray(12.34),
+            jsonObject(
+                "dimensions", singletonJsonIntegerArray(1),
+                "items", singletonJsonDoubleArray(12.34))),
+
+        jsonApiTestPair(
+            singleDimensionMultiDimensionalArray(70.0, 70.1, 70.2),
+            jsonObject(
+                "dimensions", singletonJsonIntegerArray(3),
+                "items", jsonDoubleArray(
+                    70.0, 70.1, 70.2))),
+
+        jsonApiTestPair(
+            twoDimensionalMultiDimensionalArray(new Double[][] {
+                { 70.0, 70.1, 70.2 },
+                { 71.0, 71.1, 71.2 }
+            }),
+            jsonObject(
+                "dimensions", jsonIntegerArray(2, 3),
+                "items", jsonDoubleArray(
+                    70.0, 70.1, 70.2,
+                    71.0, 71.1, 71.2))),
 
         jsonApiTestPair(
             newMultiDimensionalArray(
