@@ -236,6 +236,16 @@ public class RBJsonArrays {
         .toArray();          // a raw array of type double[]
   }
 
+  /**
+   * Converts a JsonArray to a raw array of type double[].
+   */
+  public static int[] jsonArrayToIntArray(JsonArray jsonArray, Function<JsonElement, Integer> itemDeserializer) {
+    return jsonArrayToList(jsonArray, itemDeserializer)
+        .stream()
+        .mapToInt(d -> d) // a DoubleStream, e.g. a stream of primitive doubles
+        .toArray();          // a raw array of type double[]
+  }
+
   public static <T> RBSet<T> jsonArrayToRBSet(JsonArray jsonArray, Function<JsonElement, T> itemDeserializer) {
     MutableRBSet<T> mutableSet = newMutableRBSetWithExpectedSize(jsonArray.size());
     jsonArray.forEach(jsonElement -> mutableSet.addAssumingAbsent(itemDeserializer.apply(jsonElement)));
