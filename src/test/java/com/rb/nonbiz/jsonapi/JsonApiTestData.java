@@ -1,10 +1,16 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
+import com.rb.nonbiz.text.Strings;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
+import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * A collection of pairs of JSON objects and their corresponding Java objects,
@@ -34,6 +40,27 @@ public class JsonApiTestData<T> {
 
   public MatcherGenerator<T> getMatcherGenerator() {
     return matcherGenerator;
+  }
+
+  public void testRoundTripConversions(
+      Function<T, JsonObject> toJsonObject,
+      Function<JsonObject, T> fromJsonObject) {
+    for (int i = 0; i < testPairs.size(); i++) {
+      JsonApiTestPair<T> testPair = testPairs.get(i);
+      JsonObject expectedJson = testPair.getJsonObject();
+      T    expectedJavaObject = testPair.getJavaObject();
+      JsonObject actualJson = toJsonObject.apply(expectedJavaObject);
+      T    actualJavaObject = fromJsonObject.apply(expectedJson);
+
+      assertThat(
+          Strings.format("Test %s of %s : JSON (generated from Java object) does not match expected", i + 1, testPairs.size()),
+          actualJson,
+          jsonObjectEpsilonMatcher(expectedJson));
+      assertThat(
+          Strings.format("Test %s of %s : Java object (generated from JSON) does not match expected", i + 1, testPairs.size()),
+          actualJavaObject,
+          matcherGenerator.apply(expectedJavaObject));
+    }
   }
 
 }
