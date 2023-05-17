@@ -165,6 +165,43 @@ public class RoundingScaleTest extends RBTestMatcher<RoundingScale> {
     asserter.accept(-5.6,  roundingScale(1), -5.551);
   }
 
+  @Test
+  public void testCeilingSimplistically() {
+    TriConsumer<Double, RoundingScale, Double> asserter = (expectedRoundedResult, roundingScale, unrounded) ->
+        assertEquals(expectedRoundedResult, roundingScale.ceilingSimplistically(unrounded), 1e-8);
+
+    asserter.accept(990.0,      roundingScale(-1), 987.654321);
+    asserter.accept(988.0,      roundingScale(0),  987.654321);
+    asserter.accept(987.7,      roundingScale(1),  987.654321);
+    asserter.accept(987.66,     roundingScale(2),  987.654321);
+    asserter.accept(987.655,    roundingScale(3),  987.654321);
+    asserter.accept(987.654321, roundingScale(6),  987.654321);
+    asserter.accept(987.654321, roundingScale(10), 987.654321);
+
+    asserter.accept(-980.0,      roundingScale(-1), -987.654321);
+    asserter.accept(-987.0,      roundingScale(0),  -987.654321);
+    asserter.accept(-987.6,      roundingScale(1),  -987.654321);
+    asserter.accept(-987.65,     roundingScale(2),  -987.654321);
+    asserter.accept(-987.654,    roundingScale(3),  -987.654321);
+    asserter.accept(-987.654321, roundingScale(6),  -987.654321);
+    asserter.accept(-987.654321, roundingScale(10), -987.654321);
+
+    asserter.accept(5.6,   roundingScale(1), 5.55);
+    asserter.accept(5.6,   roundingScale(1), 5.551);
+
+    asserter.accept(56.0,  roundingScale( 0), 55.5);
+    asserter.accept(56.0,  roundingScale( 0), 55.51);
+
+    asserter.accept(560.0, roundingScale(-1), 555.0);
+    asserter.accept(560.0, roundingScale(-1), 555.1);
+
+    asserter.accept(-5.0,  roundingScale(0), -5.5);
+    asserter.accept(-5.0,  roundingScale(0), -5.51);
+
+    asserter.accept(-5.5,  roundingScale(1), -5.55);
+    asserter.accept(-5.5,  roundingScale(1), -5.551);
+  }
+
   @Override
   public RoundingScale makeTrivialObject() {
     return INTEGER_ROUNDING_SCALE;
