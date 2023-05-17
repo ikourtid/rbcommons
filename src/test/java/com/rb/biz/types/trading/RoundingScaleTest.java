@@ -1,5 +1,6 @@
 package com.rb.biz.types.trading;
 
+import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -87,43 +88,46 @@ public class RoundingScaleTest extends RBTestMatcher<RoundingScale> {
 
   @Test
   public void testRoundSimplistically() {
-    assertEquals(990,    roundingScale(-1).roundSimplistically(987.654321), 1e-8);
-    assertEquals(988,     roundingScale(0).roundSimplistically(987.654321), 1e-8);
-    assertEquals(987.7,   roundingScale(1).roundSimplistically(987.654321), 1e-8);
-    assertEquals(987.65,  roundingScale(2).roundSimplistically(987.654321), 1e-8);
-    assertEquals(987.654, roundingScale(3).roundSimplistically(987.654321), 1e-8);
-    assertEquals(987.654321, roundingScale( 6).roundSimplistically(987.654321), 1e-8);
-    assertEquals(987.654321, roundingScale(10).roundSimplistically(987.654321), 1e-8);
+    TriConsumer<Double, RoundingScale, Double> asserter = (expectedRoundedResult, roundingScale, unrounded) ->
+        assertEquals(expectedRoundedResult, roundingScale.roundSimplistically(unrounded), 1e-8);
 
-    assertEquals(-990,    roundingScale(-1).roundSimplistically(-987.654321), 1e-8);
-    assertEquals(-988,     roundingScale(0).roundSimplistically(-987.654321), 1e-8);
-    assertEquals(-987.7,   roundingScale(1).roundSimplistically(-987.654321), 1e-8);
-    assertEquals(-987.65,  roundingScale(2).roundSimplistically(-987.654321), 1e-8);
-    assertEquals(-987.654, roundingScale(3).roundSimplistically(-987.654321), 1e-8);
-    assertEquals(-987.654321, roundingScale( 6).roundSimplistically(-987.654321), 1e-8);
-    assertEquals(-987.654321, roundingScale(10).roundSimplistically(-987.654321), 1e-8);
+    asserter.accept(990.0,      roundingScale(-1), 987.654321);
+    asserter.accept(988.0,      roundingScale(0),  987.654321);
+    asserter.accept(987.7,      roundingScale(1),  987.654321);
+    asserter.accept(987.65,     roundingScale(2),  987.654321);
+    asserter.accept(987.654,    roundingScale(3),  987.654321);
+    asserter.accept(987.654321, roundingScale(6),  987.654321);
+    asserter.accept(987.654321, roundingScale(10), 987.654321);
+
+    asserter.accept(-990.0,      roundingScale(-1), -987.654321);
+    asserter.accept(-988.0,      roundingScale(0),  -987.654321);
+    asserter.accept(-987.7,      roundingScale(1),  -987.654321);
+    asserter.accept(-987.65,     roundingScale(2),  -987.654321);
+    asserter.accept(-987.654,    roundingScale(3),  -987.654321);
+    asserter.accept(-987.654321, roundingScale(6),  -987.654321);
+    asserter.accept(-987.654321, roundingScale(10), -987.654321);
 
     // roundSimplistically works for cases in which multiplying by 10, rounding, and dividing by 10 would not:
     // (5.55 * 10.0) / 10.0 computes as 5.5, but we want it to compute 5.6.
     // Instead, we use two multiplications: (5.55 * 10.0) * 0.1, which computes to 5.6
-    assertEquals(5.6, roundingScale(1).roundSimplistically(5.55),  1e-8);
-    assertEquals(5.6, roundingScale(1).roundSimplistically(5.551), 1e-8);
+    asserter.accept(5.6,   roundingScale(1), 5.55);
+    asserter.accept(5.6,   roundingScale(1), 5.551);
 
-    assertEquals(56,  roundingScale( 0).roundSimplistically(55.5),  1e-8);
-    assertEquals(56,  roundingScale( 0).roundSimplistically(55.51), 1e-8);
+    asserter.accept(56.0,  roundingScale( 0), 55.5);
+    asserter.accept(56.0,  roundingScale( 0), 55.51);
 
-    assertEquals(560, roundingScale(-1).roundSimplistically(555.0), 1e-8);
-    assertEquals(560, roundingScale(-1).roundSimplistically(555.1), 1e-8);
+    asserter.accept(560.0, roundingScale(-1), 555.0);
+    asserter.accept(560.0, roundingScale(-1), 555.1);
 
     // -5.5 rounds simplistically 'up' to -5
-    assertEquals(-5, roundingScale(0).roundSimplistically(-5.5),  1e-8);
-    assertEquals(-6, roundingScale(0).roundSimplistically(-5.51), 1e-8);
+    asserter.accept(-5.0,  roundingScale(0), -5.5);
+    asserter.accept(-6.0,  roundingScale(0), -5.51);
 
     // -5.55 simplistically rounds 'up' to -5.55.
-    assertEquals(-5.5, roundingScale(1).roundSimplistically(-5.55),  1e-8);
-    assertEquals(-5.6, roundingScale(1).roundSimplistically(-5.551), 1e-8);
+    asserter.accept(-5.5,  roundingScale(1), -5.55);
+    asserter.accept(-5.6,  roundingScale(1), -5.551);
   }
-
+  
   @Override
   public RoundingScale makeTrivialObject() {
     return INTEGER_ROUNDING_SCALE;

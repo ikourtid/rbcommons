@@ -102,6 +102,26 @@ public class RoundingScale implements Comparable<RoundingScale> {
     return Math.round(value * getPowerOf10InverseAsDouble()) * getPowerOf10AsDouble();
   }
 
+  /**
+   * Implements an imperfect flooring of scaling down a number, rounding it as an int, and scaling it up.
+   * We add 'simplistically' to the name of this method, just to be clear to the caller. In many cases this is good
+   * enough (e.g. writing numbers to JSON files for visualizations).
+   */
+  public double floorSimplistically(double value) {
+    // use two multiplications for improved accuracy (and speed)
+    return Math.floor(value * getPowerOf10InverseAsDouble()) * getPowerOf10AsDouble();
+  }
+
+  /**
+   * Implements an imperfect ceiling operation of scaling down a number, rounding it as an int, and scaling it up.
+   * We add 'simplistically' to the name of this method, just to be clear to the caller. In many cases this is good
+   * enough (e.g. writing numbers to JSON files for visualizations).
+   */
+  public double ceilingSimplistically(double value) {
+    // use two multiplications for improved accuracy (and speed)
+    return Math.ceil(value * getPowerOf10InverseAsDouble()) * getPowerOf10AsDouble();
+  }
+
   @Override
   public int compareTo(RoundingScale other) {
     return Integer.compare(roundingScale, other.roundingScale);
