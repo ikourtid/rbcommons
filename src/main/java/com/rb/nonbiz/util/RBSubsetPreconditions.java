@@ -54,7 +54,7 @@ public class RBSubsetPreconditions {
     RBSet<T> badItems = RBSets.difference(expectedSubset, expectedSuperset);
     throw new IllegalArgumentException(smartFormat(
         "%s : %s items in the %s -item left set (expected subset) are not in the %s -item right set (expected superset)."
-            + " Items: %s ; left set= %s ; right set= %s : %s",
+            + " Items: %s ; left set= %s ; right set= %s",
         smartFormat(format, args),
         badItems.size(), expectedSubset.size(), expectedSuperset.size(),
         badItems, expectedSubset, expectedSuperset));
