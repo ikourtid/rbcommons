@@ -49,24 +49,24 @@ public class RBIntegersTest {
     Epsilon epsilon = epsilon(0.02);
 
     assertIllegalArgumentException( () -> asAlmostExactIntOrThrow(-1.03, epsilon));
-    assertEquals(-1, asAlmostExactIntOrThrow(-1.01, epsilon));
-    assertEquals(-1, asAlmostExactIntOrThrow(-1.0, epsilon));
-    assertEquals(-1, asAlmostExactIntOrThrow(-0.99, epsilon));
+    assertEquals(-1,                      asAlmostExactIntOrThrow(-1.01, epsilon));
+    assertEquals(-1,                      asAlmostExactIntOrThrow(-1.0,  epsilon));
+    assertEquals(-1,                      asAlmostExactIntOrThrow(-0.99, epsilon));
     assertIllegalArgumentException( () -> asAlmostExactIntOrThrow(-0.97, epsilon));
     assertIllegalArgumentException( () -> asAlmostExactIntOrThrow(-0.03, epsilon));
-    assertEquals(0, asAlmostExactIntOrThrow(-0.01, epsilon));
-    assertEquals(0, asAlmostExactIntOrThrow(0.0, epsilon));
-    assertEquals(0, asAlmostExactIntOrThrow(0.01, epsilon));
-    assertIllegalArgumentException( () -> asAlmostExactIntOrThrow(0.03, epsilon));
-    assertIllegalArgumentException( () -> asAlmostExactIntOrThrow(0.97, epsilon));
-    assertEquals(1, asAlmostExactIntOrThrow(0.99, epsilon));
-    assertEquals(1, asAlmostExactIntOrThrow(1.0, epsilon));
-    assertEquals(1, asAlmostExactIntOrThrow(1.01, epsilon));
-    assertIllegalArgumentException( () -> asAlmostExactIntOrThrow(1.03, epsilon));
-    assertIllegalArgumentException( () -> asAlmostExactIntOrThrow(1.97, epsilon));
-    assertEquals(2, asAlmostExactIntOrThrow(1.99, epsilon));
-    assertEquals(2, asAlmostExactIntOrThrow(2.0, epsilon));
-    assertEquals(2, asAlmostExactIntOrThrow(2.01, epsilon));
+    assertEquals(0,                       asAlmostExactIntOrThrow(-0.01, epsilon));
+    assertEquals(0,                       asAlmostExactIntOrThrow( 0.0,  epsilon));
+    assertEquals(0,                       asAlmostExactIntOrThrow( 0.01, epsilon));
+    assertIllegalArgumentException( () -> asAlmostExactIntOrThrow( 0.03, epsilon));
+    assertIllegalArgumentException( () -> asAlmostExactIntOrThrow( 0.97, epsilon));
+    assertEquals(1,                       asAlmostExactIntOrThrow( 0.99, epsilon));
+    assertEquals(1,                       asAlmostExactIntOrThrow( 1.0,  epsilon));
+    assertEquals(1,                       asAlmostExactIntOrThrow( 1.01, epsilon));
+    assertIllegalArgumentException( () -> asAlmostExactIntOrThrow( 1.03, epsilon));
+    assertIllegalArgumentException( () -> asAlmostExactIntOrThrow( 1.97, epsilon));
+    assertEquals(2,                       asAlmostExactIntOrThrow( 1.99, epsilon));
+    assertEquals(2,                       asAlmostExactIntOrThrow( 2.0,  epsilon));
+    assertEquals(2,                       asAlmostExactIntOrThrow( 2.01, epsilon));
   }
 
 }
