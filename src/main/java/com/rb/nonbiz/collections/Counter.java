@@ -42,6 +42,11 @@ public class Counter<T> {
       return this;
     }
 
+    public CounterBuilder<T> addAll(RBMap<T, Integer> rbMap) {
+      rbMap.forEachEntry( (key, value) -> add(key, value));
+      return this;
+    }
+
     public CounterBuilder<T> increment(T key) {
       return add(key, 1);
     }
