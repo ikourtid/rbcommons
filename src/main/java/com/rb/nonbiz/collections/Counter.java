@@ -111,9 +111,8 @@ public class Counter<T> {
   }
 
   /**
-   * Do not use this; it is here to help the test matcher.
+   * Do not use this; it is here to help the test matcher and by a JSON API converter.
    */
-  @VisibleForTesting
   public RBMap<T, Integer> getRawMap() {
     return rawMap;
   }
