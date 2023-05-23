@@ -22,10 +22,10 @@ public class JsonObjectPathTest extends RBTestMatcher<JsonObjectPath> {
         "\t",
         "\n",
         "  ").forEach(badJsonProperty -> {
-      assertIllegalArgumentException(() -> singletonJsonObjectPath(badJsonProperty));
-      assertIllegalArgumentException(() -> jsonObjectPath("x", badJsonProperty));
-      assertIllegalArgumentException(() -> jsonObjectPath(badJsonProperty, "y"));
-      assertIllegalArgumentException(() -> jsonObjectPath("x", badJsonProperty, "y"));
+      assertIllegalArgumentException( () -> singletonJsonObjectPath(badJsonProperty));
+      assertIllegalArgumentException( () -> jsonObjectPath("x", badJsonProperty));
+      assertIllegalArgumentException( () -> jsonObjectPath(badJsonProperty, "y"));
+      assertIllegalArgumentException( () -> jsonObjectPath("x", badJsonProperty, "y"));
     });
   }
 
