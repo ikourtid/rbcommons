@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
@@ -21,6 +22,7 @@ import static com.google.common.primitives.Ints.checkedCast;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional2;
 import static com.rb.nonbiz.collections.RBOptionals.toSpecializedOptionalDouble;
 import static com.rb.nonbiz.date.RBDates.dateFromYyyyMmDd;
+import static com.rb.nonbiz.json.JsonObjectPath.jsonObjectPath;
 import static com.rb.nonbiz.json.RBGson.PERCENTAGE_TO_FRACTION;
 import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonArray;
@@ -385,16 +387,17 @@ public class RBJsonObjectGetters {
       JsonObject jsonObject,
       String firstProperty,
       String ... restOfProperties) {
-    // get the first level nested object
-    JsonObject innerJsonObject = getJsonObjectOrThrow(jsonObject, firstProperty);
-    if (restOfProperties.length == 0) {
-      // innermost nesting; return
-      return innerJsonObject;
-    }
+    return getNestedJsonObjectOrThrow(jsonObject, jsonObjectPath(firstProperty, restOfProperties));
+  }
 
-    // not innermost? call recursively...
-    String[] restExceptFirst = Arrays.copyOfRange(restOfProperties, 1, restOfProperties.length);
-    return getNestedJsonObjectOrThrow(innerJsonObject, restOfProperties[0], restExceptFirst);
+  public static JsonObject getNestedJsonObjectOrThrow(
+      JsonObject jsonObject,
+      JsonObjectPath jsonObjectPath) {
+    JsonObject innerJsonObject = jsonObject;
+    for (String jsonProperty : jsonObjectPath.getJsonProperties()) {
+      innerJsonObject = getJsonObjectOrThrow(innerJsonObject, jsonProperty);
+    }
+    return innerJsonObject;
   }
 
   /**

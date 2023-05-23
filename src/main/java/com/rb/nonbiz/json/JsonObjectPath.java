@@ -2,15 +2,13 @@ package com.rb.nonbiz.json;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.rb.biz.types.StringFunctions;
-import com.rb.nonbiz.collections.RBLists;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.List;
 
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
-import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
+import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 import static com.rb.nonbiz.text.Strings.formatCollectionInOrder;
 import static java.util.Collections.singletonList;
 
@@ -25,7 +23,10 @@ public class JsonObjectPath {
     this.jsonProperties = jsonProperties;
   }
 
-  private static JsonObjectPath jsonObjectPath(List<String> jsonProperties) {
+  public static JsonObjectPath jsonObjectPath(List<String> jsonProperties) {
+    RBPreconditions.checkArgument(
+        !jsonProperties.isEmpty(),
+        "We must have at least one property in the JsonObjectPath");
     // Ideally we would have a typesafe JsonProperty type here that disallows such bad values,
     // but it's too late by now (May 2023) to make such a change, as most code uses a plain String
     // to denote a JSON property.
@@ -36,8 +37,8 @@ public class JsonObjectPath {
     return new JsonObjectPath(jsonProperties);
   }
 
-  public static JsonObjectPath jsonObjectPath(String first, String second, String ... rest) {
-    return jsonObjectPath(concatenateFirstSecondAndRest(first, second, rest));
+  public static JsonObjectPath jsonObjectPath(String first, String ... rest) {
+    return jsonObjectPath(concatenateFirstAndRest(first, rest));
   }
 
   public static JsonObjectPath singletonJsonObjectPath(String onlyProperty) {
