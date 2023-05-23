@@ -16,6 +16,7 @@ import java.util.function.Function;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.rb.biz.types.Price.price;
+import static com.rb.nonbiz.json.JsonObjectPath.jsonObjectPath;
 import static com.rb.nonbiz.json.RBGson.jsonBoolean;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonInteger;
@@ -610,7 +611,7 @@ public class RBJsonObjectGettersTest {
   }
 
   @Test
-  public void getNestedJsonObject_pathExistsButValueIsNotJsonObject_throws() {
+  public void getNestedJsonObject_usingStringOverload_pathExistsButValueIsNotJsonObject_throws() {
     Function<JsonElement, JsonObject> maker = jsonElement -> singletonJsonObject(
         "key0", singletonJsonObject(
             "key1", jsonElement));
@@ -631,7 +632,32 @@ public class RBJsonObjectGettersTest {
     doesNotThrow2 = getOptionalNestedJsonObject(
         maker.apply(singletonJsonObject(DUMMY_STRING, jsonInteger(DUMMY_POSITIVE_INTEGER))), "key0", "key1");
   }
-  
+
+  // Same as above, but using the overload that takes a JsonObjectPath.
+  @Test
+  public void getNestedJsonObject_usingJsonObjectPathOverload_pathExistsButValueIsNotJsonObject_throws() {
+    Function<JsonElement, JsonObject> maker = jsonElement -> singletonJsonObject(
+        "key0", singletonJsonObject(
+            "key1", jsonElement));
+
+    JsonObjectPath pathKey0Key1 = jsonObjectPath("key0", "key1");
+    assertIllegalArgumentException( () ->
+        getNestedJsonObjectOrThrow(maker.apply(jsonString(DUMMY_STRING)), pathKey0Key1));
+    assertIllegalArgumentException( () ->
+        getOptionalNestedJsonObject(maker.apply(jsonString(DUMMY_STRING)), pathKey0Key1));
+
+    JsonObject doesNotThrow1;
+    doesNotThrow1 = getNestedJsonObjectOrThrow(
+        maker.apply(emptyJsonObject()), pathKey0Key1);
+    doesNotThrow1 = getNestedJsonObjectOrThrow(
+        maker.apply(singletonJsonObject(DUMMY_STRING, jsonInteger(DUMMY_POSITIVE_INTEGER))), pathKey0Key1);
+    Optional<JsonObject> doesNotThrow2;
+    doesNotThrow2 = getOptionalNestedJsonObject(
+        maker.apply(emptyJsonObject()), pathKey0Key1);
+    doesNotThrow2 = getOptionalNestedJsonObject(
+        maker.apply(singletonJsonObject(DUMMY_STRING, jsonInteger(DUMMY_POSITIVE_INTEGER))), pathKey0Key1);
+  }
+
   @Test
   public void test_getJsonObjectOrDefault() {
     JsonObject jsonObject = singletonJsonObject("a", singletonJsonObject("xyz", jsonString("123")));

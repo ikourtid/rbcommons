@@ -411,19 +411,27 @@ public class RBJsonObjectGetters {
       JsonObject jsonObject,
       String firstProperty,
       String ... restOfProperties) {
-    return transformOptional2(
-        getOptionalJsonObject(jsonObject, firstProperty),
-        // if the first subobject is not there, transformOptional2 won't evaluate the code below, and just return empty.
-        firstInnerJsonObject -> {
-          if (restOfProperties.length == 0) {
-            // innermost nesting; return
-            return Optional.of(firstInnerJsonObject);
-          }
+    return getOptionalNestedJsonObject(jsonObject, jsonObjectPath(firstProperty, restOfProperties));
+  }
 
-          // not innermost? call recursively...
-          String[] restExceptFirst = Arrays.copyOfRange(restOfProperties, 1, restOfProperties.length);
-          return getOptionalNestedJsonObject(firstInnerJsonObject, restOfProperties[0], restExceptFirst);
-        });
+  public static Optional<JsonObject> getOptionalNestedJsonObject(
+      JsonObject jsonObject,
+      JsonObjectPath jsonObjectPath) {
+    JsonObject intermediateJsonObject = jsonObject;
+
+    for (String jsonProperty : jsonObjectPath.getJsonProperties()) {
+      if (!intermediateJsonObject.has(jsonProperty)) {
+        return Optional.empty();
+      }
+      JsonElement nestedJsonElement = intermediateJsonObject.get(jsonProperty);
+      RBPreconditions.checkArgument(
+          nestedJsonElement.isJsonObject(),
+          "Nested JsonElement under property %s is not a JsonObject: %s",
+          jsonProperty, nestedJsonElement);
+      intermediateJsonObject = nestedJsonElement.getAsJsonObject();
+    }
+    // If by this point we haven't exited, the nested JsonObject exists.
+    return Optional.of(intermediateJsonObject);
   }
 
   /**
