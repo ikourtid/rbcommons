@@ -616,6 +616,30 @@ public class RBJsonObjectGettersTest {
         "key0", singletonJsonObject(
             "key1", jsonElement));
 
+    assertIllegalArgumentException( () ->
+        getNestedJsonObjectOrThrow(maker.apply(jsonString(DUMMY_STRING)), "key0", "key1"));
+    assertIllegalArgumentException( () ->
+        getOptionalNestedJsonObject(maker.apply(jsonString(DUMMY_STRING)), "key0", "key1"));
+
+    JsonObject doesNotThrow1;
+    doesNotThrow1 = getNestedJsonObjectOrThrow(
+        maker.apply(emptyJsonObject()), "key0", "key1");
+    doesNotThrow1 = getNestedJsonObjectOrThrow(
+        maker.apply(singletonJsonObject(DUMMY_STRING, jsonInteger(DUMMY_POSITIVE_INTEGER))), "key0", "key1");
+    Optional<JsonObject> doesNotThrow2;
+    doesNotThrow2 = getOptionalNestedJsonObject(
+        maker.apply(emptyJsonObject()), "key0", "key1");
+    doesNotThrow2 = getOptionalNestedJsonObject(
+        maker.apply(singletonJsonObject(DUMMY_STRING, jsonInteger(DUMMY_POSITIVE_INTEGER))), "key0", "key1");
+  }
+
+  // Same as above, but using the overload that takes a JsonObjectPath.
+  @Test
+  public void getNestedJsonObject_usingJsonObjectPathOverload_pathExistsButValueIsNotJsonObject_throws() {
+    Function<JsonElement, JsonObject> maker = jsonElement -> singletonJsonObject(
+        "key0", singletonJsonObject(
+            "key1", jsonElement));
+
     JsonObjectPath pathKey0Key1 = jsonObjectPath("key0", "key1");
     assertIllegalArgumentException( () ->
         getNestedJsonObjectOrThrow(maker.apply(jsonString(DUMMY_STRING)), pathKey0Key1));
@@ -632,30 +656,6 @@ public class RBJsonObjectGettersTest {
         maker.apply(emptyJsonObject()), pathKey0Key1);
     doesNotThrow2 = getOptionalNestedJsonObject(
         maker.apply(singletonJsonObject(DUMMY_STRING, jsonInteger(DUMMY_POSITIVE_INTEGER))), pathKey0Key1);
-  }
-
-  // Same as above, but using the overload that takes a JsonObjectPath.
-  @Test
-  public void getNestedJsonObject_usingJsonObjectPathOverload_pathExistsButValueIsNotJsonObject_throws() {
-    Function<JsonElement, JsonObject> maker = jsonElement -> singletonJsonObject(
-        "key0", singletonJsonObject(
-            "key1", jsonElement));
-
-    assertIllegalArgumentException( () ->
-        getNestedJsonObjectOrThrow(maker.apply(jsonString(DUMMY_STRING)), "key0", "key1"));
-    assertIllegalArgumentException( () ->
-        getOptionalNestedJsonObject(maker.apply(jsonString(DUMMY_STRING)), "key0", "key1"));
-
-    JsonObject doesNotThrow1;
-    doesNotThrow1 = getNestedJsonObjectOrThrow(
-        maker.apply(emptyJsonObject()), "key0", "key1");
-    doesNotThrow1 = getNestedJsonObjectOrThrow(
-        maker.apply(singletonJsonObject(DUMMY_STRING, jsonInteger(DUMMY_POSITIVE_INTEGER))), "key0", "key1");
-    Optional<JsonObject> doesNotThrow2;
-    doesNotThrow2 = getOptionalNestedJsonObject(
-        maker.apply(emptyJsonObject()), "key0", "key1");
-    doesNotThrow2 = getOptionalNestedJsonObject(
-        maker.apply(singletonJsonObject(DUMMY_STRING, jsonInteger(DUMMY_POSITIVE_INTEGER))), "key0", "key1");
   }
 
   @Test
