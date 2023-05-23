@@ -1,5 +1,6 @@
 package com.rb.nonbiz.json;
 
+import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -10,9 +11,19 @@ import static com.rb.nonbiz.json.JsonObjectPath.singletonJsonObjectPath;
 import static com.rb.nonbiz.testmatchers.Match.matchListUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.fail;
 
 public class JsonObjectPathTest extends RBTestMatcher<JsonObjectPath> {
+
+  @Test
+  public void isEmpty_throws() {
+    assertIllegalArgumentException( () -> jsonObjectPath(emptyList()));
+    JsonObjectPath doesNotThrow;
+    doesNotThrow = jsonObjectPath(singletonList("x"));
+    doesNotThrow = jsonObjectPath(ImmutableList.of("x", "y"));
+  }
 
   @Test
   public void hasEmptyProperties_throws() {
