@@ -42,6 +42,11 @@ public class Counter<T> {
       return this;
     }
 
+    public CounterBuilder<T> addAll(RBMap<T, Integer> rbMap) {
+      rbMap.forEachEntry( (key, value) -> add(key, value));
+      return this;
+    }
+
     public CounterBuilder<T> increment(T key) {
       return add(key, 1);
     }
@@ -106,10 +111,9 @@ public class Counter<T> {
   }
 
   /**
-   * Do not use this; it is here to help the test matcher.
+   * Do not use this; it is here to help the test matcher and by a JSON API converter.
    */
-  @VisibleForTesting
-  RBMap<T, Integer> getRawMap() {
+  public RBMap<T, Integer> getRawMapUnsafe() {
     return rawMap;
   }
 
