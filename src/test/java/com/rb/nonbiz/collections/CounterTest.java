@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import static com.rb.nonbiz.collections.Counter.CounterBuilder.counterBuilder;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
-import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -147,7 +146,7 @@ public class CounterTest extends RBTestMatcher<Counter<String>> {
   }
 
   @Test
-  public void testAddAll() {
+  public void testAddAllUnsafe() {
     CounterBuilder<String> builder = CounterBuilder.<String>counterBuilder()
         .add("A", 7)
         .add("B", 8);
@@ -158,7 +157,7 @@ public class CounterTest extends RBTestMatcher<Counter<String>> {
                 "B", 12,   // "B" already has an entry: 8
                 "C", 30))  // "C" has no entry
             .build()
-            .getRawMap(),
+            .getRawMapUnsafe(),
         rbMapMatcher(
             rbMapOf(
                 "A", intExplained(10, 7 +  3),
@@ -200,7 +199,7 @@ public class CounterTest extends RBTestMatcher<Counter<String>> {
   public static <T> TypeSafeMatcher<Counter<T>> counterMatcher(Counter<T> expected) {
     return makeMatcher(expected,
         // RBMap actually implements equals, and the assumption is that map keys also implement equals/hashcode.
-        matchUsingEquals(v -> v.getRawMap()));
+        matchUsingEquals(v -> v.getRawMapUnsafe()));
   }
 
 }

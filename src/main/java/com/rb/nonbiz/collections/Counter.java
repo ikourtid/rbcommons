@@ -113,7 +113,7 @@ public class Counter<T> {
   /**
    * Do not use this; it is here to help the test matcher and by a JSON API converter.
    */
-  public RBMap<T, Integer> getRawMap() {
+  public RBMap<T, Integer> getRawMapUnsafe() {
     return rawMap;
   }
 
