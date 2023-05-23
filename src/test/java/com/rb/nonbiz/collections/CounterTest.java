@@ -7,13 +7,18 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.Counter.CounterBuilder.counterBuilder;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.intExplained;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -140,6 +145,27 @@ public class CounterTest extends RBTestMatcher<Counter<String>> {
         .add("A", -1));  // cannot add a negative count, even if the resulting count is positive
   }
 
+  @Test
+  public void testAddAllUnsafe() {
+    CounterBuilder<String> builder = CounterBuilder.<String>counterBuilder()
+        .add("A", 7)
+        .add("B", 8);
+
+    assertThat(
+        builder.addAll(rbMapOf(
+                "A",  3,   // "A" already has an entry: 7
+                "B", 12,   // "B" already has an entry: 8
+                "C", 30))  // "C" has no entry
+            .build()
+            .getRawMapUnsafe(),
+        rbMapMatcher(
+            rbMapOf(
+                "A", intExplained(10, 7 +  3),
+                "B", intExplained(20, 8 + 12),
+                "C", 30),
+            f -> typeSafeEqualTo(f)));
+  }
+
   @Override
   public Counter<String> makeTrivialObject() {
     return CounterBuilder.<String>counterBuilder().build();
@@ -173,7 +199,7 @@ public class CounterTest extends RBTestMatcher<Counter<String>> {
   public static <T> TypeSafeMatcher<Counter<T>> counterMatcher(Counter<T> expected) {
     return makeMatcher(expected,
         // RBMap actually implements equals, and the assumption is that map keys also implement equals/hashcode.
-        matchUsingEquals(v -> v.getRawMap()));
+        matchUsingEquals(v -> v.getRawMapUnsafe()));
   }
 
 }
