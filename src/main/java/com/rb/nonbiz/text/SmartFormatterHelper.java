@@ -87,21 +87,9 @@ public class SmartFormatterHelper {
     lock.lock();
     try {
       LongCounter stackDepth = stackDepthByThread.get().increment(); // see definition of stackDepthByThread for more
-      boolean mustReturn = PrintsInstruments.class.isAssignableFrom(obj.getClass()) && stackDepth.get() < MAX_SMART_FORMATTER_STACK_DEPTH;
-      String toReturn = null;
-      if (mustReturn) {
-        try {
-          toReturn = ((PrintsInstruments) obj).toString(instrumentMaster, rbClock.today());
-        } catch (Exception ignored){
-          // There exist some rare cases where the toString above would cause an exception. If so,
-          // it's better to print without the tickers than to just throw an exception.
-          // Normally, it's bad to swallow exceptions, but this is fine because an exception in toString
-          // is not as big a deal.
-          toReturn = obj.toString();
-        }
-      } else {
-        toReturn = obj.toString();
-      }
+      String toReturn = PrintsInstruments.class.isAssignableFrom(obj.getClass()) && stackDepth.get() < MAX_SMART_FORMATTER_STACK_DEPTH
+          ? ((PrintsInstruments) obj).toString(instrumentMaster, rbClock.today())
+          : obj.toString();
       stackDepth.decrement();
       return toReturn;
     } finally {
