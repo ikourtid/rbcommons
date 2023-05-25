@@ -232,18 +232,18 @@ public class RBJsonArrays {
   public static double[] jsonArrayToDoubleArray(JsonArray jsonArray, Function<JsonElement, Double> itemDeserializer) {
     return jsonArrayToList(jsonArray, itemDeserializer)
         .stream()
-        .mapToDouble(d -> d) // a DoubleStream, e.g. a stream of primitive doubles
+        .mapToDouble(d -> d) // changes this to a DoubleStream, i.e. a stream of primitive doubles
         .toArray();          // a raw array of type double[]
   }
 
   /**
-   * Converts a JsonArray to a raw array of type double[].
+   * Converts a JsonArray to a raw array of type int[].
    */
   public static int[] jsonArrayToIntArray(JsonArray jsonArray, Function<JsonElement, Integer> itemDeserializer) {
     return jsonArrayToList(jsonArray, itemDeserializer)
         .stream()
-        .mapToInt(d -> d) // a DoubleStream, e.g. a stream of primitive doubles
-        .toArray();          // a raw array of type double[]
+        .mapToInt(d -> d) // changes this to an IntStream, i.e. a stream of primitive ints
+        .toArray();       // a raw array of type int[]
   }
 
   public static <T> RBSet<T> jsonArrayToRBSet(JsonArray jsonArray, Function<JsonElement, T> itemDeserializer) {

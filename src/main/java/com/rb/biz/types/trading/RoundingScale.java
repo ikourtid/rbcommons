@@ -5,6 +5,7 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -108,8 +109,7 @@ public class RoundingScale implements Comparable<RoundingScale> {
    * enough (e.g. writing numbers to JSON files for visualizations).
    */
   public double floorSimplistically(double value) {
-    // use two multiplications for improved accuracy (and speed)
-    return Math.floor(value * getPowerOf10InverseAsDouble()) * getPowerOf10AsDouble();
+    return BigDecimal.valueOf(value).setScale(roundingScale, RoundingMode.FLOOR).doubleValue();
   }
 
   /**
@@ -118,8 +118,7 @@ public class RoundingScale implements Comparable<RoundingScale> {
    * enough (e.g. writing numbers to JSON files for visualizations).
    */
   public double ceilingSimplistically(double value) {
-    // use two multiplications for improved accuracy (and speed)
-    return Math.ceil(value * getPowerOf10InverseAsDouble()) * getPowerOf10AsDouble();
+    return BigDecimal.valueOf(value).setScale(roundingScale, RoundingMode.CEILING).doubleValue();
   }
 
   @Override
