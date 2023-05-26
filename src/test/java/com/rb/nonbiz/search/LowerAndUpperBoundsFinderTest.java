@@ -10,6 +10,7 @@ import java.util.function.UnaryOperator;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static org.junit.Assert.assertTrue;
 
 public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFinder> {
@@ -56,7 +57,7 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
 
   @Override
   protected LowerAndUpperBoundsFinder makeTestObject() {
-    return new LowerAndUpperBoundsFinder();
+    return makeRealObject(LowerAndUpperBoundsFinder.class);
   }
 
 }

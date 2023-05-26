@@ -41,13 +41,18 @@ public class LowerAndUpperBoundsFinder {
     {
       X lowerBound = startingPointForSearch;
       X upperBound = startingPointForSearch;
-      int comparison = evaluateInput.apply(startingPointForSearch).compareTo(target);
+      Y startingPointY = evaluateInput.apply(startingPointForSearch);
+      int comparison = startingPointY.compareTo(target);
+      log.debug("initX %s initY %s tgtY %s compare %s", startingPointForSearch, startingPointY, target, comparison);
+
       if (comparison > 0) {
         upperBound = startingPointForSearch;
         // keep reducing lowerBound until we get below target, i.e. it becomes a real lower bound
         for (int i = 0; i < maxIterations; i++) {
           lowerBound = reduceLowerBound.apply(lowerBound);
+          log.debug("i=%s reducing lower to %s", i, lowerBound);
           if (evaluateInput.apply(lowerBound).compareTo(target) < 0) {
+            log.debug("returning [%s, %s]", lowerBound, upperBound);
             return Range.closed(lowerBound, upperBound);
           }
         }
@@ -59,7 +64,9 @@ public class LowerAndUpperBoundsFinder {
         lowerBound = startingPointForSearch;
         for (int i = 0; i < maxIterations; i++) {
           upperBound = increaseUpperBound.apply(upperBound);
+          log.debug("i=%s increasing upper to %s", i, upperBound);
           if (evaluateInput.apply(upperBound).compareTo(target) > 0) {
+            log.debug("returning [%s, %s]", lowerBound, upperBound);
             return Range.closed(lowerBound, upperBound);
           }
         }
@@ -68,7 +75,10 @@ public class LowerAndUpperBoundsFinder {
             maxIterations, upperBound, evaluateInput.apply(upperBound), target));
       } else {
         // relax bounds so that they are strictly not equal to target
-        return Range.closed(reduceLowerBound.apply(lowerBound), increaseUpperBound.apply(upperBound));
+        lowerBound = reduceLowerBound.apply(lowerBound);
+        upperBound = increaseUpperBound.apply(upperBound);
+        log.debug("returning [%s, %s]", lowerBound, upperBound);
+        return Range.closed(lowerBound, upperBound);
       }
     }
   }
