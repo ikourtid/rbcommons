@@ -10,26 +10,30 @@ import java.util.function.UnaryOperator;
 import static com.rb.nonbiz.text.RBLog.rbLog;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
+/**
+ * Find a Range of upper and upper <i>X</i>-value bounds whose <i>Y</i> values bracket a target <i>Y</i> value.
+ *
+ * <p> The user must supply 3 functions: </p>
+ * <ol>
+ *   <li> <i>evaluateInput(x)</i> to evaluate any <i>X</i> values. </li>
+ *   <li> <i>reduceLowerBound(x)</i> to reduce the lower bound. </li>
+ *   <li> <i>increaseUpperBound(x)</i> to increase the upper bound. </li>
+ * </ol>
+ * 
+ * <p> The user must also specify the maximum number of bound increases/decreases to use. The same maximum
+ * will be applied for both increasing the upper bound as well as decreasing the lower bound. </p>
+ *
+ * <p> Note: these methods assume that the function to be bound is monotonically increasing. </p>
+ */
 public class LowerAndUpperBoundsFinder {
 
   private final static RBLog log = rbLog(LowerAndUpperBoundsFinder.class);
+
   /**
    * Find a Range of upper and upper <i>X</i>-value bounds whose <i>Y</i> values bracket a target <i>Y</i> value.
    *
-   * <p> The user must supply 3 functions: </p>
-   * <ol>
-   *   <li> <i>evaluateInput(x)</i> to evaluate any <i>X</i> values. </li>
-   *   <li> <i>reduceLowerBound(x)</i> to reduce the lower bound. </li>
-   *   <li> <i>increaseUpperBound(x)</i> to increase the upper bound. </li>
-   * </ol>
-   *
-   * <p> The user must also specify the maximum number of bound increases/decreases to use. The same maximum
-   * will be applied for both increasing the upper bound as well as decreasing the lower bound. </p>
-   *
    * <p> This method should be used if there is a single starting <i>X</i> value for the search.
    * There is a similar method using an upper and a lower starting range. </p>
-   *
-   * <p> Note: this method assumes that the function to be bound is monotonically increasing. </p>
    */
   public <X extends Comparable<? super X>, Y extends Comparable<? super Y>> Range<X> findLowerAndUpperBounds(
       Function<X, Y> evaluateInput,
@@ -38,48 +42,46 @@ public class LowerAndUpperBoundsFinder {
       UnaryOperator<X> reduceLowerBound,
       UnaryOperator<X> increaseUpperBound,
       int maxIterations) {
-    {
-      X lowerBound = startingPointForSearch;
-      X upperBound = startingPointForSearch;
-      Y startingPointY = evaluateInput.apply(startingPointForSearch);
-      int comparison = startingPointY.compareTo(target);
-      log.debug("initX %s initY %s tgtY %s compare %s", startingPointForSearch, startingPointY, target, comparison);
+    X lowerBound = startingPointForSearch;
+    X upperBound = startingPointForSearch;
+    Y startingPointY = evaluateInput.apply(startingPointForSearch);
+    int comparison = startingPointY.compareTo(target);
+    log.debug("initX %s initY %s tgtY %s compare %s", startingPointForSearch, startingPointY, target, comparison);
 
-      if (comparison > 0) {
-        upperBound = startingPointForSearch;
-        // keep reducing lowerBound until we get below target, i.e. it becomes a real lower bound
-        for (int i = 0; i < maxIterations; i++) {
-          lowerBound = reduceLowerBound.apply(lowerBound);
-          log.debug("i=%s reduce lowX to %s", i, lowerBound);
-          if (evaluateInput.apply(lowerBound).compareTo(target) < 0) {
-            log.debug("returning [%s, %s]", lowerBound, upperBound);
-            return Range.closed(lowerBound, upperBound);
-          }
-        }
-        throw new IllegalArgumentException(smartFormat(
-            "After %s iterations, our lower bound of %s produces a value %s that's still above the target of %s",
-            maxIterations, lowerBound, evaluateInput.apply(lowerBound), target));
-      } else if (comparison < 0) {
-        // keep increasing upperBound until we get above target, i.e. it becomes a real upper bound
-        lowerBound = startingPointForSearch;
-        for (int i = 0; i < maxIterations; i++) {
-          upperBound = increaseUpperBound.apply(upperBound);
-          log.debug("i=%s increase upX to %s", i, upperBound);
-          if (evaluateInput.apply(upperBound).compareTo(target) > 0) {
-            log.debug("returning [%s, %s]", lowerBound, upperBound);
-            return Range.closed(lowerBound, upperBound);
-          }
-        }
-        throw new IllegalArgumentException(smartFormat(
-            "After %s iterations, our upper bound of %s produces a value %s that's still below the target of %s",
-            maxIterations, upperBound, evaluateInput.apply(upperBound), target));
-      } else {
-        // relax bounds so that they are strictly not equal to target
+    if (comparison > 0) {
+      upperBound = startingPointForSearch;
+      // keep reducing lowerBound until we get below target, i.e. it becomes a real lower bound
+      for (int i = 0; i < maxIterations; i++) {
         lowerBound = reduceLowerBound.apply(lowerBound);
-        upperBound = increaseUpperBound.apply(upperBound);
-        log.debug("returning [%s, %s]", lowerBound, upperBound);
-        return Range.closed(lowerBound, upperBound);
+        log.debug("i=%s reduce lowX to %s", i, lowerBound);
+        if (evaluateInput.apply(lowerBound).compareTo(target) < 0) {
+          log.debug("returning [%s, %s]", lowerBound, upperBound);
+          return Range.closed(lowerBound, upperBound);
+        }
       }
+      throw new IllegalArgumentException(smartFormat(
+          "After %s iterations, our lower bound of %s produces a value %s that's still above the target of %s",
+          maxIterations, lowerBound, evaluateInput.apply(lowerBound), target));
+    } else if (comparison < 0) {
+      // keep increasing upperBound until we get above target, i.e. it becomes a real upper bound
+      lowerBound = startingPointForSearch;
+      for (int i = 0; i < maxIterations; i++) {
+        upperBound = increaseUpperBound.apply(upperBound);
+        log.debug("i=%s increase upX to %s", i, upperBound);
+        if (evaluateInput.apply(upperBound).compareTo(target) > 0) {
+          log.debug("returning [%s, %s]", lowerBound, upperBound);
+          return Range.closed(lowerBound, upperBound);
+        }
+      }
+      throw new IllegalArgumentException(smartFormat(
+          "After %s iterations, our upper bound of %s produces a value %s that's still below the target of %s",
+          maxIterations, upperBound, evaluateInput.apply(upperBound), target));
+    } else {
+      // relax bounds so that they are strictly not equal to target
+      lowerBound = reduceLowerBound.apply(lowerBound);
+      upperBound = increaseUpperBound.apply(upperBound);
+      log.debug("returning [%s, %s]", lowerBound, upperBound);
+      return Range.closed(lowerBound, upperBound);
     }
   }
 
