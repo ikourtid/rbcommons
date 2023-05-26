@@ -1,15 +1,18 @@
 package com.rb.nonbiz.search;
 
 import com.google.common.collect.Range;
+import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import static com.rb.nonbiz.text.RBLog.rbLog;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 public class LowerAndUpperBoundsFinder {
 
+  private final static RBLog log = rbLog(LowerAndUpperBoundsFinder.class);
   /**
    * Find a Range of upper and upper <i>X</i>-value bounds whose <i>Y</i> values bracket a target <i>Y</i> value.
    *
@@ -90,10 +93,16 @@ public class LowerAndUpperBoundsFinder {
         "startingPointForSearchLower %s must not be greater than startingPointForSearchUpper %s",
         startingPointForSearchLower, startingPointForSearchUpper);
 
-    int comparisonLower = evaluateInput.apply(startingPointForSearchLower).compareTo(target);
-    int comparisonUpper = evaluateInput.apply(startingPointForSearchUpper).compareTo(target);
+    Y yLowerBound = evaluateInput.apply(startingPointForSearchLower);
+    Y yUpperBound = evaluateInput.apply(startingPointForSearchUpper);
+    int comparisonLower = yLowerBound.compareTo(target);
+    int comparisonUpper = yUpperBound.compareTo(target);
+    log.debug(smartFormat("lowX %s upX %s ; lowY %s upY %s ; tgtY %s",
+        startingPointForSearchLower, startingPointForSearchUpper, yLowerBound, yUpperBound, target));
+
     // check for early exit; no bound changes needed?
     if (comparisonLower < 0 && comparisonUpper > 0) {
+      log.debug("returning no changes: [%s, %s]", startingPointForSearchLower, startingPointForSearchUpper);
       return Range.closed(startingPointForSearchLower, startingPointForSearchUpper) ;
     }
 
@@ -107,6 +116,7 @@ public class LowerAndUpperBoundsFinder {
       int iIteration = 0;
       while (iIteration < maxIterations) {
         lowerBound = reduceLowerBound.apply(lowerBound);
+        log.debug("i=%s reducing lower to %s", iIteration, lowerBound);
         if (evaluateInput.apply(lowerBound).compareTo(target) < 0) {
           break;
         }
@@ -126,6 +136,7 @@ public class LowerAndUpperBoundsFinder {
       int iIteration = 0;
       while (iIteration < maxIterations) {
         upperBound = increaseUpperBound.apply(upperBound);
+        log.debug("i= %s increasing upper to %s", iIteration, upperBound);
         if (evaluateInput.apply(upperBound).compareTo(target) > 0) {
           break;
         }
@@ -138,6 +149,7 @@ public class LowerAndUpperBoundsFinder {
       }
     }
 
+    log.debug("returning [%s, %s]", lowerBound, upperBound);
     return Range.closed(lowerBound, upperBound);
   }
 
