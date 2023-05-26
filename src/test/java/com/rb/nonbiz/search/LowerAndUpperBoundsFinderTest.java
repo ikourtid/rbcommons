@@ -93,7 +93,16 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
             increaseUpperBound,
             maxIterations);
 
-    Range<BigDecimal> doesNotThrow = maker.apply(x -> x.doubleValue());
+    // use f(x) = x
+    Range<BigDecimal> doesNotThrow;
+    doesNotThrow = maker.apply(x -> x.doubleValue());
+
+    // use f(x) = 1e-9 * x
+    doesNotThrow = maker.apply(x -> 1e-9 * x.doubleValue());
+
+    // use f(x) = 1.0
+    assertIllegalArgumentException( () -> maker.apply(
+        x -> 1.0));
 
     // use f(x) = -x
     assertIllegalArgumentException( () -> maker.apply(
