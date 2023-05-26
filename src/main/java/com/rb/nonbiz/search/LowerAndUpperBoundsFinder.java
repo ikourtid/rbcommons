@@ -11,7 +11,7 @@ import static com.rb.nonbiz.text.RBLog.rbLog;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
- * Find a Range of upper and upper <i>X</i>-value bounds whose <i>Y</i> values bracket a target <i>Y</i> value.
+ * Find a Range of upper and lower <i>X</i>-value bounds whose <i>Y</i> values bracket a target <i>Y</i> value.
  *
  * <p> The user must supply 3 functions: </p>
  * <ol>
