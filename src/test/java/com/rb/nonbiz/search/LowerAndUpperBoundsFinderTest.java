@@ -88,6 +88,19 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
   }
 
   @Test
+  public void happyPath_targetIsAboveGuessRange_bothGuessesSame_canFindValidBounds() {
+    double targetAboveStartingGuessRange = 5.0;
+    assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(
+        // use lower bound = upper bound
+        targetAboveStartingGuessRange, startingLowerBoundForSearch, startingLowerBoundForSearch);
+
+    double targetBelowStartingGuessRange = 0.2;
+    assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(
+        // use lower bound = upper bound
+        targetBelowStartingGuessRange, startingLowerBoundForSearch, startingLowerBoundForSearch);
+  }
+
+  @Test
   public void happyPath_targetIsBelowGuessRange_canFindValidBounds() {
     double targetBelowStartingGuessRange = 0.2;
     assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(targetBelowStartingGuessRange);
@@ -149,8 +162,7 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
     assertTrue(valueAtLower < target);
     assertTrue(valueAtUpper > target);
   }
-
-
+  
   @Override
   protected LowerAndUpperBoundsFinder makeTestObject() {
     return makeRealObject(LowerAndUpperBoundsFinder.class);
