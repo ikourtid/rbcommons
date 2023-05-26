@@ -86,7 +86,8 @@ public class LowerAndUpperBoundsFinder {
   /**
    * Return a Range of <i>X</i>-values whose <i>Y</i>-values bracket an input target <i>Y</i>-value.
    *
-   * <p> As above, but use this if you have separate initial lower and upper <i>X</i> values instead of a single one. </p>
+   * <p> As above, but use this if you have separate initial lower and upper <i>X</i> guessed values
+   * instead of a single value. </p>
    *
    * <p> Note: this method assumes that the function to be bound is monotonically increasing. </p>
    */
@@ -105,6 +106,12 @@ public class LowerAndUpperBoundsFinder {
 
     Y yLowerBound = evaluateInput.apply(startingPointForSearchLower);
     Y yUpperBound = evaluateInput.apply(startingPointForSearchUpper);
+    RBPreconditions.checkArgument(
+        startingPointForSearchLower.compareTo(startingPointForSearchUpper) == 0 ||
+            yLowerBound.compareTo(yUpperBound) < 0,
+        "yLowerBound %s must be less than yUpperBound %s",
+        yLowerBound, yUpperBound);
+
     int comparisonLower = yLowerBound.compareTo(target);
     int comparisonUpper = yUpperBound.compareTo(target);
     log.debug(smartFormat("lowX %s upX %s ; lowY %s upY %s ; tgtY %s",

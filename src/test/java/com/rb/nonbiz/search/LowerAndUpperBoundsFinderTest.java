@@ -82,6 +82,29 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
   }
 
   @Test
+  public void decreasingFunction_throws() {
+    Function<Function<BigDecimal, Double>, Range<BigDecimal>> maker = evaluator ->
+        makeTestObject().findLowerAndUpperBounds(
+            evaluator,
+            startingLowerBoundForSearch,
+            startingUpperBoundForSearch,
+            1.234,
+            reduceLowerBound,
+            increaseUpperBound,
+            maxIterations);
+
+    Range<BigDecimal> doesNotThrow = maker.apply(x -> x.doubleValue());
+
+    // use f(x) = -x
+    assertIllegalArgumentException( () -> maker.apply(
+        x -> x.negate().doubleValue()));
+
+    // use f(x) = 1/x
+    assertIllegalArgumentException( () -> maker.apply(
+        x -> BigDecimal.ONE.divide(x, DEFAULT_MATH_CONTEXT).doubleValue()));
+  }
+
+  @Test
   public void happyPath_targetIsAboveGuessRange_canFindValidBounds() {
     double targetAboveStartingGuessRange = 5.0;
     assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(targetAboveStartingGuessRange);
@@ -162,7 +185,7 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
     assertTrue(valueAtLower < target);
     assertTrue(valueAtUpper > target);
   }
-  
+
   @Override
   protected LowerAndUpperBoundsFinder makeTestObject() {
     return makeRealObject(LowerAndUpperBoundsFinder.class);
