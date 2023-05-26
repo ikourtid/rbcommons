@@ -15,15 +15,15 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
  *
  * <p> The user must supply 3 functions: </p>
  * <ol>
- *   <li> <i>evaluateInput(x)</i> to evaluate any <i>X</i> values. </li>
+ *   <li> <i>evaluateInput(x)</i> to evaluate any <i>X</i> value. </li>
  *   <li> <i>reduceLowerBound(x)</i> to reduce the lower bound. </li>
  *   <li> <i>increaseUpperBound(x)</i> to increase the upper bound. </li>
  * </ol>
  *
  * <p> The user must also specify the maximum number of bound increases/decreases to use. The same maximum
- * will be applied for both increasing the upper bound as well as decreasing the lower bound. </p>
+ * number will be applied for both increasing the upper bound as well as decreasing the lower bound. </p>
  *
- * <p> Note: these methods assume that the function to be bound is monotonically increasing. </p>
+ * <p> Note: these methods assume that the function to be bound is strictly increasing. </p>
  */
 public class LowerAndUpperBoundsFinder {
 
@@ -91,7 +91,7 @@ public class LowerAndUpperBoundsFinder {
    * <p> As above, but use this if you have separate initial lower and upper <i>X</i> guessed values
    * instead of a single value. </p>
    *
-   * <p> Note: this method assumes that the function to be bound is monotonically increasing. </p>
+   * <p> Note: this method assumes that the function to be bound is strictly increasing. </p>
    */
   public <X extends Comparable<? super X>, Y extends Comparable<? super Y>> Range<X> findLowerAndUpperBounds(
       Function<X, Y> evaluateInput,
