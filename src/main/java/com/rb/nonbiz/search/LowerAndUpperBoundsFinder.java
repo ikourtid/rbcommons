@@ -63,37 +63,55 @@ public class LowerAndUpperBoundsFinder {
         "startingPointForSearchLower %s must not be greater than startingPointForSearchUpper %s",
         startingPointForSearchLower, startingPointForSearchUpper);
 
+    int comparisonLower = evaluateInput.apply(startingPointForSearchLower).compareTo(target);
+    int comparisonUpper = evaluateInput.apply(startingPointForSearchUpper).compareTo(target);
+    // check for early exit; no bound changes needed?
+    if (comparisonLower < 0 && comparisonUpper > 0) {
+      return Range.closed(startingPointForSearchLower, startingPointForSearchUpper) ;
+    }
+
     X lowerBound = startingPointForSearchLower;
     X upperBound = startingPointForSearchUpper;
-    int comparison = evaluateInput.apply(startingPointForSearchUpper).compareTo(target);
-    if (comparison > 0) {
-      upperBound = startingPointForSearchUpper;
-      // keep reducing lowerBound until we get below target, i.e. it becomes a real lower bound
-      for (int i = 0; i < maxIterations; i++) {
+
+    // possibly reduce the lower bound
+    if (comparisonLower >= 0) {
+      // The initial lower X-bound does not have a Y-value below the target.
+      // Keep reducing lowerBound until we get below target, i.e. it becomes a real lower bound.
+      int iIteration = 0;
+      while (iIteration < maxIterations) {
         lowerBound = reduceLowerBound.apply(lowerBound);
         if (evaluateInput.apply(lowerBound).compareTo(target) < 0) {
-          return Range.closed(lowerBound, upperBound);
+          break;
         }
+        iIteration++;
       }
-      throw new IllegalArgumentException(smartFormat(
-          "After %s iterations, our lower bound of %s produces a value %s that's still above the target of %s",
-          maxIterations, lowerBound, evaluateInput.apply(lowerBound), target));
-    } else if (comparison < 0) {
-      // keep increasing upperBound until we get above target, i.e. it becomes a real upper bound
-      lowerBound = startingPointForSearchLower;
-      for (int i = 0; i < maxIterations; i++) {
+      if (iIteration == maxIterations) {
+        throw new IllegalArgumentException(smartFormat(
+            "After %s iterations, our lower bound of %s produces a value %s that's still above the target of %s",
+            maxIterations, lowerBound, evaluateInput.apply(lowerBound), target));
+      }
+    }
+
+    // possibly increase the upper bound
+    if (comparisonUpper <= 0) {
+      // The initial upper X-bound does not have a Y-value above the target.
+      // Keep increasing upperBound until we get above target, i.e. it becomes a real upper bound.
+      int iIteration = 0;
+      while (iIteration < maxIterations) {
         upperBound = increaseUpperBound.apply(upperBound);
         if (evaluateInput.apply(upperBound).compareTo(target) > 0) {
-          return Range.closed(lowerBound, upperBound);
+          break;
         }
+        iIteration++;
       }
-      throw new IllegalArgumentException(smartFormat(
-          "After %s iterations, our upper bound of %s produces a value %s that's still below the target of %s",
-          maxIterations, upperBound, evaluateInput.apply(upperBound), target));
-    } else {
-      // relax bounds so that they are strictly not equal to target
-      return Range.closed(reduceLowerBound.apply(lowerBound), increaseUpperBound.apply(upperBound));
+      if (iIteration == maxIterations) {
+        throw new IllegalArgumentException(smartFormat(
+            "After %s iterations, our upper bound of %s produces a value %s that's still below the target of %s",
+            maxIterations, lowerBound, evaluateInput.apply(upperBound), target));
+      }
     }
+
+    return Range.closed(lowerBound, upperBound);
   }
 
 }
