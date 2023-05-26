@@ -45,10 +45,17 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
 
   @Test
   public void cannotFindBoundsWithinIterationsCap_throws() {
-    double target = 999_999;
     int tooFewMaxIterationsToFindBounds = 2;
-    assertIllegalArgumentException( () -> makeTestObject().findLowerAndUpperBounds(
-        evaluateInput, startingSingleGuessForSearch, target, reduceLowerBound, increaseUpperBound, tooFewMaxIterationsToFindBounds));
+    // try targets that are too low and too high
+    for (double target : ImmutableList.of(1e-7, 999_999.0)) {
+      assertIllegalArgumentException(() -> makeTestObject().findLowerAndUpperBounds(
+          evaluateInput,
+          startingSingleGuessForSearch,
+          target,
+          reduceLowerBound,
+          increaseUpperBound,
+          tooFewMaxIterationsToFindBounds));
+    }
   }
 
   // for the case with a single starting guess value
