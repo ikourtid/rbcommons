@@ -19,7 +19,7 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
  *   <li> <i>reduceLowerBound(x)</i> to reduce the lower bound. </li>
  *   <li> <i>increaseUpperBound(x)</i> to increase the upper bound. </li>
  * </ol>
- * 
+ *
  * <p> The user must also specify the maximum number of bound increases/decreases to use. The same maximum
  * will be applied for both increasing the upper bound as well as decreasing the lower bound. </p>
  *
