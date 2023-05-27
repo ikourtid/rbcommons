@@ -136,9 +136,13 @@ public class LowerAndUpperBoundsFinder {
       int iIteration = 0;
       while (iIteration < maxIterations) {
         lowerBound = reduceLowerBound.apply(lowerBound);
-        //Y lowerBoundY = evaluateInput.apply(lowerBound);
+        Y yLowerBoundPrev = yLowerBound;
         yLowerBound = evaluateInput.apply(lowerBound);
         log.debug("i=%s reduce lowX to %s ; lowY %s", iIteration, lowerBound, yLowerBound);
+        RBPreconditions.checkArgument(
+            yLowerBoundPrev.compareTo(yLowerBound) >= 0,
+            "new yLowerBound %s must not be greater than previous yLowerBound %s",
+            yLowerBound, yLowerBoundPrev);
         if (yLowerBound.compareTo(target) < 0) {
           break;
         }
@@ -160,9 +164,13 @@ public class LowerAndUpperBoundsFinder {
       int iIteration = 0;
       while (iIteration < maxIterations) {
         upperBound = increaseUpperBound.apply(upperBound);
-        //Y upperBoundY = evaluateInput.apply(upperBound);
+        Y yUpperBoundPrev = yUpperBound;
         yUpperBound = evaluateInput.apply(upperBound);
         log.debug("i=%s increase upX to %s ; upY %s", iIteration, upperBound, yUpperBound);
+        RBPreconditions.checkArgument(
+            yUpperBoundPrev.compareTo(yUpperBound) <= 0,
+            "new yUpperBound %s must not be less than previous yUpperBound %s",
+            yUpperBound, yUpperBoundPrev);
         if (yUpperBound.compareTo(target) > 0) {
           break;
         }
