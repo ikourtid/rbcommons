@@ -53,8 +53,9 @@ public class LowerAndUpperBoundsFinder {
       // keep reducing lowerBound until we get below target, i.e. it becomes a real lower bound
       for (int i = 0; i < maxIterations; i++) {
         lowerBound = reduceLowerBound.apply(lowerBound);
-        log.debug("i=%s reduce lowX to %s", i, lowerBound);
-        if (evaluateInput.apply(lowerBound).compareTo(target) < 0) {
+        Y lowerBoundY = evaluateInput.apply(lowerBound);
+        log.debug("i=%s reduce lowX to %s ; lowY %s", i, lowerBound, lowerBoundY);
+        if (lowerBoundY.compareTo(target) < 0) {
           log.debug("returning [%s, %s]", lowerBound, upperBound);
           return Range.closed(lowerBound, upperBound);
         }
@@ -67,8 +68,9 @@ public class LowerAndUpperBoundsFinder {
       lowerBound = startingPointForSearch;
       for (int i = 0; i < maxIterations; i++) {
         upperBound = increaseUpperBound.apply(upperBound);
-        log.debug("i=%s increase upX to %s", i, upperBound);
-        if (evaluateInput.apply(upperBound).compareTo(target) > 0) {
+        Y upperBoundY = evaluateInput.apply(upperBound);
+        log.debug("i=%s increase upX to %s ; upY %s", i, upperBound, upperBoundY);
+        if (upperBoundY.compareTo(target) > 0) {
           log.debug("returning [%s, %s]", lowerBound, upperBound);
           return Range.closed(lowerBound, upperBound);
         }
@@ -135,8 +137,9 @@ public class LowerAndUpperBoundsFinder {
       int iIteration = 0;
       while (iIteration < maxIterations) {
         lowerBound = reduceLowerBound.apply(lowerBound);
-        log.debug("i=%s reduce lowX to %s", iIteration, lowerBound);
-        if (evaluateInput.apply(lowerBound).compareTo(target) < 0) {
+        Y lowerBoundY = evaluateInput.apply(lowerBound);
+        log.debug("i=%s reduce lowX to %s ; lowY %s", iIteration, lowerBound, lowerBoundY);
+        if (lowerBoundY.compareTo(target) < 0) {
           break;
         }
         iIteration++;
@@ -157,8 +160,9 @@ public class LowerAndUpperBoundsFinder {
       int iIteration = 0;
       while (iIteration < maxIterations) {
         upperBound = increaseUpperBound.apply(upperBound);
-        log.debug("i=%s increase upX to %s", iIteration, upperBound);
-        if (evaluateInput.apply(upperBound).compareTo(target) > 0) {
+        Y upperBoundY = evaluateInput.apply(upperBound);
+        log.debug("i=%s increase upX to %s ; upY %s", iIteration, upperBound, upperBoundY);
+        if (upperBoundY.compareTo(target) > 0) {
           break;
         }
         iIteration++;
