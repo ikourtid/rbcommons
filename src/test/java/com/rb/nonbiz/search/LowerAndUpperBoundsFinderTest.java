@@ -95,12 +95,22 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
 
     // use f(x) = x
     Range<BigDecimal> doesNotThrow;
-    doesNotThrow = maker.apply(x -> x.doubleValue());
+   doesNotThrow = maker.apply(x -> x.doubleValue());
 
     // use f(x) = 1e-9 * x
     doesNotThrow = maker.apply(x -> 1e-9 * x.doubleValue());
 
-    // use f(x) = 1.0
+    maker.apply(x -> {
+      if (x.doubleValue() < -2.0) {
+        return -2.0;
+      } else if (x.doubleValue() > 2.0) {
+        return 2.0;
+      } else {
+        return x.doubleValue();
+      }
+    });
+
+    // use f(x) = 1.0. Fails because the bounds cannot be expanded enough such that yLower < yTarget < yUpper
     assertIllegalArgumentException( () -> maker.apply(
         x -> 1.0));
 
