@@ -2,7 +2,7 @@ package com.rb.nonbiz.search;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
-import com.rb.nonbiz.testutils.RBTest;
+import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -11,20 +11,21 @@ import java.util.function.UnaryOperator;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static org.junit.Assert.assertTrue;
 
-public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFinder> {
+public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<LowerAndUpperBoundsFinder> {
 
-  Function<BigDecimal, Double> evaluateInput = x -> x.multiply(x).doubleValue();
-  BigDecimal startingSingleGuessForSearch = BigDecimal.ONE;
-  UnaryOperator<BigDecimal> reduceLowerBound   = l -> l.divide(  BigDecimal.valueOf(2), DEFAULT_MATH_CONTEXT);
-  UnaryOperator<BigDecimal> increaseUpperBound = u -> u.multiply(BigDecimal.valueOf(2), DEFAULT_MATH_CONTEXT);
-  int maxIterations = 50;
+  private final Function<BigDecimal, Double> EVALUATE_INPUT_TO_SQUARE = x -> x.multiply(x).doubleValue();
+  private final BigDecimal STARTING_SINGLE_GUESS_FOR_SEARCH = BigDecimal.ONE;
+  private final UnaryOperator<BigDecimal> REDUCE_LOWER_BOUND_BY_HALVING =
+      l -> l.divide(  BigDecimal.valueOf(2), DEFAULT_MATH_CONTEXT);
+  private final UnaryOperator<BigDecimal> INCREASE_UPPER_BOUND_BY_DOUBLING =
+      u -> u.multiply(BigDecimal.valueOf(2), DEFAULT_MATH_CONTEXT);
+  private final int MAX_ITERATIONS = 50;
 
   // the following are used for the override with 2 initial "guess" bounds
-  BigDecimal startingLowerBoundForSearch = BigDecimal.valueOf(0.5);
-  BigDecimal startingUpperBoundForSearch = BigDecimal.valueOf(2.0);
+  private final BigDecimal STARTING_LOWER_BOUND_FOR_SEARCH = BigDecimal.valueOf(0.5);
+  private final BigDecimal STARTING_UPPER_BOUND_FOR_SEARCH = BigDecimal.valueOf(2.0);
 
   @Test
   public void happyPath_targetIsAboveSingleStartingGuess_canFindValidBounds() {
@@ -48,22 +49,27 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
     int tooFewMaxIterationsToFindBounds = 2;
     // try targets that are too low and too high
     for (double target : ImmutableList.of(1e-7, 999_999.0)) {
-      assertIllegalArgumentException( () -> makeTestObject().findLowerAndUpperBounds(
-          evaluateInput,
-          startingSingleGuessForSearch,
+      assertIllegalArgumentException( () -> makeRealObject().findLowerAndUpperBounds(
+          EVALUATE_INPUT_TO_SQUARE,
+          STARTING_SINGLE_GUESS_FOR_SEARCH,
           target,
-          reduceLowerBound,
-          increaseUpperBound,
+          REDUCE_LOWER_BOUND_BY_HALVING,
+          INCREASE_UPPER_BOUND_BY_DOUBLING,
           tooFewMaxIterationsToFindBounds));
     }
   }
 
   // for the case with a single starting guess value
   private void assertValidLowerAndUpperBoundsCanBeFoundSingleGuess(double target) {
-    Range<BigDecimal> lowerAndUpperBounds = makeTestObject().findLowerAndUpperBounds(
-        evaluateInput, startingSingleGuessForSearch, target, reduceLowerBound, increaseUpperBound, maxIterations);
-    double valueAtLower = evaluateInput.apply(lowerAndUpperBounds.lowerEndpoint());
-    double valueAtUpper = evaluateInput.apply(lowerAndUpperBounds.upperEndpoint());
+    Range<BigDecimal> lowerAndUpperBounds = makeRealObject().findLowerAndUpperBounds(
+        EVALUATE_INPUT_TO_SQUARE,
+        STARTING_SINGLE_GUESS_FOR_SEARCH,
+        target,
+        REDUCE_LOWER_BOUND_BY_HALVING,
+        INCREASE_UPPER_BOUND_BY_DOUBLING,
+        MAX_ITERATIONS);
+    double valueAtLower = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.lowerEndpoint());
+    double valueAtUpper = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.upperEndpoint());
     assertTrue(valueAtLower < target);
     assertTrue(valueAtUpper > target);
   }
@@ -71,27 +77,29 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
   // for the case of a starting range of guesses [lowerBound, upperBound]
   @Test
   public void lowerBoundAboveUpperBound_throws() {
-    assertIllegalArgumentException( () -> makeTestObject().findLowerAndUpperBounds(
-        evaluateInput,
-        BigDecimal.valueOf(2.2),  // lower bound
-        BigDecimal.valueOf(1.1),  // invalid upper bound; below lower bound
-        1.234,                    // target
-        reduceLowerBound,
-        increaseUpperBound,
-        maxIterations) );
+    for (double target : ImmutableList.of(1.0, 1.1, 1.2, 2.1, 2.2, 2.3)) {
+      assertIllegalArgumentException(() -> makeRealObject().findLowerAndUpperBounds(
+          EVALUATE_INPUT_TO_SQUARE,
+          BigDecimal.valueOf(2.2),  // lower bound
+          BigDecimal.valueOf(1.1),  // invalid upper bound; below lower bound
+          target,                   // the target doesn't matter; the bounds are invalid
+          REDUCE_LOWER_BOUND_BY_HALVING,
+          INCREASE_UPPER_BOUND_BY_DOUBLING,
+          MAX_ITERATIONS));
+    }
   }
 
   @Test
   public void decreasingFunction_throws() {
     Function<Function<BigDecimal, Double>, Range<BigDecimal>> maker = evaluator ->
-        makeTestObject().findLowerAndUpperBounds(
+        makeRealObject().findLowerAndUpperBounds(
             evaluator,
-            startingLowerBoundForSearch,
-            startingUpperBoundForSearch,
+            STARTING_LOWER_BOUND_FOR_SEARCH,
+            STARTING_UPPER_BOUND_FOR_SEARCH,
             1.234,
-            reduceLowerBound,
-            increaseUpperBound,
-            maxIterations);
+            REDUCE_LOWER_BOUND_BY_HALVING,
+            INCREASE_UPPER_BOUND_BY_DOUBLING,
+            MAX_ITERATIONS);
 
     // use f(x) = x
     Range<BigDecimal> doesNotThrow;
@@ -124,12 +132,12 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
     double targetAboveStartingGuessRange = 5.0;
     assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(
         // use lower bound = upper bound
-        targetAboveStartingGuessRange, startingLowerBoundForSearch, startingLowerBoundForSearch);
+        targetAboveStartingGuessRange, STARTING_LOWER_BOUND_FOR_SEARCH, STARTING_LOWER_BOUND_FOR_SEARCH);
 
     double targetBelowStartingGuessRange = 0.2;
     assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(
         // use lower bound = upper bound
-        targetBelowStartingGuessRange, startingLowerBoundForSearch, startingLowerBoundForSearch);
+        targetBelowStartingGuessRange, STARTING_LOWER_BOUND_FOR_SEARCH, STARTING_LOWER_BOUND_FOR_SEARCH);
   }
 
   @Test
@@ -158,13 +166,13 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
     int tooFewMaxIterationsToFindBounds = 2;
     // try targets that are both too low and too high
     for (double target : ImmutableList.of(1e-7, 999_999.0)) {
-      assertIllegalArgumentException( () -> makeTestObject().findLowerAndUpperBounds(
-          evaluateInput,
-          startingLowerBoundForSearch,
-          startingUpperBoundForSearch,
+      assertIllegalArgumentException( () -> makeRealObject().findLowerAndUpperBounds(
+          EVALUATE_INPUT_TO_SQUARE,
+          STARTING_LOWER_BOUND_FOR_SEARCH,
+          STARTING_UPPER_BOUND_FOR_SEARCH,
           target,
-          reduceLowerBound,
-          increaseUpperBound,
+          REDUCE_LOWER_BOUND_BY_HALVING,
+          INCREASE_UPPER_BOUND_BY_DOUBLING,
           tooFewMaxIterationsToFindBounds));
     }
   }
@@ -173,31 +181,31 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
   private void assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(double target) {
     assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(
         target,
-        startingLowerBoundForSearch,
-        startingUpperBoundForSearch);
+        STARTING_LOWER_BOUND_FOR_SEARCH,
+        STARTING_UPPER_BOUND_FOR_SEARCH);
   }
 
   private void assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(
       double target,
       BigDecimal lowerBound,
       BigDecimal upperBound) {
-    Range<BigDecimal> lowerAndUpperBounds = makeTestObject().findLowerAndUpperBounds(
-        evaluateInput,
+    Range<BigDecimal> lowerAndUpperBounds = makeRealObject().findLowerAndUpperBounds(
+        EVALUATE_INPUT_TO_SQUARE,
         lowerBound,
         upperBound,
         target,
-        reduceLowerBound,
-        increaseUpperBound,
-        maxIterations);
-    double valueAtLower = evaluateInput.apply(lowerAndUpperBounds.lowerEndpoint());
-    double valueAtUpper = evaluateInput.apply(lowerAndUpperBounds.upperEndpoint());
+        REDUCE_LOWER_BOUND_BY_HALVING,
+        INCREASE_UPPER_BOUND_BY_DOUBLING,
+        MAX_ITERATIONS);
+    double valueAtLower = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.lowerEndpoint());
+    double valueAtUpper = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.upperEndpoint());
     assertTrue(valueAtLower < target);
     assertTrue(valueAtUpper > target);
   }
 
   @Override
-  protected LowerAndUpperBoundsFinder makeTestObject() {
-    return makeRealObject(LowerAndUpperBoundsFinder.class);
+  protected Class<LowerAndUpperBoundsFinder> getClassBeingTested() {
+    return LowerAndUpperBoundsFinder.class;
   }
 
 }

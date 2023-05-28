@@ -16,8 +16,8 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
  * <p> The user must supply 3 functions: </p>
  * <ol>
  *   <li> <i>evaluateInput(x)</i> to evaluate any <i>X</i> value. </li>
- *   <li> <i>reduceLowerBound(x)</i> to reduce the lower bound. </li>
- *   <li> <i>increaseUpperBound(x)</i> to increase the upper bound. </li>
+ *   <li> <i>reduceLowerBound(x)</i> to reduce the lower bound, e.g. halving it. </li>
+ *   <li> <i>increaseUpperBound(x)</i> to increase the upper bound, e.g. doubling it. </li>
  * </ol>
  *
  * <p> The user must also specify the maximum number of bound increases/decreases to use. The same maximum
@@ -148,11 +148,10 @@ public class LowerAndUpperBoundsFinder {
         }
         iIteration++;
       }
-      if (iIteration == maxIterations) {
-        throw new IllegalArgumentException(smartFormat(
-            "After %s iterations, our lower bound of %s produces a Y-value %s that's still above the targetY of %s",
-            maxIterations, lowerBoundX, lowerBoundY, targetY));
-      }
+      RBPreconditions.checkArgument(
+          iIteration < maxIterations,
+          "After %s iterations, our lower bound of %s produces a Y-value %s that's still above the targetY of %s",
+          maxIterations, lowerBoundX, lowerBoundY, targetY);
     } else {
       log.debug("No need to reduce lowX %s", lowerBoundX);
     }
@@ -176,11 +175,10 @@ public class LowerAndUpperBoundsFinder {
         }
         iIteration++;
       }
-      if (iIteration == maxIterations) {
-        throw new IllegalArgumentException(smartFormat(
-            "After %s iterations, our upper bound of %s produces a Y-value %s that's still below the targetY of %s",
-            maxIterations, upperBoundX, upperBoundY, targetY));
-      }
+      RBPreconditions.checkArgument(
+          iIteration < maxIterations,
+          "After %s iterations, our upper bound of %s produces a Y-value %s that's still below the targetY of %s",
+          maxIterations, upperBoundX, upperBoundY, targetY);
     } else {
       log.debug("No need to increase upX %s", upperBoundX);
     }
