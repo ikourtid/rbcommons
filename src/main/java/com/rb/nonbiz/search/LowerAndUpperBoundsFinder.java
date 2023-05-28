@@ -116,7 +116,7 @@ public class LowerAndUpperBoundsFinder {
       RBPreconditions.checkArgument(
           iIteration < maxIterations,
           "After %s iterations, our lower bound of %s produces a Y-value %s that's still above the targetY of %s",
-          maxIterations, lowerBoundX, lowerBoundY, targetY);
+          iIteration, lowerBoundX, lowerBoundY, targetY);
     } else {
       log.debug("No need to reduce lowX %s", lowerBoundX);
     }
@@ -143,7 +143,7 @@ public class LowerAndUpperBoundsFinder {
       RBPreconditions.checkArgument(
           iIteration < maxIterations,
           "After %s iterations, our upper bound of %s produces a Y-value %s that's still below the targetY of %s",
-          maxIterations, upperBoundX, upperBoundY, targetY);
+          iIteration, upperBoundX, upperBoundY, targetY);
     } else {
       log.debug("No need to increase upX %s", upperBoundX);
     }
