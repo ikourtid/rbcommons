@@ -18,7 +18,7 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
 
   Function<BigDecimal, Double> evaluateInput = x -> x.multiply(x).doubleValue();
   BigDecimal startingSingleGuessForSearch = BigDecimal.ONE;
-  UnaryOperator<BigDecimal> reduceLowerBound   = l -> l.divide( BigDecimal.valueOf(2),  DEFAULT_MATH_CONTEXT);
+  UnaryOperator<BigDecimal> reduceLowerBound   = l -> l.divide(  BigDecimal.valueOf(2), DEFAULT_MATH_CONTEXT);
   UnaryOperator<BigDecimal> increaseUpperBound = u -> u.multiply(BigDecimal.valueOf(2), DEFAULT_MATH_CONTEXT);
   int maxIterations = 50;
 
@@ -100,19 +100,9 @@ public class LowerAndUpperBoundsFinderTest extends RBTest<LowerAndUpperBoundsFin
     // use f(x) = 1e-9 * x
     doesNotThrow = maker.apply(x -> 1e-9 * x.doubleValue());
 
-    maker.apply(x -> {
-      if (x.doubleValue() < -2.0) {
-        return -2.0;
-      } else if (x.doubleValue() > 2.0) {
-        return 2.0;
-      } else {
-        return x.doubleValue();
-      }
-    });
-
-    // use f(x) = 1.0. Fails because the bounds cannot be expanded enough such that yLower < yTarget < yUpper
+    // use f(x) = -1e-9 * x
     assertIllegalArgumentException( () -> maker.apply(
-        x -> 1.0));
+        x -> -1e-9 * x.doubleValue()));
 
     // use f(x) = -x
     assertIllegalArgumentException( () -> maker.apply(
