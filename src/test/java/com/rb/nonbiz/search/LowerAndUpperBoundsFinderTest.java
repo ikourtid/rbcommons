@@ -24,8 +24,8 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
   private final int MAX_ITERATIONS = 50;
 
   // the following are used for the override with 2 initial "guess" bounds
-  private final BigDecimal STARTING_LOWER_BOUND_FOR_SEARCH = BigDecimal.valueOf(0.5);
-  private final BigDecimal STARTING_UPPER_BOUND_FOR_SEARCH = BigDecimal.valueOf(2.0);
+  private final BigDecimal STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF = BigDecimal.valueOf(0.5);
+  private final BigDecimal STARTING_UPPER_BOUND_FOR_SEARCH_TWO      = BigDecimal.valueOf(2.0);
 
   @Test
   public void happyPath_targetIsAboveSingleStartingGuess_canFindValidBounds() {
@@ -94,8 +94,8 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
     Function<Function<BigDecimal, Double>, Range<BigDecimal>> maker = evaluator ->
         makeRealObject().findLowerAndUpperBounds(
             evaluator,
-            STARTING_LOWER_BOUND_FOR_SEARCH,
-            STARTING_UPPER_BOUND_FOR_SEARCH,
+            STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
+            STARTING_UPPER_BOUND_FOR_SEARCH_TWO,
             1.234,
             REDUCE_LOWER_BOUND_BY_HALVING,
             INCREASE_UPPER_BOUND_BY_DOUBLING,
@@ -132,12 +132,16 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
     double targetAboveStartingGuessRange = 5.0;
     assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(
         // use lower bound = upper bound
-        targetAboveStartingGuessRange, STARTING_LOWER_BOUND_FOR_SEARCH, STARTING_LOWER_BOUND_FOR_SEARCH);
+        targetAboveStartingGuessRange,
+        STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
+        STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF);
 
     double targetBelowStartingGuessRange = 0.2;
     assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(
         // use lower bound = upper bound
-        targetBelowStartingGuessRange, STARTING_LOWER_BOUND_FOR_SEARCH, STARTING_LOWER_BOUND_FOR_SEARCH);
+        targetBelowStartingGuessRange,
+        STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
+        STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF);
   }
 
   @Test
@@ -168,8 +172,8 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
     for (double target : ImmutableList.of(1e-7, 999_999.0)) {
       assertIllegalArgumentException( () -> makeRealObject().findLowerAndUpperBounds(
           EVALUATE_INPUT_TO_SQUARE,
-          STARTING_LOWER_BOUND_FOR_SEARCH,
-          STARTING_UPPER_BOUND_FOR_SEARCH,
+          STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
+          STARTING_UPPER_BOUND_FOR_SEARCH_TWO,
           target,
           REDUCE_LOWER_BOUND_BY_HALVING,
           INCREASE_UPPER_BOUND_BY_DOUBLING,
@@ -181,8 +185,8 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
   private void assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(double target) {
     assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(
         target,
-        STARTING_LOWER_BOUND_FOR_SEARCH,
-        STARTING_UPPER_BOUND_FOR_SEARCH);
+        STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
+        STARTING_UPPER_BOUND_FOR_SEARCH_TWO);
   }
 
   private void assertValidLowerAndUpperBoundsCanBeFoundWithGuessRange(

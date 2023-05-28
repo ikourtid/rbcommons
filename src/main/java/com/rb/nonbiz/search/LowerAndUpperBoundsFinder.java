@@ -76,7 +76,7 @@ public class LowerAndUpperBoundsFinder {
     Y lowerBoundY = evaluateInput.apply(startingPointForSearchLower);
     Y upperBoundY = evaluateInput.apply(startingPointForSearchUpper);
     RBPreconditions.checkArgument(
-            lowerBoundY.compareTo(upperBoundY) <= 0,
+        lowerBoundY.compareTo(upperBoundY) <= 0,
         "lowerBoundY %s must not be greater than upperBoundY %s",
         lowerBoundY, upperBoundY);
 
