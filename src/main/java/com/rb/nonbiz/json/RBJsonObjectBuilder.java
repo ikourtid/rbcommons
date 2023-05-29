@@ -44,7 +44,7 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
     return new RBJsonObjectBuilder(emptyJsonObject());
   }
 
-  public static RBJsonObjectBuilder rbJsonObjectBuilder(JsonObject initialJsonObject) {
+  public static RBJsonObjectBuilder rbJsonObjectBuilderWithInitialJson(JsonObject initialJsonObject) {
     return new RBJsonObjectBuilder(initialJsonObject);
   }
 
