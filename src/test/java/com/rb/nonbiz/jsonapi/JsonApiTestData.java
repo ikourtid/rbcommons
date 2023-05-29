@@ -63,4 +63,40 @@ public class JsonApiTestData<T> {
     }
   }
 
+  // Only tests a conversion from JSON to Java, not vice versa.
+  // Useful for cases where the opposite conversion does not exist, or is done by a different class whose code
+  // is meant to be tested elsewhere.
+  public void testFromJsonObject(
+      Function<JsonObject, T> fromJsonObject) {
+    for (int i = 0; i < testPairs.size(); i++) {
+      JsonApiTestPair<T> testPair = testPairs.get(i);
+      JsonObject expectedJson = testPair.getJsonObject();
+      T    expectedJavaObject = testPair.getJavaObject();
+      T    actualJavaObject = fromJsonObject.apply(expectedJson);
+
+      assertThat(
+          Strings.format("Test %s of %s : Java object (generated from JSON) does not match expected", i + 1, testPairs.size()),
+          actualJavaObject,
+          matcherGenerator.apply(expectedJavaObject));
+    }
+  }
+
+  // Only tests a conversion to JSON from Java, not vice versa.
+  // Useful for cases where the opposite conversion does not exist, or is done by a different class whose code
+  // is meant to be tested elsewhere.
+  public void testToJsonObject(
+      Function<T, JsonObject> toJsonObject) {
+    for (int i = 0; i < testPairs.size(); i++) {
+      JsonApiTestPair<T> testPair = testPairs.get(i);
+      JsonObject expectedJson = testPair.getJsonObject();
+      T    expectedJavaObject = testPair.getJavaObject();
+      JsonObject actualJson = toJsonObject.apply(expectedJavaObject);
+
+      assertThat(
+          Strings.format("Test %s of %s : JSON (generated from Java object) does not match expected", i + 1, testPairs.size()),
+          actualJson,
+          jsonObjectEpsilonMatcher(expectedJson));
+    }
+  }
+
 }
