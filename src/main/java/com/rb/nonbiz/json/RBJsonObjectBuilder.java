@@ -36,12 +36,16 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
 
   private final JsonObject jsonObject;
 
-  private RBJsonObjectBuilder() {
-    this.jsonObject = emptyJsonObject();
+  private RBJsonObjectBuilder(JsonObject jsonObject) {
+    this.jsonObject = jsonObject;
   }
 
   public static RBJsonObjectBuilder rbJsonObjectBuilder() {
-    return new RBJsonObjectBuilder();
+    return new RBJsonObjectBuilder(emptyJsonObject());
+  }
+
+  public static RBJsonObjectBuilder rbJsonObjectBuilder(JsonObject initialJsonObject) {
+    return new RBJsonObjectBuilder(initialJsonObject);
   }
 
   /**

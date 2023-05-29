@@ -22,7 +22,10 @@ public class SmartFormatter {
   @Inject static SmartFormatterHelper smartFormatterHelper;
 
   public static String smartFormatWithDatePrepended(String template, Object ... args) {
-    return smartFormatterHelper.formatWithDatePrepended(template, args);
+    // Unfortunately, we need this null check for unit tests in certain cases.
+    return smartFormatterHelper == null
+        ? Strings.format(template, args)
+        : smartFormatterHelper.formatWithDatePrepended(template, args);
   }
 
   public static String smartFormat(String template, Object ... args) {
