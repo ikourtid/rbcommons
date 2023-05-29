@@ -140,7 +140,7 @@ public class BinarySearchResult<X, Y> {
       return this;
     }
 
-    // a special case: the targetY is not within the bounds [lowerBoundY, upperBoundY],
+    // A special case: the targetY is not within the bounds [lowerBoundY, upperBoundY],
     // so no binary search can be done. This supports building a trivial "result" consisting of the lower and upper bounds.
     // Note that the initial Precondition for bounds checking is the opposite of that in sanityCheckContents().
     public BinarySearchResult<X, Y> buildForTargetOutsideOfBounds() {
@@ -148,12 +148,12 @@ public class BinarySearchResult<X, Y> {
           !nonDecreasingPerComparator(comparatorForY, lowerBoundY, targetY, upperBoundY),
           "[lowerBoundY, upperBoundY] should not contain targetY but x %s -> %s and y %s -> %s ; target= %s",
           lowerBoundX, upperBoundX, lowerBoundY, upperBoundY, targetY);
-      // even though the targetY is outside of [lowerBoundY, upperBoundY], we still check that
+      // Even though the targetY is outside of [lowerBoundY, upperBoundY], we still check that
       // lowerBoundY <= upperBoundY
       RBPreconditions.checkArgument(
           comparatorForY.compare(lowerBoundY, upperBoundY) <= 0,
           "lowerBoundY must be <= upperBoundY, but lowerBoundY = %s ; upperBoundY = %s", lowerBoundY, upperBoundY);
-      // no binary search has been done; the number of iterations must be zero.
+      // No binary search has been done; the number of iterations must be zero.
       RBPreconditions.checkArgument(
           numIterationsUsed == 0,
           "[lowerBoundY, upperBoundY] do not contain targetY; no search was done. numIterations = %s but should be 0", numIterationsUsed);
