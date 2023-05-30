@@ -10,6 +10,7 @@ import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.CaseInsensitiveStringFilter;
 import com.rb.nonbiz.collections.IidMap;
+import com.rb.nonbiz.collections.Pair;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
@@ -37,6 +38,7 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
+import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
@@ -500,6 +502,30 @@ public class RBJsonObjectsTest {
                 "id2", jsonObject(
                     "uniqueId", jsonString("id2"),
                     "value",    jsonDouble(0.22)))));
+  }
+
+  @Test
+  public void testStreamToJsonObject() {
+    BiConsumer<Stream<Pair<String, Integer>>, JsonObject> asserter = (stream, expectedJsonObject) ->
+        assertThat(
+            streamToJsonObject(
+                stream,
+                pair -> pair.getLeft() + "_",
+                pair -> jsonString(pair.getLeft() + ":" + (700 + pair.getRight()))),
+            jsonObjectEpsilonMatcher(
+                expectedJsonObject));
+
+    asserter.accept(
+        Stream.of(
+            pair("a", 1),
+            pair("b", 2)),
+        jsonObject(
+            "a_", jsonString("a:701"),
+            "b_", jsonString("b:702")));
+
+    asserter.accept(
+        Stream.empty(),
+        emptyJsonObject());
   }
 
   @Test
