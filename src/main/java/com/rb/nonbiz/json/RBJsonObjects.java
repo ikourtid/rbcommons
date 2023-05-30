@@ -176,6 +176,18 @@ public class RBJsonObjects {
         valueSerializer);
   }
 
+  public static <V> JsonObject streamToJsonObject(
+      Stream<V> stream,
+      Function<V, String> keySerializer,
+      Function<V, JsonElement> itemSerializer) {
+    RBJsonObjectBuilder builder = rbJsonObjectBuilder();
+    stream.forEachOrdered(
+        v -> builder.setJsonElement(
+            keySerializer.apply(v),
+            itemSerializer.apply(v)));
+    return builder.build();
+  }
+
   public static <V extends HasUniqueId<V>> JsonObject streamOfHasUniqueIdToJsonObject(
       Stream<V> stream,
       Function<V, JsonElement> itemSerializer) {

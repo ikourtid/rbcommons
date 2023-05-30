@@ -37,6 +37,7 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
+import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
@@ -500,6 +501,21 @@ public class RBJsonObjectsTest {
                 "id2", jsonObject(
                     "uniqueId", jsonString("id2"),
                     "value",    jsonDouble(0.22)))));
+  }
+
+  @Test
+  public void testStreamToJsonObject() {
+    assertThat(
+        streamToJsonObject(
+            Stream.of(
+                pair("a", 1),
+                pair("b", 2)),
+            pair -> pair.getLeft() + "_",
+            pair -> jsonString(pair.getLeft() + ":" + (700 + pair.getRight()))),
+        jsonObjectEpsilonMatcher(
+            jsonObject(
+                "a_", jsonString("a:701"),
+                "b_", jsonString("b:702"))));
   }
 
   @Test
