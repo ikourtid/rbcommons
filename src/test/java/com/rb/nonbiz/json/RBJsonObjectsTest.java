@@ -10,6 +10,7 @@ import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.CaseInsensitiveStringFilter;
 import com.rb.nonbiz.collections.IidMap;
+import com.rb.nonbiz.collections.Pair;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
@@ -505,17 +506,26 @@ public class RBJsonObjectsTest {
 
   @Test
   public void testStreamToJsonObject() {
-    assertThat(
-        streamToJsonObject(
-            Stream.of(
-                pair("a", 1),
-                pair("b", 2)),
-            pair -> pair.getLeft() + "_",
-            pair -> jsonString(pair.getLeft() + ":" + (700 + pair.getRight()))),
-        jsonObjectEpsilonMatcher(
-            jsonObject(
-                "a_", jsonString("a:701"),
-                "b_", jsonString("b:702"))));
+    BiConsumer<Stream<Pair<String, Integer>>, JsonObject> asserter = (stream, expectedJsonObject) ->
+        assertThat(
+            streamToJsonObject(
+                stream,
+                pair -> pair.getLeft() + "_",
+                pair -> jsonString(pair.getLeft() + ":" + (700 + pair.getRight()))),
+            jsonObjectEpsilonMatcher(
+                expectedJsonObject));
+
+    asserter.accept(
+        Stream.of(
+            pair("a", 1),
+            pair("b", 2)),
+        jsonObject(
+            "a_", jsonString("a:701"),
+            "b_", jsonString("b:702")));
+
+    asserter.accept(
+        Stream.empty(),
+        emptyJsonObject());
   }
 
   @Test
