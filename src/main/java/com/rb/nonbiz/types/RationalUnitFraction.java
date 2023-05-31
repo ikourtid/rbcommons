@@ -45,6 +45,10 @@ public class RationalUnitFraction extends PreciseValue<RationalUnitFraction> {
     return new RationalUnitFraction(numerator, denominator);
   }
 
+  public static RationalUnitFraction zeroRationalUnitFraction(int denominator) {
+    return rationalUnitFraction(0, denominator);
+  }
+
   public UnitFraction asUnitFraction() {
     return unitFraction(asBigDecimal());
   }
@@ -74,7 +78,7 @@ public class RationalUnitFraction extends PreciseValue<RationalUnitFraction> {
 
   @Override
   public String toString() {
-    return Strings.format("%s / %s ( %s )",
+    return Strings.format("[RUF %s / %s ( %s ) RUF]",
         numerator, denominator, asUnitFraction().toPercentString());
   }
 
