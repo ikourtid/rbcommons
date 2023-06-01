@@ -66,6 +66,7 @@ public class MoneyFractionJsonApiConverter implements HasJsonApiDocumentation {
             "in dollars (`Money`). <p />",
             "The ratio can be 0.0 (if the numerator is $0), or the ratio can be greater than 1.0",
             "(if the numerator is greater than the denominator). <p />",
+            "The special values of $ 0 / $ 0 is allowed, even though its ratio is undefined. <p />",
             "Negative dollar amounts are not supported in either the numerator or denominator.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
