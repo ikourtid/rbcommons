@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
+import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.types.MoneyFraction;
 
 import static com.rb.biz.types.Money.money;
@@ -12,8 +13,12 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
+import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonDoubleOrThrow;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.types.MoneyFraction.moneyFraction;
 
 /**
@@ -53,7 +58,17 @@ public class MoneyFractionJsonApiConverter implements HasJsonApiDocumentation {
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return null;
+    return jsonApiClassDocumentationBuilder()
+        .setClass(MoneyFraction.class)
+        .setSingleLineSummary(documentation("Holds a `MoneyFraction`."))
+        .setLongDocumentation(documentation(
+            "That is, a fraction with <b>numerator</b> and <b>denominator</b> expressed in dollars"))
+        .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
+        .hasNoChildJsonApiConverters()
+        .setNontrivialSampleJson(jsonObject(
+            "numerator",   jsonDouble( 1_234.56),
+            "denominator", jsonDouble(10_543.21)))
+        .build();
   }
 
 }
