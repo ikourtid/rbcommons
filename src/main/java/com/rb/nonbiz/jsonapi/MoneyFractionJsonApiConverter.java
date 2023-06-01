@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
-import com.rb.nonbiz.text.HumanReadableDocumentation;
 import com.rb.nonbiz.types.MoneyFraction;
 
 import static com.rb.biz.types.Money.money;
@@ -19,6 +18,7 @@ import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonDoubleOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
+import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 import static com.rb.nonbiz.types.MoneyFraction.moneyFraction;
 
 /**
@@ -30,10 +30,10 @@ public class MoneyFractionJsonApiConverter implements HasJsonApiDocumentation {
       .setRequiredProperties(rbMapOf(
           "numerator",   simpleClassJsonApiPropertyDescriptor(
               Money.class,
-              jsonPropertySpecificDocumentation("The fraction numerator, in dollars.")),
+              jsonPropertySpecificDocumentation("The fraction's numerator, in dollars.")),
           "denominator", simpleClassJsonApiPropertyDescriptor(
               Money.class,
-              jsonPropertySpecificDocumentation("The fraction denominator, in dollars."))))
+              jsonPropertySpecificDocumentation("The fraction's denominator, in dollars."))))
       .hasNoOptionalProperties()
       .build();
 
@@ -61,8 +61,12 @@ public class MoneyFractionJsonApiConverter implements HasJsonApiDocumentation {
     return jsonApiClassDocumentationBuilder()
         .setClass(MoneyFraction.class)
         .setSingleLineSummary(documentation("Holds a `MoneyFraction`."))
-        .setLongDocumentation(documentation(
-            "That is, a fraction with <b>numerator</b> and <b>denominator</b> expressed in dollars"))
+        .setLongDocumentation(documentation(asSingleLineWithNewlines(
+            "That is, a fraction whose <b>numerator</b> and <b>denominator</b> are both expressed",
+            "in dollars (`Money`). <p />",
+            "The ratio can be 0.0 (if the numerator is $0), or the ratio can be greater than 1.0",
+            "(if the numerator is greater than the denominator). <p />",
+            "Negative dollar amounts are not supported in either the numerator or denominator.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
         .setNontrivialSampleJson(jsonObject(
