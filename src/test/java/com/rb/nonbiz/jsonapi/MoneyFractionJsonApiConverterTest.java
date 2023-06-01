@@ -29,7 +29,7 @@ public class MoneyFractionJsonApiConverterTest extends RBCommonsIntegrationTest<
 
   // the "fraction" $0 / $0 is allowed
   @Test
-  public void testZeroOverZero() {
+  public void testZeroOverZero_allowed() {
     testRoundTripConverterHelper(
         moneyFraction(
             ZERO_MONEY,
@@ -41,7 +41,7 @@ public class MoneyFractionJsonApiConverterTest extends RBCommonsIntegrationTest<
 
   // a MoneyFraction does not need to be less than 1.0
   @Test
-  public void testFractionGreaterThanOne() {
+  public void testFractionGreaterThanOne_allowed() {
     testRoundTripConverterHelper(
         moneyFraction(
             money(789),
