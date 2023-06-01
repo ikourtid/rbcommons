@@ -1,15 +1,30 @@
 package com.rb.nonbiz.types;
 
+import com.rb.nonbiz.testmatchers.Match;
+import com.rb.nonbiz.testutils.RBTestMatcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
+import static com.rb.nonbiz.testmatchers.Match.matchUsingAlmostEquals;
+import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
+import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_MONEY;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.MoneyFraction.moneyFraction;
 import static org.junit.Assert.assertEquals;
 
-public class MoneyFractionTest {
+public class MoneyFractionTest extends RBTestMatcher<MoneyFraction> {
+
+  public static MoneyFraction testMoneyFractionWithSeed(double seed) {
+    return moneyFraction(
+        money(123.45 + seed),
+        money(567.89 + seed));
+  }
 
   @Test
   public void validArguments() {
@@ -57,6 +72,34 @@ public class MoneyFractionTest {
     assertEquals("12.345 %",    moneyFraction.toPercentString(3, true));
     assertEquals("1234.50",     moneyFraction.toBasisPoints(2, false));
     assertEquals("1234.50 bps", moneyFraction.toBasisPoints(2, true));
+  }
+
+  @Override
+  public MoneyFraction makeTrivialObject() {
+    return moneyFraction(
+        ZERO_MONEY,
+        money(1));
+  }
+
+  @Override
+  public MoneyFraction makeNontrivialObject() {
+    return testMoneyFractionWithSeed(ZERO_SEED);
+  }
+
+  @Override
+  public MoneyFraction makeMatchingNontrivialObject() {
+    return testMoneyFractionWithSeed(EPSILON_SEED);
+  }
+
+  @Override
+  protected boolean willMatch(MoneyFraction expected, MoneyFraction actual) {
+    return moneyFractionMatcher(expected).matches(actual);
+  }
+
+  public static TypeSafeMatcher<MoneyFraction> moneyFractionMatcher(MoneyFraction expected) {
+    return makeMatcher(expected,
+        matchUsingAlmostEquals(v -> v.getNumerator(),   DEFAULT_EPSILON_1e_8),
+        matchUsingAlmostEquals(v -> v.getDenominator(), DEFAULT_EPSILON_1e_8));
   }
 
 }
