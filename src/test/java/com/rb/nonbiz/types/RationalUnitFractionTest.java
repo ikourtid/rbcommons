@@ -8,11 +8,22 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.RationalUnitFraction.rationalUnitFraction;
+import static com.rb.nonbiz.types.RationalUnitFraction.zeroRationalUnitFraction;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 public class RationalUnitFractionTest extends RBTestMatcher<RationalUnitFraction> {
+
+  @Test
+  public void testZeroRationalUnitFraction() {
+    RationalUnitFraction zeroRationalUnitFraction = zeroRationalUnitFraction(123);
+
+    assertTrue(zeroRationalUnitFraction.isZero());
+
+    assertEquals(  0, zeroRationalUnitFraction.getNumerator());
+    assertEquals(123, zeroRationalUnitFraction.getDenominator());
+  }
 
   @Test
   public void validArguments() {
