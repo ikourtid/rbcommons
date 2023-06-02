@@ -60,10 +60,12 @@ public class MoneyFractionJsonApiConverter implements HasJsonApiDocumentation {
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(MoneyFraction.class)
-        .setSingleLineSummary(documentation("Holds a `MoneyFraction`."))
+        .setSingleLineSummary(documentation("Holds a ratio of dollar amounts."))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
-            "That is, a fraction whose <b>numerator</b> and <b>denominator</b> are both expressed",
+            "This holds a fraction whose <b>numerator</b> and <b>denominator</b> are both expressed",
             "in dollars (`Money`). <p />",
+            "For example, it could be useful to express the total notional traded (a dollar amount)",
+            "as a fraction of the average portfolio value (another dollar amount). <p />",
             "The ratio can be 0.0 (if the numerator is $0), or the ratio can be greater than 1.0",
             "(if the numerator is greater than the denominator). <p />",
             "The special values of $ 0 / $ 0 is allowed, even though its ratio is undefined. <p />",
