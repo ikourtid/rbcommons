@@ -1,6 +1,5 @@
 package com.rb.nonbiz.types;
 
-import com.rb.nonbiz.testmatchers.Match;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -8,7 +7,6 @@ import org.junit.Test;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingAlmostEquals;
-import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_MONEY;
@@ -78,7 +76,7 @@ public class MoneyFractionTest extends RBTestMatcher<MoneyFraction> {
   public MoneyFraction makeTrivialObject() {
     return moneyFraction(
         ZERO_MONEY,
-        money(1));
+        ZERO_MONEY);
   }
 
   @Override
