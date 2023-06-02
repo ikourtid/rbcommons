@@ -33,9 +33,10 @@ public class MoneyFraction extends PreciseValue<MoneyFraction> {
   }
 
   public static MoneyFraction moneyFraction(Money numerator, Money denominator) {
+    // Note: numerator = $0 and denominator = $0 IS allowed.
     RBPreconditions.checkArgument(
         denominator.isGreaterThan(ZERO_MONEY) || numerator.isZero(),
-        "MoneyUnitFraction cannot have denominator = 0 but numerator %s > 0",
+        "MoneyUnitFraction cannot have denominator = 0 and numerator %s > 0",
         numerator);
     return new MoneyFraction(numerator, denominator);
   }
