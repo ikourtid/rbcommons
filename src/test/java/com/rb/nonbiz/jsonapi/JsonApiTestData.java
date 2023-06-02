@@ -1,6 +1,5 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
