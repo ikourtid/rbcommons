@@ -5,8 +5,11 @@ import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 
 /**
- * An implementation of Apache's {@code StatisticalSummary}. It holds the results,
- * but does not have an addPoint() method.
+ * An implementation of Apache's {@code StatisticalSummary}.
+ *
+ * <p> It simply holds the results. The purpose is to be able to write {@code StatisticalSummary}s
+ * to JSON and be able to read one in again. We aren't able to read in a regular {@code StatisticalSummary}
+ * since the results stored here are only available after adding one point after the other. </p>
  */
 public class StatisticalSummaryImpl implements StatisticalSummary {
 
