@@ -33,13 +33,13 @@ public class StatisticalSummaryImplJsonApiConverter implements HasJsonApiDocumen
               jsonPropertySpecificDocumentation("The number of data points.")),
           "mean", simpleClassJsonApiPropertyDescriptor(
               Double.class,
-              jsonPropertySpecificDocumentation("The mean (average) of the data points.")),
+              jsonPropertySpecificDocumentation("The mean (average) value of the data points.")),
           "min", simpleClassJsonApiPropertyDescriptor(
               Double.class,
-              jsonPropertySpecificDocumentation("The minimum data value in the data set.")),
+              jsonPropertySpecificDocumentation("The minimum value in the data set.")),
           "max", simpleClassJsonApiPropertyDescriptor(
               Double.class,
-              jsonPropertySpecificDocumentation("The maximum data value in the data set.")),
+              jsonPropertySpecificDocumentation("The maximum value in the data set.")),
           "standardDeviation", simpleClassJsonApiPropertyDescriptor(
               Double.class,
               jsonPropertySpecificDocumentation("The standard deviation of the data set.")),
@@ -88,11 +88,11 @@ public class StatisticalSummaryImplJsonApiConverter implements HasJsonApiDocumen
     return jsonApiClassDocumentationBuilder()
         .setClass(StatisticalSummaryImpl.class)
         .setSingleLineSummary(documentation(
-            "Holds a statistical summary of for a data set."))
+            "Holds a statistical summary of a data set."))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
             "The properties are: <p />",
             "The number of data points <b>n</b> (a long integer). <p />",
-            "The <b>mean</b>; the mean (average) value of the data. <p />",
+            "The <b>mean</b> (average) value of the data. <p />",
             "The <b>min</b>; the minimum value observed in the data set. <p />",
             "The <b>max</b>; the maximum value observed in the data set. <p />",
             "The <b>standardDeviation</b> of the data set. <p />",
@@ -102,7 +102,7 @@ public class StatisticalSummaryImplJsonApiConverter implements HasJsonApiDocumen
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
         .setNontrivialSampleJson(jsonObject(
-            "n",                 jsonLong(234L),        // a long; the only non-double
+            "n",                 jsonLong(  234L),        // a long; the only non-double
             "mean",              jsonDouble(12.345),
             "min",               jsonDouble(-5.678),
             "max",               jsonDouble(67.890),
