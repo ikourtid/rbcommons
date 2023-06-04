@@ -12,15 +12,19 @@ import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertyS
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonLong;
+import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
+import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonDoubleOrThrow;
+import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonLongOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
+import static com.rb.nonbiz.math.stats.StatisticalSummaryImpl.statisticalSummaryImpl;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
 /**
  * Converts a {@link StatisticalSummaryImpl} back and forth to JSON for our public API.
  */
-public class StatisticalSummaryImplJsonApiConverter extends HasJsonApiDocumentation {
+public class StatisticalSummaryImplJsonApiConverter implements HasJsonApiDocumentation {
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties(rbMapOf(
@@ -36,9 +40,6 @@ public class StatisticalSummaryImplJsonApiConverter extends HasJsonApiDocumentat
           "max", simpleClassJsonApiPropertyDescriptor(
               Double.class,
               jsonPropertySpecificDocumentation("The maximum data value in the data set.")),
-          "min", simpleClassJsonApiPropertyDescriptor(
-              Double.class,
-              jsonPropertySpecificDocumentation("The minimum data value in the data set.")),
           "standardDeviation", simpleClassJsonApiPropertyDescriptor(
               Double.class,
               jsonPropertySpecificDocumentation("The standard deviation of the data set.")),
@@ -55,12 +56,31 @@ public class StatisticalSummaryImplJsonApiConverter extends HasJsonApiDocumentat
 
   public JsonObject toJsonObject(
       StatisticalSummaryImpl statisticalSummaryImpl) {
-    return null;
+    return jsonValidator.validate(
+        rbJsonObjectBuilder()
+            .setLong(  "n",                 statisticalSummaryImpl.getN())
+            .setDouble("mean",              statisticalSummaryImpl.getMean())
+            .setDouble("min",               statisticalSummaryImpl.getMin())
+            .setDouble("max",               statisticalSummaryImpl.getMax())
+            .setDouble("standardDeviation", statisticalSummaryImpl.getStandardDeviation())
+            .setDouble("variance",          statisticalSummaryImpl.getVariance())
+            .setDouble("sum",               statisticalSummaryImpl.getSum())
+            .build(),
+        JSON_VALIDATION_INSTRUCTIONS);
   }
 
   public StatisticalSummaryImpl fromJsonObject(
       JsonObject jsonObject) {
-    return null;
+    jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
+
+    return statisticalSummaryImpl(
+        getJsonLongOrThrow(  jsonObject, "n"),
+        getJsonDoubleOrThrow(jsonObject, "mean"),
+        getJsonDoubleOrThrow(jsonObject, "min"),
+        getJsonDoubleOrThrow(jsonObject, "max"),
+        getJsonDoubleOrThrow(jsonObject, "standardDeviation"),
+        getJsonDoubleOrThrow(jsonObject, "variance"),
+        getJsonDoubleOrThrow(jsonObject, "sum"));
   }
 
   @Override
