@@ -28,8 +28,7 @@ public class SummaryStatisticsJsonApiConverterTest extends RBCommonsIntegrationT
         summaryStatistics,
         v -> (int) v);
 
-
-    makeRealObject().toJsonObject(summaryStatistics)
+    makeRealObject().toJsonObject(summaryStatistics);
 
   }
 
