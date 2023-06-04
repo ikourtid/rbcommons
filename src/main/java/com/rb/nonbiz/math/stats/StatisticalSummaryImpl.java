@@ -76,15 +76,15 @@ public class StatisticalSummaryImpl implements StatisticalSummary {
   /**
    * A constructor given an Apache {@code SummaryStatistics}. Just copy the summary statistics.
    */
-  public static StatisticalSummaryImpl statisticalSummaryImpl(SummaryStatistics summaryStatistics) {
+  public static StatisticalSummaryImpl statisticalSummaryImpl(StatisticalSummary statisticalSummary) {
     return statisticalSummaryImpl(
-        summaryStatistics.getN(),
-        summaryStatistics.getMean(),
-        summaryStatistics.getMin(),
-        summaryStatistics.getMax(),
-        summaryStatistics.getStandardDeviation(),
-        summaryStatistics.getVariance(),
-        summaryStatistics.getSum());
+        statisticalSummary.getN(),
+        statisticalSummary.getMean(),
+        statisticalSummary.getMin(),
+        statisticalSummary.getMax(),
+        statisticalSummary.getStandardDeviation(),
+        statisticalSummary.getVariance(),
+        statisticalSummary.getSum());
   }
 
   @Override
