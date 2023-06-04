@@ -25,6 +25,8 @@ public class StatisticalSummaryImplTest extends RBTestMatcher<StatisticalSummary
         20.2  + seed,       // max
         2.34  + seed,       // stdDev
         5.32  + seed,       // variance
+        // Yes, the following should be 123 * (5.1 + seed), but then makeNonTrivialObject() does not match
+        // makeMatchingNonTrivialObject() because the epsilon is multiplied by 123.
         123 * 5.1 + seed);  // sum = n * mean.
   }
 
@@ -113,5 +115,5 @@ public class StatisticalSummaryImplTest extends RBTestMatcher<StatisticalSummary
         matchUsingDoubleAlmostEquals(v -> v.getVariance(),          DEFAULT_EPSILON_1e_8),
         matchUsingDoubleAlmostEquals(v -> v.getSum(),               DEFAULT_EPSILON_1e_8));
   }
-  
+
 }
