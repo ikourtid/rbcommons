@@ -44,7 +44,7 @@ public class StatisticalSummaryImplTest extends RBTestMatcher<StatisticalSummary
     doesNotThrow =                        statisticalSummaryImpl(3, 2.0, 1.0, 3.0, 1.0, 1.0, 6.0);
     assertIllegalArgumentException( () -> statisticalSummaryImpl(3, 2.0, 2.1, 3.0, 1.0, 1.0, 6.0));  // min > mean
 
-    // must have min <= mean
+    // must have mean <= max
     doesNotThrow =                        statisticalSummaryImpl(3, 2.0, 1.0, 3.0, 1.0, 1.0, 6.0);
     assertIllegalArgumentException( () -> statisticalSummaryImpl(3, 2.0, 1.1, 1.9, 1.0, 1.0, 6.0));  // max < mean
 
@@ -52,7 +52,7 @@ public class StatisticalSummaryImplTest extends RBTestMatcher<StatisticalSummary
     doesNotThrow =                        statisticalSummaryImpl(3, 2.0, 1.0, 3.0,  1.0, 1.0, 6.0);
     assertIllegalArgumentException( () -> statisticalSummaryImpl(3, 2.0, 1.1, 1.9, -0.1, 1.0, 6.0));  // stddev < 0
 
-    // cannot have negative standard deviation
+    // cannot have negative variance
     doesNotThrow =                        statisticalSummaryImpl(3, 2.0, 1.0, 3.0, 1.0,  1.0, 6.0);
     assertIllegalArgumentException( () -> statisticalSummaryImpl(3, 2.0, 1.1, 1.9, 1.0, -0.1, 6.0));  // variance < 0
   }
