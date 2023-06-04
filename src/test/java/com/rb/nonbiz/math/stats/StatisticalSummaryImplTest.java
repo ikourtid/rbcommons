@@ -9,6 +9,7 @@ import static com.rb.nonbiz.math.stats.StatisticalSummaryImpl.statisticalSummary
 import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
@@ -25,6 +26,33 @@ public class StatisticalSummaryImplTest extends RBTestMatcher<StatisticalSummary
         2.34  + seed,       // stdDev
         5.32  + seed,       // variance
         123 * 5.1 + seed);  // sum = n * mean.
+  }
+
+  @Test
+  public void testPreconditions() {
+    StatisticalSummaryImpl doesNotThrow;
+
+    // must have at least one data point
+    doesNotThrow =                        statisticalSummaryImpl(1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    assertIllegalArgumentException( () -> statisticalSummaryImpl(0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));  // n = 0
+
+    // Consider the set of data {1, 2, 3}. Then mean = 2, min = 1, max = 3, stddev = 1, var = 1, sum = 6
+
+    // must have min <= mean
+    doesNotThrow =                        statisticalSummaryImpl(3, 2.0, 1.0, 3.0, 1.0, 1.0, 6.0);
+    assertIllegalArgumentException( () -> statisticalSummaryImpl(3, 2.0, 2.1, 3.0, 1.0, 1.0, 6.0));  // min > mean
+
+    // must have min <= mean
+    doesNotThrow =                        statisticalSummaryImpl(3, 2.0, 1.0, 3.0, 1.0, 1.0, 6.0);
+    assertIllegalArgumentException( () -> statisticalSummaryImpl(3, 2.0, 1.1, 1.9, 1.0, 1.0, 6.0));  // max < mean
+
+    // cannot have negative standard deviation
+    doesNotThrow =                        statisticalSummaryImpl(3, 2.0, 1.0, 3.0,  1.0, 1.0, 6.0);
+    assertIllegalArgumentException( () -> statisticalSummaryImpl(3, 2.0, 1.1, 1.9, -0.1, 1.0, 6.0));  // stddev < 0
+
+    // cannot have negative standard deviation
+    doesNotThrow =                        statisticalSummaryImpl(3, 2.0, 1.0, 3.0, 1.0,  1.0, 6.0);
+    assertIllegalArgumentException( () -> statisticalSummaryImpl(3, 2.0, 1.1, 1.9, 1.0, -0.1, 6.0));  // variance < 0
   }
 
   @Test
@@ -85,4 +113,5 @@ public class StatisticalSummaryImplTest extends RBTestMatcher<StatisticalSummary
         matchUsingDoubleAlmostEquals(v -> v.getVariance(),          DEFAULT_EPSILON_1e_8),
         matchUsingDoubleAlmostEquals(v -> v.getSum(),               DEFAULT_EPSILON_1e_8));
   }
+  
 }

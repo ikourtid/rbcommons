@@ -51,8 +51,8 @@ public class StatisticalSummaryImpl implements StatisticalSummary {
       double sum) {
     // We could have more checks, but we don't want to make it too hard to construct test data.
     RBPreconditions.checkArgument(
-        n >= 0,
-        "Can't have negative number of points 'n': %s",
+        n >= 1,
+        "Must have at least one data point, but n= %s",
         n);
     RBPreconditions.checkArgument(
         min <= max,
