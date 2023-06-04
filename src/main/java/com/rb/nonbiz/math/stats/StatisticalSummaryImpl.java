@@ -7,9 +7,11 @@ import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 /**
  * An implementation of Apache's {@code StatisticalSummary}.
  *
- * <p> It simply holds the results. The purpose is to be able to write {@code StatisticalSummary}s
- * to JSON and be able to read one in again. We aren't able to read in a regular {@code StatisticalSummary}
- * since the results stored here are only available after adding one point after the other. </p>
+ * <p> This simply holds the results; it does not calculate them. </p>
+ *
+ * <p> The purpose is to be able to write {@code StatisticalSummary}s
+ * to JSON and be able to read one in again. We aren't able to read in Apache's {@code StatisticalSummary}
+ * since they are built up by adding one point after the other. </p>
  */
 public class StatisticalSummaryImpl implements StatisticalSummary {
 
@@ -48,7 +50,7 @@ public class StatisticalSummaryImpl implements StatisticalSummary {
       double sum) {
     RBPreconditions.checkArgument(
         n >= 0,
-        "Can't have negative n: %s",
+        "Can't have negative number of points 'n': %s",
         n);
     RBPreconditions.checkArgument(
         min <= max,
@@ -60,11 +62,11 @@ public class StatisticalSummaryImpl implements StatisticalSummary {
         mean, min, max);
     RBPreconditions.checkArgument(
         stdDev >= 0,
-        "Can't have negative stdDev %s",
+        "Can't have a negative standard deviation: %s",
         stdDev);
     RBPreconditions.checkArgument(
         variance >= 0,
-        "Can't have negative variance %s",
+        "Can't have a negative variance: %s",
         variance);
     return new StatisticalSummaryImpl(n, mean, min, max, stdDev, variance, sum);
   }
