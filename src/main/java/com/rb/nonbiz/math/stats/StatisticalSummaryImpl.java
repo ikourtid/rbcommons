@@ -3,6 +3,7 @@ package com.rb.nonbiz.math.stats;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 /**
  * An implementation of Apache's {@code StatisticalSummary}.
@@ -69,6 +70,20 @@ public class StatisticalSummaryImpl implements StatisticalSummary {
         "Can't have a negative variance: %s",
         variance);
     return new StatisticalSummaryImpl(n, mean, min, max, stdDev, variance, sum);
+  }
+
+  /**
+   * A constructor using an Apache {@code SummaryStatistics}. Just copy the summary statistics.
+   */
+  public static StatisticalSummaryImpl statisticalSummaryImpl(SummaryStatistics summaryStatistics) {
+    return statisticalSummaryImpl(
+        summaryStatistics.getN(),
+        summaryStatistics.getMean(),
+        summaryStatistics.getMin(),
+        summaryStatistics.getMax(),
+        summaryStatistics.getStandardDeviation(),
+        summaryStatistics.getVariance(),
+        summaryStatistics.getSum());
   }
 
   @Override
