@@ -11,8 +11,8 @@ import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
  * <p> This simply holds the results; it does not calculate them. </p>
  *
  * <p> The purpose is to be able to write {@code StatisticalSummary}s to/from JSON.
- * We aren't able to read in Apache's {@code StatisticalSummary} from JSON
- * since they are built up by adding one point after the other. </p>
+ * We cannot construct an Apache {@code StatisticalSummary} from JSON summary
+ * statistics since it is built up by adding one data point after the other. </p>
  */
 public class StatisticalSummaryImpl implements StatisticalSummary {
 
