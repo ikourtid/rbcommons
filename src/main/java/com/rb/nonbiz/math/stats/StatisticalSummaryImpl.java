@@ -6,12 +6,12 @@ import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 
 /**
- * An implementation of Apache's {@code StatisticalSummary}.
+ * An implementation of Apache's {@code StatisticalSummary} interface.
  *
  * <p> This simply holds the results; it does not calculate them. </p>
  *
- * <p> The purpose is to be able to write {@code StatisticalSummary}s
- * to JSON and be able to read one in again. We aren't able to read in Apache's {@code StatisticalSummary}
+ * <p> The purpose is to be able to write {@code StatisticalSummary}s to/from JSON.
+ * We aren't able to read in Apache's {@code StatisticalSummary} from JSON
  * since they are built up by adding one point after the other. </p>
  */
 public class StatisticalSummaryImpl implements StatisticalSummary {
@@ -49,6 +49,7 @@ public class StatisticalSummaryImpl implements StatisticalSummary {
       double stdDev,
       double variance,
       double sum) {
+    // We could have more checks, but we don't want to make it too hard to construct test data.
     RBPreconditions.checkArgument(
         n >= 0,
         "Can't have negative number of points 'n': %s",
@@ -73,7 +74,7 @@ public class StatisticalSummaryImpl implements StatisticalSummary {
   }
 
   /**
-   * A constructor using an Apache {@code SummaryStatistics}. Just copy the summary statistics.
+   * A constructor given an Apache {@code SummaryStatistics}. Just copy the summary statistics.
    */
   public static StatisticalSummaryImpl statisticalSummaryImpl(SummaryStatistics summaryStatistics) {
     return statisticalSummaryImpl(
