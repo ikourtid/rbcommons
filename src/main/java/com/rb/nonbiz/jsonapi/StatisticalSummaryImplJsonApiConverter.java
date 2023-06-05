@@ -17,7 +17,7 @@ import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonDoubleOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonLongOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
-import static com.rb.nonbiz.math.stats.StatisticalSummaryImpl.statisticalSummaryImpl;
+import static com.rb.nonbiz.math.stats.StatisticalSummaryImpl.StatisticalSummaryImplBuilder.statisticalSummaryImplBuilder;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
@@ -42,14 +42,15 @@ public class StatisticalSummaryImplJsonApiConverter implements HasJsonApiDocumen
               jsonPropertySpecificDocumentation("The maximum value in the data set.")),
           "standardDeviation", simpleClassJsonApiPropertyDescriptor(
               Double.class,
-              jsonPropertySpecificDocumentation("The standard deviation of the data set.")),
+              jsonPropertySpecificDocumentation("The standard deviation of the data set."))))
+      // the following properties are derived, so if they're not present in JSON we can still construct the Java object
+      .setOptionalProperties(rbMapOf(
           "variance", simpleClassJsonApiPropertyDescriptor(
               Double.class,
               jsonPropertySpecificDocumentation("The variance of the data set.")),
           "sum", simpleClassJsonApiPropertyDescriptor(
               Double.class,
               jsonPropertySpecificDocumentation("The sum of the values in the data set."))))
-      .hasNoOptionalProperties()
       .build();
 
   @Inject JsonValidator jsonValidator;
@@ -73,14 +74,14 @@ public class StatisticalSummaryImplJsonApiConverter implements HasJsonApiDocumen
       JsonObject jsonObject) {
     jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
 
-    return statisticalSummaryImpl(
-        getJsonLongOrThrow(  jsonObject, "n"),
-        getJsonDoubleOrThrow(jsonObject, "mean"),
-        getJsonDoubleOrThrow(jsonObject, "min"),
-        getJsonDoubleOrThrow(jsonObject, "max"),
-        getJsonDoubleOrThrow(jsonObject, "standardDeviation"),
-        getJsonDoubleOrThrow(jsonObject, "variance"),
-        getJsonDoubleOrThrow(jsonObject, "sum"));
+    return statisticalSummaryImplBuilder()
+        .setN(                getJsonLongOrThrow(  jsonObject, "n"))
+        .setMean(             getJsonDoubleOrThrow(jsonObject, "mean"))
+        .setMin(              getJsonDoubleOrThrow(jsonObject, "min"))
+        .setMax(              getJsonDoubleOrThrow(jsonObject, "max"))
+        .setStandardDeviation(getJsonDoubleOrThrow(jsonObject, "standardDeviation"))
+        // we don't read in 'variance' or 'sum' because they are derived quantities
+        .build();
   }
 
   @Override
