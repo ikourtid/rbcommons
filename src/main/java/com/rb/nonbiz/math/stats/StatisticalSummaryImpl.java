@@ -172,7 +172,6 @@ public class StatisticalSummaryImpl implements StatisticalSummary {
           standardDeviation,
           standardDeviation * standardDeviation,  // variance = stdDev * stdDev
           n * mean);                              // sum = n * mean
-
     }
   }
 
