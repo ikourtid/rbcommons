@@ -104,6 +104,7 @@ public class StatisticalSummaryImpl implements StatisticalSummary {
    */
   public static class StatisticalSummaryImplBuilder implements RBBuilder<StatisticalSummaryImpl> {
 
+    // use Long/Double instead of long/double so that we can use checkNotAlreadySet() below
     private Long   n;
     private Double mean;
     private Double min;
@@ -170,7 +171,7 @@ public class StatisticalSummaryImpl implements StatisticalSummary {
           max,
           standardDeviation,
           standardDeviation * standardDeviation,  // variance = stdDev * stdDev
-          n * mean);   // sum = n * mean
+          n * mean);                              // sum = n * mean
 
     }
   }
