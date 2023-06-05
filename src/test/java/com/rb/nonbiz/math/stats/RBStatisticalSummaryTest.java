@@ -38,7 +38,7 @@ public class RBStatisticalSummaryTest extends RBTestMatcher<RBStatisticalSummary
     assertAlmostEquals(summary.getMinMaxRange().upperEndpoint(), money(5), DEFAULT_EPSILON_1e_8);
   }
 
-  public static <T extends Comparable<?>> RBStatisticalSummary<T> simpleRBStatisticalSummary(
+  public static <T extends Comparable<? super T>> RBStatisticalSummary<T> simpleRBStatisticalSummary(
       DoubleFunction<T> instantiator, double first, double ... rest) {
     return rbStatisticalSummary(toStatisticalSummary(first, rest), instantiator);
   }
@@ -75,7 +75,7 @@ public class RBStatisticalSummaryTest extends RBTestMatcher<RBStatisticalSummary
     return rbStatisticalSummaryMatcher(expected, DEFAULT_EPSILON_1e_8).matches(actual);
   }
 
-  public static <T extends Comparable<?>> TypeSafeMatcher<RBStatisticalSummary<T>> rbStatisticalSummaryMatcher(
+  public static <T extends Comparable<? super T>> TypeSafeMatcher<RBStatisticalSummary<T>> rbStatisticalSummaryMatcher(
       RBStatisticalSummary<T> expected, Epsilon epsilon) {
     return makeMatcher(expected,
         match(v -> v.getRawStatisticalSummary(), f -> statisticalSummaryMatcher(f, epsilon)));
