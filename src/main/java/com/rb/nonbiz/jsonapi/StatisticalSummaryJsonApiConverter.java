@@ -43,7 +43,7 @@ public class StatisticalSummaryJsonApiConverter implements HasJsonApiDocumentati
           "standardDeviation", simpleClassJsonApiPropertyDescriptor(
               Double.class,
               jsonPropertySpecificDocumentation("The standard deviation of the data set."))))
-      // the following properties are derived, so if they're not present in JSON we can still construct the Java object
+      // the following properties are derived, so they're not used when converting from JSON
       .setOptionalProperties(rbMapOf(
           "variance", simpleClassJsonApiPropertyDescriptor(
               Double.class,
