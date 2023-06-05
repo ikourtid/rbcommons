@@ -152,7 +152,9 @@ public class RBMapMergers {
     int sharedSize = RBSimilarityPreconditions.checkAllSame(
         ImmutableList.of(map1, map2, map3),
         map -> map.size(),
-        "We can only merge maps with the same keys, which implies same # of entries: %s %s %s",
+        "We can only merge maps with the same keys, which implies same # of entries: " +
+            "but map1 size= %s ; map2 size= %s ; map3 size= %s ; map1= %s ; map2= %s ; map3= %s ",
+        map1.size(), map2.size(), map3.size(),
         map1, map2, map3);
     MutableRBMap<K, V> mutableMerged = newMutableRBMapWithExpectedSize(sharedSize);
 
