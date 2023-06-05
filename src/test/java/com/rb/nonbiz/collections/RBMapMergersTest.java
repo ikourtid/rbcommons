@@ -460,7 +460,8 @@ public class RBMapMergersTest {
                 intMap1,
                 doubleMap2,
                 booleanMap3,
-                (key, v1, v2, v3) -> merger.apply(key, v1, v2, v3)));
+                (key, v1, v2, v3) -> merger.apply(key, v1, v2, v3),
+                DUMMY_STRING));
 
     asserter.accept(emptyRBMap(), emptyRBMap(), emptyRBMap(), emptyRBMap());
     asserter.accept(
@@ -484,20 +485,21 @@ public class RBMapMergersTest {
 
     // if the maps have different numbers of keys, an exception will be thrown
     assertIllegalArgumentException( () -> mergeRBMapEntriesExpectingSameKeys(
-        singletonRBMap("a", 1), emptyRBMap(), emptyRBMap(), merger));
+        singletonRBMap("a", 1), emptyRBMap(), emptyRBMap(), merger, DUMMY_STRING));
     assertIllegalArgumentException( () -> mergeRBMapEntriesExpectingSameKeys(
-        emptyRBMap(), singletonRBMap("a", 2.2), emptyRBMap(), merger));
+        emptyRBMap(), singletonRBMap("a", 2.2), emptyRBMap(), merger, DUMMY_STRING));
     assertIllegalArgumentException( () -> mergeRBMapEntriesExpectingSameKeys(
         singletonRBMap("a", 1),      // 1 key
         rbMapOf(
             "a", 1.1,                // 2 keys; throws
             "b", 2.2),
         singletonRBMap("a", false),  // 1 key
-        merger));
+        merger,
+        DUMMY_STRING));
 
     // if the maps have the same numbers of keys, but the keys differ, this will again throw
     assertIllegalArgumentException( () -> mergeRBMapEntriesExpectingSameKeys(
-        singletonRBMap("a", 1), singletonRBMap("b", 2.2), singletonRBMap("a", false), merger));
+        singletonRBMap("a", 1), singletonRBMap("b", 2.2), singletonRBMap("a", false), merger, DUMMY_STRING));
   }
 
   @Test
@@ -513,7 +515,8 @@ public class RBMapMergersTest {
                 intMap1,
                 doubleMap2,
                 booleanMap3,
-                (v1, v2, v3) -> merger.apply(v1, v2, v3)));
+                (v1, v2, v3) -> merger.apply(v1, v2, v3),
+                DUMMY_STRING));
 
     asserter.accept(emptyRBMap(), emptyRBMap(), emptyRBMap(), emptyRBMap());
     asserter.accept(
@@ -537,20 +540,21 @@ public class RBMapMergersTest {
 
     // if the maps have different numbers of keys, an exception will be thrown
     assertIllegalArgumentException( () -> mergeRBMapValuesExpectingSameKeys(
-        singletonRBMap("a", 1), emptyRBMap(), emptyRBMap(), merger));
+        singletonRBMap("a", 1), emptyRBMap(), emptyRBMap(), merger, DUMMY_STRING));
     assertIllegalArgumentException( () -> mergeRBMapValuesExpectingSameKeys(
-        emptyRBMap(), singletonRBMap("a", 2.2), emptyRBMap(), merger));
+        emptyRBMap(), singletonRBMap("a", 2.2), emptyRBMap(), merger, DUMMY_STRING));
     assertIllegalArgumentException( () -> mergeRBMapValuesExpectingSameKeys(
         singletonRBMap("a", 1),      // 1 key
         rbMapOf(
             "a", 1.1,                // 2 keys; throws
             "b", 2.2),
         singletonRBMap("a", false),  // 1 key
-        merger));
+        merger,
+        DUMMY_STRING));
 
     // if the maps have the same numbers of keys, but the keys differ, this will again throw
     assertIllegalArgumentException( () -> mergeRBMapValuesExpectingSameKeys(
-        singletonRBMap("a", 1), singletonRBMap("b", 2.2), singletonRBMap("a", false), merger));
+        singletonRBMap("a", 1), singletonRBMap("b", 2.2), singletonRBMap("a", false), merger, DUMMY_STRING));
   }
 
   @Test
