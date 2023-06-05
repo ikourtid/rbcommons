@@ -46,10 +46,11 @@ public class StatisticalSummaryImplTest extends RBTestMatcher<StatisticalSummary
             .setStandardDeviation(1.0)
             .build();
     doesNotThrow =                        makerNPoints.apply( 1L);
+    doesNotThrow =                        makerNPoints.apply( 1_234L);
     assertIllegalArgumentException( () -> makerNPoints.apply(-1L));  // n = -1
     assertIllegalArgumentException( () -> makerNPoints.apply( 0L));  // n =  0
 
-    // must have min <= mean
+    // must have min <= max, min <= mean, and mean <= max
     TriFunction<Double, Double, Double, StatisticalSummaryImpl> maker3 = (mean, min, max) ->
         statisticalSummaryImplBuilder()
             .setN(   3L)
@@ -72,8 +73,8 @@ public class StatisticalSummaryImplTest extends RBTestMatcher<StatisticalSummary
             .setStandardDeviation(stdDev)
             .build();
     // cannot have a negative standard deviation
-    doesNotThrow =                        makerStdDev.apply(0.0);
-    doesNotThrow =                        makerStdDev.apply(1.23);
+    doesNotThrow =                        makerStdDev.apply( 0.0);
+    doesNotThrow =                        makerStdDev.apply( 1.23);
     assertIllegalArgumentException( () -> makerStdDev.apply(-1e-9));  // stddev < 0
     assertIllegalArgumentException( () -> makerStdDev.apply(-1.0));   // stddev < 0
   }
