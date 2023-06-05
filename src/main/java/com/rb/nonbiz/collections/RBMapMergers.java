@@ -148,14 +148,14 @@ public class RBMapMergers {
       RBMap<K, V1> map1,
       RBMap<K, V2> map2,
       RBMap<K, V3> map3,
-      QuadriFunction<K, V1, V2, V3, V> merger) {
+      QuadriFunction<K, V1, V2, V3, V> merger,
+      String errorMessage) {
     int sharedSize = RBSimilarityPreconditions.checkAllSame(
         ImmutableList.of(map1, map2, map3),
         map -> map.size(),
-        "We can only merge maps with the same keys, which implies same # of entries: " +
+        "%s : We can only merge maps with the same keys, which implies same # of entries, " +
             "but map1 size= %s ; map2 size= %s ; map3 size= %s ; map1= %s ; map2= %s ; map3= %s ",
-        map1.size(), map2.size(), map3.size(),
-        map1, map2, map3);
+        errorMessage, map1.size(), map2.size(), map3.size(), map1, map2, map3);
     MutableRBMap<K, V> mutableMerged = newMutableRBMapWithExpectedSize(sharedSize);
 
     // We don't need to check for the *keys* to be the same. If we iterate over 'size' items of map1, and all of them
@@ -170,12 +170,14 @@ public class RBMapMergers {
       RBMap<K, V1> map1,
       RBMap<K, V2> map2,
       RBMap<K, V3> map3,
-      TriFunction<V1, V2, V3, V> merger) {
+      TriFunction<V1, V2, V3, V> merger,
+      String errorMessage) {
     return mergeRBMapEntriesExpectingSameKeys(
         map1,
         map2,
         map3,
-        (ignoredKey, v1, v2, v3) -> merger.apply(v1, v2, v3));
+        (ignoredKey, v1, v2, v3) -> merger.apply(v1, v2, v3),
+        errorMessage);
   }
 
   /**
