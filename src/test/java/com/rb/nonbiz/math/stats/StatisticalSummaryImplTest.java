@@ -1,10 +1,14 @@
 package com.rb.nonbiz.math.stats;
 
+import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.function.Function;
+
+import static com.rb.nonbiz.math.stats.StatisticalSummaryImpl.StatisticalSummaryImplBuilder.statisticalSummaryImplBuilder;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryImpl.statisticalSummaryImpl;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
@@ -13,21 +17,19 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class StatisticalSummaryImplTest extends RBTestMatcher<StatisticalSummaryImpl> {
 
   public StatisticalSummaryImpl testStatisticalSummaryImplWithSeed(double seed) {
-    return statisticalSummaryImpl(
-        123,                // n
-        5.1   + seed,       // mean
-        -10.1 - seed,       // min
-        20.2  + seed,       // max
-        2.34  + seed,       // stdDev
-        5.32  + seed,       // variance
-        // Yes, the following should be 123 * (5.1 + seed), but then makeNonTrivialObject() does not match
-        // makeMatchingNonTrivialObject() because the epsilon is multiplied by 123.
-        123 * 5.1 + seed);  // sum = n * mean.
+    return statisticalSummaryImplBuilder()
+        .setN(                  123L)
+        .setMean(               5.1 + seed)
+        .setMin(              -10.1 - seed)
+        .setMax(               20.2 + seed)
+        .setStandardDeviation( 2.34 + seed)
+        .build();
   }
 
   @Test
@@ -35,26 +37,45 @@ public class StatisticalSummaryImplTest extends RBTestMatcher<StatisticalSummary
     StatisticalSummaryImpl doesNotThrow;
 
     // must have at least one data point
-    doesNotThrow =                        statisticalSummaryImpl(1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-    assertIllegalArgumentException( () -> statisticalSummaryImpl(0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0));  // n = 0
-
-    // Consider the set of data {1, 2, 3}. Then mean = 2, min = 1, max = 3, stddev = 1, var = 1, sum = 6
+    Function<Long, StatisticalSummaryImpl> makerNPoints = numPoints ->
+        statisticalSummaryImplBuilder()
+            .setN(numPoints)
+            .setMean(2.0)
+            .setMin( 1.0)
+            .setMax( 3.0)
+            .setStandardDeviation(1.0)
+            .build();
+    doesNotThrow =                        makerNPoints.apply( 1L);
+    assertIllegalArgumentException( () -> makerNPoints.apply(-1L));  // n = -1
+    assertIllegalArgumentException( () -> makerNPoints.apply( 0L));  // n =  0
 
     // must have min <= mean
-    doesNotThrow =                        statisticalSummaryImpl(3, 2.0, 1.0, 3.0, 1.0, 1.0, 6.0);
-    assertIllegalArgumentException( () -> statisticalSummaryImpl(3, 2.0, 2.1, 3.0, 1.0, 1.0, 6.0));  // min > mean
+    TriFunction<Double, Double, Double, StatisticalSummaryImpl> maker3 = (mean, min, max) ->
+        statisticalSummaryImplBuilder()
+            .setN(   3L)
+            .setMean(mean)
+            .setMin( min)
+            .setMax( max)
+            .setStandardDeviation(0.1)
+            .build();
+    doesNotThrow =                        maker3.apply(2.0, 1.0, 3.0);
+    assertIllegalArgumentException( () -> maker3.apply(2.0, 3.0, 1.0));  // min > max
+    assertIllegalArgumentException( () -> maker3.apply(2.0, 2.1, 3.0));  // min > mean
+    assertIllegalArgumentException( () -> maker3.apply(2.0, 1.0, 1.9));  // max > mean
 
-    // must have mean <= max
-    doesNotThrow =                        statisticalSummaryImpl(3, 2.0, 1.0, 3.0, 1.0, 1.0, 6.0);
-    assertIllegalArgumentException( () -> statisticalSummaryImpl(3, 2.0, 1.1, 1.9, 1.0, 1.0, 6.0));  // max < mean
-
-    // cannot have negative standard deviation
-    doesNotThrow =                        statisticalSummaryImpl(3, 2.0, 1.0, 3.0,  1.0, 1.0, 6.0);
-    assertIllegalArgumentException( () -> statisticalSummaryImpl(3, 2.0, 1.1, 1.9, -0.1, 1.0, 6.0));  // stddev < 0
-
-    // cannot have negative variance
-    doesNotThrow =                        statisticalSummaryImpl(3, 2.0, 1.0, 3.0, 1.0,  1.0, 6.0);
-    assertIllegalArgumentException( () -> statisticalSummaryImpl(3, 2.0, 1.1, 1.9, 1.0, -0.1, 6.0));  // variance < 0
+    Function<Double, StatisticalSummaryImpl> makerStdDev = stdDev ->
+        statisticalSummaryImplBuilder()
+            .setN(   3L)
+            .setMean(2.0)
+            .setMin( 1.0)
+            .setMax( 3.0)
+            .setStandardDeviation(stdDev)
+            .build();
+    // cannot have a negative standard deviation
+    doesNotThrow =                        makerStdDev.apply(0.0);
+    doesNotThrow =                        makerStdDev.apply(1.23);
+    assertIllegalArgumentException( () -> makerStdDev.apply(-1e-9));  // stddev < 0
+    assertIllegalArgumentException( () -> makerStdDev.apply(-1.0));   // stddev < 0
   }
 
   @Test
@@ -67,26 +88,24 @@ public class StatisticalSummaryImplTest extends RBTestMatcher<StatisticalSummary
     assertThat(
         statisticalSummaryImpl(summaryStatistics),
         statisticalSummaryImplMatcher(
-            statisticalSummaryImpl(
-                3,       // n
-                2.0,     // mean
-                0.0,     // min
-                4.0,     // max
-                2.0,     // stddev
-                4.0,     // variance
-                6.0)));  // sum
+            statisticalSummaryImplBuilder()
+                .setN(   3L)
+                .setMean(2.0)
+                .setMin( 0.0)
+                .setMax( 4.0)
+                .setStandardDeviation(2.0)
+                .build()));
   }
 
   @Override
   public StatisticalSummaryImpl makeTrivialObject() {
-    return statisticalSummaryImpl(
-        1,     // n
-        0.0,   // mean
-        0.0,   // min
-        0.0,   // max
-        0.0,   // stdDev
-        0.0,   // variance
-        0.0);  // sum
+    return statisticalSummaryImplBuilder()
+        .setN(                1L)
+        .setMean(             0.0)
+        .setMin(              0.0)
+        .setMax(              0.0)
+        .setStandardDeviation(0.0)
+        .build();
   }
 
   @Override
@@ -106,14 +125,27 @@ public class StatisticalSummaryImplTest extends RBTestMatcher<StatisticalSummary
 
   public static TypeSafeMatcher<StatisticalSummaryImpl> statisticalSummaryImplMatcher(
       StatisticalSummaryImpl expected) {
+    // The derived quantities 'variance' and 'sum' won't use the same epsilons
+    // as the other variables, since they are products.
+    // We have to multiply their epsilons by their derivatives.
+
+    // the derivative of the variance w.r.t. standard deviation
+    double epsMultiplierVariance = 2.0 * expected.getStandardDeviation();
+    // the derivative of the sum w.r.t. the mean
+    double epsMultiplierSum = expected.getN();
+    double defaultEpsilonValue = DEFAULT_EPSILON_1e_8.doubleValue();
+
     return makeMatcher(expected,
         matchUsingEquals(            v -> v.getN()),
         matchUsingDoubleAlmostEquals(v -> v.getMin(),               DEFAULT_EPSILON_1e_8),
         matchUsingDoubleAlmostEquals(v -> v.getMax(),               DEFAULT_EPSILON_1e_8),
         matchUsingDoubleAlmostEquals(v -> v.getMean(),              DEFAULT_EPSILON_1e_8),
         matchUsingDoubleAlmostEquals(v -> v.getStandardDeviation(), DEFAULT_EPSILON_1e_8),
-        matchUsingDoubleAlmostEquals(v -> v.getVariance(),          DEFAULT_EPSILON_1e_8),
-        matchUsingDoubleAlmostEquals(v -> v.getSum(),               DEFAULT_EPSILON_1e_8));
+        // The following are derived quantities, but let's check anyway.
+        matchUsingDoubleAlmostEquals(v -> v.getVariance(),
+            epsilon(epsMultiplierVariance * defaultEpsilonValue)),
+        matchUsingDoubleAlmostEquals(v -> v.getSum(),
+            epsilon(epsMultiplierSum      * defaultEpsilonValue)));
   }
 
 }
