@@ -9,22 +9,23 @@ import java.util.function.DoubleFunction;
 import static com.rb.nonbiz.math.stats.RBStats.formatStatisticalSummary;
 
 /**
- * This is a typesafe wrapper around StatisticalSummary, which we created for the same reasons why we like
+ * This is a typesafe wrapper around an Apache {@code StatisticalSummary}, which we created for the same reasons why we like
  * type-safety elsewhere: it allows us to talk about stats of e.g. Money. For example, getMin() should really return Money,
  * not double.
  *
- * We can't easily enforce it statically, other than by requiring 'instantiator' to be passed in,
+ * <p> We can't easily enforce it statically, other than by requiring 'instantiator' to be passed in,
  * but T has to be a number-like class. Unfortunately, we didn't think about this hard enough early on, so
  * ImpreciseValue and PreciseValue don't extend Number, which would have been a good base class.
- * That would have allowed us to use {@code <T extends Number>} below.
+ * That would have allowed us to use {@code <T extends Number>} below. </p>
  *
- * At a minimum, we can require that T extends Comparable; it's not quite the same, but it's still useful to do that.
+ * <p> At a minimum, we can require that T extends Comparable; it's not quite the same, but it's still useful to do
+ * that. </p>
  *
- * Note that the standard deviation will be returned as a double, NOT as a T. It is possible that T's constructor
+ * <p> Note that the standard deviation will be returned as a double, NOT as a T. It is possible that T's constructor
  * enforces that e.g. T &gt; 0, but standard deviation could be 0, which would throw an exception.
- * Variance has the same reason as above for not being a T.
+ * Variance has the same reason as above for not being a T. </p>
  */
-public class RBStatisticalSummary<T extends Comparable<?>> {
+public class RBStatisticalSummary<T extends Comparable<? super T>> {
 
   protected final StatisticalSummary rawStatisticalSummary;
   private final DoubleFunction<T> instantiator;
@@ -34,7 +35,7 @@ public class RBStatisticalSummary<T extends Comparable<?>> {
     this.instantiator = instantiator;
   }
 
-  public static <T extends Comparable<?>> RBStatisticalSummary<T> rbStatisticalSummary(
+  public static <T extends Comparable<? super T>> RBStatisticalSummary<T> rbStatisticalSummary(
       StatisticalSummary rawStatisticalSummary, DoubleFunction<T> instantiator) {
     return new RBStatisticalSummary<>(rawStatisticalSummary, instantiator);
   }
