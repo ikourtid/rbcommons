@@ -1,7 +1,7 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.rb.nonbiz.math.stats.StatisticalSummaryImpl;
 import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
+import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.junit.Test;
 
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
@@ -10,16 +10,16 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
 import static com.rb.nonbiz.jsonapi.JsonApiTestPair.jsonApiTestPair;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryImpl.StatisticalSummaryImplBuilder.statisticalSummaryImplBuilder;
-import static com.rb.nonbiz.math.stats.StatisticalSummaryImpl.statisticalSummaryImpl;
-import static com.rb.nonbiz.math.stats.StatisticalSummaryImplTest.statisticalSummaryImplMatcher;
+import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.statisticalSummaryMatcher;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
-public class StatisticalSummaryImplJsonApiConverterTest
-    extends RBCommonsIntegrationTest<StatisticalSummaryImplJsonApiConverter> {
+public class StatisticalSummaryJsonApiConverterTest
+    extends RBCommonsIntegrationTest<StatisticalSummaryJsonApiConverter> {
 
   @Test
   public void testRoundTrip() {
-    JsonApiTestData<StatisticalSummaryImpl> statisticalSummaryJsonApiTestData = jsonApiTestData(
-        f -> statisticalSummaryImplMatcher(f),
+    JsonApiTestData<StatisticalSummary> statisticalSummaryJsonApiTestData = jsonApiTestData(
+        f -> statisticalSummaryMatcher(f, DEFAULT_EPSILON_1e_8),
 
         jsonApiTestPair(
             statisticalSummaryImplBuilder()
@@ -44,8 +44,8 @@ public class StatisticalSummaryImplJsonApiConverterTest
   }
 
   @Override
-  protected Class<StatisticalSummaryImplJsonApiConverter> getClassBeingTested() {
-    return StatisticalSummaryImplJsonApiConverter.class;
+  protected Class<StatisticalSummaryJsonApiConverter> getClassBeingTested() {
+    return StatisticalSummaryJsonApiConverter.class;
   }
 
 }

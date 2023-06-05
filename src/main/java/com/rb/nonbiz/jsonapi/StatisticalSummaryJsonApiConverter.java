@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
-import com.rb.nonbiz.math.stats.StatisticalSummaryImpl;
+import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
@@ -22,9 +22,9 @@ import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
 /**
- * Converts a {@link StatisticalSummaryImpl} back and forth to JSON for our public API.
+ * Converts a {@link StatisticalSummary} back and forth to JSON for our public API.
  */
-public class StatisticalSummaryImplJsonApiConverter implements HasJsonApiDocumentation {
+public class StatisticalSummaryJsonApiConverter implements HasJsonApiDocumentation {
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties(rbMapOf(
@@ -56,24 +56,25 @@ public class StatisticalSummaryImplJsonApiConverter implements HasJsonApiDocumen
   @Inject JsonValidator jsonValidator;
 
   public JsonObject toJsonObject(
-      StatisticalSummaryImpl statisticalSummaryImpl) {
+      StatisticalSummary statisticalSummary) {
     return jsonValidator.validate(
         rbJsonObjectBuilder()
-            .setLong(  "n",                 statisticalSummaryImpl.getN())
-            .setDouble("mean",              statisticalSummaryImpl.getMean())
-            .setDouble("min",               statisticalSummaryImpl.getMin())
-            .setDouble("max",               statisticalSummaryImpl.getMax())
-            .setDouble("standardDeviation", statisticalSummaryImpl.getStandardDeviation())
-            .setDouble("variance",          statisticalSummaryImpl.getVariance())
-            .setDouble("sum",               statisticalSummaryImpl.getSum())
+            .setLong(  "n",                 statisticalSummary.getN())
+            .setDouble("mean",              statisticalSummary.getMean())
+            .setDouble("min",               statisticalSummary.getMin())
+            .setDouble("max",               statisticalSummary.getMax())
+            .setDouble("standardDeviation", statisticalSummary.getStandardDeviation())
+            .setDouble("variance",          statisticalSummary.getVariance())
+            .setDouble("sum",               statisticalSummary.getSum())
             .build(),
         JSON_VALIDATION_INSTRUCTIONS);
   }
 
-  public StatisticalSummaryImpl fromJsonObject(
+  public StatisticalSummary fromJsonObject(
       JsonObject jsonObject) {
     jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
 
+    // return a StatisticalSummaryImpl, which implements StatisticalSummary
     return statisticalSummaryImplBuilder()
         .setN(                getJsonLongOrThrow(  jsonObject, "n"))
         .setMean(             getJsonDoubleOrThrow(jsonObject, "mean"))
@@ -87,7 +88,7 @@ public class StatisticalSummaryImplJsonApiConverter implements HasJsonApiDocumen
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
-        .setClass(StatisticalSummaryImpl.class)
+        .setClass(StatisticalSummary.class)
         .setSingleLineSummary(documentation(
             "Holds a statistical summary of a data set."))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
@@ -107,9 +108,9 @@ public class StatisticalSummaryImplJsonApiConverter implements HasJsonApiDocumen
             "mean",              jsonDouble(12.345),
             "min",               jsonDouble(-5.678),
             "max",               jsonDouble(67.890),
-            "standardDeviation", jsonDouble(4.321),
-            "variance",          jsonDouble(17.89),
-            "sum",               jsonDouble(2_888.73)))  // = n * mean
+            "standardDeviation", jsonDouble( 4.321),
+            "variance",          jsonDouble(18.671_041),  // variance = stdDev * stdDev
+            "sum",               jsonDouble(2_888.73)))   // sum      = n * mean
         .build();
   }
 
