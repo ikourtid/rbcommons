@@ -65,9 +65,9 @@ public class ClosedUnitFractionRangesJsonApiConverterTest extends RBTest<ClosedU
                 "max", jsonDouble(100)),  // default min = 0 %; default max = 100 %
             "222", jsonObject(
                 "min", jsonDouble(10),
-                "max", jsonDouble(100)),   // this is optional for fromJsonObject() but appears for toJsonObject()
+                "max", jsonDouble(100)),  // this is optional for fromJsonObject() but appears for toJsonObject()
             "333", jsonObject(
-                "min", jsonDouble(0),      // this is optional for fromJsonObject() but appears for toJsonObject()
+                "min", jsonDouble(0),     // this is optional for fromJsonObject() but appears for toJsonObject()
                 "max", jsonDouble(90))),
         iid -> iid.asString());
   }
