@@ -18,9 +18,13 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
+import static com.rb.nonbiz.types.ClosedUnitFractionRange.unitFractionAtLeast;
+import static com.rb.nonbiz.types.ClosedUnitFractionRange.unitFractionAtMost;
+import static com.rb.nonbiz.types.ClosedUnitFractionRange.unrestrictedClosedUnitFractionRange;
 import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
 import static java.lang.Long.parseLong;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,6 +36,40 @@ public class ClosedUnitFractionRangesJsonApiConverterTest extends RBTest<ClosedU
     testInstrumentIdRoundTripConversionHelper(
         emptyClosedUnitFractionRanges(),
         emptyJsonObject());
+  }
+
+  @Test
+  public void testDefaultValues() {
+    ClosedUnitFractionRanges<InstrumentId> closedUnitFractionRangesNoDefaults = closedUnitFractionRanges(rbMapOf(
+        instrumentId(111L), unrestrictedClosedUnitFractionRange(),           // default min = 0 % and max = 100 %
+        instrumentId(222L), unitFractionAtLeast(unitFractionInPct(10)),      // default max = 100 %
+        instrumentId(333L), unitFractionAtMost( unitFractionInPct(90))));    // default min = 0 %
+
+    // converting from Json: default min = 0 %; default max = 100 %
+    testFromJsonHelper(
+        closedUnitFractionRangesNoDefaults,
+        jsonObject(
+            "111", emptyJsonObject(),
+            "222", singletonJsonObject(
+                "min", jsonDouble(10)),    // no 'max'; 100 % is the default
+            "333", singletonJsonObject(
+                "max", jsonDouble(90))),   // no 'min'; 0 % is the default
+        v -> instrumentId(parseLong(v)));
+
+    // converting to Json: default 'min' and 'max' appear in the Json
+    testToJsonHelper(
+        closedUnitFractionRangesNoDefaults,
+        jsonObject(
+            "111", jsonObject(
+                "min", jsonDouble(0),     // both entries are optional for fromJsonObject()
+                "max", jsonDouble(100)),  // default min = 0 %; default max = 100 %
+            "222", jsonObject(
+                "min", jsonDouble(10),
+                "max", jsonDouble(100)),   // this is optional for fromJsonObject() but appears for toJsonObject()
+            "333", jsonObject(
+                "min", jsonDouble(0),      // this is optional for fromJsonObject() but appears for toJsonObject()
+                "max", jsonDouble(90))),
+        iid -> iid.asString());
   }
 
   @Test
@@ -89,16 +127,31 @@ public class ClosedUnitFractionRangesJsonApiConverterTest extends RBTest<ClosedU
       JsonObject closedUnitFractionRangesJsonObject,
       Function<C, String> keySerializer,
       Function<String, C> keyDeserializer) {
-    
+
     // check the conversion toJsonObject()
+    testToJsonHelper(closedUnitFractionRanges, closedUnitFractionRangesJsonObject, keySerializer);
+
+    // check the conversion fromJsonObject()
+    testFromJsonHelper(closedUnitFractionRanges, closedUnitFractionRangesJsonObject, keyDeserializer);
+  }
+
+  private <C extends Comparable<? super C>> void testToJsonHelper(
+      ClosedUnitFractionRanges<C> closedUnitFractionRanges,
+      JsonObject closedUnitFractionRangesJsonObject,
+      Function<C, String> keySerializer) {
+    
     assertThat(
         makeTestObject().toJsonObject(
             closedUnitFractionRanges,
             v -> keySerializer.apply(v)),
         jsonObjectEpsilonMatcher(
             closedUnitFractionRangesJsonObject));
+  }
 
-    // check the conversion fromJsonObject()
+  private <C extends Comparable<? super C>> void testFromJsonHelper(
+      ClosedUnitFractionRanges<C> closedUnitFractionRanges,
+      JsonObject closedUnitFractionRangesJsonObject,
+      Function<String, C> keyDeserializer) {
     assertThat(
         makeTestObject().fromJsonObject(
             closedUnitFractionRangesJsonObject,
