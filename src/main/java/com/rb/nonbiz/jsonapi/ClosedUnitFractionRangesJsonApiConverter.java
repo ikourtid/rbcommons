@@ -87,7 +87,9 @@ public class ClosedUnitFractionRangesJsonApiConverter implements HasJsonApiDocum
                 "A `Range` with closed upper and lower bounds, each with a value",
                 "between 0% and 100%. <p />",
                 "The range minimum is specified via <b>min</b> and the range maximum by <b>max</b>.",
-                "Both <b>min</b> and <b>max</b> are given as percentages (0-100).")))
+                "Both <b>min</b> and <b>max</b> are given as percentages (0-100). <p />",
+                "It is possible to omit either <b>min</b> or <b>max</b> (or both). The default",
+                "<b>min</b> is 0% and the default <b>max</b> is 100%.")))
             // This converter does not use a JsonValidationInstructions, deferring all validation to
             // RangeJsonApiConverter. However, we include its RANGE_JSON_VALIDATION_INSTRUCTIONS here
             // to help with the JsonApiDocumentation.
