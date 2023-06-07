@@ -47,7 +47,10 @@ import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
  */
 public class RangeJsonApiConverter implements HasJsonApiDocumentation {
 
-  private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
+  // RANGE_JSON_VALIDATION_INSTRUCTIONS is 'package private' (instead of the usual 'private') so that it can be used by
+  // CloseUnitFractionRangesJsonApiConverter to help with its JsonApiDocumentation. It also has a non-standard
+  // name (it's usually JSON_VALIDATION_INSTRUCTIONS) to avoid name collisions.
+  static final JsonValidationInstructions RANGE_JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .hasNoRequiredProperties()
       .setOptionalProperties(rbMapOf(
           "min", UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR,
@@ -71,13 +74,13 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
             .setIf("min", range, r -> r.hasLowerBound(), r -> serializer.apply(r.lowerEndpoint()))
             .setIf("max", range, r -> r.hasUpperBound(), r -> serializer.apply(r.upperEndpoint()))
             .build(),
-        JSON_VALIDATION_INSTRUCTIONS);
+        RANGE_JSON_VALIDATION_INSTRUCTIONS);
   }
 
   public <C extends Comparable<? super C>> Range<C> fromJsonObject(
       JsonObject jsonObject,
       Function<JsonPrimitive, C> deserializer) {
-    jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
+    jsonValidator.validate(jsonObject, RANGE_JSON_VALIDATION_INSTRUCTIONS);
 
     Optional<JsonPrimitive> maybeMin = getOptionalJsonPrimitive(jsonObject, "min");
     Optional<JsonPrimitive> maybeMax = getOptionalJsonPrimitive(jsonObject, "max");
@@ -117,7 +120,7 @@ public class RangeJsonApiConverter implements HasJsonApiDocumentation {
             "the <b>max</b> property to ",
             "signify a range extending up to +infinity. </p>",
             "<p> Both 'min' and 'max' can be omitted to specify an unlimited range. </p>")))
-        .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
+        .setJsonValidationInstructions(RANGE_JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
         .setNontrivialSampleJson(jsonObject(
             "min", jsonDouble(-1.1),
