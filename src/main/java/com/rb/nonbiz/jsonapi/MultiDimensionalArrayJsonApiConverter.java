@@ -101,7 +101,7 @@ public class MultiDimensionalArrayJsonApiConverter implements HasJsonApiDocument
         .setClass(MultiDimensionalArray.class)
         .setSingleLineSummary(documentation("Holds a multi-dimensional array."))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
-            "The dimensions of the array are specified with the  <b>dimensions</b> property,",
+            "The dimensions of the array are specified with the <b>dimensions</b> property,",
             "which holds an array of integers. <p />",
             "For example, <b>dimensions</b> of [4, 1, 5] would indicate a 3-dimensional array",
             "with 4 entries in the first dimension, 1 entry in the second, and 5 entries in the third dimension. <p />",
@@ -113,7 +113,7 @@ public class MultiDimensionalArrayJsonApiConverter implements HasJsonApiDocument
             "'most significant digit' (and varies the most slowly). <p />",
             "In the above example, the first 5 entries would correspond to coordinates",
             "[0, 0, 0], [0, 0, 1], [0, 0, 2], [0, 0, 3], and [0, 0, 4]. Since the second dimension has only 1 entry,",
-            "the next array elements would be",
+            "the next 5 array elements would be",
             "[0, 1, 0], [0, 1, 1], [0, 1, 2], [0, 1, 3], and [0, 1, 4], etc.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
