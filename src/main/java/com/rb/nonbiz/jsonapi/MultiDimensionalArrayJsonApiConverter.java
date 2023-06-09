@@ -101,7 +101,8 @@ public class MultiDimensionalArrayJsonApiConverter implements HasJsonApiDocument
         .setClass(MultiDimensionalArray.class)
         .setSingleLineSummary(documentation("Holds a multi-dimensional array."))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
-            "The dimensions of the array are specified in <b>dimensions</b>, which is an array of integers.",
+            "The dimensions of the array are specified with the  <b>dimensions</b> property,",
+            "which holds an array of integers. <p />",
             "For example, <b>dimensions</b> of [4, 1, 5] would indicate a 3-dimensional array",
             "with 4 entries in the first dimension, 1 entry in the second, and 5 entries in the third dimension. <p />",
             "The array entries themselves are stored under the <b>items</b> property. In the above example,",
