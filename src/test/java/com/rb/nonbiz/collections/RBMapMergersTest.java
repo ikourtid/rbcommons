@@ -6,6 +6,7 @@ import com.rb.nonbiz.functional.QuadriConsumer;
 import com.rb.nonbiz.functional.QuadriFunction;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.functional.TriFunction;
+import com.rb.nonbiz.testmatchers.RBMapMatchers;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.PositiveMultiplier;
 import com.rb.nonbiz.types.RBNumeric;
@@ -20,13 +21,22 @@ import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 
 import static com.google.common.collect.Iterators.singletonIterator;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A2;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A3;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
+import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsInOrderAllowingOverwriting;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap;
+import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.RBMapMergers.*;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapPreciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
@@ -804,6 +814,49 @@ public class RBMapMergersTest {
             "a", money(1),
             "b", money(2)),
         singletonRBMap("a", POSITIVE_MULTIPLIER_1)));
+  }
+
+  @Test
+  public void testMergeRBMapsInOrderAllowingOverwriting() {
+    assertThat(
+        mergeRBMapsInOrderAllowingOverwriting(emptyRBMap(), emptyRBMap()),
+        rbMapEqualityMatcher(emptyRBMap()));
+
+    assertThat(
+        mergeRBMapsInOrderAllowingOverwriting(emptyRBMap(), emptyRBMap(), emptyRBMap()),
+        rbMapEqualityMatcher(emptyRBMap()));
+
+    assertThat(
+        mergeRBMapsInOrderAllowingOverwriting(
+            rbMapOf(
+                "A1", "1x",
+                "A2", "2x",
+                "A3", "3x"),
+            rbMapOf(
+                "A1", "1y",
+                "A2", "2y")),
+        rbMapEqualityMatcher(
+            rbMapOf(
+                "A1", "1y",
+                "A2", "2y",
+                "A3", "3x")));
+
+    assertThat(
+        mergeRBMapsInOrderAllowingOverwriting(
+            rbMapOf(
+                "A1", "1x",
+                "A2", "2x",
+                "A3", "3x"),
+            rbMapOf(
+                "A1", "1y",
+                "A2", "2y"),
+            singletonRBMap(
+                "A1", "1z")),
+        rbMapEqualityMatcher(
+            rbMapOf(
+                "A1", "1z",
+                "A2", "2y",
+                "A3", "3x")));
   }
 
 }
