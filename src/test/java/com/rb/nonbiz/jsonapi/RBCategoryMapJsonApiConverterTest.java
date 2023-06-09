@@ -1,6 +1,9 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.google.common.collect.Range;
+import com.google.gson.JsonElement;
 import com.rb.nonbiz.collections.RBCategoryMap;
+import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import com.rb.nonbiz.testutils.RBTest;
 import com.rb.nonbiz.types.Epsilon;
@@ -65,6 +68,22 @@ public class RBCategoryMapJsonApiConverterTest extends RBCommonsIntegrationTest<
             jsonObject,
             key -> key,
             jsonElement -> jsonElement.getAsDouble()));
+  }
+
+  @Test
+  public void testValidSampleJson() {
+    RBCategoryMapJsonApiConverter realObject = makeRealObject(RBCategoryMapJsonApiConverter.class);
+
+    JsonElement sampleJson = RBOptionals.getOrThrow(
+        // have to cast because not all JsonApiDocumentation classes have NontrivialSampleJson
+        ((JsonApiClassDocumentation) realObject.getJsonApiDocumentation()).getNontrivialSampleJson(),
+        "Internal error - should have a sample JSON");
+
+    // Check that the sample JSON can be successfully processed by fromJsonObject().
+    RBCategoryMap<String, Integer> doesNotThrow = realObject.fromJsonObject(
+        sampleJson.getAsJsonObject(),
+        key -> key,
+        jsonElement -> jsonElement.getAsInt());
   }
 
   @Override
