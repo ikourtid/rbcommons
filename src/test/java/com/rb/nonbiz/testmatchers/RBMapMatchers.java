@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.TreeMap;
 
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -33,7 +32,6 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.rangeMatcher;
-import static com.rb.nonbiz.testmatchers.RBValueMatchers.epsilonForNumericsElseEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
@@ -172,6 +170,14 @@ public class RBMapMatchers {
     };
   }
 
+  /**
+   * {@link RBMap} implements a non-trivial hashCode/equals, but because not all data classes do,
+   * this matcher can be used to avoid needing to know this.
+   */
+  public static <K, V> TypeSafeMatcher<RBMap<K, V>> rbMapEqualityMatcher(RBMap<K, V> expected) {
+    return rbMapMatcher(expected, f -> typeSafeEqualTo(f));
+  }
+
   public static <E extends Enum<E>, V> TypeSafeMatcher<RBEnumMap<E, V>> rbEnumMapMatcher(
       RBEnumMap<E, V> expected,
       MatcherGenerator<V> valueMatcherGenerator) {
@@ -202,7 +208,7 @@ public class RBMapMatchers {
             expected.asDescendingMapOfRanges().entrySet().iterator(),
             expectedEntry -> makeMatcher(expectedEntry, actualEntry ->
                 rangeMatcher(expectedEntry.getKey(), keysMatcherGenerator).matches(actualEntry.getKey())
-                && valuesMatcherGenerator.apply(expectedEntry.getValue()).matches(actualEntry.getValue())))
+                    && valuesMatcherGenerator.apply(expectedEntry.getValue()).matches(actualEntry.getValue())))
             .matches(actual.asDescendingMapOfRanges().entrySet().iterator()));
   }
 
@@ -277,7 +283,7 @@ public class RBMapMatchers {
    * although it is possible. For the same reason why checking two doubles for equality is generally not good,
    * it's also not good to have doubles as keys, because if your (double) key is epsilon-different, it will look like
    * the map doesn't have a value for that key.
-   * 
+   *
    * Hence the only matcher for an BiMap uses equality.
    */
   public static <A, B> TypeSafeMatcher<BiMap<A, B>> biMapEqualityMatcher(BiMap<A, B> expected) {
