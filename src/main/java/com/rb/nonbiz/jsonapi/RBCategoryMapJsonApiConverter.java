@@ -16,7 +16,6 @@ import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPro
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
-import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonInteger;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonElementOrThrow;
@@ -37,7 +36,9 @@ public class RBCategoryMapJsonApiConverter implements HasJsonApiDocumentation {
       .setRequiredProperties(rbMapOf(
           "valueRegardlessOfCategory", simpleClassJsonApiPropertyDescriptor(
               UNKNOWN_CLASS_OF_JSON_PROPERTY,
-              jsonPropertySpecificDocumentation("The value V that is valid regardless of category")),
+              jsonPropertySpecificDocumentation(asSingleLineWithNewlines(
+                  "The value <i>V</i> regardless of category.",
+                  "For example, it could be the sum of all the per-category values."))),
           "categoryMap", rbMapJsonApiPropertyDescriptor(
               simpleClassJsonApiPropertyDescriptor(UNKNOWN_CLASS_OF_JSON_PROPERTY),
               simpleClassJsonApiPropertyDescriptor(UNKNOWN_CLASS_OF_JSON_PROPERTY))))
@@ -93,7 +94,7 @@ public class RBCategoryMapJsonApiConverter implements HasJsonApiDocumentation {
             "holding the total trading notional (buy + sell) which doesn't apply to either category",
             "by itself. <p />",
             "The category map is stored under the <b>categoryMap</p> property. <p />",
-            "The value that applies regardless of category is stored under the ",
+            "The value that applies across categories is stored under the ",
             "<b>valueRegardlessOfCategory</b> property.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
