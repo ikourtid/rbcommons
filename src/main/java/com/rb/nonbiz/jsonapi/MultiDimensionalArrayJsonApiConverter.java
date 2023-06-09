@@ -23,11 +23,17 @@ import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertyS
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR;
 import static com.rb.nonbiz.json.RBGson.jsonInteger;
+import static com.rb.nonbiz.json.RBGson.jsonString;
+import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArrayToIntArray;
+import static com.rb.nonbiz.json.RBJsonArrays.jsonIntegerArray;
 import static com.rb.nonbiz.json.RBJsonArrays.listToJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.streamToJsonArray;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonArrayOrThrow;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
 /**
@@ -40,7 +46,7 @@ public class MultiDimensionalArrayJsonApiConverter implements HasJsonApiDocument
           "dimensions", collectionJsonApiPropertyDescriptor(
               simpleClassJsonApiPropertyDescriptor(Integer.class),
               jsonPropertySpecificDocumentation(asSingleLineWithNewlines(
-                  "The size of the N-dimensional space in each dimension. For example, [40, 10, 30, 20] means that the",
+                  "The size of the <i>N</i>-dimensional space in each dimension. For example, [40, 10, 30, 20] means that the",
                   "last dimension (a bit like the least important digit) in this 4-dimensional space has a size of 20."))),
           "items", collectionJsonApiPropertyDescriptor(
               UNKNOWN_DATA_CLASS_JSON_API_DESCRIPTOR,
@@ -91,7 +97,32 @@ public class MultiDimensionalArrayJsonApiConverter implements HasJsonApiDocument
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return null; // FIXME SWA BACKTEST JSON API
+    return jsonApiClassDocumentationBuilder()
+        .setClass(MultiDimensionalArray.class)
+        .setSingleLineSummary(documentation("Holds a multi-dimensional array."))
+        .setLongDocumentation(documentation(asSingleLineWithNewlines(
+            "The dimensions of the array are specified in <b>dimensions</b>; an array of integers.",
+            "For example, <b>dimensions</b> of [4, 1, 5] would indicate a 3-dimensional array",
+            "with 4 entries in the first dimension, 1 entry in the second, and 5 entries in the 3rd dimension. <p />",
+            "The array entries themselves are stored under the <b>items</b> property. In the above example,",
+            "the <b>items</b> array would be of size 4 x 1 x 5 = 20. <p />",
+            "The items are listed in order, considering",
+            "the last dimension to be the 'least significant' bit and the first dimension to be the",
+            "'most significant'. In the above example, the first 5 entries would correspond to coordinates",
+            "[0, 0, 0], [0, 0, 1], [0, 0, 2], [0, 0, 3], and [0, 0, 4]. The next entries would be",
+            "[0, 1, 0], [0, 1, 1], [0, 1, 2], [0, 1, 3], and [0, 1, 4], etc.")))
+        .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
+        .hasNoChildJsonApiConverters()
+        .setNontrivialSampleJson(jsonObject(
+            "dimensions", jsonIntegerArray(2, 1, 3),
+            "items", jsonArray(
+                jsonString("0.0.0"),
+                jsonString("0.0.1"),
+                jsonString("0.0.2"),
+                jsonString("1.0.0"),
+                jsonString("1.0.1"),
+                jsonString("1.0.2"))))
+        .build();
   }
 
 }
