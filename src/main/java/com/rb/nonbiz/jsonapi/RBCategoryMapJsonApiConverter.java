@@ -17,6 +17,7 @@ import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertyS
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
+import static com.rb.nonbiz.json.RBGson.jsonInteger;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonElementOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
@@ -97,11 +98,11 @@ public class RBCategoryMapJsonApiConverter implements HasJsonApiDocumentation {
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
         .setNontrivialSampleJson(jsonObject(
-            "valueRegardlessOfCategory", jsonDouble(1_100),
+            "valueRegardlessOfCategory", jsonInteger(1_100),
             "categoryMap", jsonObject(
-                "TLH",        jsonDouble(100),
-                "invest",     jsonDouble(300),
-                "withdrawal", jsonDouble(700))))
+                "TLH",        jsonInteger(100),
+                "invest",     jsonInteger(300),
+                "withdrawal", jsonInteger(700))))
         .build();
   }
 
