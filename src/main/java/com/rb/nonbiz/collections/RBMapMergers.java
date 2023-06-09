@@ -21,11 +21,14 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
+import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBMaps.getWhenUpToOneRBMapIsNonEmpty;
 import static com.rb.nonbiz.collections.RBOptionals.filterPresentOptionalsInStream;
+import static com.rb.nonbiz.collections.RBOptionals.getIntOrThrow;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
@@ -342,7 +345,35 @@ public class RBMapMergers {
       sum += value1.doubleValue() * map2.getOrThrow(key).doubleValue();
     }
     return sum;
+  }
 
+  /**
+   * It is rare that we overwrite map entries, but sometimes we want to merge maps in the order they are supplied.
+   *
+   * <p> This returns a map whose keys are the set union of the keys in the maps supplied, and
+   * corresponding value for every such key is the value for the latest map in the arguments supplied. </p>
+   */
+  @SafeVarargs
+  public static <K, V> RBMap<K, V> mergeRBMapsInOrderAllowingOverwriting(
+      RBMap<K, V> first, RBMap<K, V> second, RBMap<K, V> ... rest) {
+    // We could use:
+    // max size of any map (underestimate, but less wasted storage)
+    // sum of sizes of all maps (overestimate, but better performance)
+    // size of set union of keys (exact, but worst performance, because we'd need to calculate it.
+    // We'll just go with 'max'.
+    MutableRBMap<K, V> mutableMap = newMutableRBMapWithExpectedSize(
+        getIntOrThrow(
+            concatenateFirstSecondAndRest(first, second, rest)
+                .mapToInt(v -> v.size())
+                .max(),
+            "Internal error - we know there are at least 2 maps here"));
+
+    concatenateFirstSecondAndRest(first, second, rest).forEach(
+        map -> map.forEachEntry(
+            // We rarely use put; it's usually putAssumingAbsent, putAssumingPresent, etc.
+            // However, given the semantics of this method, it makes sense.
+            (instrumentId, v) -> mutableMap.put(instrumentId, v)));
+    return newRBMap(mutableMap);
   }
 
 }
