@@ -38,12 +38,8 @@ public class RBCategoryMapJsonApiConverter implements HasJsonApiDocumentation {
               UNKNOWN_CLASS_OF_JSON_PROPERTY,
               jsonPropertySpecificDocumentation("The value V that is valid regardless of category")),
           "categoryMap", rbMapJsonApiPropertyDescriptor(
-              simpleClassJsonApiPropertyDescriptor(
-                  UNKNOWN_CLASS_OF_JSON_PROPERTY,
-                  jsonPropertySpecificDocumentation("The key type of the category map.")),
-              simpleClassJsonApiPropertyDescriptor(
-                  UNKNOWN_CLASS_OF_JSON_PROPERTY,
-                  jsonPropertySpecificDocumentation("The value type of the category map.")))))
+              simpleClassJsonApiPropertyDescriptor(UNKNOWN_CLASS_OF_JSON_PROPERTY),
+              simpleClassJsonApiPropertyDescriptor(UNKNOWN_CLASS_OF_JSON_PROPERTY))))
       .hasNoOptionalProperties()
       .build();
 
