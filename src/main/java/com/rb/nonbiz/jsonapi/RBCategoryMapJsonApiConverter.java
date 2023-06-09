@@ -38,7 +38,7 @@ public class RBCategoryMapJsonApiConverter implements HasJsonApiDocumentation {
               UNKNOWN_CLASS_OF_JSON_PROPERTY,
               jsonPropertySpecificDocumentation(asSingleLineWithNewlines(
                   "The value <i>V</i> regardless of category.",
-                  "For example, it could be the sum of all the per-category values."))),
+                  "For example, this could be the sum of all the per-category values."))),
           "categoryMap", rbMapJsonApiPropertyDescriptor(
               simpleClassJsonApiPropertyDescriptor(UNKNOWN_CLASS_OF_JSON_PROPERTY),
               simpleClassJsonApiPropertyDescriptor(UNKNOWN_CLASS_OF_JSON_PROPERTY))))
@@ -74,8 +74,7 @@ public class RBCategoryMapJsonApiConverter implements HasJsonApiDocumentation {
 
     return rbCategoryMap(
         valueDeserializer.apply(
-            getJsonElementOrThrow(
-                jsonObject, "valueRegardlessOfCategory")),
+            getJsonElementOrThrow(jsonObject, "valueRegardlessOfCategory")),
         jsonObjectToRBMap(
             getJsonObjectOrThrow(jsonObject, "categoryMap"),
             keyDeserializer,
