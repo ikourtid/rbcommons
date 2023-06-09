@@ -101,15 +101,18 @@ public class MultiDimensionalArrayJsonApiConverter implements HasJsonApiDocument
         .setClass(MultiDimensionalArray.class)
         .setSingleLineSummary(documentation("Holds a multi-dimensional array."))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
-            "The dimensions of the array are specified in <b>dimensions</b>; an array of integers.",
+            "The dimensions of the array are specified in <b>dimensions</b>, which is an array of integers.",
             "For example, <b>dimensions</b> of [4, 1, 5] would indicate a 3-dimensional array",
-            "with 4 entries in the first dimension, 1 entry in the second, and 5 entries in the 3rd dimension. <p />",
+            "with 4 entries in the first dimension, 1 entry in the second, and 5 entries in the third dimension. <p />",
             "The array entries themselves are stored under the <b>items</b> property. In the above example,",
-            "the <b>items</b> array would be of size 4 x 1 x 5 = 20. <p />",
-            "The items are listed in order, considering",
-            "the last dimension to be the 'least significant' bit and the first dimension to be the",
-            "'most significant'. In the above example, the first 5 entries would correspond to coordinates",
-            "[0, 0, 0], [0, 0, 1], [0, 0, 2], [0, 0, 3], and [0, 0, 4]. The next entries would be",
+            "the <b>items</b> array would be of length 4 x 1 x 5 = 20. <p />",
+            "The items are listed in order, following the convention that",
+            "the last dimension is the 'least significant digit' (and varies the fastest)",
+            "and the first dimension to be the",
+            "'most significant digit' (and varies the most slowly). <p />",
+            "In the above example, the first 5 entries would correspond to coordinates",
+            "[0, 0, 0], [0, 0, 1], [0, 0, 2], [0, 0, 3], and [0, 0, 4]. Since the second dimension has only 1 entry,",
+            "the next array elements would be",
             "[0, 1, 0], [0, 1, 1], [0, 1, 2], [0, 1, 3], and [0, 1, 4], etc.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
