@@ -16,11 +16,16 @@ import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPro
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
+import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonElementOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
+import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjects.jsonObjectToRBMap;
 import static com.rb.nonbiz.json.RBJsonObjects.rbMapToJsonObject;
+import static com.rb.nonbiz.jsonapi.JsonApiClassDocumentation.JsonApiClassDocumentationBuilder.jsonApiClassDocumentationBuilder;
+import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
+import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
 /**
  * Converts an {@link RBCategoryMap} back and forth to JSON for our public API.
@@ -81,7 +86,27 @@ public class RBCategoryMapJsonApiConverter implements HasJsonApiDocumentation {
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
-    return null;
+    return jsonApiClassDocumentationBuilder()
+        .setClass(RBCategoryMap.class)
+        .setSingleLineSummary(documentation(asSingleLineWithNewlines(
+            "Like an `RBMap` of categories, with an additional data member",
+            "that applies regardless of category.")))
+        .setLongDocumentation(documentation(asSingleLineWithNewlines(
+            "For example, we could store the trading notional by side (buy/sell), additionally",
+            "holding the total trading notional (buy + sell) which doesn't apply to either category",
+            "by itself. <p />",
+            "The category map is stored under the <b>categoryMap</p> property. <p />",
+            "The value that applies regardless of category is stored under the ",
+            "<b>valueRegardlessOfCategory</b> property.")))
+        .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
+        .hasNoChildJsonApiConverters()
+        .setNontrivialSampleJson(jsonObject(
+            "valueRegardlessOfCategory", jsonDouble(1_100),
+            "categoryMap", jsonObject(
+                "TLH",        jsonDouble(100),
+                "invest",     jsonDouble(300),
+                "withdrawal", jsonDouble(700))))
+        .build();
   }
 
 }
