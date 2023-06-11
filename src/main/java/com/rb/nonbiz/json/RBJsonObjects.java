@@ -76,7 +76,6 @@ public class RBJsonObjects {
         .build();
   }
 
-
   public static <K, V> JsonObject rbMapToJsonObject(
       RBMap<K, V> map,
       Function<K, String> keySerializer,

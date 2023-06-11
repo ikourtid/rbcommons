@@ -48,6 +48,7 @@ public class RBJsonMatchers {
       // Even though JsonObject does not have ordered semantics, and it's more like a map, sometimes it's nice to
       // make sure that the JSON people see has certain fields in order. For example, for any JsonObject where they keys
       // (properties) are a string representation of a date, it's nice if all entries are ordered by date.
+      // The following depends on the fact that JsonObject stores entries in the order they were added.
       if (expected.size() != actual.size()) {
         return false;
       }
