@@ -15,25 +15,25 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * A collection of pairs of JSON objects and their corresponding Java objects,
  * so we can make sure that back-and-forth conversions are correct.
  *
- * @see JsonApiTestPair
+ * @see JsonApiPair
  */
 public class JsonApiTestData<T> {
 
   private final MatcherGenerator<T> matcherGenerator;
-  private final List<JsonApiTestPair<T>> testPairs;
+  private final List<JsonApiPair<T>> testPairs;
 
-  private JsonApiTestData(MatcherGenerator<T> matcherGenerator, List<JsonApiTestPair<T>> testPairs) {
+  private JsonApiTestData(MatcherGenerator<T> matcherGenerator, List<JsonApiPair<T>> testPairs) {
     this.matcherGenerator = matcherGenerator;
     this.testPairs = testPairs;
   }
 
   @SafeVarargs
   public static <T> JsonApiTestData<T> jsonApiTestData(
-      MatcherGenerator<T> matcherGenerator, JsonApiTestPair<T> first, JsonApiTestPair<T> ... rest) {
+      MatcherGenerator<T> matcherGenerator, JsonApiPair<T> first, JsonApiPair<T>... rest) {
     return new JsonApiTestData<>(matcherGenerator, concatenateFirstAndRest(first, rest));
   }
 
-  public List<JsonApiTestPair<T>> getTestPairs() {
+  public List<JsonApiPair<T>> getTestPairs() {
     return testPairs;
   }
 
@@ -45,7 +45,7 @@ public class JsonApiTestData<T> {
       Function<T, JsonObject> toJsonObject,
       Function<JsonObject, T> fromJsonObject) {
     for (int i = 0; i < testPairs.size(); i++) {
-      JsonApiTestPair<T> testPair = testPairs.get(i);
+      JsonApiPair<T> testPair = testPairs.get(i);
       JsonObject expectedJson = testPair.getJsonObject();
       T    expectedJavaObject = testPair.getJavaObject();
       JsonObject actualJson = toJsonObject.apply(expectedJavaObject);
@@ -68,7 +68,7 @@ public class JsonApiTestData<T> {
   public void testFromJsonObject(
       Function<JsonObject, T> fromJsonObject) {
     for (int i = 0; i < testPairs.size(); i++) {
-      JsonApiTestPair<T> testPair = testPairs.get(i);
+      JsonApiPair<T> testPair = testPairs.get(i);
       JsonObject expectedJson = testPair.getJsonObject();
       T    expectedJavaObject = testPair.getJavaObject();
       T    actualJavaObject = fromJsonObject.apply(expectedJson);
@@ -86,7 +86,7 @@ public class JsonApiTestData<T> {
   public void testToJsonObject(
       Function<T, JsonObject> toJsonObject) {
     for (int i = 0; i < testPairs.size(); i++) {
-      JsonApiTestPair<T> testPair = testPairs.get(i);
+      JsonApiPair<T> testPair = testPairs.get(i);
       JsonObject expectedJson = testPair.getJsonObject();
       T    expectedJavaObject = testPair.getJavaObject();
       JsonObject actualJson = toJsonObject.apply(expectedJavaObject);

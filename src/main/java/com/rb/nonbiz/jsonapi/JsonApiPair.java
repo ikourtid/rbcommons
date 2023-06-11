@@ -7,18 +7,18 @@ import com.google.gson.JsonObject;
  *
  * <p> The unit tests will check that conversions in both directions produce the correct results. </p>
  */
-public class JsonApiTestPair<T> {
+public class JsonApiPair<T> {
 
   private final T javaObject;
   private final JsonObject jsonObject;
 
-  private JsonApiTestPair(T javaObject, JsonObject jsonObject) {
+  private JsonApiPair(T javaObject, JsonObject jsonObject) {
     this.javaObject = javaObject;
     this.jsonObject = jsonObject;
   }
 
-  public static <T> JsonApiTestPair<T> jsonApiTestPair(T javaObject, JsonObject jsonObject) {
-    return new JsonApiTestPair<>(javaObject, jsonObject);
+  public static <T> JsonApiPair<T> jsonApiPair(T javaObject, JsonObject jsonObject) {
+    return new JsonApiPair<>(javaObject, jsonObject);
   }
 
   public T getJavaObject() {
