@@ -13,6 +13,7 @@ import com.rb.nonbiz.text.RBSetOfHasUniqueId;
 import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import java.util.Comparator;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -48,6 +49,7 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.text.RBSetOfHasUniqueId.rbSetOfHasUniqueId;
 import static com.rb.nonbiz.text.UniqueId.uniqueId;
 import static java.util.Comparator.comparing;
+import static java.util.Map.Entry.comparingByKey;
 
 /**
  * Various utilities related to RBMap / IidMap {@code <--> } JsonObject conversions.
@@ -74,6 +76,7 @@ public class RBJsonObjects {
         .build();
   }
 
+
   public static <K, V> JsonObject rbMapToJsonObject(
       RBMap<K, V> map,
       Function<K, String> keySerializer,
@@ -84,6 +87,37 @@ public class RBJsonObjects {
     // because InstrumentId keys are unique, and they get serialized in a standardized way.
     return jsonObject(
         map.transformKeysAndValuesCopy(keySerializer, valueSerializer));
+  }
+
+  /**
+   * Although a JsonObject does not ensure a certain order, sometimes it is convenient to have a JSON object
+   * with its entries constructed in a certain order, because (depending on the implementation of JsonObject),
+   * it's either guaranteed, or at least very likely, to show properties in order in the final JSON.
+   * For cases where humans read the JSON, it will make it more legible.
+   */
+  public static <K, V> JsonObject orderedRBMapToJsonObject(
+      RBMap<K, V> map,
+      Function<K, String> keySerializer,
+      Function<V, JsonElement> valueSerializer,
+      Comparator<K> comparator) {
+    // Since 'map' is an RBMap, the code below has the advantage that it ensures
+    // that the transformed / serialized keys are unique.
+    // Note that we don't have to do this with IidMaps (@see #iidMapToJsonObject)
+    // because InstrumentId keys are unique, and they get serialized in a standardized way.
+
+    // Note that we can't just return the following:
+    // jsonObject(map.orderedTransformKeysAndValuesCopy(keySerializer, valueSerializer, comparator));
+    // It's subtle. Here's why. Even if orderedTransformKeysAndValuesCopy constructs the map in a deterministic order,
+    // the jsonObject() constructor that takes in an RBMap will call that map's .entrySet() and may not necessarily
+    // retrieve the entries in deterministic order.
+    RBJsonObjectBuilder rbJsonObjectBuilder = rbJsonObjectBuilder();
+    map.entrySet().stream().sorted(comparingByKey(comparator))
+        .forEach(entry -> {
+          K key = entry.getKey();
+          V value = entry.getValue();
+          rbJsonObjectBuilder.setJsonElement(keySerializer.apply(key), valueSerializer.apply(value));
+        });
+    return rbJsonObjectBuilder.build();
   }
 
   public static <E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>, V> JsonObject rbEnumMapToJsonObject(
