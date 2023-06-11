@@ -56,6 +56,7 @@ import static com.rb.nonbiz.json.RBJsonObjects.*;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
+import static com.rb.nonbiz.testmatchers.RBJsonMatchers.orderedJsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbEnumMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatcher;
@@ -347,6 +348,48 @@ public class RBJsonObjectsTest {
     asserter.accept(
         emptyRBMap(),
         emptyJsonObject());
+  }
+
+  @Test
+  public void testOrderedRBMapToJsonObject() {
+    BiConsumer<RBMap<InstrumentId, Money>, JsonObject> asserter = (map, expectedJsonObject) ->
+        assertThat(
+            orderedRBMapToJsonObject(
+                map,
+                v -> Strings.format("S%s", Long.toString(v.asLong())),
+                v -> jsonString(v.toString(2)),
+                InstrumentId::compareTo),
+            orderedJsonObjectEpsilonMatcher(expectedJsonObject));
+
+    asserter.accept(
+        // These are 1 through 9, but constructed out of order. The semantics won't change, but it means that the
+        // RBMap's internal storage is very unlikely to be such that the returned entries are in the order 1, 2, ... 9.
+        rbMapOf(
+            instrumentId(1), money(1.1),
+            instrumentId(9), money(9.9),
+            instrumentId(2), money(2.2),
+            instrumentId(7), money(7.7),
+            instrumentId(4), money(4.4),
+            instrumentId(3), money(3.3),
+            instrumentId(6), money(6.6),
+            instrumentId(5), money(5.5),
+            instrumentId(8), money(8.8)),
+        // In reality, we store maps of PreciseValue by storing the numeric value.
+        // In this test, we intentionally rely on Money#toString (with precision 2) to make the conversion less trivial.
+        jsonObject(
+            "S1", jsonString("$ 1.10"),
+            "S2", jsonString("$ 2.20"),
+            "S3", jsonString("$ 3.30"),
+            "S4", jsonString("$ 4.40"),
+            "S5", jsonString("$ 5.50"),
+            "S6", jsonString("$ 6.60"),
+            "S7", jsonString("$ 7.70"),
+            "S8", jsonString("$ 8.80"),
+            "S9", jsonString("$ 9.90")));
+    asserter.accept(
+        emptyRBMap(),
+        emptyJsonObject());
+
   }
 
   @Test
