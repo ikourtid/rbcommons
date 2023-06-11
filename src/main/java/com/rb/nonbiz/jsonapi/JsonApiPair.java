@@ -1,6 +1,7 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonObject;
+import com.rb.nonbiz.text.Strings;
 
 /**
  * Represents a Java object and its corresponding JSON object representation.
@@ -27,6 +28,11 @@ public class JsonApiPair<T> {
 
   public JsonObject getJsonObject() {
     return jsonObject;
+  }
+
+  @Override
+  public String toString() {
+    return Strings.format("[JAP %s %s JAP]", javaObject, jsonObject);
   }
 
 }
