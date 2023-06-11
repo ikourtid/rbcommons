@@ -10,16 +10,16 @@ import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
  * A collection of pairs of JSON arrays and their corresponding Java objects,
  * so we can make sure that back-and-forth conversions are correct.
  *
- * @see JsonArrayApiTestPair
+ * @see JsonArrayApiPair
  */
 public class JsonArrayApiTestData<T> {
 
   private final MatcherGenerator<T> matcherGenerator;
-  private final List<JsonArrayApiTestPair<T>> testPairs;
+  private final List<JsonArrayApiPair<T>> testPairs;
 
   private JsonArrayApiTestData(
       MatcherGenerator<T> matcherGenerator,
-      List<JsonArrayApiTestPair<T>> testPairs) {
+      List<JsonArrayApiPair<T>> testPairs) {
     this.matcherGenerator = matcherGenerator;
     this.testPairs = testPairs;
   }
@@ -27,14 +27,14 @@ public class JsonArrayApiTestData<T> {
   @SafeVarargs
   public static <T> JsonArrayApiTestData<T> jsonArrayApiTestData(
       MatcherGenerator<T> matcherGenerator,
-      JsonArrayApiTestPair<T> first,
-      JsonArrayApiTestPair<T> ... rest) {
+      JsonArrayApiPair<T> first,
+      JsonArrayApiPair<T>... rest) {
     return new JsonArrayApiTestData<>(
         matcherGenerator,
         concatenateFirstAndRest(first, rest));
   }
 
-  public List<JsonArrayApiTestPair<T>> getTestPairs() {
+  public List<JsonArrayApiPair<T>> getTestPairs() {
     return testPairs;
   }
 

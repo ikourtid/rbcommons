@@ -4,9 +4,12 @@ import com.google.gson.JsonObject;
 import com.rb.nonbiz.text.Strings;
 
 /**
- * Represents a Java object and its corresponding JSON object representation.
+ * Represents a Java object and its corresponding JSON object representation, for those Java objects whose JSON
+ *  * representation is a {@link JsonObject}.
  *
  * <p> The unit tests will check that conversions in both directions produce the correct results. </p>
+ *
+ * @see JsonArrayApiPair
  */
 public class JsonApiPair<T> {
 
