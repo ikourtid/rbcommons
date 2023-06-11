@@ -32,7 +32,7 @@ import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
  */
 public class RBCategoryMapJsonApiConverter implements HasJsonApiDocumentation {
 
-  static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
+  private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties(rbMapOf(
           "valueRegardlessOfCategory", simpleClassJsonApiPropertyDescriptor(
               UNKNOWN_CLASS_OF_JSON_PROPERTY,
