@@ -1,6 +1,7 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonArray;
+import com.rb.nonbiz.text.Strings;
 
 /**
  * Represents a Java object and its corresponding JSON array representation, for those Java objects whose JSON
@@ -32,6 +33,11 @@ public class JsonArrayApiPair<T> {
 
   public JsonArray getJsonArray() {
     return jsonArray;
+  }
+
+  @Override
+  public String toString() {
+    return Strings.format("[JAAP %s %s JAAP]", javaObject, jsonArray);
   }
 
 }
