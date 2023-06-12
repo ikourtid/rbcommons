@@ -20,7 +20,7 @@ import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonDoubleArray;
 import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonIntegerArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
-import static com.rb.nonbiz.jsonapi.JsonApiTestPair.jsonApiTestPair;
+import static com.rb.nonbiz.jsonapi.JsonApiPair.jsonApiPair;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
@@ -32,20 +32,20 @@ public class MultiDimensionalArrayJsonApiConverterTest
     JsonApiTestData<MultiDimensionalArray<Double>> jsonApiTestData = jsonApiTestData(
         f -> multiDimensionalArrayMatcher(f, f2 -> doubleAlmostEqualsMatcher(f2, DEFAULT_EPSILON_1e_8)),
 
-        jsonApiTestPair(
+        jsonApiPair(
             singleItemMultiDimensionalArray(12.34),
             jsonObject(
                 "dimensions", singletonJsonIntegerArray(1),
                 "items", singletonJsonDoubleArray(12.34))),
 
-        jsonApiTestPair(
+        jsonApiPair(
             singleDimensionMultiDimensionalArray(70.0, 70.1, 70.2),
             jsonObject(
                 "dimensions", singletonJsonIntegerArray(3),
                 "items", jsonDoubleArray(
                     70.0, 70.1, 70.2))),
 
-        jsonApiTestPair(
+        jsonApiPair(
             twoDimensionalMultiDimensionalArray(new Double[][] {
                 { 70.0, 70.1, 70.2 },
                 { 71.0, 71.1, 71.2 }
@@ -56,7 +56,7 @@ public class MultiDimensionalArrayJsonApiConverterTest
                     70.0, 70.1, 70.2,
                     71.0, 71.1, 71.2))),
 
-        jsonApiTestPair(
+        jsonApiPair(
             newMultiDimensionalArray(
                 MutableMultiDimensionalArray.<Double>mutableMultiDimensionalArray(2, 1, 3)
                     .setAssumingAbsent(1_000.0, coordinates(0, 0, 0))
