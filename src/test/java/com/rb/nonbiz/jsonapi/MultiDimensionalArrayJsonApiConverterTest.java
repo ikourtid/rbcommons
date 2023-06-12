@@ -1,7 +1,9 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.google.gson.JsonElement;
 import com.rb.nonbiz.collections.MultiDimensionalArray;
 import com.rb.nonbiz.collections.MutableMultiDimensionalArray;
+import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import org.junit.Test;
 
@@ -78,6 +80,21 @@ public class MultiDimensionalArrayJsonApiConverterTest
     jsonApiTestData.testRoundTripConversions(
         multiDimensionalArray -> makeRealObject().toJsonObject(multiDimensionalArray, v -> jsonDouble(v)),
         jsonObject            -> makeRealObject().fromJsonObject(jsonObject, v -> v.getAsDouble()));
+  }
+
+  @Test
+  public void testValidSampleJson() {
+    MultiDimensionalArrayJsonApiConverter realObject = makeRealObject();
+
+    JsonElement sampleJson = RBOptionals.getOrThrow(
+        // have to cast because not all JsonApiDocumentation classes have NontrivialSampleJson
+        ((JsonApiClassDocumentation) realObject.getJsonApiDocumentation()).getNontrivialSampleJson(),
+        "Internal error - should have a sample JSON");
+
+    // Check that the sample JSON can be successfully processed by fromJsonObject().
+    MultiDimensionalArray<String> doesNotThrow = realObject.fromJsonObject(
+        sampleJson.getAsJsonObject(),
+        v -> v.getAsString());
   }
 
   @Override

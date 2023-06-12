@@ -32,7 +32,6 @@ import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonValidationInstructions.UNKNOWN_CLASS_OF_JSON_PROPERTY;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonStringOrThrow;
-import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.formatMapInKeyOrder;
 import static com.rb.nonbiz.text.Strings.formatOptional;
 import static java.util.Collections.singletonList;
@@ -765,12 +764,6 @@ public abstract class JsonApiPropertyDescriptor {
      * {@link JsonApiDocumentation} will just use its own {@link PseudoEnumJsonApiPropertyDescriptor}.</p>
      */
     public static class PseudoEnum {}
-
-    // This should be removed once we have human-readable descriptions for all instances where we use it.
-    // The reason it exists is that it helps us avoid having fixmes in multiple places.
-    public static HumanReadableDocumentation undefinedPseudoEnumJsonApiPropertyDescription() {
-      return documentation("FIXME SWA JSONDOC");
-    }
 
     private final RBMap<String, HumanReadableDocumentation> validValuesToExplanations;
 

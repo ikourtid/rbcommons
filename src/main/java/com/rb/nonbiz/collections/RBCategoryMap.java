@@ -12,15 +12,15 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 
 /**
- * Like an RBMap, except that this also stores a value that's supposed to mean 'regardless of key'.
+ * Like an {@link RBMap}, except that this also stores a value that's supposed to mean 'regardless of key'.
  * For example, this is useful if you want to store trading notional by side (buy/sell), but also the total
  * (i.e. regardless of category).
  *
- * The valueRegardlessOfCategory does not have to use additive semantics, like it would with buy / sell notional.
- * For example, we could be storing orders by order reason (TLH, rebalance, etc.) We may decide to doublecount some.
+ * <p> The valueRegardlessOfCategory does not have to use additive semantics, like it would with buy / sell notional.
+ * For example, we could be storing orders by order reason (TLH, rebalance, etc.) We may decide to double-count some. </p>
  *
- * This is very similar to {@link RBMapWithDefault}, but the semantics are different. The single value here has
- * semantics of 'applies to the total', not 'if you don't find it in the map, use this'.
+ * <p> This is very similar to {@link RBMapWithDefault}, but the semantics are different. The single value here has
+ * semantics of 'applies to the total', not 'if you don't find it in the map, use this'. </p>
  */
 public class RBCategoryMap<K, V> {
 
