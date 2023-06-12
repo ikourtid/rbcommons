@@ -8,7 +8,7 @@ import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonLong;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
-import static com.rb.nonbiz.jsonapi.JsonApiTestPair.jsonApiTestPair;
+import static com.rb.nonbiz.jsonapi.JsonApiPair.jsonApiPair;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryImpl.StatisticalSummaryImplBuilder.statisticalSummaryImplBuilder;
 import static com.rb.nonbiz.math.stats.StatisticalSummaryTest.statisticalSummaryMatcher;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
@@ -21,7 +21,7 @@ public class StatisticalSummaryJsonApiConverterTest
     JsonApiTestData<StatisticalSummary> statisticalSummaryJsonApiTestData = jsonApiTestData(
         f -> statisticalSummaryMatcher(f, DEFAULT_EPSILON_1e_8),
 
-        jsonApiTestPair(
+        jsonApiPair(
             statisticalSummaryImplBuilder()
                 .setN(                234L)
                 .setMean(             12.345)

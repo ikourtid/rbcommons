@@ -4,11 +4,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.rb.nonbiz.collections.RBIterators;
+import com.rb.nonbiz.collections.RBStreams;
 import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Set;
 
+import static com.rb.nonbiz.collections.RBIterators.pasteIntoNewIterator;
+import static com.rb.nonbiz.collections.RBStreams.pasteIntoStream;
 import static com.rb.nonbiz.testmatchers.LambdaSwitchCase.lambdaCase;
 import static com.rb.nonbiz.testmatchers.LambdaSwitchCase.lambdaSwitchMatcher;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -37,6 +41,29 @@ public class RBJsonMatchers {
 
   public static TypeSafeMatcher<JsonObject> jsonObjectEpsilonMatcher(JsonObject expected) {
     return jsonObjectMatcher(expected, DEFAULT_EPSILON_1e_8);
+  }
+
+  public static TypeSafeMatcher<JsonObject> orderedJsonObjectMatcher(JsonObject expected, Epsilon epsilon) {
+    return makeMatcher(expected, actual -> {
+      // Even though JsonObject does not have ordered semantics, and it's more like a map, sometimes it's nice to
+      // make sure that the JSON people see has certain fields in order. For example, for any JsonObject where they keys
+      // (properties) are a string representation of a date, it's nice if all entries are ordered by date.
+      // The following depends on the fact that JsonObject stores entries in the order they were added.
+      if (expected.size() != actual.size()) {
+        return false;
+      }
+      return pasteIntoStream(
+          expected.entrySet(),
+          actual.entrySet(),
+          (expectedEntry, actualEntry) ->
+              expectedEntry.getKey().equals(actualEntry.getKey()) &&
+              jsonElementMatcher(expectedEntry.getValue(), epsilon).matches(actualEntry.getValue()))
+          .allMatch(v -> v);
+    });
+  }
+
+  public static TypeSafeMatcher<JsonObject> orderedJsonObjectEpsilonMatcher(JsonObject expected) {
+    return orderedJsonObjectMatcher(expected, DEFAULT_EPSILON_1e_8);
   }
 
   public static TypeSafeMatcher<JsonArray> jsonArrayMatcher(JsonArray expected, Epsilon epsilon) {
