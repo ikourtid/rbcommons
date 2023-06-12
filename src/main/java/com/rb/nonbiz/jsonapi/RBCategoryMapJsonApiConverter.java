@@ -89,6 +89,8 @@ public class RBCategoryMapJsonApiConverter implements HasJsonApiDocumentation {
             "Like an `RBMap` of categories, with an additional data member",
             "that applies regardless of category.")))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
+            "This is similar to `RBMapWithDefault`, but the semantics are different. The single value here has",
+            "semantics of 'applies to the total', not 'if you don't find it in the map, use this'. <p />",
             "For example, we could store the trading notional by side (buy/sell), additionally",
             "holding the total trading notional (buy + sell) which doesn't apply to either category",
             "by itself. <p />",
