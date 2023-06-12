@@ -1,12 +1,9 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.google.common.collect.Range;
 import com.google.gson.JsonElement;
 import com.rb.nonbiz.collections.RBCategoryMap;
 import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
-import com.rb.nonbiz.testutils.RBTest;
-import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBCategoryMap.rbCategoryMap;
@@ -16,16 +13,10 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.jsonapi.JsonApiPair.jsonApiPair;
 import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
-import static com.rb.nonbiz.jsonapi.JsonApiTestPair.jsonApiTestPair;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
-import static org.junit.Assert.*;
-
-import org.hamcrest.TypeSafeMatcher;
-
-import static com.rb.nonbiz.testmatchers.Match.match;
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class RBCategoryMapJsonApiConverterTest extends RBCommonsIntegrationTest<RBCategoryMapJsonApiConverter> {
 
@@ -36,7 +27,7 @@ public class RBCategoryMapJsonApiConverterTest extends RBCommonsIntegrationTest<
             f -> rbCategoryMapMatcher(f, f2 -> doubleAlmostEqualsMatcher(f2, DEFAULT_EPSILON_1e_8)),
 
             // an empty category map
-            jsonApiTestPair(
+            jsonApiPair(
                 rbCategoryMap(
                     123.45,
                     emptyRBMap()),
@@ -45,7 +36,7 @@ public class RBCategoryMapJsonApiConverterTest extends RBCommonsIntegrationTest<
                     "categoryMap", emptyJsonObject())),
 
             // non-empty category map
-            jsonApiTestPair(
+            jsonApiPair(
                 rbCategoryMap(
                     1_100.0,
                     rbMapOf(
