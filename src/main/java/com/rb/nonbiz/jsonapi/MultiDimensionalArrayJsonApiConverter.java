@@ -114,18 +114,22 @@ public class MultiDimensionalArrayJsonApiConverter implements HasJsonApiDocument
             "In the above example, the first 5 entries would correspond to coordinates",
             "[0, 0, 0], [0, 0, 1], [0, 0, 2], [0, 0, 3], and [0, 0, 4]. Since the second dimension has only 1 entry,",
             "the next 5 array elements would be",
-            "[0, 1, 0], [0, 1, 1], [0, 1, 2], [0, 1, 3], and [0, 1, 4], etc.")))
+            "[1, 0, 0], [1, 0, 1], [1, 0, 2], [1, 0, 3], and [1, 0, 4], etc.")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
         .setNontrivialSampleJson(jsonObject(
-            "dimensions", jsonIntegerArray(2, 1, 3),
+            "dimensions", jsonIntegerArray(2, 1, 5),
             "items", jsonArray(
                 jsonString("0.0.0"),
                 jsonString("0.0.1"),
                 jsonString("0.0.2"),
+                jsonString("0.0.3"),
+                jsonString("0.0.4"),
                 jsonString("1.0.0"),
                 jsonString("1.0.1"),
-                jsonString("1.0.2"))))
+                jsonString("1.0.2"),
+                jsonString("1.0.3"),
+                jsonString("1.0.4"))))
         .build();
   }
 
