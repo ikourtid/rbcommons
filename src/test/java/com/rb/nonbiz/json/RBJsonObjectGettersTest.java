@@ -25,7 +25,6 @@ import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.emptyJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
-import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonArray;
 import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonStringArray;
 import static com.rb.nonbiz.json.RBJsonArraysTest.jsonArrayExactMatcher;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.*;
@@ -375,7 +374,7 @@ public class RBJsonObjectGettersTest {
         "invalidTime3",   jsonString("2014-04-04T12:59:60.123"));
 
     assertEquals(LocalDateTime.of(2014, 4, 4, 12, 59, 59, 123_000_000), getJsonDateTimeOrThrow(jsonObject, "dateTime"));
-    
+
     assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "badDateFormat1"));
     assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "invalidDate"));
     assertThrowsAnyException( () -> getJsonDateTimeOrThrow(jsonObject, "badTimeFormat1"));
@@ -774,6 +773,25 @@ public class RBJsonObjectGettersTest {
     assertEquals("isTrue",    getJsonBooleanOrDefault(jsonObject, "booleanTrue", v -> v ? "isTrue" : "isFalse", "isDefault"));
     assertEquals("isFalse",   getJsonBooleanOrDefault(jsonObject, "booleanFalse", v -> v ? "isTrue" : "isFalse", "isDefault"));
     assertEquals("isDefault", getJsonBooleanOrDefault(jsonObject, "missingKey", v -> v ? "isTrue" : "isFalse", "isDefault"));
+  }
+
+  @Test
+  public void test_getJsonIntOrDefault() {
+    JsonObject jsonObject = jsonObject(
+        "n",            jsonInteger(123),
+        "booleanTrue",  jsonBoolean(true),
+        "pi",           jsonDouble(3.14));
+
+    assertEquals(
+        123,
+        getJsonIntOrDefault(jsonObject, "n", DUMMY_POSITIVE_INTEGER));
+
+    assertEquals(
+        456,
+        getJsonIntOrDefault(jsonObject, "missing", 456));
+
+    assertIllegalArgumentException( () -> getJsonIntOrDefault(jsonObject, "booleanTrue", DUMMY_POSITIVE_INTEGER));
+    assertIllegalArgumentException( () -> getJsonIntOrDefault(jsonObject, "pi",          DUMMY_POSITIVE_INTEGER));
   }
 
   @Test
