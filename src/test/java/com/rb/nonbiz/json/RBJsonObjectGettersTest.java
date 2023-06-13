@@ -777,6 +777,25 @@ public class RBJsonObjectGettersTest {
   }
 
   @Test
+  public void test_getJsonIntOrDefault() {
+    JsonObject jsonObject = jsonObject(
+        "n",            jsonInteger(123),
+        "booleanTrue",  jsonBoolean(true),
+        "pi",           jsonDouble(3.14));
+
+    assertEquals(
+        123,
+        getJsonIntOrDefault(jsonObject, "n", DUMMY_POSITIVE_INTEGER));
+
+    assertEquals(
+        456,
+        getJsonIntOrDefault(jsonObject, "missing", 456));
+
+    assertIllegalArgumentException( () -> getJsonIntOrDefault(jsonObject, "booleanTrue", DUMMY_POSITIVE_INTEGER));
+    assertIllegalArgumentException( () -> getJsonIntOrDefault(jsonObject, "pi",          DUMMY_POSITIVE_INTEGER));
+  }
+
+  @Test
   public void test_getJsonPrimitiveOrThrow() {
     JsonObject jsonObject = jsonObject(
         "n",     jsonInteger(10),
