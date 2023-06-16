@@ -139,6 +139,30 @@ public class RBJsonObjectGettersTest {
     assertOptionalEquals("subObjKey_111", converter.apply("subObject"));
   }
 
+  @Test
+  public void testGetOptionalTransformedJsonPrimitive() {
+    JsonObject jsonObject = jsonObject(
+        "aString",  jsonString("abc"),
+        "aDouble",  jsonDouble(1.23),
+        "aBoolean", jsonBoolean(true),
+        "subObject", singletonJsonObject(
+            "subObjKey", jsonInteger(111)));
+
+    Function<String, Optional<String>> converter = key ->
+        getOptionalTransformedJsonPrimitive(
+            jsonObject,
+            key,
+            jsonPrimitive -> String.format("value_%s", jsonPrimitive.getAsString()));
+
+    assertOptionalEmpty(converter.apply("unknown_key"));
+    // not a primitive - throws an exception
+    assertIllegalArgumentException( () -> converter.apply("subObject"));
+
+    assertOptionalEquals("value_abc",  converter.apply("aString"));
+    assertOptionalEquals("value_1.23", converter.apply("aDouble"));
+    assertOptionalEquals("value_true", converter.apply("aBoolean"));
+  }
+
   /**
    * From 'jsonObject', get the value of 'property' and check that it is a string.
    * If missing, or present but with a value of JsonNull, return empty optional.
