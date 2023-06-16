@@ -84,6 +84,19 @@ public class RBJsonObjectGetters {
   }
 
   /**
+   * From 'jsonObject', get the value of 'property' if it exists (which we assume to be a JsonPrimitive)
+   * and return a transformed version of it, otherwise return empty optional.
+   */
+  public static <T> Optional<T> getOptionalTransformedJsonPrimitive(
+      JsonObject jsonObject,
+      String property,
+      Function<JsonPrimitive, T> ifPresent) {
+    return jsonObject.has(property)
+           ? Optional.of(ifPresent.apply(getJsonPrimitiveOrThrow(jsonObject, property)))
+           : Optional.empty();
+  }
+
+  /**
    * From 'jsonObject', get the value of 'property' and check that it is a number.
    * If missing, or is not a number, throw an exception.
    * Return as a JsonElement.
