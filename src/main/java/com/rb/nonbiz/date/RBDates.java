@@ -12,6 +12,7 @@ import java.time.Year;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
@@ -133,6 +134,18 @@ public class RBDates {
     return
         date.getDayOfWeek().equals(DayOfWeek.SATURDAY) ||
             date.getDayOfWeek().equals(DayOfWeek.SUNDAY);
+  }
+
+  /**
+   * This is for the cases where we don't have a Market object to help us validate that we have two consecutive market
+   * dates. These checks should catch most problems, such as to check that it's not more than 7 calendar days out into the future. We use 7 to catch corner cases such as 9/11,
+   * when the market was closed for many consecutive days.
+   */
+  public static boolean cannotBeConsecutiveMarketDays(LocalDate date, LocalDate nextMarketDate) {
+    return fallsOnWeekend(date)
+        || fallsOnWeekend(nextMarketDate)
+        || !nextMarketDate.isAfter(date)
+        || ChronoUnit.DAYS.between(date, nextMarketDate) >= 7;
   }
 
   /**
