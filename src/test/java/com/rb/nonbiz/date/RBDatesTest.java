@@ -16,11 +16,21 @@ import static com.rb.nonbiz.collections.ContiguousDiscreteRangeMapTest.contiguou
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.date.RBDates.*;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertThrowsAnyException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY0;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY1;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY2;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY3;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY4;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY5;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY6;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY7;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DAY8;
 import static java.time.DayOfWeek.FRIDAY;
 import static java.time.DayOfWeek.MONDAY;
 import static java.time.DayOfWeek.SATURDAY;
@@ -260,6 +270,31 @@ public class RBDatesTest {
     assertIllegalArgumentException( () -> makeContiguousDateDiscreteRangeMap(
         emptyRBMap(),
         LocalDate.of(2020, 1, 30)));
+  }
+
+  @Test
+  public void testCannotBeConsecutiveMarketDays() {
+    // If either day is not a market day, it doesn't matter what the other one is.
+    LocalDate fri = LocalDate.of(2023, 6, 23);
+    LocalDate sat = LocalDate.of(2023, 6, 24);
+    LocalDate sun = LocalDate.of(2023, 6, 25);
+    LocalDate mon = LocalDate.of(2023, 6, 26);
+
+    assertTrue(cannotBeConsecutiveMarketDays(fri, sat));
+    assertTrue(cannotBeConsecutiveMarketDays(fri, sun));
+    assertTrue(cannotBeConsecutiveMarketDays(sat, sun));
+    assertTrue(cannotBeConsecutiveMarketDays(sat, mon));
+
+    assertFalse(cannotBeConsecutiveMarketDays(fri, mon));
+
+    // All of DAY0, DAY1, etc. are market days.
+
+    // None of these are after DAY2; invalid.
+    rbSetOf(DAY0, DAY1, DAY2)      .forEach(date -> assertTrue( cannotBeConsecutiveMarketDays(DAY2, date)));
+    // Less than 7 calendar days after DAY2; valid.
+    rbSetOf(DAY3, DAY4, DAY5, DAY6).forEach(date -> assertFalse(cannotBeConsecutiveMarketDays(DAY2, date)));
+    // 7 or more calendar days after DAY2; invalid.
+    rbSetOf(DAY7, DAY8)            .forEach(date -> assertTrue( cannotBeConsecutiveMarketDays(DAY2, date)));
   }
 
 }
