@@ -65,6 +65,28 @@ public class MoneySignedFractionTest {
     assertIllegalArgumentException( () -> moneySignedFraction(signedMoney(100), ZERO_MONEY));
   }
 
+  @Test
+  public void testToStringPercent() {
+    MoneySignedFraction moneySignedFraction = moneySignedFraction(signedMoney(-123.456_789), money(100.0));
+
+    // we don't support negative max precision
+    assertIllegalArgumentException( () -> moneySignedFraction.toStringPercent(-1, false));
+
+    assertEquals("-123",        moneySignedFraction.toStringPercent(0, false));
+    assertEquals("-123 %",      moneySignedFraction.toStringPercent(0, true));
+    assertEquals("-123.5",      moneySignedFraction.toStringPercent(1, false));
+    assertEquals("-123.5 %",    moneySignedFraction.toStringPercent(1, true));
+
+    assertEquals("-123.457",    moneySignedFraction.toStringPercent(3, false));
+    assertEquals("-123.456789", moneySignedFraction.toStringPercent(6, false));
+
+    // specifying too many digits does not print trailing zeros
+    assertEquals("-123.456789", moneySignedFraction.toStringPercent(9, false));
+
+    assertEquals("0",   emptyMoneySignedFraction().toStringPercent(6, false));
+    assertEquals("0 %", emptyMoneySignedFraction().toStringPercent(6, true));
+  }
+
   /**
    * MoneySignedFraction is a PreciseValue, so we can compare them using matchAlmostEquals etc. -
    * just like all PreciseValue subclasses. However, if our semantics is such that $10 / $40 is not the same as

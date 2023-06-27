@@ -6,11 +6,13 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.SignedMoney.ZERO_SIGNED_MONEY;
+import static com.rb.nonbiz.json.RBGson.FRACTION_TO_PERCENTAGE;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 
 /**
@@ -60,6 +62,18 @@ public class MoneySignedFraction extends PreciseValue<MoneySignedFraction> {
   @Override
   public String toString() {
     return Strings.format("%s ( %s of %s )", asSignedFraction(), numerator, denominator);
+  }
+
+  public String toStringPercent(int maxPrecision, boolean includePercentSign) {
+    // negative precisions could make sense (rounding 123.1 to 120.0 or 100.0), but we don't support them here
+    RBPreconditions.checkArgument(
+        0 <= maxPrecision,
+        "Invalid maxPrecision %s",
+        maxPrecision);
+    String percentString = formatWithoutCommas(0, maxPrecision).format(doubleValue() * 100.0);
+    return includePercentSign
+           ? Strings.format("%s %", percentString)
+           : percentString;
   }
 
 }
