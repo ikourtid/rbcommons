@@ -534,6 +534,23 @@ public class RBJsonObjectGettersTest {
     assertIllegalArgumentException( () -> getJsonArrayOrDefaultSingleton(jsonObject, "key2",      jsonString("unusedDefault")));
     assertIllegalArgumentException( () -> getJsonArrayOrDefaultSingleton(jsonObject, "subObject", jsonString("unusedDefault")));
   }
+  
+  @Test
+  public void testGetOptionalJsonArray() {
+    JsonArray jsonArray1 = jsonStringArray("element1", "element2", "element3");
+    JsonObject jsonObject = jsonObject(
+        "key1", jsonArray1,
+        "key2", jsonString("notAnArray"),
+        "subObject", singletonJsonObject("subKey", jsonDouble(7.89)));
+
+    assertThrowsAnyException( () -> getOptionalJsonArray(jsonObject, "key2")); // not an array
+    assertThrowsAnyException( () -> getOptionalJsonArray(jsonObject, "subObject")); // not an array
+
+    assertOptionalEmpty(getOptionalJsonArray(jsonObject, "unknownKey"));
+    assertOptionalNonEmpty(
+        getOptionalJsonArray(jsonObject, "key1"),
+        jsonArrayExactMatcher(jsonArray1));
+  }
 
   @Test
   public void test_getJsonNestedObjectOrThrow() {
