@@ -404,6 +404,19 @@ public class RBJsonObjectGetters {
   }
 
   /**
+   * From 'jsonObject', get the value of 'property'.
+   * If missing, return empty Optional.
+   * If present, return that array, and throw if it's not an array.
+   */
+  public static Optional<JsonArray> getOptionalJsonArray(
+      JsonObject jsonObject,
+      String property) {
+    return jsonObject.has(property)
+        ? Optional.of(jsonObject.get(property).getAsJsonArray())
+        : Optional.empty();
+  }
+
+  /**
    * Convenience method for use in extracting a "nested" (inner) jsonObject:
    * Use instead of:
    * jsonObject.getAsJsonObject(property1).getAsJsonObject(property2).getAsJsonObject(property3)
