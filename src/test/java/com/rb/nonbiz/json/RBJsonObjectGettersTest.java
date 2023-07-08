@@ -16,6 +16,7 @@ import java.util.function.Function;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.rb.biz.types.Price.price;
+import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.json.JsonObjectPath.jsonObjectPath;
 import static com.rb.nonbiz.json.RBGson.jsonBoolean;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
@@ -363,6 +364,29 @@ public class RBJsonObjectGettersTest {
     assertIllegalArgumentException( () -> getJsonBooleanOrThrow(jsonObject, "missingProperty"));
     // property "subObject" is not a primitive
     assertIllegalArgumentException( () -> getJsonBooleanOrThrow(jsonObject, "subObject"));
+  }
+
+  @Test
+  public void test_getJsonBooleanOrDefault_nonLambdaOverload() {
+    JsonObject jsonObject = jsonObject(
+        "notABool",    jsonDouble(1.23),
+        "aTrueBool",   jsonBoolean(true),
+        "aFalseBool",  jsonBoolean(false),
+        "subObject",  singletonJsonObject("subKey", jsonDouble(7.89)));
+
+    rbSetOf(true, false).forEach(defaultValue -> {
+      assertTrue(getJsonBooleanOrDefault(jsonObject, "aTrueBool", defaultValue));
+      assertFalse(getJsonBooleanOrDefault(jsonObject, "aFalseBool", defaultValue));
+
+      // property "notABool" maps to a double
+      assertIllegalArgumentException( () -> getJsonBooleanOrDefault(jsonObject, "notABool", defaultValue));
+      // property "subObject" is not a primitive
+      assertIllegalArgumentException( () -> getJsonBooleanOrDefault(jsonObject, "subObject", defaultValue));
+    });
+
+    // property "missingProperty" is not present; return the defaut
+    assertTrue(getJsonBooleanOrDefault(jsonObject, "missingProperty", true));
+    assertFalse(getJsonBooleanOrDefault(jsonObject, "missingProperty", false));
   }
 
   @Test
