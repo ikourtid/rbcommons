@@ -41,8 +41,8 @@ public class RBJsonObjectGetters {
       JsonObject jsonObject,
       String property) {
     return jsonObject.has(property)
-           ? Optional.of(jsonObject.get(property))
-           : Optional.empty();
+        ? Optional.of(jsonObject.get(property))
+        : Optional.empty();
   }
 
   /**
@@ -53,8 +53,8 @@ public class RBJsonObjectGetters {
       JsonObject jsonObject,
       String property) {
     return jsonObject.has(property)
-           ? Optional.of(jsonObject.getAsJsonPrimitive(property))
-           : Optional.empty();
+        ? Optional.of(jsonObject.getAsJsonPrimitive(property))
+        : Optional.empty();
   }
 
   /**
@@ -65,8 +65,8 @@ public class RBJsonObjectGetters {
       JsonObject jsonObject,
       String property) {
     return jsonObject.has(property)
-           ? Optional.of(getJsonObjectOrThrow(jsonObject, property))
-           : Optional.empty();
+        ? Optional.of(getJsonObjectOrThrow(jsonObject, property))
+        : Optional.empty();
   }
 
   /**
@@ -79,8 +79,8 @@ public class RBJsonObjectGetters {
       String property,
       Function<JsonObject, T> ifPresent) {
     return jsonObject.has(property)
-           ? Optional.of(ifPresent.apply(getJsonObjectOrThrow(jsonObject, property)))
-           : Optional.empty();
+        ? Optional.of(ifPresent.apply(getJsonObjectOrThrow(jsonObject, property)))
+        : Optional.empty();
   }
 
   /**
@@ -92,8 +92,8 @@ public class RBJsonObjectGetters {
       String property,
       Function<JsonPrimitive, T> ifPresent) {
     return jsonObject.has(property)
-           ? Optional.of(ifPresent.apply(getJsonPrimitiveOrThrow(jsonObject, property)))
-           : Optional.empty();
+        ? Optional.of(ifPresent.apply(getJsonPrimitiveOrThrow(jsonObject, property)))
+        : Optional.empty();
   }
 
   /**
@@ -155,8 +155,8 @@ public class RBJsonObjectGetters {
       String property,
       double defaultValue) {
     return jsonObject.has(property)
-           ? getJsonNumberElementOrThrow(jsonObject, property).getAsDouble() * 0.01
-           : defaultValue;
+        ? getJsonNumberElementOrThrow(jsonObject, property).getAsDouble() * 0.01
+        : defaultValue;
   }
 
   /**
@@ -199,8 +199,8 @@ public class RBJsonObjectGetters {
       String property,
       int defaultValue) {
     return jsonObject.has(property)
-           ? getJsonIntOrThrow(jsonObject, property)
-           : defaultValue;
+        ? getJsonIntOrThrow(jsonObject, property)
+        : defaultValue;
   }
 
   /**
@@ -295,8 +295,8 @@ public class RBJsonObjectGetters {
       String property) {
     OptionalDouble optionalDouble = getOptionalJsonDouble(jsonObject, property);
     return !optionalDouble.isPresent()
-           ? OptionalInt.empty()
-           : OptionalInt.of(checkedCast(getDoubleAsLongAssumingIsRound(optionalDouble.getAsDouble(), epsilon(1e-12))));
+        ? OptionalInt.empty()
+        : OptionalInt.of(checkedCast(getDoubleAsLongAssumingIsRound(optionalDouble.getAsDouble(), epsilon(1e-12))));
   }
 
   /**
@@ -489,6 +489,21 @@ public class RBJsonObjectGetters {
   }
 
   /**
+   * From 'jsonObject', get the value of 'property' and check that it is a boolean.
+   * If not a boolean, throw an exception.
+   * If missing, return the default.
+   * Return as a boolean.
+   */
+  public static boolean getJsonBooleanOrDefault(
+      JsonObject jsonObject,
+      String property,
+      boolean defaultValue) {
+    return jsonObject.has(property)
+        ? getJsonBooleanOrThrow(jsonObject, property)
+        : defaultValue;
+  }
+
+  /**
    * From 'jsonObject', get the value of 'property' (which we assume to be another JsonObject)
    * and return a transformed value of the JsonObject, or (if missing) the supplied default value.
    */
@@ -498,8 +513,8 @@ public class RBJsonObjectGetters {
       Function<JsonObject, T> ifPresent,
       T ifAbsent) {
     return jsonObject.has(property)
-           ? ifPresent.apply(getJsonObjectOrThrow(jsonObject, property))
-           : ifAbsent;
+        ? ifPresent.apply(getJsonObjectOrThrow(jsonObject, property))
+        : ifAbsent;
   }
 
   /**
@@ -512,8 +527,8 @@ public class RBJsonObjectGetters {
       Function<JsonElement, T> ifPresent,
       T ifAbsent) {
     return jsonObject.has(property)
-           ? ifPresent.apply(jsonObject.get(property))
-           : ifAbsent;
+        ? ifPresent.apply(jsonObject.get(property))
+        : ifAbsent;
   }
 
   /**
@@ -526,8 +541,8 @@ public class RBJsonObjectGetters {
       Function<JsonObject, T> ifPresent,
       Supplier<T> ifAbsent) {
     return jsonObject.has(property)
-           ? ifPresent.apply(getJsonObjectOrThrow(jsonObject, property))
-           : ifAbsent.get();
+        ? ifPresent.apply(getJsonObjectOrThrow(jsonObject, property))
+        : ifAbsent.get();
   }
 
   /**
@@ -539,8 +554,8 @@ public class RBJsonObjectGetters {
       String property,
       String ifAbsent) {
     return jsonObject.has(property)
-           ? getJsonStringOrThrow(jsonObject, property)
-           : ifAbsent;
+        ? getJsonStringOrThrow(jsonObject, property)
+        : ifAbsent;
   }
 
   /**
@@ -553,8 +568,8 @@ public class RBJsonObjectGetters {
       Function<String, T> ifPresent,
       T ifAbsent) {
     return jsonObject.has(property)
-           ? ifPresent.apply(getJsonStringOrThrow(jsonObject, property))
-           : ifAbsent;
+        ? ifPresent.apply(getJsonStringOrThrow(jsonObject, property))
+        : ifAbsent;
   }
 
   /**
@@ -567,8 +582,8 @@ public class RBJsonObjectGetters {
       Function<BigDecimal, T> ifPresent,
       T ifAbsent) {
     return jsonObject.has(property)
-           ? ifPresent.apply(getJsonBigDecimalOrThrow(jsonObject, property))
-           : ifAbsent;
+        ? ifPresent.apply(getJsonBigDecimalOrThrow(jsonObject, property))
+        : ifAbsent;
   }
 
   /**
@@ -581,8 +596,8 @@ public class RBJsonObjectGetters {
       DoubleFunction<T> ifPresent,
       T ifAbsent) {
     return jsonObject.has(property)
-           ? ifPresent.apply(getJsonDoubleOrThrow(jsonObject, property))
-           : ifAbsent;
+        ? ifPresent.apply(getJsonDoubleOrThrow(jsonObject, property))
+        : ifAbsent;
   }
 
   /**
@@ -595,8 +610,8 @@ public class RBJsonObjectGetters {
       Function<Boolean, T> ifPresent,
       T ifAbsent) {
     return jsonObject.has(property)
-           ? ifPresent.apply(getJsonBooleanOrThrow(jsonObject, property))
-           : ifAbsent;
+        ? ifPresent.apply(getJsonBooleanOrThrow(jsonObject, property))
+        : ifAbsent;
   }
 
   /**
