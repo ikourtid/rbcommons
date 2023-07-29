@@ -16,6 +16,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.Comparator;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
@@ -84,8 +85,17 @@ public class RBJsonObjects {
     // that the transformed / serialized keys are unique.
     // Note that we don't have to do this with IidMaps (@see #iidMapToJsonObject)
     // because InstrumentId keys are unique, and they get serialized in a standardized way.
-    return jsonObject(
-        map.transformKeysAndValuesCopy(keySerializer, valueSerializer));
+
+    RBJsonObjectBuilder builder = rbJsonObjectBuilder();
+    map.entrySet()
+        .stream()
+        .sorted(comparing(entry -> keySerializer.apply(entry.getKey())))
+        .forEach(entry -> {
+          K key = entry.getKey();
+          V value = entry.getValue();
+          builder.setJsonElement(keySerializer.apply(key), valueSerializer.apply(value));
+        });
+    return builder.build();
   }
 
   /**
