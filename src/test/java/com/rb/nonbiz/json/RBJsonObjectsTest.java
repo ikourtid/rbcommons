@@ -24,11 +24,13 @@ import com.rb.nonbiz.types.Pointer;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.biz.jsonapi.JsonTickerMapImplTest.jsonTickerMap;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
@@ -46,6 +48,7 @@ import static com.rb.nonbiz.collections.RBSet.rbSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
+import static com.rb.nonbiz.json.RBGson.jsonInteger;
 import static com.rb.nonbiz.json.RBGson.jsonPercentage;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
@@ -82,6 +85,7 @@ import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.rbEnumMapOf;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonRBEnumMap;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotEquals;
 
 public class RBJsonObjectsTest {
 
@@ -786,6 +790,37 @@ public class RBJsonObjectsTest {
         "subObject",
         v -> pointer.set(DUMMY_DOUBLE),
         () -> pointer.set(DUMMY_DOUBLE)));
+  }
+
+  @Test
+  public void retainsOrderInPractice() {
+    // This method is called 'in practice' because there is no guarantee.
+    // Let's first create a map in relatively random order, which means it's very unlikely that iterating over its
+    // entries will be in increasing order.
+    // Quite frankly, although this test passes, it wasn't failing before we changed the rbMapToJsonObject code to
+    // be explicit about ordering. However, it seems to fix some non-determinism elsewhere, so I'll keep the test.
+    RBMap<String, Integer> map = rbMapOf(
+        "_9", 9,
+        "_1", 1,
+        "_8", 8,
+        "_2", 2,
+        "_7", 7,
+        "_3", 3,
+        "_6", 6,
+        "_4", 4,
+        "_5", 5);
+    assertNotEquals(
+        ImmutableList.of("_1", "_2", "_3", "_4", "_5", "_6", "_7", "_8", "_9"),
+        newArrayList(map.keySet()));
+
+    JsonObject jsonObject = rbMapToJsonObject(
+        map,
+        key -> key.substring(1), // drop the leading underscore
+        value -> jsonInteger(value * 10));
+
+    assertEquals(
+        ImmutableList.of("1", "2", "3", "4", "5", "6", "7", "8", "9"),
+        newArrayList(jsonObject.keySet().iterator()));
   }
 
 }
