@@ -92,6 +92,8 @@ public class RBJsonObjects {
     // run with the backtest JSON API. This method does not guarantee this to its caller, which is why 'ordered'
     // is not part of the name. The only reason this is expected (but not guaranteed) to work is that the implementation
     // of JsonObject seems to retain the order that items were added to it, and its serialization reflects that.
+    // It wasn't actually possible to replicate the old behavior with a failing test, but it does seem to fix some
+    // nondeterminism in a backtest (a JSON-API-driven one) so it's worth keeping this code.
     RBJsonObjectBuilder builder = rbJsonObjectBuilder();
     map.entrySet()
         .stream()
