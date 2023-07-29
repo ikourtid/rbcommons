@@ -46,6 +46,7 @@ import static com.rb.nonbiz.collections.RBSet.rbSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
+import static com.rb.nonbiz.json.RBGson.jsonInteger;
 import static com.rb.nonbiz.json.RBGson.jsonPercentage;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
@@ -786,6 +787,29 @@ public class RBJsonObjectsTest {
         "subObject",
         v -> pointer.set(DUMMY_DOUBLE),
         () -> pointer.set(DUMMY_DOUBLE)));
+  }
+
+  @Test
+  public void retainsOrderInPractice() {
+    // This method is called 'in practice' because there is no guarantee.
+    // Let's first create a map in relatively random order, which means it's very unlikely that iterating over its
+    // entries will be in increasing order.
+    JsonObject jsonObject = rbMapToJsonObject(
+        rbMapOf(
+            "_9", 9,
+            "_1", 1,
+            "_8", 8,
+            "_2", 2,
+            "_7", 7,
+            "_3", 3,
+            "_6", 6,
+            "_4", 4,
+            "_5", 5),
+        key -> key.substring(1), // drop the leading underscore
+        value -> jsonInteger(value * 10));
+    assertEquals(
+        ImmutableList.of("1", "2", "3", "4", "5", "6", "7", "8", "9"),
+        jsonObject.entrySet().stream().map(entry -> entry.getKey()).collect(Collectors.toList()));
   }
 
 }

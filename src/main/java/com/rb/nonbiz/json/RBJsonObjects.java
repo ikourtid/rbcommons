@@ -82,13 +82,23 @@ public class RBJsonObjects {
       Function<K, String> keySerializer,
       Function<V, JsonElement> valueSerializer) {
     // Since 'map' is an RBMap, the code below has the advantage that it ensures
-    // that the transformed / serialized keys are unique.
+    // that the transformed / serialized keys are unique,
+    // because setJsonElement throws if we try to add values for the same key.
     // Note that we don't have to do this with IidMaps (@see #iidMapToJsonObject)
     // because InstrumentId keys are unique, and they get serialized in a standardized way.
 
+    // When we serialize a general RBMap, we often need JSON properties to be ordered for determinism purposes.
+    // For instance, when doing git diff, it's easier to compare the before and after outputs of backtests that are
+    // run with the backtest JSON API. This method does not guarantee this to its caller, which is why 'ordered'
+    // is not part of the name. The only reason this is expected (but not guaranteed) to work is that the implementation
+    // of JsonObject seems to retain the order that items were added to it, and its serialization reflects that.
     RBJsonObjectBuilder builder = rbJsonObjectBuilder();
     map.entrySet()
         .stream()
+        // We end up calling keySerializer twice for every key: first, for sorting the map entries, and then for
+        // finding out what string property to use in the JSON. This is the least inefficient way to do this probably.
+        // We could put the sorted entries into a TreeMap, but then we'd have to deal with the overhead of creating
+        // another map.
         .sorted(comparing(entry -> keySerializer.apply(entry.getKey())))
         .forEach(entry -> {
           K key = entry.getKey();
