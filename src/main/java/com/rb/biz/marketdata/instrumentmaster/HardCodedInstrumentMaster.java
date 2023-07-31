@@ -21,7 +21,7 @@ import static com.rb.nonbiz.collections.IidSetSimpleConstructors.newIidSet;
  * This is useful in test when we want to create an {@link InstrumentMaster} with some mappings hardcoded,
  * e.g. STOCK_A1 {@code <->} "A1", etc.
  *
- * <p> HardCodedInstrumentMaster is used in tests, usually for a small number of stocks. It's not general enough
+ * <p> HardCodedInstrumentMaster is mostly used in tests, usually for a small number of stocks. It's not general enough
  * for production use because ticker / symbol is not necessarily a bi-map. For example, a ticker change would cause one
  * InstrumentId to map to two (or more) symbols, depending on the date. </p>
  */
@@ -99,14 +99,12 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
 
   @Override
   public Optional<InstrumentId> getInstrumentId(Symbol symbol, LocalDate ignoredDate) {
-    // use getOrThrow() to fail fast; this is test, not prod
-    return Optional.of(hardCodedSymbolBiMap.getInstrumentIdFromItem().getOrThrow(symbol));
+    return hardCodedSymbolBiMap.getInstrumentIdFromItem().getOptional(symbol);
   }
 
   @Override
   public Optional<Symbol> getSymbol(InstrumentId instrumentId, LocalDate ignoredEffectiveDate) {
-    // use getOrThrow() to fail fast; this is test, not prod
-    return Optional.of(hardCodedSymbolBiMap.getItemFromInstrumentId().getOrThrow(instrumentId));
+    return hardCodedSymbolBiMap.getItemFromInstrumentId().getOptional(instrumentId);
   }
 
   @Override
