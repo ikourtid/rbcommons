@@ -21,7 +21,7 @@ import static com.rb.nonbiz.collections.IidSetSimpleConstructors.newIidSet;
  * This is useful in test when we want to create an {@link InstrumentMaster} with some mappings hardcoded,
  * e.g. STOCK_A1 {@code <->} "A1", etc.
  *
- * <p> HardCodedInstrumentMaster is mostly used in tests, usually for a small number of stocks. It's not general enough
+ * <p> HardCodedInstrumentMaster is used in tests, usually for a small number of stocks. It's not general enough
  * for production use because ticker / symbol is not necessarily a bi-map. For example, a ticker change would cause one
  * InstrumentId to map to two (or more) symbols, depending on the date. </p>
  */
@@ -99,12 +99,18 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
 
   @Override
   public Optional<InstrumentId> getInstrumentId(Symbol symbol, LocalDate ignoredDate) {
-    return hardCodedSymbolBiMap.getInstrumentIdFromItem().getOptional(symbol);
+    // This started as a test class, and there was a comment here that said:
+    // 'use getOrThrow() to fail fast; this is test, not prod'
+    // HardCodedInstrumentMaster was later moved to prod, but we have to keep using getOrThrow and not change this,
+    // because it may affect the SmartFormatter,
+    // which has a mechanism for detecting infinite recursion, so we shouldn't mess with that by now.
+    return Optional.of(hardCodedSymbolBiMap.getInstrumentIdFromItem().getOrThrow(symbol));
   }
 
   @Override
   public Optional<Symbol> getSymbol(InstrumentId instrumentId, LocalDate ignoredEffectiveDate) {
-    return hardCodedSymbolBiMap.getItemFromInstrumentId().getOptional(instrumentId);
+    // See comment in previous method.
+    return Optional.of(hardCodedSymbolBiMap.getItemFromInstrumentId().getOrThrow(instrumentId));
   }
 
   @Override
