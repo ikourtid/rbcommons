@@ -99,13 +99,17 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
 
   @Override
   public Optional<InstrumentId> getInstrumentId(Symbol symbol, LocalDate ignoredDate) {
-    // use getOrThrow() to fail fast; this is test, not prod
+    // This started as a test class, and there was a comment here that said:
+    // 'use getOrThrow() to fail fast; this is test, not prod'
+    // HardCodedInstrumentMaster was later moved to prod, but we have to keep using getOrThrow and not change this,
+    // because it may affect the SmartFormatter,
+    // which has a mechanism for detecting infinite recursion, so we shouldn't mess with that by now.
     return Optional.of(hardCodedSymbolBiMap.getInstrumentIdFromItem().getOrThrow(symbol));
   }
 
   @Override
   public Optional<Symbol> getSymbol(InstrumentId instrumentId, LocalDate ignoredEffectiveDate) {
-    // use getOrThrow() to fail fast; this is test, not prod
+    // See comment in previous method.
     return Optional.of(hardCodedSymbolBiMap.getItemFromInstrumentId().getOrThrow(instrumentId));
   }
 
