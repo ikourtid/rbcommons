@@ -36,7 +36,8 @@ public class PrioritizedRangeMergerTest extends RBTest<PrioritizedRangeMerger> {
 
   @Test
   public void test_noOverlap_returnsSingletonUpperBound_fromHighPriorityRange() {
-    // the expected use case: the high-priority restriction is to sell everything
+    // The expected use case: a high-priority restriction is to sell everything that should take priority
+    // over other restrictions.
     checkResult(Range.singleton(0.0), Range.atLeast(    5.0), Range.singleton(0.0));
     checkResult(Range.singleton(0.0), Range.greaterThan(5.0), Range.singleton(0.0));
     checkResult(Range.singleton(0.0), Range.closed(5.0, 7.0), Range.singleton(0.0));
