@@ -23,8 +23,8 @@ public class PrioritizedRangeMergerTest extends RBTest<PrioritizedRangeMerger> {
     // we don't expect to use open bounds, but they also work:
     checkResult(Range.all(),            Range.greaterThan(2.0), Range.greaterThan(2.0));
     checkResult(Range.greaterThan(2.0), Range.all(),            Range.greaterThan(2.0));
-    checkResult(Range.all(),            Range.lessThan( 7.0),   Range.lessThan( 7.0));
-    checkResult(Range.lessThan(7.0),    Range.all(),            Range.lessThan( 7.0));
+    checkResult(Range.all(),            Range.lessThan(7.0),    Range.lessThan(   7.0));
+    checkResult(Range.lessThan(7.0),    Range.all(),            Range.lessThan(   7.0));
     checkResult(Range.greaterThan(2.0), Range.lessThan(7.0),    Range.open(2.0, 7.0));
   }
 
