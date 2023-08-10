@@ -30,9 +30,10 @@ public class PrioritizedRangeMerger {
     // No intersection. Therefore, both the high-priority range and the low-priority range must each have
     // (at least) one end point. Either the high-priority range has an upper bound the low-priority range
     // has (higher) lower bound, or vice-versa. But they both have at least one bound.
-
+    
     // The low-priority range must be entirely above or below the high-priority range.
     // To decide whether it's above or below, we just need one point from the lower-priority range.
+    // E.g. [2, 4] is below [8, 11]. It doesn't matter if we use 8 or 11 to compare to [2, 4].
     T onePointLowPriorityRange = lowPriorityRange.hasLowerBound()
                                  ? lowPriorityRange.lowerEndpoint()
                                  : lowPriorityRange.upperEndpoint();
