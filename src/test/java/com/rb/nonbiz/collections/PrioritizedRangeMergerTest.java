@@ -13,6 +13,7 @@ public class PrioritizedRangeMergerTest extends RBTest<PrioritizedRangeMerger> {
 
   @Test
   public void testWithOverlap() {
+    // In all the following cases, there is a valid intersection, so it's the simpler case in the code.
     checkResult(Range.all(),            Range.all(),            Range.all());
     checkResult(Range.all(),            Range.atLeast(2.0),     Range.atLeast(2.0));
     checkResult(Range.atLeast(2.0),     Range.all(),            Range.atLeast(2.0));

@@ -25,36 +25,42 @@ public class PrioritizedRangeMerger {
     if (maybeIntersection.isPresent()) {
       // if there is an intersection between the two ranges, return it
       return maybeIntersection.get();
-    } else {
-      // No intersection. Therefore, the low-priority range must be entirely above or below the high-priority range.
-      // To decide whether it's above or below, we just need one point from the lower-priority range.
-      T onePointLowPriorityRange = lowPriorityRange.hasLowerBound()
-                                   ? lowPriorityRange.lowerEndpoint()
-                                   : lowPriorityRange.upperEndpoint();
-      if (highPriorityRange.hasUpperBound() &&
-          highPriorityRange.upperEndpoint().compareTo(onePointLowPriorityRange) < 0) {
-        // The low-priority range is entirely above the high-priority range.
-        // Return the upper bound of the high-priority range.
-        RBPreconditions.checkArgument(
-            highPriorityRange.upperBoundType() == BoundType.CLOSED,
-            "High-priority range %s must have a closed upper bound.",
-            highPriorityRange);
-        return Range.singleton(highPriorityRange.upperEndpoint());
-      }
-      if (highPriorityRange.hasLowerBound() &&
-          highPriorityRange.lowerEndpoint().compareTo(onePointLowPriorityRange) > 0) {
-        // The low-priority range is entirely below the high-priority range.
-        // Return the lower bound of the high-priority range.
-        RBPreconditions.checkArgument(
-            highPriorityRange.lowerBoundType() == BoundType.CLOSED,
-            "High-priority range %s must have a closed lower bound.",
-            highPriorityRange);
-        return Range.singleton(highPriorityRange.lowerEndpoint());
-      }
-      throw new IllegalArgumentException(Strings.format(
-          "Internal error: should not be here. high-priority range %s low-priority range %s",
-          highPriorityRange, lowPriorityRange));
     }
+
+    // No intersection. Therefore, both the high-priority range and the low-priority range must each have
+    // (at least) one end point. Either the high-priority range has an upper bound the low-priority range
+    // has (higher) lower bound, or vice-versa. But they both have at least one bound.
+
+    // The low-priority range must be entirely above or below the high-priority range.
+    // To decide whether it's above or below, we just need one point from the lower-priority range.
+    T onePointLowPriorityRange = lowPriorityRange.hasLowerBound()
+                                 ? lowPriorityRange.lowerEndpoint()
+                                 : lowPriorityRange.upperEndpoint();
+    if (highPriorityRange.hasUpperBound() &&
+        highPriorityRange.upperEndpoint().compareTo(onePointLowPriorityRange) < 0) {
+      // The low-priority range is entirely above the high-priority range.
+      // Return the upper bound of the high-priority range.
+      RBPreconditions.checkArgument(
+          highPriorityRange.upperBoundType() == BoundType.CLOSED,
+          "High-priority range %s must have a closed upper bound.",
+          highPriorityRange);
+      return Range.singleton(highPriorityRange.upperEndpoint());
+    }
+
+    if (highPriorityRange.hasLowerBound() &&
+        highPriorityRange.lowerEndpoint().compareTo(onePointLowPriorityRange) > 0) {
+      // The low-priority range is entirely below the high-priority range.
+      // Return the lower bound of the high-priority range.
+      RBPreconditions.checkArgument(
+          highPriorityRange.lowerBoundType() == BoundType.CLOSED,
+          "High-priority range %s must have a closed lower bound.",
+          highPriorityRange);
+      return Range.singleton(highPriorityRange.lowerEndpoint());
+    }
+
+    throw new IllegalArgumentException(Strings.format(
+        "Internal error: should not be here. high-priority range %s low-priority range %s",
+        highPriorityRange, lowPriorityRange));
   }
 
 }
