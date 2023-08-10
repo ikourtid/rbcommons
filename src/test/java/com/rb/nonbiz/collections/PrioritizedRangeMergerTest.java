@@ -37,8 +37,8 @@ public class PrioritizedRangeMergerTest extends RBTest<PrioritizedRangeMerger> {
 
   @Test
   public void test_noOverlap_returnsSingletonUpperBound_fromHighPriorityRange() {
-    // The expected use case: a high-priority restriction is to sell everything that should take priority
-    // over other restrictions.
+    // The expected use case: a high-priority restriction to sell everything that should take priority
+    // over any other restrictions.
     checkResult(Range.singleton(0.0), Range.atLeast(    5.0), Range.singleton(0.0));
     checkResult(Range.singleton(0.0), Range.greaterThan(5.0), Range.singleton(0.0));
     checkResult(Range.singleton(0.0), Range.closed(5.0, 7.0), Range.singleton(0.0));
@@ -51,7 +51,7 @@ public class PrioritizedRangeMergerTest extends RBTest<PrioritizedRangeMerger> {
     checkResult(Range.closed(0.5, 2.0), Range.greaterThan(5.0), Range.singleton(2.0));
     checkResult(Range.closed(0.5, 2.0), Range.closed(5.0, 7.0), Range.singleton(2.0));
 
-    // we don't usually use open endpoints, but "openClosed" works since the upper bound is closed
+    // we don't usually use open endpoints, but "openClosed()" works since the upper bound is closed
     checkResult(Range.openClosed(0.5, 2.0), Range.atLeast(    5.0), Range.singleton(2.0));
     checkResult(Range.openClosed(0.5, 2.0), Range.greaterThan(5.0), Range.singleton(2.0));
     checkResult(Range.openClosed(0.5, 2.0), Range.closed(5.0, 7.0), Range.singleton(2.0));
@@ -67,7 +67,7 @@ public class PrioritizedRangeMergerTest extends RBTest<PrioritizedRangeMerger> {
     checkResult(Range.closed(9.0, 11.0), Range.lessThan(   7.0), Range.singleton(9.0));
     checkResult(Range.closed(9.0, 11.0), Range.closed(3.0, 7.0), Range.singleton(9.0));
 
-    // we don't usually use open endpoints, but "closedOpen" works since the lower bound is closed
+    // we don't usually use open endpoints, but "closedOpen()" works since the lower bound is closed
     checkResult(Range.closedOpen(9.0, 11.0), Range.atMost(     7.0), Range.singleton(9.0));
     checkResult(Range.closedOpen(9.0, 11.0), Range.lessThan(   7.0), Range.singleton(9.0));
     checkResult(Range.closedOpen(9.0, 11.0), Range.closed(3.0, 7.0), Range.singleton(9.0));
