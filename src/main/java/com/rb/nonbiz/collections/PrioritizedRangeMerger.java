@@ -13,8 +13,8 @@ import static com.rb.nonbiz.collections.RBRanges.rangeHasAtLeastOneClosedBound;
 /**
  * Find the intersection of a high-priority range and a low-priority range.
  *
- * <p> If the intersection of the two ranges is empty, this will return a range containing at least one point
- * from the "high priority" range. </p>
+ * <p> If the intersection of the two ranges is empty, this will return a singleton range containing the
+ * closest single point from the "high priority" range. </p>
  */
 public class PrioritizedRangeMerger {
 
@@ -22,14 +22,8 @@ public class PrioritizedRangeMerger {
       Range<T> highPriorityRange,
       Range<T> lowPriorityRange) {
     Optional<Range<T>> maybeIntersection = optionalIntersection(highPriorityRange, lowPriorityRange);
-//    RBPreconditions.checkArgument(
-//        // Despite its name, the method below checks that either endpoint that exists is closed, not open.
-//        rangeHasAtLeastOneClosedBound(highPriorityRange),
-//        "If the high-priority range has either endpoint, it must be closed, but found %s",
-//        highPriorityRange);
-//
     if (maybeIntersection.isPresent()) {
-      // if there is an intersection between the ranges, return it
+      // if there is an intersection between the two ranges, return it
       return maybeIntersection.get();
     } else {
       // No intersection. Therefore, the low-priority range must be entirely above or below the high-priority range.
