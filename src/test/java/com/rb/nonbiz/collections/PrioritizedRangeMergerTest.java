@@ -17,15 +17,15 @@ public class PrioritizedRangeMergerTest extends RBTest<PrioritizedRangeMerger> {
     checkResult(Range.all(),            Range.atLeast(2.0),     Range.atLeast(2.0));
     checkResult(Range.atLeast(2.0),     Range.all(),            Range.atLeast(2.0));
     checkResult(Range.all(),            Range.atMost( 7.0),     Range.atMost( 7.0));
-    checkResult(Range.atMost(7.0),      Range.all(),            Range.atMost( 7.0));
-    checkResult(Range.atLeast(2.0),     Range.atMost(7.0),      Range.closed(2.0, 7.0));
+    checkResult(Range.atMost( 7.0),     Range.all(),            Range.atMost( 7.0));
+    checkResult(Range.atLeast(2.0),     Range.atMost( 7.0),     Range.closed(2.0, 7.0));
 
     // we don't expect to use open bounds, but they also work:
     checkResult(Range.all(),            Range.greaterThan(2.0), Range.greaterThan(2.0));
     checkResult(Range.greaterThan(2.0), Range.all(),            Range.greaterThan(2.0));
-    checkResult(Range.all(),            Range.lessThan(7.0),    Range.lessThan(   7.0));
-    checkResult(Range.lessThan(7.0),    Range.all(),            Range.lessThan(   7.0));
-    checkResult(Range.greaterThan(2.0), Range.lessThan(7.0),    Range.open(2.0, 7.0));
+    checkResult(Range.all(),            Range.lessThan(   7.0), Range.lessThan(   7.0));
+    checkResult(Range.lessThan(   7.0), Range.all(),            Range.lessThan(   7.0));
+    checkResult(Range.greaterThan(2.0), Range.lessThan(   7.0), Range.open(2.0, 7.0));
   }
 
   @Test
