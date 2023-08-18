@@ -33,13 +33,13 @@ public class FileByDateStringFormat<T> {
     this.rawFormatOrFixedFilename = rawFormatOrFixedFilename;
   }
 
-  public static <T> FileByDateStringFormat<T> fileByDateStringFormat(String rawFormat) {
-    int count = StringUtils.countMatches(rawFormat, "%s");
+  public static <T> FileByDateStringFormat<T> fileByDateStringFormat(String fileFormatParametrizedByDate) {
+    int count = StringUtils.countMatches(fileFormatParametrizedByDate, "%s");
     RBPreconditions.checkArgument(
         count == 1,
-        "Raw string format was <%s> but there must be exactly one percent-s in it; it had %s",
-        rawFormat, count);
-    return new FileByDateStringFormat<>(Either.left(rawFormat));
+        "fileFormatParametrizedByDate was <%s> but there must be exactly one percent-s in it; it had %s",
+        fileFormatParametrizedByDate, count);
+    return new FileByDateStringFormat<>(Either.left(fileFormatParametrizedByDate));
   }
 
   public static <T> FileByDateStringFormat<T> fixedFilenameIgnoringDate(String fixedFilename) {
