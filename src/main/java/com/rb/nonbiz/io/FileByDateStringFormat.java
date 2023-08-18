@@ -2,7 +2,6 @@ package com.rb.nonbiz.io;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.rb.nonbiz.collections.Either;
-import com.rb.nonbiz.collections.Either.Visitor;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +18,14 @@ import static com.rb.nonbiz.date.RBDates.yyyyMMdd;
  * To make things clearer, this is generic on the type of the class represented by the file being loaded.
  */
 public class FileByDateStringFormat<T> {
+
+  public interface Visitor<T2> {
+
+    T2 visitFileFormatParameterizedByDate(String fileFormatParametrizedByDate);
+    T2 visitFixedFilenameIgnoringDate(String fixedFilenameIgnoringDate);
+
+  }
+
 
   private final Either<String, String> rawFormatOrFixedFilename;
 
@@ -45,6 +52,20 @@ public class FileByDateStringFormat<T> {
     return rawFormatOrFixedFilename;
   }
 
+  public <T2> T2 visit(Visitor<T2> visitor) {
+    return rawFormatOrFixedFilename.visit(new Either.Visitor<String, String, T2>() {
+      @Override
+      public T2 visitLeft(String fileFormatParametrizedByDate) {
+        return visitor.visitFileFormatParameterizedByDate(fileFormatParametrizedByDate);
+      }
+
+      @Override
+      public T2 visitRight(String fixedFilenameIgnoringDate) {
+        return visitor.visitFixedFilenameIgnoringDate(fixedFilenameIgnoringDate);
+      }
+    });
+  }
+
   // This is a bit unusual for a data class, but using the date and returning a file object takes care of some work
   // that the caller would always have to do anyway, given the semantics of this class.
   // This is better than exposing getRawFormat.
@@ -58,28 +79,28 @@ public class FileByDateStringFormat<T> {
    * We currently (Dec 2018) use this for absolute paths, but that doesn't always have to be the case.
    */
   public String getFilePathForDate(LocalDate date) {
-    return rawFormatOrFixedFilename.visit(new Visitor<String, String, String>() {
+    return visit(new Visitor<String>() {
       @Override
-      public String visitLeft(String rawFormat) {
-        return Strings.format(rawFormat, yyyyMMdd(date));
+      public String visitFileFormatParameterizedByDate(String fileFormatParametrizedByDate) {
+        return Strings.format(fileFormatParametrizedByDate, yyyyMMdd(date));
       }
 
       @Override
-      public String visitRight(String fixedFilename) {
-        return fixedFilename; // In this case, the date doesn't affect the filename - intentionally so.
+      public String visitFixedFilenameIgnoringDate(String fixedFilenameIgnoringDate) {
+        return fixedFilenameIgnoringDate; // In this case, the date doesn't affect the filename - intentionally so.
       }
     });
   }
 
   public boolean allDaysUseTheSameFile() {
-    return rawFormatOrFixedFilename.visit(new Visitor<String, String, Boolean>() {
+    return visit(new Visitor<Boolean>() {
       @Override
-      public Boolean visitLeft(String rawFormat) {
+      public Boolean visitFileFormatParameterizedByDate(String fileFormatParametrizedByDate) {
         return false;
       }
 
       @Override
-      public Boolean visitRight(String fixedFilename) {
+      public Boolean visitFixedFilenameIgnoringDate(String fixedFilenameIgnoringDate) {
         return true;
       }
     });
@@ -88,15 +109,15 @@ public class FileByDateStringFormat<T> {
   @Override
   public String toString() {
     return Strings.format("[FBDSF %s FBDSF]",
-        rawFormatOrFixedFilename.visit(new Visitor<String, String, String>() {
+        visit(new Visitor<String>() {
           @Override
-          public String visitLeft(String rawFormat) {
-            return Strings.format("raw format: %s", rawFormat);
+          public String visitFileFormatParameterizedByDate(String fileFormatParametrizedByDate) {
+            return Strings.format("format parameterized by date: %s", fileFormatParametrizedByDate);
           }
 
           @Override
-          public String visitRight(String fixedFilename) {
-            return Strings.format("fixed filename: %s", fixedFilename);
+          public String visitFixedFilenameIgnoringDate(String fixedFilenameIgnoringDate) {
+            return Strings.format("fixed filename ignoring date: %s", fixedFilenameIgnoringDate);
           }
         }));
   }
