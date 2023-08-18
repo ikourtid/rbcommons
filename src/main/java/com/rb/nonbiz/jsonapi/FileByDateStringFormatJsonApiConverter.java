@@ -61,12 +61,17 @@ public class FileByDateStringFormatJsonApiConverter {
 
   public <T> FileByDateStringFormat<T> fromJsonObject(JsonObject jsonObject) {
     // The JSON_VALIDATION_INSTRUCTIONS does not have the ability to capture the fact that exactly one of these
-    // two JSON properties must exist. Therefore,
+    // two JSON properties must exist. Therefore, we need to check for this explicitly in the code.
     boolean isFormat = jsonObject.has("fileFormatParameterizedByDate");
     boolean isFixed = jsonObject.has("fixedFilenameIgnoringDate");
     RBPreconditions.checkArgument(
         isFormat ^ isFixed,
         "exactly 1 (not 0 or 2) of 'fileFormatParameterizedByDate' or 'fixedFilenameIgnoringDate' must be specified");
+
+    // Currently (Aug 2023) this will not catch anything that's not caught above, but let's keep this, in case this
+    // changes in the future.
+    jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
+
     return isFormat
         ? fileByDateStringFormat(getJsonStringOrThrow(jsonObject, "fileFormatParameterizedByDate"))
         : fixedFilenameIgnoringDate(getJsonStringOrThrow(jsonObject, "fixedFilenameIgnoringDate"));
