@@ -9,6 +9,7 @@ import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.types.UnitFraction;
+import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -62,6 +63,11 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
 
   public RBJsonObjectBuilder setString(String property, String value) {
     return setJsonPrimitive(property, jsonString(value));
+  }
+
+  public <E extends Enum<E>, T extends JsonRoundTripStringConvertibleEnum<E>> RBJsonObjectBuilder setEnum(
+      String property, T enumValue) {
+    return setString(property, enumValue.toUniqueStableString());
   }
 
   public RBJsonObjectBuilder setInt(String property, int value) {
