@@ -26,8 +26,8 @@ public class ConstantSequence<T> implements Sequence<T> {
     return constantValue;
   }
 
-  @VisibleForTesting // ideally you should use the Sequence interface; this is here for the test matcher.
-  T getConstantValue() {
+  @VisibleForTesting // ideally you should use the Sequence interface, when possible.
+  public T getConstantValue() {
     return constantValue;
   }
 

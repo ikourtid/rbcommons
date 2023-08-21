@@ -7,6 +7,7 @@ import com.rb.nonbiz.json.JsonValidator;
 import com.rb.nonbiz.math.sequence.ArithmeticProgression;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.checkDiscriminatorValue;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.subclassDiscriminatorPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
@@ -47,6 +48,7 @@ public class ArithmeticProgressionJsonApiConverter implements HasJsonApiDocument
 
   public ArithmeticProgression fromJsonObject(JsonObject jsonObject) {
     jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
+    checkDiscriminatorValue(jsonObject, "type", "arithmeticProgression");
 
     return arithmeticProgressionBuilder()
         .setInitialValue(    getJsonDoubleOrThrow(jsonObject, "initialValue"))
@@ -58,8 +60,8 @@ public class ArithmeticProgressionJsonApiConverter implements HasJsonApiDocument
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(ArithmeticProgression.class)
-        .setSingleLineSummary(documentation(asSingleLineWithNewlines(
-            "A sequence of numbers that increases by a constant amount each time.")))
+        .setSingleLineSummary(documentation(
+            "A sequence of numbers that increases by a constant amount each time."))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
             "The first item in the sequence is specified by <b>initialValue</b>, and every subsequent item in the ",
             "sequence increases by <b>commonDifference</b>. ")))
