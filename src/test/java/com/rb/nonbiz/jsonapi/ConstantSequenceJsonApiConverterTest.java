@@ -7,6 +7,7 @@ import org.junit.Test;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTestHelper.hasJsonApiDocumentationTestHelper;
 import static com.rb.nonbiz.jsonapi.JsonApiPair.jsonApiPair;
 import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
 import static com.rb.nonbiz.math.sequence.ConstantSequence.constantSequence;
@@ -17,6 +18,19 @@ import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 public class ConstantSequenceJsonApiConverterTest
     extends RBCommonsIntegrationTest<ConstantSequenceJsonApiConverter> {
+
+  // Check that the "sample" JSON element in the JsonApiDocumentation can be transformed
+  // to a valid Java object via #fromJsonObject.
+  // We don't want to display any JSON that can't be converted.
+  @Test
+  public void testValidSampleJson() {
+    ConstantSequenceJsonApiConverter constantSequenceJsonApiConverter = makeRealObject();
+    hasJsonApiDocumentationTestHelper(
+        constantSequenceJsonApiConverter,
+        jsonObject -> constantSequenceJsonApiConverter.fromJsonObject(
+            jsonObject, v -> v.getAsDouble()))
+        .testValidSampleJson();
+  }
 
   @Test
   public void testUsingDoubles_commonCase() {
