@@ -10,6 +10,7 @@ import org.junit.Test;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTestHelper.hasJsonApiDocumentationTestHelper;
 import static com.rb.nonbiz.jsonapi.JsonApiPair.jsonApiPair;
 import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
 import static com.rb.nonbiz.math.sequence.ArithmeticProgression.ArithmeticProgressionBuilder.arithmeticProgressionBuilder;
@@ -23,6 +24,18 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class ArithmeticProgressionJsonApiConverterTest
     extends RBCommonsIntegrationTest<ArithmeticProgressionJsonApiConverter> {
+
+  // Check that the "sample" JSON element in the JsonApiDocumentation can be transformed
+  // to a valid Java object via #fromJsonObject.
+  // We don't want to display any JSON that can't be converted.
+  @Test
+  public void testValidSampleJson() {
+    ArithmeticProgressionJsonApiConverter arithmeticProgressionJsonApiConverter = makeRealObject();
+    hasJsonApiDocumentationTestHelper(
+        arithmeticProgressionJsonApiConverter,
+        jsonObject -> arithmeticProgressionJsonApiConverter.fromJsonObject(jsonObject))
+        .testValidSampleJson();
+  }
 
   @Test
   public void generalCase() {

@@ -7,6 +7,7 @@ import org.junit.Test;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
+import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentationTestHelper.hasJsonApiDocumentationTestHelper;
 import static com.rb.nonbiz.jsonapi.JsonApiPair.jsonApiPair;
 import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
 import static com.rb.nonbiz.math.sequence.GeometricProgression.GeometricProgressionBuilder.geometricProgressionBuilder;
@@ -14,6 +15,18 @@ import static com.rb.nonbiz.math.sequence.GeometricProgressionTest.geometricProg
 
 public class GeometricProgressionJsonApiConverterTest
     extends RBCommonsIntegrationTest<GeometricProgressionJsonApiConverter> {
+
+  // Check that the "sample" JSON element in the JsonApiDocumentation can be transformed
+  // to a valid Java object via #fromJsonObject.
+  // We don't want to display any JSON that can't be converted.
+  @Test
+  public void testValidSampleJson() {
+    GeometricProgressionJsonApiConverter geometricProgressionJsonApiConverter = makeRealObject();
+    hasJsonApiDocumentationTestHelper(
+        geometricProgressionJsonApiConverter,
+        jsonObject -> geometricProgressionJsonApiConverter.fromJsonObject(jsonObject))
+        .testValidSampleJson();
+  }
 
   @Test
   public void generalCase() {
