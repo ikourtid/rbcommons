@@ -20,12 +20,11 @@ public class GeometricProgressionJsonApiConverterTest
   // to a valid Java object via #fromJsonObject.
   // We don't want to display any JSON that can't be converted.
   @Test
-  public void testValidSampleJson() {
+  public void hasJsonApiDocumentation_runAllTests() {
     GeometricProgressionJsonApiConverter geometricProgressionJsonApiConverter = makeRealObject();
-    hasJsonApiDocumentationTestHelper(
+    hasJsonApiDocumentationTestHelper().runAllTests(
         geometricProgressionJsonApiConverter,
-        jsonObject -> geometricProgressionJsonApiConverter.fromJsonObject(jsonObject))
-        .testValidSampleJson();
+        jsonObject -> geometricProgressionJsonApiConverter.fromJsonObject(jsonObject));
   }
 
   @Test

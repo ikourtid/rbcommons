@@ -19,17 +19,13 @@ import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 public class ConstantSequenceJsonApiConverterTest
     extends RBCommonsIntegrationTest<ConstantSequenceJsonApiConverter> {
 
-  // Check that the "sample" JSON element in the JsonApiDocumentation can be transformed
-  // to a valid Java object via #fromJsonObject.
-  // We don't want to display any JSON that can't be converted.
   @Test
-  public void testValidSampleJson() {
+  public void hasJsonApiDocumentation_runAllTests() {
     ConstantSequenceJsonApiConverter constantSequenceJsonApiConverter = makeRealObject();
-    hasJsonApiDocumentationTestHelper(
+    hasJsonApiDocumentationTestHelper().runAllTests(
         constantSequenceJsonApiConverter,
         jsonObject -> constantSequenceJsonApiConverter.fromJsonObject(
-            jsonObject, v -> v.getAsDouble()))
-        .testValidSampleJson();
+            jsonObject, v -> v.getAsDouble()));
   }
 
   @Test
