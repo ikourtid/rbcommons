@@ -12,7 +12,6 @@ import com.rb.nonbiz.jsonapi.doc.AllPropertiesMentionedInSingleDocumentationStri
 import com.rb.nonbiz.jsonapi.doc.RecursiveJsonApiDocumentationLister;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
-import org.junit.Test;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,32 +28,31 @@ import static com.rb.nonbiz.testutils.RBCommonsIntegrationTest.makeRealObject;
 
 public class HasJsonApiDocumentationTestHelper<T> {
 
-  private final HasJsonApiDocumentation hasJsonApiDocumentation;
-  private final Function<JsonObject, T> deserializer;
+  private HasJsonApiDocumentationTestHelper() {}
 
-  private HasJsonApiDocumentationTestHelper(
-      HasJsonApiDocumentation hasJsonApiDocumentation,
-      Function<JsonObject, T> deserializer) {
-    this.hasJsonApiDocumentation = hasJsonApiDocumentation;
-    this.deserializer = deserializer;
+  public static <T> HasJsonApiDocumentationTestHelper<T> hasJsonApiDocumentationTestHelper() {
+    return new HasJsonApiDocumentationTestHelper<>();
   }
 
-  public static <T> HasJsonApiDocumentationTestHelper<T> hasJsonApiDocumentationTestHelper(
+  public void runAllTests(
       HasJsonApiDocumentation hasJsonApiDocumentation,
       Function<JsonObject, T> deserializer) {
-    return new HasJsonApiDocumentationTestHelper<>(hasJsonApiDocumentation, deserializer);
+    testValidSampleJson(hasJsonApiDocumentation, deserializer);
+    testAllPropertiesMentionedInDoc(hasJsonApiDocumentation);
+    testPropertiesMentionedAreValid(hasJsonApiDocumentation);
   }
 
-  public void runAllTests() {
-    testValidSampleJson();
-    testAllPropertiesMentionedInDoc();
-    testPropertiesMentionedAreValid();
+  public void runAllTestsExceptForValidSampleJson(HasJsonApiDocumentation hasJsonApiDocumentation) {
+    testAllPropertiesMentionedInDoc(hasJsonApiDocumentation);
+    testPropertiesMentionedAreValid(hasJsonApiDocumentation);
   }
 
   // Check that the "sample" JSON element in the JsonApiDocumentation can be transformed
   // to a valid Java object via #fromJsonObject.
   // We don't want to display any JSON that can't be converted.
-  public void testValidSampleJson() {
+  public void testValidSampleJson(
+      HasJsonApiDocumentation hasJsonApiDocumentation,
+      Function<JsonObject, T> deserializer) {
     // Not all JsonApiClassDocumentation subclasses have sample JSON, so we return Optional<JsonElement>
     // so that classes without can return Optional.empty() and not have the (non-existent) sample JSON checked
     // for validity further on.
@@ -132,7 +130,7 @@ public class HasJsonApiDocumentationTestHelper<T> {
   // We call this 'topLevel' documentation, in contrast with the recursive list of documentation used to
   // search for valid properties.
   // Make this method 'public static' so that test classes that don't extend JsonRoundTripConverter can access it.
-  public void testPropertiesMentionedAreValid() {
+  public void testPropertiesMentionedAreValid(HasJsonApiDocumentation hasJsonApiDocumentation) {
     JsonApiDocumentation topLevelJsonApiDocumentation = hasJsonApiDocumentation.getJsonApiDocumentation();
 
     AllPropertiesMentionedInSingleDocumentationStringLister allPropertiesMentionedInSingleDocumentationStringLister
@@ -172,7 +170,7 @@ public class HasJsonApiDocumentationTestHelper<T> {
 
   // Check that all the top-level (not recursive) properties were in fact mentioned
   // in the documentation at least once each.
-  public void testAllPropertiesMentionedInDoc() {
+  public void testAllPropertiesMentionedInDoc(HasJsonApiDocumentation hasJsonApiDocumentation) {
     JsonApiDocumentation jsonApiDocumentation = hasJsonApiDocumentation.getJsonApiDocumentation();
 
     // Find all the required and optional properties for this converter, as found in the

@@ -25,16 +25,12 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 public class ArithmeticProgressionJsonApiConverterTest
     extends RBCommonsIntegrationTest<ArithmeticProgressionJsonApiConverter> {
 
-  // Check that the "sample" JSON element in the JsonApiDocumentation can be transformed
-  // to a valid Java object via #fromJsonObject.
-  // We don't want to display any JSON that can't be converted.
   @Test
-  public void testValidSampleJson() {
+  public void hasJsonApiDocumentation_runAllTests() {
     ArithmeticProgressionJsonApiConverter arithmeticProgressionJsonApiConverter = makeRealObject();
-    hasJsonApiDocumentationTestHelper(
+    hasJsonApiDocumentationTestHelper().runAllTests(
         arithmeticProgressionJsonApiConverter,
-        jsonObject -> arithmeticProgressionJsonApiConverter.fromJsonObject(jsonObject))
-        .testValidSampleJson();
+        jsonObject -> arithmeticProgressionJsonApiConverter.fromJsonObject(jsonObject));
   }
 
   @Test
