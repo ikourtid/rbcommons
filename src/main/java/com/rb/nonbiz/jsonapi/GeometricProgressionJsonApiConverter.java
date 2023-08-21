@@ -8,6 +8,7 @@ import com.rb.nonbiz.math.sequence.GeometricProgression;
 import com.rb.nonbiz.math.sequence.GeometricProgression;
 
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
+import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.checkDiscriminatorValue;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.subclassDiscriminatorPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
@@ -48,6 +49,7 @@ public class GeometricProgressionJsonApiConverter implements HasJsonApiDocumenta
 
   public GeometricProgression fromJsonObject(JsonObject jsonObject) {
     jsonValidator.validate(jsonObject, JSON_VALIDATION_INSTRUCTIONS);
+    checkDiscriminatorValue(jsonObject, "type", "geometricProgression");
 
     return geometricProgressionBuilder()
         .setInitialValue(getJsonDoubleOrThrow(jsonObject, "initialValue"))
@@ -59,8 +61,8 @@ public class GeometricProgressionJsonApiConverter implements HasJsonApiDocumenta
   public JsonApiDocumentation getJsonApiDocumentation() {
     return jsonApiClassDocumentationBuilder()
         .setClass(GeometricProgression.class)
-        .setSingleLineSummary(documentation(asSingleLineWithNewlines(
-            "A sequence of numbers that increases by a constant ratio each time.")))
+        .setSingleLineSummary(documentation(
+            "A sequence of numbers that increases by a constant ratio each time."))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
             "The first item in the sequence is specified by <b>initialValue</b>, and every subsequent item in the ",
             "sequence is its previous item times <b>commonRatio</b>. ")))
