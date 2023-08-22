@@ -1,7 +1,7 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.rb.nonbiz.math.sequence.ConstantSequence;
-import com.rb.nonbiz.math.sequence.DoubleSequence;
+import com.rb.nonbiz.math.sequence.SimpleSequence;
 import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
 import static com.rb.nonbiz.math.sequence.ArithmeticProgression.ArithmeticProgressionBuilder.arithmeticProgressionBuilder;
 import static com.rb.nonbiz.math.sequence.ConstantSequence.constantSequence;
 import static com.rb.nonbiz.math.sequence.ConstantSequenceTest.constantSequenceMatcher;
-import static com.rb.nonbiz.math.sequence.DoubleSequenceTest.doubleSequenceMatcher;
+import static com.rb.nonbiz.math.sequence.SimpleSequenceTest.doubleSequenceMatcher;
 import static com.rb.nonbiz.math.sequence.GeometricProgression.GeometricProgressionBuilder.geometricProgressionBuilder;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
@@ -51,7 +51,7 @@ public class SequenceOfDoubleJsonApiConverterTest
                 "commonRatio",  jsonDouble(1.08))))
         .testRoundTripConversions(
             v -> makeRealObject().toJsonObject(v),
-            v -> (DoubleSequence) makeRealObject().fromJsonObject(v));
+            v -> (SimpleSequence) makeRealObject().fromJsonObject(v));
 
     // ... vs. the ConstantSequence class.
     // These classes do not form a single inheritance hierarchy because ConstantSequence is generic; it does not just

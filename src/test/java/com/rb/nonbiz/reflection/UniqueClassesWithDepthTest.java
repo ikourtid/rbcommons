@@ -2,7 +2,7 @@ package com.rb.nonbiz.reflection;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.math.sequence.ArithmeticProgression;
-import com.rb.nonbiz.math.sequence.DoubleSequence;
+import com.rb.nonbiz.math.sequence.SimpleSequence;
 import com.rb.nonbiz.math.sequence.GeometricProgression;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -24,7 +24,7 @@ public class UniqueClassesWithDepthTest extends RBTestMatcher<UniqueClassesWithD
   @Override
   public UniqueClassesWithDepth makeNontrivialObject() {
     return uniqueClassesWithDepth(ImmutableList.of(
-        classWithDepth(DoubleSequence.class, 0),
+        classWithDepth(SimpleSequence.class, 0),
         classWithDepth(ArithmeticProgression.class, 1),
         classWithDepth(GeometricProgression.class, 1)));
   }
@@ -33,7 +33,7 @@ public class UniqueClassesWithDepthTest extends RBTestMatcher<UniqueClassesWithD
   public UniqueClassesWithDepth makeMatchingNontrivialObject() {
     // Nothing to tweak here
     return uniqueClassesWithDepth(ImmutableList.of(
-        classWithDepth(DoubleSequence.class, 0),
+        classWithDepth(SimpleSequence.class, 0),
         classWithDepth(ArithmeticProgression.class, 1),
         classWithDepth(GeometricProgression.class, 1)));
   }

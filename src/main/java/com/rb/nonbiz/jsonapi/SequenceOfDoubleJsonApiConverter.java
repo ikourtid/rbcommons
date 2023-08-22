@@ -4,8 +4,8 @@ import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.rb.nonbiz.math.sequence.ArithmeticProgression;
 import com.rb.nonbiz.math.sequence.ConstantSequence;
-import com.rb.nonbiz.math.sequence.DoubleSequence;
-import com.rb.nonbiz.math.sequence.DoubleSequence.Visitor;
+import com.rb.nonbiz.math.sequence.SimpleSequence;
+import com.rb.nonbiz.math.sequence.SimpleSequence.Visitor;
 import com.rb.nonbiz.math.sequence.GeometricProgression;
 import com.rb.nonbiz.math.sequence.Sequence;
 import com.rb.nonbiz.text.Strings;
@@ -37,9 +37,9 @@ public class SequenceOfDoubleJsonApiConverter implements HasJsonApiDocumentation
     // Unfortunately there's no good way to do this without instanceof. This is because ArithmeticProgression
     // and GeometricProgression are both specific to Double, whereas ConstantSequence can apply to any data type,
     // not just double.
-    if (sequence instanceof DoubleSequence) {
-      DoubleSequence doubleSequence = (DoubleSequence) sequence;
-      return doubleSequence.visit(new Visitor<JsonObject>() {
+    if (sequence instanceof SimpleSequence) {
+      SimpleSequence simpleSequence = (SimpleSequence) sequence;
+      return simpleSequence.visit(new Visitor<JsonObject>() {
         @Override
         public JsonObject visitArithmeticProgression(ArithmeticProgression arithmeticProgression) {
           return arithmeticProgressionJsonApiConverter.toJsonObject(arithmeticProgression);
