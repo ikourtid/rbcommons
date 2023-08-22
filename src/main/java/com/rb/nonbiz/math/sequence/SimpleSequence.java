@@ -16,6 +16,7 @@ public abstract class SimpleSequence<T> extends Sequence<T> {
 
   public interface Visitor<T, T2> {
 
+    T2 visitConstantSequence(ConstantSequence<T> constantSequence);
     T2 visitArithmeticProgression(ArithmeticProgression<T> arithmeticProgression);
     T2 visitGeometricProgression(GeometricProgression<T> geometricProgression);
 

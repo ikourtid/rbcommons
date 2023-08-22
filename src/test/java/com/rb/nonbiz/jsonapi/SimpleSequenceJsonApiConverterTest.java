@@ -21,8 +21,8 @@ import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
-public class SequenceOfDoubleJsonApiConverterTest
-    extends RBCommonsIntegrationTest<SequenceOfDoubleJsonApiConverter> {
+public class SimpleSequenceJsonApiConverterTest
+    extends RBCommonsIntegrationTest<SimpleSequenceJsonApiConverter> {
 
   @Test
   public void handlesAllSubclasses() {
@@ -71,15 +71,15 @@ public class SequenceOfDoubleJsonApiConverterTest
 
   @Test
   public void hasJsonApiDocumentation_runAllTests() {
-    SequenceOfDoubleJsonApiConverter sequenceOfDoubleJsonApiConverter = makeRealObject();
+    SimpleSequenceJsonApiConverter simpleSequenceJsonApiConverter = makeRealObject();
     hasJsonApiDocumentationTestHelper().runAllTests(
-        sequenceOfDoubleJsonApiConverter,
-        v -> sequenceOfDoubleJsonApiConverter.fromJsonObject(v));
+        simpleSequenceJsonApiConverter,
+        v -> simpleSequenceJsonApiConverter.fromJsonObject(v));
   }
 
   @Override
-  protected Class<SequenceOfDoubleJsonApiConverter> getClassBeingTested() {
-    return SequenceOfDoubleJsonApiConverter.class;
+  protected Class<SimpleSequenceJsonApiConverter> getClassBeingTested() {
+    return SimpleSequenceJsonApiConverter.class;
   }
 
 }

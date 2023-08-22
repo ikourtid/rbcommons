@@ -1,15 +1,19 @@
 package com.rb.nonbiz.jsonapi;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.rb.nonbiz.math.sequence.ArithmeticProgression;
 import com.rb.nonbiz.math.sequence.ConstantSequence;
-import com.rb.nonbiz.math.sequence.SimpleSequence;
-import com.rb.nonbiz.math.sequence.SimpleSequence.Visitor;
 import com.rb.nonbiz.math.sequence.GeometricProgression;
 import com.rb.nonbiz.math.sequence.Sequence;
-import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.math.sequence.SimpleSequence;
+import com.rb.nonbiz.math.sequence.SimpleSequence.Visitor;
+import com.rb.nonbiz.types.PositiveMultiplier;
 import com.rb.nonbiz.util.RBPreconditions;
+
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
@@ -21,60 +25,51 @@ import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 
 /**
- * Converts a {@link Sequence} of {@link Double} back and forth to JSON for our public API.
+ * Converts a {@link SimpleSequence} back and forth to JSON for our public API.
  */
-public class SequenceOfDoubleJsonApiConverter implements HasJsonApiDocumentation {
+public class SimpleSequenceJsonApiConverter implements HasJsonApiDocumentation {
 
   @Inject ArithmeticProgressionJsonApiConverter arithmeticProgressionJsonApiConverter;
-  @Inject ConstantSequenceJsonApiConverter constantSequenceJsonApiConverter;
   @Inject GeometricProgressionJsonApiConverter geometricProgressionJsonApiConverter;
 
   // Typically, JSON API converter classes use a JsonValidator. However, because this represents
   // one of multiple subclasses, we delegate the JSON validation to the JSON API converters of the subclasses.
   // Also, it would be difficult to specify the optional properties, since each subclass has its own.
 
-  public JsonObject toJsonObject(Sequence<Double> sequence) {
+  public <T> JsonObject toJsonObject(SimpleSequence<T> simpleSequence, Function<T, JsonElement> itemSerializer) {
     // Unfortunately there's no good way to do this without instanceof. This is because ArithmeticProgression
     // and GeometricProgression are both specific to Double, whereas ConstantSequence can apply to any data type,
     // not just double.
-    if (sequence instanceof SimpleSequence) {
-      SimpleSequence simpleSequence = (SimpleSequence) sequence;
-      return simpleSequence.visit(new Visitor<JsonObject>() {
-        @Override
-        public JsonObject visitArithmeticProgression(ArithmeticProgression arithmeticProgression) {
-          return arithmeticProgressionJsonApiConverter.toJsonObject(arithmeticProgression);
-        }
+    return simpleSequence.visit(new Visitor<T, JsonObject>() {
+      @Override
+      public JsonObject visitArithmeticProgression(ArithmeticProgression<T> arithmeticProgression) {
+        return arithmeticProgressionJsonApiConverter.toJsonObject(arithmeticProgression, itemSerializer);
+      }
 
-        @Override
-        public JsonObject visitGeometricProgression(GeometricProgression geometricProgression) {
-          return geometricProgressionJsonApiConverter.toJsonObject(geometricProgression);
-        }
-      });
-    }
-    if (sequence instanceof ConstantSequence) {
-      return constantSequenceJsonApiConverter.toJsonObject(
-          (ConstantSequence<Double>) sequence,
-          v -> jsonDouble(v));
-    }
-    throw new IllegalArgumentException(Strings.format(
-        "The only Sequence objects that can be converted to JSON are ConstantSequence, ArithmeticProgression, and " +
-            "GeometricProgression; got a %s",
-        sequence.getClass().getCanonicalName()));
+      @Override
+      public JsonObject visitGeometricProgression(GeometricProgression<T> geometricProgression) {
+        return geometricProgressionJsonApiConverter.toJsonObject(geometricProgression, itemSerializer);
+      }
+    });
   }
 
-  public Sequence<Double> fromJsonObject(JsonObject jsonObject) {
+  public <T> SimpleSequence<T> fromJsonObject(
+      JsonObject jsonObject,
+      Function<JsonElement, T> itemDeserializer,
+      BiFunction<T, Double, T> nextItemGeneratorIfArithmetic,
+      BiFunction<T, PositiveMultiplier, T> nextItemGeneratorIfGeometric) {
     String typeDiscriminatorValue = getJsonStringOrThrow(jsonObject, "type");
-    boolean isConstant   = typeDiscriminatorValue.equals("constantSequence");
+//    boolean isConstant   = typeDiscriminatorValue.equals("constantSequence");
     boolean isArithmetic = typeDiscriminatorValue.equals("arithmeticProgression");
     boolean isGeometric  = typeDiscriminatorValue.equals("geometricProgression");
 
     RBPreconditions.checkArgument(
-        isConstant ^ isArithmetic ^ isGeometric,
+        //isConstant ^
+            isArithmetic ^ isGeometric,
         "Exactly one of 'constantSequence', 'arithmeticProgression', 'geometricProgression' must be specified: JSON was %s",
         jsonObject);
-    return isGeometric ? geometricProgressionJsonApiConverter.fromJsonObject(jsonObject)
-        : isArithmetic ? arithmeticProgressionJsonApiConverter.fromJsonObject(jsonObject)
-        :                constantSequenceJsonApiConverter.fromJsonObject(jsonObject, v -> v.getAsDouble());
+    return isGeometric ? geometricProgressionJsonApiConverter.fromJsonObject(jsonObject, itemDeserializer, nextItemGeneratorIfGeometric)
+        :                arithmeticProgressionJsonApiConverter.fromJsonObject(jsonObject, itemDeserializer, nextItemGeneratorIfArithmetic);
   }
 
   @Override
@@ -86,11 +81,11 @@ public class SequenceOfDoubleJsonApiConverter implements HasJsonApiDocumentation
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
             "Can be an arithmetic progression, geometric progression, or just a constant sequence.")))
         .setJsonApiInfoOnMultipleSubclasses(
-            jsonApiSubclassInfoBuilder()
-                .setClassOfSubclass(ConstantSequence.class)
-                .setDiscriminatorPropertyValue("constantSequence")
-                .setJsonApiConverterForTraversing(constantSequenceJsonApiConverter)
-                .build(),
+//            jsonApiSubclassInfoBuilder()
+//                .setClassOfSubclass(ConstantSequence.class)
+//                .setDiscriminatorPropertyValue("constantSequence")
+//                .setJsonApiConverterForTraversing(constantSequenceJsonApiConverter)
+//                .build(),
             jsonApiSubclassInfoBuilder()
                 .setClassOfSubclass(ArithmeticProgression.class)
                 .setDiscriminatorPropertyValue("arithmeticProgression")
