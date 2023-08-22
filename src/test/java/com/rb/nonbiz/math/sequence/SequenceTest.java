@@ -2,7 +2,6 @@ package com.rb.nonbiz.math.sequence;
 
 import com.google.common.collect.Iterators;
 import com.rb.biz.types.Money;
-import com.rb.nonbiz.collections.RBLists;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -13,9 +12,7 @@ import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.math.sequence.ArithmeticProgression.ArithmeticProgressionBuilder.arithmeticProgressionBuilder;
 import static com.rb.nonbiz.math.sequence.ConstantSequence.constantSequence;
 import static com.rb.nonbiz.math.sequence.Sequences.transformedSequence;
-import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchList;
-import static com.rb.nonbiz.testmatchers.RBIterMatchers.nFirstItemsIteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
