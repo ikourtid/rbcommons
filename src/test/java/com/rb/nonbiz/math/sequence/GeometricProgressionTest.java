@@ -96,6 +96,7 @@ public class GeometricProgressionTest extends RBTestMatcher<GeometricProgression
     return makeMatcher(expected,
         match(                          v -> v.getInitialValue(), matcherGenerator),
         matchUsingImpreciseAlmostEquals(v -> v.getCommonRatio(),  DEFAULT_EPSILON_1e_8));
+    // We can't match on the lambda, of course.
   }
 
 }

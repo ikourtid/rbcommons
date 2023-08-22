@@ -14,7 +14,7 @@ import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
 import static com.rb.nonbiz.math.sequence.ArithmeticProgression.ArithmeticProgressionBuilder.arithmeticProgressionBuilder;
 import static com.rb.nonbiz.math.sequence.ConstantSequence.constantSequence;
 import static com.rb.nonbiz.math.sequence.ConstantSequenceTest.constantSequenceMatcher;
-import static com.rb.nonbiz.math.sequence.SimpleSequenceTest.doubleSequenceMatcher;
+import static com.rb.nonbiz.math.sequence.SimpleSequenceTest.simpleSequenceMatcher;
 import static com.rb.nonbiz.math.sequence.GeometricProgression.GeometricProgressionBuilder.geometricProgressionBuilder;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
@@ -28,7 +28,7 @@ public class SimpleSequenceJsonApiConverterTest
   public void handlesAllSubclasses() {
     // Unfortunately, we must separately test the DoubleSequence subclasses...
     jsonApiTestData(
-        f -> doubleSequenceMatcher(f),
+        f -> simpleSequenceMatcher(f),
 
         jsonApiPair(
             arithmeticProgressionBuilder()

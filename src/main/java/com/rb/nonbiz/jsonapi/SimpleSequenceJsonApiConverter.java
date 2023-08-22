@@ -30,6 +30,7 @@ import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 public class SimpleSequenceJsonApiConverter implements HasJsonApiDocumentation {
 
   @Inject ArithmeticProgressionJsonApiConverter arithmeticProgressionJsonApiConverter;
+  @Inject ConstantSequenceJsonApiConverter constantSequenceJsonApiConverter;
   @Inject GeometricProgressionJsonApiConverter geometricProgressionJsonApiConverter;
 
   // Typically, JSON API converter classes use a JsonValidator. However, because this represents
@@ -41,6 +42,11 @@ public class SimpleSequenceJsonApiConverter implements HasJsonApiDocumentation {
     // and GeometricProgression are both specific to Double, whereas ConstantSequence can apply to any data type,
     // not just double.
     return simpleSequence.visit(new Visitor<T, JsonObject>() {
+      @Override
+      public JsonObject visitConstantSequence(ConstantSequence<T> constantSequence) {
+        return constantSequenceJsonApiConverter.toJsonObject(constantSequence, itemSerializer);
+      }
+
       @Override
       public JsonObject visitArithmeticProgression(ArithmeticProgression<T> arithmeticProgression) {
         return arithmeticProgressionJsonApiConverter.toJsonObject(arithmeticProgression, itemSerializer);
