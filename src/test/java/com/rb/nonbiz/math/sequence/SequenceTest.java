@@ -1,17 +1,20 @@
 package com.rb.nonbiz.math.sequence;
 
+import com.google.common.collect.Iterators;
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.collections.RBLists;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.math.sequence.ArithmeticProgression.ArithmeticProgressionBuilder.arithmeticProgressionBuilder;
 import static com.rb.nonbiz.math.sequence.ConstantSequence.constantSequence;
 import static com.rb.nonbiz.math.sequence.Sequences.transformedSequence;
 import static com.rb.nonbiz.testmatchers.Match.match;
+import static com.rb.nonbiz.testmatchers.Match.matchList;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.nFirstItemsIteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
@@ -74,7 +77,7 @@ public class SequenceTest extends RBTestMatcher<Sequence<Money>> {
   public static <T> TypeSafeMatcher<Sequence<T>> sequenceIncompleteMatcher(
       Sequence<T> expected, MatcherGenerator<T> matcherGenerator) {
     return makeMatcher(expected,
-        match(v -> v.iterator(), f -> nFirstItemsIteratorMatcher(f, 10, matcherGenerator)));
+        matchList(v -> newArrayList(Iterators.limit(v.iterator(), 10)), matcherGenerator));
   }
 
 }
