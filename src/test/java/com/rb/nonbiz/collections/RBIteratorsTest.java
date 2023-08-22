@@ -53,6 +53,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class RBIteratorsTest {
 
@@ -234,6 +235,11 @@ public class RBIteratorsTest {
     assertResult.accept(3, "abc_bcd_cde_");
     assertResult.accept(2, "ab_bc_cd_de_");
     assertResult.accept(1, "a_b_c_d_e_");
+  }
+
+  @Test
+  public void testForEachPairWhileBothPresent() {
+    fail("FIXME SWA");
   }
 
   @Test
