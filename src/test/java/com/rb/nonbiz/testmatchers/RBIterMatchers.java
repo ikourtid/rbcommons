@@ -1,5 +1,6 @@
 package com.rb.nonbiz.testmatchers;
 
+import com.google.common.collect.Iterators;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
@@ -16,7 +17,8 @@ public class RBIterMatchers {
   /**
    * Obviously this 'consumes' the iterator, so be mindful.
    */
-  public static <T> TypeSafeMatcher<Iterator<T>> iteratorMatcher(Iterator<T> expected, MatcherGenerator<T> matcherGenerator) {
+  public static <T> TypeSafeMatcher<Iterator<T>> iteratorMatcher(
+      Iterator<T> expected, MatcherGenerator<T> matcherGenerator) {
     return makeMatcher(expected, actual -> {
       while (true) {
         if (!expected.hasNext() && !actual.hasNext()) {
@@ -32,6 +34,11 @@ public class RBIterMatchers {
         }
       }
     });
+  }
+
+  public static <T> TypeSafeMatcher<Iterator<T>> nFirstItemsIteratorMatcher(
+      Iterator<T> expected, int nItems, MatcherGenerator<T> matcherGenerator) {
+    return iteratorMatcher(Iterators.limit(expected, nItems), matcherGenerator);
   }
 
   /**

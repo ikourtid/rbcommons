@@ -7,6 +7,7 @@ import com.rb.biz.types.Money;
 import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -644,6 +645,16 @@ public class RBIteratorsTest {
     assertIllegalArgumentException( () -> matchChecker.apply(
         singletonList(DUMMY_STRING),
         ImmutableList.of(DUMMY_STRING, DUMMY_STRING)));
+  }
+
+  @Test
+  public void testConstantItemIterator() {
+    Iterator<String> iterator = constantItemIterator("x");
+
+    for (int i = 0; i < 3; i++) { // nothing special about 3, but we can't use infinity here.
+      assertTrue(iterator.hasNext());
+      assertEquals("x", iterator.next());
+    }
   }
 
   private int getOnlyIndexWithB(String...values) {

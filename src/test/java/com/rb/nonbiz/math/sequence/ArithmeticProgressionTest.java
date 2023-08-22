@@ -5,6 +5,8 @@ import com.rb.nonbiz.text.Strings;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.Iterator;
+
 import static com.rb.nonbiz.math.sequence.ArithmeticProgression.ArithmeticProgressionBuilder.arithmeticProgressionBuilder;
 import static com.rb.nonbiz.math.sequence.ArithmeticProgression.singleValueArithmeticProgression;
 import static com.rb.nonbiz.math.sequence.Sequences.transformedSequence;
@@ -43,20 +45,14 @@ public class ArithmeticProgressionTest extends RBTestMatcher<ArithmeticProgressi
 
   @Test
   public void testGet() {
-    ArithmeticProgression arithmeticProgression = arithmeticProgressionBuilder()
+    Iterator<Double> iterator = arithmeticProgressionBuilder()
         .setInitialValue(1.1)
         .setCommonDifference(0.5)
-        .build();
-    assertIllegalArgumentException( () -> arithmeticProgression.get(-999));
-    assertIllegalArgumentException( () -> arithmeticProgression.get(-1));
-    assertEquals(1.1, arithmeticProgression.get(0), 1e-8);
-    assertEquals(1.6, arithmeticProgression.get(1), 1e-8);
-    assertEquals(2.1, arithmeticProgression.get(2), 1e-8);
-
-    assertEquals(
-        doubleExplained(500_001.1, 1.1 + 0.5 * 1_000_000),
-        arithmeticProgression.get(1_000_000),
-        1e-8);
+        .build()
+        .iterator();
+    assertEquals(1.1, iterator.next(), 1e-8);
+    assertEquals(1.6, iterator.next(), 1e-8);
+    assertEquals(2.1, iterator.next(), 1e-8);
   }
 
   @Override

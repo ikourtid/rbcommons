@@ -4,6 +4,8 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import java.util.Iterator;
+
 import static com.rb.nonbiz.math.sequence.ArithmeticProgression.ArithmeticProgressionBuilder.arithmeticProgressionBuilder;
 
 /**
@@ -43,8 +45,20 @@ public class ArithmeticProgression extends DoubleSequence {
   }
 
   @Override
-  public Double getUnsafe(int nonNegativeN) {
-    return initialValue + nonNegativeN * commonDifference;
+  public Iterator<Double> iterator() {
+    return new Iterator<Double>() {
+      private int index = 0;
+
+      @Override
+      public boolean hasNext() {
+        return true; // a Sequence is infinite, so
+      }
+
+      @Override
+      public Double next() {
+        return initialValue + (index++) * commonDifference;
+      }
+    };
   }
 
   @Override

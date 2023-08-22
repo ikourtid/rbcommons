@@ -534,4 +534,21 @@ public class RBIterators {
             iterationBody.apply(runningValue, iteratorEntry));
   }
 
+  /**
+   * Returns an iterator that never runs out of items, and whose items are all the same value.
+   */
+  public static <T> Iterator<T> constantItemIterator(T constantValue) {
+    return new Iterator<T>() {
+      @Override
+      public boolean hasNext() {
+        return true;
+      }
+
+      @Override
+      public T next() {
+        return constantValue;
+      }
+    };
+  }
+
 }

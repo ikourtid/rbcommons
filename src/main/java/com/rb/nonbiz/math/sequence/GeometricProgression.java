@@ -1,8 +1,11 @@
 package com.rb.nonbiz.math.sequence;
 
+import com.rb.nonbiz.collections.RBIterators;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
+
+import java.util.Iterator;
 
 import static com.rb.nonbiz.math.sequence.GeometricProgression.GeometricProgressionBuilder.geometricProgressionBuilder;
 
@@ -43,8 +46,20 @@ public class GeometricProgression extends DoubleSequence {
   }
 
   @Override
-  public Double getUnsafe(int nonNegativeN) {
-    return initialValue * Math.pow(commonRatio, nonNegativeN);
+  public Iterator<Double> iterator() {
+    return new Iterator<Double>() {
+      private int index = 0;
+
+      @Override
+      public boolean hasNext() {
+        return true; // a Sequence is infinite, so
+      }
+
+      @Override
+      public Double next() {
+        return initialValue * Math.pow(commonRatio, index++);
+      }
+    };
   }
 
   @Override
