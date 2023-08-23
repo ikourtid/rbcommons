@@ -36,7 +36,11 @@ public abstract class Sequence<T> implements Iterable<T> {
 
       @Override
       public boolean hasNext() {
-        return true; // a Sequence is infinite, so
+        // a Sequence is infinite, so it will always have a next item.
+        // In theory, it's not truly infinite because we will eventually run into floating point overflow
+        // if we keep e.g. adding a difference to a number, as is the case with an arithmetic progression.
+        // However, we can treat it as infinite in practice, considering how we will be using it.
+        return true;
       }
 
       @Override
