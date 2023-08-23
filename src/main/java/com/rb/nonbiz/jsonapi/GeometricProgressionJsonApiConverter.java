@@ -48,7 +48,7 @@ public class GeometricProgressionJsonApiConverter implements HasJsonApiDocumenta
       Function<T, JsonElement> elementSerializer) {
     return jsonValidator.validate(
         rbJsonObjectBuilder()
-            .setString("type", "arithmeticProgression")
+            .setString("type", "geometricProgression")
             .setJsonElement("initialValue",  elementSerializer.apply(geometricProgression.getInitialValue()))
             .setImpreciseValue("commonRatio", geometricProgression.getCommonRatio())
             .build(),

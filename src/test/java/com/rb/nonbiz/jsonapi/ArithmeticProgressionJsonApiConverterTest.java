@@ -53,8 +53,10 @@ public class ArithmeticProgressionJsonApiConverterTest
                 v -> pair(v.getLeft(), sumMoney(v.getRight(), money(1.1)))),
             jsonObject(
                 "type",             jsonString("arithmeticProgression"),
-                "initialValue",     jsonDouble(111.22),
-                "commonDifference", jsonDouble(0.33))),
+                "initialValue", jsonObject(
+                    "left", jsonString("x"),
+                    "right", jsonDouble(100.0)),
+                "commonDifference", jsonDouble(1.1))),
 
         jsonApiPair(
             arithmeticProgression(
@@ -63,7 +65,9 @@ public class ArithmeticProgressionJsonApiConverterTest
                 v -> pair(v.getLeft(), sumMoney(v.getRight(), ZERO_MONEY))),
             jsonObject(
                 "type",             jsonString("arithmeticProgression"),
-                "initialValue",     jsonDouble(111.22),
+                "initialValue", jsonObject(
+                    "left", jsonString("x"),
+                    "right", jsonDouble(100.0)),
                 "commonDifference", jsonDouble(0))),
 
         jsonApiPair(
@@ -73,8 +77,10 @@ public class ArithmeticProgressionJsonApiConverterTest
                 v -> pair(v.getLeft(), money(v.getRight().doubleValue() - 1.1))),
             jsonObject(
                 "type",             jsonString("arithmeticProgression"),
-                "initialValue",     jsonDouble(-111.22),
-                "commonDifference", jsonDouble(-0.33))));
+                "initialValue", jsonObject(
+                    "left", jsonString("x"),
+                    "right", jsonDouble(100.0)),
+                "commonDifference", jsonDouble(-1.1))));
 
     jsonApiTestData.testRoundTripConversions(
         v -> makeRealObject().toJsonObject(

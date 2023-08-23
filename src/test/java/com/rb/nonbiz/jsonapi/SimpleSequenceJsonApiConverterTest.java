@@ -39,13 +39,15 @@ public class SimpleSequenceJsonApiConverterTest
 
         jsonApiPair(
             arithmeticProgression(
-                pair("x", money(100.0)),
+                pair("x", money(100.1)),
                 1.1,
                 v -> pair(v.getLeft(), sumMoney(v.getRight(), money(1.1)))),
             jsonObject(
                 "type", jsonString("arithmeticProgression"),
-                "initialValue", jsonDouble(111.22),
-                "commonDifference", jsonDouble(0.33))),
+                "initialValue", jsonObject(
+                    "left", jsonString("x"),
+                    "right", jsonDouble(100.1)),
+                "commonDifference", jsonDouble(1.1))),
 
         jsonApiPair(
             geometricProgression(
@@ -60,7 +62,7 @@ public class SimpleSequenceJsonApiConverterTest
                 "commonRatio", jsonDouble(1.1))),
 
         jsonApiPair(
-            constantSequence(pair("y", money(12.34))),
+            constantSequence(pair("x", money(12.34))),
             jsonObject(
                 "type", jsonString("constantSequence"),
                 "constantValue", jsonObject(

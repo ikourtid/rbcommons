@@ -41,8 +41,9 @@ public abstract class Sequence<T> implements Iterable<T> {
 
       @Override
       public T next() {
+        T toReturn = currentValue;
         currentValue = nextItemGenerator.apply(currentValue);
-        return currentValue;
+        return toReturn;
       }
     };
   }

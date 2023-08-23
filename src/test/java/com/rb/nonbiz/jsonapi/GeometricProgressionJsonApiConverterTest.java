@@ -78,7 +78,7 @@ public class GeometricProgressionJsonApiConverterTest
 
         jsonApiPair(
             geometricProgression(
-                pair("x", money(100.0)),
+                pair("x", money(100.1)),
                 positiveMultiplier(0.8),
                 v -> pair(v.getLeft(), money(0.8 * v.getRight().doubleValue()))),
             jsonObject(
