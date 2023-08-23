@@ -65,17 +65,17 @@ public class SimpleSequenceJsonApiConverter implements HasJsonApiDocumentation {
       BiFunction<T, Double, T> nextItemGeneratorIfArithmetic,
       BiFunction<T, PositiveMultiplier, T> nextItemGeneratorIfGeometric) {
     String typeDiscriminatorValue = getJsonStringOrThrow(jsonObject, "type");
-//    boolean isConstant   = typeDiscriminatorValue.equals("constantSequence");
+    boolean isConstant   = typeDiscriminatorValue.equals("constantSequence");
     boolean isArithmetic = typeDiscriminatorValue.equals("arithmeticProgression");
     boolean isGeometric  = typeDiscriminatorValue.equals("geometricProgression");
 
     RBPreconditions.checkArgument(
-        //isConstant ^
-            isArithmetic ^ isGeometric,
+        isConstant ^ isArithmetic ^ isGeometric,
         "Exactly one of 'constantSequence', 'arithmeticProgression', 'geometricProgression' must be specified: JSON was %s",
         jsonObject);
-    return isGeometric ? geometricProgressionJsonApiConverter.fromJsonObject(jsonObject, itemDeserializer, nextItemGeneratorIfGeometric)
-        :                arithmeticProgressionJsonApiConverter.fromJsonObject(jsonObject, itemDeserializer, nextItemGeneratorIfArithmetic);
+    return isGeometric ? geometricProgressionJsonApiConverter .fromJsonObject(jsonObject, itemDeserializer, nextItemGeneratorIfGeometric)
+        : isArithmetic ? arithmeticProgressionJsonApiConverter.fromJsonObject(jsonObject, itemDeserializer, nextItemGeneratorIfArithmetic)
+        :                constantSequenceJsonApiConverter     .fromJsonObject(jsonObject, itemDeserializer);
   }
 
   @Override
@@ -83,15 +83,19 @@ public class SimpleSequenceJsonApiConverter implements HasJsonApiDocumentation {
     return jsonApiClassWithSubclassesDocumentationBuilder()
         .setClassBeingDocumented(Sequence.class)
         .setSingleLineSummary(documentation(
-            "A sequence (in the math sense) of Double (floating point numbers)."))
+            "A sequence (in the math sense) of numbers, or objects with numbers in them."))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
-            "Can be an arithmetic progression, geometric progression, or just a constant sequence.")))
+            "Can be an arithmetic progression, geometric progression, or just a constant sequence. <p />",
+
+            "Note that this is more general than a single number; it could be any object with a number in it. ",
+            "If so, then any subsequent items in the sequence will be identical to the initial value, except for ",
+            "the number in the object. <p />")))
         .setJsonApiInfoOnMultipleSubclasses(
-//            jsonApiSubclassInfoBuilder()
-//                .setClassOfSubclass(ConstantSequence.class)
-//                .setDiscriminatorPropertyValue("constantSequence")
-//                .setJsonApiConverterForTraversing(constantSequenceJsonApiConverter)
-//                .build(),
+            jsonApiSubclassInfoBuilder()
+                .setClassOfSubclass(ConstantSequence.class)
+                .setDiscriminatorPropertyValue("constantSequence")
+                .setJsonApiConverterForTraversing(constantSequenceJsonApiConverter)
+                .build(),
             jsonApiSubclassInfoBuilder()
                 .setClassOfSubclass(ArithmeticProgression.class)
                 .setDiscriminatorPropertyValue("arithmeticProgression")

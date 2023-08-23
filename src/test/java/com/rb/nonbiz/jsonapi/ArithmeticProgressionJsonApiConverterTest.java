@@ -79,6 +79,7 @@ public class ArithmeticProgressionJsonApiConverterTest
     jsonApiTestData.testRoundTripConversions(
         v -> makeRealObject().toJsonObject(
             v,
+            // serializer
             pair -> jsonObject(
                 "left", jsonString(pair.getLeft()),
                 "right", jsonBigDecimal(pair.getRight()))),

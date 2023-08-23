@@ -81,7 +81,7 @@ public class GeometricProgressionJsonApiConverter implements HasJsonApiDocumenta
 
             "Note that this is more general than a single number; it could be any object with a number in it. ",
             "If so, then any subsequent items in the sequence will be identical to the initial value, except for ",
-            "the number in the object.")))
+            "the number in the object. <p />")))
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasNoChildJsonApiConverters()
         .setNontrivialSampleJson(jsonObject(
