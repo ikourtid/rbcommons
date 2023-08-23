@@ -20,7 +20,7 @@ import static com.rb.nonbiz.types.PositiveMultiplier.POSITIVE_MULTIPLIER_1;
  * <em> n + 1 </em> from item <em> n </em>. This means that we cannot have a precondition here that the 
  * commonDifference is being properly applied by that operator; there is no way to check.
  * However, we will store the commonDifference so that we can (de)serialize this class to/from JSON.
- * The serialization will not have the operator, of course, because we can't serialize lambdas,
+ * The serialized version will not store the operator, of course, because we can't serialize lambdas,
  * but the caller of the deserializer code will have the correct context in the code to create the lambda;
  * there won't be a need for anything in the JSON serialization. </p>
  *
