@@ -5,6 +5,8 @@ import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.Iterator;
+
 import static com.rb.nonbiz.math.sequence.ConstantSequence.constantSequence;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -18,12 +20,10 @@ public class ConstantSequenceTest extends RBTestMatcher<ConstantSequence<String>
 
   @Test
   public void testBasicCalls() {
-    Sequence<String> stringSequence = constantSequence("x");
-    assertIllegalArgumentException( () -> stringSequence.get(-999));
-    assertIllegalArgumentException( () -> stringSequence.get(-1));
-    assertEquals("x", stringSequence.get(0));
-    assertEquals("x", stringSequence.get(1));
-    assertEquals("x", stringSequence.get(MAX_VALUE));
+    Iterator<String> stringSequence = constantSequence("x").iterator();
+    assertEquals("x", stringSequence.next());
+    assertEquals("x", stringSequence.next());
+    assertEquals("x", stringSequence.next());
   }
 
   @Override

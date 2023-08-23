@@ -33,6 +33,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class RBIterablesTest {
 
@@ -115,6 +116,11 @@ public class RBIterablesTest {
     assertIllegalArgumentException( () -> weightedAverage(ImmutableList.of(1.1, 2.2), ImmutableList.of(3.3, 4.4, 5.5)));
     assertIllegalArgumentException( () -> weightedAverage(ImmutableList.of(1.1, 2.2), ImmutableList.of(0.0, 0.0)));
     assertIllegalArgumentException( () -> weightedAverage(ImmutableList.of(1.1, 2.2), ImmutableList.of(-1.0, 5.0)));
+  }
+
+  @Test
+  public void testForEachPairWhileBothPresent() {
+    fail("FIXME SWA");
   }
 
   @Test

@@ -1,7 +1,12 @@
 package com.rb.nonbiz.math.sequence;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.rb.nonbiz.collections.RBIterators;
 import com.rb.nonbiz.text.Strings;
+
+import java.util.Iterator;
+
+import static com.rb.nonbiz.collections.RBIterators.constantItemIterator;
 
 /**
  * A {@link Sequence} (function of non-negative integer to T) where each value of the function is always the same.
@@ -22,8 +27,8 @@ public class ConstantSequence<T> implements Sequence<T> {
   }
 
   @Override
-  public T getUnsafe(int ignoredNonNegativeN) {
-    return constantValue;
+  public Iterator<T> iterator() {
+    return constantItemIterator(constantValue);
   }
 
   @VisibleForTesting // ideally you should use the Sequence interface, when possible.

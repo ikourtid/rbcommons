@@ -189,7 +189,10 @@ public class Match<T, F> {
   }
 
   public boolean matches(T expected, T actual) {
-    boolean result = matcherGenerator.apply(fieldExtractor.apply(expected)).matches(fieldExtractor.apply(actual));
+    // Do not inline these; it helps with breakpoints in the debugger.
+    F expectedValue = fieldExtractor.apply(expected);
+    F actualValue = fieldExtractor.apply(actual);
+    boolean result = matcherGenerator.apply(expectedValue).matches(actualValue);
     return result;
   }
 

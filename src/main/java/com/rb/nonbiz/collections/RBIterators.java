@@ -153,13 +153,28 @@ public class RBIterators {
    * This allows you to 'paste' (in the unix utility sense) 2 iterators (assumed to have the same # of elements)
    * and perform some action on the combination of the left and right item.
    *
-   * It will also have a precondition that they have the same number of items.
+   * <p> It will also have a precondition that they have the same number of items. </p>
    */
   public static <T1, T2> void forEachPair(Iterator<T1> iter1, Iterator<T2> iter2, BiConsumer<T1, T2> biConsumer) {
     while (iter1.hasNext() && iter2.hasNext()) {
       biConsumer.accept(iter1.next(), iter2.next());
     }
     RBPreconditions.checkArgument(!iter1.hasNext() && !iter2.hasNext());
+  }
+
+  /**
+   * This allows you to 'paste' (in the unix utility sense) 2 iterators (not assumed to have the same # of elements)
+   * and perform some action on the combination of the left and right item, until we run out of items either on
+   * iter1 or iter2.
+   *
+   * <p> Unlike {@link #forEachPair(Iterator, Iterator, BiConsumer)}, this will (intentionally) not have a precondition
+   * that they have the same number of items. </p>
+   */
+  public static <T1, T2> void forEachPairWhileBothPresent(
+      Iterator<T1> iter1, Iterator<T2> iter2, BiConsumer<T1, T2> biConsumer) {
+    while (iter1.hasNext() && iter2.hasNext()) {
+      biConsumer.accept(iter1.next(), iter2.next());
+    }
   }
 
   /**
@@ -532,6 +547,23 @@ public class RBIterators {
         initialRunningValue,
         (runningValue, iteratorEntry, ignoredIterationIndex, ignoredIsLastItem) ->
             iterationBody.apply(runningValue, iteratorEntry));
+  }
+
+  /**
+   * Returns an iterator that never runs out of items, and whose items are all the same value.
+   */
+  public static <T> Iterator<T> constantItemIterator(T constantValue) {
+    return new Iterator<T>() {
+      @Override
+      public boolean hasNext() {
+        return true;
+      }
+
+      @Override
+      public T next() {
+        return constantValue;
+      }
+    };
   }
 
 }

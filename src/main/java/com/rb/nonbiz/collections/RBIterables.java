@@ -115,6 +115,13 @@ public class RBIterables {
   }
 
   /**
+   * Executes some code for each pair of values in 2 iterables which must be of the same size.
+   */
+  public static <T1, T2> void forEachPairWhileBothPresent(Iterable<T1> iter1, Iterable<T2> iter2, BiConsumer<T1, T2> biConsumer) {
+    RBIterators.forEachPairWhileBothPresent(iter1.iterator(), iter2.iterator(), biConsumer);
+  }
+
+  /**
    * Returns true if each pair of values in 2 iterables returns true for the supplied {@link BiPredicate}.
    *
    * <p> It will also have a precondition that they have the same number of items. </p>

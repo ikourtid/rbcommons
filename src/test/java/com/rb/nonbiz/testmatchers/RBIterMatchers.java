@@ -16,7 +16,8 @@ public class RBIterMatchers {
   /**
    * Obviously this 'consumes' the iterator, so be mindful.
    */
-  public static <T> TypeSafeMatcher<Iterator<T>> iteratorMatcher(Iterator<T> expected, MatcherGenerator<T> matcherGenerator) {
+  public static <T> TypeSafeMatcher<Iterator<T>> iteratorMatcher(
+      Iterator<T> expected, MatcherGenerator<T> matcherGenerator) {
     return makeMatcher(expected, actual -> {
       while (true) {
         if (!expected.hasNext() && !actual.hasNext()) {

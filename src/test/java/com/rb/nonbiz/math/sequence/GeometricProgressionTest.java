@@ -4,6 +4,8 @@ import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.Iterator;
+
 import static com.rb.nonbiz.math.sequence.GeometricProgression.GeometricProgressionBuilder.geometricProgressionBuilder;
 import static com.rb.nonbiz.math.sequence.GeometricProgression.singleValueGeometricProgression;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
@@ -17,18 +19,15 @@ public class GeometricProgressionTest extends RBTestMatcher<GeometricProgression
 
   @Test
   public void testGet() {
-    GeometricProgression geometricProgression = geometricProgressionBuilder()
+    Iterator<Double> iterator = geometricProgressionBuilder()
         .setInitialValue(100.0)
         .setCommonRatio(2.0)
-        .build();
-    assertIllegalArgumentException( () -> geometricProgression.get(-999));
-    assertIllegalArgumentException( () -> geometricProgression.get(-1));
-    assertEquals(100, geometricProgression.get(0), 1e-8);
-    assertEquals(200, geometricProgression.get(1), 1e-8);
-    assertEquals(400, geometricProgression.get(2), 1e-8);
-    assertEquals(800, geometricProgression.get(3), 1e-8);
-
-    assertEquals(doubleExplained(102_400, 100 * Math.pow(2, 10)), geometricProgression.get(10), 1e-8);
+        .build()
+        .iterator();
+    assertEquals(100, iterator.next(), 1e-8);
+    assertEquals(200, iterator.next(), 1e-8);
+    assertEquals(400, iterator.next(), 1e-8);
+    assertEquals(800, iterator.next(), 1e-8);
   }
 
   @Override

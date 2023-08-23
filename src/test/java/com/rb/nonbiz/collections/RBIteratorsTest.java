@@ -7,6 +7,7 @@ import com.rb.biz.types.Money;
 import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -52,6 +53,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class RBIteratorsTest {
 
@@ -233,6 +235,11 @@ public class RBIteratorsTest {
     assertResult.accept(3, "abc_bcd_cde_");
     assertResult.accept(2, "ab_bc_cd_de_");
     assertResult.accept(1, "a_b_c_d_e_");
+  }
+
+  @Test
+  public void testForEachPairWhileBothPresent() {
+    fail("FIXME SWA");
   }
 
   @Test
@@ -644,6 +651,16 @@ public class RBIteratorsTest {
     assertIllegalArgumentException( () -> matchChecker.apply(
         singletonList(DUMMY_STRING),
         ImmutableList.of(DUMMY_STRING, DUMMY_STRING)));
+  }
+
+  @Test
+  public void testConstantItemIterator() {
+    Iterator<String> iterator = constantItemIterator("x");
+
+    for (int i = 0; i < 3; i++) { // nothing special about 3, but we can't use infinity here.
+      assertTrue(iterator.hasNext());
+      assertEquals("x", iterator.next());
+    }
   }
 
   private int getOnlyIndexWithB(String...values) {
