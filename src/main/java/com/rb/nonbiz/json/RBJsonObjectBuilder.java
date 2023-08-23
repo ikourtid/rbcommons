@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.rb.nonbiz.types.Epsilon;
+import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.types.UnitFraction;
@@ -325,6 +326,14 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
    */
   public <P extends PreciseValue<? super P>> RBJsonObjectBuilder setPreciseValue(String property, P value) {
     return setJsonElement(property, jsonBigDecimal(value));
+  }
+
+  /**
+   * Adds { property : jsonDouble } to jsonObject.
+   * Throws if 'property' already exists in jsonObject.
+   */
+  public <P extends ImpreciseValue<? super P>> RBJsonObjectBuilder setImpreciseValue(String property, P value) {
+    return setJsonElement(property, jsonDouble(value));
   }
 
   /**

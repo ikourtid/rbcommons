@@ -2,58 +2,53 @@ package com.rb.nonbiz.math.sequence;
 
 import com.google.common.collect.Iterators;
 import com.rb.biz.types.Money;
+import com.rb.nonbiz.collections.Pair;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.biz.types.Money.ZERO_MONEY;
-import static com.rb.biz.types.Money.money;
-import static com.rb.nonbiz.math.sequence.ArithmeticProgression.ArithmeticProgressionBuilder.arithmeticProgressionBuilder;
+import static com.rb.nonbiz.collections.Pair.pair;
+import static com.rb.nonbiz.collections.PairTest.pairMatcher;
 import static com.rb.nonbiz.math.sequence.ConstantSequence.constantSequence;
-import static com.rb.nonbiz.math.sequence.Sequences.transformedSequence;
 import static com.rb.nonbiz.testmatchers.Match.matchList;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 
 // This test class is not generic, but the publicly exposed static matcher is.
-public class SequenceTest extends RBTestMatcher<Sequence<Money>> {
+public class SequenceTest extends RBTestMatcher<Sequence<Pair<String, Money>>> {
 
   @Override
-  public Sequence<Money> makeTrivialObject() {
-    return constantSequence(ZERO_MONEY);
+  public Sequence<Pair<String, Money>> makeTrivialObject() {
+    return constantSequence(pair("", ZERO_MONEY));
   }
 
   @Override
-  public Sequence<Money> makeNontrivialObject() {
-    return transformedSequence(
-        arithmeticProgressionBuilder()
-            .setCommonDifference(100)
-            .setInitialValue(500)
-            .build(),
-        v -> money(v));
+  public Sequence<Pair<String, Money>> makeNontrivialObject() {
+    return new GeometricProgressionTest().makeNontrivialObject();
   }
 
   @Override
-  public Sequence<Money> makeMatchingNontrivialObject() {
-    double e = 1e-12; // epsilon; using a smaller one than the usual 1e-9, because the differences compound further down in the Sequence
-    return transformedSequence(
-        arithmeticProgressionBuilder()
-            .setCommonDifference(100 + e)
-            .setInitialValue(500 + e)
-            .build(),
-        v -> money(v));
+  public Sequence<Pair<String, Money>> makeMatchingNontrivialObject() {
+    return new GeometricProgressionTest().makeMatchingNontrivialObject();
   }
 
   @Override
-  protected boolean willMatch(Sequence<Money> expected, Sequence<Money> actual) {
-    return sequenceIncompleteMatcher(expected, f -> preciseValueMatcher(f, DEFAULT_EPSILON_1e_8))
+  protected boolean willMatch(Sequence<Pair<String, Money>> expected, Sequence<Pair<String, Money>> actual) {
+    return sequenceIncompleteMatcher(
+        expected,
+        // We need to use a much smaller epsilon than usual here, because the sequenceIncompleteMatcher
+        // looks at the first 5 items, and the epsilons compound with every multiplication that yields the next
+        // item.
+        f -> pairMatcher(f, f2 -> typeSafeEqualTo(f2), f3 -> preciseValueMatcher(f3, epsilon(1e-6))))
         .matches(actual);
   }
 
-  public static <T>TypeSafeMatcher<Sequence<T>> sequenceEqualityIncompleteMatcher(Sequence<T> expected) {
+  public static <T> TypeSafeMatcher<Sequence<T>> sequenceEqualityIncompleteMatcher(Sequence<T> expected) {
     return sequenceIncompleteMatcher(expected, f -> typeSafeEqualTo(f));
   }
 
@@ -74,7 +69,7 @@ public class SequenceTest extends RBTestMatcher<Sequence<Money>> {
   public static <T> TypeSafeMatcher<Sequence<T>> sequenceIncompleteMatcher(
       Sequence<T> expected, MatcherGenerator<T> matcherGenerator) {
     return makeMatcher(expected,
-        matchList(v -> newArrayList(Iterators.limit(v.iterator(), 10)), matcherGenerator));
+        matchList(v -> newArrayList(Iterators.limit(v.iterator(), 5)), matcherGenerator));
   }
 
 }

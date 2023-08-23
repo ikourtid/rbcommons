@@ -7,7 +7,6 @@ import com.rb.biz.types.Money;
 import com.rb.nonbiz.math.stats.ZScore;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
-import org.apache.commons.lang3.builder.ToStringExclude;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -53,7 +52,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class RBIteratorsTest {
 
@@ -239,7 +237,19 @@ public class RBIteratorsTest {
 
   @Test
   public void testForEachPairWhileBothPresent() {
-    fail("FIXME SWA");
+    BiConsumer<List<Integer>, String> asserter = (intList, expectedString) -> {
+      StringBuilder sb = new StringBuilder();
+      forEachPairWhileBothPresent(
+          ImmutableList.of("a", "b").iterator(),
+          intList.iterator(),
+          (v1, v2) -> sb.append(String.format("%s_%s;", v1, v2)));
+      assertEquals(expectedString, sb.toString());
+    };
+
+    asserter.accept(emptyList(),               "");
+    asserter.accept(singletonList(7),          "a_7;");
+    asserter.accept(ImmutableList.of(7, 8),    "a_7;b_8;");
+    asserter.accept(ImmutableList.of(7, 8, 9), "a_7;b_8;");
   }
 
   @Test

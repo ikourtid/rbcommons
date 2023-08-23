@@ -11,15 +11,13 @@ import static com.rb.nonbiz.collections.RBIterators.constantItemIterator;
 /**
  * A {@link Sequence} (function of non-negative integer to T) where each value of the function is always the same.
  *
- * This is clearer to use in lieu of an ArithmeticProgression or GeometricProgression for cases where the value
- * does not change. Moreover, it is applicable to Sequence of any type, not just Double.
+ * <p> This is clearer to use in lieu of an ArithmeticProgression or GeometricProgression for cases where the value
+ * does not change. </p>
  */
-public class ConstantSequence<T> implements Sequence<T> {
-
-  private final T constantValue;
+public class ConstantSequence<T> extends SimpleSequence<T> {
 
   private ConstantSequence(T constantValue) {
-    this.constantValue = constantValue;
+    super(constantValue, v -> constantValue);
   }
 
   public static <T> ConstantSequence<T> constantSequence(T constantValue) {
@@ -27,18 +25,18 @@ public class ConstantSequence<T> implements Sequence<T> {
   }
 
   @Override
-  public Iterator<T> iterator() {
-    return constantItemIterator(constantValue);
+  public <T2> T2 visit(Visitor<T, T2> visitor) {
+    return visitor.visitConstantSequence(this);
   }
 
   @VisibleForTesting // ideally you should use the Sequence interface, when possible.
   public T getConstantValue() {
-    return constantValue;
+    return getInitialValue();
   }
 
   @Override
   public String toString() {
-    return Strings.format("[CS %s CS]", constantValue);
+    return Strings.format("[CS %s CS]", getConstantValue());
   }
 
 }
