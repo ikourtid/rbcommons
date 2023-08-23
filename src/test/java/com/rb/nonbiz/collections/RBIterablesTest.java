@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
@@ -13,15 +14,7 @@ import java.util.stream.IntStream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
-import static com.rb.nonbiz.collections.RBIterables.allPairsMatch;
-import static com.rb.nonbiz.collections.RBIterables.consecutiveNonOverlappingPairs;
-import static com.rb.nonbiz.collections.RBIterables.consecutivePairs;
-import static com.rb.nonbiz.collections.RBIterables.dotProduct;
-import static com.rb.nonbiz.collections.RBIterables.forEachUnequalPairInList;
-import static com.rb.nonbiz.collections.RBIterables.forEachUniquePair;
-import static com.rb.nonbiz.collections.RBIterables.getOnlyIndexWhere;
-import static com.rb.nonbiz.collections.RBIterables.sumDoubles;
-import static com.rb.nonbiz.collections.RBIterables.weightedAverage;
+import static com.rb.nonbiz.collections.RBIterables.*;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertThrowsAnyException;
@@ -120,7 +113,19 @@ public class RBIterablesTest {
 
   @Test
   public void testForEachPairWhileBothPresent() {
-    fail("FIXME SWA");
+    BiConsumer<List<Integer>, String> asserter = (intList, expectedString) -> {
+      StringBuilder sb = new StringBuilder();
+      forEachPairWhileBothPresent(
+          ImmutableList.of("a", "b"),
+          intList,
+          (v1, v2) -> sb.append(String.format("%s_%s;", v1, v2)));
+      assertEquals(expectedString, sb.toString());
+    };
+
+    asserter.accept(emptyList(),               "");
+    asserter.accept(singletonList(7),          "a_7;");
+    asserter.accept(ImmutableList.of(7, 8),    "a_7;b_8;");
+    asserter.accept(ImmutableList.of(7, 8, 9), "a_7;b_8;");
   }
 
   @Test
