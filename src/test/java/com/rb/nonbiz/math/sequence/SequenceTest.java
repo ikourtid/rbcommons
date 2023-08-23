@@ -17,6 +17,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.epsilon;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class SequenceTest extends RBTestMatcher<Sequence<Pair<String, Money>>> {
@@ -40,7 +41,10 @@ public class SequenceTest extends RBTestMatcher<Sequence<Pair<String, Money>>> {
   protected boolean willMatch(Sequence<Pair<String, Money>> expected, Sequence<Pair<String, Money>> actual) {
     return sequenceIncompleteMatcher(
         expected,
-        f -> pairMatcher(f, f2 -> typeSafeEqualTo(f2), f3 -> preciseValueMatcher(f3, DEFAULT_EPSILON_1e_8)))
+        // We need to use a much smaller epsilon than usual here, because the sequenceIncompleteMatcher
+        // looks at the first 5 items, and the epsilons compound with every multiplication that yields the next
+        // item.
+        f -> pairMatcher(f, f2 -> typeSafeEqualTo(f2), f3 -> preciseValueMatcher(f3, epsilon(1e-6))))
         .matches(actual);
   }
 
@@ -65,7 +69,7 @@ public class SequenceTest extends RBTestMatcher<Sequence<Pair<String, Money>>> {
   public static <T> TypeSafeMatcher<Sequence<T>> sequenceIncompleteMatcher(
       Sequence<T> expected, MatcherGenerator<T> matcherGenerator) {
     return makeMatcher(expected,
-        matchList(v -> newArrayList(Iterators.limit(v.iterator(), 10)), matcherGenerator));
+        matchList(v -> newArrayList(Iterators.limit(v.iterator(), 5)), matcherGenerator));
   }
 
 }
