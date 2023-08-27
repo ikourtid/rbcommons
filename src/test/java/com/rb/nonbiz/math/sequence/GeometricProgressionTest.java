@@ -16,7 +16,7 @@ import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairTest.pairMatcher;
 import static com.rb.nonbiz.math.sequence.GeometricProgression.doubleGeometricProgression;
 import static com.rb.nonbiz.math.sequence.GeometricProgression.geometricProgression;
-import static com.rb.nonbiz.math.sequence.GeometricProgression.singleValueGeometricProgression;
+import static com.rb.nonbiz.math.sequence.GeometricProgression.constantValueGeometricProgression;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingImpreciseAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -62,7 +62,7 @@ public class GeometricProgressionTest extends RBTestMatcher<GeometricProgression
 
   @Override
   public GeometricProgression<Pair<String, Money>> makeTrivialObject() {
-    return singleValueGeometricProgression(pair("", ZERO_MONEY));
+    return constantValueGeometricProgression(pair("", ZERO_MONEY));
   }
 
   @Override

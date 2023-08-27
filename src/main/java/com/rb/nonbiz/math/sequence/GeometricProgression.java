@@ -24,7 +24,12 @@ import static com.rb.nonbiz.types.PositiveMultiplier.POSITIVE_MULTIPLIER_1;
  * but the caller of the deserializer code will have the correct context in the code to create the lambda;
  * there won't be a need for anything in the JSON serialization. </p>
  *
- * <p> We only allow the common ratio in a geometric progression to be positive, otherwise the signs will alternate. </p>
+ * <p> We only allow the common ratio in a geometric progression to be positive, otherwise the signs will alternate.
+ * The general mathematical abstraction does allow negative ratios, but in practice we are unlikely to ever want
+ * to use that in our applications - it would almost always be due to some error. At least this is the case for the
+ * first use case (August 2023): the API can specify expected future net gains with a geometric progression (e.g.
+ * $10k every year, increasing by 5% each time). Therefore, we opted to enforce a positive ratio,
+ * at the expense of making this class's usage more restrictive. </p>
  */
 public class GeometricProgression<T> extends SimpleSequence<T> {
 
@@ -45,7 +50,7 @@ public class GeometricProgression<T> extends SimpleSequence<T> {
     return new GeometricProgression<>(initialValue, commonRatio, v -> v * commonRatio.doubleValue());
   }
 
-  public static <T> GeometricProgression<T> singleValueGeometricProgression(T initialValue) {
+  public static <T> GeometricProgression<T> constantValueGeometricProgression(T initialValue) {
     return geometricProgression(
         initialValue,
         POSITIVE_MULTIPLIER_1,
@@ -65,7 +70,7 @@ public class GeometricProgression<T> extends SimpleSequence<T> {
 
   @Override
   public String toString() {
-    return Strings.format("[GP init= %s ; ratio %s GP]", getInitialValue(), commonRatio);
+    return Strings.format("[GP init= %s ; ratio= %s GP]", getInitialValue(), commonRatio);
   }
 
 }
