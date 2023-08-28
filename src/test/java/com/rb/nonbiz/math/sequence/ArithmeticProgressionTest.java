@@ -17,7 +17,7 @@ import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairTest.pairMatcher;
 import static com.rb.nonbiz.math.sequence.ArithmeticProgression.arithmeticProgression;
 import static com.rb.nonbiz.math.sequence.ArithmeticProgression.doubleArithmeticProgression;
-import static com.rb.nonbiz.math.sequence.ArithmeticProgression.singleValueArithmeticProgression;
+import static com.rb.nonbiz.math.sequence.ArithmeticProgression.constantValueArithmeticProgression;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 public class ArithmeticProgressionTest extends RBTestMatcher<ArithmeticProgression<Pair<String, Money>>> {
 
   public static ArithmeticProgression<Integer> allZeroesArithmeticProgression() {
-    return singleValueArithmeticProgression(0);
+    return constantValueArithmeticProgression(0);
   }
 
   /**
@@ -74,7 +74,7 @@ public class ArithmeticProgressionTest extends RBTestMatcher<ArithmeticProgressi
 
   @Override
   public ArithmeticProgression<Pair<String, Money>> makeTrivialObject() {
-    return singleValueArithmeticProgression(pair("", ZERO_MONEY));
+    return constantValueArithmeticProgression(pair("", ZERO_MONEY));
   }
 
   @Override

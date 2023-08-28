@@ -1,7 +1,6 @@
 package com.rb.nonbiz.math.sequence;
 
 import com.rb.nonbiz.text.Strings;
-import com.rb.nonbiz.types.PositiveMultiplier;
 
 import java.util.function.UnaryOperator;
 
@@ -41,7 +40,7 @@ public class ArithmeticProgression<T> extends SimpleSequence<T> {
     return new ArithmeticProgression<>(initialValue, commonDifference, v -> v + commonDifference);
   }
 
-  public static <T> ArithmeticProgression<T> singleValueArithmeticProgression(T initialValue) {
+  public static <T> ArithmeticProgression<T> constantValueArithmeticProgression(T initialValue) {
     return arithmeticProgression(
         initialValue,
         0.0,
@@ -61,7 +60,7 @@ public class ArithmeticProgression<T> extends SimpleSequence<T> {
 
   @Override
   public String toString() {
-    return Strings.format("[AP init= %s ; diff %s AP]", getInitialValue(), commonDifference);
+    return Strings.format("[AP init= %s ; diff= %s AP]", getInitialValue(), commonDifference);
   }
 
 }
