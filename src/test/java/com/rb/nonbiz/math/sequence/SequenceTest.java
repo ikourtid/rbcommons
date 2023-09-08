@@ -41,7 +41,7 @@ public class SequenceTest extends RBTestMatcher<Sequence<Pair<String, Money>>> {
   protected boolean willMatch(Sequence<Pair<String, Money>> expected, Sequence<Pair<String, Money>> actual) {
     return sequenceIncompleteMatcher(
         expected,
-        // We need to use a much smaller epsilon than usual here, because the sequenceIncompleteMatcher
+        // We need to use a much larger / looser epsilon than usual here, because the sequenceIncompleteMatcher
         // looks at the first 5 items, and the epsilons compound with every multiplication that yields the next
         // item.
         f -> pairMatcher(f, f2 -> typeSafeEqualTo(f2), f3 -> preciseValueMatcher(f3, epsilon(1e-6))))
