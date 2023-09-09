@@ -149,12 +149,14 @@ public class ClosedUnitFractionRangeUtilitiesTest {
   }
 
   @Test
-  public void testTightenClosedUnitFractionRangeUpperAndLower() {
+  public void testTightenClosedUnitFractionRangeUpperAndLower_simplerCase_originalGeneratorOfRangeIsInCenter() {
     // Using Range<Double> allows each test case to fit in a single line & therefore align vertically.
     QuadriConsumer<Range<Double>, Double, Double, Range<Double>> asserter =
         (initialRange, multiplierOnLower, multiplierOnUpper, expectedResult) -> assertThat(
             tightenClosedUnitFractionRangeProportionally(
                 closedUnitFractionRange(transformRange(initialRange, v -> unitFraction(v))),
+                // In this test, we just cover the simpler case where the 'generator point' of the original range
+                // is exactly in the center of the range.
                 unitFraction(0.5 * (initialRange.lowerEndpoint() + initialRange.upperEndpoint())),
                 closedUnitFractionHardToSoftRangeTighteningInstructions(
                     unitFraction(multiplierOnLower),
@@ -182,12 +184,14 @@ public class ClosedUnitFractionRangeUtilitiesTest {
   }
 
   @Test
-  public void testTightenClosedUnitFractionRangeProportionally() {
+  public void testTightenClosedUnitFractionRangeProportionally_simplerCase_originalGeneratorOfRangeIsInCenter() {
     // Using Range<Double> allows each test case to fit in a single line & therefore align vertically.
     TriConsumer<Range<Double>, Double, Range<Double>> asserter =
         (initialRange, multiplierOnInitialRangeWidth, expectedResult) -> assertThat(
             tightenClosedUnitFractionRangeProportionally(
                 closedUnitFractionRange(transformRange(initialRange, v -> unitFraction(v))),
+                // In this test, we just cover the simpler case where the 'generator point' of the original range
+                // is exactly in the center of the range.
                 unitFraction(0.5 * (initialRange.lowerEndpoint() + initialRange.upperEndpoint())),
                 closedUnitFractionHardToSoftRangeTighteningInstructions(
                     unitFraction(multiplierOnInitialRangeWidth),
@@ -221,6 +225,50 @@ public class ClosedUnitFractionRangeUtilitiesTest {
 
     asserter.accept(Range.closed(1.0, 1.0), 1.0, Range.closed(1.0,  1.0));
     asserter.accept(Range.closed(1.0, 1.0), 0.9, Range.closed(1.0,  1.0));
+    // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
+    // asserter.accept(Range.closed(1.0, 1.0), 0.0, Range.closed(1.0,  1.0));
+  }
+
+  @Test
+  public void testTightenClosedUnitFractionRangeProportionally_generalCase_originalGeneratorOfRangeIsNotInCenter() {
+    // Using Range<Double> allows each test case to fit in a single line & therefore align vertically.
+    QuadriConsumer<Range<Double>, Double, Double, Range<Double>> asserter =
+        (initialRange, originalGeneratorOfRange, multiplierOnInitialRangeWidth, expectedResult) -> assertThat(
+            tightenClosedUnitFractionRangeProportionally(
+                closedUnitFractionRange(transformRange(initialRange, v -> unitFraction(v))),
+                unitFraction(originalGeneratorOfRange),
+                closedUnitFractionHardToSoftRangeTighteningInstructions(
+                    unitFraction(multiplierOnInitialRangeWidth),
+                    unitFraction(multiplierOnInitialRangeWidth))),
+            closedUnitFractionRangeMatcher(
+                closedUnitFractionRange(transformRange(expectedResult, v -> unitFraction(v)))));
+    asserter.accept(Range.closed(0.0, 1.0), 0.5, 1.0, Range.closed(0.0,  1.0));
+    asserter.accept(Range.closed(0.0, 1.0), 0.5, 0.9, Range.closed(0.05, 0.95));
+    // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
+    // asserter.accept(Range.closed(0.0, 1.0), 0.0, Range.closed(0.5,  0.5));
+
+    asserter.accept(Range.closed(0.4, 1.0), 0.7, 1.0, Range.closed(0.4,  1.0));
+    asserter.accept(Range.closed(0.4, 1.0), 0.7, 0.9, Range.closed(0.43, 0.97));
+    // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
+    // asserter.accept(Range.closed(0.4, 1.0), 0.0, Range.closed(0.7,  0.7));
+
+    asserter.accept(Range.closed(0.0, 0.6), 0.3, 1.0, Range.closed(0.0,  0.6));
+    asserter.accept(Range.closed(0.0, 0.6), 0.3, 0.9, Range.closed(0.03, 0.57));
+    // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
+    // asserter.accept(Range.closed(0.0, 0.6), 0.0, Range.closed(0.3,  0.3));
+
+    asserter.accept(Range.closed(0.0, 0.0), 0.0, 1.0, Range.closed(0.0,  0.0));
+    asserter.accept(Range.closed(0.0, 0.0), 0.0, 0.9, Range.closed(0.0,  0.0));
+    // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
+    // asserter.accept(Range.closed(0.0, 0.0), 0.0, Range.closed(0.0,  0.0));
+
+    asserter.accept(Range.closed(0.4, 0.4), 0.4, 1.0, Range.closed(0.4,  0.4));
+    asserter.accept(Range.closed(0.4, 0.4), 0.4, 0.9, Range.closed(0.4,  0.4));
+    // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
+    // asserter.accept(Range.closed(0.4, 0.4), 0.0, Range.closed(0.4,  0.4));
+
+    asserter.accept(Range.closed(1.0, 1.0), 1.0, 1.0, Range.closed(1.0,  1.0));
+    asserter.accept(Range.closed(1.0, 1.0), 1.0, 0.9, Range.closed(1.0,  1.0));
     // We can't do this, because closedUnitFractionHardToSoftRangeTighteningInstructions doesn't support a 0 multiplier.
     // asserter.accept(Range.closed(1.0, 1.0), 0.0, Range.closed(1.0,  1.0));
   }

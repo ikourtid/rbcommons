@@ -72,11 +72,12 @@ public class ClosedUnitFractionRangeUtilities {
    */
   public static ClosedUnitFractionRange tightenClosedUnitFractionRangeProportionally(
       ClosedUnitFractionRange initialRange,
-      UnitFraction originalCenterOfRange,
+      UnitFraction originalGeneratorOfRange,
       ClosedUnitFractionHardToSoftRangeTighteningInstructions closedUnitFractionHardToSoftRangeTighteningInstructions) {
     RBPreconditions.checkArgument(
-        initialRange.contains(originalCenterOfRange),
-    "FIXME IAK");
+        initialRange.contains(originalGeneratorOfRange),
+        "The point %s that generated the original range of %s must be inside that range",
+        originalGeneratorOfRange, initialRange);
 
     UnitFraction rawLowerMultiplier = closedUnitFractionHardToSoftRangeTighteningInstructions.getRawMultiplierForLowerEndPoint();
     UnitFraction rawUpperMultiplier = closedUnitFractionHardToSoftRangeTighteningInstructions.getRawMultiplierForUpperEndPoint();
@@ -90,7 +91,7 @@ public class ClosedUnitFractionRangeUtilities {
       // it makes sense to special-case this.
       return initialRange;
     }
-    double originalCenter = originalCenterOfRange.doubleValue();
+    double originalCenter = originalGeneratorOfRange.doubleValue();
     double lowerToCenter = originalCenter - initialRange.lowerEndpoint().doubleValue();
     double centerToUpper = initialRange.upperEndpoint().doubleValue() - originalCenter;
 
