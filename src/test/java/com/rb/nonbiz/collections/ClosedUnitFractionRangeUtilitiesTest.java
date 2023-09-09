@@ -147,7 +147,7 @@ public class ClosedUnitFractionRangeUtilitiesTest {
     asserter.accept(Range.closed(0.2, 0.8), 0.9, Range.closed(0.2, 0.9));
     asserter.accept(Range.closed(0.2, 0.8), 1.0, Range.closed(0.2, 1.0));
   }
-/*
+
   @Test
   public void testTightenClosedUnitFractionRangeUpperAndLower() {
     // Using Range<Double> allows each test case to fit in a single line & therefore align vertically.
@@ -155,6 +155,7 @@ public class ClosedUnitFractionRangeUtilitiesTest {
         (initialRange, multiplierOnLower, multiplierOnUpper, expectedResult) -> assertThat(
             tightenClosedUnitFractionRangeProportionally(
                 closedUnitFractionRange(transformRange(initialRange, v -> unitFraction(v))),
+                unitFraction(0.5 * (initialRange.lowerEndpoint() + initialRange.upperEndpoint())),
                 closedUnitFractionHardToSoftRangeTighteningInstructions(
                     unitFraction(multiplierOnLower),
                     unitFraction(multiplierOnUpper))),
@@ -178,7 +179,7 @@ public class ClosedUnitFractionRangeUtilitiesTest {
     // Mid point is 0.7, half width 0.1.
     asserter.accept(Range.closed(0.6, 0.8), 0.2, 0.5,
         Range.closed(doubleExplained(0.68, 0.7 - 0.2 * 0.1), doubleExplained(0.75, 0.7 + 0.5 * 0.1)));
- }
+  }
 
   @Test
   public void testTightenClosedUnitFractionRangeProportionally() {
@@ -187,6 +188,7 @@ public class ClosedUnitFractionRangeUtilitiesTest {
         (initialRange, multiplierOnInitialRangeWidth, expectedResult) -> assertThat(
             tightenClosedUnitFractionRangeProportionally(
                 closedUnitFractionRange(transformRange(initialRange, v -> unitFraction(v))),
+                unitFraction(0.5 * (initialRange.lowerEndpoint() + initialRange.upperEndpoint())),
                 closedUnitFractionHardToSoftRangeTighteningInstructions(
                     unitFraction(multiplierOnInitialRangeWidth),
                     unitFraction(multiplierOnInitialRangeWidth))),
@@ -232,7 +234,10 @@ public class ClosedUnitFractionRangeUtilitiesTest {
     // But I might as well keep it in.
     ClosedUnitFractionRange range = unitFractionAtMost(unitFraction(new BigDecimal("0.00695779989577999128")));
     assertThat(
-        tightenClosedUnitFractionRangeProportionally(range, setClosedUnitFractionSoftRangeToSameAsHard()),
+        tightenClosedUnitFractionRangeProportionally(
+            range,
+            unitFraction(0.003), // This middle argument was added later; just using a value between 0 and the max.
+            setClosedUnitFractionSoftRangeToSameAsHard()),
         closedUnitFractionRangeMatcher(range));
   }
 
@@ -299,6 +304,6 @@ public class ClosedUnitFractionRangeUtilitiesTest {
             unitFractionFixedTo(unitFractionInBps(1.1))),
         closedUnitFractionRangeMatcher(
             unitFractionFixedTo(unitFractionInBps(1.1))));
-  }*/
+  }
 
 }
