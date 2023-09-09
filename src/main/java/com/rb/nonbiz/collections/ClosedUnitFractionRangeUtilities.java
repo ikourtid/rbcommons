@@ -72,7 +72,12 @@ public class ClosedUnitFractionRangeUtilities {
    */
   public static ClosedUnitFractionRange tightenClosedUnitFractionRangeProportionally(
       ClosedUnitFractionRange initialRange,
+      UnitFraction originalCenterOfRange,
       ClosedUnitFractionHardToSoftRangeTighteningInstructions closedUnitFractionHardToSoftRangeTighteningInstructions) {
+    RBPreconditions.checkArgument(
+        initialRange.contains(originalCenterOfRange),
+    "FIXME IAK");
+
     UnitFraction rawLowerMultiplier = closedUnitFractionHardToSoftRangeTighteningInstructions.getRawMultiplierForLowerEndPoint();
     UnitFraction rawUpperMultiplier = closedUnitFractionHardToSoftRangeTighteningInstructions.getRawMultiplierForUpperEndPoint();
     if (rawLowerMultiplier.isAlmostOne(DEFAULT_EPSILON_1e_8) && rawUpperMultiplier.isAlmostOne(DEFAULT_EPSILON_1e_8)) {
@@ -85,14 +90,13 @@ public class ClosedUnitFractionRangeUtilities {
       // it makes sense to special-case this.
       return initialRange;
     }
-    double oldLower = initialRange.lowerEndpoint().doubleValue();
-    double oldUpper = initialRange.upperEndpoint().doubleValue();
-    double middle = 0.5 * (oldLower + oldUpper);
-    double oldHalfWidth = 0.5 * (oldUpper - oldLower);
+    double originalCenter = originalCenterOfRange.doubleValue();
+    double lowerToCenter = originalCenter - initialRange.lowerEndpoint().doubleValue();
+    double centerToUpper = initialRange.upperEndpoint().doubleValue() - originalCenter;
 
     return closedUnitFractionRange(
-        unitFraction(middle - oldHalfWidth * rawLowerMultiplier.doubleValue() ),
-        unitFraction(middle + oldHalfWidth * rawUpperMultiplier.doubleValue()));
+        unitFraction(originalCenter - lowerToCenter * rawLowerMultiplier.doubleValue() ),
+        unitFraction(originalCenter + centerToUpper * rawUpperMultiplier.doubleValue()));
   }
 
   /**
