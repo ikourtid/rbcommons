@@ -307,7 +307,9 @@ public class ClosedUnitFractionRangeUtilitiesTest {
     assertThat(
         tightenClosedUnitFractionRangeProportionally(
             range,
-            unitFraction(0.003), // This middle argument was added later; just using a value between 0 and the max.
+            // This middle argument was added later; just using a value between 0 and the max of 0.00696
+            // to make the test pass.
+            unitFraction(0.003),
             setClosedUnitFractionSoftRangeToSameAsHard()),
         closedUnitFractionRangeMatcher(range));
   }
