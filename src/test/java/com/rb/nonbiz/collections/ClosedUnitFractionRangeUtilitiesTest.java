@@ -235,7 +235,6 @@ public class ClosedUnitFractionRangeUtilitiesTest {
   @Test
   public void testTightenClosedUnitFractionRangeProportionally_generalCase_asymmetric() {
     // Using doubles allows each test case to fit in a single line & therefore align vertically.
-    // Using doubles allows each test case to fit in a single line & therefore align vertically.
     TriFunction<Range<Double>, Double, Pair<Double, Double>, ClosedUnitFractionRange> calculator =
         (initialRange,
          originalGeneratorOfRange,
