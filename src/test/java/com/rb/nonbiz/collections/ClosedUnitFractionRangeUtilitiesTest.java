@@ -2,7 +2,9 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.Range;
 import com.rb.nonbiz.functional.QuadriConsumer;
+import com.rb.nonbiz.functional.QuintConsumer;
 import com.rb.nonbiz.functional.TriConsumer;
+import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import org.junit.Test;
 
@@ -14,6 +16,7 @@ import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.optiona
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.possiblyLoosenToContainPoint;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.tightenClosedUnitFractionRangeAround;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRangeUtilities.tightenClosedUnitFractionRangeProportionally;
+import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBRanges.transformRange;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -149,12 +152,15 @@ public class ClosedUnitFractionRangeUtilitiesTest {
   }
 
   @Test
-  public void testTightenClosedUnitFractionRangeUpperAndLower() {
+  public void testTightenClosedUnitFractionRangeUpperAndLower_simplerCase_originalGeneratorOfRangeIsInCenter() {
     // Using Range<Double> allows each test case to fit in a single line & therefore align vertically.
     QuadriConsumer<Range<Double>, Double, Double, Range<Double>> asserter =
         (initialRange, multiplierOnLower, multiplierOnUpper, expectedResult) -> assertThat(
             tightenClosedUnitFractionRangeProportionally(
                 closedUnitFractionRange(transformRange(initialRange, v -> unitFraction(v))),
+                // In this test, we just cover the simpler case where the 'generator point' of the original range
+                // is exactly in the center of the range.
+                unitFraction(0.5 * (initialRange.lowerEndpoint() + initialRange.upperEndpoint())),
                 closedUnitFractionHardToSoftRangeTighteningInstructions(
                     unitFraction(multiplierOnLower),
                     unitFraction(multiplierOnUpper))),
@@ -178,15 +184,18 @@ public class ClosedUnitFractionRangeUtilitiesTest {
     // Mid point is 0.7, half width 0.1.
     asserter.accept(Range.closed(0.6, 0.8), 0.2, 0.5,
         Range.closed(doubleExplained(0.68, 0.7 - 0.2 * 0.1), doubleExplained(0.75, 0.7 + 0.5 * 0.1)));
- }
+  }
 
   @Test
-  public void testTightenClosedUnitFractionRangeProportionally() {
+  public void testTightenClosedUnitFractionRangeProportionally_simplerCase_originalGeneratorOfRangeIsInCenter() {
     // Using Range<Double> allows each test case to fit in a single line & therefore align vertically.
     TriConsumer<Range<Double>, Double, Range<Double>> asserter =
         (initialRange, multiplierOnInitialRangeWidth, expectedResult) -> assertThat(
             tightenClosedUnitFractionRangeProportionally(
                 closedUnitFractionRange(transformRange(initialRange, v -> unitFraction(v))),
+                // In this test, we just cover the simpler case where the 'generator point' of the original range
+                // is exactly in the center of the range.
+                unitFraction(0.5 * (initialRange.lowerEndpoint() + initialRange.upperEndpoint())),
                 closedUnitFractionHardToSoftRangeTighteningInstructions(
                     unitFraction(multiplierOnInitialRangeWidth),
                     unitFraction(multiplierOnInitialRangeWidth))),
@@ -224,6 +233,70 @@ public class ClosedUnitFractionRangeUtilitiesTest {
   }
 
   @Test
+  public void testTightenClosedUnitFractionRangeProportionally_generalCase_asymmetric() {
+    // Using doubles allows each test case to fit in a single line & therefore align vertically.
+    // Using doubles allows each test case to fit in a single line & therefore align vertically.
+    TriFunction<Range<Double>, Double, Pair<Double, Double>, ClosedUnitFractionRange> calculator =
+        (initialRange,
+         originalGeneratorOfRange,
+         closedUnitFractionHardToSoftRangeTighteningInstructionsAsPair) ->
+            tightenClosedUnitFractionRangeProportionally(
+                closedUnitFractionRange(transformRange(initialRange, v -> unitFraction(v))),
+                unitFraction(originalGeneratorOfRange),
+                closedUnitFractionHardToSoftRangeTighteningInstructions(
+                    unitFraction(closedUnitFractionHardToSoftRangeTighteningInstructionsAsPair.getLeft()),
+                    unitFraction(closedUnitFractionHardToSoftRangeTighteningInstructionsAsPair.getRight())));
+
+    QuadriConsumer<Range<Double>, Double, Pair<Double, Double>, Range<Double>> asserter =
+        (initialRange,
+         originalGeneratorOfRange,
+         closedUnitFractionHardToSoftRangeTighteningInstructionsAsPair,
+         expectedResult) -> assertThat(
+            calculator.apply(
+                initialRange,
+                originalGeneratorOfRange,
+                closedUnitFractionHardToSoftRangeTighteningInstructionsAsPair),
+            closedUnitFractionRangeMatcher(
+                closedUnitFractionRange(transformRange(expectedResult, v -> unitFraction(v)))));
+
+    // Special case: the intent here is to create an initial hard range starting off of 0.2, with +300% upwards,
+    // so the hard upper bound will be 0.8, and -75% downwards, so the hard lower bound will be 0.05.
+    // First, let's create a soft range symmetrically around 0.2, with plus/minus 30%.
+    asserter.accept(
+        Range.closed(
+            doubleExplained(0.05, 0.2 - 0.75 * 0.2),
+            doubleExplained(0.8,  0.2 +    3 * 0.2)),
+        0.2,
+        pair(0.3, 0.3),
+        Range.closed(
+            doubleExplained(0.155, 0.2 - 0.3 * (0.2 - 0.05)),  // go down from 0.2 by 30% of the distance betw 0.2 and hard lower 0.05
+            doubleExplained(0.38,  0.2 + 0.3 * (0.8 - 0.2)))); // go up   from 0.2 by 30% of the distance betw 0.2 and hard lower 0.8
+
+    // Same as above, but handling the extreme case of up/down 100%.
+    asserter.accept(
+        Range.closed(0.05, 0.8),
+        0.2,
+        pair(1.0, 1.0),
+        Range.closed(
+            doubleExplained(0.05, 0.2 - 1.0 * (0.2 - 0.05)),   // go down from 0.2 by 100% of the distance betw 0.2 and hard lower 0.05
+            doubleExplained(0.8,  0.2 + 1.0 * (0.8 - 0.2))));  // go up   from 0.2 by 100% of the distance betw 0.2 and hard lower 0.8
+
+    //  Can't try the other extreme case of 0%, because we (intentionally) throw an exception then..
+    assertIllegalArgumentException( () -> calculator.apply(Range.closed(0.05, 0.8), 0.2, pair(0.0,   0.123)));
+    assertIllegalArgumentException( () -> calculator.apply(Range.closed(0.05, 0.8), 0.2, pair(0.123, 0.0)));
+    assertIllegalArgumentException( () -> calculator.apply(Range.closed(0.05, 0.8), 0.2, pair(0.0,   0.0)));
+
+    // Now let's try this, but not using a symmetric '30% up, 30% down' set of numbers. Instead, we use 60% and 70%.
+    asserter.accept(
+        Range.closed(0.05, 0.8),
+        0.2,
+        pair(0.6, 0.7),
+        Range.closed(
+            doubleExplained(0.11, 0.2 - 0.6 * (0.2 - 0.05)),   // go down from 0.2 by 60% of the distance betw 0.2 and hard lower 0.05
+            doubleExplained(0.62, 0.2 + 0.7 * (0.8 - 0.2))));  // go up   from 0.2 by 70% of the distance betw 0.2 and hard lower 0.8
+  }
+
+  @Test
   public void softRangeSameAsHard_doesNotThrowDueToNumericalIssues() {
     // Unfortunately this test does not fail if we remove the fix about special-casing
     // ClosedUnitFractionHardToSoftRangeTighteningInstructions#setClosedUnitFractionSoftRangeToSameAsHard.
@@ -232,7 +305,12 @@ public class ClosedUnitFractionRangeUtilitiesTest {
     // But I might as well keep it in.
     ClosedUnitFractionRange range = unitFractionAtMost(unitFraction(new BigDecimal("0.00695779989577999128")));
     assertThat(
-        tightenClosedUnitFractionRangeProportionally(range, setClosedUnitFractionSoftRangeToSameAsHard()),
+        tightenClosedUnitFractionRangeProportionally(
+            range,
+            // This middle argument was added later; just using a value between 0 and the max of 0.00696
+            // to make the test pass.
+            unitFraction(0.003),
+            setClosedUnitFractionSoftRangeToSameAsHard()),
         closedUnitFractionRangeMatcher(range));
   }
 

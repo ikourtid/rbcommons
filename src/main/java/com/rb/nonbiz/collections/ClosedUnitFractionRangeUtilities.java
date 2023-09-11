@@ -68,11 +68,19 @@ public class ClosedUnitFractionRangeUtilities {
    *
    * <p> Using an upper multiplier of 0.5 and a lower multiplier of 0.8 would give [ 41%, 47.5% ]. </p>
    *
-   * <p> There is no combination of inputs that should result in throwing an exception. </p>
+   * <p> There is a notion of a 'starting point', which is the point we used to generate the initialRange.
+   * For example, the starting point may have been 45% in the initial range of [40%, 50%] - but it does not
+   * necessarily have to be the center. It does have to be an interior point though in the initial range. </p>
    */
   public static ClosedUnitFractionRange tightenClosedUnitFractionRangeProportionally(
       ClosedUnitFractionRange initialRange,
+      UnitFraction startingPoint,
       ClosedUnitFractionHardToSoftRangeTighteningInstructions closedUnitFractionHardToSoftRangeTighteningInstructions) {
+    RBPreconditions.checkArgument(
+        initialRange.contains(startingPoint),
+        "The point %s that generated the original range of %s must be inside that range",
+        startingPoint, initialRange);
+
     UnitFraction rawLowerMultiplier = closedUnitFractionHardToSoftRangeTighteningInstructions.getRawMultiplierForLowerEndPoint();
     UnitFraction rawUpperMultiplier = closedUnitFractionHardToSoftRangeTighteningInstructions.getRawMultiplierForUpperEndPoint();
     if (rawLowerMultiplier.isAlmostOne(DEFAULT_EPSILON_1e_8) && rawUpperMultiplier.isAlmostOne(DEFAULT_EPSILON_1e_8)) {
@@ -85,14 +93,13 @@ public class ClosedUnitFractionRangeUtilities {
       // it makes sense to special-case this.
       return initialRange;
     }
-    double oldLower = initialRange.lowerEndpoint().doubleValue();
-    double oldUpper = initialRange.upperEndpoint().doubleValue();
-    double middle = 0.5 * (oldLower + oldUpper);
-    double oldHalfWidth = 0.5 * (oldUpper - oldLower);
+    double originalCenter = startingPoint.doubleValue();
+    double lowerToCenter = originalCenter - initialRange.lowerEndpoint().doubleValue();
+    double centerToUpper = initialRange.upperEndpoint().doubleValue() - originalCenter;
 
     return closedUnitFractionRange(
-        unitFraction(middle - oldHalfWidth * rawLowerMultiplier.doubleValue() ),
-        unitFraction(middle + oldHalfWidth * rawUpperMultiplier.doubleValue()));
+        unitFraction(originalCenter - lowerToCenter * rawLowerMultiplier.doubleValue() ),
+        unitFraction(originalCenter + centerToUpper * rawUpperMultiplier.doubleValue()));
   }
 
   /**
