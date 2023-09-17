@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.util.BitSet;
@@ -38,11 +39,14 @@ public class RBBitSets {
    * array index.
    */
   public static <T> List<T> filterListUsingBitSet(List<T> list, BitSet bitSet) {
-    int size = RBSimilarityPreconditions.checkBothSame(
-        list.size(), bitSet.size(),
-        "List and bitset must have the same size");
+    // Normally, we would check that the bitset and the list have the same size, but with BitSet, there is no easy
+    // way to do that, surprisingly. But we can at least check for the following.
+    RBPreconditions.checkArgument(
+        list.size() >= bitSet.length(),
+        "The list size %s must be >= the bitset length of %s (length is measured using the index of the last 'true' bit).",
+        list.size(), bitSet.length());
     List<T> toReturn = newArrayListWithExpectedSize(bitSet.cardinality());
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < list.size(); i++) {
       if (bitSet.get(i)) {
         toReturn.add(list.get(i));
       }
