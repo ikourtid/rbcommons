@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.biz.types.Price;
+import com.rb.nonbiz.testmatchers.RBOptionalMatchers;
 import com.rb.nonbiz.text.Strings;
 import org.junit.Test;
 
@@ -15,11 +16,13 @@ import java.util.function.Predicate;
 import static com.rb.biz.types.Price.averagePrice;
 import static com.rb.biz.types.Price.price;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.*;
+import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.nonEmptyOptionalMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class RBOptionalTransformersTest {
@@ -166,6 +169,23 @@ public class RBOptionalTransformersTest {
     assertEquals(Optional.empty(), transformOptionalLong(OptionalLong.empty(),             v -> 2 * v));
     assertEquals(Optional.of("40"), transformOptionalLong(OptionalLong.of(10),             v -> new DecimalFormat("#0").format(4 * v)));
     assertEquals(Optional.empty(), transformOptionalLong(OptionalLong.empty(),             v -> new DecimalFormat("#0").format(4 * v)));
+  }
+
+  @Test
+  public void testToNonSpecializedOptional() {
+    assertThat(
+        toNonSpecializedOptional(OptionalInt.of(123)),
+        nonEmptyOptionalMatcher(typeSafeEqualTo(123)));
+    assertThat(
+        toNonSpecializedOptional(OptionalLong.of(123)),
+        nonEmptyOptionalMatcher(typeSafeEqualTo(123L)));
+    assertThat(
+        toNonSpecializedOptional(OptionalDouble.of(1.23)),
+        nonEmptyOptionalMatcher(typeSafeEqualTo(1.23))); // exact equality works here bc we don't manipulate 1.23
+
+    assertOptionalEmpty(toNonSpecializedOptional(OptionalInt.empty()));
+    assertOptionalEmpty(toNonSpecializedOptional(OptionalLong.empty()));
+    assertOptionalEmpty(toNonSpecializedOptional(OptionalDouble.empty()));
   }
 
 }
