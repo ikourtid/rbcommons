@@ -904,10 +904,17 @@ public class RBRanges {
         : Range.all();
   }
 
-    /**
-     * The constructors of Guava Range do not guard against some weird cases for Double ranges, so let's check here
-     * just to be safe.
-     */
+  // FIXME IAK COMMENT AND TEST
+  public static Range<Double> constructDoubleRangeAllowingNaN(double lowerEndpoint, double upperEndpoint) {
+    return constructRange(
+        Double.isNaN(lowerEndpoint) ? Optional.<Double>empty() : Optional.of(lowerEndpoint), CLOSED,
+        Double.isNaN(upperEndpoint) ? Optional.<Double>empty() : Optional.of(upperEndpoint), CLOSED);
+  }
+
+  /**
+   * The constructors of Guava Range do not guard against some weird cases for Double ranges, so let's check here
+   * just to be safe.
+   */
   public static void validateAgainstExtremes(Range<Double> range) {
     if (range.hasLowerBound()) {
       double lower = range.lowerEndpoint();
