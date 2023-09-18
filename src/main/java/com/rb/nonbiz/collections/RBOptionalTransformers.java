@@ -277,4 +277,31 @@ public class RBOptionalTransformers {
     return optional1.orElseGet(optional2::get);
   }
 
+  /**
+   * Converts an {@link OptionalInt} to an {@link Optional} of {@link Integer}.
+   */
+  public static Optional<Integer> toNonSpecializedOptional(OptionalInt optionalInt) {
+    return optionalInt.isPresent()
+        ? Optional.of(optionalInt.getAsInt())
+        : Optional.empty();
+  }
+
+  /**
+   * Converts an {@link OptionalLong} to an {@link Optional} of {@link Long}.
+   */
+  public static Optional<Long> toNonSpecializedOptional(OptionalLong optionalLong) {
+    return optionalLong.isPresent()
+        ? Optional.of(optionalLong.getAsLong())
+        : Optional.empty();
+  }
+
+  /**
+   * Converts an {@link OptionalLong} to an {@link Optional} of {@link Long}.
+   */
+  public static Optional<Double> toNonSpecializedOptional(OptionalDouble optionalDouble) {
+    return optionalDouble.isPresent()
+        ? Optional.of(optionalDouble.getAsDouble())
+        : Optional.empty();
+  }
+
 }
