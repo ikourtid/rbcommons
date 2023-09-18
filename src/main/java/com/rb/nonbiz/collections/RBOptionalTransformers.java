@@ -277,4 +277,10 @@ public class RBOptionalTransformers {
     return optional1.orElseGet(optional2::get);
   }
 
+  public static Optional<Integer> toNonSpecializedOptional(OptionalInt optionalInt) {
+    return optionalInt.isPresent()
+        ? Optional.of(optionalInt.getAsInt())
+        : Optional.empty();
+  }
+
 }
