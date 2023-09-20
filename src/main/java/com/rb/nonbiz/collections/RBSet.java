@@ -1,6 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableSet;
+import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Collection;
@@ -11,9 +12,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.rb.nonbiz.collections.IidSetSimpleConstructors.newIidSet;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
@@ -229,6 +232,13 @@ public class RBSet<T> implements Iterable<T> {
 
   public Stream<T> stream() {
     return rawImmutableSet.stream();
+  }
+
+  public RBSet<T> filter(Predicate<T> predicate) {
+    return newRBSet(
+        stream()
+            .filter(predicate)
+            .collect(Collectors.toSet()));
   }
 
   /**
