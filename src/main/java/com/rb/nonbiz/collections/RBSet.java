@@ -234,6 +234,9 @@ public class RBSet<T> implements Iterable<T> {
     return rawImmutableSet.stream();
   }
 
+  /**
+   * Create a new {@link RBSet} where only the elements that satisfy the predicate are kept.
+   */
   public RBSet<T> filter(Predicate<T> predicate) {
     return newRBSet(
         stream()

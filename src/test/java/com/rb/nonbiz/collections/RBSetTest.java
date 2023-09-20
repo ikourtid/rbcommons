@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -287,6 +288,20 @@ public class RBSetTest {
                 (v1, v2) -> v1.stringContents.equals(v2.stringContents),
                 v -> v.stringContents.hashCode())
             .size());
+  }
+
+  @Test
+  public void testFilter() {
+    BiConsumer<RBSet<Integer>, RBSet<Integer>> asserter = (preFilter, expectedPostFilter) ->
+        assertEquals(expectedPostFilter, preFilter.filter(v -> v >= 10));
+
+    asserter.accept(emptyRBSet(),      emptyRBSet());
+    asserter.accept(singletonRBSet(8), emptyRBSet());
+    asserter.accept(rbSetOf(8, 9),     emptyRBSet());
+
+    asserter.accept(rbSetOf(8, 9, 10),     singletonRBSet(10));
+    asserter.accept(rbSetOf(8, 9, 10, 11), rbSetOf(10, 11));
+    asserter.accept(rbSetOf(10, 11),       rbSetOf(10, 11));
   }
 
 }
