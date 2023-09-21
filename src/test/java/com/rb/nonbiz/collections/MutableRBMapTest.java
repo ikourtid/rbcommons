@@ -2,7 +2,6 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.rb.nonbiz.functional.TriConsumer;
 import org.junit.Test;
 
 import java.util.List;
