@@ -10,6 +10,7 @@ import com.rb.nonbiz.util.RBSubsetPreconditions;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +35,7 @@ import static com.rb.nonbiz.collections.RBIterators.getFirstNonUniqueIteratorIte
 import static com.rb.nonbiz.collections.RBIterators.iteratorItemsAreUnique;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBStreams.pasteIntoStream;
+import static java.util.Collections.unmodifiableList;
 import static java.util.Comparator.comparing;
 
 /**
@@ -346,18 +348,22 @@ public class RBLists {
     return newList;
   }
 
+  /**
+   * A convenience method to create a copy of the original list with only one if its elements changed.
+   */
   public static <T> List<T> copyWithModifiedElement(List<T> originalList, int index, UnaryOperator<T> operator) {
     RBPreconditions.checkArgument(
         0 <= index && index < originalList.size(),
         "%s is not a valid index for an array with %s items: %s",
         index, originalList.size(), originalList);
-    Builder<T> builder = ImmutableList.<T>builderWithExpectedSize(originalList.size());
+    List<T> newList = newArrayListWithCapacity(originalList.size());
 
     for (int i = 0; i < originalList.size(); i++) {
       T currentValue = originalList.get(i);
-      builder.add(i == index ? operator.apply(currentValue) : currentValue);
+      newList.add(i == index ? operator.apply(currentValue) : currentValue);
     }
-    return builder.build();
+    // We have good enough habits never to modify lists inside the code, but let's add this just in case.
+    return unmodifiableList(newList);
   }
 
 }
