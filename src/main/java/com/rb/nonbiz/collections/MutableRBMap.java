@@ -118,7 +118,9 @@ public class MutableRBMap<K, V> {
   public V getOrThrow(K key, String template, Object...args) {
     checkKeyIsNotNull(key);
     Optional<V> value = getOptional(key);
-    RBPreconditions.checkArgument(value.isPresent(), template, args);
+    if (!value.isPresent()) {
+      throw new IllegalArgumentException(smartFormat(template, args));
+    }
     return value.get();
   }
 
