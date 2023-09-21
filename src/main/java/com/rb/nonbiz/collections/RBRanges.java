@@ -30,6 +30,7 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.POSITIVE_INFINITY;
+import static java.lang.Double.isNaN;
 
 /**
  * Various static methods pertaining to Range objects.
@@ -904,11 +905,14 @@ public class RBRanges {
         : Range.all();
   }
 
-  // FIXME IAK COMMENT AND TEST
+  /**
+   * Constructs a {@link Range} where if the supplied lower (upper) bound is NaN, the resulting range
+   * will have no lower (upper) bound, otherwise it will be bounded with that value as a closed bound.
+   */
   public static Range<Double> constructDoubleRangeAllowingNaN(double lowerEndpoint, double upperEndpoint) {
     return constructRange(
-        Double.isNaN(lowerEndpoint) ? Optional.<Double>empty() : Optional.of(lowerEndpoint), CLOSED,
-        Double.isNaN(upperEndpoint) ? Optional.<Double>empty() : Optional.of(upperEndpoint), CLOSED);
+        isNaN(lowerEndpoint) ? Optional.<Double>empty() : Optional.of(lowerEndpoint), CLOSED,
+        isNaN(upperEndpoint) ? Optional.<Double>empty() : Optional.of(upperEndpoint), CLOSED);
   }
 
   /**
@@ -919,7 +923,7 @@ public class RBRanges {
     if (range.hasLowerBound()) {
       double lower = range.lowerEndpoint();
       RBPreconditions.checkArgument(
-          !Double.isNaN(lower),
+          !isNaN(lower),
           "Although the Range constructor allows it, you should not have a lower bound of NaN in %s",
           range);
       RBPreconditions.checkArgument(
@@ -934,7 +938,7 @@ public class RBRanges {
     if (range.hasUpperBound()) {
       double upper = range.upperEndpoint();
       RBPreconditions.checkArgument(
-          !Double.isNaN(upper),
+          !isNaN(upper),
           "Although the Range constructor allows it, you should not have an upper bound of NaN in %s",
           range);
       RBPreconditions.checkArgument(
