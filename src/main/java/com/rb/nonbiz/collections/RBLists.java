@@ -1,11 +1,16 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+import com.rb.nonbiz.util.RBOrderingPreconditions;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
+import com.rb.nonbiz.util.RBSubsetPreconditions;
 
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -15,11 +20,14 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.ImmutableList.builderWithExpectedSize;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBComparators.composeComparators;
@@ -27,6 +35,7 @@ import static com.rb.nonbiz.collections.RBIterators.getFirstNonUniqueIteratorIte
 import static com.rb.nonbiz.collections.RBIterators.iteratorItemsAreUnique;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBStreams.pasteIntoStream;
+import static java.util.Collections.unmodifiableList;
 import static java.util.Comparator.comparing;
 
 /**
@@ -337,6 +346,24 @@ public class RBLists {
       newList.add(externalIterationTransformer.apply(i, list.get(i)));
     }
     return newList;
+  }
+
+  /**
+   * A convenience method to create a copy of the original list with only one if its elements changed.
+   */
+  public static <T> List<T> copyWithModifiedElement(List<T> originalList, int index, UnaryOperator<T> operator) {
+    RBPreconditions.checkArgument(
+        0 <= index && index < originalList.size(),
+        "%s is not a valid index for an array with %s items: %s",
+        index, originalList.size(), originalList);
+    List<T> newList = newArrayListWithCapacity(originalList.size());
+
+    for (int i = 0; i < originalList.size(); i++) {
+      T currentValue = originalList.get(i);
+      newList.add(i == index ? operator.apply(currentValue) : currentValue);
+    }
+    // We have good enough habits never to modify lists inside the code, but let's add this just in case.
+    return unmodifiableList(newList);
   }
 
 }

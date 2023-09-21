@@ -6,6 +6,7 @@ import com.rb.biz.types.Money;
 import com.rb.biz.types.SignedMoney;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.math.stats.ZScore;
+import com.rb.nonbiz.testmatchers.RBRangeMatchers;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.PositiveMultiplier;
@@ -1941,6 +1942,19 @@ public class RBRangesTest {
         emptyList(),
         LocalDate.of(2020, 1, 30),
         date -> date.minusDays(1)));
+  }
+
+  @Test
+  public void testConstructClosedDoubleRangeAllowingNaN() {
+    TriConsumer<Double, Double, Range<Double>> asserter = (lowerBound, upperBound, expectedResult) ->
+        assertThat(
+            constructDoubleRangeAllowingNaN(lowerBound, upperBound),
+            doubleRangeMatcher(expectedResult, DEFAULT_EPSILON_1e_8));
+
+    asserter.accept(1.1, 3.3, Range.closed(1.1, 3.3));
+    asserter.accept(NaN, 3.3, Range.atMost(3.3));
+    asserter.accept(1.1, NaN, Range.atLeast(1.1));
+    asserter.accept(NaN, NaN, Range.all());
   }
 
 }
