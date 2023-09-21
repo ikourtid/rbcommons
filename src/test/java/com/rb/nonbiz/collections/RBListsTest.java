@@ -500,4 +500,19 @@ public class RBListsTest {
         emptyList());
   }
 
+  @Test
+  public void testCopyWithModifiedElement() {
+    assertIllegalArgumentException( () -> copyWithModifiedElement(emptyList(), 0, v -> v + "_"));
+
+    assertIllegalArgumentException( () -> copyWithModifiedElement(singletonList("a"), -1, v -> v + "_"));
+    assertEquals(singletonList("a_"),     copyWithModifiedElement(singletonList("a"),  0, v -> v + "_"));
+    assertIllegalArgumentException( () -> copyWithModifiedElement(singletonList("a"),  1, v -> v + "_"));
+
+    assertIllegalArgumentException( () ->           copyWithModifiedElement(ImmutableList.of("a", "b", "c"), -1, v -> v + "_"));
+    assertEquals(ImmutableList.of("a_", "b", "c"),  copyWithModifiedElement(ImmutableList.of("a", "b", "c"),  0, v -> v + "_"));
+    assertEquals(ImmutableList.of("a",  "b_", "c"), copyWithModifiedElement(ImmutableList.of("a", "b", "c"),  1, v -> v + "_"));
+    assertEquals(ImmutableList.of("a",  "b", "c_"), copyWithModifiedElement(ImmutableList.of("a", "b", "c"),  2, v -> v + "_"));
+    assertIllegalArgumentException( () ->           copyWithModifiedElement(ImmutableList.of("a", "b", "c"),  3, v -> v + "_"));
+  }
+
 }

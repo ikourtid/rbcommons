@@ -2,8 +2,10 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.rb.nonbiz.util.RBOrderingPreconditions;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
+import com.rb.nonbiz.util.RBSubsetPreconditions;
 
 import java.util.Arrays;
 import java.util.BitSet;
@@ -345,7 +347,10 @@ public class RBLists {
   }
 
   public static <T> List<T> copyWithModifiedElement(List<T> originalList, int index, UnaryOperator<T> operator) {
-    RBPreconditions.checkArgument(index < originalList.size());
+    RBPreconditions.checkArgument(
+        0 <= index && index < originalList.size(),
+        "%s is not a valid index for an array with %s items: %s",
+        index, originalList.size(), originalList);
     Builder<T> builder = ImmutableList.<T>builderWithExpectedSize(originalList.size());
 
     for (int i = 0; i < originalList.size(); i++) {
