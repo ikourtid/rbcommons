@@ -1,5 +1,7 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
@@ -15,11 +17,14 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.ImmutableList.builderWithExpectedSize;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBComparators.composeComparators;
@@ -337,6 +342,17 @@ public class RBLists {
       newList.add(externalIterationTransformer.apply(i, list.get(i)));
     }
     return newList;
+  }
+
+  public static <T> List<T> copyWithModifiedElement(List<T> originalList, int index, UnaryOperator<T> operator) {
+    RBPreconditions.checkArgument(index < originalList.size());
+    Builder<T> builder = ImmutableList.<T>builderWithExpectedSize(originalList.size());
+
+    for (int i = 0; i < originalList.size(); i++) {
+      T currentValue = originalList.get(i);
+      builder.add(i == index ? operator.apply(currentValue) : currentValue);
+    }
+    return builder.build();
   }
 
 }
