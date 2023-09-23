@@ -1,6 +1,7 @@
 package com.rb.nonbiz.types;
 
 import com.google.common.collect.ImmutableList;
+import com.rb.nonbiz.functional.TriConsumer;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -25,6 +26,7 @@ import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static com.rb.nonbiz.types.UnitFraction.unitFractionInBps;
 import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
 import static java.util.Collections.emptyList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -616,6 +618,26 @@ public class UnitFractionTest {
     assertIllegalArgumentException( () -> nonIntegerPercent.toPercentString(1,  0, true));
     assertIllegalArgumentException( () -> nonIntegerPercent.toPercentString(2,  1, true));
     assertIllegalArgumentException( () -> nonIntegerPercent.toPercentString(2,  1, false));
+  }
+
+  @Test
+  public void testSubtractWithFloorOfZero() {
+    TriConsumer<UnitFraction, UnitFraction, UnitFraction> asserter = (left, right, result) -> assertAlmostEquals(
+        left.subtractWithFloorOfZero(right),
+        result,
+        DEFAULT_EPSILON_1e_8);
+
+    asserter.accept(unitFractionInPct(10), UNIT_FRACTION_1,          UNIT_FRACTION_0);
+    asserter.accept(unitFractionInPct(10), unitFractionInPct(11),    UNIT_FRACTION_0);
+    asserter.accept(unitFractionInPct(10), unitFractionInPct(10),    UNIT_FRACTION_0);
+    asserter.accept(unitFractionInPct(10), unitFractionInPct(9),     unitFractionInPct(1));
+
+    asserter.accept(UNIT_FRACTION_0,       unitFractionInPct(12.34), UNIT_FRACTION_0);
+    asserter.accept(UNIT_FRACTION_0,       UNIT_FRACTION_0,          UNIT_FRACTION_0);
+
+    asserter.accept(UNIT_FRACTION_1,       UNIT_FRACTION_1,          UNIT_FRACTION_0);
+    asserter.accept(UNIT_FRACTION_1,       unitFractionInPct(10),    unitFractionInPct(90));
+    asserter.accept(UNIT_FRACTION_1,       UNIT_FRACTION_0,          UNIT_FRACTION_1);
   }
 
 }

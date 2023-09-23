@@ -5,13 +5,18 @@ import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.stream.Stream;
+
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.closedUnitFractionRanges;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.emptyClosedUnitFractionRanges;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.nonEmptyClosedUnitFractionRanges;
+import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
+import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -19,6 +24,7 @@ import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.nonEmptyOptionalMatc
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
+import static com.rb.nonbiz.types.ClosedUnitFractionRange.unrestrictedClosedUnitFractionRange;
 import static com.rb.nonbiz.types.ClosedUnitFractionRangeTest.closedUnitFractionRangeMatcher;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
@@ -33,6 +39,14 @@ public class ClosedUnitFractionRangesTest extends RBTestMatcher<ClosedUnitFracti
   public static <T> ClosedUnitFractionRanges<T> singletonClosedUnitFractionRanges(
       T onlyKey, ClosedUnitFractionRange onlyValue) {
     return closedUnitFractionRanges(singletonRBMap(onlyKey, onlyValue));
+  }
+
+  @SafeVarargs
+  public static <T> ClosedUnitFractionRanges<T> unrestrictedClosedUnitFractionRanges(
+      T first, T second, T ... rest) {
+    return closedUnitFractionRanges(
+        newRBSet(concatenateFirstSecondAndRest(first, second, rest).iterator())
+            .toRBMap(ignoredKey -> unrestrictedClosedUnitFractionRange()));
   }
 
   @Test

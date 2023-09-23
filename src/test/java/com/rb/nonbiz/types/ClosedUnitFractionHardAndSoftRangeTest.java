@@ -10,6 +10,8 @@ import java.util.function.Function;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.EPSILON_SEED;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.ZERO_SEED;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRange.closedUnitFractionHardAndPossiblySameSoftRange;
 import static com.rb.nonbiz.types.ClosedUnitFractionHardAndSoftRange.closedUnitFractionHardAndSoftRange;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
@@ -21,6 +23,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 
 public class ClosedUnitFractionHardAndSoftRangeTest extends RBTestMatcher<ClosedUnitFractionHardAndSoftRange> {
+
+  public static ClosedUnitFractionHardAndSoftRange testClosedUnitFractionHardAndSoftRangeWithSeed(double seed) {
+    return closedUnitFractionHardAndSoftRange(
+        closedUnitFractionRange(unitFraction(0.1 + seed), unitFraction(0.8 + seed)),
+        closedUnitFractionRange(unitFraction(0.4 + seed), unitFraction(0.6 + seed)));
+  }
 
   public static ClosedUnitFractionHardAndSoftRange unrestrictedClosedUnitFractionHardAndSoftRange() {
     return closedUnitFractionHardAndSoftRange(
@@ -137,17 +145,12 @@ public class ClosedUnitFractionHardAndSoftRangeTest extends RBTestMatcher<Closed
 
   @Override
   public ClosedUnitFractionHardAndSoftRange makeNontrivialObject() {
-    return closedUnitFractionHardAndSoftRange(
-        closedUnitFractionRange(unitFraction(0.1), unitFraction(0.8)),
-        closedUnitFractionRange(unitFraction(0.4), unitFraction(0.6)));
+    return testClosedUnitFractionHardAndSoftRangeWithSeed(ZERO_SEED);
   }
 
   @Override
   public ClosedUnitFractionHardAndSoftRange makeMatchingNontrivialObject() {
-    double e = 1e-9; // epsilon
-    return closedUnitFractionHardAndSoftRange(
-        closedUnitFractionRange(unitFraction(0.1 + e), unitFraction(0.8 + e)),
-        closedUnitFractionRange(unitFraction(0.4 + e), unitFraction(0.6 + e)));
+    return testClosedUnitFractionHardAndSoftRangeWithSeed(EPSILON_SEED);
   }
 
   @Override
