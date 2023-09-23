@@ -274,6 +274,16 @@ public class UnitFraction extends PreciseValue<UnitFraction> {
     return forgivingUnitFraction(asBigDecimal().subtract(remainingToAllocate.asBigDecimal()), epsilon(1e-15));
   }
 
+  /**
+   * Subtracts to a valid UnitFraction, but the result would be negative (which isn't a valid UnitFraction),
+   * we return UNIT_FRACTION_0.
+   */
+  public UnitFraction subtractWithFloorOfZero(UnitFraction subtrahend) {
+    return isLessThan(subtrahend)
+        ? UNIT_FRACTION_0
+        : subtract(subtrahend);
+  }
+
   public UnitFraction multiply(UnitFraction other) {
     return unitFraction(asBigDecimal().multiply(other.asBigDecimal()));
   }
