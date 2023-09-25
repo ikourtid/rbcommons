@@ -37,6 +37,10 @@ public class RBBitSets {
   /**
    * Returns a new list that only includes the items from the original list when the bitset is set to true for that
    * array index.
+   *
+   * <p> Because of the way {@link BitSet} works, we can't check that it has the same size as the list passed in.
+   * Say you wanted a bitset to represent 10 bits. If you access the 11th one, you will get 'false',
+   * instead of an {@link ArrayIndexOutOfBoundsException} or some other exception. </p>
    */
   public static <T> List<T> filterListUsingBitSet(List<T> list, BitSet bitSet) {
     // Normally, we would check that the bitset and the list have the same size, but with BitSet, there is no easy

@@ -5,6 +5,8 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
+import static com.rb.nonbiz.types.HardAndSoftRange.hardAndPossiblySameSoftRange;
+import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 
 public class ClosedUnitFractionHardAndSoftRange {
 
@@ -109,6 +111,12 @@ public class ClosedUnitFractionHardAndSoftRange {
     throw new IllegalArgumentException(smartFormat(
         "Internal error: we should never be here per the constructor preconditions: pointToInclude= %s ; CUFHASR= %s",
         pointToInclude, this));
+  }
+
+  public HardAndSoftRange<UnitFraction> asGeneralHardAndSoftRange() {
+    return hardAndPossiblySameSoftRange(
+        getHardRange().asClosedRangeOfUnitFraction().asRange(),
+        getSoftRange().asClosedRangeOfUnitFraction().asRange());
   }
 
   @Override
