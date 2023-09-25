@@ -296,7 +296,7 @@ public class RBOptionalTransformers {
   }
 
   /**
-   * Converts an {@link OptionalLong} to an {@link Optional} of {@link Long}.
+   * Converts an {@link OptionalDouble} to an {@link Optional} of {@link Double}.
    */
   public static Optional<Double> toNonSpecializedOptional(OptionalDouble optionalDouble) {
     return optionalDouble.isPresent()

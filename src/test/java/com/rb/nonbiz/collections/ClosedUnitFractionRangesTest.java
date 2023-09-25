@@ -41,6 +41,11 @@ public class ClosedUnitFractionRangesTest extends RBTestMatcher<ClosedUnitFracti
     return closedUnitFractionRanges(singletonRBMap(onlyKey, onlyValue));
   }
 
+  /**
+   * This test-only method constructs a {@link ClosedUnitFractionRanges} with empty ranges for all the provided
+   * keys. It is useful in higher-up repos for creating objects with the right keys, to avoid some preconditions
+   * in the data we use in tests.
+   */
   @SafeVarargs
   public static <T> ClosedUnitFractionRanges<T> unrestrictedClosedUnitFractionRanges(
       T first, T second, T ... rest) {

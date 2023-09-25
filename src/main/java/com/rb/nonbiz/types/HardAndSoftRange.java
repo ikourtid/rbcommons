@@ -42,9 +42,7 @@ public class HardAndSoftRange<T extends RBNumeric<? super T>> {
     this.softRange = softRange;
   }
 
-  // We use a builder when we have multiple values of the same type, but the name hardAndSoft should clarify that
-  // hard comes before soft.
-  public static <T extends RBNumeric<? super T>> HardAndSoftRange<T> hardAndSoftRange(
+  private static <T extends RBNumeric<? super T>> HardAndSoftRange<T> sharedHardAndSoftRange(
       Range<T> hardRange,
       Range<T> softRange) {
     RBPreconditions.checkArgument(
@@ -78,6 +76,28 @@ public class HardAndSoftRange<T extends RBNumeric<? super T>> {
           "Soft range may not have an open upper bound type: %s %s",
           softRange);
     }
+    return new HardAndSoftRange<>(hardRange, softRange);
+  }
+
+
+    // We use a builder when we have multiple values of the same type, but the name hardAndSoft should clarify that
+  // hard comes before soft.
+  public static <T extends RBNumeric<? super T>> HardAndSoftRange<T> hardAndSoftRange(
+      Range<T> hardRange,
+      Range<T> softRange) {
+    RBPreconditions.checkArgument(
+        // check that the soft range is a proper subset of the hard range
+        rangeIsProperSubsetOnBothEnds(softRange, hardRange),
+        "hard range must be a proper superset of soft range: %s %s",
+        hardRange, softRange);
+    return sharedHardAndSoftRange(hardRange, softRange);
+  }
+
+  // We use a builder when we have multiple values of the same type, but the name hardAndSoft should clarify that
+  // hard comes before soft.
+  public static <T extends RBNumeric<? super T>> HardAndSoftRange<T> hardAndPossiblySameSoftRange(
+      Range<T> hardRange,
+      Range<T> softRange) {
     RBPreconditions.checkArgument(
         // check that the soft range is a proper subset of the hard range
         rangeIsProperSubsetOnBothEnds(softRange, hardRange),
