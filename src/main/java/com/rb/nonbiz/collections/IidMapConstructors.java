@@ -153,6 +153,20 @@ public class IidMapConstructors {
     return newIidMap(mutableIidMap);
   }
 
+  @SafeVarargs
+  public static <V extends HasInstrumentId> IidMap<V> iidMapOfHasInstrumentId(
+      V first,
+      V second,
+      V ... rest) {
+    MutableIidMap<V> mutableIidMap = newMutableIidMapWithExpectedSize(2 + rest.length);
+    mutableIidMap.putAssumingAbsent(first.getInstrumentId(), first);
+    mutableIidMap.putAssumingAbsent(second.getInstrumentId(), second);
+    for (V value : rest) {
+      mutableIidMap.putAssumingAbsent(value.getInstrumentId(), value);
+    }
+    return newIidMap(mutableIidMap);
+  }
+
   /**
    * Just like iidFromSet, except that we skip elements for which the transformer returns Optional.empty(),
    * and when it returns Optional.of(X) the resulting map stores X.
