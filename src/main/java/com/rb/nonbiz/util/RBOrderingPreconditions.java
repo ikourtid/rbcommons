@@ -118,7 +118,8 @@ public class RBOrderingPreconditions {
   }
 
   /**
-   * For n items, throw if the items (which implement Comparable) aren't decreasing (or staying the same).
+   * For n doubles, this expects every consecutive pair of numbers to decrease, or stay the same, or increase only
+   * by an epsilon amount. It will throw otherwise.
    */
   public static void checkDoublesNotIncreasing(Iterable<Double> iterable, Epsilon epsilon) {
     checkDoublesNotIncreasing(iterable, epsilon, "items must be in 'not-increasing' order");
@@ -139,14 +140,16 @@ public class RBOrderingPreconditions {
   }
 
   /**
-   * For n items, throw if the items (which implement Comparable) aren't decreasing (or staying the same).
+   * For n doubles, this expects every consecutive pair of numbers to decrease, or stay the same, or increase only
+   * by an epsilon amount. It will throw otherwise.
    */
   public static void checkDoublesNotIncreasing(Iterable<Double> iterable, Epsilon epsilon, String format, Object...args) {
     checkConsecutive(iterable, (v1, v2) -> v1 - v2 >= -1 * epsilon.doubleValue(), format, args);
   }
 
   /**
-   * For n items, throw if the items (which implement Comparable) aren't decreasing (or staying the same).
+   * For n doubles, this expects every consecutive pair of numbers to decrease, or stay the same, or increase only
+   * by an epsilon amount. It will throw otherwise.
    */
   public static void checkDoublesNotIncreasing(Iterator<Double> iterable, Epsilon epsilon, String format, Object...args) {
     checkConsecutive(iterable, (v1, v2) -> v1 - v2 >= -1 * epsilon.doubleValue(), format, args);
