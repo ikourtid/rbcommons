@@ -135,7 +135,7 @@ public class RBOrderingPreconditions {
    * For n items, throw if the items (which implement Comparable) aren't decreasing (OK to stay the same).
    */
   public static <T extends Comparable<T>> void checkNotIncreasing(Iterator<T> iterator, String format, Object...args) {
-    checkConsecutive(iterator, (v1, v2) -> v1.compareTo(v2) >= -1e-8, format, args);
+    checkConsecutive(iterator, (v1, v2) -> v1.compareTo(v2) >= 0, format, args);
   }
 
   /**
