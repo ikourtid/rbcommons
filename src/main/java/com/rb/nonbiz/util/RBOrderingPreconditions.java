@@ -120,6 +120,13 @@ public class RBOrderingPreconditions {
   /**
    * For n items, throw if the items (which implement Comparable) aren't decreasing (or staying the same).
    */
+  public static void checkDoublesNotIncreasing(Iterable<Double> iterable, Epsilon epsilon) {
+    checkDoublesNotIncreasing(iterable, epsilon, "items must be in 'not-increasing' order");
+  }
+
+  /**
+   * For n items, throw if the items (which implement Comparable) aren't decreasing (or staying the same).
+   */
   public static <T extends Comparable<T>> void checkNotIncreasing(Iterator<T> iterator) {
     checkNotIncreasing(iterator, "items must be in 'not-increasing' order");
   }
@@ -129,6 +136,20 @@ public class RBOrderingPreconditions {
    */
   public static <T extends Comparable<T>> void checkNotIncreasing(Iterable<T> iterable, String format, Object...args) {
     checkConsecutive(iterable, (v1, v2) -> v1.compareTo(v2) >= 0, format, args);
+  }
+
+  /**
+   * For n items, throw if the items (which implement Comparable) aren't decreasing (or staying the same).
+   */
+  public static void checkDoublesNotIncreasing(Iterable<Double> iterable, Epsilon epsilon, String format, Object...args) {
+    checkConsecutive(iterable, (v1, v2) -> v1 - v2 >= -1 * epsilon.doubleValue(), format, args);
+  }
+
+  /**
+   * For n items, throw if the items (which implement Comparable) aren't decreasing (or staying the same).
+   */
+  public static void checkDoublesNotIncreasing(Iterator<Double> iterable, Epsilon epsilon, String format, Object...args) {
+    checkConsecutive(iterable, (v1, v2) -> v1 - v2 >= -1 * epsilon.doubleValue(), format, args);
   }
 
   /**
