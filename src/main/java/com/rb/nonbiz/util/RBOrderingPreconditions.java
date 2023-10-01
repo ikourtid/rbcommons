@@ -151,8 +151,8 @@ public class RBOrderingPreconditions {
    * For n doubles, this expects every consecutive pair of numbers to decrease, or stay the same, or increase only
    * by an epsilon amount. It will throw otherwise.
    */
-  public static void checkDoublesNotIncreasing(Iterator<Double> iterable, Epsilon epsilon, String format, Object...args) {
-    checkConsecutive(iterable, (v1, v2) -> v1 - v2 >= -1 * epsilon.doubleValue(), format, args);
+  public static void checkDoublesNotIncreasing(Iterator<Double> iterator, Epsilon epsilon, String format, Object...args) {
+    checkConsecutive(iterator, (v1, v2) -> v1 - v2 >= -1 * epsilon.doubleValue(), format, args);
   }
 
   /**
