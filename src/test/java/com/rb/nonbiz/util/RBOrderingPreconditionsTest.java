@@ -28,13 +28,17 @@ public class RBOrderingPreconditionsTest {
       }
     };
 
-    asserter.accept(true, ImmutableList.of(9.0, 8.0,        7.0));        // decreasing, so definitely not increasing
-    asserter.accept(true, ImmutableList.of(9.0, 9.0,        7.0));        // 9 and 9; not decreasing, but also not increasing
-    asserter.accept(true, ImmutableList.of(9.0, 9.0 + 1e-9, 7.0));        // increasing, but below epsilon
-    asserter.accept(true, ImmutableList.of(9.0, 8.0,        8.0 + 1e-9)); // increasing, but below epsilon
+    asserter.accept(true,  ImmutableList.of(9.0, 8.0,        7.0));        // decreasing, so definitely not increasing
+    asserter.accept(false, ImmutableList.of(7.0, 8.0, 9.0));
+    asserter.accept(true,  ImmutableList.of(9.0, 9.0,        7.0));        // 9 and 9; not decreasing, but also not increasing
+    asserter.accept(true,  ImmutableList.of(9.0, 9.0 + 1e-9, 7.0));        // increasing, but below epsilon
+    asserter.accept(false, ImmutableList.of(9.0, 9.0 + 1e-7, 7.0));        // increasing by more than epsilon
+    asserter.accept(true,  ImmutableList.of(9.0, 8.0,        8.0 + 1e-9)); // increasing, but below epsilon
+    asserter.accept(false, ImmutableList.of(9.0, 8.0,        8.0 + 1e-7)); // increasing by more than epsilon
 
-    asserter.accept(true, ImmutableList.of(9.0, 9.0));
-    asserter.accept(true, ImmutableList.of(9.0, 9.0 + 1e-9));
+    asserter.accept(true,  ImmutableList.of(9.0, 9.0));
+    asserter.accept(true,  ImmutableList.of(9.0, 9.0 + 1e-9));
+    asserter.accept(false, ImmutableList.of(9.0, 9.0 + 1e-7));
   }
 
 }
