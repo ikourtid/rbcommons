@@ -4,14 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.rb.nonbiz.collections.RBIterators;
-import com.rb.nonbiz.collections.RBStreams;
 import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Set;
 
-import static com.rb.nonbiz.collections.RBIterators.pasteIntoNewIterator;
 import static com.rb.nonbiz.collections.RBStreams.pasteIntoStream;
 import static com.rb.nonbiz.testmatchers.LambdaSwitchCase.lambdaCase;
 import static com.rb.nonbiz.testmatchers.LambdaSwitchCase.lambdaSwitchMatcher;

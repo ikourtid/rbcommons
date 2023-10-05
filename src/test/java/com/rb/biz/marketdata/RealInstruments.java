@@ -3,7 +3,6 @@ package com.rb.biz.marketdata;
 import com.rb.biz.types.asset.InstrumentId;
 
 import static com.rb.biz.types.Symbol.symbol;
-import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 
 public class RealInstruments {
 

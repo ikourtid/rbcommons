@@ -1,6 +1,5 @@
 package com.rb.nonbiz.jsonapi;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonPrimitive;
 import com.rb.nonbiz.text.Strings;
 

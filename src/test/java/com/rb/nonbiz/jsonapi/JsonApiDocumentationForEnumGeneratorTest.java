@@ -12,7 +12,6 @@ import static com.rb.nonbiz.testutils.Asserters.valueExplained;
 import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 import static com.rb.nonbiz.text.Strings.asSingleLine;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.rbEnumMapOf;
-import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.rbEnumMapOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class JsonApiDocumentationForEnumGeneratorTest extends RBTest<JsonApiDocumentationForEnumGenerator> {

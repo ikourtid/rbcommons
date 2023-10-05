@@ -7,8 +7,6 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
 import com.rb.nonbiz.util.RBPreconditions;
 
-import java.util.EnumMap;
-
 import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.nonbiz.util.RBEnumMaps.rbEnumMapCoveringAllEnumValues;
 

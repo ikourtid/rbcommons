@@ -19,8 +19,8 @@ import static com.rb.nonbiz.json.RBJsonArrays.jsonIntegerArray;
 import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonDoubleArray;
 import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonIntegerArray;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
-import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
 import static com.rb.nonbiz.jsonapi.JsonApiPair.jsonApiPair;
+import static com.rb.nonbiz.jsonapi.JsonApiTestData.jsonApiTestData;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 

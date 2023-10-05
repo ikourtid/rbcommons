@@ -13,7 +13,6 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.fail;
 
 public class JsonObjectPathTest extends RBTestMatcher<JsonObjectPath> {
 

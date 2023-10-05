@@ -8,6 +8,7 @@ import static com.rb.nonbiz.collections.IidMapConstructors.iidMapOfHasInstrument
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
 import static com.rb.nonbiz.collections.TestHasInstrumentId.testHasInstrumentId;
+import static com.rb.nonbiz.collections.TestHasInstrumentId.testHasInstrumentIdMatcher;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class IidMapConstructorsTest {
@@ -22,7 +23,7 @@ public class IidMapConstructorsTest {
             iidMapOf(
                 STOCK_A1, testHasInstrumentId(STOCK_A1, 1.1),
                 STOCK_A2, testHasInstrumentId(STOCK_A2, 2.2)),
-            v -> TestHasInstrumentId.testHasInstrumentIdMatcher(v)));
+            v -> testHasInstrumentIdMatcher(v)));
   }
 
 }

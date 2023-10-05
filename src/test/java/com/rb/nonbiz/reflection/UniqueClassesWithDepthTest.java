@@ -2,8 +2,8 @@ package com.rb.nonbiz.reflection;
 
 import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.math.sequence.ArithmeticProgression;
-import com.rb.nonbiz.math.sequence.SimpleSequence;
 import com.rb.nonbiz.math.sequence.GeometricProgression;
+import com.rb.nonbiz.math.sequence.SimpleSequence;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 

@@ -8,7 +8,6 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.Optional;
 
 import static com.rb.nonbiz.collections.RBRanges.optionalIntersection;
-import static com.rb.nonbiz.collections.RBRanges.rangeHasAtLeastOneClosedBound;
 
 /**
  * Find the intersection of a high-priority range and a low-priority range.

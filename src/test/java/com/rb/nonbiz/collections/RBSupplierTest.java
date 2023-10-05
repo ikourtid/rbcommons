@@ -2,21 +2,17 @@ package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
-import com.rb.nonbiz.types.Epsilon;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import static com.rb.nonbiz.collections.RBSupplier.rbSupplierReturningValidValue;
 import static com.rb.nonbiz.collections.RBSupplier.rbSupplierThrowingException;
 import static com.rb.nonbiz.testmatchers.Match.matchOptional;
-import static com.rb.nonbiz.testmatchers.Match.matchUsingDoubleAlmostEquals;
+import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
-import static org.junit.Assert.*;
-
-import org.hamcrest.TypeSafeMatcher;
-
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static org.junit.Assert.assertEquals;
 
 // This test class is not generic, but the prod class and static matcher are.
 public class RBSupplierTest extends RBTestMatcher<RBSupplier<Double>> {
