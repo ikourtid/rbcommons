@@ -1,7 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableSet;
-import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Collection;
@@ -16,7 +15,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.rb.nonbiz.collections.IidSetSimpleConstructors.newIidSet;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;

@@ -5,12 +5,9 @@ import com.rb.nonbiz.types.ClosedUnitFractionRange;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import java.util.stream.Stream;
-
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.closedUnitFractionRanges;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.emptyClosedUnitFractionRanges;
 import static com.rb.nonbiz.collections.ClosedUnitFractionRanges.nonEmptyClosedUnitFractionRanges;
-import static com.rb.nonbiz.collections.RBMapConstructors.rbMapFromStream;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;

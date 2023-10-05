@@ -11,8 +11,6 @@ import static com.rb.nonbiz.math.sequence.ConstantSequence.constantSequence;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
-import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static java.lang.Integer.MAX_VALUE;
 import static org.junit.Assert.assertEquals;
 
 // This test class is not generic, but the publicly exposed static matcher is.

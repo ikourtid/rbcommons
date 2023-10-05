@@ -6,7 +6,6 @@ import com.rb.nonbiz.util.RBPreconditions;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
 import static com.rb.nonbiz.types.HardAndSoftRange.hardAndPossiblySameSoftRange;
-import static com.rb.nonbiz.types.HardAndSoftRange.hardAndSoftRange;
 
 public class ClosedUnitFractionHardAndSoftRange {
 

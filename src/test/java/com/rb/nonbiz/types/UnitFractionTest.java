@@ -26,7 +26,6 @@ import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static com.rb.nonbiz.types.UnitFraction.unitFractionInBps;
 import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
 import static java.util.Collections.emptyList;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

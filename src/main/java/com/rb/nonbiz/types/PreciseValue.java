@@ -2,7 +2,6 @@ package com.rb.nonbiz.types;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.rb.biz.types.trading.RoundingScale;
-import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;

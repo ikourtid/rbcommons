@@ -24,7 +24,6 @@ import com.rb.nonbiz.types.Pointer;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;

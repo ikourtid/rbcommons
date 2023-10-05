@@ -1,7 +1,6 @@
 package com.rb.biz.guice;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.inject.Guice;
 import com.rb.biz.guice.RBClockModifier.RBClockModifierToken;
 import com.rb.nonbiz.util.RBPreconditions;
 

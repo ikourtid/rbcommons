@@ -3,6 +3,10 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
+import java.util.BitSet;
+import java.util.List;
+import java.util.function.Function;
+
 import static com.rb.nonbiz.collections.RBBitSets.bitSetOf;
 import static com.rb.nonbiz.collections.RBBitSets.emptyBitSet;
 import static com.rb.nonbiz.collections.RBBitSets.filterListUsingBitSet;
@@ -11,16 +15,9 @@ import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.*;
-
-import org.hamcrest.TypeSafeMatcher;
-
-import java.util.BitSet;
-import java.util.List;
-import java.util.function.Function;
-
-import static com.rb.nonbiz.testmatchers.Match.match;
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class RBBitSetsTest {
 

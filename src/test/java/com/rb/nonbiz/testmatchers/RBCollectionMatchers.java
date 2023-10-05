@@ -1,7 +1,6 @@
 package com.rb.nonbiz.testmatchers;
 
 import com.rb.nonbiz.collections.MutableRBSortedSet;
-import com.rb.nonbiz.collections.RBEnumMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSortedSet;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
@@ -16,8 +15,6 @@ import org.hamcrest.TypeSafeMatcher;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.rb.nonbiz.collections.RBSet.newRBSet;

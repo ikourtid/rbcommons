@@ -6,13 +6,11 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Optional;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.biz.types.SignedMoney.ZERO_SIGNED_MONEY;
-import static com.rb.nonbiz.json.RBGson.FRACTION_TO_PERCENTAGE;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 
 /**

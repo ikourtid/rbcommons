@@ -2,7 +2,6 @@ package com.rb.nonbiz.collections;
 
 import com.google.common.collect.Range;
 import com.rb.nonbiz.functional.QuadriConsumer;
-import com.rb.nonbiz.functional.QuintConsumer;
 import com.rb.nonbiz.functional.TriConsumer;
 import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.types.ClosedUnitFractionRange;
