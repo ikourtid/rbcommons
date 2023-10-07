@@ -1,8 +1,11 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
+import com.rb.biz.types.asset.InstrumentId;
 import org.junit.Test;
 
+import java.util.Comparator;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
 import java.util.stream.Stream;
@@ -10,6 +13,7 @@ import java.util.stream.Stream;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A2;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A3;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapDoubleMatcher;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.emptyImmutableIndexableArray1D;
@@ -17,22 +21,29 @@ import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.immutableIndex
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1DTest.immutableIndexableArray1DMatcher;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1DTest.singletonImmutableIndexableArray1D;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1DTest.testImmutableIndexableArray1D;
+import static com.rb.nonbiz.collections.ImmutableIndexableArrays1D.iidMapToImmutableIndexableArray1D;
 import static com.rb.nonbiz.collections.ImmutableIndexableArrays1D.immutableIndexableArray1DFromStream;
 import static com.rb.nonbiz.collections.ImmutableIndexableArrays1D.immutableIndexableArray1DToIidMap;
 import static com.rb.nonbiz.collections.ImmutableIndexableArrays1D.immutableIndexableArray1DToRBMap;
 import static com.rb.nonbiz.collections.ImmutableIndexableArrays1D.mergeImmutableIndexableArrays1DByValue;
+import static com.rb.nonbiz.collections.ImmutableIndexableArrays1D.rbMapToImmutableIndexableArray1D;
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairTest.pairEqualityMatcher;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapDoubleMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.Comparator.comparing;
+import static java.util.Map.Entry.comparingByKey;
+import static java.util.Map.Entry.comparingByValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -154,6 +165,59 @@ public class ImmutableIndexableArrays1DTest {
   }
 
   @Test
+  public void testRBMapToImmutableIndexableArray1D() {
+    Comparator<Map.Entry<String, Double>> comparatorByKey   = comparingByKey();
+    Comparator<Map.Entry<String, Double>> comparatorByValue = comparingByValue();
+
+    // Of course, we can also compare based on a combination of InstrumentId *and* double, but it's hard to test this.
+
+    rbSetOf(comparatorByKey, comparatorByValue)
+        .forEach(comparator ->
+            assertTrue(
+                rbMapToImmutableIndexableArray1D(emptyRBMap(), comparator).isEmpty()));
+
+    BiConsumer<Comparator<Map.Entry<String, Double>>, ImmutableIndexableArray1D<String, Double>> asserter =
+        (comparator, expectedResult) ->
+            assertThat(
+                rbMapToImmutableIndexableArray1D(
+                    rbMapOf(
+                        "A1", 9.9,
+                        "A2", 8.8,
+                        "A3", 7.7),
+                    comparator),
+                immutableIndexableArray1DMatcher(
+                    expectedResult,
+                    v -> typeSafeEqualTo(v),
+                    v -> doubleAlmostEqualsMatcher(v, DEFAULT_EPSILON_1e_8)));
+
+    asserter.accept(
+        comparatorByKey,
+        testImmutableIndexableArray1D(
+            "A1", 9.9,
+            "A2", 8.8,
+            "A3", 7.7));
+    asserter.accept(
+        comparatorByKey.reversed(),
+        testImmutableIndexableArray1D(
+            "A3", 7.7,
+            "A2", 8.8,
+            "A1", 9.9));
+
+    asserter.accept(
+        comparatorByValue,
+        testImmutableIndexableArray1D(
+            "A3", 7.7,
+            "A2", 8.8,
+            "A1", 9.9));
+    asserter.accept(
+        comparatorByValue.reversed(),
+        testImmutableIndexableArray1D(
+            "A1", 9.9,
+            "A2", 8.8,
+            "A3", 7.7));
+  }
+
+  @Test
   public void testImmutableIndexableArray1DToIidMap() {
     assertTrue(
         immutableIndexableArray1DToIidMap(emptyImmutableIndexableArray1D(new Double[] {}))
@@ -170,6 +234,58 @@ public class ImmutableIndexableArrays1DTest {
                 STOCK_A2, 2.2,
                 STOCK_A3, 3.3),
             DEFAULT_EPSILON_1e_8));
+  }
+
+  @Test
+  public void testIidMapToImmutableIndexableArray1D() {
+    Comparator<Pair<InstrumentId, Double>> comparatorByInstrumentId = comparing(pair -> pair.getLeft());
+    Comparator<Pair<InstrumentId, Double>> comparatorByValue        = comparing(pair -> pair.getRight());
+    // Of course, we can also compare based on a combination of InstrumentId *and* double, but it's hard to test this.
+
+    rbSetOf(comparatorByInstrumentId, comparatorByValue)
+        .forEach(comparator ->
+            assertTrue(
+                iidMapToImmutableIndexableArray1D(emptyIidMap(), comparator).isEmpty()));
+
+    BiConsumer<Comparator<Pair<InstrumentId, Double>>, ImmutableIndexableArray1D<InstrumentId, Double>> asserter =
+        (comparator, expectedResult) ->
+            assertThat(
+                iidMapToImmutableIndexableArray1D(
+                    iidMapOf(
+                        STOCK_A1, 9.9,
+                        STOCK_A2, 8.8,
+                        STOCK_A3, 7.7),
+                    comparator),
+                immutableIndexableArray1DMatcher(
+                    expectedResult,
+                    v -> typeSafeEqualTo(v),
+                    v -> doubleAlmostEqualsMatcher(v, DEFAULT_EPSILON_1e_8)));
+
+    asserter.accept(
+        comparatorByInstrumentId,
+        testImmutableIndexableArray1D(
+            STOCK_A1, 9.9,
+            STOCK_A2, 8.8,
+            STOCK_A3, 7.7));
+    asserter.accept(
+        comparatorByInstrumentId.reversed(),
+        testImmutableIndexableArray1D(
+            STOCK_A3, 7.7,
+            STOCK_A2, 8.8,
+            STOCK_A1, 9.9));
+
+    asserter.accept(
+        comparatorByValue,
+        testImmutableIndexableArray1D(
+            STOCK_A3, 7.7,
+            STOCK_A2, 8.8,
+            STOCK_A1, 9.9));
+    asserter.accept(
+        comparatorByValue.reversed(),
+        testImmutableIndexableArray1D(
+            STOCK_A1, 9.9,
+            STOCK_A2, 8.8,
+            STOCK_A3, 7.7));
   }
 
 }
