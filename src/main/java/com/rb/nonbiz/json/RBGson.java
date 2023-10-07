@@ -50,11 +50,6 @@ public class RBGson {
     return new JsonPrimitive(roundTo6digits(d));
   }
 
-  // round to 2 digits, perhaps for money amounts
-  public static JsonPrimitive jsonDoubleRoundedTo2Digits(double d) {
-    return new JsonPrimitive(roundTo2digits(d));
-  }
-
   public static JsonPrimitive jsonDoubleUnrounded(double d) {
     return new JsonPrimitive(d);
   }
