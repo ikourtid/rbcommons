@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.types.LongCounter;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -12,9 +13,12 @@ import java.util.stream.Stream;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.emptyImmutableIndexableArray1D;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.immutableIndexableArray1D;
+import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.types.LongCounter.longCounter;
 
@@ -108,5 +112,20 @@ public class ImmutableIndexableArrays1D {
         : immutableIndexableArray1D(simpleArrayIndexMapping(keysInOrder), rawArray);
   }
 
+  public static <K, V> RBMap<K, V> immutableIndexableArray1DToRBMap(
+      ImmutableIndexableArray1D<K, V> immutableIndexableArray1D) {
+    MutableRBMap<K, V> mutableMap = newMutableRBMapWithExpectedSize(immutableIndexableArray1D.size());
+    immutableIndexableArray1D.forEachEntry( (key, value) ->
+        mutableMap.putAssumingAbsent(key, value));
+    return newRBMap(mutableMap);
+  }
+
+  public static <V> IidMap<V> immutableIndexableArray1DToIidMap(
+      ImmutableIndexableArray1D<InstrumentId, V> immutableIndexableArray1D) {
+    MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(immutableIndexableArray1D.size());
+    immutableIndexableArray1D.forEachEntry( (instrumentId, value) ->
+        mutableMap.putAssumingAbsent(instrumentId, value));
+    return newIidMap(mutableMap);
+  }
 
 }
