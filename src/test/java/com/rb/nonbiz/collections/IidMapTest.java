@@ -54,6 +54,7 @@ import static com.rb.nonbiz.testmatchers.RBMapMatchers.hasLongMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapPreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIidSetEquals;
@@ -932,6 +933,12 @@ public class IidMapTest extends RBTestMatcher<IidMap<Money>> {
       IidMap<V> expected) {
     return makeMatcher(expected, actual ->
         hasLongMapMatcher(expected, f -> typeSafeEqualTo(f)).matches(actual));
+  }
+
+  public static TypeSafeMatcher<IidMap<Double>> iidMapDoubleMatcher(
+      IidMap<Double> expected, Epsilon epsilon) {
+    return makeMatcher(expected, actual ->
+        hasLongMapMatcher(expected, f -> doubleAlmostEqualsMatcher(f, epsilon)).matches(actual));
   }
 
   public static <V extends PreciseValue> TypeSafeMatcher<IidMap<V>> iidMapPreciseValueMatcher(

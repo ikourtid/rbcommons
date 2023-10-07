@@ -7,23 +7,34 @@ import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
 import java.util.stream.Stream;
 
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A2;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A3;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
+import static com.rb.nonbiz.collections.IidMapTest.iidMapDoubleMatcher;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.emptyImmutableIndexableArray1D;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.immutableIndexableArray1D;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1DTest.immutableIndexableArray1DMatcher;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1DTest.singletonImmutableIndexableArray1D;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1DTest.testImmutableIndexableArray1D;
 import static com.rb.nonbiz.collections.ImmutableIndexableArrays1D.immutableIndexableArray1DFromStream;
+import static com.rb.nonbiz.collections.ImmutableIndexableArrays1D.immutableIndexableArray1DToIidMap;
+import static com.rb.nonbiz.collections.ImmutableIndexableArrays1D.immutableIndexableArray1DToRBMap;
 import static com.rb.nonbiz.collections.ImmutableIndexableArrays1D.mergeImmutableIndexableArrays1DByValue;
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairTest.pairEqualityMatcher;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapDoubleMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.intExplained;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class ImmutableIndexableArrays1DTest {
 
@@ -121,6 +132,44 @@ public class ImmutableIndexableArrays1DTest {
         size -> new Pair[size],
         Stream.of(pair("a", 11), pair("a", 22)),
         v -> v.getLeft()));
+  }
+
+  @Test
+  public void testImmutableIndexableArray1DToRBMap() {
+    assertTrue(
+        immutableIndexableArray1DToRBMap(emptyImmutableIndexableArray1D(new Double[] {}))
+            .isEmpty());
+
+    assertThat(
+        immutableIndexableArray1DToRBMap(testImmutableIndexableArray1D(
+            "A1", 1.1,
+            "A2", 2.2,
+            "A3", 3.3)),
+        rbMapDoubleMatcher(
+            rbMapOf(
+                "A1", 1.1,
+                "A2", 2.2,
+                "A3", 3.3),
+            DEFAULT_EPSILON_1e_8));
+  }
+
+  @Test
+  public void testImmutableIndexableArray1DToIidMap() {
+    assertTrue(
+        immutableIndexableArray1DToIidMap(emptyImmutableIndexableArray1D(new Double[] {}))
+            .isEmpty());
+
+    assertThat(
+        immutableIndexableArray1DToIidMap(testImmutableIndexableArray1D(
+            STOCK_A1, 1.1,
+            STOCK_A2, 2.2,
+            STOCK_A3, 3.3)),
+        iidMapDoubleMatcher(
+            iidMapOf(
+                STOCK_A1, 1.1,
+                STOCK_A2, 2.2,
+                STOCK_A3, 3.3),
+            DEFAULT_EPSILON_1e_8));
   }
 
 }
