@@ -7,10 +7,12 @@ import com.rb.nonbiz.text.PrintsInstruments;
 import com.rb.nonbiz.types.LongCounter;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
 import gnu.trove.map.hash.TLongObjectHashMap;
+import org.checkerframework.checker.units.qual.K;
 
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -185,6 +187,18 @@ public class IidMap<V> extends HasLongMap<InstrumentId, V> implements PrintsInst
   public void forEachIidSortedValue(Consumer<V> consumer) {
     sortedInstrumentIdStream()
         .forEach(instrumentId -> consumer.accept(getOrThrow(instrumentId)));
+  }
+
+  /**
+   * Goes through the entries using a comparator that sorts based on both instrument ID and value.
+   */
+  public void forEachSortedEntry(
+      BiConsumer<InstrumentId, V> biConsumer,
+      Comparator<Pair<InstrumentId, V>> mapEntriesComparator) {
+    instrumentIdStream()
+        .map(instrumentId -> pair(instrumentId, getOrThrow(instrumentId)))
+        .sorted(mapEntriesComparator)
+        .forEach(entry -> biConsumer.accept(entry.getLeft(), entry.getRight()));
   }
 
   /**
