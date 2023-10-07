@@ -13,6 +13,7 @@ import com.rb.nonbiz.types.PreciseValue;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -162,7 +163,34 @@ public class IidMapTest extends RBTestMatcher<IidMap<Money>> {
   }
 
   @Test
-  public void testForEachSortedEntry() {
+  public void testForSortedEntry() {
+    BiConsumer<Comparator<Pair<InstrumentId, Integer>>, List<String>> asserter =
+        (comparator, expectedList) -> {
+
+          List<String> list = newArrayList();
+          // I am adding elements in a shuffled order so it's less likely that they will all end up ordered by accident.
+          iidMapOf(
+              instrumentId(10), 6,
+              instrumentId(60), 1,
+              instrumentId(20), 5,
+              instrumentId(40), 3,
+              instrumentId(50), 2,
+              instrumentId(30), 4)
+              .forEachSortedEntry(
+                  (instrumentId, str) -> list.add(
+                      Strings.format("%s_%s", instrumentId.asLong(), str)),
+                  comparator);
+
+          assertThat(
+              list,
+              orderedListEqualityMatcher(expectedList));
+        };
+    asserter.accept(comparing(pair -> pair.getLeft()),  ImmutableList.of("10_6", "20_5", "30_4", "40_3", "50_2", "60_1"));
+    asserter.accept(comparing(pair -> pair.getRight()), ImmutableList.of("60_1", "50_2", "40_3", "30_4", "20_5", "10_6"));
+  }
+
+  @Test
+  public void testForEachIidSortedEntry() {
     List<String> list = newArrayList();
     // I am adding elements in a shuffled order so it's less likely that they will all end up ordered by accident.
     iidMapOf(
