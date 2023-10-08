@@ -161,43 +161,46 @@ public abstract class RBTestMatcher<T> {
    */
   @Test
   public void matcherMetaTest() {
+    T trivialObject            = makeTrivialObject();
+    T nonTrivialObject         = makeNontrivialObject();
+    T matchingNonTrivialObject = makeMatchingNontrivialObject();
+
     assertTrue(
         "makeTrivialObject() should match itself",
-        willMatch(makeTrivialObject(), makeTrivialObject()));
+        willMatch(trivialObject, trivialObject));
     assertFalse(
         "makeTrivialObject() should not match makeNontrivialObject()",
-        willMatch(makeTrivialObject(), makeNontrivialObject()));
+        willMatch(trivialObject, nonTrivialObject));
     assertFalse(
         "makeNonTrivialObject() should not match makeTrivialObject()",
-        willMatch(makeNontrivialObject(), makeTrivialObject()));
+        willMatch(nonTrivialObject, trivialObject));
     // We create separate objects because if the matcher erroneously does simple pointer equality,
     // the test will pass in cases when it shouldn't.
     assertTrue(
         "makeNontrivialObject() should match itself",
         willMatch(
-            makeNontrivialObject(),
+            nonTrivialObject,
             makeNontrivialObject()));
     assertTrue(
         "makeMatchingNontrivialObject() should match itself",
         willMatch(
-            makeMatchingNontrivialObject(),
-            makeMatchingNontrivialObject()));
-    assertTrue(
-        "makeNontrivialObject() should match makeMatchingNontrivialObject()",
-        willMatch(
-            makeNontrivialObject(),
+            matchingNonTrivialObject,
             makeMatchingNontrivialObject()));
     assertTrue(
         "makeMatchingNontrivialObject() should match makeNontrivialObject()",
         willMatch(
-            makeMatchingNontrivialObject(),
-            makeNontrivialObject()));
-
+            matchingNonTrivialObject,
+            nonTrivialObject));
+    assertTrue(
+        "makeNontrivialObject() should match makeMatchingNontrivialObject()",
+        willMatch(
+            nonTrivialObject,
+            matchingNonTrivialObject));
     // Most data classes do not support hashCode/equals. In those cases, the following will be pointer comparisons
     // (the default #equals behavior), and since by construction we are dealing with different objects
     // (regardless of their contents), the two objects will be unequal.
-    assertNotEquals(makeTrivialObject(), makeNontrivialObject());
-    assertNotEquals(makeTrivialObject(), makeMatchingNontrivialObject());
+    assertNotEquals(trivialObject, nonTrivialObject);
+    assertNotEquals(trivialObject, matchingNonTrivialObject);
     // However, the following cannot stay in. There are many cases where the Nontrivial and MatchingNontrivial
     // cannot be tweaked to be 'almost same, but not same' versions with each other, AND the data class
     // supports hashCode/equals. In those cases, Nontrivial and MatchingNontrivial would actually be equal.
