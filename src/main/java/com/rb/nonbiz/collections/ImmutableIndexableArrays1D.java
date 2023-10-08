@@ -125,7 +125,7 @@ public class ImmutableIndexableArrays1D {
   }
 
   /**
-   * Converts an {@link RBMap} into a {@link ImmutableIndexableArray1D}.
+   * Converts an {@link RBMap} into an {@link ImmutableIndexableArray1D}.
    *
    * <p> Unlike an {@link RBMap}, ordering matters in an indexable array. Therefore,
    * a comparator is passed to help us decide in which order the entries will appear. </p>
@@ -163,7 +163,7 @@ public class ImmutableIndexableArrays1D {
   }
 
   /**
-   * Converts an {@link IidMap} into a {@link ImmutableIndexableArray1D}.
+   * Converts an {@link IidMap} into an {@link ImmutableIndexableArray1D}.
    *
    * <p> Unlike an {@link IidMap}, ordering matters in an indexable array. Therefore,
    * a comparator is passed to help us decide in which order the entries will appear. </p>
