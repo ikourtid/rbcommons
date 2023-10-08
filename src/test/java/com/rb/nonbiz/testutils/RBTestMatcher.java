@@ -180,12 +180,12 @@ public abstract class RBTestMatcher<T> {
         "makeNontrivialObject() should match itself",
         willMatch(
             nonTrivialObject,
-            nonTrivialObject));
+            makeNontrivialObject()));
     assertTrue(
         "makeMatchingNontrivialObject() should match itself",
         willMatch(
             matchingNonTrivialObject,
-            matchingNonTrivialObject));
+            makeMatchingNontrivialObject()));
     assertTrue(
         "makeMatchingNontrivialObject() should match makeNontrivialObject()",
         willMatch(
