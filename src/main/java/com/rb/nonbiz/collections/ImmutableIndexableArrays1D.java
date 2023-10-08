@@ -1,9 +1,13 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.types.LongCounter;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -12,9 +16,13 @@ import java.util.stream.Stream;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.emptyImmutableIndexableArray1D;
 import static com.rb.nonbiz.collections.ImmutableIndexableArray1D.immutableIndexableArray1D;
+import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
+import static com.rb.nonbiz.collections.Pair.pair;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.types.LongCounter.longCounter;
 
@@ -108,5 +116,81 @@ public class ImmutableIndexableArrays1D {
         : immutableIndexableArray1D(simpleArrayIndexMapping(keysInOrder), rawArray);
   }
 
+  public static <K, V> RBMap<K, V> immutableIndexableArray1DToRBMap(
+      ImmutableIndexableArray1D<K, V> immutableIndexableArray1D) {
+    MutableRBMap<K, V> mutableMap = newMutableRBMapWithExpectedSize(immutableIndexableArray1D.size());
+    immutableIndexableArray1D.forEachEntry( (key, value) ->
+        mutableMap.putAssumingAbsent(key, value));
+    return newRBMap(mutableMap);
+  }
+
+  /**
+   * Converts an {@link RBMap} into a {@link ImmutableIndexableArray1D}.
+   *
+   * <p> Unlike an {@link RBMap}, ordering matters in an indexable array. Therefore,
+   * a comparator is passed to help us decide in which order the entries will appear. </p>
+   */
+  public static <K, V> ImmutableIndexableArray1D<K, V> rbMapToImmutableIndexableArray1D(
+      RBMap<K, V> rbMap,
+      Comparator<Map.Entry<K, V>> entryComparator) {
+    K[] keys   = (K[]) new Object[rbMap.size()];
+    V[] values = (V[]) new Object[rbMap.size()];
+
+    int i = 0;
+    Iterator<Map.Entry<K, V>> iter = rbMap.entrySet()
+        .stream()
+        .sorted(entryComparator)
+        .iterator();
+
+    while (iter.hasNext()) {
+      Map.Entry<K, V> entry = iter.next();
+      keys[i] = entry.getKey();
+      values[i] = entry.getValue();
+      i++;
+    }
+
+    return immutableIndexableArray1D(
+        simpleArrayIndexMapping(keys),
+        values);
+  }
+
+  public static <V> IidMap<V> immutableIndexableArray1DToIidMap(
+      ImmutableIndexableArray1D<InstrumentId, V> immutableIndexableArray1D) {
+    MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(immutableIndexableArray1D.size());
+    immutableIndexableArray1D.forEachEntry( (instrumentId, value) ->
+        mutableMap.putAssumingAbsent(instrumentId, value));
+    return newIidMap(mutableMap);
+  }
+
+  /**
+   * Converts an {@link IidMap} into a {@link ImmutableIndexableArray1D}.
+   *
+   * <p> Unlike an {@link IidMap}, ordering matters in an indexable array. Therefore,
+   * a comparator is passed to help us decide in which order the entries will appear. </p>
+   */
+  public static <V> ImmutableIndexableArray1D<InstrumentId, V> iidMapToImmutableIndexableArray1D(
+      IidMap<V> iidMap,
+      Comparator<Pair<InstrumentId, V>> entryComparator) {
+    InstrumentId[] instrumentIds = new InstrumentId[iidMap.size()];
+    V[] values = (V[]) new Object[iidMap.size()];
+
+    int i = 0;
+    Iterator<Pair<InstrumentId, V>> iter = iidMap.instrumentIdStream()
+        .map(v -> pair(v, iidMap.getOrThrow(v)))
+        // I can't find a succinct way to do this using comparing(), but this slightly more verbose version will do.
+        .sorted(entryComparator)
+        .iterator();
+
+    while (iter.hasNext()) {
+      Pair<InstrumentId, V> pair = iter.next();
+      instrumentIds[i] = pair.getLeft();
+      values[i] = pair.getRight();
+      i++;
+    }
+
+    return immutableIndexableArray1D(
+        simpleArrayIndexMapping(instrumentIds),
+        values);
+  }
 
 }
