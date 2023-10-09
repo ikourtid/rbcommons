@@ -3,13 +3,15 @@ package com.rb.nonbiz.collections;
 import com.google.common.base.Joiner;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
+import org.apache.commons.math3.util.MultidimensionalCounter;
 
 import java.util.Arrays;
 
 /**
  * These are coordinates in an N-dimensional space.
- * We keep the underlying collection as an array, so that this can interoperate easily with
- * MultidimensionalCounter.
+ *
+ * <p> We keep the underlying collection as an array, so that this can interoperate easily with
+ * {@link MultidimensionalCounter}. </p>
  */
 public class Coordinates {
 
