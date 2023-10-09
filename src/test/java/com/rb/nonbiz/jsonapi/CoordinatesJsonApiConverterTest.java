@@ -11,6 +11,7 @@ import static com.rb.nonbiz.collections.Coordinates.coordinates;
 import static com.rb.nonbiz.collections.CoordinatesTest.coordinatesMatcher;
 import static com.rb.nonbiz.json.RBGson.jsonInteger;
 import static com.rb.nonbiz.json.RBJsonArrays.jsonArray;
+import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonArray;
 import static com.rb.nonbiz.jsonapi.JsonArrayApiPair.jsonArrayApiPair;
 import static com.rb.nonbiz.jsonapi.JsonArrayApiTestData.jsonArrayApiTestData;
 
@@ -22,6 +23,12 @@ public class CoordinatesJsonApiConverterTest extends RBCommonsIntegrationTest<Co
         jsonArrayApiTestData(
             f -> coordinatesMatcher(f),
 
+            // the simplest case
+            jsonArrayApiPair(
+                coordinates(0),
+                singletonJsonArray(jsonInteger(0))),
+
+            // the general case
             jsonArrayApiPair(
                 coordinates(1, 0, 3, 0, 4),
                 jsonArray(
