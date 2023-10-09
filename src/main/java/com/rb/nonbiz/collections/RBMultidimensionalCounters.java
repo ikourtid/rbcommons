@@ -25,11 +25,12 @@ public class RBMultidimensionalCounters {
   }
 
   /**
-   * This name is not great, but it is mean to contrast with the 'as we vary dimension'
+   * This name is not great, but it is meant to contrast with the 'as we vary dimension'
    * iteration, which is all over the place (currently used in group sanity checks).
-   * Given an N-dimensional slice, this will return an iterator that will iterate over k N-1-dimensional slices
+   *
+   * <p> Given an N-dimensional slice, this will return an iterator that will iterate over k N-1-dimensional slices
    * of the array (effectively), where k is the size of the dimension we pass in.
-   * See very extensive comments in #getSliceOfMultiDimensionalArray and the corresponding tests.
+   * See very extensive comments in #getSliceOfMultiDimensionalArray and the corresponding tests. </p>
    */
   public static Iterator<Iterator<Coordinates>> asWeFixDimensionIterator(
       MultidimensionalCounter counter, int dimension) {
