@@ -54,10 +54,10 @@ public class JsonArrayApiTestData<T> {
       Function<JsonArray, T> fromJsonArray) {
     for (int i = 0; i < testPairs.size(); i++) {
       JsonArrayApiPair<T> testPair = testPairs.get(i);
-      JsonArray expectedJsonArray = testPair.getJsonArray();
-      T         expectedJavaArray = testPair.getJavaObject();
-      JsonArray actualJsonArray   = toJsonArray.apply(expectedJavaArray);
-      T         actualJavaObject  = fromJsonArray.apply(expectedJsonArray);
+      JsonArray expectedJsonArray  = testPair.getJsonArray();
+      T         expectedJavaObject = testPair.getJavaObject();
+      JsonArray actualJsonArray    = toJsonArray.apply(expectedJavaObject);
+      T         actualJavaObject   = fromJsonArray.apply(expectedJsonArray);
 
       assertThat(
           Strings.format("Test %s of %s : JSON array (generated from Java object) does not match expected",
@@ -68,7 +68,7 @@ public class JsonArrayApiTestData<T> {
           Strings.format("Test %s of %s : Java object (generated from JSON array) does not match expected",
               i + 1, testPairs.size()),
           actualJavaObject,
-          matcherGenerator.apply(expectedJavaArray));
+          matcherGenerator.apply(expectedJavaObject));
     }
   }
 
