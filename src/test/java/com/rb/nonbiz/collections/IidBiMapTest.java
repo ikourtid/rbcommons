@@ -54,6 +54,21 @@ public class IidBiMapTest extends RBTestMatcher<IidBiMap<String>> {
         STOCK_B, "X")));
   }
 
+  @Test
+  public void testTransformValuesCopyOrThrow() {
+    IidBiMap<Integer> map = iidBiMap(iidMapOf(
+        STOCK_A, 11,
+        STOCK_B, 22));
+    assertThat(
+        map.transformValuesCopyOrThrow(v -> "_" + Integer.toString(v)),
+        iidBiMapMatcher(
+            iidBiMap(iidMapOf(
+                STOCK_A, "_11",
+                STOCK_B, "_22"))));
+    // Since this is a bidirectional map, we can't have the same value appearing more than once.
+    assertIllegalArgumentException( () -> map.transformValuesCopyOrThrow(v -> "sameValue"));
+  }
+
   @Override
   public IidBiMap<String> makeTrivialObject() {
     return emptyIidBiMap();

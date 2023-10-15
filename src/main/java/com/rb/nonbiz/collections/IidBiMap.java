@@ -6,6 +6,7 @@ import com.rb.nonbiz.text.PrintsInstruments;
 import com.rb.nonbiz.text.Strings;
 
 import java.time.LocalDate;
+import java.util.function.Function;
 
 import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_INSTRUMENT_MASTER;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpectedSize;
@@ -50,6 +51,16 @@ public class IidBiMap<V> implements PrintsInstruments {
 
   public int size() {
     return instrumentIdFromItem.size(); // same as itemFromInstrumentId.size()
+  }
+
+  /**
+   * Constructs a new IidBiMap with the values transformed.
+   *
+   * <p> Throws if the transformation would result in a value appearing more than once in the result, because then
+   * the result cannot be a bidirectional map. </p>
+   */
+  public <V2> IidBiMap<V2> transformValuesCopyOrThrow(Function<V, V2> transformer) {
+    return iidBiMap(itemFromInstrumentId.transformValuesCopy(transformer));
   }
 
   @Override
