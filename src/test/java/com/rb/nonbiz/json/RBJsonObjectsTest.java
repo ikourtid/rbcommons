@@ -3,6 +3,7 @@ package com.rb.nonbiz.json;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.Money;
@@ -820,6 +821,39 @@ public class RBJsonObjectsTest {
     assertEquals(
         ImmutableList.of("1", "2", "3", "4", "5", "6", "7", "8", "9"),
         newArrayList(jsonObject.keySet().iterator()));
+  }
+
+  @Test
+  public void testFilterEntries() {
+    BiConsumer<JsonObject, JsonObject> asserter = (input, expectedOutput) ->
+        assertThat(
+            filterEntries(input, (key, value) -> !(key.equals("badKey") || value.isJsonNull())),
+            jsonObjectEpsilonMatcher(expectedOutput));
+    asserter.accept(emptyJsonObject(), emptyJsonObject());
+    asserter.accept(
+        jsonObject(
+            "key1", jsonString("value1"),
+            "key2", JsonNull.INSTANCE,
+            "badKey", jsonString("value3")),
+        singletonJsonObject(
+            "key1", jsonString("value1")));
+  }
+
+  @Test
+  public void testFilterKeys() {
+    BiConsumer<JsonObject, JsonObject> asserter = (input, expectedOutput) ->
+        assertThat(
+            filterKeys(input, key -> !key.equals("badKey")),
+            jsonObjectEpsilonMatcher(expectedOutput));
+    asserter.accept(emptyJsonObject(), emptyJsonObject());
+    asserter.accept(
+        jsonObject(
+            "key1", jsonString("value1"),
+            "key2", JsonNull.INSTANCE,
+            "badKey", jsonString("value3")),
+        jsonObject(
+            "key1", jsonString("value1"),
+            "key2", JsonNull.INSTANCE));
   }
 
 }

@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.*;
+import com.rb.nonbiz.search.Filter;
 import com.rb.nonbiz.text.HasUniqueId;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
 import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
@@ -17,6 +18,7 @@ import java.util.Comparator;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.function.Function;
@@ -240,6 +242,32 @@ public class RBJsonObjects {
             keySerializer.apply(v),
             itemSerializer.apply(v)));
     return builder.build();
+  }
+
+  /**
+   * Creates a copy of a JsonObject with some entries possibly removed.
+   */
+  public static JsonObject filterEntries(
+      JsonObject jsonObject,
+      BiPredicate<String, JsonElement> mustKeepEntryPredicate) {
+    RBJsonObjectBuilder builder = rbJsonObjectBuilder();
+    jsonObject.entrySet().forEach(entry -> {
+          String key = entry.getKey();
+          JsonElement value = entry.getValue();
+          if (mustKeepEntryPredicate.test(key, value)) {
+            builder.setJsonElement(key, value);
+          }
+        });
+    return builder.build();
+  }
+
+  /**
+   * Creates a copy of a JsonObject with some entries possibly removed, based only on the JSON property (not the value).
+   */
+  public static JsonObject filterKeys(
+      JsonObject jsonObject,
+      Predicate<String> mustKeepKeyPredicate) {
+    return filterEntries(jsonObject, (key, ignoredValue) -> mustKeepKeyPredicate.test(key));
   }
 
   public static <V extends HasUniqueId<V>> JsonObject streamOfHasUniqueIdToJsonObject(
