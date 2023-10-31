@@ -17,6 +17,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -564,6 +565,20 @@ public class RBOptionalsTest {
     assertOptionalEquals(1, findZeroOrOnePresentOptional(Optional.of(1),   Optional.empty(), Optional.empty()));
     assertOptionalEquals(1, findZeroOrOnePresentOptional(Optional.empty(), Optional.of(1),   Optional.empty()));
     assertOptionalEquals(1, findZeroOrOnePresentOptional(Optional.empty(), Optional.empty(), Optional.of(1)));
+  }
+
+  @Test
+  public void testOptionalSatisfies() {
+    BiConsumer<Optional<String>, Boolean> asserter = (optional, expectedResult) ->
+      assertEquals(
+          expectedResult,
+          optionalSatisfies(optional, v -> v.length() >= 2));
+
+    asserter.accept(Optional.empty(), false);
+    asserter.accept(Optional.of(""), false);
+    asserter.accept(Optional.of("x"), false);
+    asserter.accept(Optional.of("xy"), true);
+    asserter.accept(Optional.of("xyz"), true);
   }
 
 }

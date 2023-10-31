@@ -20,6 +20,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -103,6 +104,13 @@ public class RBOptionals {
       Optional<?> first, Optional<?> second, Optional<?> third, Optional<?> ... rest) {
     return !first.isPresent() && !second.isPresent() && !third.isPresent()
         && Arrays.stream(rest).noneMatch(v -> v.isPresent());
+  }
+
+  /**
+   * Returns true if the optional is present and its value satisfies the supplied predicate.
+   */
+  public static <T> boolean optionalSatisfies(Optional<T> optional, Predicate<T> predicate) {
+    return optional.isPresent() && predicate.test(optional.get());
   }
 
   /**
