@@ -317,4 +317,18 @@ public class RBJsonArrays {
                numericValues.stream().map(v -> jsonDoubleRoundedTo6Digits(v))));
   }
 
+  public static <T> JsonArray toJsonArray(List<T> list) {
+    Class<?> sharedClass = RBSimilarityPreconditions.checkAllSame(list, v -> v.getClass());
+    // We probably should avoid converting strings for this particular scenario, b/c the 3d grid will show numeric
+    // values at each point, and strings don't make sense.
+    return jsonArray(
+        list.size(),
+        list.stream()
+            .map(v ->
+                  Number        .class.isAssignableFrom(sharedClass) ? jsonDouble(((Number) v).doubleValue()) :
+                  PreciseValue  .class.isAssignableFrom(sharedClass) ? jsonDouble((PreciseValue)   v) :
+                  ImpreciseValue.class.isAssignableFrom(sharedClass) ? jsonDouble((ImpreciseValue) v) :
+                  jsonString(v.toString())));
+  }
+
 }
