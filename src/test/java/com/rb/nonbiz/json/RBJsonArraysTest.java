@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
@@ -46,10 +47,16 @@ import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.nonEmptyOptionalMatcher;
+import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_DOUBLE;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_MONEY;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_MULTIPLIER;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.types.Correlation.correlation;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.PositiveMultiplier.positiveMultiplier;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static java.util.Collections.emptyList;
@@ -173,11 +180,11 @@ public class RBJsonArraysTest {
   @Test
   public void testListOfOptionalsToJsonArray() {
     BiConsumer<List<Optional<String>>, JsonArray> asserter = (javaList, expectedJsonArray) ->
-      assertThat(
-          listOfOptionalsToJsonArray(
-              javaList,
-              string -> jsonString(string)),
-          jsonArrayExactMatcher(expectedJsonArray));
+        assertThat(
+            listOfOptionalsToJsonArray(
+                javaList,
+                string -> jsonString(string)),
+            jsonArrayExactMatcher(expectedJsonArray));
 
     asserter.accept(
         emptyList(),
@@ -421,6 +428,30 @@ public class RBJsonArraysTest {
         iidMapOf(
             instrumentId(11), "item1",
             instrumentId(22), "item2"));
+  }
+
+  @Test
+  public void testListToJsonArray() {
+    BiConsumer<List<?>, JsonArray> asserter = (list, expectedJsonArray) ->
+        assertThat(
+            listToJsonArray(list),
+            jsonArrayExactMatcher(expectedJsonArray));
+
+    asserter.accept(ImmutableList.of("aa", "bb"),                                       jsonStringArray("aa", "bb"));
+    asserter.accept(ImmutableList.of(1.1, 2.2),                                         jsonDoubleArray(1.1, 2.2));
+    asserter.accept(ImmutableList.of(money(1.1), money(2.2)),                           jsonDoubleArray(1.1, 2.2));
+    asserter.accept(ImmutableList.of(positiveMultiplier(1.1), positiveMultiplier(2.2)), jsonDoubleArray(1.1, 2.2));
+
+    // different types result in exceptions.
+    rbSetOf(
+        ImmutableList.of(DUMMY_DOUBLE, DUMMY_STRING),
+        ImmutableList.of(DUMMY_DOUBLE, DUMMY_MONEY),
+        ImmutableList.of(DUMMY_DOUBLE, DUMMY_POSITIVE_MULTIPLIER),
+        ImmutableList.of(DUMMY_STRING, DUMMY_MONEY),
+        ImmutableList.of(DUMMY_STRING, DUMMY_POSITIVE_MULTIPLIER),
+        ImmutableList.of(DUMMY_MONEY, DUMMY_POSITIVE_MULTIPLIER))
+        .forEach(list ->
+            assertIllegalArgumentException( () -> listToJsonArray(list)));
   }
 
   // We'd normally create a lambda inside a test function and use that, but we can't use generics with lambdas I think.
