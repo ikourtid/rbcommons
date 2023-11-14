@@ -185,6 +185,20 @@ public class RBJsonArrays {
     return iteratorToJsonArray(list.size(), list.iterator(), itemSerializer);
   }
 
+  public static <T> JsonArray listToJsonArray(List<T> list) {
+    Class<?> sharedClass = RBSimilarityPreconditions.checkAllSame(list, v -> v.getClass());
+    // We probably should avoid converting strings for this particular scenario, b/c the 3d grid will show numeric
+    // values at each point, and strings don't make sense.
+    return jsonArray(
+        list.size(),
+        list.stream()
+            .map(v ->
+                Number        .class.isAssignableFrom(sharedClass) ? jsonDouble(((Number) v).doubleValue()) :
+                PreciseValue  .class.isAssignableFrom(sharedClass) ? jsonDouble((PreciseValue)   v) :
+                ImpreciseValue.class.isAssignableFrom(sharedClass) ? jsonDouble((ImpreciseValue) v) :
+                jsonString(v.toString())));
+  }
+
   /**
    * Convert a List of Optionals into a JsonArray consisting only of the list elements that are not Optional.empty().
    */
@@ -315,20 +329,6 @@ public class RBJsonArrays {
            : Optional.of(jsonArray(
                numericValues.size(),
                numericValues.stream().map(v -> jsonDoubleRoundedTo6Digits(v))));
-  }
-
-  public static <T> JsonArray toJsonArray(List<T> list) {
-    Class<?> sharedClass = RBSimilarityPreconditions.checkAllSame(list, v -> v.getClass());
-    // We probably should avoid converting strings for this particular scenario, b/c the 3d grid will show numeric
-    // values at each point, and strings don't make sense.
-    return jsonArray(
-        list.size(),
-        list.stream()
-            .map(v ->
-                  Number        .class.isAssignableFrom(sharedClass) ? jsonDouble(((Number) v).doubleValue()) :
-                  PreciseValue  .class.isAssignableFrom(sharedClass) ? jsonDouble((PreciseValue)   v) :
-                  ImpreciseValue.class.isAssignableFrom(sharedClass) ? jsonDouble((ImpreciseValue) v) :
-                  jsonString(v.toString())));
   }
 
 }

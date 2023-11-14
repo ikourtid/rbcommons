@@ -431,19 +431,16 @@ public class RBJsonArraysTest {
   }
 
   @Test
-  public void testToJsonArray() {
-    assertThat(
-        toJsonArray(ImmutableList.of("aa", "bb")),
-        jsonArrayExactMatcher(jsonStringArray("aa", "bb")));
-    assertThat(
-        toJsonArray(ImmutableList.of(1.1, 2.2)),
-        jsonArrayExactMatcher(jsonDoubleArray(1.1, 2.2)));
-    assertThat(
-        toJsonArray(ImmutableList.of(money(1.1), money(2.2))),
-        jsonArrayExactMatcher(jsonDoubleArray(1.1, 2.2)));
-    assertThat(
-        toJsonArray(ImmutableList.of(positiveMultiplier(1.1), positiveMultiplier(2.2))),
-        jsonArrayExactMatcher(jsonDoubleArray(1.1, 2.2)));
+  public void testListToJsonArray() {
+    BiConsumer<List<?>, JsonArray> asserter = (list, expectedJsonArray) ->
+        assertThat(
+            listToJsonArray(list),
+            jsonArrayExactMatcher(expectedJsonArray));
+
+    asserter.accept(ImmutableList.of("aa", "bb"),                                       jsonStringArray("aa", "bb"));
+    asserter.accept(ImmutableList.of(1.1, 2.2),                                         jsonDoubleArray(1.1, 2.2));
+    asserter.accept(ImmutableList.of(money(1.1), money(2.2)),                           jsonDoubleArray(1.1, 2.2));
+    asserter.accept(ImmutableList.of(positiveMultiplier(1.1), positiveMultiplier(2.2)), jsonDoubleArray(1.1, 2.2));
 
     // different types result in exceptions.
     rbSetOf(
@@ -454,7 +451,7 @@ public class RBJsonArraysTest {
         ImmutableList.of(DUMMY_STRING, DUMMY_POSITIVE_MULTIPLIER),
         ImmutableList.of(DUMMY_MONEY, DUMMY_POSITIVE_MULTIPLIER))
         .forEach(list ->
-            assertIllegalArgumentException( () -> toJsonArray(list)));
+            assertIllegalArgumentException( () -> listToJsonArray(list)));
   }
 
   // We'd normally create a lambda inside a test function and use that, but we can't use generics with lambdas I think.
