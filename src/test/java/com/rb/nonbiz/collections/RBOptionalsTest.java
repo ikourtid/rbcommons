@@ -58,6 +58,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 public class RBOptionalsTest {
 
@@ -254,6 +255,11 @@ public class RBOptionalsTest {
     assertThat(
         filterPresentOptionals(ImmutableList.of(Optional.of("a"), Optional.empty(), Optional.of("b"))).iterator(),
         iteratorEqualityMatcher(ImmutableList.of("a", "b").iterator()));
+  }
+
+  @Test
+  public void testFilterPresentOptionalsOfSubclasses() {
+    fail("FIXME IAK");
   }
 
   @Test
