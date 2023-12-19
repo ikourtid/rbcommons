@@ -280,6 +280,21 @@ public class RBOptionals {
   }
 
   /**
+   * Returns a list that includes only the present items from the optionals passed in (in order),
+   * without the Optional wrapper.
+   */
+  @SafeVarargs
+  public static <T> List<T> filterPresentOptionalsOfSubclasses(Optional<? extends T> first, Optional<? extends T> ... rest) {
+    // We are overestimating in the case where empty optionals exist, but that's OK.
+    List<T> list = newArrayListWithExpectedSize(1 + rest.length);
+    first.ifPresent(v -> list.add(v));
+    for (Optional<? extends T> restItem : rest) {
+      restItem.ifPresent(v -> list.add(v));
+    }
+    return list;
+  }
+
+  /**
    * Returns a list of doubles that includes only the present items from the optionals passed in (in order),
    * This applies to the special case of OptionalDouble.
    */
