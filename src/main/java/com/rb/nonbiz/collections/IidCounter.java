@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.rb.biz.types.asset.HasInstrumentId;
 import com.rb.biz.types.asset.InstrumentId;
+import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -14,6 +15,7 @@ import static com.rb.nonbiz.collections.IidCounter.IidCounterBuilder.iidCounterB
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.newIidSet;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMap;
+import static com.rb.nonbiz.text.Strings.formatIidMap;
 
 /**
  * Helps us keep a track of the # of times we have seen a bunch of items, per InstrumentId.
@@ -96,6 +98,10 @@ public class IidCounter {
     return rawMap;
   }
 
+  @Override
+  public String toString() {
+    return Strings.format("[IIC %s IIC", formatIidMap(rawMap));
+  }
 
   /**
    * An {@link RBBuilder} that constructs an {@link IidCounter}.
