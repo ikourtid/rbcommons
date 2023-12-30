@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.rb.biz.types.Money.money;
+import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalDouble;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalImpreciseValueToDoubleOrZero;
@@ -255,11 +256,6 @@ public class RBOptionalsTest {
     assertThat(
         filterPresentOptionals(ImmutableList.of(Optional.of("a"), Optional.empty(), Optional.of("b"))).iterator(),
         iteratorEqualityMatcher(ImmutableList.of("a", "b").iterator()));
-  }
-
-  @Test
-  public void testFilterPresentOptionalsOfSubclasses() {
-    fail("FIXME IAK");
   }
 
   @Test
