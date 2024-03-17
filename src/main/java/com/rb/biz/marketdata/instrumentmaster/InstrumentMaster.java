@@ -38,6 +38,10 @@ public interface InstrumentMaster {
     return latestValidSymbol.orElseGet( () -> instrumentIdAsSymbol(instrumentId));
   }
 
+  /**
+   * WARNING - only use this if your other code uses the {@link EncodedIdGenerator} as a mechanism for generating
+   * intuitive numeric {@link InstrumentId}.
+   */
   default Symbol getLatestValidSymbolOrBestGuess(InstrumentId instrumentId, LocalDate effectiveDate) {
     InstrumentIdGenerator instrumentIdGenerator = new InstrumentIdGenerator();
     instrumentIdGenerator.encodedIdGenerator = new EncodedIdGenerator();
