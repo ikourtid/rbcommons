@@ -6,6 +6,10 @@ import com.rb.nonbiz.text.Strings;
 import static com.rb.biz.investing.quality.ContinuouslyCompoundedAnnualizedReturn.continuouslyCompoundedAnnualizedReturn;
 import static com.rb.biz.types.OnesBasedReturn.onesBasedReturn;
 
+/**
+ * A typesafe wrapper to denote annually compounded (vs. {@link ContinuouslyCompoundedAnnualizedReturn})
+ * annualized returns (i.e. not aggregate returns over multiple years).
+ */
 public class AnnuallyCompoundedAnnualizedReturn implements Comparable<AnnuallyCompoundedAnnualizedReturn> {
 
   private final OnesBasedReturn rawReturn;
