@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 
 /**
- * Various static methods pertaining to {@link InstrumentId} instances.
+ * Various static utility methods pertaining to {@link InstrumentId}s.
  */
 public class InstrumentIds {
 

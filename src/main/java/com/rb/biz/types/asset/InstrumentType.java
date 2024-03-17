@@ -7,12 +7,12 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 /**
  * Tells us what kind of instrument we are dealing with
- * (ETF, stock, mutual fund, structured product - as of July 2022).
+ * (ETF, stock, mutual fund, structured product - as of March 2024).
  *
- * <p> The {@link InstrumentId} itself does not (and should not) record this information.
+ * <p> The {@link InstrumentId} itself does not (and should not) record this information. </p>
  *
  * <p> These could all have been enums, but using classes and visitors forces the code to handle all cases,
- * especially in case some get added later.
+ * especially in case some get added later. </p>
  *
  * <p> The current possibilities are:
  * <ul>
@@ -21,6 +21,12 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  *   <li> {@link MutualFundInstrumentType MutualFundInstrumentType} </li>
  *   <li> {@link StructuredProductInstrumentType StructuredProductInstrumentType} </li>
  * </ul>
+ *
+ * <p> The instrument type is not very crucial for investing logic. Currently (March 2024) we mostly use it to
+ * group together default values. For example, 'every mutual fund order must be rounded to 5 decimal digits',
+ * with the default (i.e. regardless of asset type) being 0 digits. But currently there is no deeper investing logic
+ * such as 'don't sell if it's a mutual fund', etc. It's really just for grouping together defaults.
+ * </p>
  */
 public abstract class InstrumentType implements HasHumanReadableLabel {
 
@@ -62,7 +68,7 @@ public abstract class InstrumentType implements HasHumanReadableLabel {
   }
 
   /**
-   * A stock.
+   * An equity security (stock).
    *
    * @see InstrumentType
    */

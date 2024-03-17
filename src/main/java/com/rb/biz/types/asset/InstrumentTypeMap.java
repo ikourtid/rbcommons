@@ -5,6 +5,7 @@ import com.rb.biz.types.asset.InstrumentType.MutualFundInstrumentType;
 import com.rb.biz.types.asset.InstrumentType.StockInstrumentType;
 import com.rb.biz.types.asset.InstrumentType.StructuredProductInstrumentType;
 import com.rb.biz.types.asset.InstrumentType.Visitor;
+import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
@@ -18,9 +19,11 @@ import static com.rb.biz.types.asset.InstrumentType.StockInstrumentType.stockIns
 import static com.rb.biz.types.asset.InstrumentType.StructuredProductInstrumentType.structuredProductInstrumentType;
 
 /**
- * A special case of a map of {@link InstrumentType} {@code ->} some value.
+ * A special case of a map of {@link InstrumentType} to some value.
  *
- * <p> Unlike an {@code RBMap<InstrumentType, T>}, this forces you to specify values for all keys. </p>
+ * <p> Unlike an {@link RBMap}, this forces you to specify values for all keys, in the sense that when you use it,
+ * if your requested instrument is not in this map, it will always throw an exception.
+ * There is no equivalent of {@link RBMap#getOptional(Object)}. </p>
  *
  * @see InstrumentType
  */
