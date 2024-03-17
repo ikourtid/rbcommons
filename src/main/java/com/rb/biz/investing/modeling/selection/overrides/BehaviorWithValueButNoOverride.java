@@ -4,6 +4,8 @@ package com.rb.biz.investing.modeling.selection.overrides;
  * Describes what we should do in cases where no override exists for a value.
  *
  * @see Overrides
+ * @see BehaviorWithValueAndOverride
+ * @see OverridesApplier
  */
 public abstract class BehaviorWithValueButNoOverride<T> {
 
@@ -15,6 +17,7 @@ public abstract class BehaviorWithValueButNoOverride<T> {
   }
 
   public abstract T visit(Visitor<T> visitor);
+
 
   public static class UseExistingValueWhenOverrideMissing<T> extends BehaviorWithValueButNoOverride<T> {
 
@@ -33,6 +36,7 @@ public abstract class BehaviorWithValueButNoOverride<T> {
     }
 
   }
+
 
   public static class UseFixedValueWhenOverrideMissing<T> extends BehaviorWithValueButNoOverride<T> {
 

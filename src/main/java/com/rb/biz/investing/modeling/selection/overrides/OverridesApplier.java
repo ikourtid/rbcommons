@@ -9,7 +9,7 @@ import java.util.Optional;
 import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 
 /**
- * Possibly applies an override to value in a map.
+ * Possibly applies an override to a value retrieved from a map.
  *
  * <p> Retrieves a value for a key out of a map, subject to the {@link Overrides} specified
  * (i.e. what to do if a value is missing, what values to override even if they are there, etc.) </p>

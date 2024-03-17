@@ -17,13 +17,11 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.rb.biz.types.Money.money;
-import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalDouble;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalImpreciseValueToDoubleOrZero;
@@ -59,7 +57,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 public class RBOptionalsTest {
 

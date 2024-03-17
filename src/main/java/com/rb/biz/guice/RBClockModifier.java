@@ -6,10 +6,11 @@ import com.google.inject.Singleton;
 import java.time.LocalDateTime;
 
 /**
- * Lets you modify the clock.
+ * Lets you modify the {@link RBClock}.
  *
- * <p> This is meant to be a layer of safety: if you need to modify the time, you need to explicitly inject
- * an RBClockModifier, whereas most code would just be injecting an RBClock to just look at the time. </p>
+ * <p> This is meant to be a layer of safety: if you need to modify the time (which is a rare occurrence, and only
+ * done by some lower-level code), you need to explicitly inject an {@link RBClockModifier}, whereas most code
+ * just injects an {@link RBClock} to just look at the time. </p>
  *
  * <p> Although there is a {@link RBClock#overwriteCurrentTime(RBClockModifierToken, LocalDateTime)} method,
  * it can only be called from {@link RBClockModifier}, because of the trick of passing a
@@ -21,7 +22,8 @@ public class RBClockModifier {
   private static final RBClockModifierToken RB_CLOCK_MODIFIER_TOKEN = new RBClockModifierToken();
 
   /**
-   * This class holds nothing and does nothing. See {@link RBClock#overwriteCurrentTime} for more.
+   * Unusually, his class holds nothing and does nothing. It exists as a safety mechanism to prevent unintentionally
+   * overwriting the global {@link RBClock}. See {@link RBClock#overwriteCurrentTime} for more.
    */
   public final static class RBClockModifierToken {
 

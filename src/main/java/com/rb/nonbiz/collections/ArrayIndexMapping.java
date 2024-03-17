@@ -8,10 +8,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * A map is a mapping of key to value. You can further break down this abstraction:
+ * A map is a mapping of key to value. In the case of an immutable map (which is the only type of map we really use
+ * in this codebase), the values can be compated into an array. You can further break down this map abstraction:
  * <ol type="a">
  *   <li> The mapping from key to int (starting at 0). </li>
- *   <li> The collection of values being mapped. </li>
+ *   <li> A sequential collection of values being mapped. </li>
  * </ol>
  *
  * <p> This class represents just (a). </p>

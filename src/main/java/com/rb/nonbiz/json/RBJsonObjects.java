@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.*;
-import com.rb.nonbiz.search.Filter;
 import com.rb.nonbiz.text.HasUniqueId;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
 import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;

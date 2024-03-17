@@ -18,27 +18,32 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
 import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 
 /**
- * Specifies a set of override values as well as instructions on how to apply them.
+ * Specifies a set of override values, as well as instructions on how to apply them.
  *
- * <p> When we run individual backtests in a batch of 'comparable backtests',
- * we may want to restrict further which instruments we want to trade.
+ * <p> Here is the original use case: When we run individual backtests in a batch of 'comparable backtests',
+ * we may want to restrict further which instruments we want to trade. </p>
  *
- * <p> The protobuf files are meant to be somewhat maximal; if we determine that stock XYZ is good enough
- * to hold and/or sell as an individual stock (e.g. enough trading volume, etc.) under relatively permissive inclusion rules,
- * then its relevant info will be in the protobufs.
- * However, in some rudimentary backtests where we only want to be trading the 'standard' asset class ETFs,
- * we may want to override XYZ from tradable/sellable to e.g. excluded. This data class contains those overrides.
+ * <p> We have a one-off step where we pre-generate such info about how good a stock is to trade in a backtest
+ * in general, and store it in protobuf files. Those protobuf files are meant to be somewhat maximal;
+ * if we determine that stock XYZ is good enough to hold and/or sell as an individual stock <em>in general</em>
+ * (e.g. enough trading volume, etc.) under relatively permissive inclusion rules, then its
+ * corresponding info will be in the protobufs. </p>
  *
- * <p> These overrides are not date-specific; they are meant to apply to all dates in the test.
+ * <p> However, in some rudimentary backtests where we only want to be trading the 'standard' asset class ETFs,
+ * we may want to override stock XYZ from tradable/sellable to e.g. excluded. This data class contains those overrides. </p>
  *
- * <p> Note: in theory, these could be MORE permissive instead of less permissive
- * vs what instruments have already been loaded. However, there is no easy way to check for that.
+ * <p> In this particular example that references backtests, note that these overrides are not date-specific;
+ * they are meant to apply to all dates in the test. </p>
+ *
+ * <p> Backtest note: in theory, these could be MORE permissive instead of less permissive
+ * vs. what instruments have already been loaded. However, there is no easy way to check for that.
  * Just make sure you don't make a mistake when you set up your backtests: e.g. if you specified in
  * {@code AllComparableBacktestSettings} that you always want to exclude stock XYZ, don't set this
  * class to say 'always make XYZ sellable'.
  *
  * @see BehaviorWithValueButNoOverride
  * @see BehaviorWithValueAndOverride
+ * @see OverridesApplier
  */
 public class Overrides<K, V extends Comparable<? super V>> {
 

@@ -2,7 +2,6 @@ package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonElement;
 import com.rb.nonbiz.collections.Coordinates;
-import com.rb.nonbiz.collections.RBCategoryMap;
 import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import org.junit.Test;
