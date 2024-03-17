@@ -47,7 +47,7 @@ public interface RBBuilder<T> {
    * because you cut-and-pasted some code.
    * So you should almost use this inside your builder setters. Search for usage for examples.
    */
-  default T checkNotAlreadySet(T currentFieldValue, T newFieldValue) {
+  default <V> V checkNotAlreadySet(V currentFieldValue, V newFieldValue) {
     RBPreconditions.checkArgument(
         currentFieldValue == null,
         "You are trying to set a value twice in a builder, which is probably a bug: from %s to %s",
@@ -60,7 +60,7 @@ public interface RBBuilder<T> {
    * This is to be used inside any reset* method, whose goal is to update an existing value in the builder.
    * It's a rare enough scenario that merits separately named builder method names starting with reset*.
    */
-  default T checkAlreadySet(T currentFieldValue, T newFieldValue) {
+  default <V> V checkAlreadySet(V currentFieldValue, V newFieldValue) {
     RBPreconditions.checkArgument(
         currentFieldValue != null,
         "You are trying to reset a value to %s in a builder, but the value has not already been set",
