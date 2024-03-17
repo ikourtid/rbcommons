@@ -10,6 +10,9 @@ import com.rb.biz.types.asset.InstrumentId;
 import java.time.LocalDate;
 import java.util.Optional;
 
+/**
+ * Various utility methods for an {@link InstrumentMaster}
+ */
 public class InstrumentMasters {
 
   public static String displaySymbol(
@@ -51,4 +54,5 @@ public class InstrumentMasters {
       }
     });
   }
+
 }

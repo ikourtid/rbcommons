@@ -7,7 +7,7 @@ import static com.rb.biz.investing.quality.AnnuallyCompoundedAnnualizedReturn.an
 import static com.rb.biz.types.OnesBasedReturn.onesBasedReturn;
 
 /**
- * A typesafe wrapper to denote annually compounded (vs. {@link AnnuallyCompoundedAnnualizedReturn})
+ * A typesafe wrapper to denote continuously compounded (vs. {@link AnnuallyCompoundedAnnualizedReturn})
  * annualized returns (i.e. not aggregate returns over multiple years).
  */
 public class ContinuouslyCompoundedAnnualizedReturn implements Comparable<ContinuouslyCompoundedAnnualizedReturn> {
