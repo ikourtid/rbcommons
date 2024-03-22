@@ -9,8 +9,8 @@ import java.util.Iterator;
 /**
  * See #MutableIndexableArray2D.
  *
- * This is a specialized, more memory-efficient alternative to a {@code MutableIndexableArray2D<Integer>}.
- * It's a bit more efficient because it uses unboxed lowercase-i ints.
+ * <p> This is a specialized, more memory-efficient alternative to a {@code MutableIndexableArray2D<Integer>}.
+ * It's a bit more efficient because it uses unboxed lowercase-i ints. </p>
  */
 public class MutableIntegerIndexableArray2D<R, C> {
 
@@ -27,7 +27,7 @@ public class MutableIntegerIndexableArray2D<R, C> {
 
   public static <R, C> MutableIntegerIndexableArray2D<R, C> mutableIntegerIndexableArray2D(
       int[][] rawArray, ArrayIndexMapping<R> rowMapping, ArrayIndexMapping<C> columnMapping) {
-    return new MutableIntegerIndexableArray2D(rawArray, rowMapping, columnMapping);
+    return new MutableIntegerIndexableArray2D<>(rawArray, rowMapping, columnMapping);
   }
 
   public int get(R rowKey, C columnKey) {

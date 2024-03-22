@@ -10,9 +10,12 @@ import java.util.SortedSet;
 import java.util.stream.Stream;
 
 /**
- * This is one of the rare mutable data classes in the codebase.
- * Typically, we will build a MutableRBSortedSet and then 'lock' its values into an RBSortedSet in the same method, and then return it.
- * We should (almost) never pass around a MutableRBSet.
+ * A mutable version of an {@link RBSortedSet}.
+ *
+ * <p> This is one of the rare mutable data classes in the codebase.
+ * Typically, we will build a {@link MutableRBSortedSet} and then 'lock' its values into an {@link RBSortedSet}
+ * in the same method, and then return it.
+ * We should (almost) never pass around a {@link RBSortedSet}. </p>
  */
 public class MutableRBSortedSet<T> {
 

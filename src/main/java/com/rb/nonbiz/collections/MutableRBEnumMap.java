@@ -16,9 +16,11 @@ import java.util.function.UnaryOperator;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
- * This is one of the rare mutable data classes in the codebase.
+ * A mutable map from an enum to a value.
+ *
+ * <p> This is one of the rare mutable data classes in the codebase.
  * Typically, we will build a {@link MutableRBEnumMap} and then 'lock' it into an {@link RBEnumMap} in the same method,
- * and then return it. We should (almost) never pass around a {@link MutableRBEnumMap}.
+ * and then return it. We should (almost) never pass around a {@link MutableRBEnumMap}. </p>
  */
 public class MutableRBEnumMap<E extends Enum<E>, V> {
 

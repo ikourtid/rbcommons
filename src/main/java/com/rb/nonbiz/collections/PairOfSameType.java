@@ -5,12 +5,12 @@ import com.rb.nonbiz.text.Strings;
 import static com.rb.nonbiz.collections.Pair.pair;
 
 /**
- * See Pair class. This is for the special case where both items in the pair are of the same type.
+ * A special case of {@link Pair} where both items are of the same type.
  *
- * This is handy for those cases where you don't want to create a separate named private data class for internal use
- * within an outer class.
+ * <p> This is handy for those cases where you don't want to create a separate named private data class for internal use
+ * within an outer class. </p>
  *
- * Don't use PairOfSameType in public interfaces; create a named class instead.
+ * <p> There is no way to enforce this in Java, but don't use Pair in public interfaces; create a named class instead. </p>
  */
 public class PairOfSameType<T> {
 

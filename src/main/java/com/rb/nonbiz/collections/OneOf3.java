@@ -11,7 +11,7 @@ import static com.rb.nonbiz.collections.RBOptionals.optionalsEqual;
  * A mini-collection that represents a triple where exactly one of the objects exists,
  * i.e. we're not allowed to have 0, 2, or 3 of them be specified.
  *
- * <p> This is a generalization of {@link Either}, but we won't rename Either to OneOf2, because it is fairly widely used
+ * <p> This is a generalization of {@link Either}, but we won't rename {@link Either} to OneOf2, because it is fairly widely used
  * in the code and is therefore already established. </p>
  */
 public class OneOf3<T1, T2, T3> {

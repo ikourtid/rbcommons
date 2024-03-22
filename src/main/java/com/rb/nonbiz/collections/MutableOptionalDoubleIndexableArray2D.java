@@ -8,10 +8,10 @@ import static com.rb.nonbiz.collections.ImmutableDoubleIndexableArray2D.immutabl
 import static com.rb.nonbiz.collections.MutableDoubleIndexableArray2D.mutableDoubleIndexableArray2D;
 
 /**
- * See #IndexableArray2D.
+ * See {@link MutableIndexableArray2D}.
  *
- * This is a specialized, more memory-efficient alternative to a {@code MutableIndexableArray2D<OptionalDouble>}.
- * See OptionalDoubleRawArray2D about why.
+ * <p> This is a specialized, more memory-efficient alternative to a {@code MutableIndexableArray2D<OptionalDouble>}.
+ * See {@link MutableOptionalDoubleRawArray2D} about why. </p>
  */
 public class MutableOptionalDoubleIndexableArray2D<R, C> extends MutableOptionalDoubleRawArray2D {
 
@@ -26,7 +26,7 @@ public class MutableOptionalDoubleIndexableArray2D<R, C> extends MutableOptional
 
   public static <R, C> MutableOptionalDoubleIndexableArray2D<R, C> mutableOptionalDoubleIndexableArray2D(
       ArrayIndexMapping<R> rowMapping, ArrayIndexMapping<C> columnMapping) {
-    return new MutableOptionalDoubleIndexableArray2D(rowMapping, columnMapping);
+    return new MutableOptionalDoubleIndexableArray2D<>(rowMapping, columnMapping);
   }
 
   public OptionalDouble get(R rowKey, C columnKey) {

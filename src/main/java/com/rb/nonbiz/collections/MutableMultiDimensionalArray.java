@@ -17,11 +17,11 @@ import java.util.stream.Stream;
 /**
  * Java allows multi-dimensional arrays, but it's hard to use them unless you know the # of dimensions ahead of time.
  * This is an implementation that allows you to use any number of dimensions.
+ *`
+ * <p> Just like with {@link RBMap}, {@link RBSet}, etc., you should not use a mutable version; once you add the data you want,
+ * wrap the result around a plain {@link MultiDimensionalArray}{@code <T>}, and pass that around. </p>
  *
- * Just like with RBMap, RBSet, etc., you should not use a mutable version; once you add the data you want,
- * wrap the result around a plain {@link MultiDimensionalArray}{@code <T>}, and pass that around.
- *
- * The iterator iterates in the order defined by the MultidimensionalCounter.
+ * <p> The iterator iterates in the order defined by the {@link MultidimensionalCounter}. </p>
  */
 public class MutableMultiDimensionalArray<T> implements Iterable<T>, PrintsMultilineString {
 

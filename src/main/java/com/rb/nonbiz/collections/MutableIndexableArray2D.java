@@ -15,18 +15,18 @@ import static com.rb.nonbiz.collections.RBOptionals.getIntOrThrow;
  * An indexable array is like a regular array, except that you can also access it based on some
  * more meaningful key - not just an integer index.
  *
- * Why not use a map instead? This is a performance optimization for cases where 3rd party libraries
+ * <p> Why not use a map instead? This is a performance optimization for cases where 3rd party libraries
  * operate using arrays. This way, we won't have to convert back and forth from arrays (needed by the 3rd party library)
- * to our own implementation (e.g. maps of arrays, maps of maps, etc.)
+ * to our own implementation (e.g. maps of arrays, maps of maps, etc.) </p>
  *
- * Also, if you know you're dealing with square data (all row/column combinations valid)
+ * <p> Also, if you know you're dealing with square data (all row/column combinations valid)
  * there's only 2 mappings that are stored. Contrast with storing an {@code RBMap<R, RBMap<C, Double>>}
  * where you have O(n) mappings separately stored in the N different submaps.
  * Finally, an IndexableArray2D makes the 'square data' semantics explicit,
- * unlike a map of maps which could be jagged.
+ * unlike a map of maps which could be jagged. </p>
  *
- * IndexableArray2D is a general implementation that works on objects.
- * There are several specialized implementations for primitives; e.g. see DoubleIndexableArray2D.
+ * <p> {@link MutableIndexableArray2D} is a general implementation that works on objects.
+ * There are several specialized implementations for primitives; e.g. see {@link MutableDoubleIndexableArray2D}. </p>
  */
 public class MutableIndexableArray2D<R, C, V> {
 
