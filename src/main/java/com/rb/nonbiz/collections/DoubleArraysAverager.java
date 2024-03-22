@@ -5,6 +5,12 @@ import java.util.Optional;
 
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
+/**
+ * Calculates the average of an array of doubles.
+ *
+ * <p> If ignoreAverageOfSingleItem is true, returns an empty optional in cases where there's only one item
+ * in the array. </p>
+ */
 public class DoubleArraysAverager {
 
   public Optional<double[]> calculateAverageArray(Iterator<double[]> arraysIterator,

@@ -17,9 +17,10 @@ import static com.rb.nonbiz.types.PreciseValue.formatWithoutCommas;
 import static com.rb.nonbiz.types.Weighted.weighted;
 
 /**
- * A thin layer on top of a plain RBMap, for the special case where the values are doubles.
- * It lets you express more explicitly what a map contains.
- * Also has well-defined functionality for summing, combining etc. - see DoubleMapMath.java
+ * A thin layer on top of a plain {@link RBMap}, for the special case where the values are doubles.
+ *
+ * <p> It lets you express more explicitly what a map contains.
+ * It also has well-defined functionality for summing, combining etc. - see {@link DoubleMaps}. </p>
  */
 public class DoubleMap<K> implements Iterable<Weighted<K>>, PrintsMultilineString {
 

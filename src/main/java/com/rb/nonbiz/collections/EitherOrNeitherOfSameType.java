@@ -11,9 +11,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 /**
- * Like EitherOrNeither, except that both items are of the same type.
- *
- * @see EitherOrNeither
+ * Like {@link EitherOrNeither}, except that both items are of the same type.
  */
 public class EitherOrNeitherOfSameType<T> {
 

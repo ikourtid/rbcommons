@@ -26,6 +26,9 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
 import static com.rb.nonbiz.types.LongCounter.longCounter;
 
+/**
+ * Various static utility methods pertaining to {@link ImmutableIndexableArray1D}.
+ */
 public class ImmutableIndexableArrays1D {
 
   /**

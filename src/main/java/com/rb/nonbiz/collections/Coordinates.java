@@ -21,7 +21,7 @@ public class Coordinates {
     this.rawCoordinatesArray = rawCoordinatesArray;
   }
 
-  public static Coordinates coordinates(int...rawCoordinatesArray) {
+  public static Coordinates coordinates(int ... rawCoordinatesArray) {
     RBPreconditions.checkArgument(rawCoordinatesArray.length > 0);
     for (int i = 0; i < rawCoordinatesArray.length; i++) {
       RBPreconditions.checkArgument(rawCoordinatesArray[i] >= 0);

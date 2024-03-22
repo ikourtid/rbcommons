@@ -11,7 +11,7 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * A mini-collection that represents a pair where either the 'left' or the 'right' object exists,
- * i.e. we're not allowed to have neither (or both) be specified.
+ * i.e. it is not valid to have neither be specified, or both.
  */
 public class Either<L, R> {
 

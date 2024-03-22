@@ -26,7 +26,8 @@ import static java.util.Map.Entry.comparingByKey;
 /**
  * A collection of items with weights that sum to 0.
  *
- * In a way, this is similar to SignedPartition, except that the signedFractions must sum to 0, not 1.
+ * <p> In a way, this is similar to {@link SignedPartition},
+ * except that the {@link SignedFraction}s must sum to 0, not 1. </p>
  */
 public class Deviations<K> {
 
