@@ -5,7 +5,8 @@ import com.google.inject.Inject;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 
 /**
- * Applies a series of {@link DetailedPartitionModification}s to an original {@link Partition}.
+ * Applies a series of {@link DetailedPartitionModification}s to an original {@link Partition} to generate a new
+ * {@link Partition}.
  *
  * <p> Just like {@link SingleDetailedPartitionModificationApplier}, except that it can apply multiple modifications
  * in a row. </p>
