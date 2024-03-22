@@ -12,7 +12,7 @@ import static com.rb.biz.types.trading.PositiveQuantity.positiveQuantity;
 import static com.rb.biz.types.trading.SellQuantity.sellQuantity;
 
 /**
- * A quantity that can be positive, negative, or zero.
+ * A quantity (in shares of a security) that can be positive, negative, or zero.
  *
  * <p> Instrument quantities are typically non-negative.
  * A {@code SignedQuantity} is useful because it makes it explicit that a quantity is allowed to be negative or zero,

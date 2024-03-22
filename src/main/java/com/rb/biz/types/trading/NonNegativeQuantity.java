@@ -11,7 +11,7 @@ import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
- * Holds a non-negative quantity. That is, holds a value x such that {@code x >= 0}.
+ * Holds a non-negative quantity in shares of a security. That is, holds a value x such that {@code x >= 0}.
  *
  * @see SignedQuantity
  */

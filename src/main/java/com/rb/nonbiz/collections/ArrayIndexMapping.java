@@ -9,16 +9,16 @@ import java.util.stream.IntStream;
 
 /**
  * A map is a mapping of key to value. In the case of an immutable map (which is the only type of map we really use
- * in this codebase), the values can be compated into an array. You can further break down this map abstraction:
+ * in this codebase), the collection of values can be compacted into an array. You can further break down this map abstraction:
  * <ol type="a">
- *   <li> The mapping from key to int (starting at 0). </li>
- *   <li> A sequential collection of values being mapped. </li>
+ *   <li> The mapping from key to consecutive ints starting at 0 (i.e. array indices). </li>
+ *   <li> A sequential collection of values being mapped (effectively a mapping of int to value). </li>
  * </ol>
  *
  * <p> This class represents just (a). </p>
  *
- * <p> If we share only the mapping part across multiple maps, then we only need to specify the values in each map.
- * This trick allows us to create of maps that are: </p>
+ * <p> If we share only the mapping part across multiple maps, then each map effectively is an array, plus a
+ * pointer to the {@link ArrayIndexMapping}. This trick allows us to create of maps that are: </p>
  * <ol type="a">
  *   <li> More memory-efficient: all the objects are in an array (i.e. consecutive). </li>
  *   <li> Faster, because there are no map lookups (even O(1) ones like in a hashmap) - only array lookups
@@ -27,6 +27,10 @@ import java.util.stream.IntStream;
  *    {@code MarketDaysIntMapping}. </li>
  * </ol>
  *
+ * <p> In particular, this allows us to create a 2-dimensional map (or more dimensions) where we can look up entries
+ * by two keys (not necessarily numeric), instead of by 2 numeric indices like with a 2-d array.
+ * </p>
+ *
  * <p> The various classes with 'IndexableArray' in their name use this. </p>
  *
  * <p> Of course, this is only applicable when the keys are unique. </p>
@@ -34,17 +38,17 @@ import java.util.stream.IntStream;
 public interface ArrayIndexMapping<T> {
 
   /**
-   * This should throw if numeric index does not appear in the mapping.
+   * This must throw if numeric index does not appear in the mapping.
    */
   T getKey(int index);
 
   /**
-   * This should throw if the key is not in the mapping.
+   * This must throw if the key is not in the mapping.
    */
   int getIndexOrThrow(T key);
 
   /**
-   * This returns OptionalInt.empty() if the key is not in the mapping. Otherwise, return the index.
+   * This returns OptionalInt.empty() if the key is not in the mapping. Otherwise, it returns the index.
    */
   OptionalInt getOptionalIndex(T key);
 

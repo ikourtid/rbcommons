@@ -17,7 +17,7 @@ import static com.rb.nonbiz.math.RBBigDecimals.bigDecimalAverage;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
- * Holds a price.
+ * A typesafe representation of a price per unit of a security, i.e. price per share for stocks.
  *
  * <p> Just a thin wrapper around {@link PreciseValue}. </p>
  */

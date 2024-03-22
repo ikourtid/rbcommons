@@ -11,9 +11,11 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 
 /**
- * This is a generalization of the following use case:
+ * A map whose values are {@link ClosedUnitFractionHardAndSoftRange} objects.
  *
- * <p> Say an asset class is specified by an advisor to be between 30% to 40% of total (hard range). </p>
+ * <p> This is a generalization of the following use case: </p>
+ *
+ * <p> Say an asset class is requested to remain between 30% to 40% of total (hard range). </p>
  *
  * <p> If a portfolio is outside the hard range, we should force it to be a bit inside of the 30%-40% range -
  * i.e. not exactly at the edge (e.g. 30%).
@@ -21,10 +23,12 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
  *
  * <p> Here's why: If an asset class at 29% was traded to be exactly at 30%,
  * then if it dropped in price more than the other asset classes on the next day and went to 29.99% of the total,
- * we'd have to trade again. </p>
+ * the constraint would be violated, and we'd have to trade again. </p>
  *
  * <p> It's like how a house heating thermostat may turn on the heat when the temperature goes to 68,
  * but only turn it off when it goes to 70. It is to prevent oscillations around a single cutoff point. </p>
+ *
+ * <p> These semantics are implemented elsewhere; this class just stores the data. </p>
  *
  * @see ClosedUnitFractionHardAndSoftRange
  */

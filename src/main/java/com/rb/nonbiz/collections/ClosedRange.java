@@ -9,10 +9,10 @@ import java.util.Optional;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 
 /**
- * A simple wrapper around a {@link Range} that ensures that the range is closed.
+ * A simple wrapper around a {@link Range} that ensures that the range is closed on both ends.
  *
- * <p> There are many places in the code where we want to pass around a closed range, so instead of passing a Range
- * and asserting at the callee that it is a closed range, it is clearer to use a ClosedRange. </p>
+ * <p> There are many places in the code where we want to pass around a closed range, so instead of passing a {@link Range}
+ * and asserting at the callee that it is a closed range, it is clearer to use a {@link ClosedRange}. </p>
  */
 public class ClosedRange<T extends Comparable<? super T>> {
 
