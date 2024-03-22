@@ -16,7 +16,8 @@ import static com.rb.nonbiz.collections.HasLongSets.mutableUnionOfHasLongSets;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.newIidSet;
 
 /**
- * IidSet constructors based on unions / intersections / differences of IidSets and / or Sets.
+ * {@link IidSet} constructors based on unions / intersections / differences of {@link IidSet}s and / or
+ * plain Java {@link Set}s.
  */
 public class IidSetOperations {
 

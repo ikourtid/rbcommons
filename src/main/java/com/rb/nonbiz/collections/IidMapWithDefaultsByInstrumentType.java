@@ -17,9 +17,12 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 
 /**
- * Basically just an {@link IidMap}, but it also stores a default value per instrument type,
- * with the semantics that the default value applies when a value for a given {@link InstrumentId}
- * is missing.
+ * Similar to an {@link IidMap}, but it also stores a default value per instrument type,
+ * with the semantics that the default value of the respective instrument type applies
+ * when a value for a given {@link InstrumentId} is missing.
+ *
+ * <p> This means that the {@link InstrumentType} must be known when attempting to retrieve a value from this map,
+ * so that the corresponding default value can be used if the {@link InstrumentId} key is missing. </p>
  *
  * @see IidMap
  * @see InstrumentTypeMap

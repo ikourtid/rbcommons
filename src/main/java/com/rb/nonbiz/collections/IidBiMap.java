@@ -16,8 +16,9 @@ import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 /**
  * A bidirectional map between InstrumentId and another type.
  *
- * Note: generic class V must implement equals/hashCode in order for this to have the semantics you want.
- * Otherwise, the RBMap member would just be doing pointer comparisons when looking up an item by value.
+ * <p> Note: generic class V must implement equals/hashCode (which is rare in our codebase)
+ * in order for this to have the semantics you want.
+ * Otherwise, the {@link RBMap} member would just be doing pointer comparisons when looking up an item by value. </p>
  */
 public class IidBiMap<V> implements PrintsInstruments {
 

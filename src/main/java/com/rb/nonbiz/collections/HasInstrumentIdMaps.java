@@ -1,5 +1,6 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.ImmutableMap;
 import com.rb.biz.types.asset.HasInstrumentId;
 
 import java.util.function.Function;
@@ -7,6 +8,9 @@ import java.util.function.Function;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.collections.Pair.pair;
 
+/**
+ * Various static utility methods pertaining to {@link HasInstrumentIdMap}.
+ */
 public class HasInstrumentIdMaps {
 
   public static <T extends HasInstrumentId, V> HasInstrumentIdMap<T, V> newHasInstrumentIdMap(
@@ -15,7 +19,7 @@ public class HasInstrumentIdMaps {
   }
 
   /**
-   * Unlike ImmutableMap#of, there is no 0-pair override for HasInstrumentIdMapOf.
+   * Unlike {@link ImmutableMap#of()}, there is no 0-pair override.
    * This is to force you to use emptyRBMap, which is more explicit and makes reading tests easier.
    * Likewise for singletonRBMap().
    */
@@ -24,7 +28,7 @@ public class HasInstrumentIdMaps {
   }
 
   /**
-   * Unlike ImmutableMap#of, there is no single-pair override for HasInstrumentIdMapOf.
+   * Unlike {@link ImmutableMap#of()}, there is no single-pair override for HasInstrumentIdMapOf.
    * This is to force you to use singletonHasInstrumentIdMap, which is more explicit and makes reading tests easier.
    * Likewise for emptyHasInstrumentIdMap().
    */

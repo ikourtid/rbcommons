@@ -8,8 +8,13 @@ import java.util.Map;
 
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 
+/**
+ * Various simple utility methods for constructing an {@link IidMap}.
+ */
 public class IidMapSimpleConstructors {
 
+  // We use SuppressWarnings because we can use the same instance everywhere; the generic class does not matter.
+  @SuppressWarnings("rawtypes")
   private static final IidMap EMPTY_INSTANCE = newIidMap(newMutableIidMapWithExpectedSize(1));
 
   public static <V> IidMap<V> newIidMap(TLongObjectHashMap<V> rawMap) {
@@ -19,6 +24,9 @@ public class IidMapSimpleConstructors {
       // (e.g. because the code never ended up putting anything in it), then we want the system to be able to
       // garbage-collect it. Since there is only one EMPTY_INSTANCE, we get to reuse it for all cases where an
       // empty IidMap is used. This works because IidMaps are immutable, so it's OK to share a read-only instance.
+
+      // We use the suppression below, because we can use the same instance everywhere; the generic class does not matter.
+      //noinspection unchecked
       return EMPTY_INSTANCE;
     }
     return new IidMap<>(rawMap);
@@ -39,6 +47,9 @@ public class IidMapSimpleConstructors {
       // (e.g. because the code never ended up putting anything in it), then we want the system to be able to
       // garbage-collect it. Since there is only one EMPTY_INSTANCE, we get to reuse it for all cases where an
       // empty IidMap is used. This works because IidMaps are immutable, so it's OK to share a read-only instance.
+
+      // We use the suppression below, because we can use the same instance everywhere; the generic class does not matter.
+      //noinspection unchecked
       return EMPTY_INSTANCE;
     }
     MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(initialMap.size());
@@ -56,6 +67,8 @@ public class IidMapSimpleConstructors {
    * Likewise for singletonRBMap().
    */
   public static <V> IidMap<V> emptyIidMap() {
+    // We use the suppression below, because we can use the same instance everywhere; the generic class does not matter.
+    //noinspection unchecked
     return EMPTY_INSTANCE;
   }
 

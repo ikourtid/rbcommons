@@ -1,6 +1,8 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.rb.biz.types.asset.AssetId;
+import com.rb.nonbiz.math.eigen.Investable;
 import com.rb.nonbiz.types.HasLongRepresentation;
 import gnu.trove.iterator.TLongIterator;
 import gnu.trove.iterator.TLongObjectIterator;
@@ -17,22 +19,22 @@ import java.util.stream.LongStream;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
- * This is a special implementation of an RBMap (SORT OF) for the cases where the key class
- * implements HasLongRepresentation. In those cases, we can key off of the long, and can therefore use
+ * This is a special implementation of an {@link RBMap} (more or less) for the cases where the key class
+ * implements {@link HasLongRepresentation}. In those cases, we can key off of the long, and can therefore use
  * specialized classes which are faster and more space-efficient (which can also result in speed increases
  * due to fewer cache misses, presumably).
  *
- * This is used in IidMap in particular, but can also be used for other cases
- * of HasLongRepresentation (AssetId, Investable, AssetClass, etc.)
+ * <p> This is used in {@link IidMap} in particular, but can also be used for other cases
+ * of {@link HasLongRepresentation} ({@link AssetId}, {@link Investable}, AssetClass, etc.). </p>
  *
- * I originally wanted to make this look just like RBMap, so that the code can be agnostic
- * about whether it's using a special implementation for the cases
+ * <p> We originally wanted to make this look just like {@link RBMap}, so that the code can be agnostic
+ * about whether it's using a special implementation for the cases of {@link HasLongRepresentation}.
  * However, it's just not possible. The GNU Trove objects that we use for the raw underlying map
- * do not really support a java.util.Map-like interface - e.g. an entrySet().
+ * do not really support a java.util.Map-like interface - e.g. an entrySet(). </p>
  *
- * Therefore, any code that uses this will need to treat this specially (i.e. not like an RBMap),
- * and also cannot use the various handy transformation functions in RBMap
- * (although it is always possible to implement equivalents - but it can't be the same code).
+ * <p> Therefore, any code that uses this will need to treat this specially (i.e. not like an {@link RBMap}),
+ * and also cannot use the various handy transformation functions in {@link RBMap}
+ * (although it is always possible to implement equivalents - but it can't be the same code). </p>
  *
  * @see RBMap
  * @see HasLongSet

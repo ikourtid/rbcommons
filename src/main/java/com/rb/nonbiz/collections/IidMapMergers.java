@@ -26,6 +26,9 @@ import static com.rb.nonbiz.collections.RBOptionals.filterPresentOptionalsInStre
 import static com.rb.nonbiz.collections.RBOptionals.getIntOrThrow;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 
+/**
+ * Various static utility methods for merging {@link IidMap}s.
+ */
 public class IidMapMergers {
 
   /**

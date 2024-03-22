@@ -15,6 +15,9 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 
+/**
+ * Various utility methods pertaining to {@link IidMap}.
+ */
 public class IidMaps {
 
   /**

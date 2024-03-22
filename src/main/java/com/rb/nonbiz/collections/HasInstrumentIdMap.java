@@ -23,7 +23,7 @@ import static com.rb.nonbiz.collections.Pair.pair;
  *
  * <p> Downside: you only index the map using an InstrumentId, not the full HasInstrumentId class.
  *    However, that's not bad, since we rarely implement #equals, and we'd need to if we actually wanted to use
- *    the HasInstrumentId implementer class as a key. </p>
+ *    the {@link HasInstrumentId} as a key. </p>
  *
  * <p> This is useful for cases where we want to attach additional information to the {@link InstrumentId},
  * without generating 2 maps of iid {@code ->} {@link HasInstrumentId} and iid {@code ->} value. </p>

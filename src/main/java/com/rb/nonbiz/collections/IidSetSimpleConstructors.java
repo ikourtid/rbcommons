@@ -13,7 +13,7 @@ import static com.rb.nonbiz.collections.MutableIidSet.newMutableIidSetWithExpect
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstAndRest;
 
 /**
- * Constructors for IidSets based on lists, Collections, iterators.
+ * Constructors for {@link IidSet}s based on lists, {@link Collection}s, {@link Iterator}s, etc..
  */
 public class IidSetSimpleConstructors {
 
@@ -59,7 +59,7 @@ public class IidSetSimpleConstructors {
     return newIidSetHelper(NOT_IN_INCREASING_INSTRUMENT_ID, ALLOW_DUPLICATES, instrumentIds, sizeHint);
   }
 
-  public static IidSet newIidSetFromPossibleDuplicates(InstrumentId...instrumentIds) {
+  public static IidSet newIidSetFromPossibleDuplicates(InstrumentId ... instrumentIds) {
     return newIidSetHelper(ALLOW_DUPLICATES, instrumentIds);
   }
 

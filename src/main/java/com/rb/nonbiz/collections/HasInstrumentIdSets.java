@@ -15,6 +15,9 @@ import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpect
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 
 
+/**
+ * Various static utility methods pertaining to {@link HasInstrumentIdSet}, including static constructors.
+ */
 public class HasInstrumentIdSets {
 
   public static <T extends HasInstrumentId> HasInstrumentIdSet<T> newHasInstrumentIdSet(

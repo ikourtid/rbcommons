@@ -12,6 +12,12 @@ import java.util.function.BiConsumer;
 import static com.rb.nonbiz.collections.IidSetOperations.unionOfIidSets;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
+/**
+ * Support for visiting {@link IidMap} objects - possible multiple ones.
+ *
+ * <p> This it to help focus on what to do on each case (e.g. an object appears on only the 1st, or only the 2nd, or
+ * both maps) by only having to supply a lambda for each case, without having to do if/then/else-type logic. </p>
+ */
 public class IidMapVisitors {
 
   /**

@@ -13,6 +13,9 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 
+/**
+ * Various static utility methods for constructing an {@link IidMap}.
+ */
 public class IidMapConstructors {
 
   /**

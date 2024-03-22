@@ -40,6 +40,8 @@ import static java.util.Comparator.comparing;
 /**
  * A specialized map for the cases where the key is an {@link InstrumentId}.
  *
+ * <p> It uses GNU Trove specialized maps for improved performance vs. {@link RBMap}, which is more general. </p>
+ *
  * <p> Note that this is not exactly like an {@link RBMap}, and has somewhat unorthodox ways to iterate over it
  * (unlike {@link RBMap}, which sort of looks like a {@link Map}). </p>
  *

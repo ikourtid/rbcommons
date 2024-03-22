@@ -14,7 +14,12 @@ import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndex
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
 /**
- * Just like {@link MutableDoubleIndexableArray2D}, except this is immutable.
+ * <p> A map that can be indexed with two keys. </p>
+ *
+ * <p> This is more efficient than using a map of maps, and also ensures that the map is 'rectangular',
+ * i.e. there are values for every combination of the keys in the 1st and 2nd dimension's keyset. </p>
+ *
+ * <p> Similar to {@link MutableDoubleIndexableArray2D}, except this is immutable. </p>
  *
  * <p> Note that someone can modify the underlying object if they have a handle to it via getRawArrayUnsafe()
  * but at least they can't modify it through THIS object; there's no set() method here. </p>
