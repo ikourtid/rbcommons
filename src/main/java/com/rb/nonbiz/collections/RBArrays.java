@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.stream.IntStream;
 
+/**
+ * Various static utility methods pertaining to Java arrays.
+ */
 public class RBArrays {
 
   /**

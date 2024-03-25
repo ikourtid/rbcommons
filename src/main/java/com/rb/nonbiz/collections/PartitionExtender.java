@@ -10,9 +10,9 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 
 /**
  * 'Extends' an existing partition by adding a new item and normalizing the rest.
- * E.g. extending partition {a {@code ->}  .6, b {@code ->}  .4} by adding c {@code ->}  .2
+ * <p> E.g. extending partition {a {@code ->}  .6, b {@code ->}  .4} by adding c {@code ->}  .2
  * will result in {a {@code ->}  .48, b {@code ->}  .32, c {@code ->}  .2}
- * (i.e. normalize everything else to sum to (1 - 0.2) but have the same relative proportions as before)
+ * (i.e. normalize everything else to sum to (1 - 0.2) but have the same relative proportions as before.) </p>
  *
  * @see PartitionUnextender
  */

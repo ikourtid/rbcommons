@@ -5,6 +5,9 @@ import com.rb.nonbiz.util.RBPreconditions;
 import static com.rb.nonbiz.collections.PartialComparisonResult.noOrderingDefined;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondAndRest;
 
+/**
+ * Various utility methods pertaining to {@link PartialComparator}.
+ */
 public class PartialComparators {
 
   public static PartialComparisonResult partiallyCompareMultiple(

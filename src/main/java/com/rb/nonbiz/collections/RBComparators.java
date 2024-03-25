@@ -14,6 +14,10 @@ import static com.rb.nonbiz.collections.RBOptionalTransformers.transformPairOfOp
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformPairOfOptionalInts;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformPairOfOptionals;
 
+/**
+ * Various static utility methods pertaining to Java {@link Comparator}, including cases of partial comparison
+ * (see {@link PartialComparisonResult}).
+ */
 public class RBComparators {
 
   @SafeVarargs

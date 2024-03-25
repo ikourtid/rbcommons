@@ -8,7 +8,7 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 
 /**
- * Various helper methods pertaining to {@link BitSet}.
+ * Various static utility helper methods pertaining to {@link BitSet}.
  */
 public class RBBitSets {
 

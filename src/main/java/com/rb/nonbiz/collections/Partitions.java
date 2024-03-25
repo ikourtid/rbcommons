@@ -14,6 +14,9 @@ import static com.rb.nonbiz.collections.RBStreams.sumAsBigDecimals;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
+/**
+ * Various static utility methods pertaining to a {@link Partition}.
+ */
 public class Partitions {
 
   /**

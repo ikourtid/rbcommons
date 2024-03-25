@@ -11,22 +11,25 @@ import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 
 /**
- * #see PartitionExtender
- * This does the opposite; it reduces the weight of an item in the partition.
+ * <p> This does the opposite of the {@link PartitionExtender}; it reduces the weight of an item in the partition. </p>
  *
- * The PartitionExtender has the semantics that if we extend by e.g. 0.2, then 0.2 refers to the total AFTER
+ * <p> This has the semantics that if we extend by e.g. 0.2, then 0.2 refers to the total AFTER
  * extending. For example, extending a $1m portfolio with 0.2 KO will result in $250k KO (0.2 = 1.25m / 1m).
  * One *could* also have alternate semantics, so that 0.25 would achieve the same effect as above. However,
  *
- * a) this way we could only extend by 100% (since we pass in a unit fraction whose max value is 1);
+ * <ul>
+ * <li> this way we could only extend by 100% (since we pass in a unit fraction whose max value is 1);
  * i.e. we can't add $101 KO to a portfolio that has $100.
  * Of course, we don't *have* to pass in a UnitFraction, but it's tighter semantics than passing any arbitrary
  * multiplier. In fact, all values in [0, 1) make sense; 1 does not because we'd have to add an infinite quantity
- * of this new item (or increase an existing item by an infinite amount) to have it become 100% of the new partition.
+ * of this new item (or increase an existing item by an infinite amount) to have it become 100% of the new partition. </li>
  *
- * b) the reason I originally created the PartitionExtender was to 'splice in' 20 bps of cash to an existing
- * target allocation. This 20 bps is typically defined in terms of the final portfolio, not the original.
+ * <li> the reason I originally created the PartitionExtender was to 'splice in' 20 bps of cash to an existing
+ * target allocation. This 20 bps is typically defined in terms of the final portfolio, not the original. </li>
+ * </ul>
+ * </p>
  *
+ * <p>
  * OK, so we want to keep the semantics symmetric here. The PartitionExtender conforms to:
  * "new value" = "old value" + unitFractionOfNewTotal * "new value"
  * e.g.
@@ -34,22 +37,23 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
  * So what would 0.2 mean in this case if we reduce, in this example using 0.2 (but reducing down)?
  * "new value" = "old value" - unitFractionOfNewTotal * "new value"
  * <pre>
- * {@code <==> new = old - 0.2 * new
- *        <==> new = old / 1.2 = 0.83333333333 * old}
+ *   <==> new = old - 0.2 * new
+ *   <==> new = old / 1.2 = 0.83333333333 * old
  * </pre>
+ * </p>
  *
- * The problem with these semantics though is that the extending and 'unextending' are not inverse functions.
+ * <p> The problem with these semantics though is that the extending and 'unextending' are not inverse functions.
  * It would be clear to have unextend(extend(partition, 0.2), 0.2) == partition.
  * Plus, it's a bit easier to think about it. In the case of extending, there actually is some new amount that
- * is 0.2 of the new total. In the case of unextending, there isn't; it's not in the new total.
+ * is 0.2 of the new total. In the case of unextending, there isn't; it's not in the new total. </p>
  *
- * The other advantage of these semantics is that, just like with PartitionExtender, the range of valid values to
+ * <p> The other advantage of these semantics is that, just like with PartitionExtender, the range of valid values to
  * 'unextend' by is again in [0, 1). If we 'unextend' by 0, we do nothing (easy); if we unextend by 100% - epsilon
- * an item that's 100% - epsilon of a 2-item partition, we'll still a valid partition, namely 100% of the other item.
+ * an item that's 100% - epsilon of a 2-item partition, we'll still a valid partition, namely 100% of the other item. </p>
  *
- * So these are the semantics we will use.
+ * <p> So these are the semantics we will use. </p>
  *
- * Therefore, post-unextension partition "value" = (1 - 0.2) * "pre", in this example. I.e. $1m = 0.8 * $1.25m
+ * <p> Therefore, post-unextension partition "value" = (1 - 0.2) * "pre", in this example. I.e. $1m = 0.8 * $1.25m </p>
  */
 public class PartitionUnextender {
 

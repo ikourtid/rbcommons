@@ -10,9 +10,9 @@ import static com.rb.nonbiz.collections.PartitionPairDifferenceStats.PartitionPa
 /**
  * Returns statistics about the differences in a pair of partitions.
  *
- * If a key appears in one partition but not another, we will treat that other partition like it has a 0% holding
+ * <p> If a key appears in one partition but not another, we will treat that other partition like it has a 0% holding
  * in that key. This is not some limiting assumption; partitions never include entries for keys that have a 0%
- * in the partition, so no key means 0%.
+ * in the partition, so no key means 0%. </p>
  */
 public class PartitionPairDifferenceStatsCalculator {
 
