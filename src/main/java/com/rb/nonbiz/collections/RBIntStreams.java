@@ -7,6 +7,10 @@ import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+/**
+ * Various static utility methods related to {@link IntStream}s, or more generally cases where a {@link Stream}
+ * and integers are involved.
+ */
 public class RBIntStreams {
 
   /**

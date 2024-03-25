@@ -14,7 +14,7 @@ import static com.rb.nonbiz.collections.RBIterators.consecutivePairsIterator;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
- * Various static methods pertaining to Iterable objects.
+ * Various static methods pertaining to {@link Iterable} objects.
  */
 public class RBIterables {
 

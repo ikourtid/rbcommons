@@ -31,7 +31,7 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.Comparator.comparing;
 
 /**
- * Various static methods pertaining to List objects.
+ * Various static methods pertaining to {@link List} objects.
  */
 public class RBLists {
 

@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableBiMap.Builder;
+import com.google.common.collect.ImmutableMap;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
@@ -35,25 +36,25 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Comparator.comparing;
 
 /**
- * Similar to java.util.Map. However, it is meant to be immutable.
+ * Similar to Java {@link Map}. However, it is meant to be immutable.
  *
- * <p>Always prefer RBMap to a java.util.Map, especially on an interface, but even inside a method's body, when possible.
+ * <p>Always prefer {@link RBMap} to a Java {@link Map}, especially on an interface, but even inside a method's body, when possible.
  * </p>
  *
- * <p> Guava ImmutableMap implements the Map interface, but its put() method will throw at runtime.
- * However, RBMap intentionally has NO methods to modify it. That offers compile-time safety. </p>
+ * <p> Guava {@link ImmutableMap} implements the {@link Map} interface, but its put() method will throw at runtime.
+ * However, {@link RBMap} intentionally has NO methods to modify it. That offers compile-time safety. </p>
  *
- * <p> Another advantage: #get on a regular Map returns null if the value is not there. We don't like nulls in the codebase,
+ * <p> Another advantage: #get on a regular {@link Map} returns null if the value is not there. We don't like nulls in the codebase,
  * plus that behavior is confusing to someone new to Java. </p>
  *
- * <p> Instead, RBMap has: </p>
+ * <p> Instead, {@link RBMap} has: </p>
  * <ol>
- *   <li> #getOptional (which will return an Optional.empty() if there is no value for the specified key). </li>
- *   <li> #getOrThrow, which assumes the value is there, and returns {@link Optional}.of(...). </li>
+ *   <li> {@link #getOptional(Object)} (which will return an Optional.empty() if there is no value for the specified key). </li>
+ *   <li> {@link #getOrThrow(Object)}, which assumes the value is there, and returns {@link Optional}.of(...). </li>
  * </ol>
  *
- * @see RBMaps for some handy static methods.
- * @see MutableRBMap for a class that helps you initialize an RBMap.
+ * @see RBMaps
+ * @see MutableRBMap
  */
 public class RBMap<K, V> {
 

@@ -14,7 +14,8 @@ import static java.util.Collections.singletonList;
 
 /**
  * This is like a plain {@code List<T>}, except with the semantics that a single item may be singled out as somehow being special.
- * It's possible to have no such 'special' item, but we can't have more than one.
+ *
+ * <p> It's possible to have no such 'special' item, but we can't have more than one. </p>
  */
 public class RBListWithSpecialValue<T> {
 

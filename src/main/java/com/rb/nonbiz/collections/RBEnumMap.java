@@ -4,6 +4,7 @@ import com.rb.nonbiz.util.RBEnumMapSimpleConstructors;
 import com.rb.nonbiz.util.RBEnumMaps;
 
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -12,25 +13,26 @@ import java.util.function.BiConsumer;
 import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMapFromPlainRBMap;
 
 /**
- * Similar to {@link java.util.EnumMap}. However, it is meant to be immutable.
+ * Similar to {@link EnumMap}. However, it is meant to be immutable. So this is more like an {@link RBMap},
+ * but specialized for enum keys.
  *
- * <p>Always prefer {@link RBEnumMap} to a java.util.EnumMap, especially on an interface, but even inside a method's body, when possible.
- * </p>
+ * <p>Always prefer {@link RBEnumMap} to {@link EnumMap}, especially on an interface,
+ * but even inside a method's body, when possible. Here's why: </p>
  *
  * <p> Guava ImmutableMap implements the Map interface, but its put() method will throw at runtime.
  * However, {@link RBEnumMap} intentionally has NO methods to modify it. That offers compile-time safety. </p>
  *
- * <p> Another advantage: #get on a regular {@link Map} returns null if the value is not there. We don't like nulls in the codebase,
- * plus that behavior is confusing to someone new to Java. </p>
+ * <p> Another advantage: a regular {@link Map#get(Object)} returns null if the value is not there.
+ * We don't like nulls in the codebase, plus that behavior is confusing to someone new to Java. </p>
  *
- * <p> Instead, RBEnumMap has: </p>
+ * <p> Instead, {@link RBEnumMap} has: </p>
  * <ol>
- *   <li> #getOptional (which will return an Optional.empty() if there is no value for the specified key). </li>
- *   <li> #getOrThrow, which assumes the value is there, and returns {@link Optional}.of(...). </li>
+ *   <li> {@link #getOptional(Enum)} (which will return an Optional.empty() if there is no value for the specified key). </li>
+ *   <li> {@link #getOrThrow(Enum)}, which assumes the value is there, and returns {@link Optional}.of(...). </li>
  * </ol>
  *
- * @see RBEnumMaps for some handy static methods.
- * @see RBEnumMapSimpleConstructors for some helpful constructors.
+ * @see RBEnumMaps
+ * @see RBEnumMapSimpleConstructors
  */
 public class RBEnumMap<E extends Enum<E>, V> {
 

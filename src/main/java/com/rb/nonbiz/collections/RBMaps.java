@@ -19,7 +19,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 
 /**
- * Various static methods pertaining to RBMap objects.
+ * Various static methods pertaining to {@link RBMap} objects.
  *
  * @see RBMap
  */
