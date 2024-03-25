@@ -19,8 +19,8 @@ import static com.rb.nonbiz.util.RBPreconditions.checkDoesNotThrowException;
 /**
  * A {@link Function} from {@link UnitFraction} to any arbitrary {@link RBNumeric} type.
  *
- * <p> There are additional semantics that function must produce values for the entire domain of {@link UnitFraction},
- * from {@link UnitFraction#UNIT_FRACTION_0} to {@link UnitFraction#UNIT_FRACTION_1}.
+ * <p> There are additional semantics that the domain of the function is the same as the range of valid values
+ * of {@link UnitFraction}, from {@link UnitFraction#UNIT_FRACTION_0} to {@link UnitFraction#UNIT_FRACTION_1}.
  * There's a precondition that checks for that, although it's a 'best efforts' check. </p>
  */
 public class UnitFractionFunction<Y extends RBNumeric<? super Y>>

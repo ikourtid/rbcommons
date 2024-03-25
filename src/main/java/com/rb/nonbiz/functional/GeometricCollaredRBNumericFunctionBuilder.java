@@ -12,9 +12,9 @@ import static com.rb.nonbiz.functional.RBNumericFunction.rbNumericFunction;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 /**
- * This lets us build a function with a collar on its Y values (min + max) in a slightly more legible fashion.
+ * <p> This lets us build a function with a collar on its Y values (min + max) in a slightly more legible fashion.
  * I don't know if there's a term for 'geometric interpolation', but one way to think about this intuitively is what
- * happens in the middle of the x range, i.e. (minX + maxX) / 2:
+ * happens in the middle of the x range, i.e. (minX + maxX) / 2: </p>
  *
  * <p> With linear interpolation, the value in the middle is (minY + maxY) / 2, i.e. the arithmetic average of the Y range.
  * With geometric interpolation, the value in the middle is sqrt(minY * maxY), i.e. the geometric average of the Y range. </p>

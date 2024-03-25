@@ -21,7 +21,7 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
 
 /**
  * A function that maps a string to an {@link RBNumeric},
- * and either also allows a 'missing string' case (which maps to a constant RBNumeric),
+ * and either also allows a 'missing string' case (which maps to a constant {@link RBNumeric}),
  * or returns empty if a missing string is encountered.
  *
  * <p> A sample use case for this is ESG string-valued attributes, where an empty

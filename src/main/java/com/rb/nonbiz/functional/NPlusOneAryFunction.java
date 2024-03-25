@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * f( {x1, x2, ..., xN}, xx)
+ * A descriptor for a function f( {x1, x2, ..., xN}, xx)
  * where the x_i and xx are all of the same type, but f doesn't have to return a value of the same type as the x_i.
  *
- * This is semantically almost the same as a function that takes N+1 values of type X, except that there are cases
- * where it is more convenient to break them up into a group of N plus a single value of 1.
+ * <p> This is semantically almost the same as a function that takes N+1 values of type X, except that there are cases
+ * where it is more convenient to break them up into a group of N plus a single value of 1. </p>
  *
  * @see N_aryFunction
  */

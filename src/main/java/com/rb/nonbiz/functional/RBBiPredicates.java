@@ -10,6 +10,9 @@ import java.util.function.BiPredicate;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 
+/**
+ * Various binary predicates in the form of static methods.
+ */
 public class RBBiPredicates {
 
   public static <C extends Comparable<? super C>> BiPredicate<C, C> isGreaterThan() {
