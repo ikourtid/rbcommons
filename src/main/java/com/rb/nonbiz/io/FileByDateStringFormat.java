@@ -12,10 +12,11 @@ import java.time.LocalDate;
 import static com.rb.nonbiz.date.RBDates.yyyyMMdd;
 
 /**
- * This is the format (as in Strings.format) which, together with a date,
- * can give us a full file.
+ * This is the format (as in Strings.format) which, together with a date, can give us a full filename.
  *
- * To make things clearer, this is generic on the type of the class represented by the file being loaded.
+ * <p> To make things clearer, this is generic on the type of the class represented by the file being loaded.
+ * Otherwise, the generic type T is not really used here; note that no member is generic on T.
+ * </p>
  */
 public class FileByDateStringFormat<T> {
 

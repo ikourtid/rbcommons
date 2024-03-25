@@ -4,6 +4,11 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import java.io.File;
 
+/**
+ * Creates a directory in the file system.
+ *
+ * <p> This is fairly simple, but having a separate class allows us to mock this in tests. </p>
+ */
 public class DirectoryCreator {
 
   /**
