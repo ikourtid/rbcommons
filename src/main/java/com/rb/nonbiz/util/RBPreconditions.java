@@ -4,6 +4,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Range;
 import com.rb.nonbiz.collections.IidMap;
 import com.rb.nonbiz.collections.RBLists;
+import com.rb.nonbiz.collections.RBMap;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,6 +19,10 @@ import static com.rb.nonbiz.collections.RBOptionals.findOnlyPresentOptional;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
+/**
+ * Various static precondition methods (i.e. methods that are expected to throw an exception if their arguments are
+ * not deemed valid) that do not fall under the other categories in the files called RB*Preconditions.
+ */
 public class RBPreconditions {
 
   private static final Pattern PATTERN_WITH_NON_CONTIGUOUS_TRUE = Pattern.compile("F*T+F+T+F*");

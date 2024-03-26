@@ -3,6 +3,7 @@ package com.rb.nonbiz.util;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.PartialComparator;
 import com.rb.nonbiz.collections.PartiallyComparable;
+import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.types.Epsilon;
 
 import java.util.Comparator;
@@ -15,6 +16,10 @@ import static com.rb.nonbiz.collections.RBIterables.forEachUnequalPairInList;
 import static com.rb.nonbiz.collections.RBIterators.consecutivePairsIterator;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
+/**
+ * Various static precondition methods (i.e. methods that are expected to throw an exception if their arguments are
+ * not deemed valid), pertaining to ordering of items (e.g. 'all must be increasing', etc.)
+ */
 public class RBOrderingPreconditions {
 
   /**

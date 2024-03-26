@@ -18,6 +18,9 @@ import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.emptyRBEnumMap;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkAllSame;
 
+/**
+ * Various static utility methods related to {@link RBEnumMap}.
+ */
 public class RBEnumMaps {
 
   /**
