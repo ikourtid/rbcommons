@@ -1,5 +1,6 @@
 package com.rb.nonbiz.json;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -22,7 +23,7 @@ import static com.rb.nonbiz.date.RBDates.yyyyMMdd;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 /**
- * Various wrappers around Gson to increase readability of code.
+ * Various wrappers around Google's JSON library {@link Gson} to increase readability of code.
  */
 public class RBGson {
 

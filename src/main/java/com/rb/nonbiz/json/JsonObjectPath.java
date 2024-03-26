@@ -13,7 +13,8 @@ import static com.rb.nonbiz.text.Strings.formatCollectionInOrder;
 import static java.util.Collections.singletonList;
 
 /**
- * Represents a way to drill down a {@link JsonObject} to get to a {@link JsonElement} inside it.
+ * Represents a way to drill down a {@link JsonObject} (possibly down multiple levels, including other JSON
+ * subobjects) to get to a {@link JsonElement} inside it.
  */
 public class JsonObjectPath {
 

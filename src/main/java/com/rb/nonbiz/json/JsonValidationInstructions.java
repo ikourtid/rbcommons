@@ -20,9 +20,10 @@ import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPro
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 
 /**
- * Hold information about required and optional top-level properties for a JSON object.
+ * Holds schema information about required and optional top-level properties for a JSON object.
  *
- * <p> The purpose is to check JSON objects being converted via our JsonApiConverters.
+ * <p> The purpose is to check JSON objects being converted to Java objects (and vice versa)
+ * via our various JSON API converter verb classes.
  * In particular, we want to know if an optional property is misspelled, which could allow
  * a silent failure to propagate. </p>
  *

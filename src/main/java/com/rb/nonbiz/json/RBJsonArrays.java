@@ -39,7 +39,7 @@ import static com.rb.nonbiz.json.RBGson.jsonLong;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 
 /**
- * Utility methods for {@link JsonArray}s.
+ * Various static utility methods for {@link JsonArray}s.
  */
 public class RBJsonArrays {
 
