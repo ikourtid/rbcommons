@@ -27,7 +27,7 @@ import static com.rb.nonbiz.math.vectorspaces.RBIndexableMatrix.rbIndexableMatri
 import static com.rb.nonbiz.math.vectorspaces.RBVector.rbVector;
 
 /**
- * An immutable wrapper around the Colt library's DoubleMatrix2D,
+ * An immutable wrapper around the Colt library's {@link DoubleMatrix2D},
  * in the sense that this doesn't expose any methods that can result in mutating the object,
  * or even expose the matrix itself, where the caller could mutate it.
  *

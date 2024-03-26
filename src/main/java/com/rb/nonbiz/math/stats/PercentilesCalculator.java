@@ -6,6 +6,9 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * For a list of sorted items, calculates percentiles per the list specified (e.g. 5th, 10th, 50th, 90th, 95th).
+ */
 public class PercentilesCalculator {
 
   /**

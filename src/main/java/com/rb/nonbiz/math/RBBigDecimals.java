@@ -8,6 +8,9 @@ import java.math.BigDecimal;
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.nonbiz.types.RBDoubles.epsilonCompareDoubles;
 
+/**
+ * Various static utility methods related to Java's {@link BigDecimal}.
+ */
 public class RBBigDecimals {
 
   private static final BigDecimal ONE_HALF = new BigDecimal("0.5");

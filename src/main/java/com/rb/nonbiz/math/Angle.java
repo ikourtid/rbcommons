@@ -1,14 +1,19 @@
 package com.rb.nonbiz.math;
 
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.util.RBPreconditions;
 
 /**
- * This breaks the convention of dumb immutable classes, but is handy because it lazy-evaluates cosine (from degrees)
- * or degrees (from cosine). These conversions are heavy operation, so it's good to avoid when possible.
+ * A typesafe representation of an angle.
  *
- * Also, depending on how you view it, this is still immutable, because once the calculation happens,
- * it won't happen again. It's not like there is some field that can be modified with a setter.
+ * <p> This breaks the convention of dumb immutable classes, but is handy because it lazy-evaluates cosine (from degrees)
+ * or degrees (from cosine). These conversions are heavy operation, so it's good to avoid when possible. </p>
+ *
+ * <p> Also, depending on how you view it, this is still immutable, because once the calculation happens,
+ * it won't happen again. It's not like there is some field that can be modified with a setter. </p>
+ *
+ * <p> {@link PreciseValue} also follows this pattern for supporting both a BigDecimal and a double version. </p>
  */
 public class Angle {
 

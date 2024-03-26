@@ -6,8 +6,8 @@ import com.rb.nonbiz.text.Strings;
 /**
  * A {@link Sequence} (function of non-negative integer to T) where each value of the function is always the same.
  *
- * <p> This is clearer to use in lieu of an ArithmeticProgression or GeometricProgression for cases where the value
- * does not change. </p>
+ * <p> This is clearer to use in lieu of an {@link ArithmeticProgression} or {@link GeometricProgression}
+ * for cases where the value does not change. </p>
  */
 public class ConstantSequence<T> extends SimpleSequence<T> {
 

@@ -7,9 +7,10 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.List;
 
-/*
- * A wrapper around a list of Doubles, guaranteeing that they are positive and in decreasing order
- * Useful in passing around values based on eigenvalues.
+/**
+ * A typesafe wrapper around a list of Doubles, guaranteeing that they are positive and in decreasing order.
+ *
+ * <p> One example usage is storing eigenvalues. </p>
  */
 public class DecreasingPositiveDoubles {
 

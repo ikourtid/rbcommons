@@ -14,7 +14,7 @@ import static com.rb.nonbiz.math.stats.StatisticalSummaryAspect.getStatisticalSu
 import static com.rb.nonbiz.util.RBEnumMaps.transformRBEnumMap;
 
 /**
- * @see StatisticalSummaryOfStatisticalSummaries
+ * Calculates a {@link StatisticalSummaryOfStatisticalSummaries} from multiple {@link StatisticalSummary} objects.
  */
 public class StatisticalSummaryOfStatisticalSummariesCalculator {
 

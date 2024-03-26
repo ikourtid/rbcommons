@@ -12,6 +12,7 @@ import java.util.function.UnaryOperator;
  *
  * <p> In practice, this class identical to {@link Iterable}, except the semantics are clearer.
  * So it's a sequence, but without random access. </p>
+ *
  * @param <T>
  */
 public abstract class Sequence<T> implements Iterable<T> {

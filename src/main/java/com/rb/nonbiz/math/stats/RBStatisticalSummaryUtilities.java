@@ -10,6 +10,11 @@ import java.util.function.DoubleFunction;
 import static com.rb.nonbiz.math.stats.RBStatisticalSummary.rbStatisticalSummary;
 import static com.rb.nonbiz.math.stats.RBStats.toStatisticalSummary;
 
+/**
+ * Various static utility methods pertaining to {@link RBStatisticalSummary}.
+ *
+ * @see RBStats
+ */
 public class RBStatisticalSummaryUtilities {
 
   public static <V extends ImpreciseValue<V>> RBStatisticalSummary<V> toRBStatisticalSummary(

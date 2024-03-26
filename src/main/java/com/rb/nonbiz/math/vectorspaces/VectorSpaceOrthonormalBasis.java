@@ -13,13 +13,13 @@ import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
  * (1/sqrt(2), 1/sqrt(2)) and (1/sqrt(2), -1/sqrt(2)), both of which are unit vectors and orthogonal to each other,
  * but not the (1, 0) and (0, 1) vectors. The latter is called the canonical basis (also 'standard basis').
  *
- * We could have stored this as a {@code List<RBVector>}, but a matrix representation is a standard math way to do this,
- * and there's a chance that a matrix form may aid in other ways in the future (e.g. applying transformations).
+ * <p> We could have stored this as a {@code List<RBVector>}, but a matrix representation is a standard math way to do this,
+ * and there's a chance that a matrix form may aid in other ways in the future (e.g. applying transformations). </p>
  *
- * I went back-and-forth between using inheritance (from {@link VectorSpaceBasis} and object composition,
+ * <p> We went back-and-forth between using inheritance (from {@link VectorSpaceBasis} and object composition,
  * and settled for the latter.
  * Even though this is clearly an "is a" relationship, composition is useful because it saves us from having to
- * duplicate the linear independence preconditions.
+ * duplicate the linear independence preconditions. </p>
  */
 public class VectorSpaceOrthonormalBasis {
 

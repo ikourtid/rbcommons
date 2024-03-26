@@ -2,6 +2,7 @@ package com.rb.nonbiz.math.vectorspaces;
 
 import cern.colt.matrix.DoubleMatrix2D;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
+import com.rb.nonbiz.collections.ImmutableDoubleIndexableArray2D;
 import com.rb.nonbiz.collections.IndexableDoubleDataStore2D;
 import com.rb.nonbiz.text.Strings;
 
@@ -18,6 +19,8 @@ import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
  * want to interact with the Colt linear algebra library. Of course, this means that the fact that we use a
  * {@link DoubleMatrix2D} inside {@link RBMatrix} is not hidden by this abstraction -
  * but it's fine; this is intentional here. </p>
+ *
+ * @see ImmutableDoubleIndexableArray2D
  */
 public class RBIndexableMatrix<R, C> implements IndexableDoubleDataStore2D<R, C> {
 

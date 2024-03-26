@@ -5,7 +5,7 @@ import com.rb.nonbiz.types.IntegerValue;
 import com.rb.nonbiz.util.RBPreconditions;
 
 /**
- * Just a thin typesafe wrapper around an int, which denotes the row index to a matrix.
+ * Just a thin typesafe wrapper around an int, which denotes the column index to a matrix.
  */
 public class MatrixColumnIndex extends IntegerValue<MatrixColumnIndex> implements IsArrayIndex {
 

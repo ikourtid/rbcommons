@@ -5,6 +5,9 @@ import com.rb.nonbiz.math.vectorspaces.RBMatrix;
 import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnIndex;
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 
+/**
+ * Calculates the sample standard deviations for every column in an {@link RBMatrix}.
+ */
 public class StandardDeviationsCalculator {
 
   public double[] getSampleStandardDeviationsForColumns(RBMatrix matrix) {

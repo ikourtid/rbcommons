@@ -24,6 +24,8 @@ import static com.rb.nonbiz.math.stats.RBStats.formatStatisticalSummary;
  * <p> Note that the standard deviation will be returned as a double, NOT as a T. It is possible that T's constructor
  * enforces that e.g. T &gt; 0, but standard deviation could be 0, which would throw an exception.
  * Variance has the same reason as above for not being a T. </p>
+ *
+ * @param <T>
  */
 public class RBStatisticalSummary<T extends Comparable<? super T>> {
 

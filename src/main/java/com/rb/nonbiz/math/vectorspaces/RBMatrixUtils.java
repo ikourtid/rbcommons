@@ -8,6 +8,9 @@ import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnInde
 import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
+/**
+ * Various static utility methods related to {@link RBMatrix}.
+ */
 public class RBMatrixUtils {
 
   /**

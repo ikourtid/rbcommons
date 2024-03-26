@@ -12,9 +12,9 @@ import static com.rb.nonbiz.math.stats.StatisticalSummaryImpl.StatisticalSummary
  *
  * <p> This simply holds the results; it does not calculate them. </p>
  *
- * <p> The initial use case (June 2023) is to be able to write {@code StatisticalSummary}s
+ * <p> The initial use case is to be able to write {@code StatisticalSummary} objects
  * to/from JSON. We cannot construct an Apache {@code StatisticalSummary} from JSON
- * summary entries since the Apache class is built up by adding one data point at at time. </p>
+ * summary entries, since the Apache class is built up by adding one data point at at time. </p>
  */
 public class StatisticalSummaryImpl implements StatisticalSummary {
 
