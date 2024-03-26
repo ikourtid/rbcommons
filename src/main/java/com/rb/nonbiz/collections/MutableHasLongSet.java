@@ -6,8 +6,9 @@ import gnu.trove.set.hash.TLongHashSet;
 
 /**
  * This is one of the rare mutable data classes in the codebase.
- * Typically, we will build a MutableRBSet and then 'lock' it into an RBSet in the same method, and then return it.
- * We should (almost) never pass around a MutableRBSet.
+ *
+ * <p> Typically, we will build a {@link MutableHasLongSet} and then 'lock' it into a {@link HasLongSet}
+ * in the same method, and then return it. We should (almost) never pass around a {@link MutableHasLongSet}. </p>
  */
 public class MutableHasLongSet<T extends HasLongRepresentation> {
 

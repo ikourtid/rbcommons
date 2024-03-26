@@ -13,10 +13,10 @@ import java.util.function.Function;
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
 /**
- * This is a special class that lets us declare a (mathematical) function that maps a Number
- * (we care currently - Dec 2020 - only about Long or Double) to another RBNumeric.
+ * This is a special class that lets us declare a (mathematical) function that maps a {@link Number}
+ * (currently - Mar 2024 - we only care about Long or Double) to another {@link RBNumeric}.
  *
- * <p> The reason we let the user specify a less-typesafe DoubleUnaryOperator in the construction parameters
+ * <p> The reason we let the user specify a less-typesafe {@link DoubleUnaryOperator} in the construction parameters
  * is that it makes it possible to write generalized code that generates {@link DoubleUnaryOperator} objects for arbitrary
  * double -> double functions. This way, we can reuse such code for all kinds of cases of X and Y. </p>
  *
@@ -24,7 +24,7 @@ import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
  * test-only TypeSafeMatchers for comparing objects in test. This is why we typically use limited functional objects
  * such as {@code FunctionDescriptor}. However, the downside of such 'limited' objects is that they only allow for
  * one class of function (albeit parametrizable), but not any arbitrary function, e.g. a logarithmic one.
- * Therefore, in order to keep things general, we will store a Function object here. </p>
+ * Therefore, in order to keep things general, we will store a {@link Function} object here. </p>
  */
 public class RBNumericFunction<X extends Number, Y extends RBNumeric<? super Y>>
     implements Function<X, Y>, HasHumanReadableLabel {

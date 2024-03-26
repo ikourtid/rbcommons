@@ -6,6 +6,8 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBOrderingPreconditions;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 
 import static com.rb.nonbiz.collections.RBRanges.rangeIsAtLeast;
@@ -13,18 +15,20 @@ import static com.rb.nonbiz.collections.RBRanges.rangeIsClosed;
 import static java.util.Collections.singletonList;
 
 /**
- * Strictly speaking this is 'not necessarily contiguous'. It could still be contiguous.
+ * A collection of {@link Range}s that may not be contiguous, and whose last range may or may not have an upper bound.
  *
- * I'm using {@code <? super K>} instead of {@code <K>} because there I may eventually want to have K be LocalDate,
- * but LocalDate implements ChronoLocalDate which in turn implements {@code Comparable<ChronoLocalDate>},
- * so there's no other way to get this to work.
+ * <p> Strictly speaking this is 'not necessarily contiguous'. It could still be contiguous. </p>
  *
- * Note that we model all ranges (except maybe the last one) as closed, which is intentional for 'non-contiguous'
+ * <p> We're using {@code <? super K>} instead of {@code <K>} because there I may eventually want to have K be LocalDate,
+ * but {@link LocalDate} implements {@link ChronoLocalDate} which in turn implements {@code Comparable<ChronoLocalDate>},
+ * so there's no other way to get this to work. </p>
+ *
+ * <p> Note that we model all ranges (except maybe the last one) as closed, which is intentional for 'non-contiguous'
  * (discrete) values.
  * For e.g. doubles, this wouldn't work; we'd be representing this as e.g. [2, 5.5] and [5.5, 7]
  * instead of [2, 5.5) and [5.5, 7], so there would be overlap.
  * For e.g. integers, this does work; we'd be using e.g. [2, 4] and [5, 7], so there would be no gaps,
- * but no range would be open on the right side.
+ * but no range would be open on the right side. </p>
  */
 public class NonContiguousRangeCollection<K extends Comparable<? super K>> {
 

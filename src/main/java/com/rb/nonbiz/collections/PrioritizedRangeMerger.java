@@ -10,10 +10,13 @@ import java.util.Optional;
 import static com.rb.nonbiz.collections.RBRanges.optionalIntersection;
 
 /**
- * Find the intersection of a high-priority range and a low-priority range.
+ * Find the intersection of a high-priority {@link Range} and a low-priority one.
  *
  * <p> If the intersection of the two ranges is empty, this will return a singleton range containing the
  * closest single point from the "high priority" range. </p>
+ *
+ * <p> Look at the tests for extensive examples, but a simple one is this: if the high-priority is [2, 4]
+ * and low-priority range is [7, 8], this will return [4, 4]. </p>
  */
 public class PrioritizedRangeMerger {
 

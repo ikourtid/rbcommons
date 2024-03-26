@@ -8,6 +8,9 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 
+/**
+ * Various static utility methods pertaining to {@link IidBiMap}; currently only static constructors.
+ */
 public class IidBiMaps {
 
   public static <V> IidBiMap<V> emptyIidBiMap() {

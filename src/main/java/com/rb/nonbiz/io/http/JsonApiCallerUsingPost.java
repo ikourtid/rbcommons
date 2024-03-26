@@ -16,7 +16,7 @@ import java.net.URI;
 /**
  * Makes an HTTP POST request to the specified URI, passing in the specified {@link JsonObject} in the POST request
  * contents. You can do this using by passing in a {@link CloseableHttpClient}, which we will not auto-close
- * (to allow for reuse),
+ * (to allow for reuse).
  */
 public class JsonApiCallerUsingPost {
 

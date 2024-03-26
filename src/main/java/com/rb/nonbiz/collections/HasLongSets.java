@@ -17,6 +17,9 @@ import java.util.stream.Stream;
 import static com.rb.nonbiz.collections.MutableHasLongSet.newMutableHasLongSetWithExpectedSize;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstAndRest;
 
+/**
+ * Various static utility methods pertaining to {@link HasLongSet}.
+ */
 public class HasLongSets {
 
   /**

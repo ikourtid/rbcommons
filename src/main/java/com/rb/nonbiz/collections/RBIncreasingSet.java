@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.util.RBOrderingPreconditions;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,9 +13,13 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static java.util.Collections.emptyList;
 
 /**
- * Like an RBSet, except that you can iterate in increasing item order.
- * This is a bit inefficient because it stores items twice, but it allows us to retrieve in O(1) expected time
- * (since the RBSet uses an underlying HashSet), and also iterate in O(1) time.
+ * Like an {@link RBSet}, except that you can iterate in increasing item order.
+ *
+ * <p> This of course requires that the set element type implements {@link Comparable}. </p>
+ *
+ * <p> This is a bit inefficient because it stores items twice, but it allows us to retrieve in O(1) expected time
+ * (since the {@link RBSet} uses an underlying {@link HashSet}), and also iterate in O(1) time (since the list
+ * member stores items in increasing order.) </p>
  */
 public class RBIncreasingSet<T extends Comparable<? super T>> implements Iterable<T> {
 

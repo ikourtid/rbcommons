@@ -13,11 +13,11 @@ import static com.rb.nonbiz.text.Strings.formatMapWhereValuesPrintInstruments;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
- * A RBMap keyed by date, with the extra precondition that the dates aren't too far apart from each other,
+ * An {@link RBMap} keyed by date, with the extra construction-time precondition that the dates aren't too far apart from each other,
  * i.e. the earliest and latest date are no more than maxCalendarRangeAllowed from each other.
  *
- * 'Nearby' is not a great name; the date range can be big, as in years. But the name makes it clear that the dates
- * can't be too far from each other. It just doesn't say how far.
+ * <p> 'Nearby' is not a great name; the date range can be big, as in years. But the name makes it clear that the dates
+ * can't be too far from each other. It just doesn't say how far. </p>
  */
 public class NearbyDatesMap<V> {
 

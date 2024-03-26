@@ -8,7 +8,9 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.Optional;
 
 /**
- * Similar to Either, except that this also allows for the possibility that neither 'left' nor 'right' items exist.
+ * Similar to {@link Either}, except that this also allows for the possibility that neither 'left' nor 'right' items exist.
+ *
+ * <p> As a corollary, it is not valid to have both items exist. </p>
  *
  * @see Either
  * @see EitherOrBoth

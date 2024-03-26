@@ -8,6 +8,15 @@ import com.rb.nonbiz.types.UnitFraction;
 
 import java.util.function.Predicate;
 
+/**
+ * Various unary comparison predicates.
+ *
+ * <p> In practice, these are binary predicates, except that one of the two items is an argument, whereas in a
+ * binary predicate, constructing the predicate itself needs no arguments, but the predicate takes in two values. </p>
+ *
+ * <p> I believe the general term for this is 'currying', but it's easier to understand this if you just look at
+ * {@link RBBiPredicates}. </p>
+ */
 public class RBPredicates {
 
   public static <C extends Comparable<? super C>> Predicate<C> isGreaterThan(C otherValue) {

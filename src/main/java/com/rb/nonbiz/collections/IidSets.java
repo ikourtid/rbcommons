@@ -16,6 +16,9 @@ import static com.rb.nonbiz.collections.IidSetSimpleConstructors.newIidSet;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstSecondThirdAndRest;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 
+/**
+ * Various utility methods pertaining to {@link IidSet}.
+ */
 public class IidSets {
 
   /**

@@ -16,8 +16,10 @@ import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.trading.SignedQuantity.signedQuantity;
 
 /**
- * The plain {@link Money} class only allows {@code >=} 0 values, so you'll need this for those rare cases
- * where you want to represent a negative amount.
+ * A typesafe representation of money that also allows for negative values.
+ *
+ * <p> The plain {@link Money} class only allows {@code >=} 0 values, so you'll need this for those rare cases
+ * where you want to represent a negative amount. </p>
  *
  * @see Money
  */

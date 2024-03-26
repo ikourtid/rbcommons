@@ -32,9 +32,9 @@ import static java.util.Comparator.reverseOrder;
  * Use this whenever you want to represent having <i>N</i> items with proportions that sum to 1,
  * where the items all have a positive proportion.
  *
- * <p> {@code Partition<T>} is used all over the place. This is a specialized class similar to {@code Partition<T>}.
- * It was added in Sep 2018, after 300k lines of code were written, so it doesn't appear very frequently.
- * It is particularly useful in situations where there are a lot of instrument IDs as keys (e.g. a stock index membership). </p>
+ * <p> {@code Partition<T>} is used all over the place. This is a specialized class similar to {@code Partition<T>},
+ * which uses {@link IidMap} for better performance vs. a general {@link RBMap}.
+ * It was added relatively late, so it doesn't appear very frequently. </p>
  *
  * @see Partition
  */

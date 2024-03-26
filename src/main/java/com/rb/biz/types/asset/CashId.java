@@ -2,6 +2,7 @@ package com.rb.biz.types.asset;
 
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.biz.types.Symbol;
+import com.rb.biz.types.asset.AssetId.AssetIdVisitor;
 
 import java.time.LocalDate;
 
@@ -10,10 +11,14 @@ import static com.rb.biz.types.Symbol.symbol;
 /**
  * The special {@link AssetId} for CASH.
  *
- * <p> This class was created to prevent bigger hacks. It allows us to avoid special-casing cash in the code.
+ * <p> This class allows us to avoid special-casing cash in the code. Sometimes we want to treat cash and securities
+ * the same, in which case we use {@link AssetId}, which covers more. In other cases, we only want to store information
+ * about non-cash / securities, in which case we use {@link InstrumentId}. </p>
  *
  * <p> Unlike {@link InstrumentId}, one cannot construct a {@link CashId}. The only available instance is
- * {@code CASH}, which is given the special numeric ID of {@code 0L}.
+ * {@code CASH}, which is given the special numeric ID of {@code 0L}. Although the cleaner way to determine whether
+ * an {@link AssetId} is a {@link CashId} or an {@link InstrumentId} is via an {@link AssetIdVisitor}, this
+ * special numeric code ( {@link #CASH_ID} ) makes it easier to make that determination in a faster way. </p>
  *
  * @see AssetId
  * @see InstrumentId
@@ -27,9 +32,8 @@ public class CashId extends AssetId {
     return symbol("$");
   }
 
-  private CashId() {
-    /* This exists to prevent instantiation via a default CashId() constructor */
-  }
+  /* This private constructor exists to prevent instantiation via a default CashId() constructor */
+  private CashId() {}
 
   @Override
   public <T> T visit(AssetIdVisitor<T> visitor) {

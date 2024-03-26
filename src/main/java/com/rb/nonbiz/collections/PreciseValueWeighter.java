@@ -13,9 +13,7 @@ import static java.math.MathContext.DECIMAL128;
 /**
  * Creates weighted averages where the weights scalars are PreciseValue instances.
  *
- * Use RBStreams#unweightedAverage if you're looking for basic doubles-based functionality similar to this.
- *
- * @see DoublesWeighter
+ * Use {@link DoublesWeighter} if you're looking for basic doubles-based functionality similar to this.
  */
 public class PreciseValueWeighter {
 

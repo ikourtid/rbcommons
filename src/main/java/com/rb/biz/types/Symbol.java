@@ -8,9 +8,18 @@ import com.rb.nonbiz.util.RBPreconditions;
  * This is a thin wrapper around a regular String, but it gives us type safety
  * whenever we want to represent a ticker symbol for an instrument (stock or ETF).
  *
- * <p> Note that sometimes stocks have 'ticker changes' where the symbol can change,
+ * <p> The string has limitations on its length and content, but that covers every instance of security
+ * symbol we have encountered. </p>
+ *
+ * <p> Stocks sometimes have ticker changes, where the symbol can change,
  * even though the underlying traded entity is fundamentally the same.
- * One such example was QQQ {@code ->} QQQQ {@code ->} QQQ. </p>
+ * One such example was QQQ {@code ->} QQQQ {@code ->} QQQ. A {@link Symbol} / date combination is unique,
+ * and an {@link InstrumentId} always has a single {@link Symbol} on a given day; ticker changes cannot happen
+ * mid-day. </p>
+ *
+ * <p> Note that, in general, symbols are mostly used for human-facing outputs, like log files that describe
+ * what happened, HTML pages that summarize trading activity, etc. It is <strong>very</strong> important that
+ * {@link InstrumentId} are used whenever possible. </p>
  */
 public class Symbol {
 

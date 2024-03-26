@@ -34,9 +34,9 @@ import static java.util.Map.Entry.comparingByValue;
 
 /**
  * Use this whenever you want to represent having <i>N</i> items with proportions that sum to 1,
- * where the items all have a positive proportion.
+ * where the items all have a positive weight.
  *
- * <p> A traditional asset allocation that does not allow short positions is a good example. </p>
+ * <p> An asset allocation that does not allow short positions is a good example. </p>
  *
  * @see LinearCombination
  * @see FlatLinearCombination

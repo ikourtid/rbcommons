@@ -11,6 +11,9 @@ import static com.rb.nonbiz.collections.Coordinates.coordinates;
 import static com.rb.nonbiz.collections.MultiDimensionalArray.newMultiDimensionalArray;
 import static com.rb.nonbiz.collections.MutableMultiDimensionalArray.mutableMultiDimensionalArray;
 
+/**
+ * Various static utility methods pertaining to {@link MultiDimensionalArray}.
+ */
 public class MultiDimensionalArrays {
 
   public static <T> MultiDimensionalArray<T> multiDimensionalArray(

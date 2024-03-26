@@ -23,7 +23,7 @@ import static com.rb.biz.types.trading.NonNegativeQuantity.nonNegativeQuantity;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
- * Represents a non-negative dollar amount.
+ * A typesafe representation a non-negative dollar amount.
  *
  * <p> Instead of calling this NonNegativeMoney, we just call it Money,
  * since in almost all cases, we want to enforce that the amounts are {@code >= 0}  $0.

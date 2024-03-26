@@ -4,25 +4,39 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableMap;
 import com.rb.biz.types.Symbol;
+import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.types.HasLongRepresentation;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import static com.rb.biz.types.Symbol.symbol;
 
 /**
- * Using arbitrary numeric IDs for instruments makes it painful to retrieve the symbol from them, and a
- * lookup table must be used.
- * It would be nice to have the numeric ID give you the symbol via some calculation.
- * This does some form of uuencoding.
- * Of course, even though the instrument ID stays constant, the ticker symbol may change. However, that doesn't
+ * Generates numeric keys that make it easier for an {@link InstrumentId} to be mapped to a {@link Symbol},
+ * and vice versa.
+ *
+ * <p> Using arbitrary numeric IDs for instruments makes it painful to retrieve the symbol from them, and a
+ * lookup table must be used. It would be nice to have the numeric ID give you the symbol via some calculation.
+ * This does some form of uuencoding to achieve that goal. </p>
+ *
+ * <p> Of course, even though the instrument ID stays constant, the ticker symbol may change. However, that doesn't
  * happen all that often.
  * Also, some tickers are recycled: stock ABC changes its name to DEF, and then later some other stock
- * is given the ticker ABC. But that is a new stock, so it should have a new instrument id.
- * So this is only useful to make it easier for us to go back from instrument ID to the ORIGINAL symbol
+ * is given the ticker ABC. But that is a new stock, so it should have a new instrument id. </p>
+ *
+ *
+ * <p> So this is only useful to make it easier for us to go back from instrument ID to the ORIGINAL symbol
  * that gave rise to it. It's just a convenience so that when we look at an instrument ID, we can figure out
- * what symbol it is. Again, if DEF were to be alive, its instrument ID would translate to the string 'ABC',
- * so slightly confusing. But most large securities (which correlates with the securities we care about)
- * don't undergo ticker changes. So this is a useful enough lookup method.
+ * what symbol it is. Again, per the previous example, if DEF were to be alive, its instrument ID would translate to the
+ * string 'ABC', so slightly confusing. But most large securities (which correlates with the securities we care about)
+ * don't undergo ticker changes. So this is a useful enough lookup method. Furthermore, even getting the original,
+ * pre-ticker-change symbol is more useful than just looking at an arbitrary numeric long key for an {@link InstrumentId}. </p>
+ *
+ * <p> One limitation of this uuencoding approach is that, in order to fit a reasonably-sized ticker, we have to
+ * limit the number of valid characters. This only allows letters (capitals only), numbers, and three separator
+ * characters: period (.), hyphen (-), and slash (/). </p>
+ *
+ * <p> Although the documentation above refers to {@link InstrumentId}, this code is more general and supports
+ * {@link HasLongRepresentation}, which is more general than {@link InstrumentId}. </p>
  */
 public class EncodedIdGenerator {
 

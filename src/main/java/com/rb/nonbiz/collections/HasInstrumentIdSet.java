@@ -22,8 +22,15 @@ import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 import static java.util.Comparator.comparing;
 
 /**
- * A set of HasInstrumentId that can be indexed by InstrumentId.
- * It uses the instrument-id-specific optimized maps (using GNU Trove)
+ * A set of {@link HasInstrumentId} that can be indexed by InstrumentId.
+ *
+ * <p> Note that whether a {@link HasInstrumentId} object is deemed to exist in the set or not
+ * depends solely on its InstrumentId, and not the rest of the object. This helps performance.
+ * The restriction is that the user of this must ensure that no two {@link HasInstrumentId} objects stored here
+ * are the same. We generally do not implement equals/hashCode, but if we did, we could just use a regular
+ * {@link RBSet}, which relies on checking the entire object for equality (equals/hashCode). </p>
+ *
+ * <p> It uses the instrument-id-specific optimized maps (using GNU Trove). </p>
  *
  * @see HasLongMap
  * @see HasInstrumentIdMap

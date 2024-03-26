@@ -2,7 +2,7 @@ package com.rb.nonbiz.functional;
 
 /**
  * Sometimes we use Optional inside a data class to denote a missing value.
- * We can have a data class implement AllowsMissingValues to declare that, and allow handling the missing value
+ * We can have a data class implement this interface to declare that intention, and allow handling the missing value
  * without dealing with a 'raw' optional. It's a bit cleaner this way.
  *
  * <p> We could also have called this interface {@code HasOptional<T>}, have the interface method be called

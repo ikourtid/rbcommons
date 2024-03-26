@@ -9,13 +9,14 @@ import com.rb.nonbiz.util.RBSubsetPreconditions;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 /**
- * Not a great name...
- * For an original partition of N items (e.g. 10% cash, 40% A, 50% B)
- * we generate 3 partitions, where we bump up each of (cash, A, B) by e.g. 1%,
- * and another 3, where we bump down instead of up.
+ * This is best illustrated via an example.
  *
- * This is useful for researching the local gradient of improvement of the residual allocation
- * in the presence external assets.
+ * <p> For an original partition of N items (e.g. 10% cash, 40% A, 50% B)
+ * we can generate 3 partitions, where we bump up each of (cash, A, B) by e.g. 1%,
+ * and another 3, where we bump down instead of up. </p>
+ *
+ * <p> This is useful for researching the local gradient of improvement of the residual allocation
+ * in the presence external assets. </p>
  */
 public class PartitionGradient<T> {
 

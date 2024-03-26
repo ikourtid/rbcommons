@@ -18,11 +18,11 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.singletonList;
 
 /**
- * Strictly speaking this is 'not necessarily contiguous'. It could still be contiguous.
+ * <p> Strictly speaking this is 'not necessarily contiguous'. It could still be contiguous. </p>
  *
- * I'm using {@code <? super K>} instead of {@code <K>} because there I mostly want to have K be LocalDate,
+ * <p> I'm using {@code <? super K>} instead of {@code <K>} because there I mostly want to have K be LocalDate,
  * but LocalDate implements ChronoLocalDate which in turn implements {@code Comparable<ChronoLocalDate>},
- * so there's no other way to get this to work.
+ * so there's no other way to get this to work. </p>
  */
 // RangeMap is officially marked @Beta / unstable, but it sounds like this is an oversight. So it's safe to use.
 // https://github.com/google/guava/issues/3376

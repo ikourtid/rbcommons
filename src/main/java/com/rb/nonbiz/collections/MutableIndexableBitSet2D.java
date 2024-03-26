@@ -7,8 +7,8 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 /**
  * See #MutableIndexableArray2D.
  *
- * This is a specialized, more memory-efficient alternative to a {@code MutableIndexableArray2D<Boolean>}.
- * It's a bit more efficient because it uses unboxed lowercase-b booleans.
+ * <p> This is a specialized, more memory-efficient alternative to a {@code MutableIndexableArray2D<Boolean>}.
+ * It's a bit more efficient because it uses unboxed lowercase-b booleans. </p>
  */
 public class MutableIndexableBitSet2D<R, C> {
 

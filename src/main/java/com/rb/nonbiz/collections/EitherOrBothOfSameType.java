@@ -11,8 +11,7 @@ import static com.rb.nonbiz.collections.EitherOrBoth.eitherOrBoth;
 import static java.util.Collections.singletonList;
 
 /**
- * @see EitherOrBoth
- * This is similar, except that the left and right side of the 'either' are of the same type.
+ * Similar to {@link EitherOrBoth}, except that the left and right side of the 'either' are of the same type.
  */
 public class EitherOrBothOfSameType<T> {
 

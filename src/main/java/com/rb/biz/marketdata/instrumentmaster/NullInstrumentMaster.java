@@ -2,13 +2,17 @@ package com.rb.biz.marketdata.instrumentmaster;
 
 import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
+import com.rb.nonbiz.text.PrintsInstruments;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 /**
- * This is useful when we want to say that we don't have an instrument master,
- * but don't want to pass null because it's ugly.
+ * A simple implementation of {@link InstrumentMaster} for cases when we want to say that we don't have an
+ * instrument master, but don't want to pass null because our codebase (as do most modern Java codebases)
+ * avoids nulls.
+ *
+ * <p> See {@link PrintsInstruments} for a description of where this is most commonly used. </p>
  */
 public class NullInstrumentMaster implements InstrumentMaster {
 

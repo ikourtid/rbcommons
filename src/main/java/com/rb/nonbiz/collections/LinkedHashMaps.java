@@ -14,7 +14,7 @@ import static com.rb.nonbiz.util.RBPreconditions.checkUnique;
 import static java.util.function.Function.identity;
 
 /**
- * Various helper methods related to {@link LinkedHashMap}, which is currently (July 2022) not widely used.
+ * Various helper methods related to {@link LinkedHashMap}.
  */
 public class LinkedHashMaps {
 

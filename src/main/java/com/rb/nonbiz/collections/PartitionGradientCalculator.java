@@ -7,6 +7,8 @@ import static com.rb.nonbiz.collections.PartitionGradient.partitionGradient;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 
 /**
+ * Calculates a {@link PartitionGradient}.
+ *
  * For a partition of e.g. A, B, and C, this will create 3 partitions where A, B, and C are bumped up
  * respectively by bumpAmount, e.g. 1% (as per PartitionExtender - i.e. bumping everything else down proportionately).
  * Likewise for bumping down, except that if A is below 1% in the original partition, we can't bump it down by 1%,

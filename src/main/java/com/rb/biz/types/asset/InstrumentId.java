@@ -15,11 +15,11 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.emptyList;
 
 /**
- * The unique numeric ID of a tradable instrument.
+ * A wrapper around a unique numeric (long) ID of a security.
  *
- * <p> In practice, an {@code InstrumentId} can represent individual stocks, ETFs, ETFns, or mutual funds.
+ * <p> In practice, an {@code InstrumentId} can represent individual stocks, ETFs, other ETPs, or mutual funds.
  *
- * <p> Unlike a ticker symbol (e.g. QQQ), which can change for a security, the {@code InstrumentId} is supposed to be stable.
+ * <p> Unlike a ticker symbol (e.g. QQQ), which can change for a security, the {@code InstrumentId} is meant to be stable.
  * E.g. the Nasdaq 100 ETF used to be QQQ, then became QQQQ (4 Qs), then became QQQ again. In such a case,
  * the {@code InstrumentId} will be the same for the underlying security, despite the ticker changes. </p>
  *
@@ -33,7 +33,7 @@ public class InstrumentId extends AssetId {
 
   /**
    * {@code InstrumentIds} appear everywhere in the code, and there's only a few thousand of them, so it is good to
-   * 'intern' them. Otherwise the code will be generating new {@code InstrumentID}s frequently.
+   * 'intern' them. Otherwise, the code would be generating new {@code InstrumentID}s frequently.
    *
    * <p> We set the initial size of the cache to 3,000 instrument IDs, which is more than we'd ever need;
    * it's unlikely that we'll use more than ~1,000 in any backtest. But the space for this cache is cheap.

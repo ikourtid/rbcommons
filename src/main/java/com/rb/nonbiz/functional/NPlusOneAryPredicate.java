@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 /**
- * f( {x1, x2, ..., xN}, xx)
+ * A descriptor for a predicate f( {x1, x2, ..., xN}, xx)
  * where the x_i and xx are of the same type, and f is a boolean.
+ *
+ * <p> This is semantically almost the same as a predicate that takes N+1 values of type X, except that there are cases
+ * where it is more convenient to break them up into a group of N plus a single value of 1. </p>
  *
  * @see NPlusOneAryFunction
  */

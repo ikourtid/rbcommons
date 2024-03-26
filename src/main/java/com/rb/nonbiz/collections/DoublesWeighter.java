@@ -1,13 +1,12 @@
 package com.rb.nonbiz.collections;
 
+import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Iterator;
 
 /**
- * Creates weighted averages where the weights scalars are PreciseValue instances.
- *
- * Use RBStreams#unweightedAverage if you're looking for basic doubles-based functionality similar to this.
+ * Creates weighted averages where the weights are {@link PreciseValue} instances.
  *
  * @see PreciseValueWeighter
  */

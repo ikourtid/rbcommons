@@ -37,8 +37,8 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
 import static java.util.Collections.singletonList;
 
 /**
- * This is helpful in the JSON API documentation (OpenAPI / Swagger). It gives us type information for a property of a
- * JSON object in the JSON API serialization.
+ * <p> This is helpful in the JSON API documentation (OpenAPI / Swagger). It gives us type information for a property of a
+ * JSON object in the JSON API serialization. </p>
  *
  * <p> It is a bit like a generalization of the Java concept of a {@link Class} object, except tailored for
  * purposes of serialization and generating documentation. For example, it records information about generic classes,

@@ -29,7 +29,7 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.emptyIterator;
 
 /**
- * Various static methods pertaining to Iterator objects.
+ * Various static methods pertaining to {@link Iterator} objects.
  */
 public class RBIterators {
 

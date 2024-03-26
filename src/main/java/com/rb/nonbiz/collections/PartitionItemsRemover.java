@@ -10,10 +10,11 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
- * Removes some items from a partition, and normalizes the remaining ones to add to 1
- * (so their *relative* weights remain the same).
+ * Creates a new {@link Partition} that removes some items from another {@link Partition},
+ * and normalizes the remaining ones to add to 1, so their <em>relative</em> weights remain the same).
  *
- * This is the opposite of PartitionExtender, which adds instead of removing.
+ * <p> This is the opposite of {@link PartitionExtender}, which adds instead of removing. </p>
+ *
  * @see PartitionExtender
  */
 public class PartitionItemsRemover {

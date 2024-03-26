@@ -9,7 +9,9 @@ import java.util.Optional;
 import static com.rb.nonbiz.collections.RBOptionals.optionalsEqual;
 
 /**
- * Similar to Either, except that this also allows for the possibility that both 'left' and 'right' items exist.
+ * Similar to {@link Either}, except that this also allows for the possibility that both 'left' and 'right' items exist.
+ *
+ * <p> As a corollary, it is not valid to have neither item exist. </p>
  *
  * @see Either
  * @see EitherOrNeither

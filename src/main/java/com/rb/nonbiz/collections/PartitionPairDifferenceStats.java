@@ -16,28 +16,30 @@ import static com.rb.nonbiz.types.PreciseValues.epsilonComparePreciseValuesAsDou
 
 /**
  * This is useful for storing information about how two partitions are different.
- * Example: target is 10% A, 40% B, 50% C; actual partition is 12% A, 37% B, 51% C.
+ *
+ * <p> Example: target is 10% A, 40% B, 50% C; actual partition is 12% A, 37% B, 51% C.
  * The differences are +2, -3, +1.
  * {@link #statsForOverweight} will be a {@link StatisticalSummary} for the +2 and +1 (obviously there will be many more numbers in
  * general.
  * {@link #statsForUnderweight} will be a {@link StatisticalSummary} for the -3.
  * {@link #statsForAbsoluteValueDifferences} will be a {@link StatisticalSummary} for +2, +3, and +1 (absolute values).
+ * </p>
  *
- * One nice thing about this is that we don't have to worry about one of the 3 fields not existing:
+ * <p> One nice thing about this is that we don't have to worry about one of the 3 fields not existing:
  * if any partition item is overweight, then at least one has to be underweight, and vice versa. That is, partition X
  * cannot have every single item overweight vs. partition Y.
  * However, if every item is on target, even if we decide to categorize "exactly on target" as overweight (pick one),
  * then there will be 0 items in statsForUnderweight, which is an invalid {@link SummaryStatistics}; there has to be
  * at least one item. Therefore, we will adopt the expedient semantics that a 0 difference (exactly on target)
- * counts as both overweight and underweight.
+ * counts as both overweight and underweight. </p>
  *
- * We won't use a {@link RBStatisticalSummary} here, because we can't find a proper generic to use. If we use
+ * <p> We won't use a {@link RBStatisticalSummary} here, because we can't find a proper generic to use. If we use
  * {@code RBStatisticalSummary<Partition<AssetClass>>} then it's not really clear; the stats are for the difference
  * between two partitions. Then, if we use {@code RBStatisticalSummary<UnitFraction>}, then there can't be a sum
- * defined, because the sum of UnitFractions can easily exceed 1 (e.g. {@code statsForAbsoluteValueDifferences.getSum()}).
+ * defined, because the sum of UnitFractions can easily exceed 1 (e.g. {@code statsForAbsoluteValueDifferences.getSum()}). </p>
  *
- * This means we'll have to know to interpret these correctly, i.e. that they are in the UnitFraction range of 0 to 1
- * for overweight, and -1 to 0 for underweight.
+ * <p> This means we'll have to know to interpret these correctly, i.e. that they are in the UnitFraction range of 0 to 1
+ * for overweight, and -1 to 0 for underweight. </p>
  */
 public class PartitionPairDifferenceStats {
 

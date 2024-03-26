@@ -10,9 +10,11 @@ import java.util.Set;
 import static com.rb.nonbiz.text.Strings.sizePrefix;
 
 /**
- * This is one of the rare mutable data classes in the codebase.
+ * A mutable version of an {@link RBSet}.
+ *
+ * <p> This is one of the rare mutable data classes in the codebase.
  * Typically, we will build a MutableRBSet and then 'lock' its values into an RBSet in the same method, and then return it.
- * We should (almost) never pass around a MutableRBSet.
+ * We should (almost) never pass around a MutableRBSet. </p>
  */
 public class MutableRBSet<T> {
 

@@ -10,9 +10,10 @@ import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 
 /**
  * Reads the contents of an entire file into a single string.
- * Don't use this for files of any serious size! In most cases, you want to iterate one line at a time.
  *
- * This abstracts away the reading of a file, which is a low-level operation that's hard to mock in tests otherwise.
+ * <p> Don't use this for files of any serious size! In most cases, you want to iterate one line at a time. </p>
+ *
+ * <p> This abstracts away the reading of a file, which is a low-level operation that's hard to mock in tests otherwise. </p>
  */
 public class StringFromFileReader {
 

@@ -18,12 +18,15 @@ import static com.rb.nonbiz.collections.IidBiMaps.singletonIidBiMap;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.newIidSet;
 
 /**
- * This is useful in test when we want to create an {@link InstrumentMaster} with some mappings hardcoded,
- * e.g. STOCK_A1 {@code <->} "A1", etc.
+ * A concrete implementation of the {@link InstrumentMaster} interface that
  *
- * <p> HardCodedInstrumentMaster is used in tests, usually for a small number of stocks. It's not general enough
- * for production use because ticker / symbol is not necessarily a bi-map. For example, a ticker change would cause one
- * InstrumentId to map to two (or more) symbols, depending on the date. </p>
+ * <p> This is useful when we want to create an {@link InstrumentMaster} with some mappings hardcoded,
+ * reagrdless of day, e.g. STOCK_A1 {@code <->} "A1", etc. </p>
+ *
+ * <p> This is used in mostly tests, usually for a small number of stocks. It's not general enough
+ * for production use because ticker / symbol is not necessarily a bi-map, except if we are only dealing with a
+ * single day. If we are dealing with multiple days, then a ticker change would cause one
+ * {@link InstrumentId} to map to two (or more) symbols, depending on the date. </p>
  */
 public class HardCodedInstrumentMaster implements InstrumentMaster {
 

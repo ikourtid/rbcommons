@@ -14,8 +14,10 @@ import java.util.function.Function;
 import static com.rb.nonbiz.functional.RBNumericFunction.rbIdentityNumericFunction;
 
 /**
- * A data class representing a (mathematical) function from Number (Double or Long currently - Dec 2020),
+ * A data class representing a (mathematical) function from {@link Number} (Double or Long currently - Mar 2024),
  * where it's also possible to have a 'missing' X.
+ *
+ * @see RBNumericFunction
  */
 public class RBNumericFunctionThatHandlesMissingValues<X extends Number, Y extends RBNumeric<? super Y>>
     implements Function<AllowsMissingValues<X>, Optional<Y>>, HasHumanReadableLabel {

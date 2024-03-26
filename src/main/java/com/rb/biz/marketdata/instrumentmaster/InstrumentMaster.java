@@ -14,6 +14,10 @@ import java.util.Optional;
 import static com.rb.biz.types.Symbol.instrumentIdAsSymbol;
 import static com.rb.biz.types.asset.CashId.cashSymbol;
 
+/**
+ * Answers two questions: for a {@link Symbol} / date combination, what is the (numeric) {@link InstrumentId}?
+ * What was the valid {@link Symbol] for an {@link InstrumentId} on a given date?
+ */
 public interface InstrumentMaster {
 
   Optional<InstrumentId> getInstrumentId(Symbol symbol, LocalDate effectiveDate);
@@ -34,6 +38,10 @@ public interface InstrumentMaster {
     return latestValidSymbol.orElseGet( () -> instrumentIdAsSymbol(instrumentId));
   }
 
+  /**
+   * WARNING - only use this if your other code uses the {@link EncodedIdGenerator} as a mechanism for generating
+   * intuitive numeric {@link InstrumentId}.
+   */
   default Symbol getLatestValidSymbolOrBestGuess(InstrumentId instrumentId, LocalDate effectiveDate) {
     InstrumentIdGenerator instrumentIdGenerator = new InstrumentIdGenerator();
     instrumentIdGenerator.encodedIdGenerator = new EncodedIdGenerator();

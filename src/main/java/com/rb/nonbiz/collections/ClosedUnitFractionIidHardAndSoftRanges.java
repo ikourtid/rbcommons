@@ -17,8 +17,8 @@ import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 /**
  * Similar to {@link ClosedUnitFractionHardAndSoftRanges}.
  *
- * <p> This is the same, except that it uses the {@link IidMap} infrastructure,
- * which is faster than {@link RBMap}. </p>
+ * <p> This is the same, except that it's for the case where the map keys are {@link InstrumentId}.
+ * It uses {@link IidMap} which is faster than {@link RBMap}. </p>
  *
  * @see ClosedUnitFractionHardAndSoftRange
  */

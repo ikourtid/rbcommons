@@ -19,10 +19,13 @@ import static com.rb.nonbiz.text.Strings.formatIidMap;
 
 /**
  * Helps us keep a track of the # of times we have seen a bunch of items, per InstrumentId.
- * It is like a histogram. It's not like a general map of InstrumentId to value.
- * We can only increment the counters of individual instruments and see their counts, but not overwrite the counts.
  *
- * This is a special, InstrumentId-specific implementation of Counter.
+ * <p> It is like a histogram. It's not like a general map of InstrumentId to value.
+ * We can only increment the counters of individual instruments and see their counts, but not overwrite the counts. </p>
+ *
+ * <p> This is a special, InstrumentId-specific implementation of {@link Counter}. It is a rare example of a mutable class
+ * in our codebase. </p>
+ *
  * @see Counter
  */
 public class IidCounter {

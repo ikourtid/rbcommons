@@ -6,6 +6,12 @@ import java.util.Comparator;
 import java.util.OptionalInt;
 import java.util.function.Function;
 
+/**
+ * The result of a partial comparison using a {@link PartialComparator}.
+ *
+ * <p> For two partially comparable items A and B, the partial comparison result could be 'less than', 'equal',
+ * 'greater than', but also (and this is unique to partial comparisons) 'not defined'. </p>
+ */
 public class PartialComparisonResult {
 
   private final OptionalInt rawResult;

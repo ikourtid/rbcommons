@@ -13,11 +13,12 @@ import static com.rb.nonbiz.math.RBBigDecimals.bigDecimalInvert;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
- * Returns expressed so that 1.0 means 'no increase or decrease', 1.02 means "+ 2%",
+ * Returns expressed such that 1.0 means 'no increase or decrease', 1.02 means "+ 2%",
  * and 0.97 means "-3%".
  *
- * <p> Contrast this with zero-based returns (no such class exists as of Aug 2017),
- * where the respective values would have been 0, 0.02, -0.03, respectively. </p>
+ * <p> Contrast this with zero-based returns,
+ * where the respective values would have been 0, 0.02, -0.03, respectively.
+ * No such class exists in the codebase as of March 2024. It's better this way because it avoids confusion. </p>
  *
  * <p> Ones-based returns have the property that they can be multiplied to produce a valid ones-based return.
  * This is not the case with zero-based returns; e.g. a $100 portfolio that goes up 10% and down 10% is
@@ -36,13 +37,21 @@ public class OnesBasedReturn extends PreciseValue<OnesBasedReturn> {
   }
 
   /**
-   * <p> Note that some very lossy returns may not be representable when using continuous compounding.
-   * Take a portfolio that has dropped 20% over 2 months. </p>
+   * <p> Note that some very lossy returns may not be possible to represent when using continuous compounding.
+   * Take a portfolio that has dropped 20% over 2 months:
    *
-   * {@code final value = start value * e ^ (r * t)}
-   * {@code ln(final / start) = r * t}
-   * {@code ln(0.8) = r * .2}
-   * {@code r = ln(0.8)/.2 = -1.11 (zero based)} - so that implies a -111% annual return, which is not possible for a single year.
+   * <pre>
+   * final value = start value * e ^ (r * t)
+   * <==> ln(final / start) = r * t}
+   * </pre>
+   *
+   * In this example,
+   * <pre>
+   * ln(0.8) = r * .2
+   * <==> r = ln(0.8)/.2 = -1.11 (zero based)
+   * </pre>
+   * ... so the above implies a -111% annual return, which is not possible for a single year.
+   * </p>
    *
    * <p> Keep this in mind in case some mysterious exception takes you here! </p>
    */

@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.RBNumeric;
+import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.types.WeightedBy;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -18,18 +19,18 @@ import static java.util.Collections.singletonList;
 /**
  * A collection of items with positive weights. There used to be a restriction that they sum to 1, but not anymore.
  *
- * FlatLinearCombination is more general than #see Partition ; the items here are not guaranteed to be keyable. You can still iterate
+ * <p> {@link FlatLinearCombination} is more general than {@link Partition}; the items here are not guaranteed to be usable
+ * as keys; remember that we do not always implement equals / hashCode.. You can still iterate
  * over each (item, weight) pair of course.
- * Also, the weights do not need to sum to 1, unlike Partition - although, like Partition, they are UnitFractions,
- * so the weights are in (0, 1].
+ * Also, the weights do not need to sum to 1, unlike {@link Partition}. However, like {@link Partition},
+ * they are {@link UnitFraction}, so the weights are in (0, 1]. </p>
  *
- * FlatLinearCombination is less general than #see LinearCombination; here, we do not preserve any sort of tree structure.
+ * <p> {@link FlatLinearCombination} is less general than {@link LinearCombination};
+ * here, we do not preserve any sort of tree structure. </p>
  *
- * You can choose not to care about the order that the items appear here. However, having a deterministic order
- * makes testing easier, so we will assume that by default.
+ * <p> You can choose not to care about the order that the items appear here. However, having a deterministic order
+ * makes testing easier, so we will assume that by default. </p>
  *
- * @see Partition
- * @see LinearCombination
  * @see SignedPartition
  * @see FlatSignedLinearCombination
  */

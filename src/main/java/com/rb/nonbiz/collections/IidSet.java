@@ -26,7 +26,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 /**
  * A set of {@link InstrumentId}s that can be indexed by InstrumentId.
  *
- * <p> It uses the instrument-id-specific optimized maps (using GNU Trove). </p>
+ * <p> It uses the instrument-id-specific optimized maps (using GNU Trove) for better performance. </p>
  *
  * @see HasLongSet
  * @see HasInstrumentIdSet

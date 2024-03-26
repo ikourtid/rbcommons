@@ -11,12 +11,13 @@ import static com.rb.biz.types.StringFunctions.isAllWhiteSpace;
 import static com.rb.nonbiz.util.RBEnumMaps.rbEnumMapCoveringAllEnumValues;
 
 /**
- * We often serialize a Java enum by using strings that are similar in meaning to the Java identifier, but
- * possibly looking different (e.g. JSON API tends to use camelcase instead of capitalized snake case in Java).
- * We have to do this, because if we ever rename the Java enum class or its enum values, we
- * don't want the API to change, as others may be relying on those specific strings.
+ * A way to describe an enum for the purpose of documenting an JSON-based API.
  *
- * <p> For those JSON properties, we should be using this. </p>
+ * <p> We often serialize a Java enum by using strings that are similar in meaning to the Java identifier, but
+ * possibly looking different (e.g. JSON API tends to use camelcase instead of capitalized snake case in Java).
+ * We have to use this class, because if we ever rename the Java enum class or its enum values, we
+ * don't want the API to change, as others may be relying on those specific strings. That is, we can't just write
+ * the Java enum's '{@link Class#getSimpleName()}</p>
  */
 public class JsonApiEnumDescriptor<E extends Enum<E> & JsonRoundTripStringConvertibleEnum<E>> {
 

@@ -12,27 +12,30 @@ import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 
 /**
  * The name is not super-intuitive, but it's meant to contrast with the (well-established in the codebase by now)
- * Partition class. A {@code Partition<K>} is indexable by K. A {@code LinearCombination<N, L>} is not;
- * you can just iterate over its items.
+ * {@link Partition} class. A {@code Partition<K>} is indexable by K. A {@code LinearCombination<N, L>} is not;
+ * you can only iterate over its items.
  *
- * Use this whenever you want to represent having N things with proportions that sum to 1 (hence 'normalized')
- * and all the weights are positive, but there are no indexing semantics.
+ * <p> Use this whenever you want to represent having N things with proportions that sum to 1 (hence 'normalized')
+ * and all the weights are positive, but there are no indexing semantics. </p>
  *
  * This does not have to have ordered semantics. However, I'll do that, because
  * a) it results in deterministic printing
  * b) it's easier to check for epsilon-based comparison in test. E.g. if we have
+ * <pre>
  * 0.499999999 {@code ->}  "A"
  * 0.500000001 {@code ->}  "B"
- *
+ * </pre>
  * and
  *
+ * <pre>
  * 0.499999999 {@code ->}  "A"
  * 0.500000001 {@code ->}  "B"
+ * </pre>
  *
- * we want those to be equivalent. If we don't have ordered semantics, it's hard to tell what's first and what's second.
+ * <p> we want those to be equivalent. If we don't have ordered semantics, it's hard to tell what's first and what's second. </p>
  *
- * In the generics below, N = node and L = leaf. This class allows you to use a different type for the nodes and
- * leaves, although you don't have to.
+ * <p> In the generics below, N = node and L = leaf. This class allows you to use a different type for the nodes and
+ * leaves, although you don't have to. </p>
  *
  * #see Partition
  * #see SignedPartition

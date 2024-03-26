@@ -18,12 +18,12 @@ import static com.rb.nonbiz.collections.RBStreams.sumBigDecimals;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 
 /**
- * Just like Deviations, except that this explicitly disallows items with a 0 fraction.
+ * Just like {@link Deviations}, except that this explicitly disallows items with a 0 fraction.
  *
- * You can decide whether to use this (vs plain Deviations) depending on whether you care about recording information
+ * <p> You can decide whether to use this (vs plain {@link Deviations}) depending on whether you care about recording information
  * about missing items. For example, say you want to store the differences between the ideal and the actual
  * partition. If you care about having entries for items that have equal fractions in both partitions (and therefore
- * have a 0 deviation), then use plain Deviations. Use this when you want to explicitly disallow 0 deviations.
+ * have a 0 deviation), then use plain {@link Deviations}. Use this when you want to explicitly disallow 0 deviations. </p>
  */
 public class NonZeroDeviations<K> {
 

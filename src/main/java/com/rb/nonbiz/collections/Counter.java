@@ -16,6 +16,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
  * <p> It is like a histogram. It's not like a general map of object to value.
  * We can only increment the counters of individual items and see their counts, but not overwrite the counts. </p>
  *
+ * <p> This class is mutable, which is generally rare in the codebase, hence worth pointing out. </p>
  */
 public class Counter<T> {
 

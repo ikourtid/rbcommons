@@ -31,6 +31,12 @@ import static com.rb.nonbiz.util.RBEnumMaps.getWhenUpToOneRBEnumMapIsNonEmpty;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkAllSame;
 import static com.rb.nonbiz.util.RBSimilarityPreconditions.checkBothSame;
 
+/**
+ * Various static utility methods that merge two or more {@link RBEnumMap}s.
+ *
+ * <p> The various methods have different expectations about inputs. E.g. you may want to throw if there is
+ * ever any key appearing in more than one input {@link RBEnumMap}.</p>
+ */
 public class RBEnumMapMergers {
 
   /**

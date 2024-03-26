@@ -14,7 +14,8 @@ import java.util.stream.Stream;
  *
  * <p> As elsewhere in the codebase, it is highly recommended that you use this immutable class instead of the mutable version,
  * {@link MutableMultiDimensionalArray}. The usual pattern is to create a {@link MutableMultiDimensionalArray} once,
- * wrap it in a MultiDimensionalArray, and then just pass around the MultiDimensionalArray. </p>
+ * wrap it in a {@link MultiDimensionalArray}, and then just pass around the {@link MultiDimensionalArray},
+ * which does not even expose methods to mutate its state. </p>
  *
  * <p> The iterator iterates in the order defined by the {@code MultidimensionalCounter}. </p>
  *

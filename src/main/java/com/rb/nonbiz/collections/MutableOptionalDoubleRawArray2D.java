@@ -9,10 +9,12 @@ import static com.rb.nonbiz.collections.BitSet2D.bitSet2D;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 /**
- * This is more memory-efficient than a 2D array of {@code OptionalDouble},
+ * Similar to a mutable 2d array of {@link OptionalDouble}.
+ *
+ * <p> This is more memory-efficient than a 2D array of {@code OptionalDouble},
  * because the double[][] is more space-efficient than either a Double[][] (boxed double)
  * or a {@code OptionalDouble[][]}, so we save a lot.
- * The BitSet2D is pretty compact, so we don't lose as much there.
+ * The BitSet2D is pretty compact, so we don't lose as much there. </p>
  */
 public class MutableOptionalDoubleRawArray2D {
 

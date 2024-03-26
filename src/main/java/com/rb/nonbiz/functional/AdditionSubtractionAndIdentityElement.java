@@ -10,12 +10,11 @@ import java.util.function.BinaryOperator;
  * An addition function (which, in general, may apply to non-scalars, such as TotalByPortfolioType),
  * a subtraction function, and an identity element.
  *
- * <p> Note that <i>T</i> can be a datatype such that subtraction is not always defined,
+ * <p> Note that <i>T</i> can be a datatype such that the result of a subtraction is not always defined,
  * e.g. {@link Money}, where it has to be positive. </p>
  *
- * <p> We'll just have to
- * make sure we only use this functionality in a situation that will not cause an exception - e.g. trying to subtract
- * money(10).subtract(money(11)). </p>
+ * <p> We'll just have to make sure we only use this functionality in a situation that will not cause an exception.
+ * For example, the code has to avoid subtracting 11 from 10 if using {@link Money}. </p>
  */
 public class AdditionSubtractionAndIdentityElement<T> {
 
