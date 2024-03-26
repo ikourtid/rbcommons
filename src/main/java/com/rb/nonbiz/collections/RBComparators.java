@@ -146,4 +146,22 @@ public class RBComparators {
     return comparator.compare(v1, v2) < 0 && comparator.compare(v2, v3) < 0;
   }
 
+  /**
+   * Make a {@code Comparator<T>} based on comparing the specified fields in order.
+   * The first comparison that results in non-equality will determine the result of the comparator.
+   */
+  public static <T> Comparator<T> makeComparator(Function<T, Comparable>... comparisonFields) {
+    return (t1, t2) -> {
+      for (Function<T, Comparable> comparisonField : comparisonFields) {
+        Comparable value1 = comparisonField.apply(t1);
+        Comparable value2 = comparisonField.apply(t2);
+        int comparisonResult = value1.compareTo(value2);
+        if (comparisonResult != 0) {
+          return comparisonResult;
+        }
+      }
+      return 0;
+    };
+  }
+
 }
