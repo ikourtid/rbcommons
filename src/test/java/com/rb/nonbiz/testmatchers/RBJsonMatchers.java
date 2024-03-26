@@ -21,6 +21,10 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.stringMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
+/**
+ * Test infrastructure for comparing Google GSON-library-JSON-related objects
+ * (such as {@link JsonObject} and {@link JsonArray}) using {@link TypeSafeMatcher}s.
+ */
 public class RBJsonMatchers {
 
   public static TypeSafeMatcher<JsonObject> jsonObjectMatcher(JsonObject expected, Epsilon epsilon) {

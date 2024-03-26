@@ -17,6 +17,9 @@ import static java.lang.Double.isNaN;
 import static java.math.RoundingMode.HALF_UP;
 
 /**
+ * A base class for creating typesafe versions of an BigDecimal,
+ * with two goals: tightening semantics, and making code easier to read.
+ *
  * A {@code PreciseValue} is the base class of many value classes in the code.
  *
  * <p> This exists because using a plain double may result in an approximate value. E.g. 100.00 could be represented

@@ -7,6 +7,9 @@ import com.rb.nonbiz.text.Strings;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
+/**
+ * Test infrastructure for comparing {@link Either} objects using {@link TypeSafeMatcher}s.
+ */
 public class RBEitherMatchers {
 
   public static <L, R> TypeSafeMatcher<Either<L, R>> eitherMatcher(

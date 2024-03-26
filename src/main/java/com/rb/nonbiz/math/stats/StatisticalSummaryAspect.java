@@ -3,7 +3,7 @@ package com.rb.nonbiz.math.stats;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 
 /**
- * This is a way to refer to the fields of {@link StatisticalSummary} programmatically.
+ * This is a way to refer to the fields of {@link StatisticalSummary} programmatically, such as mean, stdev, min, etc.
  */
 public enum StatisticalSummaryAspect {
 

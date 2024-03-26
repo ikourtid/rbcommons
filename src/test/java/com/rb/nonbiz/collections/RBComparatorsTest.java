@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.functional.TriConsumer;
 import org.junit.Test;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -193,6 +194,47 @@ public class RBComparatorsTest {
         Stream.of(1, 3, 5, 2, 4)
             .sorted(comparing(v -> v, reverseOrder()))
             .collect(Collectors.toList()));
+  }
+
+  @Test
+  public void makeComparator() {
+    class StringAndInt {
+
+      String string;
+      Integer number;
+
+      public StringAndInt(String string, Integer number) {
+        this.string = string;
+        this.number = number;
+      }
+
+    }
+
+    StringAndInt a1 = new StringAndInt("a", 1);
+    StringAndInt a2 = new StringAndInt("a", 2);
+    StringAndInt b1 = new StringAndInt("b", 1);
+    StringAndInt b2 = new StringAndInt("b", 2);
+
+    Comparator<StringAndInt> comparator = RBComparators.<StringAndInt>makeComparator(
+        stringAndInt -> stringAndInt.string,
+        stringAndInt -> stringAndInt.number);
+    List<StringAndInt> expectedSorting = ImmutableList.of(a1, a2, b1, b2);
+    for (int i = 0; i < expectedSorting.size(); i++) {
+      for (int j = 0; j < expectedSorting.size(); j++) {
+        StringAndInt itemI = expectedSorting.get(i);
+        StringAndInt itemJ = expectedSorting.get(j);
+        if (i < j) {
+          assertTrue(comparator.compare(itemI, itemJ) < 0);
+          assertTrue(comparator.compare(itemJ, itemI) > 0);
+        } else if (i > j) {
+          assertTrue(comparator.compare(itemI, itemJ) > 0);
+          assertTrue(comparator.compare(itemJ, itemI) < 0);
+        } else {
+          assertTrue(comparator.compare(itemI, itemJ) == 0);
+          assertTrue(comparator.compare(itemJ, itemI) == 0);
+        }
+      }
+    }
   }
 
 }

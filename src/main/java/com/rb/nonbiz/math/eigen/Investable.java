@@ -13,7 +13,7 @@ import com.rb.nonbiz.types.HasLongRepresentation;
  *    instrument class (or, more generally, asset class). </li>
  * </ol>
  *
- * <p> The current examples (Jun 2022) are {@link InstrumentId}, {@link AssetId},
+ * <p> The current examples (March 2024) are {@link InstrumentId}, {@link AssetId},
  * InstrumentClass, and AssetClass, and {@link CashId}. </p>
  */
 public interface Investable extends HasLongRepresentation {

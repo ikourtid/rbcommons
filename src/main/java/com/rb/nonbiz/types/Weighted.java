@@ -4,9 +4,11 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 /**
- * An item with a scalar weight.
+ * An item together with a scalar Double weight.
  *
  * <p> This is useful for describing a term in a linear combination of items. </p>
+ *
+ * @see WeightedBy
  */
 public class Weighted<T> {
 

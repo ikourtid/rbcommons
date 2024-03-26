@@ -16,8 +16,17 @@ import static com.rb.nonbiz.text.Strings.formatOptional;
  * <p> Unlike the most widely used {@link JsonApiClassDocumentation}, there is no {@link JsonValidationInstructions}
  * here. That normally gets used for attaching type info to a property string key. However, in the case of
  * superclass / subclass, there will not be any additional properties in the representation. Typically, it will be
- * an object such as: {@code { "type" = "SubClass1", "subclassProperty1" = "foo", "subclassProperty2" = "bar" } }.
- * Using the terminology below, {@link #getDiscriminatorPropertyValue()} would be "SubClass1".
+ * an object such as:
+ *
+ * <pre>
+ *   {
+ *      "type" = "SubClass1",
+ *      "subclassProperty1" = "foo",
+ *      "subclassProperty2" = "bar"
+ *   }
+ * </pre>
+ *
+ * <p> Using the terminology below, {@link #getDiscriminatorPropertyValue()} would be "SubClass1".
  * The discriminator property name is "type", but that's not stored here. </p>
  *
  * <p> The corresponding JSON API converter is only stored here so that we can traverse the tree of objects

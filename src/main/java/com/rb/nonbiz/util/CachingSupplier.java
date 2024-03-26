@@ -13,16 +13,18 @@ import static com.google.common.collect.Maps.newHashMapWithExpectedSize;
 import static com.rb.nonbiz.text.RBLog.rbLog;
 
 /**
- * This is a special verb class, because it is stateful.
+ * A {@link Supplier} for a cache.
  *
- * If you want to create a specialized caching supplier (e.g. one to load and cache the eigendecompositions),
+ * <p> This is a special verb class, because it is stateful. </p>
+ *
+ * <p> If you want to create a specialized caching supplier (e.g. one to load and cache the eigendecompositions),
  * remember to annotate your caching supplier class (not this) as
  * {@literal @Singleton}
- * ... otherwise, you would be reloading your eigendecomposition files into a different cache each time!
+ * ... otherwise, you would be reloading your eigendecomposition files into a different cache each time! </p>
  *
- * If your cache is effectively '2-D' (e.g. you want to cache a unique eigendecomposition for each combination of
+ * <p> If your cache is effectively '2-D' (e.g. you want to cache a unique eigendecomposition for each combination of
  * date and RiskModelDescriptor), no problem: just make sure the CachingSupplierKey is a pair of those two values,
- * and that it implements hashCode and equals.
+ * and that it implements hashCode and equals. </p>
  */
 public class CachingSupplier<K extends CachingSupplierKey<V>, V> {
 

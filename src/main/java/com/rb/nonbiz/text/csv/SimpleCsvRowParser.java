@@ -15,7 +15,7 @@ import static com.rb.nonbiz.text.csv.SimpleCsvRow.simpleCsvRow;
  * Parsing a single row of CSV is simple, in the common case:
  * abc,xyz,123
  *
- * However, CSV is allowed to have commas inside the cells, if the cell is surrounded by doublequotes.
+ * <p> However, CSV is allowed to have commas inside the cells, if the cell is surrounded by doublequotes.
  * For example:
  * {@code  x,y }
  * is represented as
@@ -25,13 +25,11 @@ import static com.rb.nonbiz.text.csv.SimpleCsvRow.simpleCsvRow;
  * {@code  "a" }
  * gets represented as:
  * {@code  """a""" }
+ * </p>
  *
- * This is useful for cases where we have a file with many columns, but we only want to read a subset of them.
+ * <p> This is useful for cases where we have a file with many columns, but we only want to read a subset of them.
  * Instead of loading the entire file in memory as a string, like {@link SimpleCsvParser} does,
- * we will read one line at a time, and only keep the columns we care about.
- *
- * This code does not use our normal style for the most part, but that's because it was inspired by code I saw
- * on some site.
+ * we will read one line at a time, and only keep the columns we care about. </p>
  */
 public class SimpleCsvRowParser {
 

@@ -6,7 +6,8 @@ import org.junit.runner.RunWith;
 /**
  * This is just a category marker, so it is intentionally empty.
  *
- * Applies to all tests, including unit and integration tests, plus backtests.
+ * <p> Applies to all tests, including unit and integration tests, plus backtests, plus whatever new may appear
+ * over time. </p>
  */
 @RunWith(ClasspathSuite.class)
 public class AllTests {

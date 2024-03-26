@@ -2,7 +2,6 @@ package com.rb.biz.types.asset;
 
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.biz.types.Symbol;
-import com.rb.biz.types.asset.AssetId.AssetIdVisitor;
 
 import java.time.LocalDate;
 

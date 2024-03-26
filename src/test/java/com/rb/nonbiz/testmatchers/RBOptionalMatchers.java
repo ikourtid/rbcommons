@@ -17,6 +17,9 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeSame;
 
+/**
+ * Test infrastructure for comparing {@link Optional} objects using {@link TypeSafeMatcher}s.
+ */
 public class RBOptionalMatchers {
 
   public static <T> TypeSafeMatcher<Optional<T>> emptyOptionalMatcher() {

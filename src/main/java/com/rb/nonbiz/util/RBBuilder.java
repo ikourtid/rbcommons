@@ -3,30 +3,38 @@ package com.rb.nonbiz.util;
 import com.google.common.annotations.VisibleForTesting;
 
 /**
- * A builder class (which should implement RBBuilder) is useful:
- * a) in cases where there are multiple fields of the same type, relying on argument order may be error-prone.
- * b) adds clarity over what a field actually is - vs relying on argument order.
- * c) in cases there are reasonable defaults for some fields in an object. At the limit, an object with n fields
- *    (where all n have default values) could need 2^n different constructors, in the absence of a builder.
+ * An interface for a builder object.
  *
- * The RBBuilder interface isn't strictly needed because we don't need to ever pass a builder of some class that's
+ * <p> A builder class (which should implement {@link RBBuilder}) is useful:
+ * <ol>
+ *   <li> in cases where there are multiple fields of the same type, relying on argument order may be error-prone. </li>
+ *   <li> adds clarity over what a field actually is - vs relying on argument order. </li>
+ *   <li> in cases there are reasonable defaults for some fields in an object. At the limit, an object with n fields
+ *    (where all n have default values) could need 2^n different constructors, in the absence of a builder. </li>
+ * </ol>
+ * </p>
+ *
+ * <p> This interface isn't strictly needed because we don't need to ever pass a builder of some class that's
  * not already known, i.e. we never pass around an {@code RBBuilder<T>}. At most, we'd pass a specific class that implements
- * RBBuilder.
- * However, implementing RBBuilder forces you to follow certain conventions whenever you implement a builder.
+ * {@link RBBuilder}.
+ * However, implementing {@link RBBuilder} forces you to follow certain conventions whenever you implement a builder. </p>
  *
- * It is very rare that you would need a getter on a builder.
- * Ideally, you should build the object first, and then just call that built object's getter.
+ * <p> It is very rare that you would need a getter on a builder.
+ * Ideally, you should build the object first, and then just call that built object's getter. </p>
  *
- * Use the default method name format that IntelliJ gives you; e.g.
- * * setFooBarBaz if something can only be set once
- * * addFooBarBaz if sime items get collected in e.g. some list
+ * <p> Use the default method name format that IntelliJ gives you; e.g.
+ * <ul>
+ *   <li> {@code setFooBarBaz} if something can only be set once </li>
+ *   <li> {@code addFooBarBaz} if sime items get collected in e.g. some list </li>
+ * </ul>
+ * </p>
  *
- * We have a convention where builder methods such as setXYZ assume that they have only been called once, and throw
+ * <p> We have a convention where builder methods such as {@code setXYZ} assume that they have only been called once, and throw
  * an exception otherwise. This is for extra safety in tests, because you can find yourself diagnosing confusing problems
  * if a field is set twice with different values; the behavior would depend on which value you set last.
  * For cases where you explicitly want to change a value that was already set previously by a setXYZ method,
- * the convention should be to create a method resetXYZ, which should assume XYZ has been given a value, and throw
- * an exception otherwise. That would be the opposite behavior of setXYZ.
+ * the convention should be to create a method {@code resetXYZ}, which should assume {@code XYZ}
+ * has been given a value, and throw an exception otherwise. That would be the opposite behavior of {@code setXYZ}. </p>
  */
 public interface RBBuilder<T> {
 

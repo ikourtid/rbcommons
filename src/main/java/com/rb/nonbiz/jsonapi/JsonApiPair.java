@@ -5,9 +5,10 @@ import com.rb.nonbiz.text.Strings;
 
 /**
  * Represents a Java object and its corresponding JSON object representation, for those Java objects whose JSON
- *  * representation is a {@link JsonObject}.
+ * representation is a {@link JsonObject}.
  *
- * <p> The unit tests will check that conversions in both directions produce the correct results. </p>
+ * <p> It is used almost exclusively in tests. The unit tests for the various JSON API converter verb classes
+ * will check that conversions in both directions produce the correct results. </p>
  *
  * @see JsonArrayApiPair
  */

@@ -7,8 +7,8 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Executors;
 
 /**
- * Some backtests or daytests run on all possible threads (12, on Iraklis's machine);
- * some may need fewer, if they are resource-heavy (e.g. maybe we can't fit 12 backtests in memory at
+ * Some backtests or daytests run on all possible threads (16, on Iraklis's machine);
+ * some may need fewer, if they are resource-heavy (e.g. maybe we can't fit 16 backtests in memory at
  * the same time).
  * This allows you to control how many threads will be used, on a per daytest or backtest basis.
  * Of course, the concept is more general; it just so happens that currently (Mar 2023) we only use this

@@ -10,10 +10,11 @@ import com.rb.nonbiz.util.RBSimilarityPreconditions;
 /**
  * An immutable square matrix.
  *
- * <p> I went back-and-forth between using inheritance and object composition, and settled for the latter.
+ * <p> We went back-and-forth between using inheritance and object composition, and settled for the latter.
  * Even though this is clearly an "is a" relationship, composition is useful because it saves us from having to
- * duplicate some preconditions. Plus, it hides some methods: getNumRows and getNumColumns were replaced with the
- * more explicit #getNumRowsOrColumns. </p>
+ * duplicate some preconditions. Plus, it hides some methods:
+ * {@link RBMatrix#getNumRows()} and {@link RBMatrix#getNumColumns()} were replaced with the
+ * more explicit {@link #getNumRowsOrColumns()}. </p>
  *
  * @see RBMatrix
  */

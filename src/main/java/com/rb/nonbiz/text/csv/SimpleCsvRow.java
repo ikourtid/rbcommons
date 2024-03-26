@@ -6,6 +6,9 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.List;
 
+/**
+ * A data row from inside a {@link SimpleCsv}.
+ */
 public class SimpleCsvRow {
 
   private final List<String> cellsInRow;

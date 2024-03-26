@@ -5,7 +5,7 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 /**
- * This is just a thin wrapper around a set of strings to help us specify which CSV columns to bother reading
+ * A typesafe thin wrapper around a set of strings to help us specify which CSV columns to bother reading
  * from a file. This is useful for cases where there are tons of them, and we only care about a small subset.
  */
 public class CsvColumnInclusionFilter {

@@ -28,6 +28,9 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeSame;
 
+/**
+ * Test infrastructure for comparing collections with {@link TypeSafeMatcher}s.
+ */
 public class RBCollectionMatchers {
 
   /**

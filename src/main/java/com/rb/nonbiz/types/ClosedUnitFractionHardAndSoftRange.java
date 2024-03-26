@@ -7,6 +7,11 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.ClosedUnitFractionRange.closedUnitFractionRange;
 import static com.rb.nonbiz.types.HardAndSoftRange.hardAndPossiblySameSoftRange;
 
+/**
+ * A version of {@link HardAndSoftRange} that's specialized for {@link UnitFraction}.
+ *
+ * <p> See {@link HardAndSoftRange} for an explanation of the 'hard and soft range' concept. </p>
+ */
 public class ClosedUnitFractionHardAndSoftRange {
 
   private final ClosedUnitFractionRange hardRange;

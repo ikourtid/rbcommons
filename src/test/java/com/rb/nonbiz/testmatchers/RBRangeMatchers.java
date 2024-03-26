@@ -22,6 +22,9 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.rbNumericValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 
+/**
+ * Test infrastructure for comparing {@link Range} objects using {@link TypeSafeMatcher}s.
+ */
 public class RBRangeMatchers {
 
   public static TypeSafeMatcher<Range<Double>> doubleRangeMatcher(Range<Double> expected, Epsilon epsilon) {

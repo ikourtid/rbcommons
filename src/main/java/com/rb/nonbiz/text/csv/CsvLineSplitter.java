@@ -5,11 +5,13 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 /**
  * Splits a single line of text into comma-separated components, while allowing
  * the possibility of commas being escaped inside doublequotes.
- * That is, we don't just return line.split(",").
- * I'm not sure if this implements some super-general CSV standard, but at least it takes
+ *
+ * <p> That is, we don't just return {@code line.split(",")}. </p>
+ *
+ * <p> I'm not sure if this implements some super-general CSV standard, but at least it takes
  * escaped commas into account.
  * For example, it does not handle the case where there is an escaped doublequote WITHIN a doublequoted field,
- * but it will suffice for now.
+ * but it will suffice for now. </p>
  */
 public class CsvLineSplitter {
 

@@ -22,10 +22,11 @@ import static com.rb.nonbiz.json.RBJsonStringArray.RBJsonStringArrayBuilder.rbJs
 
 /**
  * Represents a collection of (date, y) points, expressed in JSON format.
- * It is called 'sparse' because it is suited for representing cases where the dates aren't consecutive, i.e.
- * there are gaps in the dates.
  *
- * This is the more general version of JsonPointList.
+ * <p> It is called 'sparse' because it is suited for representing cases where the dates aren't consecutive, i.e.
+ * there are gaps in the dates. It also allows for y values of any type, not just numbers. </p>
+ *
+ * <p> This is a more general version of JsonPointList. </p>
  */
 public class JsonSparseTimeSeries {
 

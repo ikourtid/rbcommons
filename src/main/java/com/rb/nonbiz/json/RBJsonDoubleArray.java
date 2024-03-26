@@ -22,11 +22,12 @@ import static java.util.Collections.singletonList;
  * JSON arrays don't have to have items of the same type in them.
  * This class enforces that all items are doubles.
  *
- * Classes in our system are normally immutable. JsonArray (not our class) is not.
- * The way we can make this class immutable is to return a new JsonArray every time we ask for one.
- * Otherwise, if there were a JsonArray private member, a caller could retrieve it and add to it.
+ * <p> Classes in our system are normally immutable. {@link JsonArray} (a Google / 3rd party class, not ours) is not.
+ * The way we can make this class immutable is to return a new {@link JsonArray} every time we ask for one.
+ * Otherwise, if there were a {@link JsonArray} private member, a caller could retrieve it and add to it.
+ * This is less efficient, but safer. </p>
  *
- * Another advantage is that, once we know this can only hold doubles, we can have a test matcher that uses an epsilon.
+ * <p> Another advantage is that, once we know this can only hold doubles, we can have a test matcher that uses an epsilon. </p>
  */
 public class RBJsonDoubleArray {
 

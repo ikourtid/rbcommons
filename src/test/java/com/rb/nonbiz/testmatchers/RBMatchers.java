@@ -10,6 +10,9 @@ import java.util.function.Predicate;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 
+/**
+ * Test infrastructure for comparing objects using {@link TypeSafeMatcher}s.
+ */
 public class RBMatchers {
 
   /** This is to allow the possibility of avoiding the annoying describeTo implementation

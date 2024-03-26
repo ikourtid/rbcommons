@@ -12,10 +12,11 @@ import static com.rb.nonbiz.math.vectorspaces.MatrixColumnIndex.matrixColumnInde
  * A vector space basis is a set of linearly independent vectors that span the vector space,
  * i.e. every vector in the vector space can be expressed as a linear combination of the vectors in the basis.
  *
- * The vectors do not have to be pairwise orthogonal, or unit vectors; for that, see {@link VectorSpaceOrthonormalBasis}.
+ * <p> The vectors do not have to be pairwise orthogonal, or unit vectors;
+ * for that, see {@link VectorSpaceOrthonormalBasis}. </p>
  *
- * Instead of an ordered list of vectors, we store them in matrix format, where column vectors are the
- * vectors in the basis. This is a standard math way of doing it.
+ * <p> Instead of an ordered list of vectors, we store them in matrix format, where column vectors are the
+ * vectors in the basis. This is a standard math way of doing it. </p>
  */
 public class VectorSpaceBasis {
 

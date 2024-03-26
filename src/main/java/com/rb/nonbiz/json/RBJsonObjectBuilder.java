@@ -32,7 +32,11 @@ import static com.rb.nonbiz.json.RBGson.jsonString;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 
 /**
- * A nice, fluent way to build a JsonObject, with functionality for conditional addition of property/value pairs.
+ * A fluent builder for constructing a {@link JsonObject},
+ * also with functionality for conditional addition of property/value pairs.
+ *
+ * <p> Beyond the fluent style, another advantage is that the setters throw an exception if you set a property
+ * more than once, as this is almost always an error. </p>
  */
 public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
 

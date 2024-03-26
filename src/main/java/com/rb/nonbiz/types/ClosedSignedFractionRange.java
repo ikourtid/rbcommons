@@ -7,8 +7,9 @@ import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_0;
 import static com.rb.nonbiz.types.SignedFraction.SIGNED_FRACTION_1;
 
 /**
- * This is effectively a {@code Range<Double>} except that it is bounded on both ends.
- * It's similar to ClosedUnitFractionRange, except that the bounds don't have to be between 0 and 1.
+ * This is effectively a {@code Range<Double>}, except that it is bounded on both ends.
+ *
+ * <p> It's similar to ClosedUnitFractionRange, except that the bounds don't have to be between 0 and 1. </p>
  */
 public class ClosedSignedFractionRange {
 

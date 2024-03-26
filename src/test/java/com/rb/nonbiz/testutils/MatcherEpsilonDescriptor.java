@@ -7,6 +7,13 @@ import java.util.Objects;
 
 import static com.rb.nonbiz.text.UniqueId.uniqueId;
 
+/**
+ * Support that allows us to use different epsilons that are context-specific.
+ *
+ * <p> For example, we may want to use 1e-6 epsilon for buy order quantities, but 1e-4 for buy notional. </p>
+ *
+ * @see MatcherEpsilons
+ */
 public abstract class MatcherEpsilonDescriptor<T> {
 
   protected final Class<T> clazz;

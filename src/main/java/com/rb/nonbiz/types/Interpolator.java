@@ -3,8 +3,8 @@ package com.rb.nonbiz.types;
 import com.rb.nonbiz.util.RBPreconditions;
 
 /**
- * This is like a builder, so it's mutable.
- * It allows for a fluent representation of an interpolation.
+ * A builder object (and therefore mutable, despite our usual convention)
+ * that allows for a fluent representation of an interpolation.
  */
 public class Interpolator {
 

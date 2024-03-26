@@ -7,6 +7,11 @@ import java.util.function.Function;
 
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
+/**
+ * Test infrastructure for comparing 'sibling' objects in a class hierarchy (i.e. those with a shared superclass)
+ * in the case where we use visitor classes (usually named just 'Visitor') to implement the equivalent of
+ * what later versions of Java call 'sealed classes'.
+ */
 public class RBVisitorMatchers {
 
   public static class VisitorMatchInfo<T> {
@@ -45,11 +50,11 @@ public class RBVisitorMatchers {
    * (1 for each of its N implementations), and where each of those methods takes as an argument
    * an object of that implementation.
    *
-   * The advantage is that we don't have to have N^2 cases to cover in the code for the cases where the
+   * <p> The advantage is that we don't have to have N^2 cases to cover in the code for the cases where the
    * visitor covers N different implementations.
-   * The number of lines of code is now proportional to N than to N^2.
+   * The number of lines of code is now proportional to N than to N^2. </p>
    *
-   * Look at a usage of this for a better understanding, as it's easier to see its usefulness in an example.
+   * <p> Look at a usage of this for a better understanding, as it's easier to see its usefulness in an example. </p>
    */
   public static <T> TypeSafeMatcher<T> generalVisitorMatcher(T expected,
                                                               Function<T, VisitorMatchInfo<T>> extractor) {

@@ -2,6 +2,7 @@ package com.rb.nonbiz.math.stats;
 
 import com.google.inject.Inject;
 import com.rb.nonbiz.collections.PreciseValueWeighter;
+import com.rb.nonbiz.types.PositiveMultiplier;
 import com.rb.nonbiz.types.PreciseValue;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -15,12 +16,14 @@ import static java.math.MathContext.DECIMAL128;
 /**
  * Calculates population standard deviation (weighted and unweighted).
  *
- * I'm not sure how to generalize this statement or make it rigorous, but:
- * you can't always instantiate a PreciseValue with the value of the standard deviation.
+ * <p> It's not clear how to generalize this statement or make it rigorous, but:
+ * you can't always instantiate a {@link PreciseValue} with the value of the standard deviation.
  * This won't work when the 'zero value' of V is not the BigDecimal 0, e.g. with OnesBasedReturn.
- * By 'zero value' I mean something like the 'additive identity' in a (math) ring.
+ * By 'zero value' I mean something like the 'additive identity' in a (math) ring. </p>
+ *
+ * <p> Another example: if we have several {@link PositiveMultiplier}s with the exact same value, the standard
+ * deviation would be 0, but it is not possible to express 0 using a {@link PositiveMultiplier}. </p>
  */
-
 public class StdDevCalculator {
 
   @Inject PreciseValueWeighter preciseValueWeighter;

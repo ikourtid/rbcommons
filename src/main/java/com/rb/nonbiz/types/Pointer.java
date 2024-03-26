@@ -8,9 +8,9 @@ import java.util.function.Consumer;
 
 /**
  * Use this when you modify a value e.g. inside some inner method in a lambda.
- * We should never pass around a Pointer, or store it. It's not meant to be a C++ pointer!
+ * We should never pass around a {@link Pointer}, or store it. It's not meant to be a C++ pointer!
  *
- * @see ObjectReference if you know for sure this will have a value, and you can supply it at initialization time;
+ * Use {@link ObjectReference} if you know for sure this will have a value, and you can supply it at initialization time;
  * it is slightly clearer.
  */
 public class Pointer<T> {

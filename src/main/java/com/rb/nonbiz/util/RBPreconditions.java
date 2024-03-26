@@ -18,6 +18,10 @@ import static com.rb.nonbiz.collections.RBOptionals.findOnlyPresentOptional;
 import static com.rb.nonbiz.collections.RBStreams.concatenateFirstSecondAndRest;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
+/**
+ * Various static precondition methods (i.e. methods that are expected to throw an exception if their arguments are
+ * not deemed valid) that do not fall under the other categories in the files called RB*Preconditions.
+ */
 public class RBPreconditions {
 
   private static final Pattern PATTERN_WITH_NON_CONTIGUOUS_TRUE = Pattern.compile("F*T+F+T+F*");

@@ -4,13 +4,12 @@ import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.util.RBPreconditions;
 
 /**
- * Represents all top-level (non-inner classes) in the com.rb package in the rb module, including test ones
- * when this is run from test.
+ * A typesafe wrapper representing all top-level (non-inner classes) in the com.rb package in the rb module,
+ * including test ones when this is run from test.
  *
- * Ideally we'd use something smarter, where we do some pre-indexing. There are libraries that do this. However,
+ * <p> Ideally we'd use something smarter, where we do some pre-indexing. There are libraries that do this. However,
  * I used a Google library that does this stuff in a simple fashion. If this code ever becomes time-critical,
- * we can upgrade this. But right now (May 2021) we only use this as a one-off for determining what files to include
- * in the jar files we give to clients who get a binary license.
+ * we can upgrade this. </p>
  */
 public class AllRbTopLevelClasses {
 

@@ -10,9 +10,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 
 /**
- * This is a version for the special cases where all instances of a class match each other.
- * The class does not necessarily have to have a single instance; there could be many, in the sense that there can be
- * multiple objects in the runtime.
+ * This is a version of {@link RBTestMatcher} for the special cases where all instances of a class match each other.
+ *
+ * <p> The class does not necessarily have to have a single instance, from a pure pointer point of view;
+ * there could be many, in the sense that there can be multiple objects in the runtime.
+ * </p>
  *
  * @see RBTestMatcher
  */

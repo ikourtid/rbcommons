@@ -8,7 +8,7 @@ import com.rb.nonbiz.util.RBSimilarityPreconditions;
 import java.util.List;
 
 /**
- * A list with scalar weights.
+ * A list ({@link HasList}, to be precise), together with scalar Double weights.
  *
  * <p> This is more convenient than using {@link Weighted} for those cases where we already have an object
  * that has a list in it, and we just want to store weights externally.  </p>

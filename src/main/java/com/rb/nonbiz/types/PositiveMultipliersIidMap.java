@@ -16,10 +16,10 @@ import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 
 /**
  * A map of items {@code ->} {@link PositiveMultiplier}, specialized for {@link InstrumentId}
- * because it uses the more efficient IidMap.
+ * because it uses the more efficient {@link IidMap}.
  *
  * @see DoubleMap
- * @see PositiveMultipliersIidMap
+ * @see PositiveMultipliersMap
  */
 public class PositiveMultipliersIidMap implements PrintsInstruments {
 

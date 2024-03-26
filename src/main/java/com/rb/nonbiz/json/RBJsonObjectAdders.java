@@ -14,6 +14,12 @@ import java.util.function.Predicate;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonString;
 
+/**
+ * Various static utility methods for adding key/value pairs to a {@link JsonObject}.
+ *
+ * <p> We rarely use mutable semantics in the codebase, but {@link JsonObject} is a Google / 3rd party class,
+ * not ours. </p>
+ */
 public class RBJsonObjectAdders {
 
   // This is very simple but it allows us to add stuff fluently, which makes the code shorter.

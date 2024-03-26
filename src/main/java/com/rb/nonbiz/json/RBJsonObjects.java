@@ -53,7 +53,7 @@ import static java.util.Comparator.comparing;
 import static java.util.Map.Entry.comparingByKey;
 
 /**
- * Various utilities related to RBMap / IidMap {@code <--> } JsonObject conversions.
+ * Various static utilities related to {@link RBMap} / {@link IidMap} {@code <--> } {@link JsonObject} conversions.
  */
 public class RBJsonObjects {
 

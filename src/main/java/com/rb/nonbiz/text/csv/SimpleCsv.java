@@ -10,7 +10,8 @@ import java.util.stream.Collectors;
 
 /**
  * Represents a CSV file which has been read and loaded into memory.
- * This contains both a {@link SimpleCsvHeaderRow} and a list of {@link SimpleCsvRow}.
+ *
+ * <p> This contains both a {@link SimpleCsvHeaderRow} and a list of {@link SimpleCsvRow}. </p>
  */
 public class SimpleCsv {
 

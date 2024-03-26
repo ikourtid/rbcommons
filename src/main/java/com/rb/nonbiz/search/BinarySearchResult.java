@@ -11,9 +11,11 @@ import java.util.function.BiFunction;
 import static com.rb.nonbiz.collections.RBComparators.nonDecreasingPerComparator;
 
 /**
- * As we narrow in on x to find the best f(x), the result will be an interval [x1, x2]
+ * The result of a binary search.
+ *
+ * <p> As we narrow in on x to find the best f(x), the result will be an interval [x1, x2]
  * and a corresponding interval [f(x1), f(x2)] such that f(x1) &le; f(x) &le; f(x2),
- * where f(x) is the 'targetY' parameter in the BinarySearchParameters
+ * where f(x) is the 'targetY' parameter in the {@link BinarySearchParameters}. </p>
  */
 public class BinarySearchResult<X, Y> {
 

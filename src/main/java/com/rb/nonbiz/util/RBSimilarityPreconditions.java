@@ -20,6 +20,10 @@ import static com.rb.nonbiz.collections.RBRanges.getMinMaxClosedRange;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.function.Function.identity;
 
+/**
+ * Various static precondition methods (i.e. methods that are expected to throw an exception if their arguments are
+ * not deemed valid), pertaining to items in a collection being similar under different definitions.
+ */
 public class RBSimilarityPreconditions {
 
   /**

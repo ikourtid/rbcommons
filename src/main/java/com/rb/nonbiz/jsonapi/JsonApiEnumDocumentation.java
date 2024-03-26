@@ -9,7 +9,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 /**
  * This is (mostly) human-readable text that explains how a Java enum of this type
- * will get converted to/from JSON. It's useful mostly to 3rd party developers.
+ * will get converted to/from JSON. It's useful API users.
  *
  * <p> For non-enums, see {@link JsonApiClassDocumentation}. </p>
  *

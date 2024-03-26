@@ -10,10 +10,10 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 
 /**
- * This is effectively a {@code Range<Double>} except that:
+ * Like a {@code Range<Double>} except that:
  * <ul>
  *   <li> It is bounded on both ends. </li>
- *   <li> It is at most [0, 1], which is convenient because we use '{@link UnitFraction}
+ *   <li> It is within [0, 1], which is convenient because we use '{@link UnitFraction}
  *        of total portfolio' a lot in our LP formulations. </li>
  * </ul>
  */

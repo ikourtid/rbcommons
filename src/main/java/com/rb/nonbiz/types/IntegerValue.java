@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This is like {@link PreciseValue} and {@link ImpreciseValue}, but for int typesafe wrappers.
+ * A base class for creating typesafe versions of an {@link Integer},
+ * with two goals: tightening semantics, and making code easier to read.
+ *
+ * <p> This is like {@link PreciseValue} and {@link ImpreciseValue}, but for int typesafe wrappers.
  * Like those two, it lets us have more clearly named comparison methods:
  * {@code val1.isLessThan(val2)} is clearer than {@code val1.compareTo(val2) < 0}
  * More importantly, since Java doesn't allow typedefs, it gives us a general way to implement simple wrappers
- * around a single int.
+ * around a single int. </p>
  */
 public abstract class IntegerValue<T extends IntegerValue<T>> extends RBNumeric<T> {
 

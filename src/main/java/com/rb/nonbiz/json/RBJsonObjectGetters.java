@@ -73,8 +73,7 @@ public class RBJsonObjectGetters {
    * From 'jsonObject', get the value of 'property' if it exists (which we assume to be another JsonObject)
    * and return a transformed version of it, otherwise return empty optional.
    */
-  // FIXME SWA JSON rename to getOptionalTransformedJsonSubObject?
-  public static <T> Optional<T> getOptionalJsonSubObject(
+  public static <T> Optional<T> getOptionalTransformedJsonSubObject(
       JsonObject jsonObject,
       String property,
       Function<JsonObject, T> ifPresent) {

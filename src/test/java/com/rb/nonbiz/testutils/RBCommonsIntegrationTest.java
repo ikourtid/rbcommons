@@ -13,7 +13,7 @@ import static com.rb.biz.guice.modules.RBCommonsTestModule.rbCommonsIntegrationT
  * Integration tests (i.e. higher level than unit tests) of verb class FooBarBazer
  * should inherit from {@code RBIntegrationTest<FooBarBazer>}
  *
- * All this does is enforce convention by having you override getClassBeingTested; it should look like this:
+ * <p> All this does is enforce convention by having you override getClassBeingTested; it should look like this: </p>
  *
  * <pre>
  * {@code @Override}
@@ -23,21 +23,22 @@ import static com.rb.biz.guice.modules.RBCommonsTestModule.rbCommonsIntegrationT
  * }
  * }</pre>
  *
- * By the way, if you are wondering why we even need this method, keep in mind that Java does something called
+ * <p> By the way, if you are wondering why we even need this method, keep in mind that Java does something called
  * 'type erasure', which basically means that type information for generics is NOT available at runtime,
- * i.e. once the code has been compiled.
+ * i.e. once the code has been compiled. </p>
  *
- * Then you can just use makeRealObject() in your test code to get a usable object (with all Guice injections done
- * for you) of the type you are doing an integration test for.
+ * <p> Then you can just use makeRealObject() in your test code to get a usable object (with all Guice injections done
+ * for you) of the type you are doing an integration test for. </p>
  *
- * If you want to instantiate a real object that has 0 (or some manageable number of) verb sub-objects in it,
+ * <p> If you want to instantiate a real object that has 0 (or some manageable number of) verb sub-objects in it,
  * OR the number of (recursive transitive closure of) injections,
  * you could use RBTest instead of RBIntegrationTest, and just return a real object.
  * That alternative will be slightly faster, since RBIntegrationTest uses the Guice injector.
- * Of course, this will only matter once we have tons and tons of tests.
+ * Of course, this will only matter once we have tons and tons of tests. </p>
  *
- * An integration test for verb class FooBarBazer should be named FooBarBazerIntegrationTest.java,
- * in order to distinguish it from the unit test FooBarBazerTest.java.
+ * <p> An integration test for verb class FooBarBazer (using 'er' as a typical ending for an 'active' verb class)
+ * should be named FooBarBazerIntegrationTest.java,
+ * in order to distinguish it from the unit test FooBarBazerTest.java. </p>
  *
  * @see RBTest
  * @see RBCommonsIntegrationTest

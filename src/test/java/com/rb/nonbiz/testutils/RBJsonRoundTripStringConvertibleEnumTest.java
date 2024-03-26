@@ -16,11 +16,13 @@ import static com.rb.nonbiz.util.RBPreconditions.checkUnique;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * For enums that implement {@link JsonRoundTripStringConvertibleEnum},
+ * Test infrastructure for testing enum conversions to/from JSON strings.
+ *
+ * <p> For enums that implement {@link JsonRoundTripStringConvertibleEnum},
  * if we want to test the conversion back and forth to a 'unique stable string', the test class for that enum
  * should extend this. Just like with {@link RBTestMatcher}, some tests will be automatically created and run
  * to confirm that all enums are covered, and that the string representations are all unique and equal to whatever
- * values are returned by {@link #getEnumConstantsToRepresentations()}.
+ * values are returned by {@link #getEnumConstantsToRepresentations()}. </p>
  *
  * <p> We use a lot of reflection to get this to work, because there are static methods involved here. </p>
  */

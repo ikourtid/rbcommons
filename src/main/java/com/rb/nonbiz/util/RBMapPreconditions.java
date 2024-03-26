@@ -9,6 +9,10 @@ import com.rb.nonbiz.math.eigen.Investable;
 
 import java.util.function.Function;
 
+/**
+ * Various static precondition methods (i.e. methods that are expected to throw an exception if their arguments are
+ * not deemed valid), pertaining to {@link RBMap}.
+ */
 public class RBMapPreconditions {
 
   /**

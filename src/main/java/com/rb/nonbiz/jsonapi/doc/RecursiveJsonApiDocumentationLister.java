@@ -19,7 +19,7 @@ import static com.rb.nonbiz.jsonapi.HasJsonApiDocumentation.getAllJsonApiDocumen
 /**
  * Creates a list of (possibly non-unique) {@link JsonApiDocumentation} by recursively traversing a root
  * {@link JsonApiDocumentation} and its children, etc. For example, the {@link JsonApiDocumentation} for
- * MarketInfo will also have {@link JsonApiDocumentation} for CurrentMarketInfo
+ * MarketInfo will also have {@link JsonApiDocumentation} for CurrentMarketInfo,
  * DailyMarketInfo, and so on.
  */
 public class RecursiveJsonApiDocumentationLister {

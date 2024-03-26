@@ -18,6 +18,11 @@ import static com.rb.nonbiz.collections.RBIterators.transformToDoubleIterator;
 import static com.rb.nonbiz.math.stats.ZScore.zScore;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
+/**
+ * Various static utility methods pertaining to the 3rd party class {@link StatisticalSummary}.
+ *
+ * @see RBStatisticalSummaryUtilities
+ */
 public class RBStats {
 
   public static StatisticalSummary toBigDecimalStatisticalSummary(Iterable<BigDecimal> iterable) {

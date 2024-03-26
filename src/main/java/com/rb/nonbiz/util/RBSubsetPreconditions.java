@@ -12,6 +12,10 @@ import static com.rb.nonbiz.collections.IidSetOperations.isSubsetOf;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
+/**
+ * Various static precondition methods (i.e. methods that are expected to throw an exception if their arguments are
+ * not deemed valid), pertaining to subset relationships.
+ */
 public class RBSubsetPreconditions {
 
   // You could just use RBPreconditions.checkArgument(IidSets.isSubsetOf(expectedSubset, expectedSuperset))

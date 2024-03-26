@@ -38,6 +38,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+/**
+ * Test infrastructure to extend the usual assertEquals etc. methods from JUnit with more methods.
+ */
 public class Asserters {
 
   public static <T extends RBNumeric<? super T>> void assertAlmostEquals(T value1, T value2, Epsilon epsilon) {

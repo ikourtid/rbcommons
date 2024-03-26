@@ -18,10 +18,10 @@ import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonStringArray.RBJsonStringArrayBuilder.rbJsonStringArrayBuilder;
 
 /**
- * Represents a collection of (x, y) points, expressed in JSON format, with separate x and y vectors,
- * which is the way the chart library expects to see them.
+ * Represents a daily timeseries as a collection of (x, y) points, expressed in JSON format, with separate x and y vectors,
+ * which is the way our 3rd party chart library (Plot.ly) expects to see them.
  *
- * This is the more specialized version of JsonPointList, specialized for storing only a double per date.
+ * <p> The y vector is restricted to be a number (double). </p>
  */
 public class JsonPointList {
 

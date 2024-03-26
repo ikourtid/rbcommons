@@ -37,9 +37,9 @@ import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
  * <p> In the generics below, N = node and L = leaf. This class allows you to use a different type for the nodes and
  * leaves, although you don't have to. </p>
  *
- * #see Partition
- * #see SignedPartition
- * #see FlatLinearCombination
+ * @see Partition
+ * @see SignedPartition
+ * @see FlatLinearCombination
  */
 public class LinearCombination<N, L> {
 

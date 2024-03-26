@@ -16,6 +16,9 @@ import static com.rb.biz.types.Money.money;
  * <p> {@code MoneyFraction} includes the possibility of the numerator being greater than the denominator.
  * The use case was for {@code PortfolioTurnover} &gt; 100%. </p>
  *
+ * <p> A sample use case is amount of buy notional vs. total order notional. Unlike a pure ratio,
+ * it also allows for $0 out of $0, which is valid in the aforementioned sample use case. </p>
+ *
  * @see MoneyUnitFraction
  */
 public class MoneyFraction extends PreciseValue<MoneyFraction> {

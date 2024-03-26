@@ -6,6 +6,9 @@ import com.rb.nonbiz.collections.RBEnumMap;
 import static com.rb.nonbiz.collections.MutableRBEnumMap.newMutableRBEnumMap;
 import static com.rb.nonbiz.collections.RBEnumMap.newRBEnumMap;
 
+/**
+ * Various simple static constructors for {@link RBEnumMap}.
+ */
 public class RBEnumMapSimpleConstructors {
 
   public static <E extends Enum<E>, V> RBEnumMap<E, V> emptyRBEnumMap(Class<E> enumClass) {

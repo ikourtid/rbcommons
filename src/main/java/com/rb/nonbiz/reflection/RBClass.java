@@ -20,9 +20,9 @@ import static java.util.Collections.singletonList;
  *
  * <p> Java supports {@link Class} objects as part of its reflection API.
  * However, because generics were not part of the original Java specification and got added later,
- * Java uses "type erasure" (look it up) and doesn't have any knowledge at runtime about the generic class arguments.
+ * Java uses "type erasure" (you can look it up) and doesn't have any knowledge during runtime about the generic class arguments.
  * That is, I can call {@link Class#getClass()} on a runtime object of type {@code Foo<X, Y>} and get Foo.class,
- * but there's no way to get X.class or Y.class. This class allows it.
+ * but there's no way to get X.class or Y.class. This data class stores that extra information as well.
  * </p>
  */
 public class RBClass<T> {

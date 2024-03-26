@@ -11,6 +11,11 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 
+/**
+ * Test infrastructure for comparing {@link Stream} objects using {@link TypeSafeMatcher}s.
+ *
+ * <p> Of course, this requires 'consuming' the stream - but in tests, that's almost always OK. </p>
+ */
 public class RBStreamMatchers {
 
   /**

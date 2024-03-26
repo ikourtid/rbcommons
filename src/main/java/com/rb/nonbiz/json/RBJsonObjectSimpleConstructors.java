@@ -6,6 +6,9 @@ import com.rb.nonbiz.collections.RBMap;
 
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 
+/**
+ * Various fluent and legible static constructors for {@link JsonObject}s.
+ */
 public class RBJsonObjectSimpleConstructors {
 
   public static JsonObject emptyJsonObject() {

@@ -8,10 +8,10 @@ import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMapWithExpected
 import static com.rb.nonbiz.collections.Pair.pair;
 
 /**
- * Use this to build a RBMapOfHasUniqueId, which is immutable.
+ * Use this to build a {@link RBMapOfHasUniqueId}, which is immutable.
  *
- * This indirection is here to hide the internal implementation details of RBMapOfHasUniqueId
- * which stores a {@code RBMap<UniqueId<K>, Pair<K, V>>}.
+ * <p> This indirection is here to hide the internal implementation details of {@link RBMapOfHasUniqueId}
+ * which stores a {@code RBMap<UniqueId<K>, Pair<K, V>>}. </p>
  */
 public class MutableRBMapOfHasUniqueId<K extends HasUniqueId<K>, V> {
 

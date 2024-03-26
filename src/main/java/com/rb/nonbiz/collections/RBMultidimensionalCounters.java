@@ -29,8 +29,11 @@ public class RBMultidimensionalCounters {
    * iteration, which is all over the place (currently used in group sanity checks).
    *
    * <p> Given an N-dimensional slice, this will return an iterator that will iterate over k N-1-dimensional slices
-   * of the array (effectively), where k is the size of the dimension we pass in.
-   * See very extensive comments in #getSliceOfMultiDimensionalArray and the corresponding tests. </p>
+   * of the array (effectively), where k is the size of the dimension we pass in. </p>
+   *
+   * <p> See very extensive comments in
+   * {@link MultiDimensionalArrays#getSliceOfMultiDimensionalArray(MultiDimensionalArray, int, int)}
+   * and the corresponding tests. </p>
    */
   public static Iterator<Iterator<Coordinates>> asWeFixDimensionIterator(
       MultidimensionalCounter counter, int dimension) {
@@ -63,8 +66,11 @@ public class RBMultidimensionalCounters {
   }
 
   /**
-   * #see asWeFixDimensionIterator
-   * See very extensive comments in #getSliceOfMultiDimensionalArray and the corresponding tests.
+   * <p> See very extensive comments in
+   * {@link MultiDimensionalArrays#getSliceOfMultiDimensionalArray(MultiDimensionalArray, int, int)}
+   * and the corresponding tests. </p>
+   *
+   * See also {@link #asWeFixDimensionIterator(MultidimensionalCounter, int)}.
    */
   public static List<List<Coordinates>> asWeFixDimension(
       MultidimensionalCounter counter, int dimensionToVary) {
@@ -74,7 +80,9 @@ public class RBMultidimensionalCounters {
   }
 
   /**
-   * See very extensive comments in #getSliceOfMultiDimensionalArray and the corresponding tests.
+   * <p> See very extensive comments in
+   * {@link MultiDimensionalArrays#getSliceOfMultiDimensionalArray(MultiDimensionalArray, int, int)}
+   * and the corresponding tests. </p>
    */
   public static Iterator<Iterator<Coordinates>> asWeVaryDimensionIterator(MultidimensionalCounter counter, int dimensionToVary) {
     RBPreconditions.checkValidArrayElement(dimensionToVary, counter.getDimension());

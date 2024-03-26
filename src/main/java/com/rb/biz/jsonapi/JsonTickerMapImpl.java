@@ -1,7 +1,6 @@
 package com.rb.biz.jsonapi;
 
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
-import com.rb.biz.types.Symbol;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.IidBiMap;
 import com.rb.nonbiz.text.Strings;
