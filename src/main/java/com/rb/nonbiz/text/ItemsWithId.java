@@ -7,6 +7,9 @@ import java.util.List;
 
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
 
+/**
+ * Static utility methods pertaining to {@link ItemWithId}.
+ */
 public class ItemsWithId {
 
   /**
@@ -14,7 +17,8 @@ public class ItemsWithId {
    *
    * @see ItemWithId
    */
-  public static <T> List<ItemWithId<T>> itemsWithUniqueIds(ItemWithId<T> first, ItemWithId<T>...rest) {
+  @SafeVarargs
+  public static <T> List<ItemWithId<T>> itemsWithUniqueIds(ItemWithId<T> first, ItemWithId<T> ... rest) {
     List<ItemWithId<T>> list = concatenateFirstAndRest(first, rest);
     RBPreconditions.checkUnique(
         Iterators.transform(list.iterator(), itemWithId -> itemWithId.getUniqueId()));

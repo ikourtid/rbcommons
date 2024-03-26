@@ -18,11 +18,11 @@ import static com.rb.nonbiz.text.csv.SimpleCsvHeaderRow.simpleCsvHeaderRow;
 import static com.rb.nonbiz.text.csv.SimpleCsvRow.simpleCsvRow;
 
 /**
- * A CSV parser that is simple in the sense that the entire CSV file is loaded into memory, instead of using a
+ * A CSV parser that is simple, in the sense that the entire CSV file is loaded into memory, instead of using a
  * buffered file reader.
  *
- * There are other CSV libraries, but we are using ours because of the above simplification, and also for the
- * ability to only load a subset of the columns.
+ * <p> There are other CSV libraries, but we are using ours because of the above simplification, and also for the
+ * ability to only load a subset of the columns. </p>
  */
 public class SimpleCsvParser {
 

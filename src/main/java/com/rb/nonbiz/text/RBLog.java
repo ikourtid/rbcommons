@@ -9,15 +9,22 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormatWithDatePrepended;
 
 /**
  * Every class FooBarBaz that wants to log should have this, at the top:
- * private static final RBLog log = rbLog(FooBarBaz.class);
- * ... and then just make a bunch of calls like {@code
- * log.info("xyz");
- * log.info( () -> someComplicatedCalculation());
- * }
  *
- * There are overloads that take {@code Supplier<String>}. Those save us from the overhead of building
+ * <pre>
+ *   private static final RBLog log = rbLog(FooBarBaz.class);
+ * </pre>
+ *
+ * ... and then just make a bunch of calls like
+ *
+ * <pre>
+ *   log.info("xyz");
+ *   log.info( () -> someComplicatedCalculation());
+ * </pre>
+ *
+ * <p> There are also overloads that take {@code Supplier<String>}. Those save us from the overhead of building
  * a string if we are not going to be printing it anyway
- * for the cases where the logger is not enabled for a particular log level.
+ * for the cases where the logger is not enabled for a particular log level. To avoid the overhead of constructing
+ * a lambda, only use those overloads when the cost of building the string is non-trivial. </p>
  */
 public class RBLog {
 

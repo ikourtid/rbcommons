@@ -17,17 +17,19 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static java.util.Comparator.comparing;
 
 /**
- * Sometimes we want an RBMap, but the map key does not implement #equals and #hashCode.
+ * An immutable map from {@link HasUniqueId} to any value.
+ *
+ * <p> Sometimes we want an RBMap, but the map key does not implement #equals and #hashCode.
  * We can just use {@code RBMap<K, V>} in the case where we can rely on pointer comparison, e.g. if K does not implement
- * hashCode or equals, but we don't instantiate more than one K that would ever count as intuitively 'equal'.
+ * hashCode or equals, but we don't instantiate more than one K that would ever count as intuitively 'equal'. </p>
  *
- * Essentially, this behaves like an {@code RBMap<K, V>} but by storing two separate maps to avoid the fact that K
- * does not implement #equals and #hashCode, as it should in an {@code RBMap<K, V>}.
+ * <p> Essentially, this behaves like an {@code RBMap<K, V>} but by storing two separate maps to avoid the fact that K
+ * does not implement #equals and #hashCode, as it should in an {@code RBMap<K, V>}. </p>
  *
- * The initial use case scenario for this was a map of BacktestResultField to some other type.
+ * <p> The initial use case scenario for this was a map of BacktestResultField to some other type.
  * BacktestResultField has a uniqueId, but does not implement #equals and #hashCode. So we shouldn't be keying off of
  * a BacktestResultField. We were doing this (June 2019) but it was working because we never have more than one
- * instance of a BacktestResultField with the same uniqueId, so everything worked, but only by accident.
+ * instance of a BacktestResultField with the same uniqueId, so everything worked, but only by accident. </p>
  */
 public class RBMapOfHasUniqueId<K extends HasUniqueId<K>, V> {
 

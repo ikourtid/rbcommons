@@ -2,6 +2,12 @@ package com.rb.nonbiz.text;
 
 import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 
+/**
+ * Just a pair of an item and a label. Useful in cases where the item itself does not implement
+ * {@link HasHumanReadableLabel} / doesn't store one internally.
+ *
+ * @param <T>
+ */
 public class ItemWithLabel<T> implements HasHumanReadableLabel {
 
   private final HumanReadableLabel label;

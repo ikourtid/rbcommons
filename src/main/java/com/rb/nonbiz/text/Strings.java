@@ -42,6 +42,11 @@ import static java.util.Map.Entry.comparingByValue;
 /**
  * Various versions of Java's {@link String#format} methods, with the advantage that {@link Strings#format}
  * doesn't throw an exception if the format doesn't match its arguments.
+ *
+ * <p> We normally take a fail-fast approach. However, this flexibility is important,
+ * because the cost of an exception is too high compared to having the wrong
+ * contents in a string, since we rarely look at the contents of strings to make any decisions in our codebase.
+ * </p>
  */
 public class Strings {
 

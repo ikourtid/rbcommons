@@ -14,7 +14,7 @@ import com.rb.nonbiz.collections.Either;
  * issue of avoiding the inconvenience of specifying the metric twice in the investor settings:
  * if we were able to specify the same EsgScorableMetric separately for the objective function with the same UniqueId,
  * we wouldn't have an easy way of confirming that it is identical to the EsgScorableMetric that appears inside
- * the constraints under the same UniqueId. </p>
+ * the constraints under the same {@link UniqueId}. </p>
  *
  * @see Either
  */

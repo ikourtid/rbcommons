@@ -5,9 +5,10 @@ import com.rb.nonbiz.util.RBPreconditions;
 import static com.rb.nonbiz.text.HumanReadableLabel.checkNonEmptyLabelWithNoWhitespace;
 
 /**
- * A human-readable label used to document our output.
+ * A human-readable label used to document our output. It's a simple implementation of {@link HumanReadableLabel}.
  *
- * <p> We never use labels in our business logic; they exist only for explanatory purposes. </p>
+ * <p> We never use labels in our business logic; they exist only for explanatory purposes.
+ * In other words, only humans are supposed to read  a {@link HumanReadableLabel}. </p>
  */
 public class SimpleHumanReadableLabel implements HumanReadableLabel {
 
