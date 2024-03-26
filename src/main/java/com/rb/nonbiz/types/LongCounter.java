@@ -6,13 +6,13 @@ import com.rb.nonbiz.util.RBPreconditions;
 import static java.lang.Math.toIntExact;
 
 /**
- * Use this when you modify a value e.g. inside some inner method in a lambda.
- * We should never pass around an LongCounter, or store it. It's not meant to be a C++ pointer!
+ * A non-negative {@link Long} number that represents how many times something has happened.
+ *
+ * <p> Use this when you modify a value e.g. inside some inner method in a lambda. Because it's mutable (which is rare
+ * in our codebase), we should never pass around an {@link LongCounter}, or store it. It's not meant to be a C++ pointer! </p>
  *
  * <p> If you ever find yourself using a {@code Pointer<Integer>} or {@code Pointer<Long>},
  * chances are that this will be a better specialized version. </p>
- *
- * <p> This is one of those rare mutable classes in our system. </p>
  */
  public class LongCounter {
 

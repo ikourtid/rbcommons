@@ -18,13 +18,13 @@ import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 
 /**
- * Represents a single floating-point number from 0 to 1 (inclusive).
+ * Represents a continuous value from 0 to 1 (inclusive).
  *
- * <p> This is a misnomer but we couldn't find a better name: </p>
+ * <p> This is a misnomer, but we couldn't find a better name: </p>
  * <ol>
  *   <li> General fractions can of course be less than 0 or greater than 1. </li>
  *   <li> A {@code UnitFraction} object can have irrational values within [ 0, 1 ], e.g.
- *     {@code 0.5 * Math.sqrt(2)}. </li>
+ *     {@code 0.5 * Math.sqrt(2)}, so it's not truly a fraction in the 'ratio of integers' sense. </li>
  </ol>
  *
  * See {@link RationalUnitFraction} for a special case that enforces that the values are rational numbers.

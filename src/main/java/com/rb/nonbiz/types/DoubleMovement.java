@@ -1,12 +1,13 @@
 package com.rb.nonbiz.types;
 
+import com.rb.biz.types.OnesBasedReturn;
 import com.rb.nonbiz.text.Strings;
 
 /**
  * Represents 2 doubles, usually with 'before/after' semantics'.
- * Do not use this for price returns though; @see OnesBasedReturn.
+ * Do not use this for price returns though; use {@link OnesBasedReturn} instead.
  *
- * This is useful for e.g. looking at how eigenvalues jump around from one day to the next.
+ * <p> This is useful for e.g. looking at how eigenvalues jump around from one day to the next. </p>
  */
 public class DoubleMovement {
 

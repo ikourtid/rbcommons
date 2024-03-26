@@ -7,13 +7,13 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 /**
- * This is effectively a generalization of a boolean.
+ * This is effectively a generalization of a boolean, allowing for smooth values between true and false.
  *
  * <p> There are often cases where there is a number that we <i>could</i> use in a calculation,
  * and we want to decide to either use it, use a default value (whatever the default happens to be - not our job here),
  * or just use something in between. </p>
  *
- * This is effectively a {@link UnitFraction}, but with more explicit semantics.
+ * <p> This is also effectively a {@link UnitFraction}, but with more explicit semantics. </p>
  *
  * @see Interpolator
  */

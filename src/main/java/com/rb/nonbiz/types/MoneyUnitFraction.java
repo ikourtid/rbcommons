@@ -11,9 +11,15 @@ import static com.rb.biz.types.Money.ZERO_MONEY;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 /**
- * Useful to represent stuff such as "out of $x traded, $y was bought".
- * Basically, whenever the numerator is {@code <=} than the denominator.
- * It's also OK if it's $0 out of $0.
+ * A ratio of {@link Money}
+ *
+ * <p> Useful to represent stuff such as "out of $x traded, $y was bought".
+ * Basically, whenever the numerator is {@code <=} than the denominator. </p>
+ *
+ * <p> It's also OK if it's $0 out of $0. </p>
+ *
+ * @see MoneyFraction
+ * @see MoneySignedFraction
  */
 public class MoneyUnitFraction extends PreciseValue<MoneyUnitFraction> {
 

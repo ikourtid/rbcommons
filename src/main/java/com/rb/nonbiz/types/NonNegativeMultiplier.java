@@ -7,6 +7,8 @@ import java.util.Collection;
 /**
  * A simple class to hold a non-negative number meant to be used as a multiplier
  * of some other numeric quantity.
+ *
+ * @see PositiveMultiplier
  */
 public class NonNegativeMultiplier extends ImpreciseValue<NonNegativeMultiplier> {
 

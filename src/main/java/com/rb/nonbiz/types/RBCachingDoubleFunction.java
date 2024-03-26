@@ -14,6 +14,12 @@ import static com.rb.nonbiz.collections.MutableRBDoubleKeyedMap.newMutableRBDoub
  * <p> This is useful for expensive calculations, where we want to avoid invoking the supplied function again
  * if we have already done it before. However, the complexity is that the parameter of the function is a double,
  * so checking whether we've called this function on the same x uses an epsilon comparison. </p>
+ *
+ * <p> Obviously you should avoid using this in cases where two x values that are less than epsilon apart
+ * produce very different results. Say f(x1) = y1 and f(x2) = y2, and x1 and x2 are less than {@link #epsilonForX} apart.
+ * Normally, y1 and y2 would also be very near each other. If not, then if we first call f(x1) and get back y1, the next
+ * time we call f(x2) we will also get y1, because of caching. So if y1 is very different than y2, we should not
+ * use this class. </p>
  */
 public class RBCachingDoubleFunction<V> implements DoubleFunction<V> {
 

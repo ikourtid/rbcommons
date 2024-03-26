@@ -5,7 +5,7 @@ import java.util.OptionalLong;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalLong;
 
 /**
- * Various utilities pertaining to {@link Long}.
+ * Various static utility methods pertaining to a plain Java @link Long}.
  */
 public class RBLongs {
 

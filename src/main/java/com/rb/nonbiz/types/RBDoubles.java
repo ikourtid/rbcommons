@@ -7,6 +7,9 @@ import java.util.OptionalDouble;
 
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalDouble;
 
+/**
+ * Various static utility methods pertaining to plain Java {@link Double}s.
+ */
 public class RBDoubles {
 
   /**

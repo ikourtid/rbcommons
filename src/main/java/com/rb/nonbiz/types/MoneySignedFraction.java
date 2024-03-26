@@ -14,11 +14,16 @@ import static com.rb.biz.types.SignedMoney.ZERO_SIGNED_MONEY;
 import static com.rb.nonbiz.types.SignedFraction.signedFraction;
 
 /**
- * Similar to MoneyUnitFraction, except that the numerator can also be negative - i.e. it's a SignedMoney.
- * Useful to represent stuff such as "out of $x held, gains / losses were $y", or
- * "out of $x held, tax due (or owed) is $y"
+ * A ratio of {@link Money}.
  *
- * It's also OK if it's $0 out of $0.
+ * <p> Similar to {@link MoneyUnitFraction}, except that the numerator can also be negative - i.e.
+ * it's a {@link SignedMoney}. Useful to represent stuff such as "out of $x held, gains / losses were $y", or
+ * "out of $x held, tax due (or owed) is $y" </p>
+ *
+ * <p> It's also OK if it's $0 out of $0. </p>
+ *
+ * @see MoneyFraction
+ * @see MoneyUnitFraction
  */
 public class MoneySignedFraction extends PreciseValue<MoneySignedFraction> {
 

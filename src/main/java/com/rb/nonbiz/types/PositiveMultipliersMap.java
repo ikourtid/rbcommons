@@ -12,6 +12,7 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
  * A map of items {@code ->} positive multiplier.
  *
  * @see DoubleMap
+ * @see PositiveMultipliersIidMap
  */
 public class PositiveMultipliersMap<K> {
 

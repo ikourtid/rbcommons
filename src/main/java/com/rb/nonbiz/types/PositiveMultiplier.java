@@ -4,6 +4,8 @@ import com.rb.nonbiz.util.RBPreconditions;
 
 /**
  * A simple class to hold a positive number meant to be used as positive multiplier to some other numeric quantity.
+ *
+ * @see NonNegativeMultiplier
  */
 public class PositiveMultiplier extends ImpreciseValue<PositiveMultiplier> {
 
