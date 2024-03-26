@@ -11,11 +11,12 @@ import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional
 
 /**
  * Represents a filter in a single collection of values T.
- * Right now (Oct 2018) we only support a filter with a single value,
- * but this could be expanded to a set of values later, if needed.
  *
- * Note that T should implement a non-trivial hashCode/equals
- * (i.e. it shouldn't be the default Object implementation of reference/pointer comparison).
+ * <p> Right now (March 2024) we only support a filter with a single value,
+ * but this could be expanded to a set of values later, if needed. </p>
+ *
+ * <p> Note that T should implement a non-trivial hashCode/equals
+ * (i.e. it shouldn't be the default Object implementation of reference/pointer comparison). </p>
  */
 public class Filter<T> {
 

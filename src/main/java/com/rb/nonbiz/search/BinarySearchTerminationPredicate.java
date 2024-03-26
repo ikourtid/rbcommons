@@ -6,20 +6,25 @@ import com.rb.nonbiz.collections.EitherOrBoth.EitherOrBothVisitor;
 import java.util.function.BiPredicate;
 
 /**
- * Say we are doing a binary search to find an x such that f(x) is very near 2,
+ * Instructions on when the binary search should return its result and stop halving the x values.
+ *
+ * <p> Say we are doing a binary search to find an x such that f(x) is very near 2,
  * but we don't know f. Let's say that f(x) = x^2, w.l.o.g., but assume we can't know its inverse function,
  * which is sqrt(x).
- * Note that sqrt(2) = 1.41421356. Let's say we start the binary search with x bounds [1.0, 2.0].
+ * Note that sqrt(2) = 1.41421356. Let's say we start the binary search with x bounds [1.0, 2.0]. </p>
  *
+ * <p>
  * We could terminate if the binary search is:
- * a) looking at an x interval that is very small, e.g. x in [1.41,  1.42]
- * b) looking at a  y interval that is very small, e.g. y in [1.9,   2.1]
- * c) a OR b
- * d) a AND b
+ * <ol>
+ *  <li> looking at an x interval that is very small, e.g. x in [1.41,  1.42] </li>
+ *  <li> looking at a  y interval that is very small, e.g. y in [1.9,   2.1] </li>
+ *  <li> #1 OR #2 </li>
+ *  <li> #1 AND #2 </li>
+ * </ol>
  *
- * This data class abstracts away those 4 cases. Its inner state is intentionally not made available,
- * but the point is that you just call BinarySearchTerminationPredicate#test
- * (using 'test' in the 'test predicate' sense per Java naming convention, not in the unit test sense).
+ * <p> This data class abstracts away those 4 cases. Its inner state is intentionally not made available,
+ * but the point is that you just call {@link BinarySearchTerminationPredicate#test(Object, Object, Object, Object)}
+ * (using 'test' in the 'test predicate' sense per Java naming convention, not in the unit test sense). </p>
  */
 public class BinarySearchTerminationPredicate<X, Y> {
 
