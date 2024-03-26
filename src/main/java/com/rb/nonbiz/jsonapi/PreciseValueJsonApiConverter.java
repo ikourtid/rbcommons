@@ -1,6 +1,7 @@
 package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.rb.biz.jsonapi.JsonTicker;
 import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.asset.InstrumentId;
@@ -13,7 +14,7 @@ import java.util.function.Function;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
- * Reads a {@link PreciseValue} from JSON for the case where it's the value of a JsonObject
+ * Reads a {@link PreciseValue} from JSON for the case where it's the value of a {@link JsonObject}
  * that's keyed by instrument (JsonTicker, to be precise).
  *
  * <p> In case of an exception, we will throw a detailed new exception

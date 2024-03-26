@@ -2,6 +2,7 @@ package com.rb.nonbiz.jsonapi;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.rb.nonbiz.collections.FlatSignedLinearCombination;
 import com.rb.nonbiz.types.WeightedBySignedFraction;
@@ -22,13 +23,14 @@ import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 /**
  * Converts a {@link FlatSignedLinearCombination} back and forth to a JSON array for our public API.
  *
- * <p> This does not create a JSON Object as most converters do, but instead creates a JSON Array.
- * It does so because a FlatSignedLinearCombinartion is just a thin wrapper for a
+ * <p> This does not create a {@link JsonObject} as most converters do, but instead creates a {@link JsonArray}.
+ * It does so because a {@link FlatSignedLinearCombination} is just a thin wrapper for a
  * {@code List<WeightedBySignedFraction<T>>}, and lists are more naturally represented by arrays.
  * Furthermore, if we were to create a JsonObject, it's not clear what the keys would be. </p>
  *
  * <p> This does not implement JsonArrayRoundTripConverter because we need to supply serializers
- * and deserializers. </p>
+ * and deserializers. Plus, JsonArrayRoundTripConverter is a higher-level concept with some business logic,
+ * and is not applicable to this repo. </p>
  */
 public class FlatSignedLinearCombinationJsonApiConverter implements HasJsonApiDocumentation {
 

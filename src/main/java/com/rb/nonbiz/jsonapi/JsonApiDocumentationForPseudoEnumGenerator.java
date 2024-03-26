@@ -9,7 +9,8 @@ import static com.rb.nonbiz.text.HumanReadableDocumentation.documentation;
 
 /**
  * Generates {@link JsonApiDocumentation} specifically in the case of {@link PseudoEnumJsonApiPropertyDescriptor}s.
- * Centralizing the text generation into this location will standardize the documentation format.
+ *
+ * <p> Centralizing the text generation into this location helps standardize the documentation format. </p>
  */
 public class JsonApiDocumentationForPseudoEnumGenerator {
 

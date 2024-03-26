@@ -32,7 +32,9 @@ import static com.rb.nonbiz.text.Strings.asSingleLineWithNewlines;
 /**
  * Converts an {@link ImmutableIndexableArray1D} back and forth to JSON for our public API.
  *
- * This does not implement JsonRoundTripConverter because we need to supply serializers and deserializers.
+ * <p> This does not implement JsonRoundTripConverter because we need to supply serializers and deserializers.
+ * Plus, JsonRoundTripConverter is a higher-level concept with some business logic,
+ * and is not applicable to this repo. </p>
  */
 public class ImmutableIndexableArray1DJsonApiConverter implements HasJsonApiDocumentation {
 

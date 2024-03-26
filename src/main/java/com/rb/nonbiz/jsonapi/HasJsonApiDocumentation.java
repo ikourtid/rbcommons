@@ -8,8 +8,8 @@ import java.util.Optional;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 
 /**
- * Used by JSON API converters (NOT the classes they convert) to denote that a class has human-readable documentation
- * (typically for developers) for its JSON format.
+ * Used by JSON API converter verb classes (NOT by the data classes they convert) to denote that a class
+ * has human-readable documentation (typically for developers) for its JSON-serialized version.
  */
 public interface HasJsonApiDocumentation {
 
