@@ -9,6 +9,8 @@ import static com.rb.nonbiz.reflection.AllRbTopLevelClasses.allRbTopLevelClasses
 
 /**
  * Retrieves all top-level (non-inner classes) in the com.rb package in the rb module, including test ones.
+ *
+ * @see AllRbTopLevelClasses
  */
 public class AllRbTopLevelClassesRetriever {
 

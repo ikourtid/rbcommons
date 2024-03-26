@@ -15,6 +15,9 @@ import static com.rb.nonbiz.reflection.UniqueClassesWithDepth.uniqueClassesWithD
 
 /**
  * Enumerates a data class and its fields, and - if specified as recursive, its fields' fields as well.
+ *
+ * <p> Note that there is no hard distinction between data classes and verb classes; it is just a
+ * strong convention. </p>
  */
 public class DataClassRecursiveEnumerator {
 
