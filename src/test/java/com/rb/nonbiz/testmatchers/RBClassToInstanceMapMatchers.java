@@ -8,7 +8,7 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 /**
- * Contains TypeSafeMatcher code for Guava classes.
+ * Test infrastructure for comparing {@link ClassToInstanceMap} objects using {@link TypeSafeMatcher}s.
  */
 public class RBClassToInstanceMapMatchers {
 

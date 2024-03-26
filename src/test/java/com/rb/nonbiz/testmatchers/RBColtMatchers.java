@@ -10,6 +10,10 @@ import org.hamcrest.TypeSafeMatcher;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.doubleArrayMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
+/**
+ * Test infrastructure for comparing Colt library objects (such as {@link DoubleMatrix1D} and
+ * {@link DoubleMatrix2D}) using {@link TypeSafeMatcher}s.
+ */
 public class RBColtMatchers {
 
   public static TypeSafeMatcher<DoubleMatrix2D> matrixMatcher(DoubleMatrix2D expected, MatcherEpsilons e) {

@@ -12,6 +12,9 @@ import java.util.stream.IntStream;
 
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 
+/**
+ * Test infrastructure for comparing arrays with {@link TypeSafeMatcher}s.
+ */
 public class RBArrayMatchers {
 
   public static <T> TypeSafeMatcher<T[]> arrayMatcher(T[] expected, MatcherGenerator<T> itemMatcherGenerator) {

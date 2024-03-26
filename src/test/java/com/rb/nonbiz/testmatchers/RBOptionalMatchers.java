@@ -1,5 +1,6 @@
 package com.rb.nonbiz.testmatchers;
 
+import com.rb.nonbiz.collections.Either;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Epsilon;
@@ -17,6 +18,9 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeSame;
 
+/**
+ * Test infrastructure for comparing {@link Optional} objects using {@link TypeSafeMatcher}s.
+ */
 public class RBOptionalMatchers {
 
   public static <T> TypeSafeMatcher<Optional<T>> emptyOptionalMatcher() {

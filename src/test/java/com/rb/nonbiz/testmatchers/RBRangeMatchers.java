@@ -2,6 +2,7 @@ package com.rb.nonbiz.testmatchers;
 
 import com.google.common.collect.Range;
 import com.rb.nonbiz.collections.ClosedRange;
+import com.rb.nonbiz.collections.Either;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
@@ -22,6 +23,9 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.rbNumericValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 
+/**
+ * Test infrastructure for comparing {@link Range} objects using {@link TypeSafeMatcher}s.
+ */
 public class RBRangeMatchers {
 
   public static TypeSafeMatcher<Range<Double>> doubleRangeMatcher(Range<Double> expected, Epsilon epsilon) {

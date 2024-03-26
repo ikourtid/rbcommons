@@ -8,6 +8,7 @@ import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.IntegerValue;
 import com.rb.nonbiz.types.PreciseValue;
+import org.hamcrest.TypeSafeMatcher;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,10 +34,15 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 
 /**
- * This helps avoid the mistake of having the expected and actual on both sides of a match
- * in the (typical) static functions that return TypeSafeMatcher in a data class test that extends RBTestMatcher.
+ * Infrastructure to help with using {@link TypeSafeMatcher} in our tests, and thus make it easier to test
+ * (vs. have it be so difficult that developers won't bother.)
  *
- * F = short for 'field'
+ * <p> This helps avoid the mistake of having the expected and actual on both sides of a match
+ * in the (typical) static functions that return {@link TypeSafeMatcher}
+ * in a data class test that extends {@link com.rb.nonbiz.testutils.RBTestMatcher}. </p>
+ *
+ * @param <T> type of object whose fields we are comparing via a matcher
+ * @param <F> type of an object's field that's being compared
  */
 public class Match<T, F> {
 

@@ -14,11 +14,11 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 /**
  * This is useful for matching objects that can belong to more than one type.
  *
- * In our codebase, we usually use visitors and generalVisitorMatcher to do this sort of thing.
- * However, we can't do this for classes that we did not write.
+ * <p> In our codebase, we usually use visitors and {@link RBVisitorMatchers#generalVisitorMatcher(Object, Function)}
+ * to do this sort of thing. However, we can't do this for classes that we did not write. </p>
  *
- * It's harder to explain this here than it is to look at an example of where and how {@link #lambdaSwitchMatcher}
- * gets used.
+ * <p> It's harder to explain this here than it is to look at an example of where and how {@link #lambdaSwitchMatcher}
+ * gets used. </p>
  */
 public class LambdaSwitchCase<T, V> {
 

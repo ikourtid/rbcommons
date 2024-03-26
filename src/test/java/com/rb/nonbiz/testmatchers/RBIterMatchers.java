@@ -11,6 +11,9 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 
+/**
+ * Test infrastructure for comparing {@link Iterator}s using {@link TypeSafeMatcher}s.
+ */
 public class RBIterMatchers {
 
   /**

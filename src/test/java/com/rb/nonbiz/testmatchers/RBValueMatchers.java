@@ -19,6 +19,9 @@ import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.types.PreciseValue.bigDecimalsAlmostEqual;
 
+/**
+ * Test infrastructure for comparing primitive values using {@link TypeSafeMatcher}s.
+ */
 public class RBValueMatchers {
 
   public static <T extends RBNumeric<? super T>> TypeSafeMatcher<T> rbNumericMatcher(T expected, Epsilon epsilon) {

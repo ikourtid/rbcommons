@@ -36,6 +36,9 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.impreciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 
+/**
+ * Test infrastructure for comparing {@link RBMap} and {@link IidMap} objects using {@link TypeSafeMatcher}s.
+ */
 public class RBMapMatchers {
 
   public static <K, V extends PreciseValue> TypeSafeMatcher<RBMap<K, V>> rbMapPreciseValueMatcher(
