@@ -1,6 +1,5 @@
 package com.rb.nonbiz.testmatchers;
 
-import com.rb.nonbiz.collections.Either;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.Epsilon;

@@ -8,6 +8,9 @@ import java.util.Collections;
 
 import static org.jmock.AbstractExpectations.returnValue;
 
+/**
+ * Various static utility methods related to mocking for purposes of testing.
+ */
 public class RBMockeries {
 
   public static Mockery imposterizingMockery() {

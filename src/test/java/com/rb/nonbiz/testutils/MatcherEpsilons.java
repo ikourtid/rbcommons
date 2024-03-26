@@ -22,7 +22,10 @@ import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
  * Normally, our test matchers use 1e-8 (DEFAULT_EPSILON). However, sometimes we want to override the epsilons.
  * This helps you accomplish that.
  *
- * see OrdersTest#testEpsilonsInfra for how this gets used. Also, {@link MatcherEpsilonsTest}.
+ * <p> In the higher-level repos, see OrdersTest#testEpsilonsInfra for how this gets used.
+ * Also, see {@link MatcherEpsilonsTest}. </p>
+ *
+ * @see MatcherEpsilonDescriptor
  */
 public class MatcherEpsilons {
 

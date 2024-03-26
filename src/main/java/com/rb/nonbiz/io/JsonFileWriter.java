@@ -1,7 +1,6 @@
 package com.rb.nonbiz.io;
 
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 

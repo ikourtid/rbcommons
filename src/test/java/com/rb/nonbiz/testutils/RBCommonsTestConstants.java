@@ -45,8 +45,8 @@ import static com.rb.nonbiz.types.SplitMultiplier.splitMultiplier;
  * This class doesn't have any real functionality; it's just a repository for a bunch of
  * dummy values that are convenient to use in tests in order to denote that a value doesn't matter.
  *
- * RBTest and RBIntegrationTest derive from RBTestConstants, but this is purely for convenience reasons.
- * Autocompletion in the IDE can be much smarter, and it keeps us from having to static import these constants.
+ * {@link RBTest} and {@link RBCommonsIntegrationTest} derive from this, but this is purely for convenience reasons:
+ * It allows autocompletion in the IDE to be much smarter, and it keeps us from having to static import these constants.
  */
 public abstract class RBCommonsTestConstants<T> {
 

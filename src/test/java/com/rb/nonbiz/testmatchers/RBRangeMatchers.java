@@ -2,7 +2,6 @@ package com.rb.nonbiz.testmatchers;
 
 import com.google.common.collect.Range;
 import com.rb.nonbiz.collections.ClosedRange;
-import com.rb.nonbiz.collections.Either;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.text.Strings;
