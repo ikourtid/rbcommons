@@ -132,7 +132,7 @@ public class RBJsonObjectGettersTest {
             "subObjKey", jsonInteger(111)));
 
     Function<String, Optional<String>> converter = key ->
-        getOptionalJsonSubObject(jsonObject, key, jsonSubObject -> String.format("%s_%s",
+        getOptionalTransformedJsonSubObject(jsonObject, key, jsonSubObject -> String.format("%s_%s",
             getOnlyElement(jsonSubObject.keySet()),
             jsonSubObject.get(getOnlyElement(jsonSubObject.keySet()))));
     assertOptionalEmpty(converter.apply("unknown_key"));
