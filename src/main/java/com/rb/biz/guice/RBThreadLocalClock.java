@@ -63,7 +63,7 @@ public class RBThreadLocalClock implements RBClock {
   @Override
   public ZonedDateTime nowOnEastCoast() {
     // All production machines should be on East Coast time, because that's kind of standard,
-    // as NYSE is on the East Coast, and all US exchanges follow by and large the same trading hours (9:30 - 4).
+    // as NYSE is on the East Coast, and all US stock exchanges follow by and large the same trading hours (9:30 - 4).
     // This is not a requirement, of course.
     return now().atZone(EAST_COAST_ZONE_ID);
   }

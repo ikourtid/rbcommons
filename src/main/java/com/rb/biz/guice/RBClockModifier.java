@@ -22,7 +22,7 @@ public class RBClockModifier {
   private static final RBClockModifierToken RB_CLOCK_MODIFIER_TOKEN = new RBClockModifierToken();
 
   /**
-   * Unusually, his class holds nothing and does nothing. It exists as a safety mechanism to prevent unintentionally
+   * Unusually, this class holds nothing and does nothing. It exists as a safety mechanism to prevent unintentionally
    * overwriting the global {@link RBClock}. See {@link RBClock#overwriteCurrentTime} for more.
    */
   public final static class RBClockModifierToken {
