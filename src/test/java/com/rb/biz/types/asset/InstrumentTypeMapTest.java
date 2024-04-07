@@ -2,6 +2,7 @@ package com.rb.biz.types.asset;
 
 import com.rb.biz.types.asset.InstrumentTypeMap.InstrumentTypeMapBuilder;
 import com.rb.nonbiz.collections.IidSet;
+import com.rb.nonbiz.collections.IidSetSimpleConstructors;
 import com.rb.nonbiz.collections.Pair;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.functional.QuadriConsumer;
@@ -10,14 +11,18 @@ import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.stream.Collectors;
+
 import static com.rb.biz.marketdata.FakeInstruments.*;
 import static com.rb.biz.types.asset.InstrumentType.EtfInstrumentType.etfInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.MutualFundInstrumentType.mutualFundInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.StockInstrumentType.stockInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.StructuredProductInstrumentType.structuredProductInstrumentType;
+import static com.rb.biz.types.asset.InstrumentTypeMap.checkInstrumentTypeMapHasNoDuplicateInstruments;
 import static com.rb.biz.types.asset.InstrumentTypeMap.checkInstrumentTypeMapHasNoDuplicates;
 import static com.rb.biz.types.asset.InstrumentTypeMap.instrumentTypeMapWithSharedDefaults;
 import static com.rb.biz.types.asset.InstrumentTypeTest.instrumentTypeMatcher;
+import static com.rb.nonbiz.collections.IidSetSimpleConstructors.newIidSet;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.singletonIidSet;
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
@@ -135,6 +140,119 @@ public class InstrumentTypeMapTest extends RBTestMatcher<InstrumentTypeMap<Doubl
         rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_C2, DUMMY_STRING)),
         rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_D2, DUMMY_STRING))));
     
+    // Same as above, but we removed the 2nd pair which was an attempt to keep the test general
+    assertIllegalArgumentException( () -> checker.accept(
+        singletonRBSet(pair(STOCK_E,  DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_E,  DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_C1, DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_D1, DUMMY_STRING))));
+
+    assertIllegalArgumentException( () -> checker.accept(
+        singletonRBSet(pair(STOCK_E,  DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_B1, DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_E,  DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_D1, DUMMY_STRING))));
+
+    assertIllegalArgumentException( () -> checker.accept(
+        singletonRBSet(pair(STOCK_E,  DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_B1, DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_C1, DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_E,  DUMMY_STRING))));
+
+    assertIllegalArgumentException( () -> checker.accept(
+        singletonRBSet(pair(STOCK_A1, DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_E,  DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_E,  DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_D1, DUMMY_STRING))));
+
+    assertIllegalArgumentException( () -> checker.accept(
+        singletonRBSet(pair(STOCK_A1, DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_E,  DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_C1, DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_E,  DUMMY_STRING))));
+
+    assertIllegalArgumentException( () -> checker.accept(
+        singletonRBSet(pair(STOCK_A1, DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_B1, DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_E,  DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_E,  DUMMY_STRING))));
+  }
+
+  @Test
+  public void testCheckInstrumentTypeMapHasNoDuplicateInstruments() {
+    QuadriConsumer<
+        RBSet<Pair<InstrumentId, String>>,
+        RBSet<Pair<InstrumentId, String>>,
+        RBSet<Pair<InstrumentId, String>>,
+        RBSet<Pair<InstrumentId, String>>> checker =
+        (forEtfs, forStocks, forMutualFunds, forStructuredProducts) ->
+            checkInstrumentTypeMapHasNoDuplicateInstruments(
+                InstrumentTypeMapBuilder.<RBSet<Pair<InstrumentId, String>>>instrumentTypeMapBuilder()
+                    .setValueForEtfs(forEtfs)
+                    .setValueForStocks(forStocks)
+                    .setValueForMutualFunds(forMutualFunds)
+                    .setValueForStructuredProducts(forStructuredProducts)
+                    .build(),
+                v -> newIidSet(v.stream()
+                    .map(v1 -> v1.getLeft())
+                    .collect(Collectors.toList())));
+
+    // does not throw
+    checker.accept(
+        rbSetOf(pair(STOCK_A1, DUMMY_STRING), pair(STOCK_A2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_B1, DUMMY_STRING), pair(STOCK_B2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_C1, DUMMY_STRING), pair(STOCK_C2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_D1, DUMMY_STRING), pair(STOCK_D2, DUMMY_STRING)));
+
+    checker.accept(
+        singletonRBSet(pair(STOCK_A1, DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_B1, DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_C1, DUMMY_STRING)),
+        singletonRBSet(pair(STOCK_D1, DUMMY_STRING)));
+
+    checker.accept(
+        emptyRBSet(),
+        emptyRBSet(),
+        emptyRBSet(),
+        emptyRBSet());
+
+    // STOCK_E appears in two places below. The 2nd pair is immaterial
+    assertIllegalArgumentException( () -> checker.accept(
+        rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_A2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_B2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_C1, DUMMY_STRING), pair(STOCK_C2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_D1, DUMMY_STRING), pair(STOCK_D2, DUMMY_STRING))));
+
+    assertIllegalArgumentException( () -> checker.accept(
+        rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_A2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_B1, DUMMY_STRING), pair(STOCK_B2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_C2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_D1, DUMMY_STRING), pair(STOCK_D2, DUMMY_STRING))));
+
+    assertIllegalArgumentException( () -> checker.accept(
+        rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_A2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_B1, DUMMY_STRING), pair(STOCK_B2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_C1, DUMMY_STRING), pair(STOCK_C2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_D2, DUMMY_STRING))));
+
+    assertIllegalArgumentException( () -> checker.accept(
+        rbSetOf(pair(STOCK_A1, DUMMY_STRING), pair(STOCK_A2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_B2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_C2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_D1, DUMMY_STRING), pair(STOCK_D2, DUMMY_STRING))));
+
+    assertIllegalArgumentException( () -> checker.accept(
+        rbSetOf(pair(STOCK_A1, DUMMY_STRING), pair(STOCK_A2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_B2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_C1, DUMMY_STRING), pair(STOCK_C2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_D2, DUMMY_STRING))));
+
+    assertIllegalArgumentException( () -> checker.accept(
+        rbSetOf(pair(STOCK_A1, DUMMY_STRING), pair(STOCK_A2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_B1, DUMMY_STRING), pair(STOCK_B2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_C2, DUMMY_STRING)),
+        rbSetOf(pair(STOCK_E,  DUMMY_STRING), pair(STOCK_D2, DUMMY_STRING))));
+
     // Same as above, but we removed the 2nd pair which was an attempt to keep the test general
     assertIllegalArgumentException( () -> checker.accept(
         singletonRBSet(pair(STOCK_E,  DUMMY_STRING)),

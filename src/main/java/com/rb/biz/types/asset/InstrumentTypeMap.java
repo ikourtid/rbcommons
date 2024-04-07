@@ -5,6 +5,9 @@ import com.rb.biz.types.asset.InstrumentType.MutualFundInstrumentType;
 import com.rb.biz.types.asset.InstrumentType.StockInstrumentType;
 import com.rb.biz.types.asset.InstrumentType.StructuredProductInstrumentType;
 import com.rb.biz.types.asset.InstrumentType.Visitor;
+import com.rb.nonbiz.collections.IidMap;
+import com.rb.nonbiz.collections.IidSet;
+import com.rb.nonbiz.collections.IidSets;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.RBSets;
@@ -12,6 +15,7 @@ import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 import com.rb.nonbiz.util.RBSimilarityPreconditions;
+import org.checkerframework.checker.units.qual.K;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -61,8 +65,8 @@ public class InstrumentTypeMap<T> {
   }
 
   /**
-   * A common use case is when we store an IidMap under each instrument type,
-   * in which case we want to ensure each instrument appears under only one instrument type.
+   * A common use case is when we store an RBMap under each instrument type,
+   * in which case we want to ensure each key appears under only one instrument type.
    *
    * <p> This cannot be part of the builder below, because the generic class T is not guaranteed to have
    * this notion of being able to extract a set of keys out of it. For all we know, T could be just a string.
@@ -72,7 +76,7 @@ public class InstrumentTypeMap<T> {
       InstrumentTypeMap<T> instrumentTypeMap,
       Function<T, RBSet<K>> keysExtractor) {
     RBPreconditions.checkArgument(
-        noSharedItems(
+        RBSets.noSharedItems(
             keysExtractor.apply(instrumentTypeMap.valueForEtfs),
             keysExtractor.apply(instrumentTypeMap.valueForStocks),
             keysExtractor.apply(instrumentTypeMap.valueForMutualFunds),
@@ -81,7 +85,28 @@ public class InstrumentTypeMap<T> {
         instrumentTypeMap);
   }
 
-  public T get(InstrumentType instrumentType) {
+  /**
+   * A common use case is when we store an {@link IidMap} under each instrument type,
+   * in which case we want to ensure each instrument appears under only one instrument type.
+   *
+   * <p> This cannot be part of the builder below, because the generic class T is not guaranteed to have
+   * this notion of being able to extract a set of keys out of it. For all we know, T could be just a string.
+   * So this method has to be separate and invoked when applicable. </p>
+   */
+  public static <T> void checkInstrumentTypeMapHasNoDuplicateInstruments(
+      InstrumentTypeMap<T> instrumentTypeMap,
+      Function<T, IidSet> iidSetExtractor) {
+    RBPreconditions.checkArgument(
+        IidSets.noSharedIids(
+            iidSetExtractor.apply(instrumentTypeMap.valueForEtfs),
+            iidSetExtractor.apply(instrumentTypeMap.valueForStocks),
+            iidSetExtractor.apply(instrumentTypeMap.valueForMutualFunds),
+            iidSetExtractor.apply(instrumentTypeMap.valueForStructuredProducts)),
+        "The InstrumentIds under each InstrumentType must be unique: %s",
+        instrumentTypeMap);
+  }
+
+    public T get(InstrumentType instrumentType) {
     return instrumentType.visit(visitor);
   }
 
