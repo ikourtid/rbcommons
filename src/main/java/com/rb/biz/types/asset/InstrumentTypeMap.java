@@ -6,10 +6,14 @@ import com.rb.biz.types.asset.InstrumentType.StockInstrumentType;
 import com.rb.biz.types.asset.InstrumentType.StructuredProductInstrumentType;
 import com.rb.biz.types.asset.InstrumentType.Visitor;
 import com.rb.nonbiz.collections.RBMap;
+import com.rb.nonbiz.collections.RBSet;
+import com.rb.nonbiz.collections.RBSets;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
+import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -17,6 +21,7 @@ import static com.rb.biz.types.asset.InstrumentType.EtfInstrumentType.etfInstrum
 import static com.rb.biz.types.asset.InstrumentType.MutualFundInstrumentType.mutualFundInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.StockInstrumentType.stockInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.StructuredProductInstrumentType.structuredProductInstrumentType;
+import static com.rb.nonbiz.collections.RBSets.noSharedItems;
 
 /**
  * A special case of a map of {@link InstrumentType} to some value.
@@ -53,6 +58,27 @@ public class InstrumentTypeMap<T> {
         .setValueForMutualFunds(       sharedDefaultValueForAllInstrumentTypes)
         .setValueForStructuredProducts(sharedDefaultValueForAllInstrumentTypes)
         .build();
+  }
+
+  /**
+   * A common use case is when we store an IidMap under each instrument type,
+   * in which case we want to ensure each instrument appears under only one instrument type.
+   *
+   * <p> This cannot be part of the builder below, because the generic class T is not guaranteed to have
+   * this notion of being able to extract a set of keys out of it. For all we know, T could be just a string.
+   * So this method has to be separate and invoked when applicable. </p>
+   */
+  public static <K, T> void checkInstrumentTypeMapHasNoDuplicates(
+      InstrumentTypeMap<T> instrumentTypeMap,
+      Function<T, RBSet<K>> keysExtractor) {
+    RBPreconditions.checkArgument(
+        noSharedItems(
+            keysExtractor.apply(instrumentTypeMap.valueForEtfs),
+            keysExtractor.apply(instrumentTypeMap.valueForStocks),
+            keysExtractor.apply(instrumentTypeMap.valueForMutualFunds),
+            keysExtractor.apply(instrumentTypeMap.valueForStructuredProducts)),
+        "The keys (possibly InstrumentIds) under each InstrumentType must be unique: %s",
+        instrumentTypeMap);
   }
 
   public T get(InstrumentType instrumentType) {
