@@ -28,6 +28,8 @@ public class RBCommonsTestModule implements Module {
     binder.requestStaticInjection(SmartFormatter.class);
     binder.requestStaticInjection(SmartFormatterHelper.class);
 
+    // That is, by default, this binds to an empty HardCodedInstrumentMaster
+    // (since HardCodedInstrumentMaster's no-arg constructor constructs an empty one).
     binder
         .bind(InstrumentMaster.class)
         .to(HardCodedInstrumentMaster.class);
