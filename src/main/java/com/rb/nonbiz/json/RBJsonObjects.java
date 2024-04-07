@@ -16,6 +16,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 import java.util.Comparator;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -378,6 +379,14 @@ public class RBJsonObjects {
       mutableMap.putAssumingAbsent(instrumentId, value);
     });
     return newIidMap(mutableMap);
+  }
+
+  public static void forEachJsonObjectEntry(JsonObject jsonObject, BiConsumer<String, JsonElement> entryConsumer) {
+    jsonObject.entrySet().forEach(entry -> {
+      String property = entry.getKey();
+      JsonElement value = entry.getValue();
+      entryConsumer.accept(property, value);
+    });
   }
 
   public static <V> SimpleArrayIndexMapping<V> jsonArrayToSimpleArrayIndexMapping(

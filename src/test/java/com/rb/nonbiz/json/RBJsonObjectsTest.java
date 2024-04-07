@@ -11,6 +11,7 @@ import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.ArrayIndexMapping;
 import com.rb.nonbiz.collections.CaseInsensitiveStringFilter;
 import com.rb.nonbiz.collections.IidMap;
+import com.rb.nonbiz.collections.MutableRBSet;
 import com.rb.nonbiz.collections.Pair;
 import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
@@ -40,10 +41,12 @@ import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
+import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
+import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.SimpleArrayIndexMapping.simpleArrayIndexMapping;
@@ -86,6 +89,7 @@ import static com.rb.nonbiz.util.RBEnumMapSimpleConstructors.singletonRBEnumMap;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class RBJsonObjectsTest {
 
@@ -854,6 +858,28 @@ public class RBJsonObjectsTest {
         jsonObject(
             "key1", jsonString("value1"),
             "key2", JsonNull.INSTANCE));
+  }
+
+  @Test
+  public void testForEachJsonObjectEntry() {
+    MutableRBSet<String> items = newMutableRBSet();
+
+    forEachJsonObjectEntry(
+        emptyJsonObject(),
+        (property, value) -> items.addAssumingAbsent(Strings.format("%s_%s", property, value)));
+    assertTrue(items.isEmpty());
+
+    forEachJsonObjectEntry(
+        jsonObject(
+            "key1", jsonString("value1"),
+            "key2", jsonInteger(22)),
+        (property, value) -> items.addAssumingAbsent(Strings.format("%s_%s", property, value.getAsString())));
+
+    assertThat(
+        newRBSet(items),
+        rbSetEqualsMatcher(rbSetOf(
+           "key1_value1",
+           "key2_22")));
   }
 
 }

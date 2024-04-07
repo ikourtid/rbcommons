@@ -81,7 +81,7 @@ public class InstrumentTypeMap<T> {
   }
 
   /**
-   * Assuming this predicate matches exactly one of the (Sept 2019 currently 3) instrument types,
+   * Assuming this predicate matches exactly one of the (Apr 2024 currently 4) instrument types,
    * returns the appropriate InstrumentType.
    * If not exactly one, then it throws.
    */
