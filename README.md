@@ -1,5 +1,9 @@
-# Rowboat Commons
-Built on top of Google Guava and Apache Commons, 
+# Rowboat Commons Library
+Built on top of Google Guava and Apache Commons, this is infrastructure code used in the
+Rowboat Advisors Portfolio Optimizer and Tax-Aware Backtester.
+
+However, most code is not domain-specific, and can be used in any general Java code,
+such as our immutable collections.
 
 ## Summary
 
@@ -30,5 +34,4 @@ Built on top of Google Guava and Apache Commons,
 * Testing 
 
 ### General
-* Null avoidance
-* 
+* Null avoidance via helper methods on Optional.
