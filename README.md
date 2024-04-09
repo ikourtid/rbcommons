@@ -31,7 +31,7 @@ such as our immutable collections.
 ### Other
 * <strong>Quick-and-dirty IO</strong>
 * Extensions on Guava <strong>preconditions</strong>
-* Testing 
+* Unit-testing functionality
 
 ### General
 * Null avoidance via helper methods on Optional.
