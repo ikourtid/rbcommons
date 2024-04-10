@@ -10,14 +10,13 @@ import java.time.LocalDateTime;
  *
  * <p> The upside is more testing coverage. </p>
  *
- * <p> Downsides are:
+ * <p> Downsides are: </p>
  * <ul>
  *   <li> it forces you to make the test data realistic - whereas, when you mock your injected classes, you can pretend
  *   that the injected class produces some particular input based on some particular output, even if the real class
  *   wouldn't produce that input. </li>
  *   <li> it slows things down, as injector.injectMembers is not instant. </li>
  * </ul>
- * </p>
  *
  * <p> In general, this is most useful in 'happy path' types of test methods, which uses most/all of your injected
  * objects. Otherwise, if you are just checking that e.g. some simple combination of inputs is invalid and causes
