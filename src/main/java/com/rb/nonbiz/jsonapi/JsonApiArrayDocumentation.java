@@ -143,6 +143,9 @@ public class JsonApiArrayDocumentation extends JsonApiDocumentation {
   }
 
 
+  /**
+   * An {@link RBBuilder} that lets you construct a {@link JsonApiArrayDocumentation} object.
+   */
   public static class JsonApiArrayDocumentationBuilder implements RBBuilder<JsonApiArrayDocumentation> {
 
     private Class<?> classBeingDocumented;

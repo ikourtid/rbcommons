@@ -5,6 +5,9 @@ import org.apache.commons.lang3.CharUtils;
 
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 
+/**
+ * Various static utility methods pertaining to files.
+ */
 public class RBFileUtilities {
 
   private static final RBSet<Character> INVALID_CHARACTERS_IN_PATH = rbSetOf('?', '*', '\\');

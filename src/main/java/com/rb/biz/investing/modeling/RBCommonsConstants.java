@@ -4,6 +4,11 @@ import com.rb.nonbiz.text.Strings;
 
 import java.math.MathContext;
 
+/**
+ * Various constants used across this repository.
+ *
+ * <p> We normally avoid top-level constants, which are effectively globals. </p>
+ */
 public class RBCommonsConstants {
 
   public static final MathContext DEFAULT_MATH_CONTEXT = MathContext.DECIMAL64;

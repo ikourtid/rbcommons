@@ -20,6 +20,9 @@ import static com.rb.nonbiz.date.RBDates.yyyyMMdd;
  */
 public class FileByDateStringFormat<T> {
 
+  /**
+   * A mechanism to visit the different subcases of a {@link FileByDateStringFormat}.
+   */
   public interface Visitor<T2> {
 
     T2 visitFileFormatParameterizedByDate(String fileFormatParametrizedByDate);

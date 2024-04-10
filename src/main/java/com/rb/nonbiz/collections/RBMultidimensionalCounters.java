@@ -18,6 +18,9 @@ import static com.rb.nonbiz.collections.RBArrays.cutFromArray;
 import static com.rb.nonbiz.collections.RBArrays.spliceIntoArray;
 import static java.util.Collections.singletonList;
 
+/**
+ * Various static utility helper methods pertaining to a {@link MultidimensionalCounter}.
+ */
 public class RBMultidimensionalCounters {
 
   public static Iterator<Coordinates> flatMultidimensionalIterator(MultidimensionalCounter counter) {

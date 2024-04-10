@@ -20,6 +20,10 @@ import com.rb.nonbiz.collections.Either;
  */
 public class UniqueIdOrItem<T extends HasUniqueId<T>> {
 
+  /**
+   * This lets you handle the separate cases of {@link UniqueId} vs. actual item
+   * when dealing with a {@link UniqueIdOrItem}.
+   */
   public interface Visitor<T extends HasUniqueId<T>, V> {
 
     V visitIsUniqueId(UniqueId<T> uniqueId);

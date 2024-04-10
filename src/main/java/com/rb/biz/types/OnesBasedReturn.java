@@ -42,16 +42,15 @@ public class OnesBasedReturn extends PreciseValue<OnesBasedReturn> {
    *
    * <pre>
    * final value = start value * e ^ (r * t)
-   * <==> ln(final / start) = r * t}
+   * &lt;==&gt;⇔ ln(final / start) = r * t}
    * </pre>
    *
    * In this example,
    * <pre>
    * ln(0.8) = r * .2
-   * <==> r = ln(0.8)/.2 = -1.11 (zero based)
+   * &lt;==&gt;⇔ r = ln(0.8)/.2 = -1.11 (zero based)
    * </pre>
    * ... so the above implies a -111% annual return, which is not possible for a single year.
-   * </p>
    *
    * <p> Keep this in mind in case some mysterious exception takes you here! </p>
    */

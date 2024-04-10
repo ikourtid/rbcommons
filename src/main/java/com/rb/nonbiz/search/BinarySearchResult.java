@@ -89,6 +89,9 @@ public class BinarySearchResult<X, Y> {
   }
 
 
+  /**
+   * A {@link RBBuilder} that creates a {@link BinarySearchResult}.
+   */
   public static class BinarySearchResultBuilder<X, Y> implements RBBuilder<BinarySearchResult<X, Y>> {
 
     private X lowerBoundX;
