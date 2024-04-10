@@ -45,7 +45,7 @@ public class RoundingScale implements Comparable<RoundingScale> {
   // precompute the values (powers of 10) corresponding to the allowable rounding scales, both as BigDecimal and as double
   // (so that if we need to access them as double, we won't always need to convert the BigDecimals).
   private final static List<BigDecimal> roundingScaleValuesAsBigDecimals;
-  private final static List<Double> roundingScaleValuesAsDoubles;
+  private final static List<Double>     roundingScaleValuesAsDoubles;
 
   static {
     roundingScaleValuesAsBigDecimals = IntStream.range(0, MAX_ROUNDING_SCALE - MIN_ROUNDING_SCALE + 1)
