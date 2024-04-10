@@ -101,6 +101,10 @@ public class SignedMoney extends PreciseValue<SignedMoney> {
         : money(asBigDecimal(), doubleValue);
   }
 
+  /**
+   * Converts this {@link SignedMoney} to a (non-negative) {@link Money} value, or to $0
+   * if this SignedMoney is negative.
+   */
   public Money toMoneyWithFloorOfZero() {
     return isNegative()
         ? ZERO_MONEY
