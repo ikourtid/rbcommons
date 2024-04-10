@@ -16,7 +16,7 @@ import static com.rb.biz.types.asset.CashId.cashSymbol;
 
 /**
  * Answers two questions: for a {@link Symbol} / date combination, what is the (numeric) {@link InstrumentId}?
- * What was the valid {@link Symbol] for an {@link InstrumentId} on a given date?
+ * What was the valid {@link Symbol} for an {@link InstrumentId} on a given date?
  */
 public interface InstrumentMaster {
 

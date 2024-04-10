@@ -15,7 +15,7 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
  *
  * <p> This has the semantics that if we extend by e.g. 0.2, then 0.2 refers to the total AFTER
  * extending. For example, extending a $1m portfolio with 0.2 KO will result in $250k KO (0.2 = 1.25m / 1m).
- * One *could* also have alternate semantics, so that 0.25 would achieve the same effect as above. However,
+ * One *could* also have alternate semantics, so that 0.25 would achieve the same effect as above. However: </p>
  *
  * <ul>
  * <li> this way we could only extend by 100% (since we pass in a unit fraction whose max value is 1);
@@ -27,7 +27,6 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
  * <li> the reason I originally created the PartitionExtender was to 'splice in' 20 bps of cash to an existing
  * target allocation. This 20 bps is typically defined in terms of the final portfolio, not the original. </li>
  * </ul>
- * </p>
  *
  * <p>
  * OK, so we want to keep the semantics symmetric here. The PartitionExtender conforms to:
@@ -36,11 +35,12 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
  * $1.25m = $1m + 0.2 * $1.25m
  * So what would 0.2 mean in this case if we reduce, in this example using 0.2 (but reducing down)?
  * "new value" = "old value" - unitFractionOfNewTotal * "new value"
- * <pre>
- *   <==> new = old - 0.2 * new
- *   <==> new = old / 1.2 = 0.83333333333 * old
- * </pre>
  * </p>
+ *
+ * <pre>
+ *   &lt;==&gt; new = old - 0.2 * new
+ *   &lt;==&gt; new = old / 1.2 = 0.83333333333 * old
+ * </pre>
  *
  * <p> The problem with these semantics though is that the extending and 'unextending' are not inverse functions.
  * It would be clear to have unextend(extend(partition, 0.2), 0.2) == partition.

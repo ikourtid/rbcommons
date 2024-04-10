@@ -5,14 +5,13 @@ import com.google.common.annotations.VisibleForTesting;
 /**
  * An interface for a builder object.
  *
- * <p> A builder class (which should implement {@link RBBuilder}) is useful:
+ * <p> A builder class (which should implement {@link RBBuilder}) is useful: </p>
  * <ol>
  *   <li> in cases where there are multiple fields of the same type, relying on argument order may be error-prone. </li>
  *   <li> adds clarity over what a field actually is - vs relying on argument order. </li>
  *   <li> in cases there are reasonable defaults for some fields in an object. At the limit, an object with n fields
  *    (where all n have default values) could need 2^n different constructors, in the absence of a builder. </li>
  * </ol>
- * </p>
  *
  * <p> This interface isn't strictly needed because we don't need to ever pass a builder of some class that's
  * not already known, i.e. we never pass around an {@code RBBuilder<T>}. At most, we'd pass a specific class that implements
@@ -22,12 +21,11 @@ import com.google.common.annotations.VisibleForTesting;
  * <p> It is very rare that you would need a getter on a builder.
  * Ideally, you should build the object first, and then just call that built object's getter. </p>
  *
- * <p> Use the default method name format that IntelliJ gives you; e.g.
+ * <p> Use the default method name format that IntelliJ gives you; e.g. </p>
  * <ul>
  *   <li> {@code setFooBarBaz} if something can only be set once </li>
  *   <li> {@code addFooBarBaz} if sime items get collected in e.g. some list </li>
  * </ul>
- * </p>
  *
  * <p> We have a convention where builder methods such as {@code setXYZ} assume that they have only been called once, and throw
  * an exception otherwise. This is for extra safety in tests, because you can find yourself diagnosing confusing problems

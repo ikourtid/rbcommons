@@ -84,6 +84,9 @@ public class BinarySearchParameters<X, Y> {
   }
 
 
+  /**
+   * An {@link RBBuilder} that helps you build a {@link BinarySearchParameters} object.
+   */
   public static class BinarySearchParametersBuilder<X, Y> implements RBBuilder<BinarySearchParameters<X, Y>> {
 
     private X lowerBoundX;

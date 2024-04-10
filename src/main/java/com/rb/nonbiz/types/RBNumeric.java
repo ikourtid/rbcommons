@@ -11,7 +11,7 @@ package com.rb.nonbiz.types;
  *
  * <p> Moreover, Java's {@link Comparable} interface has well-defined semantics, but it's hard to read.
  * <pre>
- *   foo1.compareTo(foo2) < 0
+ *   foo1.compareTo(foo2) &lt; 0
  * </pre>
  *
  * is harder to read than
