@@ -70,6 +70,11 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
     return setJsonPrimitive(property, jsonString(value));
   }
 
+  public RBJsonObjectBuilder setIfOptionalStringPresent(String property, Optional<String> value) {
+    value.ifPresent(v -> setString(property, v));
+    return this;
+  }
+
   public <E extends Enum<E>, T extends JsonRoundTripStringConvertibleEnum<E>> RBJsonObjectBuilder setEnum(
       String property, T enumValue) {
     return setString(property, enumValue.toUniqueStableString());
