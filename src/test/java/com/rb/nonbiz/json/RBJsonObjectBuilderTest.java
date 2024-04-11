@@ -113,6 +113,8 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setJsonElement("jsonElement", jsonInteger(123))
         .setInt("int", 456)
         .setString("string", "abc")
+        .setIfOptionalStringPresent("optString", Optional.of("optAbc"))
+        .setIfOptionalStringPresent("emptyOptionalString", Optional.empty())
         .setDouble("double", 3.14)
         .setDoublePercentage("doublePct", 0.123)
         .setBoolean("booleanFalse", false)
@@ -129,6 +131,10 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
     assertEquals(
         jsonString("abc"),
         builder.getJsonObject().getAsJsonPrimitive("string"));
+    assertEquals(
+        jsonString("optAbc"),
+        builder.getJsonObject().getAsJsonPrimitive("optString"));
+    assertFalse(builder.getJsonObject().has("emptyOptionalString"));
     assertThat(
         builder.getJsonObject().getAsJsonPrimitive("double").getAsDouble(),
         doubleAlmostEqualsMatcher(3.14, DEFAULT_EPSILON_1e_8));
