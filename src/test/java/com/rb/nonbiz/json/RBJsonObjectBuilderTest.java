@@ -136,21 +136,17 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
     assertEquals(
         jsonString("abc"),
         builder.getJsonObject().getAsJsonPrimitive("string"));
-
     assertFalse(
         builder.getJsonObject().getAsJsonPrimitive("optBool").getAsBoolean());
     assertFalse(builder.getJsonObject().has("emptyOptionalBool"));
-
     assertEquals(
         jsonString("optStr"),
         builder.getJsonObject().getAsJsonPrimitive("optString"));
     assertFalse(builder.getJsonObject().has("emptyOptionalString"));
-
     assertEquals(
         jsonString("optLab"),
         builder.getJsonObject().getAsJsonPrimitive("optLabel"));
     assertFalse(builder.getJsonObject().has("emptyOptionalLabel"));
-
     assertThat(
         builder.getJsonObject().getAsJsonPrimitive("double").getAsDouble(),
         doubleAlmostEqualsMatcher(3.14, DEFAULT_EPSILON_1e_8));
