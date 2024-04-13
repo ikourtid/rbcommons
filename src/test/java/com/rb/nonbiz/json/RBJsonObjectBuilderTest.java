@@ -37,6 +37,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.text.SimpleHumanReadableLabel.label;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.EpsilonTest.DUMMY_EPSILON;
 import static junit.framework.TestCase.assertEquals;
@@ -113,8 +114,12 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setJsonElement("jsonElement", jsonInteger(123))
         .setInt("int", 456)
         .setString("string", "abc")
-        .setIfOptionalStringPresent("optString", Optional.of("optAbc"))
+        .setIfOptionalBooleanPresent("optBool", Optional.of(false))
+        .setIfOptionalLabelPresent("emptyOptionalBool", Optional.empty())
+        .setIfOptionalStringPresent("optString", Optional.of("optStr"))
         .setIfOptionalStringPresent("emptyOptionalString", Optional.empty())
+        .setIfOptionalLabelPresent("optLabel", Optional.of(label("optLab")))
+        .setIfOptionalLabelPresent("emptyOptionalLabel", Optional.empty())
         .setDouble("double", 3.14)
         .setDoublePercentage("doublePct", 0.123)
         .setBoolean("booleanFalse", false)
@@ -131,10 +136,21 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
     assertEquals(
         jsonString("abc"),
         builder.getJsonObject().getAsJsonPrimitive("string"));
+
+    assertFalse(
+        builder.getJsonObject().getAsJsonPrimitive("optBool").getAsBoolean());
+    assertFalse(builder.getJsonObject().has("emptyOptionalBool"));
+
     assertEquals(
-        jsonString("optAbc"),
+        jsonString("optStr"),
         builder.getJsonObject().getAsJsonPrimitive("optString"));
     assertFalse(builder.getJsonObject().has("emptyOptionalString"));
+
+    assertEquals(
+        jsonString("optLab"),
+        builder.getJsonObject().getAsJsonPrimitive("optLabel"));
+    assertFalse(builder.getJsonObject().has("emptyOptionalLabel"));
+
     assertThat(
         builder.getJsonObject().getAsJsonPrimitive("double").getAsDouble(),
         doubleAlmostEqualsMatcher(3.14, DEFAULT_EPSILON_1e_8));

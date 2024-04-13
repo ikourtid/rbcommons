@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.rb.nonbiz.text.HumanReadableLabel;
 import com.rb.nonbiz.types.Epsilon;
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
@@ -70,8 +71,18 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
     return setJsonPrimitive(property, jsonString(value));
   }
 
+  public RBJsonObjectBuilder setIfOptionalBooleanPresent(String property, Optional<Boolean> value) {
+    value.ifPresent(v -> setBoolean(property, v));
+    return this;
+  }
+
   public RBJsonObjectBuilder setIfOptionalStringPresent(String property, Optional<String> value) {
     value.ifPresent(v -> setString(property, v));
+    return this;
+  }
+
+  public RBJsonObjectBuilder setIfOptionalLabelPresent(String property, Optional<HumanReadableLabel> value) {
+    value.ifPresent(v -> setString(property, v.getLabelText()));
     return this;
   }
 
