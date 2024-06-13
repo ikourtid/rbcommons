@@ -8,7 +8,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 /**
  * A simple representation of a normal distribution; just the mean and stdev.
  *
- * <p> This is too low-level to be related to <em>generation</em> of numbers from that distribution. </p>
+ * <p> {@link MutableNormalDistributionGenerator} generates random numbers from this distribution. </p>
  */
 public class NormalDistribution {
 
