@@ -14,10 +14,11 @@ import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
  * using a supplied random number generator that generates normally distributed numbers.
  *
  * <p> The best example is price diffusion, which is especially useful when generating synthetic market
- * data for a Monte Carlo simulation. E.g. price starts at 100, and then randomly moves up by e.g. 1.05 or down
- * by 1 / 1.05 (NOT 0.95 - that's the point of the log normal distribution. </p>
+ * data for a Monte Carlo simulation. E.g. price starts at 100, and then next day it moves by a random amount,
+ * e.g. up by e.g. 1.05 times its value, or down by 1 / 1.05 times its value (NOT 0.95x -
+ * that's the point of the log-normal distribution. </p>
  *
- * <p> Log normal distributions are the best model for stock prices, because they can't go negative.
+ * <p> Log-normal distributions are the best model for stock prices, because they can't go negative.
  * Intuitively, it's like saying that a stock is just as likely to double as it is to halve.
  * You might say "then why not just buy the stock and make instant profits, since on average it will gain?".
  * But that's a long discussion. </p>
