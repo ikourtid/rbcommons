@@ -131,6 +131,9 @@ public class IidMapTest extends RBTestMatcher<IidMap<Money>> {
       RBMap<InstrumentId, Integer> ignored = theMap.orderedTransformKeysAndValuesCopy(v -> v, v -> v);
     });
     assertCachesOrdering.accept(theMap -> {
+      IidMap<Integer> ignored = theMap.orderedTransformEntriesCopy((k, v) -> v);
+    });
+    assertCachesOrdering.accept(theMap -> {
       Stream<InstrumentId> ignored = theMap.sortedInstrumentIdStream();
     });
     assertCachesOrdering.accept(theMap -> {
@@ -142,6 +145,39 @@ public class IidMapTest extends RBTestMatcher<IidMap<Money>> {
     assertCachesOrdering.accept(theMap -> {
       Stream<Integer> ignored = theMap.toIidSortedStream();
     });
+  }
+
+  @Test
+  public void testOrderedTransformEntriesCopy() {
+    List<String> stringList = newArrayList();
+
+    assertThat(
+        iidMapOf(
+            instrumentId(10), 1,
+            instrumentId(60), 6,
+            instrumentId(20), 2,
+            instrumentId(40), 4,
+            instrumentId(50), 5,
+            instrumentId(30), 3)
+            .orderedTransformEntriesCopy( (instrumentId, value) -> {
+              stringList.add(Strings.format("%s_%s", instrumentId.asLong(), value)); // e.g. "10_1"
+              // We need to cast to int to avoid the result being a long
+              return ((int) instrumentId.asLong()) + value; // e.g. 11
+            }),
+        iidMapEqualityMatcher(
+            iidMapOf(
+                // The ordering doesn't matter inside the iidMapOf constructor; just keeping it consistent
+                instrumentId(10), 11,
+                instrumentId(60), 66,
+                instrumentId(20), 22,
+                instrumentId(40), 44,
+                instrumentId(50), 55,
+                instrumentId(30), 33)));
+
+    // Additionally, we must have performed the operations in a fixed order.
+    assertThat(
+        stringList,
+        orderedListEqualityMatcher(ImmutableList.of("10_1", "20_2", "30_3", "40_4", "50_5", "60_6")));
   }
 
   @Test

@@ -26,7 +26,7 @@ public class RandomNumberGeneratorSeedTest extends RBTestMatcher<RandomNumberGen
     doesNotThrow = randomNumberGeneratorSeed(0);
     doesNotThrow = randomNumberGeneratorSeed(1);
     doesNotThrow = randomNumberGeneratorSeed(100);
-    assertIllegalArgumentException( () -> randomNumberGeneratorSeed(1_000));
+    doesNotThrow = randomNumberGeneratorSeed(100_000_000);
   }
 
   @Override
