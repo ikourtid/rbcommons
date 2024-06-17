@@ -18,6 +18,7 @@ import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.preciseValueListMa
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.RandomNumberGeneratorSeed.randomNumberGeneratorSeed;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -117,7 +118,7 @@ public class LogNormalDiffusionGeneratorTest extends RBCommonsIntegrationTest<Lo
             // to get to a daily number.
             .setStandardDeviation(doubleExplained(0.01007905261, 0.16 / Math.sqrt(252)))
             .build(),
-        seed);
+        randomNumberGeneratorSeed(seed));
   }
 
   @Override

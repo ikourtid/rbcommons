@@ -3,9 +3,12 @@ package com.rb.nonbiz.math.stats;
 import cern.jet.random.Normal;
 import cern.jet.random.engine.MersenneTwister;
 import cern.jet.random.engine.RandomEngine;
+import com.rb.nonbiz.types.RandomNumberGeneratorSeed;
 
+import java.util.Optional;
 import java.util.OptionalInt;
 
+import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalInt;
 
 /**
@@ -30,12 +33,12 @@ public class MutableNormalDistributionGenerator {
   }
 
   public static MutableNormalDistributionGenerator mutableNormalDistributionGenerator(
-      NormalDistribution normalDistribution, OptionalInt seed) {
+      NormalDistribution normalDistribution, Optional<RandomNumberGeneratorSeed> randomNumberGeneratorSeed) {
     // Apparently this is a good pseudo-random generator.
     // https://dst.lbl.gov/ACSSoftware/colt/api/cern/jet/random/engine/MersenneTwister.html
-    RandomEngine randomEngine = transformOptionalInt(
-        seed,
-        v -> new MersenneTwister(v))
+    RandomEngine randomEngine = transformOptional(
+        randomNumberGeneratorSeed,
+        v -> new MersenneTwister(v.intValue()))
         .orElse(new MersenneTwister());
     return new MutableNormalDistributionGenerator(
         new Normal(normalDistribution.getMean(), normalDistribution.getStandardDeviation(), randomEngine),
@@ -44,13 +47,13 @@ public class MutableNormalDistributionGenerator {
 
   public static MutableNormalDistributionGenerator mutableNormalDistributionGeneratorWithSeed(
       NormalDistribution normalDistribution,
-      int seed) {
-    return mutableNormalDistributionGenerator(normalDistribution, OptionalInt.of(seed));
+      RandomNumberGeneratorSeed randomNumberGeneratorSeed) {
+    return mutableNormalDistributionGenerator(normalDistribution, Optional.of(randomNumberGeneratorSeed));
   }
 
   public static MutableNormalDistributionGenerator mutableNormalDistributionGeneratorWithoutSeed(
       NormalDistribution normalDistribution) {
-    return mutableNormalDistributionGenerator(normalDistribution, OptionalInt.empty());
+    return mutableNormalDistributionGenerator(normalDistribution, Optional.empty());
   }
 
   /**
