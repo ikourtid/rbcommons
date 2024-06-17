@@ -10,6 +10,7 @@ import static com.rb.nonbiz.math.stats.NormalDistribution.NormalDistributionBuil
 import static com.rb.nonbiz.math.stats.NormalDistributionTest.standardNormalDistribution;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.doubleArrayMatcher;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.RandomNumberGeneratorSeed.randomNumberGeneratorSeed;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
@@ -20,13 +21,13 @@ public class MutableNormalDistributionGeneratorTest {
   public void seedGuaranteesDeterminism() {
     // 123 is the seed for the random number generator
     MutableNormalDistributionGenerator generator =
-        mutableNormalDistributionGeneratorWithSeed(standardNormalDistribution(), 123);
+        mutableNormalDistributionGeneratorWithSeed(standardNormalDistribution(), randomNumberGeneratorSeed(123));
 
     double[] expected = {
         -1.505603669780131,
-        0.18330437656907184,
+         0.18330437656907184,
         -1.0499474918446852,
-        0.5210058089715774,
+         0.5210058089715774,
         -0.08687486395603258
     };
     assertThat(
@@ -49,7 +50,7 @@ public class MutableNormalDistributionGeneratorTest {
 
     // Finally, if we use a random number generator with a different seed (456), the numbers will also be different.
     MutableNormalDistributionGenerator generator2 =
-        mutableNormalDistributionGeneratorWithSeed(standardNormalDistribution(), 456);
+        mutableNormalDistributionGeneratorWithSeed(standardNormalDistribution(), randomNumberGeneratorSeed(456));
     assertThat(
         IntStream.range(0, 5)
             .mapToDouble(ignored -> generator2.nextDouble())
@@ -69,7 +70,7 @@ public class MutableNormalDistributionGeneratorTest {
                 .setMean(mean)
                 .setStandardDeviation(stdev)
                 .build(),
-            789); // just using a fixed seed for this test to be deterministic
+            randomNumberGeneratorSeed(789)); // just using a fixed seed for this test to be deterministic
 
     SummaryStatistics summaryStatistics = new SummaryStatistics();
     for (int i = 0; i < 1_000_000; i++) {
