@@ -318,7 +318,7 @@ public class IidMap<V> extends HasLongMap<InstrumentId, V> implements PrintsInst
   }
 
   /**
-   * Creates a new map whose keys AND values are a transformation of the original ones,
+   * Creates a new {@link RBMap} whose keys AND values are a transformation of the original ones,
    * and the key transformation doesn't depend on the value in any particular entry, and also
    * the value transformation doesn't depend on the key in any particular entry.
    */
@@ -332,9 +332,12 @@ public class IidMap<V> extends HasLongMap<InstrumentId, V> implements PrintsInst
   }
 
   /**
-   * Creates a new map whose keys AND values are a transformation of the original ones,
+   * Creates a new {@link RBMap} whose keys AND values are a transformation of the original ones,
    * and the key transformation doesn't depend on the value in any particular entry, and also
    * the value transformation doesn't depend on the key in any particular entry.
+   *
+   * <p> Additionally, the ordering is deterministic, by sorted {@link InstrumentId}. This can be useful if e.g.
+   * we are generating synthetic market data using a seeded random number generator. </p>
    */
   public <K1, V1> RBMap<K1, V1> orderedTransformKeysAndValuesCopy(
       Function<InstrumentId, K1> keyTransformer,
@@ -343,6 +346,22 @@ public class IidMap<V> extends HasLongMap<InstrumentId, V> implements PrintsInst
     sortedInstrumentIdStream().iterator().forEachRemaining(instrumentId -> mutableMap.putAssumingAbsent(
         keyTransformer.apply(instrumentId), valuesTransformer.apply(getOrThrow(instrumentId))));
     return newRBMap(mutableMap);
+  }
+
+  /**
+   * Creates a new {@link IidMap} with the same instrument ID keys, but whose values are a transformation of the original ones,
+   * and the value transformation depends on both the key and the value in any particular entry.
+   *
+   * <p> Additionally, the ordering is deterministic, by sorted {@link InstrumentId}. This can be useful if e.g.
+   * we are generating synthetic market data using a seeded random number generator. </p>
+   */
+  public <V2> IidMap<V2> orderedTransformEntriesCopy(BiFunction<InstrumentId, V, V2> transformer) {
+    MutableIidMap<V2> mutableMap = newMutableIidMapWithExpectedSize(size());
+    sortedInstrumentIdStream()
+        .iterator()
+        .forEachRemaining(instrumentId -> mutableMap.putAssumingAbsent(
+            instrumentId, transformer.apply(instrumentId, getOrThrow(instrumentId))));
+    return newIidMap(mutableMap);
   }
 
   public <V2> IidMap<V2> transformEntriesCopy(BiFunction<InstrumentId, V, V2> transformer) {
