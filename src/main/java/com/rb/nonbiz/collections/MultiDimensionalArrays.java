@@ -104,4 +104,11 @@ public class MultiDimensionalArrays {
         (ignoredInteger, coordinates) -> transformer.apply(initial.getRawMutableArray().get(coordinates)));
   }
 
+  public static <T1, T2, T> MultiDimensionalArray<T> mergeMultiDimensionalArrays(
+      MultiDimensionalArray<T1> multiDimensionalArray1,
+      MultiDimensionalArray<T2> multiDimensionalArray1,
+      BiFunction<T1, T2, T> merger) {
+    MutableMultiDimensionalArray<T> mutableMultiDimensionalArray =
+  }
+
 }
