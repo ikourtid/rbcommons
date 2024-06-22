@@ -1,14 +1,18 @@
 package com.rb.nonbiz.math.stats;
 
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
 import java.util.stream.IntStream;
 
 import static com.rb.nonbiz.math.stats.MutableNormalDistributionGenerator.mutableNormalDistributionGeneratorWithSeed;
 import static com.rb.nonbiz.math.stats.NormalDistribution.NormalDistributionBuilder.normalDistributionBuilder;
+import static com.rb.nonbiz.math.stats.NormalDistributionTest.normalDistributionMatcher;
 import static com.rb.nonbiz.math.stats.NormalDistributionTest.standardNormalDistribution;
+import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBArrayMatchers.doubleArrayMatcher;
+import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.RandomNumberGeneratorSeed.randomNumberGeneratorSeed;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -81,6 +85,15 @@ public class MutableNormalDistributionGeneratorTest {
     // 2nd args are epsilons.
     assertEquals(mean, summaryStatistics.getMean(), 0.0005);
     assertEquals(stdev, summaryStatistics.getStandardDeviation(), 0.002);
+  }
+
+  // This ignores the member 'Normal normal', but it's better than nothing.
+  // Remember that MutableNormalDistributionGenerator is a bit special, because it's kind of like a data class,
+  // but also like a verb class.
+  public static TypeSafeMatcher<MutableNormalDistributionGenerator> mutableNormalDistributionGeneratorMatcher(
+      MutableNormalDistributionGenerator expected) {
+    return makeMatcher(expected,
+        match(v -> v.getNormalDistribution(), f -> normalDistributionMatcher(f)));
   }
 
 }

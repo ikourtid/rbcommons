@@ -33,9 +33,9 @@ public class NormalDistributionTest extends RBTestMatcher<NormalDistribution> {
 
       assertIllegalArgumentException( () -> maker.apply(-1.23));
       assertIllegalArgumentException( () -> maker.apply(-1e-9));
-      assertIllegalArgumentException( () -> maker.apply(0));
-      assertIllegalArgumentException( () -> maker.apply(1e-9));
       NormalDistribution doesNotThrow;
+      doesNotThrow = maker.apply(0);
+      doesNotThrow = maker.apply(1e-9);
       doesNotThrow = maker.apply(1e-7);
       doesNotThrow = maker.apply(1.23);
     }

@@ -61,8 +61,8 @@ public class NormalDistribution {
       RBPreconditions.checkNotNull(standardDeviation);
 
       RBPreconditions.checkArgument(
-          standardDeviation > 1e-8,
-          "Standard deviation cannot be almost 0 or negative; was %s",
+          standardDeviation >= 0,
+          "Standard deviation cannot be negative; was %s",
           standardDeviation);
     }
 
