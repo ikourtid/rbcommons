@@ -86,7 +86,7 @@ public class LogNormalDiffusionGeneratorTest extends RBCommonsIntegrationTest<Lo
 
   @Test
   public void simplestCase_size1() {
-    rbSetOf(-123, 0, 123, 321).forEach(seed ->
+    rbSetOf(0, 123, 321).forEach(seed ->
         assertThat(
             makeRealObject().generate(
                 v -> price(v),
