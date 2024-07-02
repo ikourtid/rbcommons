@@ -28,6 +28,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertAlmostEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_MONEY;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static com.rb.nonbiz.types.Epsilon.ZERO_EPSILON;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static com.rb.nonbiz.types.PreciseValue.*;
 import static java.util.Collections.emptyList;
@@ -108,6 +109,13 @@ public class PreciseValueTest {
 
     assertEquals(1, larger.compareTo(smaller));
     assertEquals(-1, smaller.compareTo(larger));
+
+    // This doesn't really check the full behavior, but it confirms that the performance optimization will work,
+    // although we're cheating because we are peeking into the prod code below.
+    assertEquals(0, ZERO_EPSILON.doubleValue(), 0.0);
+
+    assertEquals(1, larger.almostCompareTo(smaller, ZERO_EPSILON));
+    assertEquals(-1, smaller.almostCompareTo(larger, ZERO_EPSILON));
   }
 
   @Test

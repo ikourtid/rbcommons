@@ -243,9 +243,12 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
    * <p> If the epsilon is non-zero, then we can dispense with the extra precision of BigDecimal and just convert
    * to doubles.</p>
    */
-  // FIXME IAK test this
   public int almostCompareTo(T other, Epsilon epsilon) {
-    if (epsilon.valuesAreWithin(0, 0)) {
+    if (epsilon.doubleValue() == 0) {
+      // The following is tested to be true, so this performance optimization should actually trigger with an
+      // ZERO_EPSILON. But worst case, even if we were wrong, it would just mean that the code outside this 'if' scope
+      // would run, so it would be a bit less optimized. That's fine.
+      //     assertEquals(0, ZERO_EPSILON.doubleValue(), 0.0);
       return compareTo(other); // special case
     }
 
