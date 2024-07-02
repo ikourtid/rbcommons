@@ -144,8 +144,8 @@ public class ClosedUnitFractionRange {
    * </pre>
    */
   public boolean isSameOrLooser(ClosedUnitFractionRange other) {
-    int lowerComparison = rawRange.lowerEndpoint().compareTo(other.lowerEndpoint());
-    int upperComparison = rawRange.upperEndpoint().compareTo(other.upperEndpoint());
+    int lowerComparison = rawRange.lowerEndpoint().almostCompareTo(other.lowerEndpoint(), Epsilon.epsilon(1e-9));
+    int upperComparison = rawRange.upperEndpoint().almostCompareTo(other.upperEndpoint(), Epsilon.epsilon(1e-9));
 
     boolean otherMinsOut  = other.lowerEndpoint().isZero();
     boolean otherMaxesOut = other.upperEndpoint().isOne();
