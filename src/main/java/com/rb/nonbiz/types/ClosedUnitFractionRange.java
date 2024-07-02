@@ -6,6 +6,7 @@ import com.rb.nonbiz.collections.RBRanges;
 import com.rb.nonbiz.text.Strings;
 
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
+import static com.rb.nonbiz.types.Epsilon.TINY_EPSILON_1e_12;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_0;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 
@@ -144,8 +145,8 @@ public class ClosedUnitFractionRange {
    * </pre>
    */
   public boolean isSameOrLooser(ClosedUnitFractionRange other) {
-    int lowerComparison = rawRange.lowerEndpoint().almostCompareTo(other.lowerEndpoint(), Epsilon.epsilon(1e-9));
-    int upperComparison = rawRange.upperEndpoint().almostCompareTo(other.upperEndpoint(), Epsilon.epsilon(1e-9));
+    int lowerComparison = rawRange.lowerEndpoint().almostCompareTo(other.lowerEndpoint(), TINY_EPSILON_1e_12);
+    int upperComparison = rawRange.upperEndpoint().almostCompareTo(other.upperEndpoint(), TINY_EPSILON_1e_12);
 
     boolean otherMinsOut  = other.lowerEndpoint().isZero();
     boolean otherMaxesOut = other.upperEndpoint().isOne();

@@ -9,6 +9,7 @@ import com.rb.nonbiz.util.RBPreconditions;
 public class Epsilon extends ImpreciseValue<Epsilon> {
 
   public static final Epsilon DEFAULT_EPSILON_1e_8       = epsilon(1e-8);
+  public static final Epsilon TINY_EPSILON_1e_12         = epsilon(1e-12);
   public static final Epsilon ZERO_EPSILON               = epsilon(0);
   public static final double MAX_ALLOWED_EPSILON_VALUE   = 99.9999;
 
