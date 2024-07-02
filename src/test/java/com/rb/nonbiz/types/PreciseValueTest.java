@@ -99,6 +99,18 @@ public class PreciseValueTest {
   }
 
   @Test
+  public void testCompareTo_and_almostCompareTo() {
+    Money larger  = money(new BigDecimal("0.000016766446499790902740"));
+    Money smaller = money(new BigDecimal("0.000016766446499790898"));
+
+    assertEquals(0, larger.almostCompareTo(smaller, DEFAULT_EPSILON_1e_8));
+    assertEquals(0, smaller.almostCompareTo(larger, DEFAULT_EPSILON_1e_8));
+
+    assertEquals(1, larger.compareTo(smaller));
+    assertEquals(-1, smaller.compareTo(larger));
+  }
+
+  @Test
   public void almostEqualsWorksForDifferentPreciseValueSubclasses() {
     double tiny = 1e-9;
     List<? extends SignedQuantity> quantities = ImmutableList.of(
