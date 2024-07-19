@@ -515,4 +515,62 @@ public class RBListsTest {
     assertIllegalArgumentException( () ->           copyWithModifiedElement(ImmutableList.of("a", "b", "c"),  3, v -> v + "_"));
   }
 
+  @Test
+  public void testGetListPrefixWherePredicateHoldsContiguously() {
+    BiConsumer<List<String>, List<String>> asserter = (original, expectedResult) ->
+        assertThat(
+            // This will only keep the first contiguous N strings that have a length of 1 or 0.
+            getListPrefixWherePredicateHoldsContiguously(original, v -> v.length() <= 1),
+            orderedListEqualityMatcher(expectedResult));
+
+    asserter.accept(ImmutableList.of("a",  "b",  "c",  "d"), ImmutableList.of("a", "b", "c", "d"));
+    asserter.accept(ImmutableList.of("aa", "b",  "c",  "d"), ImmutableList.of(                  ));
+    asserter.accept(ImmutableList.of("a",  "bb", "c",  "d"), ImmutableList.of("a"               ));
+    asserter.accept(ImmutableList.of("a",  "b", "cc",  "d"), ImmutableList.of("a", "b"          ));
+    asserter.accept(ImmutableList.of("a",  "b",  "c", "dd"), ImmutableList.of("a", "b", "c"     ));
+
+    asserter.accept(ImmutableList.of("a",  "b",  "c"), ImmutableList.of("a", "b", "c"));
+    asserter.accept(ImmutableList.of("aa", "b",  "c"), ImmutableList.of(             ));
+    asserter.accept(ImmutableList.of("a",  "bb", "c"), ImmutableList.of("a"          ));
+    asserter.accept(ImmutableList.of("a",  "b", "cc"), ImmutableList.of("a", "b"     ));
+
+    asserter.accept(ImmutableList.of("a",  "b"),  ImmutableList.of("a", "b"));
+    asserter.accept(ImmutableList.of("aa", "b"),  ImmutableList.of(        ));
+    asserter.accept(ImmutableList.of("a",  "bb"), ImmutableList.of("a"     ));
+
+    asserter.accept(ImmutableList.of("a"),  ImmutableList.of("a"));
+    asserter.accept(ImmutableList.of("aa"), ImmutableList.of(  ));
+
+    asserter.accept(emptyList(), emptyList());
+  }
+
+  @Test
+  public void testGetListSuffixWherePredicateHoldsContiguously() {
+    BiConsumer<List<String>, List<String>> asserter = (original, expectedResult) ->
+        assertThat(
+            // This will only keep the last contiguous N strings that have a length of 1 or 0.
+            getListSuffixWherePredicateHoldsContiguously(original, v -> v.length() <= 1),
+            orderedListEqualityMatcher(expectedResult));
+
+    asserter.accept(ImmutableList.of("a",  "b",  "c",  "d"), ImmutableList.of("a", "b", "c", "d"));
+    asserter.accept(ImmutableList.of("aa", "b",  "c",  "d"), ImmutableList.of(     "b", "c", "d"));
+    asserter.accept(ImmutableList.of("a",  "bb", "c",  "d"), ImmutableList.of(          "c", "d"));
+    asserter.accept(ImmutableList.of("a",  "b", "cc",  "d"), ImmutableList.of(               "d"));
+    asserter.accept(ImmutableList.of("a",  "b",  "c", "dd"), ImmutableList.of(                  ));
+
+    asserter.accept(ImmutableList.of("a",  "b",  "c"), ImmutableList.of("a", "b", "c"));
+    asserter.accept(ImmutableList.of("aa", "b",  "c"), ImmutableList.of(     "b", "c"));
+    asserter.accept(ImmutableList.of("a",  "bb", "c"), ImmutableList.of(          "c"));
+    asserter.accept(ImmutableList.of("a",  "b", "cc"), ImmutableList.of(             ));
+
+    asserter.accept(ImmutableList.of("a",  "b"),  ImmutableList.of("a", "b"));
+    asserter.accept(ImmutableList.of("aa", "b"),  ImmutableList.of(     "b"));
+    asserter.accept(ImmutableList.of("a",  "bb"), ImmutableList.of(        ));
+
+    asserter.accept(ImmutableList.of("a"),  ImmutableList.of("a"));
+    asserter.accept(ImmutableList.of("aa"), ImmutableList.of(  ));
+
+    asserter.accept(emptyList(), emptyList());
+  }
+
 }
