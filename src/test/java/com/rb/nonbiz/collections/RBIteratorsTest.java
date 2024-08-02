@@ -675,15 +675,74 @@ public class RBIteratorsTest {
 
   @Test
   public void testAllPrefixesOfListIterator() {
-    assertThat(
-        newArrayList(allPrefixesOfListIterator(ImmutableList.of("A", "B", "C", "D"))),
-        orderedListEqualityMatcher(
-            ImmutableList.of(
-                Collections.<String>emptyList(),
-                singletonList("A"),
-                ImmutableList.of("A", "B"),
-                ImmutableList.of("A", "B", "C"),
-                ImmutableList.of("A", "B", "C", "D"))));
+    BiConsumer<List<String>, List<List<String>>> asserter = (inputList, expectedResult) ->
+        assertThat(
+            allPrefixesOfListIterator(inputList),
+            iteratorEqualityMatcher(
+                expectedResult.iterator()));
+
+    asserter.accept(
+        ImmutableList.of("A", "B", "C", "D"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("A"),
+            ImmutableList.of("A", "B"),
+            ImmutableList.of("A", "B", "C"),
+            ImmutableList.of("A", "B", "C", "D")));
+
+    asserter.accept(
+        ImmutableList.of("A", "B"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("A"),
+            ImmutableList.of("A", "B")));
+
+    asserter.accept(
+        ImmutableList.of("A"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("A")));
+
+    asserter.accept(
+        emptyList(),
+        ImmutableList.of(
+            emptyList()));
+  }
+
+  @Test
+  public void testAllSuffixesOfListIterator() {
+    BiConsumer<List<String>, List<List<String>>> asserter = (inputList, expectedResult) ->
+        assertThat(
+            allSuffixesOfListIterator(inputList),
+            iteratorEqualityMatcher(
+                expectedResult.iterator()));
+
+    asserter.accept(
+        ImmutableList.of("A", "B", "C", "D"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("D"),
+            ImmutableList.of("C", "D"),
+            ImmutableList.of("B", "C", "D"),
+            ImmutableList.of("A", "B", "C", "D")));
+
+    asserter.accept(
+        ImmutableList.of("A", "B"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("B"),
+            ImmutableList.of("A", "B")));
+
+    asserter.accept(
+        ImmutableList.of("A"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("A")));
+
+    asserter.accept(
+        emptyList(),
+        ImmutableList.of(
+            emptyList()));
   }
 
   private int getOnlyIndexWithB(String...values) {
