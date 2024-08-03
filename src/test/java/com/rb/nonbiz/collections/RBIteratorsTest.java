@@ -638,11 +638,11 @@ public class RBIteratorsTest {
   @Test
   public void test_allPairsMatch() {
     BiFunction<List<String>, List<String>, Boolean> matchChecker = (list1, list2) ->
-            allPairsMatch(
-                list1.iterator(),
-                list2.iterator(),
-                // True if both strings start with the same character.
-                (str1, str2) -> str1.substring(0, 1).equals(str2.substring(0, 1)));
+        allPairsMatch(
+            list1.iterator(),
+            list2.iterator(),
+            // True if both strings start with the same character.
+            (str1, str2) -> str1.substring(0, 1).equals(str2.substring(0, 1)));
 
     assertTrue(matchChecker.apply(emptyList(), emptyList()));
     assertTrue(matchChecker.apply(singletonList("a"), singletonList("a")));
@@ -671,6 +671,78 @@ public class RBIteratorsTest {
       assertTrue(iterator.hasNext());
       assertEquals("x", iterator.next());
     }
+  }
+
+  @Test
+  public void testAllPrefixesOfListIterator() {
+    BiConsumer<List<String>, List<List<String>>> asserter = (inputList, expectedResult) ->
+        assertThat(
+            allPrefixesOfListIterator(inputList),
+            iteratorEqualityMatcher(
+                expectedResult.iterator()));
+
+    asserter.accept(
+        ImmutableList.of("A", "B", "C", "D"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("A"),
+            ImmutableList.of("A", "B"),
+            ImmutableList.of("A", "B", "C"),
+            ImmutableList.of("A", "B", "C", "D")));
+
+    asserter.accept(
+        ImmutableList.of("A", "B"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("A"),
+            ImmutableList.of("A", "B")));
+
+    asserter.accept(
+        ImmutableList.of("A"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("A")));
+
+    asserter.accept(
+        emptyList(),
+        ImmutableList.of(
+            emptyList()));
+  }
+
+  @Test
+  public void testAllSuffixesOfListIterator() {
+    BiConsumer<List<String>, List<List<String>>> asserter = (inputList, expectedResult) ->
+        assertThat(
+            allSuffixesOfListIterator(inputList),
+            iteratorEqualityMatcher(
+                expectedResult.iterator()));
+
+    asserter.accept(
+        ImmutableList.of("A", "B", "C", "D"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("D"),
+            ImmutableList.of("C", "D"),
+            ImmutableList.of("B", "C", "D"),
+            ImmutableList.of("A", "B", "C", "D")));
+
+    asserter.accept(
+        ImmutableList.of("A", "B"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("B"),
+            ImmutableList.of("A", "B")));
+
+    asserter.accept(
+        ImmutableList.of("A"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("A")));
+
+    asserter.accept(
+        emptyList(),
+        ImmutableList.of(
+            emptyList()));
   }
 
   private int getOnlyIndexWithB(String...values) {

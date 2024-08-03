@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
@@ -564,6 +565,30 @@ public class RBIterators {
         return constantValue;
       }
     };
+  }
+
+  /**
+   * Returns an {@link Iterator} of all this list's prefixes.
+   *
+   * <p> Best illustrated with an example: if a list has items A, B, C, D in it, this will return an iterator
+   * that will iterate over 5 items: empty list, A, AB, ABC, ABCD. </p>
+   */
+  public static <T> Iterator<List<T>> allPrefixesOfListIterator(List<T> list) {
+    return IntStream.rangeClosed(0, list.size())
+        .mapToObj(i -> list.subList(0, i))
+        .iterator();
+  }
+
+  /**
+   * Returns an {@link Iterator} of all this list's suffixes.
+   *
+   * <p> Best illustrated with an example: if a list has items A, B, C, D in it, this will return an iterator
+   * that will iterate over 5 items: empty list, D, CD, BCD, ABCD. </p>
+   */
+  public static <T> Iterator<List<T>> allSuffixesOfListIterator(List<T> list) {
+    return IntStream.rangeClosed(0, list.size())
+        .mapToObj(i -> list.subList(list.size() - i, list.size()))
+        .iterator();
   }
 
 }
