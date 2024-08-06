@@ -573,4 +573,24 @@ public class RBListsTest {
     asserter.accept(emptyList(), emptyList());
   }
 
+  @Test
+  public void testFirstWhere_lastWhere() {
+    Predicate<Integer> multipleOf3 = i -> i % 3 == 0;
+
+    assertOptionalIntEquals(1, findFirstWhere(ImmutableList.of(32, 33, 34, 35, 36, 37), multipleOf3));
+    assertOptionalIntEquals(0, findFirstWhere(ImmutableList.of(33, 34, 35, 36, 37), multipleOf3));
+    assertOptionalIntEquals(2, findFirstWhere(ImmutableList.of(34, 35, 36, 37), multipleOf3));
+    assertOptionalIntEquals(1, findFirstWhere(ImmutableList.of(35, 36, 37), multipleOf3));
+    assertOptionalIntEquals(0, findFirstWhere(ImmutableList.of(36, 37), multipleOf3));
+
+    assertOptionalIntEmpty(findFirstWhere(ImmutableList.of(37), multipleOf3));
+    assertOptionalIntEmpty(findFirstWhere(emptyList(), multipleOf3));
+
+    assertOptionalIntEquals(4,  findLastWhere(ImmutableList.of(32, 33, 34, 35, 36, 37), multipleOf3));
+
+    assertOptionalIntEquals(1, findFirstWhere(ImmutableList.of(32, 33, 34, 35, 36, 37), multipleOf3));
+    assertOptionalIntEquals(4,  findLastWhere(ImmutableList.of(32, 33, 34, 35, 36, 37), multipleOf3));
+
+  }
+
 }
