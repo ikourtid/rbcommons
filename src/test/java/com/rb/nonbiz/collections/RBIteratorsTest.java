@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.math.stats.ZScore;
+import com.rb.nonbiz.math.vectorspaces.MatrixRowIndex;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.junit.Test;
@@ -23,12 +24,15 @@ import static com.google.common.collect.Iterators.singletonIterator;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
+import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
+import static com.rb.nonbiz.collections.PairTest.pairEqualityMatcher;
 import static com.rb.nonbiz.collections.RBIterators.*;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.math.stats.ZScore.zScore;
+import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.doubleIteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorEqualityMatcher;
@@ -745,7 +749,55 @@ public class RBIteratorsTest {
             emptyList()));
   }
 
-  private int getOnlyIndexWithB(String...values) {
+  @Test
+  public void testFindMin() {
+    assertIllegalArgumentException( () -> RBIterators.<String, MatrixRowIndex>findMin(
+        emptyIterator(),
+        v -> matrixRowIndex(123)));
+
+    rbSetOf(
+        ImmutableList.of("a_1", "c_3", "b_2"),
+        ImmutableList.of("c_3", "a_1", "b_2"),
+        ImmutableList.of("b_2", "c_3", "a_1"),
+
+        ImmutableList.of("c_3", "a_1"),
+        ImmutableList.of("a_1", "c_3"),
+
+        singletonList("a_1")
+    ).forEach(list ->
+        assertThat(
+            findMin(
+                list.iterator(),
+                v -> matrixRowIndex(Integer.parseInt(v.substring(2)))),
+            pairEqualityMatcher(
+                pair(matrixRowIndex(1), "a_1"))));
+  }
+
+  @Test
+  public void testFindMax() {
+    assertIllegalArgumentException( () -> RBIterators.<String, MatrixRowIndex>findMax(
+        emptyIterator(),
+        v -> matrixRowIndex(123)));
+
+    rbSetOf(
+        ImmutableList.of("a_1", "c_3", "b_2"),
+        ImmutableList.of("c_3", "a_1", "b_2"),
+        ImmutableList.of("a_1", "b_2", "c_3"),
+
+        ImmutableList.of("c_3", "a_1"),
+        ImmutableList.of("a_1", "c_3"),
+
+        singletonList("c_3")
+    ).forEach(list ->
+        assertThat(
+            findMax(
+                list.iterator(),
+                v -> matrixRowIndex(Integer.parseInt(v.substring(2)))),
+            pairEqualityMatcher(
+                pair(matrixRowIndex(3), "c_3"))));
+  }
+
+  private int getOnlyIndexWithB(String ... values) {
     return getOnlyIndexWhere(Arrays.asList(values).iterator(), v -> v.equals("b"));
   }
 

@@ -395,4 +395,27 @@ public class RBLists {
         : originalList.subList(firstFailure + 1, originalList.size());
   }
 
+  /**
+   * Find the index of the first item in the list where the predicate is true.
+   *
+   * <p> If the predicate is never true, this returns an empty optional. </p>
+   */
+  public static <T> OptionalInt findFirstWhere(List<T> list, Predicate<T> predicate) {
+    return IntStream.range(0, list.size())
+        .filter(i -> predicate.test(list.get(i)))
+        .findFirst();
+  }
+
+  /**
+   * Find the index of the last item in the list where the predicate is true.
+   *
+   * <p> If the predicate is never true, this returns an empty optional. </p>
+   */
+  public static <T> OptionalInt findLastWhere(List<T> list, Predicate<T> predicate) {
+    return IntStream.range(0, list.size())
+        .map(i -> list.size() - 1 - i)
+        .filter(i -> predicate.test(list.get(i)))
+        .findFirst();
+  }
+
 }
