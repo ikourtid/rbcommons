@@ -13,6 +13,7 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -356,6 +357,65 @@ public class RBLists {
     }
     // We have good enough habits never to modify lists inside the code, but let's add this just in case.
     return unmodifiableList(newList);
+  }
+
+  /**
+   * Returns a prefix of the list (i.e. the prefix N items) where the supplied predicate holds for all of them.
+   */
+  public static <T> List<T> getListPrefixWherePredicateHoldsContiguously(
+      List<T> originalList,
+      Predicate<T> includeItem) {
+    Integer firstFailure = null;
+    for (int i = 0; i < originalList.size(); i++) {
+      if (!includeItem.test(originalList.get(i))) {
+        firstFailure = i;
+        break;
+      }
+    }
+    return firstFailure == null
+        ? originalList
+        : originalList.subList(0, firstFailure); // note that the ending index is exclusive, so we don't need -1 here
+  }
+
+  /**
+   * Returns a suffix of the list (i.e. the last N items) where the supplied predicate holds for all of them.
+   */
+  public static <T> List<T> getListSuffixWherePredicateHoldsContiguously(
+      List<T> originalList,
+      Predicate<T> includeItem) {
+    Integer firstFailure = null;
+    for (int i = originalList.size() - 1; i >= 0; i--) {
+      if (!includeItem.test(originalList.get(i))) {
+        firstFailure = i;
+        break;
+      }
+    }
+    return firstFailure == null
+        ? originalList
+        : originalList.subList(firstFailure + 1, originalList.size());
+  }
+
+  /**
+   * Find the index of the first item in the list where the predicate is true.
+   *
+   * <p> If the predicate is never true, this returns an empty optional. </p>
+   */
+  public static <T> OptionalInt findFirstWhere(List<T> list, Predicate<T> predicate) {
+    return IntStream.range(0, list.size())
+        .filter(i -> predicate.test(list.get(i)))
+        .findFirst();
+  }
+
+  /**
+   * Find the index of the last item in the list where the predicate is true.
+   *
+   * <p> If the predicate is never true, this returns an empty optional. </p>
+   */
+  public static <T> OptionalInt findLastWhere(List<T> list, Predicate<T> predicate) {
+    return IntStream.range(0, list.size())
+        .map(i -> list.size() - 1 - i)
+        .filter(i -> predicate.test(list.get(i)))
+        .findFirst();
   }
 
 }

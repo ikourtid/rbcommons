@@ -6,8 +6,11 @@ import com.rb.nonbiz.functional.QuadriFunction;
 import com.rb.nonbiz.functional.QuintFunction;
 import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.types.ImpreciseValue;
+import com.rb.nonbiz.types.Pointer;
 import com.rb.nonbiz.types.PreciseValue;
+import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBPreconditions;
+import org.checkerframework.checker.units.qual.C;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -21,11 +24,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
+import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
+import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static java.util.Collections.emptyIterator;
 
 /**
@@ -564,6 +570,82 @@ public class RBIterators {
         return constantValue;
       }
     };
+  }
+
+  /**
+   * Returns an {@link Iterator} of all this list's prefixes.
+   *
+   * <p> Best illustrated with an example: if a list has items A, B, C, D in it, this will return an iterator
+   * that will iterate over 5 items: empty list, A, AB, ABC, ABCD. </p>
+   */
+  public static <T> Iterator<List<T>> allPrefixesOfListIterator(List<T> list) {
+    return IntStream.rangeClosed(0, list.size())
+        .mapToObj(i -> list.subList(0, i))
+        .iterator();
+  }
+
+  /**
+   * Returns an {@link Iterator} of all this list's suffixes.
+   *
+   * <p> Best illustrated with an example: if a list has items A, B, C, D in it, this will return an iterator
+   * that will iterate over 5 items: empty list, D, CD, BCD, ABCD. </p>
+   */
+  public static <T> Iterator<List<T>> allSuffixesOfListIterator(List<T> list) {
+    return IntStream.rangeClosed(0, list.size())
+        .mapToObj(i -> list.subList(list.size() - i, list.size()))
+        .iterator();
+  }
+
+  /**
+   * From a non-empty iterator with items that can be scored by a supplied scoring function,
+   * this returns the min value, plus the item that has the min value.
+   *
+   * <p> Throws an exception if the iterator is empty. </p>
+   */
+  public static <V, N extends RBNumeric<N>> Pair<N, V> findMin(
+      Iterator<V> iter,
+      Function<V, N> scoringFunction) {
+    RBPreconditions.checkArgument(
+        iter.hasNext(),
+        "There must be at least one item in the iterator in order to be able to find a min");
+
+    Pointer<N> minScore = uninitializedPointer();
+    Pointer<V> itemWithMinScore = uninitializedPointer();
+
+    iter.forEachRemaining(item -> {
+      N thisScore = scoringFunction.apply(item);
+      if (!minScore.isInitialized() || minScore.getOrThrow().compareTo(thisScore) > 0) {
+        minScore.set(thisScore);
+        itemWithMinScore.set(item);
+      }
+    });
+    return pair(minScore.getOrThrow(), itemWithMinScore.getOrThrow());
+  }
+
+  /**
+   * From a non-empty iterator with items that can be scored by a supplied scoring function,
+   * this returns the max value, plus the item that has the max value.
+   *
+   * <p> Throws an exception if the iterator is empty. </p>
+   */
+  public static <V, N extends RBNumeric<N>> Pair<N, V> findMax(
+      Iterator<V> iter,
+      Function<V, N> scoringFunction) {
+    RBPreconditions.checkArgument(
+        iter.hasNext(),
+        "There must be at least one item in the iterator in order to be able to find a max");
+
+    Pointer<N> maxScore = uninitializedPointer();
+    Pointer<V> itemWithMaxScore = uninitializedPointer();
+
+    iter.forEachRemaining(item -> {
+      N thisScore = scoringFunction.apply(item);
+      if (!maxScore.isInitialized() || maxScore.getOrThrow().compareTo(thisScore) < 0) {
+        maxScore.set(thisScore);
+        itemWithMaxScore.set(item);
+      }
+    });
+    return pair(maxScore.getOrThrow(), itemWithMaxScore.getOrThrow());
   }
 
 }

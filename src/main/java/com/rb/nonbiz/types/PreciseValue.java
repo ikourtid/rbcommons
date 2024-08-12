@@ -235,6 +235,30 @@ public abstract class PreciseValue<T extends PreciseValue<T>> extends RBNumeric<
     return asBigDecimal().compareTo(other.asBigDecimal());
   }
 
+  /**
+   * This is similar to the behavior of the standard Java compareTo, except that it returns 0 when the two values are
+   * epsilon-equal, instead of exactly equal. Otherwise it returns the same values: -1 if the left ('this') value is
+   * bigger, and 1 if the right value is bigger.
+   *
+   * <p> If the epsilon is non-zero, then we can dispense with the extra precision of BigDecimal and just convert
+   * to doubles.</p>
+   */
+  public int almostCompareTo(T other, Epsilon epsilon) {
+    if (epsilon.doubleValue() == 0) {
+      // The following is tested to be true, so this performance optimization should actually trigger with an
+      // ZERO_EPSILON. But worst case, even if we were wrong, it would just mean that the code outside this 'if' scope
+      // would run, so it would be a bit less optimized. That's fine.
+      //     assertEquals(0, ZERO_EPSILON.doubleValue(), 0.0);
+      return compareTo(other); // special case
+    }
+
+    if (this.almostEquals(other, epsilon)) {
+      return 0; // the two values count as equal
+    }
+
+    return asBigDecimal().compareTo(other.asBigDecimal());
+  }
+
   public boolean isGreaterThanOrAlmostEqualTo(T other, Epsilon epsilon) {
     return this.asBigDecimal().compareTo(other.asBigDecimal().subtract(BigDecimal.valueOf(epsilon.doubleValue()))) >= 0;
   }

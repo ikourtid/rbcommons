@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterators;
 import com.rb.biz.types.Money;
 import com.rb.nonbiz.math.stats.ZScore;
+import com.rb.nonbiz.math.vectorspaces.MatrixRowIndex;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 import org.junit.Test;
@@ -23,12 +24,15 @@ import static com.google.common.collect.Iterators.singletonIterator;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.biz.types.Money.money;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
+import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
+import static com.rb.nonbiz.collections.PairTest.pairEqualityMatcher;
 import static com.rb.nonbiz.collections.RBIterators.*;
 import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.math.stats.ZScore.zScore;
+import static com.rb.nonbiz.math.vectorspaces.MatrixRowIndex.matrixRowIndex;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.doubleIteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorEqualityMatcher;
@@ -638,11 +642,11 @@ public class RBIteratorsTest {
   @Test
   public void test_allPairsMatch() {
     BiFunction<List<String>, List<String>, Boolean> matchChecker = (list1, list2) ->
-            allPairsMatch(
-                list1.iterator(),
-                list2.iterator(),
-                // True if both strings start with the same character.
-                (str1, str2) -> str1.substring(0, 1).equals(str2.substring(0, 1)));
+        allPairsMatch(
+            list1.iterator(),
+            list2.iterator(),
+            // True if both strings start with the same character.
+            (str1, str2) -> str1.substring(0, 1).equals(str2.substring(0, 1)));
 
     assertTrue(matchChecker.apply(emptyList(), emptyList()));
     assertTrue(matchChecker.apply(singletonList("a"), singletonList("a")));
@@ -673,7 +677,127 @@ public class RBIteratorsTest {
     }
   }
 
-  private int getOnlyIndexWithB(String...values) {
+  @Test
+  public void testAllPrefixesOfListIterator() {
+    BiConsumer<List<String>, List<List<String>>> asserter = (inputList, expectedResult) ->
+        assertThat(
+            allPrefixesOfListIterator(inputList),
+            iteratorEqualityMatcher(
+                expectedResult.iterator()));
+
+    asserter.accept(
+        ImmutableList.of("A", "B", "C", "D"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("A"),
+            ImmutableList.of("A", "B"),
+            ImmutableList.of("A", "B", "C"),
+            ImmutableList.of("A", "B", "C", "D")));
+
+    asserter.accept(
+        ImmutableList.of("A", "B"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("A"),
+            ImmutableList.of("A", "B")));
+
+    asserter.accept(
+        ImmutableList.of("A"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("A")));
+
+    asserter.accept(
+        emptyList(),
+        ImmutableList.of(
+            emptyList()));
+  }
+
+  @Test
+  public void testAllSuffixesOfListIterator() {
+    BiConsumer<List<String>, List<List<String>>> asserter = (inputList, expectedResult) ->
+        assertThat(
+            allSuffixesOfListIterator(inputList),
+            iteratorEqualityMatcher(
+                expectedResult.iterator()));
+
+    asserter.accept(
+        ImmutableList.of("A", "B", "C", "D"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("D"),
+            ImmutableList.of("C", "D"),
+            ImmutableList.of("B", "C", "D"),
+            ImmutableList.of("A", "B", "C", "D")));
+
+    asserter.accept(
+        ImmutableList.of("A", "B"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("B"),
+            ImmutableList.of("A", "B")));
+
+    asserter.accept(
+        ImmutableList.of("A"),
+        ImmutableList.of(
+            Collections.<String>emptyList(),
+            singletonList("A")));
+
+    asserter.accept(
+        emptyList(),
+        ImmutableList.of(
+            emptyList()));
+  }
+
+  @Test
+  public void testFindMin() {
+    assertIllegalArgumentException( () -> RBIterators.<String, MatrixRowIndex>findMin(
+        emptyIterator(),
+        v -> matrixRowIndex(123)));
+
+    rbSetOf(
+        ImmutableList.of("a_1", "c_3", "b_2"),
+        ImmutableList.of("c_3", "a_1", "b_2"),
+        ImmutableList.of("b_2", "c_3", "a_1"),
+
+        ImmutableList.of("c_3", "a_1"),
+        ImmutableList.of("a_1", "c_3"),
+
+        singletonList("a_1")
+    ).forEach(list ->
+        assertThat(
+            findMin(
+                list.iterator(),
+                v -> matrixRowIndex(Integer.parseInt(v.substring(2)))),
+            pairEqualityMatcher(
+                pair(matrixRowIndex(1), "a_1"))));
+  }
+
+  @Test
+  public void testFindMax() {
+    assertIllegalArgumentException( () -> RBIterators.<String, MatrixRowIndex>findMax(
+        emptyIterator(),
+        v -> matrixRowIndex(123)));
+
+    rbSetOf(
+        ImmutableList.of("a_1", "c_3", "b_2"),
+        ImmutableList.of("c_3", "a_1", "b_2"),
+        ImmutableList.of("a_1", "b_2", "c_3"),
+
+        ImmutableList.of("c_3", "a_1"),
+        ImmutableList.of("a_1", "c_3"),
+
+        singletonList("c_3")
+    ).forEach(list ->
+        assertThat(
+            findMax(
+                list.iterator(),
+                v -> matrixRowIndex(Integer.parseInt(v.substring(2)))),
+            pairEqualityMatcher(
+                pair(matrixRowIndex(3), "c_3"))));
+  }
+
+  private int getOnlyIndexWithB(String ... values) {
     return getOnlyIndexWhere(Arrays.asList(values).iterator(), v -> v.equals("b"));
   }
 

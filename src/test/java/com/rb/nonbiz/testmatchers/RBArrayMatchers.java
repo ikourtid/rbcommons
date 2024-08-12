@@ -26,7 +26,11 @@ public class RBArrayMatchers {
         }
         return IntStream
             .range(0, expected.length)
-            .allMatch(i -> itemMatcherGenerator.apply(expected[i]).matches(actual[i]));
+            .allMatch(i -> {
+              // The following is un-inlined to make it easier to place breakpoints during debugging, when needed.
+              boolean matches = itemMatcherGenerator.apply(expected[i]).matches(actual[i]);
+              return matches;
+            });
       }
 
       @Override
