@@ -30,6 +30,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSet;
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
+import static com.rb.nonbiz.collections.RBOptionals.getOrThrow;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
 import static java.util.Collections.emptyIterator;
@@ -605,10 +606,17 @@ public class RBIterators {
   public static <V, N extends RBNumeric<N>> Pair<N, V> findMin(
       Iterator<V> iter,
       Function<V, N> scoringFunction) {
-    RBPreconditions.checkArgument(
-        iter.hasNext(),
+    return getOrThrow(
+        findOptionalMin(iter, scoringFunction),
         "There must be at least one item in the iterator in order to be able to find a min");
+  }
 
+  public static <V, N extends RBNumeric<N>> Optional<Pair<N, V>> findOptionalMin(
+      Iterator<V> iter,
+      Function<V, N> scoringFunction) {
+    if (!iter.hasNext()) {
+      return Optional.empty();
+    }
     Pointer<N> minScore = uninitializedPointer();
     Pointer<V> itemWithMinScore = uninitializedPointer();
 
@@ -619,7 +627,7 @@ public class RBIterators {
         itemWithMinScore.set(item);
       }
     });
-    return pair(minScore.getOrThrow(), itemWithMinScore.getOrThrow());
+    return Optional.of(pair(minScore.getOrThrow(), itemWithMinScore.getOrThrow()));
   }
 
   /**
@@ -631,9 +639,23 @@ public class RBIterators {
   public static <V, N extends RBNumeric<N>> Pair<N, V> findMax(
       Iterator<V> iter,
       Function<V, N> scoringFunction) {
-    RBPreconditions.checkArgument(
-        iter.hasNext(),
+    return getOrThrow(
+        findOptionalMax(iter, scoringFunction),
         "There must be at least one item in the iterator in order to be able to find a max");
+  }
+
+  /**
+   * From a (possibly empty) iterator with items that can be scored by a supplied scoring function,
+   * this returns the max value, plus the item that has the max value.
+   *
+   * <p> Returns an empty optional if the iterator is empty. </p>
+   */
+  public static <V, N extends RBNumeric<N>> Optional<Pair<N, V>> findOptionalMax(
+      Iterator<V> iter,
+      Function<V, N> scoringFunction) {
+    if (!iter.hasNext()) {
+      return Optional.empty();
+    }
 
     Pointer<N> maxScore = uninitializedPointer();
     Pointer<V> itemWithMaxScore = uninitializedPointer();
@@ -645,7 +667,7 @@ public class RBIterators {
         itemWithMaxScore.set(item);
       }
     });
-    return pair(maxScore.getOrThrow(), itemWithMaxScore.getOrThrow());
+    return Optional.of(pair(maxScore.getOrThrow(), itemWithMaxScore.getOrThrow()));
   }
 
 }

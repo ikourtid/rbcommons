@@ -42,6 +42,7 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertThrowsAnyException;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_BOOLEAN;
@@ -774,6 +775,30 @@ public class RBIteratorsTest {
   }
 
   @Test
+  public void testFindOptionalMin() {
+    assertOptionalEmpty(RBIterators.<String, MatrixRowIndex>findOptionalMin(
+        emptyIterator(),
+        v -> matrixRowIndex(123)));
+
+    rbSetOf(
+        ImmutableList.of("a_1", "c_3", "b_2"),
+        ImmutableList.of("c_3", "a_1", "b_2"),
+        ImmutableList.of("b_2", "c_3", "a_1"),
+
+        ImmutableList.of("c_3", "a_1"),
+        ImmutableList.of("a_1", "c_3"),
+
+        singletonList("a_1")
+    ).forEach(list ->
+        assertOptionalNonEmpty(
+            findOptionalMin(
+                list.iterator(),
+                v -> matrixRowIndex(Integer.parseInt(v.substring(2)))),
+            pairEqualityMatcher(
+                pair(matrixRowIndex(1), "a_1"))));
+  }
+
+  @Test
   public void testFindMax() {
     assertIllegalArgumentException( () -> RBIterators.<String, MatrixRowIndex>findMax(
         emptyIterator(),
@@ -791,6 +816,30 @@ public class RBIteratorsTest {
     ).forEach(list ->
         assertThat(
             findMax(
+                list.iterator(),
+                v -> matrixRowIndex(Integer.parseInt(v.substring(2)))),
+            pairEqualityMatcher(
+                pair(matrixRowIndex(3), "c_3"))));
+  }
+
+  @Test
+  public void testFindOptionalMax() {
+    assertOptionalEmpty(RBIterators.<String, MatrixRowIndex>findOptionalMax(
+        emptyIterator(),
+        v -> matrixRowIndex(123)));
+
+    rbSetOf(
+        ImmutableList.of("a_1", "c_3", "b_2"),
+        ImmutableList.of("c_3", "a_1", "b_2"),
+        ImmutableList.of("a_1", "b_2", "c_3"),
+
+        ImmutableList.of("c_3", "a_1"),
+        ImmutableList.of("a_1", "c_3"),
+
+        singletonList("c_3")
+    ).forEach(list ->
+        assertOptionalNonEmpty(
+            findOptionalMax(
                 list.iterator(),
                 v -> matrixRowIndex(Integer.parseInt(v.substring(2)))),
             pairEqualityMatcher(

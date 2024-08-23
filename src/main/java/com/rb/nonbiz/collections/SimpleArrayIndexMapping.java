@@ -68,7 +68,9 @@ public class SimpleArrayIndexMapping<T> implements ArrayIndexMapping<T> {
     RBSimilarityPreconditions.checkBothSame(
         objectsInOrder.size(),
         arrayIndices.size(),
-        "1 or more keys in the SimpleArrayIndexMapping were equal");
+        "1 or more keys in the SimpleArrayIndexMapping were equal: %s vs %s",
+        objectsInOrder,
+        arrayIndices);
     return new SimpleArrayIndexMapping<T>(objectsInOrder, newRBMap(arrayIndices));
   }
 

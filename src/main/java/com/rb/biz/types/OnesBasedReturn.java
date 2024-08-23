@@ -26,11 +26,14 @@ import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
  */
 public class OnesBasedReturn extends PreciseValue<OnesBasedReturn> {
 
-  public static final OnesBasedReturn FLAT_RETURN = new OnesBasedReturn(BigDecimal.ONE);
   private static final BigDecimal TEN_THOUSAND = BigDecimal.valueOf(10_000);
 
   private static final BigDecimal MIN_ALLOWABLE_RETURN_BIGDECIMAL = BigDecimal.valueOf(0.0001);
   private static final BigDecimal MAX_ALLOWABLE_RETURN_BIGDECIMAL = BigDecimal.valueOf(10_000);
+
+  public static final OnesBasedReturn FLAT_RETURN = new OnesBasedReturn(BigDecimal.ONE);
+  public static final OnesBasedReturn MIN_ALLOWABLE_RETURN = new OnesBasedReturn(MIN_ALLOWABLE_RETURN_BIGDECIMAL);
+  public static final OnesBasedReturn MAX_ALLOWABLE_RETURN = new OnesBasedReturn(MAX_ALLOWABLE_RETURN_BIGDECIMAL);
 
   private OnesBasedReturn(BigDecimal onesBasedReturn) {
     super(onesBasedReturn);
