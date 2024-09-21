@@ -39,6 +39,11 @@ public class TestHasUniqueId implements HasUniqueId<TestHasUniqueId> {
     return value;
   }
 
+  @Override
+  public String toString() {
+    return Strings.format("[THUI %s %s THUI]", uniqueId, value);
+  }
+
   public static TypeSafeMatcher<TestHasUniqueId> testHasUniqueIdMatcher(TestHasUniqueId expected) {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getUniqueId()),
