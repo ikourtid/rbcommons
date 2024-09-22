@@ -177,7 +177,7 @@ public class RBJsonObjects {
           InstrumentId instrumentId = instrumentId(longId.asLong());
           V value = iidMap.getOrThrow(instrumentId);
           return pair(
-              jsonTickerMap.getJsonTickerOrThrow(instrumentId).getFreeFormTicker(),
+              jsonTickerMap.getJsonTickerOrThrow(instrumentId).getFreeFormString(),
               valueSerializer.apply(value));
         })
         .sorted(comparing(v -> v.getLeft()))
@@ -214,7 +214,7 @@ public class RBJsonObjects {
           InstrumentId instrumentId = instrumentId(longId.asLong());
           V value = iidMap.getOrThrow(instrumentId);
           return pair(
-              jsonTickerMap.getJsonTickerOrThrow(instrumentId).getFreeFormTicker(),
+              jsonTickerMap.getJsonTickerOrThrow(instrumentId).getFreeFormString(),
               valueSerializer.apply(instrumentId, value));
         })
         .sorted(comparing(v -> v.getLeft()))
