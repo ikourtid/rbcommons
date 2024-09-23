@@ -62,7 +62,7 @@ public class PreciseValueIidMapJsonConverter {
             // #addToJsonObject will throw on duplicate keys; no need to check for duplicates here
             addToJsonObject(
                 jsonObject,
-                jsonTickerMap.getJsonTickerOrThrow(iid).getFreeFormTicker(),
+                jsonTickerMap.getJsonTickerOrThrow(iid).getFreeFormString(),
                 jsonBigDecimal(value)),
         comparing(iid -> jsonTickerMap.getJsonTickerOrThrow(iid).toString()));
     return jsonObject;

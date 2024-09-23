@@ -79,7 +79,7 @@ public class JsonTickerTest extends RBTestMatcher<JsonTicker> {
 
   public static TypeSafeMatcher<JsonTicker> jsonTickerMatcher(JsonTicker expected) {
     return makeMatcher(expected,
-        matchUsingEquals(v -> v.getFreeFormTicker()));
+        matchUsingEquals(v -> v.getFreeFormString()));
   }
 
 }
