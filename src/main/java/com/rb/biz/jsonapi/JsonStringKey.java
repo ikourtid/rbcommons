@@ -15,7 +15,7 @@ import java.util.List;
  */
 public abstract class JsonStringKey {
 
-  private static final int MAX_JSON_TICKER_LENGTH = 256;
+  private static final int MAX_JSON_STRING_KEY_LENGTH = 256;
   private static final List<UnicodeBlock> ALLOWED_UNICODE_BLOCKS = ImmutableList.of(
       UnicodeBlock.BASIC_LATIN,        // ASCII printable characters + control characters
       UnicodeBlock.LATIN_1_SUPPLEMENT, // most common roman characters with accents
@@ -33,9 +33,9 @@ public abstract class JsonStringKey {
         !freeFormString.isEmpty(),
         "jsonStringKey cannot be empty");
     RBPreconditions.checkArgument(
-        freeFormString.length() <= MAX_JSON_TICKER_LENGTH,
+        freeFormString.length() <= MAX_JSON_STRING_KEY_LENGTH,
         "jsonStringKey has length %s > max %s : %s",
-        freeFormString.length(), MAX_JSON_TICKER_LENGTH, freeFormString);
+        freeFormString.length(), MAX_JSON_STRING_KEY_LENGTH, freeFormString);
     RBPreconditions.checkArgument(
         allValidCharacters(freeFormString),
         "jsonStringKey %s contains invalid characters",
