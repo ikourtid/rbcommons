@@ -26,6 +26,7 @@ import com.rb.nonbiz.types.Pointer;
 import com.rb.nonbiz.types.UnitFraction;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -64,6 +65,7 @@ import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonArrayEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.jsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBJsonMatchers.orderedJsonObjectEpsilonMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbEnumMapMatcher;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.preciseValueRangeMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.rangeEqualityMatcher;
@@ -699,6 +701,34 @@ public class RBJsonObjectsTest {
   }
 
   @Test
+  public void testJsonObjectToRBMap_mostGeneralOverloadWithMapEntryTransformer() {
+    BiConsumer<JsonObject, RBMap<String, String>> asserter = (jsonObject, expectedMap) ->
+        assertThat(
+            jsonObjectToRBMap(
+                jsonObject,
+                (stringKey, jsonElement) -> {
+                  int intValue = jsonElement.getAsInt();
+                  return pair(
+                      String.join("", Collections.nCopies(intValue, stringKey)),
+                      Strings.format("%s_%s", stringKey, intValue + 10));
+                }),
+            rbMapEqualityMatcher(
+                expectedMap));
+
+    asserter.accept(
+        jsonObject(
+            "p2", jsonInteger(2),
+            "p3", jsonInteger(3)),
+        rbMapOf(
+            "p2p2", "p2_12",
+            "p3p3p3", "p3_13"));
+
+    asserter.accept(
+        emptyJsonObject(),
+        emptyRBMap());
+  }
+
+  @Test
   public void testJsonObjectToIidMap_overloadWithoutInstrumentId() {
     BiConsumer<JsonObject, IidMap<UniqueId<CaseInsensitiveStringFilter>>> asserter =
         (jsonObject, expectedMap) ->
@@ -878,8 +908,8 @@ public class RBJsonObjectsTest {
     assertThat(
         newRBSet(items),
         rbSetEqualsMatcher(rbSetOf(
-           "key1_value1",
-           "key2_22")));
+            "key1_value1",
+            "key2_22")));
   }
 
 }

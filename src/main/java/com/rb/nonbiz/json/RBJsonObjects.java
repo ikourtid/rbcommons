@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.*;
+import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.text.HasUniqueId;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
 import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
@@ -348,6 +349,28 @@ public class RBJsonObjects {
       K key = keyDeserializer.apply(entry.getKey());
       V value = valueDeserializer.apply(key, entry.getValue());
       mutableMap.putAssumingAbsent(key, value);
+    });
+    return newRBMap(mutableMap);
+  }
+
+  /**
+   * Converts a {@link JsonObject} to an {@link RBMap} in the general case where the (transformed) map value
+   * also relies on the original key. In theory, the transformed key could also rely on the original map's value.
+   *
+   * <p> This is for the most general case of conversion. </p>
+   */
+  public static <K, V> RBMap<K, V> jsonObjectToRBMap(
+      JsonObject jsonObject,
+      BiFunction<String, JsonElement, Pair<K, V>> entryDeserializer) {
+    Set<Entry<String, JsonElement>> entrySet = jsonObject.entrySet();
+    MutableRBMap<K, V> mutableMap = newMutableRBMapWithExpectedSize(entrySet.size());
+    entrySet.forEach(entry -> {
+      String stringKey = entry.getKey();
+      JsonElement jsonElement = entry.getValue();
+      Pair<K, V> rbMapEntryPair = entryDeserializer.apply(stringKey, jsonElement);
+      K mapKey = rbMapEntryPair.getLeft();
+      V value = rbMapEntryPair.getRight();
+      mutableMap.putAssumingAbsent(mapKey, value);
     });
     return newRBMap(mutableMap);
   }

@@ -17,7 +17,11 @@ public class DirectoryCreator {
    * E.g. if filename is a/b/c.txt, it will create directories a and a/b.
    */
   synchronized public void makeAllDirs(String filename) {
-    String dirname = filename.substring(0, filename.lastIndexOf('/'));
+    int lastIndex = filename.lastIndexOf('/');
+    if (lastIndex < 0) {
+      return; // no directories specified; this is just a flat filename
+    }
+    String dirname = filename.substring(0, lastIndex);
     File dirObject = new File(dirname);
     if (dirObject.exists()) {
       RBPreconditions.checkArgument(dirObject.isDirectory());
