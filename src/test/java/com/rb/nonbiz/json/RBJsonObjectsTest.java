@@ -17,6 +17,7 @@ import com.rb.nonbiz.collections.RBMap;
 import com.rb.nonbiz.collections.RBSet;
 import com.rb.nonbiz.collections.SimpleArrayIndexMapping;
 import com.rb.nonbiz.jsonapi.RangeJsonApiConverter;
+import com.rb.nonbiz.testmatchers.RBJsonMatchers;
 import com.rb.nonbiz.testutils.TestEnumXYZ;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
 import com.rb.nonbiz.text.Strings;
@@ -355,6 +356,31 @@ public class RBJsonObjectsTest {
         jsonObject(
             "S1", jsonString("$ 1.10"),
             "S2", jsonString("$ 2.20")));
+    asserter.accept(
+        emptyRBMap(),
+        emptyJsonObject());
+  }
+
+  @Test
+  public void testRBMapToJsonObject_mostGeneralOverloadWithMapEntryTransformer() {
+    BiConsumer<RBMap<String, Integer>, JsonObject> asserter = (map, expectedJsonObject) ->
+        assertThat(
+            rbMapToJsonObject(
+                map,
+                (stringKey, intValue) -> pair(
+                    Strings.format("%s%s_prop", stringKey, 70 + intValue),
+                    jsonString(Strings.format("%s%s_val", stringKey, 80 + intValue)))),
+            jsonObjectEpsilonMatcher(
+                expectedJsonObject));
+
+    asserter.accept(
+        rbMapOf(
+            "a", 1,
+            "b", 2),
+        jsonObject(
+            "a71_prop", jsonString("a81_val"),
+            "b72_prop", jsonString("b82_val")));
+
     asserter.accept(
         emptyRBMap(),
         emptyJsonObject());

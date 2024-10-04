@@ -26,6 +26,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.MutableRBSet.newMutableRBSetWithExpectedSize;
+import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBMapMergers.mergeRBMapsDisallowingOverlap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
@@ -37,6 +38,7 @@ import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.biMapEqualityMatcher;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
@@ -860,6 +862,104 @@ public class RBMapTest {
     assertEmpty(
         RBMapSimpleConstructors.<LocalDate, String>emptyRBMap()
             .valuesInSortedKeyOrder(naturalOrder()));
+  }
+
+  @Test
+  public void testTransformGeneral_specialCaseOfMapInversion() {
+    BiConsumer<RBMap<String, Integer>, RBMap<Integer, String>> asserter = (map1, map2) ->
+        assertThat(
+            map1.transformGeneral( (stringKey, intValue) -> pair(intValue, stringKey)),
+            rbMapEqualityMatcher(map2));
+
+    asserter.accept(
+        rbMapOf(
+            "a", 1,
+            "b", 2),
+        rbMapOf(
+            1, "a",
+            2, "b"));
+
+    asserter.accept(
+        emptyRBMap(),
+        emptyRBMap());
+  }
+
+  @Test
+  public void testTransformGeneral_evenMoreGeneralCase() {
+    BiConsumer<RBMap<String, Integer>, RBMap<String, String>> asserter = (map1, map2) ->
+        assertThat(
+            map1.transformGeneral( (stringKey, intValue) -> pair(
+                Strings.format("%s_%s", stringKey, intValue),
+                Strings.format("%s_%s", intValue, stringKey))),
+            rbMapEqualityMatcher(map2));
+
+    asserter.accept(
+        rbMapOf(
+            "a", 1,
+            "b", 1),
+        rbMapOf(
+            "a_1", "1_a",
+            "b_1", "1_b"));
+
+    asserter.accept(
+        emptyRBMap(),
+        emptyRBMap());
+  }
+
+  @Test
+  public void testTransformGeneral_throwsOnCollisionOfNewMapsKeys() {
+    assertIllegalArgumentException( () ->
+        rbMapOf(
+            "a", 1,
+            "b", 1)
+            .transformGeneral( (stringKey, intValue) -> pair(intValue, stringKey)));
+    RBMap<Integer, String> doesNotThrow = rbMapOf(
+        "a", 1,
+        "b", 2)
+        .transformGeneral( (stringKey, intValue) -> pair(intValue, stringKey));
+  }
+
+  @Test
+  public void testInvert() {
+    BiConsumer<RBMap<String, Integer>, RBMap<Integer, String>> asserter = (map1, map2) -> {
+      assertThat(
+          map1.invertOrThrow(),
+          rbMapEqualityMatcher(map2));
+      assertThat(
+          map2.invertOrThrow(),
+          rbMapEqualityMatcher(map1));
+      assertThat(
+          map1.invertOrThrow().invertOrThrow(),
+          rbMapEqualityMatcher(map1));
+      assertThat(
+          map2.invertOrThrow().invertOrThrow(),
+          rbMapEqualityMatcher(map2));
+    };
+
+    asserter.accept(
+        rbMapOf(
+            "a", 1,
+            "b", 2),
+        rbMapOf(
+            1, "a",
+            2, "b"));
+
+    asserter.accept(
+        emptyRBMap(),
+        emptyRBMap());
+  }
+
+  @Test
+  public void testInvert_throwsOnCollisionOfNewMapsKeys() {
+    assertIllegalArgumentException( () ->
+        rbMapOf(
+            "a", 1,
+            "b", 1)
+            .invertOrThrow());
+    RBMap<Integer, String> doesNotThrow = rbMapOf(
+        "a", 1,
+        "b", 2)
+        .invertOrThrow();
   }
 
 }

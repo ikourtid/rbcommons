@@ -455,6 +455,46 @@ public class RBMap<K, V> {
   }
 
   /**
+   * This applies the most general transform possible to a map: the new entries (keys and values) are each
+   * functions of the original keys and values.
+   *
+   * <p> This will throw an exception if the entryTransformer ever maps an entry from the original map onto the
+   * same new key. </p>
+   *
+   * <p> This implies that the newly generated map will have the same number of entries as the original. </p>
+   *
+   * <p> You must ensure that the new map's keys implement a non-trivial equals/hashCode, i.e. that they are valid
+   * map keys and not just any general Java objects. </p>
+   */
+  public <K1, V1> RBMap<K1, V1> transformGeneral(BiFunction<K, V, Pair<K1, V1>> entryTransformer) {
+    MutableRBMap<K1, V1> mutableMap = newMutableRBMapWithExpectedSize(size());
+    forEachEntry( (key, value) -> {
+      Pair<K1, V1> newEntry = entryTransformer.apply(key, value);
+      mutableMap.putAssumingAbsent(newEntry.getLeft(), newEntry.getRight());
+    });
+    return newRBMap(mutableMap);
+  }
+
+  /**
+   * Inverts a map. That is, the original map's keys and values become the new map's values and keys, respectively.
+   *
+   * <p> This will throw an exception if two different keys of the original map point to values that are equal
+   * under equals(). </p>
+   *
+   * <p> This implies that the newly generated map will have the same number of entries as the original. </p>
+   *
+   * <p> You must ensure that the new map's keys implement a non-trivial equals/hashCode, i.e. that they are valid
+   * map keys and not just any general Java objects. </p>
+   */
+  public RBMap<V, K> invertOrThrow() {
+    MutableRBMap<V, K> mutableMap = newMutableRBMapWithExpectedSize(size());
+    forEachEntry( (key, value) -> {
+      mutableMap.putAssumingAbsent(value, key);
+    });
+    return newRBMap(mutableMap);
+  }
+
+  /**
    * Makes a copy of this map, applying the overrides passed in; all keys in the overrides map
    * must be present in the original map, for safety; this way, we really match the 'overrides' semantics.
    */

@@ -8,7 +8,6 @@ import com.google.gson.JsonObject;
 import com.rb.biz.jsonapi.JsonTickerMap;
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.collections.*;
-import com.rb.nonbiz.functional.TriFunction;
 import com.rb.nonbiz.text.HasUniqueId;
 import com.rb.nonbiz.text.RBSetOfHasUniqueId;
 import com.rb.nonbiz.util.JsonRoundTripStringConvertibleEnum;
@@ -109,6 +108,31 @@ public class RBJsonObjects {
           V value = entry.getValue();
           builder.setJsonElement(keySerializer.apply(key), valueSerializer.apply(value));
         });
+    return builder.build();
+  }
+
+  /**
+   * Converts an {@link RBMap} to a {@link JsonObject} in the general case where the (transformed) JSON object value
+   * also relies on the original key. In theory, the transformed key could also rely on the original map's value.
+   *
+   * <p> This is for the most general case of conversion. </p>
+   */
+  public static <K, V> JsonObject rbMapToJsonObject(
+      RBMap<K, V> map,
+      BiFunction<K, V, Pair<String, JsonElement>> entryDeserializer) {
+    // When we serialize a general RBMap, we often need JSON properties to be ordered for determinism purposes.
+    // For instance, when doing git diff, it's easier to compare the before and after outputs of backtests that are
+    // run with the backtest JSON API. This method does not guarantee this to its caller, which is why 'ordered'
+    // is not part of the name. The only reason this is expected (but not guaranteed) to work is that the implementation
+    // of JsonObject seems to retain the order that items were added to it, and its serialization reflects that.
+    // It wasn't actually possible to replicate the old behavior with a failing test, but it does seem to fix some
+    // nondeterminism in a backtest (a JSON-API-driven one) so it's worth keeping this code.
+    RBJsonObjectBuilder builder = rbJsonObjectBuilder();
+    map.entrySet()
+        .stream()
+        .map(entry -> entryDeserializer.apply(entry.getKey(), entry.getValue()))
+        .sorted(comparing(pair -> pair.getLeft())) // The JSON property key
+        .forEach(pair -> builder.setJsonElement(pair.getLeft(), pair.getRight()));
     return builder.build();
   }
 
@@ -253,12 +277,12 @@ public class RBJsonObjects {
       BiPredicate<String, JsonElement> mustKeepEntryPredicate) {
     RBJsonObjectBuilder builder = rbJsonObjectBuilder();
     jsonObject.entrySet().forEach(entry -> {
-          String key = entry.getKey();
-          JsonElement value = entry.getValue();
-          if (mustKeepEntryPredicate.test(key, value)) {
-            builder.setJsonElement(key, value);
-          }
-        });
+      String key = entry.getKey();
+      JsonElement value = entry.getValue();
+      if (mustKeepEntryPredicate.test(key, value)) {
+        builder.setJsonElement(key, value);
+      }
+    });
     return builder.build();
   }
 
