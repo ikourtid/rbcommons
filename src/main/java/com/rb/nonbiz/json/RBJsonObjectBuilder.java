@@ -91,6 +91,12 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
     return setString(property, enumValue.toUniqueStableString());
   }
 
+  public <E extends Enum<E>, T extends JsonRoundTripStringConvertibleEnum<E>> RBJsonObjectBuilder setOptionalEnum(
+      String property, Optional<T> enumValue) {
+    enumValue.ifPresent(v -> setString(property, v.toUniqueStableString()));
+    return this;
+  }
+
   public RBJsonObjectBuilder setInt(String property, int value) {
     return setJsonPrimitive(property, jsonInteger(value));
   }
