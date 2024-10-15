@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.singletonIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMap;
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 
@@ -154,6 +155,10 @@ public class IidMapConstructors {
     MutableIidMap<V> mutableIidMap = newMutableIidMapWithExpectedSize(expectedSize);
     stream.forEach(v -> mutableIidMap.putAssumingAbsent(v.getInstrumentId(), v));
     return newIidMap(mutableIidMap);
+  }
+
+  public static <V extends HasInstrumentId> IidMap<V> singletonIidMapOfHasInstrumentId(V onlyItem) {
+    return singletonIidMap(onlyItem.getInstrumentId(), onlyItem);
   }
 
   @SafeVarargs
