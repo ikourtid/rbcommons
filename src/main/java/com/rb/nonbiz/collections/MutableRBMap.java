@@ -50,6 +50,12 @@ public class MutableRBMap<K, V> {
     return mutableMap;
   }
 
+  public static <K, V> MutableRBMap<K, V> newMutableRBMap(K onlyInitialKey, V onlyInitialValue) {
+    MutableRBMap<K, V> mutableMap = newMutableRBMapWithExpectedSize(1);
+    mutableMap.put(onlyInitialKey, onlyInitialValue);
+    return mutableMap;
+  }
+
   /**
    * Creates a copy of this map, but also adds the contents of the specified map.
    * Throws if any key appears in both maps.
