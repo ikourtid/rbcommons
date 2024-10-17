@@ -245,12 +245,14 @@ public class IidSetOperationsTest {
 
 
   @Test
-  public void testIsSubset_all3overloads() {
+  public void testIsSubset_allOverloads() {
     TriConsumer<Boolean, Set<InstrumentId>, Set<InstrumentId>> asserter = (expectedResult, subset, superset) -> {
       // this exercise all 3 overloads
       assertEquals(expectedResult, isSubsetOf(newIidSet(subset), newIidSet(superset)));
-      assertEquals(expectedResult, isSubsetOf(subset, newIidSet(superset)));
+      assertEquals(expectedResult, isSubsetOf(subset,            newIidSet(superset)));
       assertEquals(expectedResult, isSubsetOf(newIidSet(subset), superset));
+      assertEquals(expectedResult, isSubsetOf(newIidSet(subset), superset.stream()));
+      assertEquals(expectedResult, isSubsetOf(subset.stream(),   newIidSet(superset)));
     };
     asserter.accept(true,  emptySet(),                                 emptySet());
     asserter.accept(true,  emptySet(),                                 singleton(STOCK_A));

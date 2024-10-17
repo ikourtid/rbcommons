@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.rb.nonbiz.collections.HasLongSets.hasLongSetIsSubsetOf;
 import static com.rb.nonbiz.collections.HasLongSets.hasLongSetIsSubsetOfHasLongSet;
@@ -95,16 +96,44 @@ public class IidSetOperations {
         .collect(Collectors.toSet()));
   }
 
+  /**
+   * Returns if the first argument is a subset of the second argument.
+   */
   public static boolean isSubsetOf(IidSet subset, IidSet superset) {
     return hasLongSetIsSubsetOfHasLongSet(subset, superset);
   }
 
+  /**
+   * Returns if the first argument is a subset of the second argument.
+   */
   public static boolean isSubsetOf(Set<InstrumentId> subset, IidSet superset) {
     return isSubsetOfHasLongSet(subset, superset);
   }
 
+  /**
+   * Returns if the first argument is a subset of the second argument.
+   */
   public static boolean isSubsetOf(IidSet subset, Set<InstrumentId> superset) {
     return hasLongSetIsSubsetOf(subset, superset);
+  }
+
+  /**
+   * Returns if the first argument is a subset of the second argument.
+   *
+   * <p> This is a bit more performant, for the cases where we don't want to actually build an IidSet. </p>
+   */
+  public static boolean isSubsetOf(Stream<InstrumentId> subset, IidSet superset) {
+    return subset.allMatch(v -> superset.contains(v));
+  }
+
+  /**
+   * Returns if the first argument is a subset of the second argument.
+   *
+   * <p> This is a bit more performant, for the cases where we don't want to actually build an IidSet. </p>
+   */
+  public static boolean isSubsetOf(IidSet subset, Stream<InstrumentId> superset) {
+    long subsetItemsInSuperset = superset.filter(v -> subset.contains(v)).count();
+    return subset.size() == subsetItemsInSuperset;
   }
 
 }
