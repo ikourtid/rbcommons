@@ -10,9 +10,13 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
  * 'Explodes' certain items in the partition.
  *
  * <p> E.g. 2-asset-id partition consists of a stock X and an ETF, and we know the ETF has 3 constituent stocks,
- * then the final partition will contain 4 stocks, or 3 if X is already one of the constituents of the ETF.</p>
+ * then the final partition will contain 4 stocks, or 3 if X is already one of the constituents of the ETF.
+ * Let's say ETF contains stocks X, Y, and Z, at 10% / 40% / 50% breakdown, and that X / ETF are 70% / 30% of the
+ * initial partition. The weight of Y will be 40% * 30%, and the weight of X will be 70% (from the top-level
+ * partition) plus 30% * 10% (from the ETF). </p>
  *
- * <p> This only works for a single level, i.e. not if we have a partition of partitions of partitions, etc.
+ * <p> Given the input data structures, this only works for a single level,
+ * i.e. not if we have a partition of partitions of partitions, etc.
  * Such an object can't be represented by a simple {@link Partition} anyway, since the value type in the
  * {@link Partition} is the same. </p>
  */
