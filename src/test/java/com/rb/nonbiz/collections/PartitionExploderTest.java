@@ -1,27 +1,23 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.testutils.RBTest;
+import org.checkerframework.checker.units.qual.K;
 import org.junit.Test;
 
 import static com.rb.biz.marketdata.FakeInstruments.ETF_1;
 import static com.rb.biz.marketdata.FakeInstruments.ETF_2;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_C;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_E;
 import static com.rb.nonbiz.collections.Partition.partition;
 import static com.rb.nonbiz.collections.PartitionTest.partitionMatcher;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.emptyRBMap;
 import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static com.rb.nonbiz.types.UnitFraction.unitFractionInPct;
-import static org.junit.Assert.*;
-
-import org.hamcrest.TypeSafeMatcher;
-
-import static com.rb.nonbiz.testmatchers.Match.match;
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class PartitionExploderTest extends RBTest<PartitionExploder> {
 
@@ -52,6 +48,19 @@ public class PartitionExploderTest extends RBTest<PartitionExploder> {
                 STOCK_C, unitFractionInPct(7 + 0.2 * 85),
                 STOCK_D, unitFractionInPct(19),
                 STOCK_E, unitFractionInPct(               0.5 * 10)))));
+  }
+
+  @Test
+  public void simplestCase_noSubPartitions() {
+    Partition<String> partition = partition(rbMapOf(
+        "a", unitFractionInPct(10),
+        "b", unitFractionInPct(40),
+        "c", unitFractionInPct(50)));
+    assertThat(
+        makeTestObject().explode(
+            partition, emptyRBMap()),
+        partitionMatcher(
+            partition));
   }
 
   @Override
