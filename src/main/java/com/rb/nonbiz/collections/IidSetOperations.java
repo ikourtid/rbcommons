@@ -130,6 +130,10 @@ public class IidSetOperations {
    * Returns if the first argument is a subset of the second argument.
    *
    * <p> This is a bit more performant, for the cases where we don't want to actually build an IidSet. </p>
+   *
+   * <p> However, you need to ensure that the stream does not have duplicate items in it. But by the time
+   * you call .sorted() and .distinct(), maybe you lose all the performance benefits anyway. It depends on
+   * your use case. </p>
    */
   public static boolean isSubsetOf(IidSet subset, Stream<InstrumentId> superset) {
     long subsetItemsInSuperset = superset.filter(v -> subset.contains(v)).count();
