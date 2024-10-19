@@ -1,10 +1,9 @@
-package com.rb.biz.investing.strategy.optbased.fullopt;
+package com.rb.nonbiz.collections;
 
 import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.biz.types.asset.AssetId;
-import com.rb.nonbiz.collections.FlatSignedLinearCombination;
 import com.rb.nonbiz.text.PrintsInstruments;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
