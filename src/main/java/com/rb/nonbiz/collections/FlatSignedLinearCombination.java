@@ -4,12 +4,16 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
+import com.rb.nonbiz.math.eigen.Investable;
+import com.rb.nonbiz.text.PrintsInstruments;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.types.SignedFraction;
 import com.rb.nonbiz.types.UnitFraction;
 import com.rb.nonbiz.types.WeightedBySignedFraction;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -90,11 +94,28 @@ public class FlatSignedLinearCombination<T> implements Iterable<WeightedBySigned
     return weightedItems;
   }
 
-  @Override
-  public String toString() {
+  /**
+   * Because this class is generic, there's no way to specify code that's specific to the cases where
+   * the generic type implements {@link PrintsInstruments}. Therefore, we'll use a static method instead.
+   */
+  public static <T extends PrintsInstruments> String toString(
+      FlatSignedLinearCombination<T> flatSignedLinearCombination,
+      InstrumentMaster instrumentMaster,
+      LocalDate date) {
+    List<WeightedBySignedFraction<T>> weightedItems = flatSignedLinearCombination.getWeightedItems();
     return Strings.format("[FSLC %s : %s FSLC]",
         weightedItems.size(),
-        Joiner.on(' ').join(Iterables.transform(
+        Joiner.on(" + ").join(Iterables.transform(
+            weightedItems,
+            wi -> Strings.format("%s * %s", wi.getWeight(), wi.getItem().toString(instrumentMaster, date)))));
+  }
+
+  @Override
+  public String toString() {
+    // Unfortunately, we have to duplicate the logic above; we can't delegate and pass NULL_INSTRUMENT_MASTER etc.
+    return Strings.format("[FSLC %s : %s FSLC]",
+        weightedItems.size(),
+        Joiner.on(" + ").join(Iterables.transform(
             weightedItems,
             wi -> Strings.format("%s * %s", wi.getWeight(), wi.getItem()))));
   }
