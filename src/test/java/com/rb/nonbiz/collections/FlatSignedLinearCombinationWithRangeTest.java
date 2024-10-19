@@ -1,9 +1,8 @@
-package com.rb.biz.investing.strategy.optbased.fullopt;
+package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.rb.biz.types.asset.AssetId;
-import com.rb.nonbiz.collections.FlatSignedLinearCombination;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -11,7 +10,6 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static com.rb.biz.investing.strategy.optbased.fullopt.FlatSignedLinearCombinationWithRange.flatSignedLinearCombinationWithRange;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
 import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.hardCodedInstrumentMaster;
@@ -20,6 +18,7 @@ import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.FlatSignedLinearCombination.flatSignedLinearCombination;
 import static com.rb.nonbiz.collections.FlatSignedLinearCombination.singletonFlatSignedLinearCombination;
 import static com.rb.nonbiz.collections.FlatSignedLinearCombinationTest.flatSignedLinearCombinationMatcher;
+import static com.rb.nonbiz.collections.FlatSignedLinearCombinationWithRange.flatSignedLinearCombinationWithRange;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -84,7 +83,7 @@ public class FlatSignedLinearCombinationWithRangeTest
     assertEquals(
         "[FSLCWR range= [-5.6…7.8] ; expression = [FSLC 2 : -120.00 % * A (iid 1 ) + 340.00 % * B (iid 2 ) FSLC] FSLCWR]",
         FlatSignedLinearCombinationWithRange.toString(
-            FlatSignedLinearCombinationWithRange.flatSignedLinearCombinationWithRange(
+            flatSignedLinearCombinationWithRange(
             flatSignedLinearCombination(ImmutableList.of(
                 weightedBySignedFraction(instrumentId(1), signedFraction(-1.2)),
                 weightedBySignedFraction(instrumentId(2), signedFraction(3.4)))),
