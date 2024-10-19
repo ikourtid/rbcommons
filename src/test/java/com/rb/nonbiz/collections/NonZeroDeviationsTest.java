@@ -46,6 +46,18 @@ public class NonZeroDeviationsTest extends RBTestMatcher<NonZeroDeviations<Strin
   }
 
   @Test
+  public void testTotalAbsoluteDeviation() {
+    assertEquals(BigDecimal.ZERO, emptyDeviations().getMeanAbsoluteDeviation());
+    assertThat(
+        nonZeroDeviations(rbMapOf(
+            "a", signedFraction(0.1),
+            "b", signedFraction(0.5),
+            "c", signedFraction(-0.6)))
+            .getTotalAbsoluteDeviation(),
+        bigDecimalMatcher(BigDecimal.valueOf(doubleExplained(1.2, 0.1 + 0.5 + 0.6)), DEFAULT_EPSILON_1e_8));
+  }
+
+  @Test
   public void testMeanSquaredDeviation() {
     assertEquals(BigDecimal.ZERO, emptyDeviations().getMeanAbsoluteDeviation());
     assertThat(
