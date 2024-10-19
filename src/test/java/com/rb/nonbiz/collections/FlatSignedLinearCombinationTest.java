@@ -1,14 +1,21 @@
 package com.rb.nonbiz.collections;
 
 import com.google.common.collect.ImmutableList;
+import com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster;
+import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.types.SignedFraction;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
+import static com.rb.biz.marketdata.instrumentmaster.HardCodedInstrumentMaster.hardCodedInstrumentMaster;
+import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.FlatSignedLinearCombination.flatSignedLinearCombination;
 import static com.rb.nonbiz.collections.FlatSignedLinearCombination.singletonFlatSignedLinearCombination;
+import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
 import static com.rb.nonbiz.testmatchers.Match.matchList;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -89,6 +96,20 @@ public class FlatSignedLinearCombinationTest extends RBTestMatcher<FlatSignedLin
             weightedBySignedFraction("aaa", signedFraction(0.111)),
             weightedBySignedFraction("bbb", signedFraction(0.222))));
     assertEquals(2, twoElements.size());
+  }
+
+  @Test
+  public void testPrintsInstruments() {
+    assertEquals(
+        "[FSLC 2 : 40.00 % * A (iid 1 ) + 60.00 % * B (iid 2 ) FSLC]",
+        FlatSignedLinearCombination.toString(
+            flatSignedLinearCombination(ImmutableList.of(
+                weightedBySignedFraction(instrumentId(1), signedFraction(0.4)),
+                weightedBySignedFraction(instrumentId(2), signedFraction(0.6)))),
+            hardCodedInstrumentMaster(
+                instrumentId(1), "A",
+                instrumentId(2), "B"),
+            UNUSED_DATE));
   }
 
   @Override
