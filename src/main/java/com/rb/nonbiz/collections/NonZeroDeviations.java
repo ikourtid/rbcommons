@@ -64,6 +64,13 @@ public class NonZeroDeviations<K> {
     return getMeanDeviationHelper(sf -> sf.asBigDecimal().abs());
   }
 
+  public BigDecimal getTotalAbsoluteDeviation() {
+    return sumBigDecimals(
+        signedFractions.values()
+            .stream()
+            .map(v -> v.asBigDecimal().abs()));
+  }
+
   public BigDecimal getMeanSquaredDeviation() {
     return getMeanDeviationHelper(sf -> sf.asBigDecimal().multiply(sf.asBigDecimal(), DEFAULT_MATH_CONTEXT));
   }

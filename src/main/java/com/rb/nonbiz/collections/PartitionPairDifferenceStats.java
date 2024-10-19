@@ -77,11 +77,12 @@ public class PartitionPairDifferenceStats {
 
   @Override
   public String toString() {
-    return Strings.format("[PPDS overweight= %s ; underweight= %s ; signedDiffs= %s ; |diffs|= %s PPDS]",
+    // We start with the abs diffs, which are more important. It's a bit easier to view things in log files this way.
+    return Strings.format("[PPDS |diffs|= %s ; overweight= %s ; underweight= %s ; signedDiffs= %s PPDS]",
+        formatStatisticalSummary(statsForAbsoluteValueDifferences, 6),
         formatStatisticalSummary(statsForOverweight, 6),
         formatStatisticalSummary(statsForUnderweight, 6),
-        formatStatisticalSummary(statsForSignedDifferences, 6),
-        formatStatisticalSummary(statsForAbsoluteValueDifferences, 6));
+        formatStatisticalSummary(statsForSignedDifferences, 6));
   }
 
 
