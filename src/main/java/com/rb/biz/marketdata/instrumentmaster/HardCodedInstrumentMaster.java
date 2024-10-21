@@ -123,7 +123,7 @@ public class HardCodedInstrumentMaster implements InstrumentMaster {
 
   // Do not use this; it's here to help the test matcher.
   @VisibleForTesting
-  IidBiMap<Symbol> getHardCodedSymbolBiMapDoNotUse() {
+  public IidBiMap<Symbol> getHardCodedSymbolBiMapDoNotUse() {
     return hardCodedSymbolBiMap;
   }
 
