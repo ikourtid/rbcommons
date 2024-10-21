@@ -54,7 +54,7 @@ However, we will call out some highlights below, in decreasing order of how usef
 In a previous life, we have seen catastrophic bugs due to mutable classes. We went to great lengths
 to avoid that here.
 
-Java is not great when it comes to immutable classes. ```final``` is not as expressive as C++,
+Java is not great when it comes to immutable classes. ```final``` is not as expressive as ```const``` is in C++,
 so it only prevents you from changing the reference (pointer) to an object, but it will still let
 you modify its contents if methods. Java 14 (and later) Records address this somewhat, but not perfectly.
 
