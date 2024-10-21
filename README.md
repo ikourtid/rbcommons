@@ -5,7 +5,8 @@ used in the Rowboat Advisors Portfolio Optimizer and Tax-Aware Backtester.
 
 However, most code is not domain-specific, such as our immutable collections.
 
-Built since March 2016, As of April 2024, there are 115,000+ lines of source code; 65,000+ of them are tests. 
+In continuous development since March 2016.
+As of October 2024, there are 115,000+ lines of source code; 65,000+ of them are tests. 
 So this is heavily tested.
 
 ## Summary
