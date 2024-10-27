@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -155,6 +157,53 @@ public class RBOptionalsTest {
     assertEquals(456, toSpecializedOptionalInt(Optional.of(456)).getAsInt());
   }
 
+  @Test
+  public void testIfPresentOrElse() {
+    Pointer<String> result = uninitializedPointer();
+    Consumer<Optional<String>> consumer = optional ->
+        ifPresentOrElse(
+            optional,
+            v -> result.set('_' + v),
+            () -> result.set("?"));
+
+    consumer.accept(Optional.of("x"));
+    assertEquals("_x", result.getOrThrow());
+
+    consumer.accept(Optional.empty());
+    assertEquals("?", result.getOrThrow());
+  }
+
+  @Test
+  public void testIfLongPresentOrElse() {
+    Pointer<String> result = uninitializedPointer();
+    Consumer<OptionalLong> consumer = optional ->
+        ifLongPresentOrElse(
+            optional,
+            v -> result.set('_' + Long.toString(v)),
+            () -> result.set("?"));
+
+    consumer.accept(OptionalLong.of(123));
+    assertEquals("_123", result.getOrThrow());
+
+    consumer.accept(OptionalLong.empty());
+    assertEquals("?", result.getOrThrow());
+  }
+
+  @Test
+  public void testIfIntPresentOrElse() {
+    Pointer<String> result = uninitializedPointer();
+    Consumer<OptionalInt> consumer = optional ->
+        ifIntPresentOrElse(
+            optional,
+            v -> result.set('_' + Long.toString(v)),
+            () -> result.set("?"));
+
+    consumer.accept(OptionalInt.of(123));
+    assertEquals("_123", result.getOrThrow());
+
+    consumer.accept(OptionalInt.empty());
+    assertEquals("?", result.getOrThrow());
+  }
 
   @Test
   public void lazyGetIfPresent_emptyInputs_returnsEmptyList() {
