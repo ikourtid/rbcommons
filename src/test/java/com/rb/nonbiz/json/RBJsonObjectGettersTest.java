@@ -222,6 +222,23 @@ public class RBJsonObjectGettersTest {
   }
 
   @Test
+  public void getJsonNumberElementOrThrow_hugeLong() {
+    // This fails if getJsonLongOrThrow were to cast it to double and then back to long.
+    rbSetOf(
+        9223372036854775801L,
+        9223372036854775802L,
+        9223372036854775803L,
+        9223372036854775804L,
+        9223372036854775805L,
+        9223372036854775806L,
+        9223372036854775807L)
+        .forEach(hugeLong ->
+            assertEquals(
+                hugeLong.longValue(),
+                getJsonLongOrThrow(singletonJsonObject("x", jsonLong(hugeLong)), "x")));
+  }
+
+  @Test
   public void test_getJsonNumberOrThrow() {
     JsonObject jsonObject = jsonObject(
         "notANumber", jsonString("xyz"),
