@@ -211,12 +211,7 @@ public class RBJsonObjectGetters {
   public static long getJsonLongOrThrow(
       JsonObject jsonObject,
       String property) {
-    double value = getJsonDoubleOrThrow(jsonObject, property);
-    RBPreconditions.checkArgument(
-        value == (long) value,  // check if the value is a long
-        "JSON object property ( %s ) is not a long: %s",
-        property, value);
-    return (long) value;
+    return getJsonNumberElementOrThrow(jsonObject, property).getAsLong();
   }
 
   /**
