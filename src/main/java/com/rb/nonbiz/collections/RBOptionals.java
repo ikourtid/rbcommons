@@ -20,6 +20,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -388,6 +390,30 @@ public class RBOptionals {
   public static <T> void ifPresentOrElse(Optional<T> optional, Consumer<? super T> action, Runnable emptyAction) {
     if (optional.isPresent()) {
       action.accept(optional.get());
+    } else {
+      emptyAction.run();
+    }
+  }
+
+  /**
+   * Java 1.9+ has this as a method under OptionalInt, but since we're currently (May 2020) using Java 1.8,
+   * this is handy to have as a static method.
+   */
+  public static void ifIntPresentOrElse(OptionalInt optional, IntConsumer action, Runnable emptyAction) {
+    if (optional.isPresent()) {
+      action.accept(optional.getAsInt());
+    } else {
+      emptyAction.run();
+    }
+  }
+
+  /**
+   * Java 1.9+ has this as a method under OptionalLong, but since we're currently (May 2020) using Java 1.8,
+   * this is handy to have as a static method.
+   */
+  public static void ifLongPresentOrElse(OptionalLong optional, LongConsumer action, Runnable emptyAction) {
+    if (optional.isPresent()) {
+      action.accept(optional.getAsLong());
     } else {
       emptyAction.run();
     }
