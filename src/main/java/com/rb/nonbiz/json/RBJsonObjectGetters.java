@@ -214,9 +214,9 @@ public class RBJsonObjectGetters {
       JsonObject jsonObject,
       String property) {
     long asLong = getJsonNumberElementOrThrow(jsonObject, property).getAsLong();
-    RBSimilarityPreconditions.checkBothSame(
-        getJsonBigDecimalOrThrow(jsonObject, property),
-        new BigDecimal(asLong),
+    RBPreconditions.checkArgument(
+        // Can't use #equals() here, because 123.0 and 123 aren't equal with BigDecimal.
+        getJsonBigDecimalOrThrow(jsonObject, property).compareTo(new BigDecimal(asLong)) == 0,
         "Property %s has a number that does not fit within range of a long. JSON was: %s",
         property, jsonObject);
     return asLong;

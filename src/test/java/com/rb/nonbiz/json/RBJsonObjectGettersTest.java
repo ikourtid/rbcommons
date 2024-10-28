@@ -264,6 +264,15 @@ public class RBJsonObjectGettersTest {
   }
 
   @Test
+  public void getJsonLongOrThrow_doesNotThrowIfNumberHasDecimalsButIsRound() {
+    long tooBigForInt = 11_234_567_890L;
+    JsonObject jsonObject = JsonParser.parseString("{'x': 11234567890.0 }")
+        .getAsJsonObject();
+    assertEquals(tooBigForInt, getJsonLongOrThrow(jsonObject, "x"));
+    assertEquals(tooBigForInt, getJsonLongWithoutOverflowCheckOrThrow(jsonObject, "x"));
+  }
+
+  @Test
   public void test_getJsonNumberOrThrow() {
     JsonObject jsonObject = jsonObject(
         "notANumber", jsonString("xyz"),
