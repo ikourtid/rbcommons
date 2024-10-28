@@ -10,7 +10,11 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
+import static com.rb.nonbiz.testmatchers.RBRangeMatchers.bigDecimalRangeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
+import static java.util.function.UnaryOperator.identity;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<LowerAndUpperBoundsFinder> {
@@ -103,7 +107,7 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
 
     // use f(x) = x
     Range<BigDecimal> doesNotThrow;
-   doesNotThrow = maker.apply(x -> x.doubleValue());
+    doesNotThrow = maker.apply(x -> x.doubleValue());
 
     // use f(x) = 1e-9 * x
     doesNotThrow = maker.apply(x -> 1e-9 * x.doubleValue());
@@ -179,6 +183,53 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
           INCREASE_UPPER_BOUND_BY_DOUBLING,
           tooFewMaxIterationsToFindBounds));
     }
+  }
+
+  @Test
+  public void cornerCase_cannotGoLower_butStartingOnTarget_returnsValue() {
+    int maxIterations = 10;
+    
+    // The lower bound is already on target, but the upper bound isn't.
+    assertThat(
+        makeRealObject().findLowerAndUpperBounds(
+            EVALUATE_INPUT_TO_SQUARE,
+            BigDecimal.ONE,
+            STARTING_UPPER_BOUND_FOR_SEARCH_TWO,
+            1.0,
+            identity(), // this says we can't decrease the lower bound.
+            INCREASE_UPPER_BOUND_BY_DOUBLING,
+            maxIterations),
+        bigDecimalRangeMatcher(
+            Range.closed(BigDecimal.ONE, STARTING_UPPER_BOUND_FOR_SEARCH_TWO),
+            DEFAULT_EPSILON_1e_8));
+
+    // The upper bound is already on target, but the lower bound isn't.
+    assertThat(
+        makeRealObject().findLowerAndUpperBounds(
+            EVALUATE_INPUT_TO_SQUARE,
+            STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
+            BigDecimal.ONE,
+            1.0,
+            REDUCE_LOWER_BOUND_BY_HALVING,
+            identity(), // this says we can't increase the upper bound.
+            maxIterations),
+        bigDecimalRangeMatcher(
+            Range.closed(STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF, BigDecimal.ONE),
+            DEFAULT_EPSILON_1e_8));
+
+    // and now let's try both
+    assertThat(
+        makeRealObject().findLowerAndUpperBounds(
+            EVALUATE_INPUT_TO_SQUARE,
+            BigDecimal.ONE,
+            BigDecimal.ONE,
+            1.0,
+            identity(), // this says we can't increase the lower bound.
+            identity(), // this says we can't increase the upper bound.
+            maxIterations),
+        bigDecimalRangeMatcher(
+            Range.singleton(BigDecimal.ONE),
+            DEFAULT_EPSILON_1e_8));
   }
 
   // for the case with a starting range guess [guessLower, guessUpper]
