@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.rb.nonbiz.text.Strings;
 import org.junit.Test;
 
@@ -29,6 +30,7 @@ import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
 import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonStringArray;
 import static com.rb.nonbiz.json.RBJsonArraysTest.jsonArrayExactMatcher;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.*;
+import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonLongWithoutOverflowCheckOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;
@@ -222,7 +224,16 @@ public class RBJsonObjectGettersTest {
   }
 
   @Test
-  public void getJsonNumberElementOrThrow_hugeLong() {
+  public void getJsonIntOrThrow_throwsIfOutsideIntRange() {
+    long tooBigForInt = 11_234_567_890L;
+    JsonObject jsonObject = singletonJsonObject("x", jsonLong(tooBigForInt));
+    assertIllegalArgumentException( () -> getJsonIntOrThrow(jsonObject, "x"));
+    assertEquals(tooBigForInt, getJsonLongOrThrow(jsonObject, "x"));
+    assertEquals(tooBigForInt, getJsonLongWithoutOverflowCheckOrThrow(jsonObject, "x"));
+  }
+
+  @Test
+  public void getJsonLongOrThrow_canReadHugeLongOutsideRegularIntRange() {
     // This fails if getJsonLongOrThrow were to cast it to double and then back to long.
     rbSetOf(
         9223372036854775801L,
@@ -232,10 +243,24 @@ public class RBJsonObjectGettersTest {
         9223372036854775805L,
         9223372036854775806L,
         9223372036854775807L)
-        .forEach(hugeLong ->
-            assertEquals(
-                hugeLong.longValue(),
-                getJsonLongOrThrow(singletonJsonObject("x", jsonLong(hugeLong)), "x")));
+        .forEach(hugeLong -> {
+          assertEquals(
+              hugeLong.longValue(),
+              getJsonLongOrThrow(singletonJsonObject("x", jsonLong(hugeLong)), "x"));
+          assertEquals(
+              hugeLong.longValue(),
+              getJsonLongWithoutOverflowCheckOrThrow(singletonJsonObject("x", jsonLong(hugeLong)), "x"));
+        });
+  }
+
+  @Test
+  public void getJsonLongOrThrow_throwsIfNotInsideLongRange() {
+    // as opposed to reading a number with overflow
+    JsonObject jsonObject = JsonParser.parseString("{'x': 12345678901234567890123456789012345678901234567890}")
+        .getAsJsonObject();
+    assertIllegalArgumentException( () -> getJsonLongOrThrow(jsonObject, "x"));
+    // Hard to know what the value is, because there are no overflow checks here.
+    long doesNotThrow = getJsonLongWithoutOverflowCheckOrThrow(jsonObject, "x");
   }
 
   @Test
