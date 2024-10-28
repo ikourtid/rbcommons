@@ -170,7 +170,7 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
   }
 
   @Test
-  public void upperAndLowerAreOnTarget_probablyUnintended_throws() {
+  public void upperAndLowerAreOnTarget_probablyUnintended_butValidCornerCaseWhichDoesNotThrow() {
     OnesBasedReturn expectedReturn = onesBasedReturn(doubleExplained(0.8, 1_600 / 2_000.0));
     // Here, the lower and upper bounds are set far apart, so we iterate quite a bit to get to the solution.
     assertResult(
@@ -188,14 +188,19 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
 
     // Here, the lower and upper bound are already at the solution, so no need to iterate (conceptually).
     // We used to flag it as an exception, because it is probably unintended and indicates a bug.
-    
-    // Note that we don't even need to bother running the binary search here; the BinarySearchParameters object itself
-    // will throw upon construction.
-    assertIllegalArgumentException( () -> makeBinarySearchParametersBuilder()
+    // However, that's too conservative; this is a valid scenario, even if it's a corner case.
+    assertResult(
+        makeBinarySearchParametersBuilder()
         .setLowerBoundX(expectedReturn)
         .setUpperBoundX(expectedReturn)
         .setTerminationPredicate(DEFAULT_TERMINATION_PREDICATE)
-        .build());
+        .build(),
+        v -> v
+            .setLowerBoundX(expectedReturn)
+            .setUpperBoundX(expectedReturn)
+            .setLowerBoundY(money(1_600))
+            .setUpperBoundY(money(1_600))
+            .setNumIterationsUsed(1)); // the binary search takes only 1 iteration, because we're already on target.
   }
 
   @Test

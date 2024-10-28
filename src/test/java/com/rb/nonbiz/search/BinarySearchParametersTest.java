@@ -23,7 +23,7 @@ import static java.util.Comparator.comparing;
 public class BinarySearchParametersTest extends RBTestMatcher<BinarySearchParameters<Double, String>> {
 
   @Test
-  public void lowerAndUpperBoundsSame_throws() {
+  public void lowerAndUpperBoundsInverted_throws() {
     Function<Double, BinarySearchParameters<Double, String>> maker = upperBound -> makeBuilderWithDummyLambdas()
         .setLowerBoundX(1.1)
         .setUpperBoundX(upperBound)
@@ -34,8 +34,9 @@ public class BinarySearchParametersTest extends RBTestMatcher<BinarySearchParame
     // This throws, but for a different reason: not because 1.0999999 < 1.1, but because
     // f(1.09999999) < f(1.1).
     assertIllegalArgumentException( () -> maker.apply(1.1 - 1e-9));
-    assertIllegalArgumentException( () -> maker.apply(1.1));
-    BinarySearchParameters<Double, String> doesNotThrow = maker.apply(1.1 + 1e-9);
+    BinarySearchParameters<Double, String> doesNotThrow;
+    doesNotThrow = maker.apply(1.1);
+    doesNotThrow = maker.apply(1.1 + 1e-9);
   }
 
   @Test
