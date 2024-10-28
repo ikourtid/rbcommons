@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.rb.nonbiz.util.RBPreconditions;
+import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -204,11 +205,32 @@ public class RBJsonObjectGetters {
 
   /**
    * From 'jsonObject', get the value of 'property' and check that it is a number, and that the number
-   * can be cast to a long without changing its value.
-   * If missing or is not a long, throw an exception.
-   * Return as a long.
+   * can fit inside a {@link Long}. Throws otherwise, or if the property is missing.
+   *
+   * <p> This is slightly expensive, because it converts to a {@link BigDecimal} just to check for overflow.
+   * For better performance (though less safety), use #getJsonLongWithoutOverflowCheckOrThrow </p>
    */
   public static long getJsonLongOrThrow(
+      JsonObject jsonObject,
+      String property) {
+    long asLong = getJsonNumberElementOrThrow(jsonObject, property).getAsLong();
+    RBSimilarityPreconditions.checkBothSame(
+        getJsonBigDecimalOrThrow(jsonObject, property),
+        new BigDecimal(asLong),
+        "Property %s has a number that does not fit within range of a long. JSON was: %s",
+        property, jsonObject);
+    return asLong;
+  }
+
+  /**
+   * From 'jsonObject', get the value of 'property' and check that it is a number.
+   * Throws if the property is missing.
+   * As per its name, it will not perform overflow checks, so it will not throw if the number is outside the range of a
+   * {@link Long}.
+   *
+   * @see #getJsonLongOrThrow
+   */
+  public static long getJsonLongWithoutOverflowCheckOrThrow(
       JsonObject jsonObject,
       String property) {
     return getJsonNumberElementOrThrow(jsonObject, property).getAsLong();
