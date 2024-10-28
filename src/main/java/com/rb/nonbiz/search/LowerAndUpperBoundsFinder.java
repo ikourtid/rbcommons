@@ -123,8 +123,8 @@ public class LowerAndUpperBoundsFinder {
 
     // possibly increase the upper bound
     if (comparisonUpper < 0) {
-      // The initial upper X-bound does not have a Y-value above the targetY.
-      // Keep increasing upperBoundY until we get a Y above targetY, i.e. it becomes a real upper bound.
+      // The initial upper X-bound has a Y-value below the targetY.
+      // Keep increasing upperBoundY until we get a Y above (or at) targetY, i.e. it becomes a real upper bound.
       int iIteration = 0;
       while (iIteration < maxIterations) {
         upperBoundX = increaseUpperBound.apply(upperBoundX);
