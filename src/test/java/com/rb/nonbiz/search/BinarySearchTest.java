@@ -186,8 +186,9 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
             .setUpperBoundY(money(1_600))
             .setNumIterationsUsed(31)); // the binary search happens to take 31 iterations here.
 
-    // Here, the lower and upper bound are already at the solution, so no need to iterate (conceptually),
-    // but we flag it as an exception, because it is probably unintended and indicates a bug.
+    // Here, the lower and upper bound are already at the solution, so no need to iterate (conceptually).
+    // We used to flag it as an exception, because it is probably unintended and indicates a bug.
+    
     // Note that we don't even need to bother running the binary search here; the BinarySearchParameters object itself
     // will throw upon construction.
     assertIllegalArgumentException( () -> makeBinarySearchParametersBuilder()

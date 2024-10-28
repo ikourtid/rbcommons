@@ -180,8 +180,9 @@ public class BinarySearchParameters<X, Y> {
       Y lowerValue = evaluatorOfX.apply(lowerBoundX);
       Y upperValue = evaluatorOfX.apply(upperBoundX);
       RBPreconditions.checkArgument(
-          comparatorForX.compare(lowerBoundX, upperBoundX) != 0,
-          "lower and upper bounds for X may be inverted; can also be ==, but that probably indicates a problem : %s and %s",
+          // can also be == ; that probably indicates a problem, but it's too conservative to throw an exception for.
+          comparatorForX.compare(lowerBoundX, upperBoundX) <= 0,
+          "lower and upper bounds for X may not be inverted : %s and %s",
           lowerBoundX, upperBoundX);
       RBPreconditions.checkArgument(
           comparatorForY.compare(lowerValue, targetY) <= 0,
