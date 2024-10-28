@@ -95,9 +95,9 @@ public class LowerAndUpperBoundsFinder {
     X upperBoundX = startingPointForSearchUpper;
 
     // possibly reduce the lower bound
-    if (comparisonLower >= 0) {
-      // The initial lower X-bound does not have a Y-value below the targetY.
-      // Keep reducing lowerBoundX until we get a Y below targetY, i.e. it becomes a real lower bound.
+    if (comparisonLower > 0) {
+      // The initial lower X-bound has a Y-value above the targetY.
+      // Keep reducing lowerBoundX until we get a Y below or at targetY, i.e. it becomes a real lower bound.
       int iIteration = 0;
       while (iIteration < maxIterations) {
         lowerBoundX = reduceLowerBound.apply(lowerBoundX);
@@ -108,7 +108,7 @@ public class LowerAndUpperBoundsFinder {
             lowerBoundYPrev.compareTo(lowerBoundY) >= 0,
             "new lowerBoundY %s must not be greater than previous lowerBoundY %s",
             lowerBoundY, lowerBoundYPrev);
-        if (lowerBoundY.compareTo(targetY) < 0) {
+        if (lowerBoundY.compareTo(targetY) <= 0) {
           break;
         }
         iIteration++;
@@ -122,7 +122,7 @@ public class LowerAndUpperBoundsFinder {
     }
 
     // possibly increase the upper bound
-    if (comparisonUpper <= 0) {
+    if (comparisonUpper < 0) {
       // The initial upper X-bound does not have a Y-value above the targetY.
       // Keep increasing upperBoundY until we get a Y above targetY, i.e. it becomes a real upper bound.
       int iIteration = 0;
@@ -135,7 +135,7 @@ public class LowerAndUpperBoundsFinder {
             yUpperBoundPrev.compareTo(upperBoundY) <= 0,
             "new upperBoundY %s must not be less than previous upperBoundY %s",
             upperBoundY, yUpperBoundPrev);
-        if (upperBoundY.compareTo(targetY) > 0) {
+        if (upperBoundY.compareTo(targetY) >= 0) {
           break;
         }
         iIteration++;

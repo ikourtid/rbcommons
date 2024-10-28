@@ -74,8 +74,8 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
         MAX_ITERATIONS);
     double valueAtLower = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.lowerEndpoint());
     double valueAtUpper = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.upperEndpoint());
-    assertTrue(valueAtLower < target);
-    assertTrue(valueAtUpper > target);
+    assertTrue(valueAtLower <= target);
+    assertTrue(valueAtUpper >= target);
   }
 
   // for the case of a starting range of guesses [lowerBound, upperBound]
@@ -186,7 +186,7 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
   }
 
   @Test
-  public void cornerCase_cannotGoLower_butStartingOnTarget_returnsValue() {
+  public void cornerCase_exactlyOnTarget_returnsValue() {
     int maxIterations = 10;
     
     // The lower bound is already on target, but the upper bound isn't.
