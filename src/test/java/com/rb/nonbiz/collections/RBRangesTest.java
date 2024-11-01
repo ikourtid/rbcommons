@@ -140,6 +140,17 @@ public class RBRangesTest {
   }
 
   @Test
+  public void testRangeIsSingleton() {
+    assertTrue(rangeIsSingleton(Range.singleton(7)));
+    assertTrue(rangeIsSingleton(Range.singleton(7.0 - 1e-9)));
+    assertTrue(rangeIsSingleton(Range.singleton(7.0)));
+    assertTrue(rangeIsSingleton(Range.singleton(7.0 + 1e-9)));
+
+    allNonEmptyOrSingletonRanges(-1.1, 3.3).forEach(range -> assertFalse(rangeIsSingleton(range)));
+    allNonEmptyOrSingletonRanges(-1, 3).forEach(range -> assertFalse(rangeIsSingleton(range)));
+  }
+
+  @Test
   public void testClosedDoubleRangeEpsilonContains_zeroEpsilon() {
     Epsilon e = ZERO_EPSILON;
     assertFalse(closedDoubleRangeEpsilonContains(closedRange(7.0, 8.0), 7 - 1e-9, e));
