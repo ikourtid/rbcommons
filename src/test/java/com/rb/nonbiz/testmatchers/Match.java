@@ -160,6 +160,11 @@ public class Match<T, F> {
     return match(listFieldExtractor, f -> orderedListMatcher(f, listItemMatcherGenerator));
   }
 
+  public static <T, V> Match<T, Optional<List<V>>> matchOptionalList(
+      Function<T, Optional<List<V>>> listFieldExtractor, MatcherGenerator<V> listItemMatcherGenerator) {
+    return matchOptional(listFieldExtractor, f -> orderedListMatcher(f, listItemMatcherGenerator));
+  }
+
   public static <T> Match<T, List<Double>> matchDoubleList(
       Function<T, List<Double>> listFieldExtractor, Epsilon epsilon) {
     return match(listFieldExtractor, f -> orderedListMatcher(f, f2 -> doubleAlmostEqualsMatcher(f2, epsilon)));
