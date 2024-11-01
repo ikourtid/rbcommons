@@ -147,6 +147,10 @@ public class RBRanges {
         && epsilon.valuesAreWithin(range.lowerEndpoint().doubleValue(), value.doubleValue());
   }
 
+  public static <C extends Comparable<? super C>> boolean rangeIsSingleton(Range<C> range) {
+    return rangeIsClosed(range) && range.upperEndpoint().equals(range.lowerEndpoint());
+  }
+
   public static <C extends Comparable<? super C>> boolean rangeIsUnrestricted(Range<C> range) {
     return !range.hasUpperBound() && !range.hasLowerBound();
   }
