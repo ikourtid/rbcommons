@@ -14,11 +14,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.collections.RBIterables.consecutiveNonOverlappingPairs;
@@ -276,6 +278,36 @@ public class RBStreams {
     // This works because add returns true if the item didn't already exist
     Set<T> items = Sets.newHashSet();
     return stream.allMatch(item -> items.add(item));
+  }
+
+  // FIXME IAK comment and test
+  public static <T, F> Optional<T> findFirstNonUniqueStreamItem(Stream<T> stream, Function<T, F> uniquenessFieldExtractor) {
+    // This works because add returns true if the item didn't already exist
+    Set<F> items = Sets.newHashSet();
+    Iterator<T> iter = stream.iterator();
+    while (iter.hasNext()) {
+      T item = iter.next();
+      boolean isUnique = items.add(uniquenessFieldExtractor.apply(item));
+      if (!isUnique) {
+        return Optional.of(item);
+      }
+    }
+    return Optional.empty();
+  }
+
+  public static <T, F> List<T> findDuplicateStreamItems(Stream<T> stream, Function<T, F> uniquenessKeyExtractor) {
+    // This works because add returns true if the item didn't already exist
+    Set<F> itemKeys = Sets.newHashSet();
+    List<T> duplicateItems = newArrayList();
+    Iterator<T> iter = stream.iterator();
+    while (iter.hasNext()) {
+      T item = iter.next();
+      boolean isUnique = itemKeys.add(uniquenessKeyExtractor.apply(item));
+      if (!isUnique) {
+        duplicateItems.add(item);
+      }
+    }
+    return duplicateItems;
   }
 
   /**
