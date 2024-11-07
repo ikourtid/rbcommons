@@ -15,16 +15,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.Stream.Builder;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.collections.RBIterables.consecutiveNonOverlappingPairs;
 import static com.rb.nonbiz.collections.RBIterables.consecutivePairs;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 
 /**
  * Various static utilities pertaining to Java 8 streams.
@@ -295,19 +296,10 @@ public class RBStreams {
     return Optional.empty();
   }
 
-  public static <T, F> List<T> findDuplicateStreamItems(Stream<T> stream, Function<T, F> uniquenessKeyExtractor) {
+  public static <T, F> RBMap<F, List<T>> findDuplicateStreamItems(Stream<T> stream, Function<T, F> uniquenessKeyExtractor) {
     // This works because add returns true if the item didn't already exist
-    Set<F> itemKeys = Sets.newHashSet();
-    List<T> duplicateItems = newArrayList();
-    Iterator<T> iter = stream.iterator();
-    while (iter.hasNext()) {
-      T item = iter.next();
-      boolean isUnique = itemKeys.add(uniquenessKeyExtractor.apply(item));
-      if (!isUnique) {
-        duplicateItems.add(item);
-      }
-    }
-    return duplicateItems;
+    return newRBMap(stream.collect(Collectors.groupingBy(uniquenessKeyExtractor)))
+        .filterValues(list -> list.size() >= 2);
   }
 
   /**
