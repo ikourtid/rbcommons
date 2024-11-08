@@ -36,6 +36,37 @@ public class IidMapVisitors {
 
   }
 
+
+  /**
+   * This is useful in cases where we only care about the cases where an instrument appears in both maps.
+   */
+  public static class TwoIidMapsOverlapOnlyVisitor<VL, VR> implements TwoIidMapsVisitor<VL, VR> {
+
+    private final TriConsumer<InstrumentId, VL, VR> visitOverlap;
+
+    private TwoIidMapsOverlapOnlyVisitor(TriConsumer<InstrumentId, VL, VR> visitOverlap) {
+      this.visitOverlap = visitOverlap;
+    }
+
+    public static <VL, VR> TwoIidMapsOverlapOnlyVisitor<VL, VR> twoIidMapsOverlapOnlyVisitor(
+        TriConsumer<InstrumentId, VL, VR> visitOverlap) {
+      return new TwoIidMapsOverlapOnlyVisitor<>(visitOverlap);
+    }
+
+    @Override
+    public void visitInstrumentInLeftMapOnly(InstrumentId keyInLeftMapOnly, VL valueInLeftMapOnly) {}
+
+    @Override
+    public void visitInstrumentInRightMapOnly(InstrumentId keyInRightMapOnly, VR valueInRightMapOnly) {}
+
+    @Override
+    public void visitInstrumentInBothMaps(InstrumentId keyInBothMaps, VL valueInLeftMap, VR valueInRightMap) {
+      visitOverlap.accept(keyInBothMaps, valueInLeftMap, valueInRightMap);
+    }
+  }
+
+
+
   /**
    * Useful when you are iterating a set and a map, and want to cleanly separate out the behavior when an instrument
    * appears only on the left set, only on the right map, or in both places.
@@ -57,7 +88,7 @@ public class IidMapVisitors {
    * When you have 2 IidMaps, this lets you perform 3 different actions for items that are only in the left map,
    * only in the right map, or in both maps.
    *
-   * It lets you specify a bit more cleanly (via the TwoIidMapsVisitor) what to do in those 3 different cases.
+   * <p> It lets you specify a bit more cleanly (via the TwoIidMapsVisitor) what to do in those 3 different cases. </p>
    *
    * @see RBMapVisitors#visitItemsOfTwoRBMaps
    */
