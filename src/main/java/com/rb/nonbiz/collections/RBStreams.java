@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -23,6 +25,7 @@ import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONT
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.collections.RBIterables.consecutiveNonOverlappingPairs;
 import static com.rb.nonbiz.collections.RBIterables.consecutivePairs;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.newRBMap;
 
 /**
  * Various static utilities pertaining to Java 8 streams.
@@ -276,6 +279,49 @@ public class RBStreams {
     // This works because add returns true if the item didn't already exist
     Set<T> items = Sets.newHashSet();
     return stream.allMatch(item -> items.add(item));
+  }
+
+  /**
+   * Returns the first item we encounter that is non-unique (out of possibly many) in the stream passed in.
+   *
+   * <p> Uniqueness is determined not by running equals on the stream item, but on a field of the
+   * item that we extract (e.g. some numeric ID), based on the extractor lambda passed in. </p>
+   *
+   * <p> Note that we didn't say 'returns the first non-unique item'. If the stream has items X1, Y1, X2, X3,
+   * and uniqueness is determined e.g. by the first letter, then this will return X2, not X1. </p>
+   *
+   * @param <T> The datatype of the item
+   * @param <F> The datatype of the field of the item that comparison is based on
+   */
+  public static <T, F> Optional<T> findFirstNonUniqueItemEncountered(
+      Stream<T> stream,
+      Function<T, F> uniquenessFieldExtractor) {
+    // This works because add returns true if the item didn't already exist
+    Set<F> items = Sets.newHashSet();
+    Iterator<T> iter = stream.iterator();
+    while (iter.hasNext()) {
+      T item = iter.next();
+      boolean isUnique = items.add(uniquenessFieldExtractor.apply(item));
+      if (!isUnique) {
+        return Optional.of(item);
+      }
+    }
+    return Optional.empty();
+  }
+
+  /**
+   * For any items whose key appears more than once (with the key determined by a supplied lambda),
+   * returns those items in a map, grouped by their key, whose values are the list of all items that share that key.
+   *
+   * @param <T> The datatype of the item
+   * @param <F> The datatype of the field of the item that comparison is based on
+   */
+  public static <T, F> RBMap<F, List<T>> findDuplicateStreamItems(
+      Stream<T> stream,
+      Function<T, F> uniquenessKeyExtractor) {
+    // This works because add returns true if the item didn't already exist
+    return newRBMap(stream.collect(Collectors.groupingBy(uniquenessKeyExtractor)))
+        .filterValues(list -> list.size() >= 2);
   }
 
   /**

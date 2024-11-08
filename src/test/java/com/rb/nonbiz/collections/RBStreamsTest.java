@@ -19,18 +19,25 @@ import java.util.stream.Stream;
 
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.SignedMoney.signedMoney;
+import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.collections.PairOfSameTypeTest.pairOfSameTypeMatcher;
+import static com.rb.nonbiz.collections.PairTest.pairEqualityMatcher;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
+import static com.rb.nonbiz.collections.RBMapSimpleConstructors.singletonRBMap;
 import static com.rb.nonbiz.collections.RBSet.emptyRBSet;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.RBSet.singletonRBSet;
 import static com.rb.nonbiz.collections.RBStreams.*;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
+import static com.rb.nonbiz.testmatchers.RBMapMatchers.rbMapMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_BOOLEAN;
 import static com.rb.nonbiz.testutils.RBTest.DUMMY_POSITIVE_INTEGER;
@@ -285,6 +292,89 @@ public class RBStreamsTest {
     assertTrue(streamItemsAreUnique(Stream.of("a", "b")));
     assertFalse(streamItemsAreUnique(Stream.of("a", "a")));
     assertFalse(streamItemsAreUnique(Stream.of("a", "b", "a")));
+  }
+
+  @Test
+  public void testFindFirstNonUniqueItemEncountered() {
+    rbSetOf(
+        Stream.<Pair<String, Double>>empty(),
+        Stream.of(pair("a", 0.11)),
+        Stream.of(pair("a", 0.11), pair("b", 0.11)),
+        Stream.of(pair("a", 0.11), pair("b", 0.22)))
+        .forEach(stream ->
+            assertOptionalEmpty(findFirstNonUniqueItemEncountered(stream, v -> v.getLeft())));
+
+    // One of the points of this test is that the double value doesn't matter for determining uniqueness.
+    // Also, it's always the 2nd non-unique instance being returned, not the first.
+    rbSetOf(
+        Stream.of(pair("a", 0.11), pair("a", 0.11)),
+        Stream.of(pair("a", 0.22), pair("a", 0.11)),
+        Stream.of(pair("a", 0.11), pair("b", 0.11), pair("a", 0.11)),
+        Stream.of(pair("a", 0.22), pair("b", 0.11), pair("a", 0.11)),
+        Stream.of(pair("a", 0.22), pair("b", 0.22), pair("a", 0.11)),
+        Stream.of(pair("x", 0.11), pair("a", 0.11), pair("a", 0.11), pair("a", 0.11)),
+        Stream.of(pair("x", 0.11), pair("a", 0.22), pair("a", 0.11)),
+        Stream.of(pair("x", 0.11), pair("a", 0.11), pair("b", 0.11), pair("a", 0.11)),
+        Stream.of(pair("x", 0.11), pair("a", 0.22), pair("b", 0.11), pair("a", 0.11)),
+        Stream.of(pair("x", 0.11), pair("a", 0.22), pair("b", 0.22), pair("a", 0.11)))
+        .forEach(stream ->
+            assertOptionalNonEmpty(
+                findFirstNonUniqueItemEncountered(stream, v -> v.getLeft()),
+                pairEqualityMatcher(pair("a", 0.11))));
+  }
+
+  @Test
+  public void testFindDuplicateStreamItems() {
+    rbSetOf(
+        Stream.<Pair<String, Double>>empty(),
+        Stream.of(pair("a", 0.11)),
+        Stream.of(pair("a", 0.11), pair("b", 0.11)),
+        Stream.of(pair("a", 0.11), pair("b", 0.22)))
+        .forEach(stream ->
+            assertTrue(findDuplicateStreamItems(stream, v -> v.getLeft()).isEmpty()));
+
+    // This set of test cases is relatively simple, but we might as well duplicate the content of the previous test.
+    BiConsumer<Stream<Pair<String, Double>>, RBMap<String, List<Pair<String, Double>>>> asserter =
+        (stream, expectedDuplicatesMap) ->
+            assertThat(
+                findDuplicateStreamItems(stream, v -> v.getLeft()),
+                rbMapMatcher(
+                    expectedDuplicatesMap,
+                    f -> orderedListEqualityMatcher(f)));
+
+    rbSetOf(
+        Stream.of(pair("a", 0.11), pair("a", 0.11)),
+        Stream.of(pair("a", 0.11), pair("b", 0.11), pair("a", 0.11)),
+        Stream.of(pair("x", 0.11), pair("a", 0.11), pair("b", 0.11), pair("a", 0.11)))
+        .forEach(stream ->
+            asserter.accept(
+                stream,
+                singletonRBMap("a", ImmutableList.of(pair("a", 0.11), pair("a", 0.11)))));
+
+    rbSetOf(
+        Stream.of(pair("a", 0.22), pair("a", 0.11)),
+        Stream.of(pair("a", 0.22), pair("b", 0.11), pair("a", 0.11)),
+        Stream.of(pair("a", 0.22), pair("b", 0.22), pair("a", 0.11)),
+        Stream.of(pair("x", 0.11), pair("a", 0.22), pair("a", 0.11)),
+        Stream.of(pair("x", 0.11), pair("a", 0.22), pair("b", 0.11), pair("a", 0.11)),
+        Stream.of(pair("x", 0.11), pair("a", 0.22), pair("b", 0.22), pair("a", 0.11)))
+        .forEach(stream ->
+            asserter.accept(
+                stream,
+                singletonRBMap("a", ImmutableList.of(pair("a", 0.22), pair("a", 0.11)))));
+
+    // Finally, a very general case
+    asserter.accept(
+        Stream.of(
+            pair("a", 0.11),
+            pair("b", 0.33),
+            pair("a", 0.11),
+            pair("b", 0.44),
+            pair("a", 0.22),
+            pair("x", 0.55)),
+        rbMapOf(
+            "a", ImmutableList.of(pair("a", 0.11), pair("a", 0.11), pair("a", 0.22)),
+            "b", ImmutableList.of(pair("b", 0.33), pair("b", 0.44))));
   }
 
   @Test
