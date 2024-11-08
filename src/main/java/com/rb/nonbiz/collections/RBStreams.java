@@ -282,7 +282,7 @@ public class RBStreams {
   }
 
   /**
-   * Returns the item we encounter that is non-unique (out of possibly many) in the stream passed in.
+   * Returns the first item we encounter that is non-unique (out of possibly many) in the stream passed in.
    *
    * <p> Uniqueness is determined not by running equals on the stream item, but on a field of the
    * item that we extract (e.g. some numeric ID), based on the extractor lambda passed in. </p>
