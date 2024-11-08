@@ -281,8 +281,21 @@ public class RBStreams {
     return stream.allMatch(item -> items.add(item));
   }
 
-  // FIXME IAK comment and test
-  public static <T, F> Optional<T> findFirstNonUniqueStreamItem(Stream<T> stream, Function<T, F> uniquenessFieldExtractor) {
+  /**
+   * Returns the item we encounter that is non-unique (out of possibly many) in the stream passed in.
+   *
+   * <p> Uniqueness is determined not by running equals on the stream item, but on a field of the
+   * item that we extract (e.g. some numeric ID), based on the extractor lambda passed in. </p>
+   *
+   * <p> Note that we didn't say 'returns the first non-unique item'. If the stream has items X1, Y1, X2, X3,
+   * and uniqueness is determined e.g. by the first letter, then this will return X2, not X1. </p>
+   *
+   * @param <T> The datatype of the item
+   * @param <F> The datatype of the field of the item that comparison is based on
+   */
+  public static <T, F> Optional<T> findFirstNonUniqueItemEncountered(
+      Stream<T> stream,
+      Function<T, F> uniquenessFieldExtractor) {
     // This works because add returns true if the item didn't already exist
     Set<F> items = Sets.newHashSet();
     Iterator<T> iter = stream.iterator();
@@ -296,7 +309,16 @@ public class RBStreams {
     return Optional.empty();
   }
 
-  public static <T, F> RBMap<F, List<T>> findDuplicateStreamItems(Stream<T> stream, Function<T, F> uniquenessKeyExtractor) {
+  /**
+   * For any items whose key appears more than once (with the key determined by a supplied lambda),
+   * returns those items in a map, grouped by their key, whose values are the list of all items that share that key.
+   *
+   * @param <T> The datatype of the item
+   * @param <F> The datatype of the field of the item that comparison is based on
+   */
+  public static <T, F> RBMap<F, List<T>> findDuplicateStreamItems(
+      Stream<T> stream,
+      Function<T, F> uniquenessKeyExtractor) {
     // This works because add returns true if the item didn't already exist
     return newRBMap(stream.collect(Collectors.groupingBy(uniquenessKeyExtractor)))
         .filterValues(list -> list.size() >= 2);
