@@ -428,7 +428,7 @@ public class RBLists {
    * (e.g. some numeric ID) does.
    *
    * <p> This is a limitation on {@link Stream#distinct()}. Our implementation here requires creating an
-   * intermediate list, so it's perhaps less efficient than a stream. </p>
+   * intermediate list, so it's perhaps less efficient than a stream, but it gets around that limitation. </p>
    *
    * @param <T> the datatype of the list item
    * @param <F> the datatype of the field of the list item that will decide 'distinctness'.
