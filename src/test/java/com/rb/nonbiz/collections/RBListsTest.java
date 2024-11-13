@@ -22,6 +22,8 @@ import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.PairTest.pairEqualityMatcher;
 import static com.rb.nonbiz.collections.RBLists.*;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
+import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVector;
+import static com.rb.nonbiz.math.vectorspaces.RBVectorTest.rbVectorMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
@@ -42,6 +44,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 public class RBListsTest {
 
@@ -591,6 +594,30 @@ public class RBListsTest {
     assertOptionalIntEquals(1, findFirstWhere(ImmutableList.of(32, 33, 34, 35, 36, 37), multipleOf3));
     assertOptionalIntEquals(4,  findLastWhere(ImmutableList.of(32, 33, 34, 35, 36, 37), multipleOf3));
 
+  }
+
+  @Test
+  public void testDistinctOnField() {
+    // Confirming that RBVector does not implement a non-trivial equals; it's effectively a pointer comparison.
+    assertNotEquals(rbVector(7, 8, 9), rbVector(7, 8, 9));
+
+    assertThat(
+        distinctOnField(
+            ImmutableList.of(
+                rbVector(1, 6),
+                rbVector(2, 7),
+                rbVector(1, 8),
+                rbVector(1, 9)),
+            v -> v.get(0), // uniqueness/distinctness is determined by the 1st coordinate (1 or 2 here)
+            (v1, v2) -> rbVector(
+                // If there's more than one 'non-distinct' vector (based on the 1st coordinate), we return the sum
+                v1.get(0),
+                v1.get(1) + v2.get(1))),
+        orderedListMatcher(
+            ImmutableList.of(
+                rbVector(1, 6 + 8 + 9),
+                rbVector(2, 7)),
+            f -> rbVectorMatcher(f)));
   }
 
 }

@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newArrayListWithCapacity;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
+import static com.rb.nonbiz.collections.MutableRBMap.newMutableRBMap;
 import static com.rb.nonbiz.collections.Pair.pair;
 import static com.rb.nonbiz.collections.RBComparators.composeComparators;
 import static com.rb.nonbiz.collections.RBIterators.getFirstNonUniqueIteratorItem;
@@ -30,6 +31,7 @@ import static com.rb.nonbiz.collections.RBSet.newRBSet;
 import static com.rb.nonbiz.collections.RBStreams.pasteIntoStream;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Comparator.comparing;
+import static java.util.Map.Entry.comparingByKey;
 
 /**
  * Various static methods pertaining to {@link List} objects.
@@ -416,6 +418,34 @@ public class RBLists {
         .map(i -> list.size() - 1 - i)
         .filter(i -> predicate.test(list.get(i)))
         .findFirst();
+  }
+
+
+  /**
+   * Returns a list that only keeps distinct / unique items, but with uniqueness being determined not by using
+   * equals() on the list items, but on a field to be extracted from each list item. This is particularly useful
+   * when the list items don't implement a non-trivial (i.e. non-Java-default) equals() method, but one of the fields
+   * (e.g. some numeric ID) does.
+   *
+   * <p> This is a limitation on {@link Stream#distinct()}. Our implementation here requires creating an
+   * intermediate list, so it's perhaps less efficient than a stream, but it gets around that limitation. </p>
+   *
+   * @param <T> the datatype of the list item
+   * @param <F> the datatype of the field of the list item that will decide 'distinctness'.
+   */
+  public static <T, F extends Comparable<? super F>> List<T> distinctOnField(
+      List<T> list,
+      Function<T, F> fieldExtractor,
+      BinaryOperator<T> mergeWhenSameField) {
+    MutableRBMap<F, T> distinctItems = newMutableRBMap();
+
+    list.forEach(item -> distinctItems.putOrModifyExisting(
+        fieldExtractor.apply(item), item, mergeWhenSameField));
+    return distinctItems.entrySet()
+        .stream()
+        .sorted(comparingByKey())
+        .map(v -> v.getValue())
+        .collect(Collectors.toList());
   }
 
 }
