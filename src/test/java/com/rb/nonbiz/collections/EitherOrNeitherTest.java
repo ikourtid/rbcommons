@@ -20,9 +20,12 @@ import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatch
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This test class is not generic, but the publicly exposed matcher is.
@@ -51,6 +54,13 @@ public class EitherOrNeitherTest extends RBTestMatcher<EitherOrNeither<UnitFract
     assertThat(
         eitherOrNeitherFromOptionalEither(Optional.of(Either.right(money(2.2)))),
         eitherOrNeitherMatcher(EitherOrNeither.right(money(2.2)), leftMatcher, rightMatcher));
+  }
+
+  @Test
+  public void testHasNeither() {
+    assertTrue(neither().hasNeither());
+    assertFalse(EitherOrNeither.left(DUMMY_STRING).hasNeither());
+    assertFalse(EitherOrNeither.right(DUMMY_STRING).hasNeither());
   }
 
   @Override
