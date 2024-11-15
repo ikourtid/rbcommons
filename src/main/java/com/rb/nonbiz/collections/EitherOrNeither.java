@@ -71,6 +71,11 @@ public class EitherOrNeither<L, R> {
     return right;
   }
 
+  public boolean hasNeither() {
+    return !left.isPresent() && !right.isPresent();
+  }
+
+
   public interface EitherOrNeitherVisitor<L, R, T> {
 
     T visitLeft(L left);
