@@ -76,7 +76,7 @@ public class LowerBoundFinderTest extends RBTest<LowerBoundFinder> {
         makeTestObject().findPossiblyReducedLowerBound(
             EVALUATE_INPUT_TO_SQUARE,
             STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
-            -12.34, // must be low
+            -12.34, // must be low so we won't just terminate without entering the loop
             lowerBoundReducer,
             MAX_ITERATIONS);
 

@@ -61,7 +61,7 @@ public class UpperBoundFinderTest extends RBTest<UpperBoundFinder> {
         makeTestObject().findPossiblyIncreasedUpperBound(
             EVALUATE_INPUT_TO_SQUARE,
             STARTING_UPPER_BOUND_FOR_SEARCH_TWO,
-            1.234,
+            12.34, // must be high so we won't just terminate without entering the loop
             upperBoundIncreaser,
             MAX_ITERATIONS);
 
