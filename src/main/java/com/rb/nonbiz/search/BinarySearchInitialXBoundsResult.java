@@ -1,7 +1,6 @@
 package com.rb.nonbiz.search;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Range;
 import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.OneOf3;
 import com.rb.nonbiz.text.Strings;
@@ -36,7 +35,7 @@ import static com.rb.nonbiz.collections.OneOf3.only3rdOf3;
  * This code is too low-level to know what counts as 'close enough'. Therefore, here we will just flag
  * those special cases, and the caller can decide. </p>
  */
-public class BinarySearchXBoundsResult<X extends Comparable<? super X>> {
+public class BinarySearchInitialXBoundsResult<X extends Comparable<? super X>> {
 
   public interface Visitor<T, X extends Comparable<? super X>> {
 
@@ -48,24 +47,24 @@ public class BinarySearchXBoundsResult<X extends Comparable<? super X>> {
 
   private final OneOf3<ClosedRange<X>, X, X> rawOneOf3;
 
-  public BinarySearchXBoundsResult(
+  public BinarySearchInitialXBoundsResult(
       OneOf3<ClosedRange<X>, X, X> rawOneOf3) {
     this.rawOneOf3 = rawOneOf3;
   }
 
-  public static <X extends Comparable<? super X>> BinarySearchXBoundsResult<X> binarySearchBoundsCanBracketTargetY(
+  public static <X extends Comparable<? super X>> BinarySearchInitialXBoundsResult<X> binarySearchBoundsCanBracketTargetY(
       ClosedRange<X> lowerAndUpperBounds) {
-    return new BinarySearchXBoundsResult<>(only1stOf3(lowerAndUpperBounds));
+    return new BinarySearchInitialXBoundsResult<>(only1stOf3(lowerAndUpperBounds));
   }
 
-  public static <X extends Comparable<? super X>> BinarySearchXBoundsResult<X> xUpperBoundEvaluatesToBelowTargetY(
+  public static <X extends Comparable<? super X>> BinarySearchInitialXBoundsResult<X> xUpperBoundEvaluatesToBelowTargetY(
       X highestPossibleUpperBound) {
-    return new BinarySearchXBoundsResult<>(only2ndOf3(highestPossibleUpperBound));
+    return new BinarySearchInitialXBoundsResult<>(only2ndOf3(highestPossibleUpperBound));
   }
 
-  public static <X extends Comparable<? super X>> BinarySearchXBoundsResult<X> xLowerBoundEvaluatesToAboveTargetY(
+  public static <X extends Comparable<? super X>> BinarySearchInitialXBoundsResult<X> xLowerBoundEvaluatesToAboveTargetY(
       X lowestPossibleLowerBound) {
-    return new BinarySearchXBoundsResult<>(only3rdOf3(lowestPossibleLowerBound));
+    return new BinarySearchInitialXBoundsResult<>(only3rdOf3(lowestPossibleLowerBound));
   }
 
   public <T> T visit(Visitor<T, X> visitor) {
@@ -97,7 +96,7 @@ public class BinarySearchXBoundsResult<X extends Comparable<? super X>> {
 
   @Override
   public String toString() {
-    return Strings.format("[BSXBR %s BSXBR]", visit(new Visitor<String, X>() {
+    return Strings.format("[BSIXBR %s BSIXBR]", visit(new Visitor<String, X>() {
       @Override
       public String visitXBoundsCanBracketTargetY(ClosedRange<X> lowerAndUpperBounds) {
         return Strings.format("XBoundsCanBracketTargetY: %s", Strings.formatRange(lowerAndUpperBounds.asRange()));
