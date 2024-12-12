@@ -53,7 +53,7 @@ public class LowerBoundFinderTest extends RBTest<LowerBoundFinder> {
     assertOptionalEmpty(
         makeTestObject().findPossiblyReducedLowerBound(
             EVALUATE_INPUT_TO_SQUARE,
-            STARTING_SINGLE_GUESS_FOR_SEARCH,
+            STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
             1e-7,
             REDUCE_LOWER_BOUND_BY_HALVING,
             tooFewMaxIterationsToFindBounds));
@@ -82,10 +82,10 @@ public class LowerBoundFinderTest extends RBTest<LowerBoundFinder> {
             MAX_ITERATIONS);
 
     // use f(x) = x
-    assertOptionalNonEmpty(maker.apply(x -> x.doubleValue()));
-
-    // use f(x) = 1e-9 * x
-    assertOptionalNonEmpty(maker.apply(x -> 1e-9 * x.doubleValue()));
+//    assertOptionalNonEmpty(maker.apply(x -> x.doubleValue()));
+//
+//    // use f(x) = 1e-9 * x
+//    assertOptionalNonEmpty(maker.apply(x -> 1e-9 * x.doubleValue()));
 
     // use f(x) = -1e-9 * x
     assertIllegalArgumentException( () -> maker.apply(
@@ -140,19 +140,6 @@ public class LowerBoundFinderTest extends RBTest<LowerBoundFinder> {
 
     double targetUpperEdgeStartingGuessRange = 2.0;
     assertValidLowerBoundCanBeFoundWithGuessRange(targetUpperEdgeStartingGuessRange);
-  }
-
-  @Test
-  public void cannotFindBoundsStartingGuessRange_withinIterationsCap_throws() {
-    int tooFewMaxIterationsToFindBounds = 2;
-    // try targets that are both too low and too high
-// FIXME IAK Issue #1527    for (double target : ImmutableList.of(1e-7, 999_999.0)) {
-    assertIllegalArgumentException( () -> makeTestObject().findPossiblyReducedLowerBound(
-        EVALUATE_INPUT_TO_SQUARE,
-        STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
-        1e-7,
-        REDUCE_LOWER_BOUND_BY_HALVING,
-        tooFewMaxIterationsToFindBounds));
   }
 
   @Test

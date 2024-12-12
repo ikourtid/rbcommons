@@ -42,7 +42,7 @@ public class LowerBoundFinder {
       Y lowerBoundYPrev = lowerBoundY;
       Y newLowerBoundY = evaluateInput.apply(lowerBoundX);
       RBPreconditions.checkArgument(
-          lowerBoundY.compareTo(lowerBoundYPrev) <= 0,
+          newLowerBoundY.compareTo(lowerBoundYPrev) <= 0,
           "New lower bound for Y cannot be larger than the previous one: lowerBoundY= %s ; lowerBoundYPrev= %s",
           lowerBoundY, lowerBoundYPrev);
       lowerBoundY = newLowerBoundY;
