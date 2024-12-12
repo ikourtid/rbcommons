@@ -100,16 +100,6 @@ public class LowerAndUpperBoundsFinder {
     Optional<X> upperBoundX = upperBoundFinder.findPossiblyIncreasedUpperBound(
         evaluateInput, startingPointForSearchUpper, targetY, increaseUpperBound, maxIterations);
 
-    // FIXME IAK Issue #1527 change this once we support this case
-    RBPreconditions.checkArgument(
-        lowerBoundX.isPresent(),
-        "We could not find a valid lower X bound for the binary search, even after %s iterations",
-        maxIterations);
-    RBPreconditions.checkArgument(
-        upperBoundX.isPresent(),
-        "We could not find a valid upper X bound for the binary search, even after %s iterations",
-        maxIterations);
-
     BinarySearchInitialXBoundsResult<X> result = transformPairOfOptionals(
         lowerBoundX,
         upperBoundX,
