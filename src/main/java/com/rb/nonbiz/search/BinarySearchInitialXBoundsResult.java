@@ -36,11 +36,16 @@ import static com.rb.nonbiz.collections.OneOf3.only3rdOf3;
  * those special cases, and the caller can decide. </p>
  *
  * <p> Important note: in the event that we can't find both valid bounds (lower and upper), the single bound
- * stored here will be just some valid lower (upper) bound. It will not necessarily be the tightest bound possible.
+ * stored here will be just some valid lower (or upper) bound. It will not necessarily be the tightest bound possible.
  * This is symmetric to the the normal case where we are able to find valid lower AND upper bounds; those are just
  * initial values, and aren't guaranteed to be the tightest possible. It's the job of the binary search to find
  * those. The job of the {@link LowerAndUpperBoundsFinder} is to just find some valid initial bounds that the
  * binary search can start off of. </p>
+ *
+ * <p> In the event where only the lower or upper bound exists, the caller can't exactly run a binary search.
+ * However, there should be a step that's somewhat similar to a binary search, where we keep tightening the initial
+ * bound. The binary search effectively keeps tightening the bounds until a solution is found between the bounds.
+ * This 'one-sided binary search' will be similar, except that it will only be tightening a single bound. </p>
  */
 public class BinarySearchInitialXBoundsResult<X extends Comparable<? super X>> {
 
