@@ -10,7 +10,7 @@ import static com.rb.nonbiz.collections.OneOf3.only2ndOf3;
 import static com.rb.nonbiz.collections.OneOf3.only3rdOf3;
 
 /**
- * The result of trying to find initial lower and upper bounds for a {@link BinarySearch}.
+ * The result of trying to find some valid initial lower and upper bounds for a {@link BinarySearch}.
  *
  * <p> Let's say we're trying to do a binary search on values of X such that Y = f(X) will have a value of 7.
  * Ideally, we'll find two bounds: a lower bound X1 and an upper bound X2 such that f(X1) &lt; 7 &lt; f(X2).
@@ -34,14 +34,21 @@ import static com.rb.nonbiz.collections.OneOf3.only3rdOf3;
  * f(X2) = 6.99 (in this example), which is close enough to 7, so perhaps this is a close enough solution.
  * This code is too low-level to know what counts as 'close enough'. Therefore, here we will just flag
  * those special cases, and the caller can decide. </p>
+ *
+ * <p> Important note: in the event that we can't find both valid bounds (lower and upper), the single bound
+ * stored here will be just some valid lower (upper) bound. It will not necessarily be the tightest bound possible.
+ * This is symmetric to the the normal case where we are able to find valid lower AND upper bounds; those are just
+ * initial values, and aren't guaranteed to be the tightest possible. It's the job of the binary search to find
+ * those. The job of the {@link LowerAndUpperBoundsFinder} is to just find some valid initial bounds that the
+ * binary search can start off of. </p>
  */
 public class BinarySearchInitialXBoundsResult<X extends Comparable<? super X>> {
 
   public interface Visitor<T, X extends Comparable<? super X>> {
 
     T visitXBoundsCanBracketTargetY(ClosedRange<X> lowerAndUpperBounds);
-    T visitXUpperBoundEvaluatesToBelowTargetY(X highestPossibleUpperBound);
-    T visitXLowerBoundEvaluatesToAboveTargetY(X lowestPossibleLowerBound);
+    T visitOnlyHasValidUpperBound(X someValidUpperBound);
+    T visitOnlyHasValidLowerBound(X someValidLowerBound);
 
   }
 
@@ -58,13 +65,13 @@ public class BinarySearchInitialXBoundsResult<X extends Comparable<? super X>> {
   }
 
   public static <X extends Comparable<? super X>> BinarySearchInitialXBoundsResult<X> xUpperBoundEvaluatesToBelowTargetY(
-      X highestPossibleUpperBound) {
-    return new BinarySearchInitialXBoundsResult<>(only2ndOf3(highestPossibleUpperBound));
+      X someValidUpperBound) {
+    return new BinarySearchInitialXBoundsResult<>(only2ndOf3(someValidUpperBound));
   }
 
   public static <X extends Comparable<? super X>> BinarySearchInitialXBoundsResult<X> xLowerBoundEvaluatesToAboveTargetY(
-      X lowestPossibleLowerBound) {
-    return new BinarySearchInitialXBoundsResult<>(only3rdOf3(lowestPossibleLowerBound));
+      X someValidLowerBound) {
+    return new BinarySearchInitialXBoundsResult<>(only3rdOf3(someValidLowerBound));
   }
 
   public <T> T visit(Visitor<T, X> visitor) {
@@ -75,13 +82,13 @@ public class BinarySearchInitialXBoundsResult<X extends Comparable<? super X>> {
       }
 
       @Override
-      public T visitOnly2ndOf3(X highestPossibleUpperBound) {
-        return visitor.visitXUpperBoundEvaluatesToBelowTargetY(highestPossibleUpperBound);
+      public T visitOnly2ndOf3(X someValidUpperBound) {
+        return visitor.visitOnlyHasValidUpperBound(someValidUpperBound);
       }
 
       @Override
-      public T visitOnly3rdOf3(X lowestPossibleLowerBound) {
-        return visitor.visitXLowerBoundEvaluatesToAboveTargetY(lowestPossibleLowerBound);
+      public T visitOnly3rdOf3(X someValidLowerBound) {
+        return visitor.visitOnlyHasValidLowerBound(someValidLowerBound);
       }
     });
   }
@@ -103,13 +110,13 @@ public class BinarySearchInitialXBoundsResult<X extends Comparable<? super X>> {
       }
 
       @Override
-      public String visitXUpperBoundEvaluatesToBelowTargetY(X highestPossibleUpperBound) {
-        return Strings.format("XUpperBoundEvaluatesToBelowTargetY: %s", highestPossibleUpperBound);
+      public String visitOnlyHasValidUpperBound(X someValidUpperBound) {
+        return Strings.format("XUpperBoundEvaluatesToBelowTargetY: %s", someValidUpperBound);
       }
 
       @Override
-      public String visitXLowerBoundEvaluatesToAboveTargetY(X lowestPossibleLowerBound) {
-        return Strings.format("XLowerBoundEvaluatesToAboveTargetY: %s", lowestPossibleLowerBound);
+      public String visitOnlyHasValidLowerBound(X someValidLowerBound) {
+      return Strings.format("XLowerBoundEvaluatesToAboveTargetY: %s", someValidLowerBound);
       }
     }));
   }
