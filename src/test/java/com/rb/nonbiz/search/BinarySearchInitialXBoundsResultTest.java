@@ -8,7 +8,7 @@ import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.ClosedRangeTest.closedRangeMatcher;
 import static com.rb.nonbiz.collections.OneOf3Test.oneOf3Matcher;
 import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResult.binarySearchBoundsCanBracketTargetY;
-import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResult.xLowerBoundEvaluatesToAboveTargetY;
+import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResult.onlyHasValidLowerBoundForX;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
@@ -19,7 +19,7 @@ public class BinarySearchInitialXBoundsResultTest extends RBTestMatcher<BinarySe
 
   @Override
   public BinarySearchInitialXBoundsResult<Double> makeTrivialObject() {
-    return xLowerBoundEvaluatesToAboveTargetY(0.0);
+    return onlyHasValidLowerBoundForX(0.0);
   }
 
   @Override

@@ -2,7 +2,10 @@ package com.rb.nonbiz.search;
 
 import com.google.common.collect.Range;
 import com.google.inject.Inject;
+import com.rb.nonbiz.collections.RBOptionalTransformers;
+import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.text.RBLog;
+import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Optional;
@@ -10,9 +13,11 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
+import static com.rb.nonbiz.collections.RBOptionalTransformers.transformPairOfOptionals;
 import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResult.binarySearchBoundsCanBracketTargetY;
+import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResult.onlyHasValidLowerBoundForX;
+import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResult.onlyHasValidUpperBoundForX;
 import static com.rb.nonbiz.text.RBLog.rbLog;
-import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
 /**
  * Find a {@link Range} of upper and lower <i>X</i>-value bounds whose <i>Y</i> values bracket a target <i>Y</i> value.
@@ -43,7 +48,7 @@ public class LowerAndUpperBoundsFinder {
    * There is a similar method using an upper and a lower starting range. </p>
    */
   public <X extends Comparable<? super X>, Y extends Comparable<? super Y>>
-  Range<X> findLowerAndUpperBounds(
+  BinarySearchInitialXBoundsResult<X> findLowerAndUpperBounds(
       Function<X, Y> evaluateInput,
       X startingPointForSearch,
       Y targetY,
@@ -68,7 +73,7 @@ public class LowerAndUpperBoundsFinder {
    *
    * <p> Note: this method assumes that the function to be bound is monotonically increasing. </p>
    */
-  public <X extends Comparable<? super X>, Y extends Comparable<? super Y>> Range<X>
+  public <X extends Comparable<? super X>, Y extends Comparable<? super Y>> BinarySearchInitialXBoundsResult<X>
   findLowerAndUpperBounds(
       Function<X, Y> evaluateInput,
       X startingPointForSearchLower,
@@ -105,10 +110,21 @@ public class LowerAndUpperBoundsFinder {
         "We could not find a valid upper X bound for the binary search, even after %s iterations",
         maxIterations);
 
-    log.debug("returning [%s, %s]", lowerBoundX.get(), upperBoundX.get());
-    // return binarySearchBoundsCanBracketTargetY(closedRange(lowerBoundX.get(), upperBoundX.get()));
-    // FIXME IAK Issue #1527 change to the above; for now let's keep this backwards-compatible
-    return Range.closed(lowerBoundX.get(), upperBoundX.get());
+    BinarySearchInitialXBoundsResult<X> result = transformPairOfOptionals(
+        lowerBoundX,
+        upperBoundX,
+        (lower, upper) -> binarySearchBoundsCanBracketTargetY(
+            closedRange(lowerBoundX.get(), upperBoundX.get())),
+        onlyLower -> onlyHasValidLowerBoundForX(onlyLower),
+        onlyUpper -> onlyHasValidUpperBoundForX(onlyUpper),
+        () -> {
+          throw new IllegalArgumentException(Strings.format(
+              "The binary search couldn't find initial values for a lower bound or an upper bound: %s %s",
+              lowerBoundX, upperBoundX));
+        });
+
+    log.debug("returning %s", result);
+    return result;
   }
 
 }

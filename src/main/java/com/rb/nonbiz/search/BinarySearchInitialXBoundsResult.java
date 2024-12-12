@@ -64,12 +64,12 @@ public class BinarySearchInitialXBoundsResult<X extends Comparable<? super X>> {
     return new BinarySearchInitialXBoundsResult<>(only1stOf3(lowerAndUpperBounds));
   }
 
-  public static <X extends Comparable<? super X>> BinarySearchInitialXBoundsResult<X> xUpperBoundEvaluatesToBelowTargetY(
+  public static <X extends Comparable<? super X>> BinarySearchInitialXBoundsResult<X> onlyHasValidUpperBoundForX(
       X someValidUpperBound) {
     return new BinarySearchInitialXBoundsResult<>(only2ndOf3(someValidUpperBound));
   }
 
-  public static <X extends Comparable<? super X>> BinarySearchInitialXBoundsResult<X> xLowerBoundEvaluatesToAboveTargetY(
+  public static <X extends Comparable<? super X>> BinarySearchInitialXBoundsResult<X> onlyHasValidLowerBoundForX(
       X someValidLowerBound) {
     return new BinarySearchInitialXBoundsResult<>(only3rdOf3(someValidLowerBound));
   }

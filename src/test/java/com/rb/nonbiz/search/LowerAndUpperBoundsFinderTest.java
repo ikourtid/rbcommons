@@ -2,6 +2,10 @@ package com.rb.nonbiz.search;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
+import com.rb.nonbiz.collections.ClosedRange;
+import com.rb.nonbiz.collections.RBVoid;
+import com.rb.nonbiz.search.BinarySearchInitialXBoundsResult.Visitor;
+import com.rb.nonbiz.testmatchers.RBValueMatchers;
 import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import org.junit.Test;
 
@@ -10,12 +14,19 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
+import static com.rb.nonbiz.collections.ClosedRange.closedRange;
+import static com.rb.nonbiz.collections.ClosedRange.singletonClosedRange;
+import static com.rb.nonbiz.collections.RBVoid.rbVoid;
+import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResult.binarySearchBoundsCanBracketTargetY;
+import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResultTest.binarySearchInitialXBoundsResultMatcher;
 import static com.rb.nonbiz.testmatchers.RBRangeMatchers.bigDecimalRangeMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.bigDecimalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.function.UnaryOperator.identity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<LowerAndUpperBoundsFinder> {
 
@@ -65,17 +76,36 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
 
   // for the case with a single starting guess value
   private void assertValidLowerAndUpperBoundsCanBeFoundSingleGuess(double target) {
-    Range<BigDecimal> lowerAndUpperBounds = makeRealObject().findLowerAndUpperBounds(
-        EVALUATE_INPUT_TO_SQUARE,
-        STARTING_SINGLE_GUESS_FOR_SEARCH,
-        target,
-        REDUCE_LOWER_BOUND_BY_HALVING,
-        INCREASE_UPPER_BOUND_BY_DOUBLING,
-        MAX_ITERATIONS);
-    double valueAtLower = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.lowerEndpoint());
-    double valueAtUpper = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.upperEndpoint());
-    assertTrue(valueAtLower <= target);
-    assertTrue(valueAtUpper >= target);
+    makeRealObject()
+        .findLowerAndUpperBounds(
+            EVALUATE_INPUT_TO_SQUARE,
+            STARTING_SINGLE_GUESS_FOR_SEARCH,
+            target,
+            REDUCE_LOWER_BOUND_BY_HALVING,
+            INCREASE_UPPER_BOUND_BY_DOUBLING,
+            MAX_ITERATIONS)
+        .visit(new Visitor<RBVoid, BigDecimal>() {
+          @Override
+          public RBVoid visitXBoundsCanBracketTargetY(ClosedRange<BigDecimal> lowerAndUpperBounds) {
+            double valueAtLower = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.lowerEndpoint());
+            double valueAtUpper = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.upperEndpoint());
+            assertTrue(valueAtLower <= target);
+            assertTrue(valueAtUpper >= target);
+            return rbVoid();
+          }
+
+          @Override
+          public RBVoid visitOnlyHasValidUpperBound(BigDecimal someValidUpperBound) {
+            fail("Should not get here");
+            return rbVoid();
+          }
+
+          @Override
+          public RBVoid visitOnlyHasValidLowerBound(BigDecimal someValidLowerBound) {
+            fail("Should not get here");
+            return rbVoid();
+          }
+        });
   }
 
   // for the case of a starting range of guesses [lowerBound, upperBound]
@@ -95,7 +125,7 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
 
   @Test
   public void decreasingFunction_throws() {
-    Function<Function<BigDecimal, Double>, Range<BigDecimal>> maker = evaluator ->
+    Function<Function<BigDecimal, Double>, BinarySearchInitialXBoundsResult<BigDecimal>> maker = evaluator ->
         makeRealObject().findLowerAndUpperBounds(
             evaluator,
             STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
@@ -106,7 +136,7 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
             MAX_ITERATIONS);
 
     // use f(x) = x
-    Range<BigDecimal> doesNotThrow;
+    BinarySearchInitialXBoundsResult<BigDecimal> doesNotThrow;
     doesNotThrow = maker.apply(x -> x.doubleValue());
 
     // use f(x) = 1e-9 * x
@@ -188,7 +218,7 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
   @Test
   public void cornerCase_exactlyOnTarget_returnsValue() {
     int maxIterations = 10;
-    
+
     // The lower bound is already on target, but the upper bound isn't.
     assertThat(
         makeRealObject().findLowerAndUpperBounds(
@@ -199,9 +229,9 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
             identity(), // this says we can't decrease the lower bound.
             INCREASE_UPPER_BOUND_BY_DOUBLING,
             maxIterations),
-        bigDecimalRangeMatcher(
-            Range.closed(BigDecimal.ONE, STARTING_UPPER_BOUND_FOR_SEARCH_TWO),
-            DEFAULT_EPSILON_1e_8));
+        binarySearchInitialXBoundsResultMatcher(
+            binarySearchBoundsCanBracketTargetY(closedRange(BigDecimal.ONE, STARTING_UPPER_BOUND_FOR_SEARCH_TWO)),
+            f -> bigDecimalMatcher(f, DEFAULT_EPSILON_1e_8)));
 
     // The upper bound is already on target, but the lower bound isn't.
     assertThat(
@@ -213,9 +243,9 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
             REDUCE_LOWER_BOUND_BY_HALVING,
             identity(), // this says we can't increase the upper bound.
             maxIterations),
-        bigDecimalRangeMatcher(
-            Range.closed(STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF, BigDecimal.ONE),
-            DEFAULT_EPSILON_1e_8));
+        binarySearchInitialXBoundsResultMatcher(
+            binarySearchBoundsCanBracketTargetY(closedRange(STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF, BigDecimal.ONE)),
+            f -> bigDecimalMatcher(f, DEFAULT_EPSILON_1e_8)));
 
     // and now let's try both
     assertThat(
@@ -227,9 +257,9 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
             identity(), // this says we can't increase the lower bound.
             identity(), // this says we can't increase the upper bound.
             maxIterations),
-        bigDecimalRangeMatcher(
-            Range.singleton(BigDecimal.ONE),
-            DEFAULT_EPSILON_1e_8));
+        binarySearchInitialXBoundsResultMatcher(
+            binarySearchBoundsCanBracketTargetY(singletonClosedRange(BigDecimal.ONE)),
+            f -> bigDecimalMatcher(f, DEFAULT_EPSILON_1e_8)));
   }
 
   // for the case with a starting range guess [guessLower, guessUpper]
@@ -244,18 +274,37 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
       double target,
       BigDecimal lowerBound,
       BigDecimal upperBound) {
-    Range<BigDecimal> lowerAndUpperBounds = makeRealObject().findLowerAndUpperBounds(
+    makeRealObject()
+        .findLowerAndUpperBounds(
         EVALUATE_INPUT_TO_SQUARE,
         lowerBound,
         upperBound,
         target,
         REDUCE_LOWER_BOUND_BY_HALVING,
         INCREASE_UPPER_BOUND_BY_DOUBLING,
-        MAX_ITERATIONS);
-    double valueAtLower = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.lowerEndpoint());
-    double valueAtUpper = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.upperEndpoint());
-    assertTrue(valueAtLower < target);
-    assertTrue(valueAtUpper > target);
+        MAX_ITERATIONS)
+        .visit(new Visitor<RBVoid, BigDecimal>() {
+          @Override
+          public RBVoid visitXBoundsCanBracketTargetY(ClosedRange<BigDecimal> lowerAndUpperBounds) {
+            double valueAtLower = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.lowerEndpoint());
+            double valueAtUpper = EVALUATE_INPUT_TO_SQUARE.apply(lowerAndUpperBounds.upperEndpoint());
+            assertTrue(valueAtLower < target);
+            assertTrue(valueAtUpper > target);
+            return rbVoid();
+          }
+
+          @Override
+          public RBVoid visitOnlyHasValidUpperBound(BigDecimal someValidUpperBound) {
+            fail("We should not get here!");
+            return rbVoid();
+          }
+
+          @Override
+          public RBVoid visitOnlyHasValidLowerBound(BigDecimal someValidLowerBound) {
+            fail("We should not get here!");
+            return rbVoid();
+          }
+        });
   }
 
   @Override
