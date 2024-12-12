@@ -72,32 +72,18 @@ public class LowerBoundFinderTest extends RBTest<LowerBoundFinder> {
   }
 
   @Test
-  public void decreasingFunction_throws() {
-    Function<Function<BigDecimal, Double>, Optional<BigDecimal>> maker = evaluator ->
+  public void movingInWrongDirection_throws() {
+    Function<UnaryOperator<BigDecimal>, Optional<BigDecimal>> maker = lowerBoundReducer ->
         makeTestObject().findPossiblyReducedLowerBound(
-            evaluator,
+            EVALUATE_INPUT_TO_SQUARE,
             STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
-            1.234,
-            REDUCE_LOWER_BOUND_BY_HALVING,
+            -12.34, // must be low
+            lowerBoundReducer,
             MAX_ITERATIONS);
 
-    // use f(x) = x
-//    assertOptionalNonEmpty(maker.apply(x -> x.doubleValue()));
-//
-//    // use f(x) = 1e-9 * x
-//    assertOptionalNonEmpty(maker.apply(x -> 1e-9 * x.doubleValue()));
-
-    // use f(x) = -1e-9 * x
-    assertIllegalArgumentException( () -> maker.apply(
-        x -> -1e-9 * x.doubleValue()));
-
-    // use f(x) = -x
-    assertIllegalArgumentException( () -> maker.apply(
-        x -> x.negate().doubleValue()));
-
-    // use f(x) = 1/x
-    assertIllegalArgumentException( () -> maker.apply(
-        x -> BigDecimal.ONE.divide(x, DEFAULT_MATH_CONTEXT).doubleValue()));
+    Optional<BigDecimal> doesNotThrow = maker.apply(REDUCE_LOWER_BOUND_BY_HALVING);
+    // This throws because it we should be loosening (lowering) the lower bound, not tightening (increasing) it.
+    assertIllegalArgumentException( () -> maker.apply(l -> l.multiply(BigDecimal.valueOf(2))));
   }
 
   @Test
