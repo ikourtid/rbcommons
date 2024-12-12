@@ -40,6 +40,7 @@ public class UpperBoundFinder {
       upperBoundX = increaseUpperBound.apply(upperBoundX);
       Y yUpperBoundPrev = upperBoundY;
       upperBoundY = evaluateInput.apply(upperBoundX);
+
       log.debug("i=%s increase upX to %s ; upY %s", iIteration, upperBoundX, upperBoundY);
       RBPreconditions.checkArgument(
           yUpperBoundPrev.compareTo(upperBoundY) <= 0,

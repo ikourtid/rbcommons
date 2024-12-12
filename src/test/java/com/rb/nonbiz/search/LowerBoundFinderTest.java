@@ -25,24 +25,23 @@ public class LowerBoundFinderTest extends RBTest<LowerBoundFinder> {
       l -> l.divide(  BigDecimal.valueOf(2), DEFAULT_MATH_CONTEXT);
   private final int MAX_ITERATIONS = 50;
 
-  // the following is used for the override of the initial "guess" lower bound
   private final BigDecimal STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF = BigDecimal.valueOf(0.5);
 
   @Test
-  public void happyPath_targetIsAboveSingleStartingGuess_canFindValidBounds() {
+  public void happyPath_targetIsAboveSingleStartingGuess_canFindValidBound() {
     double targetAboveStartingGuess = 1.2;
-    assertValidLowerAndUpperBoundsCanBeFoundSingleGuess(targetAboveStartingGuess);
+    assertValidLowerBoundCanBeFoundSingleGuess(targetAboveStartingGuess);
   }
 
   @Test
-  public void happyPath_targetIsBelowSingleStartingGuess_canFindValidBounds() {
+  public void happyPath_targetIsBelowSingleStartingGuess_canFindValidBound() {
     double targetBelowStartingGuess = 0.8;
-    assertValidLowerAndUpperBoundsCanBeFoundSingleGuess(targetBelowStartingGuess);
+    assertValidLowerBoundCanBeFoundSingleGuess(targetBelowStartingGuess);
   }
 
   @Test
-  public void happyPath_targetIsSameAsSingleStartingGuess_canFindValidBounds() {
-    assertValidLowerAndUpperBoundsCanBeFoundSingleGuess(1.0);
+  public void happyPath_targetIsSameAsSingleStartingGuess_canFindValidBound() {
+    assertValidLowerBoundCanBeFoundSingleGuess(1.0);
   }
 
   @Test
@@ -60,7 +59,7 @@ public class LowerBoundFinderTest extends RBTest<LowerBoundFinder> {
   }
 
   // for the case with a single starting guess value
-  private void assertValidLowerAndUpperBoundsCanBeFoundSingleGuess(double target) {
+  private void assertValidLowerBoundCanBeFoundSingleGuess(double target) {
     Optional<BigDecimal> lowerBound = makeTestObject().findPossiblyReducedLowerBound(
         EVALUATE_INPUT_TO_SQUARE,
         STARTING_SINGLE_GUESS_FOR_SEARCH,
@@ -87,13 +86,13 @@ public class LowerBoundFinderTest extends RBTest<LowerBoundFinder> {
   }
 
   @Test
-  public void happyPath_targetIsAboveGuessRange_canFindValidBounds() {
+  public void happyPath_targetIsAboveGuessRange_canFindValidBound() {
     double targetAboveStartingGuessRange = 5.0;
     assertValidLowerBoundCanBeFoundWithGuessRange(targetAboveStartingGuessRange);
   }
 
   @Test
-  public void happyPath_targetIsAboveGuessRange_bothGuessesSame_canFindValidBounds() {
+  public void happyPath_targetIsAboveGuessRange_bothGuessesSame_canFindValidBound() {
     double targetAboveStartingGuessRange = 5.0;
     assertValidLowerBoundCanBeFoundWithGuessRange(
         // use lower bound = upper bound
@@ -108,19 +107,19 @@ public class LowerBoundFinderTest extends RBTest<LowerBoundFinder> {
   }
 
   @Test
-  public void happyPath_targetIsBelowGuessRange_canFindValidBounds() {
+  public void happyPath_targetIsBelowGuessRange_canFindValidBound() {
     double targetBelowStartingGuessRange = 0.2;
     assertValidLowerBoundCanBeFoundWithGuessRange(targetBelowStartingGuessRange);
   }
 
   @Test
-  public void happyPath_targetIsInsideGuessRange_canFindValidBounds() {
+  public void happyPath_targetIsInsideGuessRange_canFindValidBound() {
     double targetInsideStartingGuessRange = 1.0;
     assertValidLowerBoundCanBeFoundWithGuessRange(targetInsideStartingGuessRange);
   }
 
   @Test
-  public void happyPath_targetIsOnEdgeOfGuessRange_canFindValidBounds() {
+  public void happyPath_targetIsOnEdgeOfGuessRange_canFindValidBound() {
     double targetLowerEdgeStartingGuessRange = 0.5;
     assertValidLowerBoundCanBeFoundWithGuessRange(targetLowerEdgeStartingGuessRange);
 
