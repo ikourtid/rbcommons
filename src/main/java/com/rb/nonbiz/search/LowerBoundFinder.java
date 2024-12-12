@@ -40,7 +40,12 @@ public class LowerBoundFinder {
     while (iIteration < maxIterations) {
       lowerBoundX = reduceLowerBound.apply(lowerBoundX);
       Y lowerBoundYPrev = lowerBoundY;
-      lowerBoundY = evaluateInput.apply(lowerBoundX);
+      Y newLowerBoundY = evaluateInput.apply(lowerBoundX);
+      RBPreconditions.checkArgument(
+          lowerBoundY.compareTo(lowerBoundYPrev) <= 0,
+          "New lower bound for Y cannot be larger than the previous one: lowerBoundY= %s ; lowerBoundYPrev= %s",
+          lowerBoundY, lowerBoundYPrev);
+      lowerBoundY = newLowerBoundY;
       log.debug("i=%s reduce lowX to %s ; lowY %s", iIteration, lowerBoundX, lowerBoundY);
       RBPreconditions.checkArgument(
           lowerBoundYPrev.compareTo(lowerBoundY) >= 0,
