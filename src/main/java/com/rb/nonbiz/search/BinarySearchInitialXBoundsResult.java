@@ -59,8 +59,7 @@ public class BinarySearchInitialXBoundsResult<X extends Comparable<? super X>> {
 
   private final OneOf3<ClosedRange<X>, X, X> rawOneOf3;
 
-  public BinarySearchInitialXBoundsResult(
-      OneOf3<ClosedRange<X>, X, X> rawOneOf3) {
+  public BinarySearchInitialXBoundsResult(OneOf3<ClosedRange<X>, X, X> rawOneOf3) {
     this.rawOneOf3 = rawOneOf3;
   }
 
@@ -137,12 +136,12 @@ public class BinarySearchInitialXBoundsResult<X extends Comparable<? super X>> {
 
       @Override
       public String visitOnlyHasValidUpperBound(X someValidUpperBound) {
-        return Strings.format("XUpperBoundEvaluatesToBelowTargetY: %s", someValidUpperBound);
+        return Strings.format("OnlyHasValidUpperBound: %s", someValidUpperBound);
       }
 
       @Override
       public String visitOnlyHasValidLowerBound(X someValidLowerBound) {
-      return Strings.format("XLowerBoundEvaluatesToAboveTargetY: %s", someValidLowerBound);
+      return Strings.format("OnlyHasValidLowerBound: %s", someValidLowerBound);
       }
     }));
   }

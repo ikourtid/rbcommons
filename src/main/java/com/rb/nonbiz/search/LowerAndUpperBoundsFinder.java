@@ -113,8 +113,7 @@ public class LowerAndUpperBoundsFinder {
     BinarySearchInitialXBoundsResult<X> result = transformPairOfOptionals(
         lowerBoundX,
         upperBoundX,
-        (lower, upper) -> binarySearchBoundsCanBracketTargetY(
-            closedRange(lowerBoundX.get(), upperBoundX.get())),
+        (lower, upper) -> binarySearchBoundsCanBracketTargetY(closedRange(lower, upper)),
         onlyLower -> onlyHasValidLowerBoundForX(onlyLower),
         onlyUpper -> onlyHasValidUpperBoundForX(onlyUpper),
         () -> {
