@@ -93,6 +93,27 @@ public class BinarySearchInitialXBoundsResult<X extends Comparable<? super X>> {
     });
   }
 
+  public ClosedRange<X> getLowerAndUpperBoundOrThrow() {
+    return visit(new Visitor<ClosedRange<X>, X>() {
+      @Override
+      public ClosedRange<X> visitXBoundsCanBracketTargetY(ClosedRange<X> lowerAndUpperBounds) {
+        return lowerAndUpperBounds;
+      }
+
+      @Override
+      public ClosedRange<X> visitOnlyHasValidUpperBound(X someValidUpperBound) {
+        throw new IllegalArgumentException(Strings.format(
+            "Expected both lower and upper bounds, but only have upper= %s", someValidUpperBound));
+      }
+
+      @Override
+      public ClosedRange<X> visitOnlyHasValidLowerBound(X someValidLowerBound) {
+        throw new IllegalArgumentException(Strings.format(
+            "Expected both lower and upper bounds, but only have lower= %s", someValidLowerBound));
+      }
+    });
+  }
+
   /**
    * Do not use this; it's here to help the test-only matcher. Instead, use the visitor.
    */
