@@ -95,6 +95,7 @@ public class LowerAndUpperBoundsFinder {
     Optional<X> upperBoundX = upperBoundFinder.findPossiblyIncreasedUpperBound(
         evaluateInput, startingPointForSearchUpper, targetY, increaseUpperBound, maxIterations);
 
+    // FIXME IAK Issue #1527 change this once we support this case
     RBPreconditions.checkArgument(
         lowerBoundX.isPresent(),
         "We could not find a valid lower X bound for the binary search, even after %s iterations",
@@ -106,7 +107,7 @@ public class LowerAndUpperBoundsFinder {
 
     log.debug("returning [%s, %s]", lowerBoundX.get(), upperBoundX.get());
     // return binarySearchBoundsCanBracketTargetY(closedRange(lowerBoundX.get(), upperBoundX.get()));
-    // FIXME IAK change to the above; for now let's keep this backwards-compatible
+    // FIXME IAK Issue #1527 change to the above; for now let's keep this backwards-compatible
     return Range.closed(lowerBoundX.get(), upperBoundX.get());
   }
 
