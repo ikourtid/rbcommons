@@ -1,6 +1,5 @@
 package com.rb.nonbiz.search;
 
-import com.rb.nonbiz.search.BinarySearchResult.BinarySearchResultBuilder;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -17,12 +16,12 @@ import static com.rb.nonbiz.text.RBLog.rbLog;
  *
  * @see BinarySearchParameters
  */
-public class InitialBinarySearchLowerBoundTightener {
+public class BinarySearchInitialUpperBoundTightener {
 
-  private static final RBLog log = rbLog(InitialBinarySearchLowerBoundTightener.class);
+  private static final RBLog log = rbLog(BinarySearchInitialUpperBoundTightener.class);
 
   public <X, Y> X tighten(
-      X initialLowerBoundX,
+      X initialUpperBoundX,
       Comparator<? super X> comparatorForX,
       Comparator<? super Y> comparatorForY,
       X targetX,
@@ -34,39 +33,39 @@ public class InitialBinarySearchLowerBoundTightener {
 
     // FIXME IAK Issue #1525 package these into a single class and include it inside BinarySearchParameters
 
-    X lowerBoundX = initialLowerBoundX;
-    Y lowerBoundY = evaluatorOfX.apply(initialLowerBoundX);
+    X upperBoundX = initialUpperBoundX;
+    Y upperBoundY = evaluatorOfX.apply(initialUpperBoundX);
 
     int numIterations = 0;
     while (numIterations++ < maxIterations) {
-      if (terminationPredicate.test(lowerBoundX, lowerBoundY)) {
-        return lowerBoundX;
+      if (terminationPredicate.test(upperBoundX, upperBoundY)) {
+        return upperBoundX;
       }
-      X midpointX = midpointGenerator.apply(lowerBoundX, targetX);
+      X midpointX = midpointGenerator.apply(upperBoundX, targetX);
       RBPreconditions.checkArgument(
-          monotonic(comparatorForX, lowerBoundX, midpointX, targetX),
-          "Midpoint generator is probably bad: for X, lower => initial mid => target should be monotonic (not strictly) but were %s %s %s",
-          lowerBoundX, midpointX, targetX);
+          monotonic(comparatorForX, targetX, midpointX, upperBoundX),
+          "Midpoint generator is probably bad: for X, target => initial mid => upper should be monotonic (not strictly) but were %s %s %s",
+          upperBoundX, midpointX, targetX);
 
       Y midpointY = evaluatorOfX.apply(midpointX);
       RBPreconditions.checkArgument(
-          monotonic(comparatorForY, lowerBoundY, midpointY, targetY),
+          monotonic(comparatorForY, targetY, midpointY, upperBoundY),
           "Midpoint generator is probably bad: for Y, lower => initial mid => target should be monotonic (not strictly) but were %s %s %s",
-          lowerBoundY, midpointY, targetY);
+          upperBoundY, midpointY, targetY);
 
       // Push the lower bound closer to the target
-      lowerBoundX = midpointX;
+      upperBoundX = midpointX;
 
       // unlikely with doubles, but can't hurt to have this here.
       // This is when a midpoint happens to find the exact y = f(x) that we are searching for.
       if (comparatorForY.compare(midpointY, targetY) == 0) {
-        return lowerBoundX;
+        return upperBoundX;
       }
     }
 
     // By this point, we've run maxIterations.
-    // The best we can do is return the tightened lower bound.
-    return lowerBoundX;
+    // The best we can do is return the tightened upper bound.
+    return upperBoundX;
   }
 
 }
