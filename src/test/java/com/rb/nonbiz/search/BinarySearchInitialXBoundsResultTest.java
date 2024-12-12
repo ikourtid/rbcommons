@@ -34,7 +34,8 @@ public class BinarySearchInitialXBoundsResultTest extends RBTestMatcher<BinarySe
   }
 
   @Override
-  protected boolean willMatch(BinarySearchInitialXBoundsResult<Double> expected, BinarySearchInitialXBoundsResult<Double> actual) {
+  protected boolean willMatch(BinarySearchInitialXBoundsResult<Double> expected,
+                              BinarySearchInitialXBoundsResult<Double> actual) {
     return binarySearchInitialXBoundsResultMatcher(expected, f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8))
         .matches(actual);
   }

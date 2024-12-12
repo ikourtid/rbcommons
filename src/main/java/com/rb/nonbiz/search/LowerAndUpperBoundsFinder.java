@@ -4,9 +4,12 @@ import com.google.common.collect.Range;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.util.RBPreconditions;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import static com.rb.nonbiz.collections.ClosedRange.closedRange;
+import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResult.binarySearchBoundsCanBracketTargetY;
 import static com.rb.nonbiz.text.RBLog.rbLog;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 
@@ -35,7 +38,8 @@ public class LowerAndUpperBoundsFinder {
    * <p> This method should be used if there is a single starting <i>X</i> value for the search.
    * There is a similar method using an upper and a lower starting range. </p>
    */
-  public <X extends Comparable<? super X>, Y extends Comparable<? super Y>> Range<X> findLowerAndUpperBounds(
+  public <X extends Comparable<? super X>, Y extends Comparable<? super Y>>
+  Range<X> findLowerAndUpperBounds(
       Function<X, Y> evaluateInput,
       X startingPointForSearch,
       Y targetY,
@@ -60,7 +64,8 @@ public class LowerAndUpperBoundsFinder {
    *
    * <p> Note: this method assumes that the function to be bound is monotonically increasing. </p>
    */
-  public <X extends Comparable<? super X>, Y extends Comparable<? super Y>> Range<X> findLowerAndUpperBounds(
+  public <X extends Comparable<? super X>, Y extends Comparable<? super Y>> Range<X>
+  findLowerAndUpperBounds(
       Function<X, Y> evaluateInput,
       X startingPointForSearchLower,
       X startingPointForSearchUpper,
@@ -80,76 +85,108 @@ public class LowerAndUpperBoundsFinder {
         "lowerBoundY %s must not be greater than upperBoundY %s",
         lowerBoundY, upperBoundY);
 
-    int comparisonLower = lowerBoundY.compareTo(targetY);
-    int comparisonUpper = upperBoundY.compareTo(targetY);
-    log.debug(smartFormat("lowX %s upX %s ; lowY %s upY %s ; tgtY %s",
-        startingPointForSearchLower, startingPointForSearchUpper, lowerBoundY, upperBoundY, targetY));
+    Optional<X> lowerBoundX = calculatePossiblyReducedLowerBound(
+        evaluateInput, startingPointForSearchLower, targetY, reduceLowerBound, maxIterations);
 
-    // check for early exit; no bound changes needed?
-    if (comparisonLower < 0 && comparisonUpper > 0) {
-      log.debug("returning no changes: [%s, %s]", startingPointForSearchLower, startingPointForSearchUpper);
-      return Range.closed(startingPointForSearchLower, startingPointForSearchUpper) ;
+    Optional<X> upperBoundX = calculatePossiblyIncreasedUpperBound(
+        evaluateInput, startingPointForSearchUpper, targetY, increaseUpperBound, maxIterations);
+
+    RBPreconditions.checkArgument(
+        lowerBoundX.isPresent(),
+        "We could not find a valid lower X bound for the binary search, even after %s iterations",
+        maxIterations);
+    RBPreconditions.checkArgument(
+        upperBoundX.isPresent(),
+        "We could not find a valid upper X bound for the binary search, even after %s iterations",
+        maxIterations);
+
+    log.debug("returning [%s, %s]", lowerBoundX.get(), upperBoundX.get());
+    // return binarySearchBoundsCanBracketTargetY(closedRange(lowerBoundX.get(), upperBoundX.get()));
+    // FIXME IAK change to the above; for now let's keep this backwards-compatible
+    return Range.closed(lowerBoundX.get(), upperBoundX.get());
+  }
+
+  private <X extends Comparable<? super X>, Y extends Comparable<? super Y>> Optional<X> calculatePossiblyReducedLowerBound(
+      Function<X, Y> evaluateInput,
+      X startingPointForSearchLower,
+      Y targetY,
+      UnaryOperator<X> reduceLowerBound,
+      int maxIterations) {
+    X lowerBoundX = startingPointForSearchLower;
+    Y lowerBoundY = evaluateInput.apply(startingPointForSearchLower);
+
+    // If the starting point X1 is already a valid lower bound, i.e. f(X1) <= Y, return that.
+    if (lowerBoundY.compareTo(targetY) <= 0) {
+      log.debug("No need to loosen (reduce) lowX= %s any further", lowerBoundX);
+      return Optional.of(lowerBoundX);
     }
 
-    X lowerBoundX = startingPointForSearchLower;
-    X upperBoundX = startingPointForSearchUpper;
-
     // possibly reduce the lower bound
-    if (comparisonLower > 0) {
-      // The initial lower X-bound has a Y-value above the targetY.
-      // Keep reducing lowerBoundX until we get a Y below or at targetY, i.e. it becomes a real lower bound.
-      int iIteration = 0;
-      while (iIteration < maxIterations) {
-        lowerBoundX = reduceLowerBound.apply(lowerBoundX);
-        Y lowerBoundYPrev = lowerBoundY;
-        lowerBoundY = evaluateInput.apply(lowerBoundX);
-        log.debug("i=%s reduce lowX to %s ; lowY %s", iIteration, lowerBoundX, lowerBoundY);
-        RBPreconditions.checkArgument(
-            lowerBoundYPrev.compareTo(lowerBoundY) >= 0,
-            "new lowerBoundY %s must not be greater than previous lowerBoundY %s",
-            lowerBoundY, lowerBoundYPrev);
-        if (lowerBoundY.compareTo(targetY) <= 0) {
-          break;
-        }
-        iIteration++;
-      }
+    // The initial lower X-bound has a Y-value above the targetY, i.e. Y < f(X1)
+    // Keep reducing lowerBoundX until we get a Y below or at targetY, i.e. it becomes a real lower bound.
+    int iIteration = 0;
+    while (iIteration < maxIterations) {
+      lowerBoundX = reduceLowerBound.apply(lowerBoundX);
+      Y lowerBoundYPrev = lowerBoundY;
+      lowerBoundY = evaluateInput.apply(lowerBoundX);
+      log.debug("i=%s reduce lowX to %s ; lowY %s", iIteration, lowerBoundX, lowerBoundY);
       RBPreconditions.checkArgument(
-          iIteration < maxIterations,
-          "After %s iterations, our lower bound of %s produces a Y-value %s that's still above the targetY of %s",
-          iIteration, lowerBoundX, lowerBoundY, targetY);
-    } else {
-      log.debug("No need to reduce lowX %s", lowerBoundX);
+          lowerBoundYPrev.compareTo(lowerBoundY) >= 0,
+          "new lowerBoundY %s must not be greater than previous lowerBoundY %s",
+          lowerBoundY, lowerBoundYPrev);
+      if (lowerBoundY.compareTo(targetY) <= 0) {
+        // Found a valid lower bound
+        return Optional.of(lowerBoundX);
+      }
+      iIteration++;
+    }
+
+    // If we get to this point, we've run too many iterations and still can't get a valid lower bound
+    log.info("After %s iterations, our lower bound of %s produces a Y-value %s that's still above the targetY of %s",
+        iIteration, lowerBoundX, lowerBoundY, targetY);
+    return Optional.empty();
+  }
+
+
+  private <X extends Comparable<? super X>, Y extends Comparable<? super Y>> Optional<X> calculatePossiblyIncreasedUpperBound(
+      Function<X, Y> evaluateInput,
+      X startingPointForSearchUpper,
+      Y targetY,
+      UnaryOperator<X> increaseUpperBound,
+      int maxIterations) {
+    X upperBoundX = startingPointForSearchUpper;
+    Y upperBoundY = evaluateInput.apply(startingPointForSearchUpper);
+
+    if (upperBoundY.compareTo(targetY) >= 0) {
+      log.debug("No need to increase upX %s", upperBoundX);
+      return Optional.of(upperBoundX);
     }
 
     // possibly increase the upper bound
-    if (comparisonUpper < 0) {
-      // The initial upper X-bound has a Y-value below the targetY.
-      // Keep increasing upperBoundY until we get a Y above (or at) targetY, i.e. it becomes a real upper bound.
-      int iIteration = 0;
-      while (iIteration < maxIterations) {
-        upperBoundX = increaseUpperBound.apply(upperBoundX);
-        Y yUpperBoundPrev = upperBoundY;
-        upperBoundY = evaluateInput.apply(upperBoundX);
-        log.debug("i=%s increase upX to %s ; upY %s", iIteration, upperBoundX, upperBoundY);
-        RBPreconditions.checkArgument(
-            yUpperBoundPrev.compareTo(upperBoundY) <= 0,
-            "new upperBoundY %s must not be less than previous upperBoundY %s",
-            upperBoundY, yUpperBoundPrev);
-        if (upperBoundY.compareTo(targetY) >= 0) {
-          break;
-        }
-        iIteration++;
-      }
+    // The initial upper X-bound has a Y-value below the targetY.
+    // Keep increasing upperBoundY until we get a Y above (or at) targetY, i.e. it becomes a real upper bound.
+    int iIteration = 0;
+    while (iIteration < maxIterations) {
+      upperBoundX = increaseUpperBound.apply(upperBoundX);
+      Y yUpperBoundPrev = upperBoundY;
+      upperBoundY = evaluateInput.apply(upperBoundX);
+      log.debug("i=%s increase upX to %s ; upY %s", iIteration, upperBoundX, upperBoundY);
       RBPreconditions.checkArgument(
-          iIteration < maxIterations,
-          "After %s iterations, our upper bound of %s produces a Y-value %s that's still below the targetY of %s",
-          iIteration, upperBoundX, upperBoundY, targetY);
-    } else {
-      log.debug("No need to increase upX %s", upperBoundX);
+          yUpperBoundPrev.compareTo(upperBoundY) <= 0,
+          "new upperBoundY %s must not be less than previous upperBoundY %s",
+          upperBoundY, yUpperBoundPrev);
+      if (upperBoundY.compareTo(targetY) >= 0) {
+        // Found a valid upper bound
+        return Optional.of(upperBoundX);
+      }
+      iIteration++;
     }
-
-    log.debug("returning [%s, %s]", lowerBoundX, upperBoundX);
-    return Range.closed(lowerBoundX, upperBoundX);
+    // If we get to this point, we've run too many iterations and still can't get a valid lower bound
+    RBPreconditions.checkArgument(
+        iIteration < maxIterations,
+        "After %s iterations, our upper bound of %s produces a Y-value %s that's still below the targetY of %s",
+        iIteration, upperBoundX, upperBoundY, targetY);
+    return Optional.empty();
   }
 
 }
