@@ -6,6 +6,7 @@ import com.rb.nonbiz.testutils.RBCommonsIntegrationTest;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
@@ -13,6 +14,8 @@ import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONT
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.ClosedRange.singletonClosedRange;
 import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResult.binarySearchBoundsCanBracketTargetY;
+import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResult.onlyHasValidLowerBoundForX;
+import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResult.onlyHasValidUpperBoundForX;
 import static com.rb.nonbiz.search.BinarySearchInitialXBoundsResultTest.binarySearchInitialXBoundsResultMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.bigDecimalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -53,18 +56,23 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
   }
 
   @Test
-  public void cannotFindBoundsWithinIterationsCap_throws() {
+  public void cannotFindBoundsWithinIterationsCap_returnsOnlyOneLimit() {
     int tooFewMaxIterationsToFindBounds = 2;
-    // try targets that are too low and too high
-    for (double target : ImmutableList.of(1e-7, 999_999.0)) {
-      assertIllegalArgumentException( () -> makeRealObject().findLowerAndUpperBounds(
-          EVALUATE_INPUT_TO_SQUARE,
-          STARTING_SINGLE_GUESS_FOR_SEARCH,
-          target,
-          REDUCE_LOWER_BOUND_BY_HALVING,
-          INCREASE_UPPER_BOUND_BY_DOUBLING,
-          tooFewMaxIterationsToFindBounds));
-    }
+
+    BiConsumer<Double, BinarySearchInitialXBoundsResult<BigDecimal>> asserter = (target, expectedResult) ->
+        assertThat(
+            makeRealObject().findLowerAndUpperBounds(
+                EVALUATE_INPUT_TO_SQUARE,
+                STARTING_SINGLE_GUESS_FOR_SEARCH,
+                target,
+                REDUCE_LOWER_BOUND_BY_HALVING,
+                INCREASE_UPPER_BOUND_BY_DOUBLING,
+                tooFewMaxIterationsToFindBounds),
+            binarySearchInitialXBoundsResultMatcher(expectedResult, v -> bigDecimalMatcher(v, DEFAULT_EPSILON_1e_8)));
+
+    // Target is too low (high), and so we can't get to a valid lower (upper) bound (< target) in a few iterations
+    asserter.accept(1e-7, onlyHasValidUpperBoundForX(STARTING_SINGLE_GUESS_FOR_SEARCH));
+    asserter.accept(1e+7, onlyHasValidLowerBoundForX(STARTING_SINGLE_GUESS_FOR_SEARCH));
   }
 
   // for the case with a single starting guess value
@@ -179,17 +187,22 @@ public class LowerAndUpperBoundsFinderTest extends RBCommonsIntegrationTest<Lowe
   @Test
   public void cannotFindBoundsStartingGuessRange_withinIterationsCap_throws() {
     int tooFewMaxIterationsToFindBounds = 2;
-    // try targets that are both too low and too high
-    for (double target : ImmutableList.of(1e-7, 999_999.0)) {
-      assertIllegalArgumentException( () -> makeRealObject().findLowerAndUpperBounds(
-          EVALUATE_INPUT_TO_SQUARE,
-          STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
-          STARTING_UPPER_BOUND_FOR_SEARCH_TWO,
-          target,
-          REDUCE_LOWER_BOUND_BY_HALVING,
-          INCREASE_UPPER_BOUND_BY_DOUBLING,
-          tooFewMaxIterationsToFindBounds));
-    }
+
+    BiConsumer<Double, BinarySearchInitialXBoundsResult<BigDecimal>> asserter = (target, expectedResult) ->
+        assertThat(
+            makeRealObject().findLowerAndUpperBounds(
+                EVALUATE_INPUT_TO_SQUARE,
+                STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF,
+                STARTING_UPPER_BOUND_FOR_SEARCH_TWO,
+                target,
+                REDUCE_LOWER_BOUND_BY_HALVING,
+                INCREASE_UPPER_BOUND_BY_DOUBLING,
+                tooFewMaxIterationsToFindBounds),
+            binarySearchInitialXBoundsResultMatcher(expectedResult, v -> bigDecimalMatcher(v, DEFAULT_EPSILON_1e_8)));
+
+    // Target is too low (high), and so we can't get to a valid lower (upper) bound (< target) in a few iterations
+    asserter.accept(1e-7, onlyHasValidUpperBoundForX(STARTING_UPPER_BOUND_FOR_SEARCH_TWO));
+    asserter.accept(1e+7, onlyHasValidLowerBoundForX(STARTING_LOWER_BOUND_FOR_SEARCH_ONE_HALF));
   }
 
   @Test

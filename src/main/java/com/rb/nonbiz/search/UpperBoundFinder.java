@@ -52,10 +52,8 @@ public class UpperBoundFinder {
       }
       iIteration++;
     }
-    // If we get to this point, we've run too many iterations and still can't get a valid lower bound
-    RBPreconditions.checkArgument(
-        iIteration < maxIterations,
-        "After %s iterations, our upper bound of %s produces a Y-value %s that's still below the targetY of %s",
+    // If we get to this point, we've run too many iterations and still can't get a valid upper bound
+    log.info("After %s iterations, our upper bound of %s produces a Y-value %s that's still below the targetY of %s",
         iIteration, upperBoundX, upperBoundY, targetY);
     return Optional.empty();
   }
