@@ -11,6 +11,7 @@ import java.util.function.UnaryOperator;
 import static com.rb.biz.investing.modeling.RBCommonsConstants.DEFAULT_MATH_CONTEXT;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.bigDecimalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.function.UnaryOperator.identity;
@@ -98,16 +99,17 @@ public class UpperBoundFinderTest extends RBTest<UpperBoundFinder> {
   }
 
   @Test
-  public void cannotFindBoundsStartingGuessRange_withinIterationsCap_throws() {
+  public void cannotFindBoundsStartingGuessRange_withinIterationsCap_returnsEmptyOptional() {
     int tooFewMaxIterationsToFindBounds = 2;
     // try a target that's too low (999). The starting guess is 1. So if we keep doubling it (2, 4, etc.)
     // we can't get to a valid upper bound that's above 999.
-    assertIllegalArgumentException( () -> makeTestObject().findPossiblyIncreasedUpperBound(
-        EVALUATE_INPUT_TO_SQUARE,
-        STARTING_UPPER_BOUND_FOR_SEARCH_TWO,
-        999.0,
-        INCREASE_UPPER_BOUND_BY_DOUBLING,
-        tooFewMaxIterationsToFindBounds));
+    assertOptionalEmpty(
+        makeTestObject().findPossiblyIncreasedUpperBound(
+            EVALUATE_INPUT_TO_SQUARE,
+            STARTING_UPPER_BOUND_FOR_SEARCH_TWO,
+            999.0,
+            INCREASE_UPPER_BOUND_BY_DOUBLING,
+            tooFewMaxIterationsToFindBounds));
   }
 
   @Test
