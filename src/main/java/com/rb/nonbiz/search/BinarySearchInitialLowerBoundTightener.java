@@ -10,7 +10,14 @@ import java.util.function.Function;
 import static com.rb.nonbiz.collections.RBComparables.monotonic;
 
 /**
- * Generalized code for doing binary search.
+ * Tightens (bumps up) the initial lower bound to be used in a binary search.
+ *
+ * <p> Normally, the binary search itself takes care of tightening the initial lower and upper bounds
+ * towards the middle. However, sometimes we can't come up with valid lower and upper bounds that 'bracket'
+ * the 'middle' / target. In those cases, we skip the binary search and instead return the tightest possible
+ * lower bound or upper bound, whichever is present. </p>
+ *
+ * <p> This special case is described at more length in {@link BinarySearchInitialXBoundsResult}. </p>
  *
  * @see BinarySearchParameters
  */
