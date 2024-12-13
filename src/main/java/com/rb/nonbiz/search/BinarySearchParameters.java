@@ -95,6 +95,19 @@ public class BinarySearchParameters<X, Y> {
       return new BinarySearchParametersBuilder<>();
     }
 
+    public BinarySearchParametersBuilder<X, Y> setBinarySearchRawParameters(
+        BinarySearchRawParameters<X, Y> binarySearchRawParameters) {
+      // Although this is the clean way to do this, having the rest of the setters is a very unusual pattern,
+      // but we broke off BinarySearchRawParameters as a separate class late in the game,
+      // and it's painful to do it cleanly due to some existing tests.
+      return setComparatorForX(binarySearchRawParameters.getComparatorForX())
+          .setComparatorForY(binarySearchRawParameters.getComparatorForY())
+          .setTargetY(binarySearchRawParameters.getTargetY())
+          .setEvaluatorOfX(binarySearchRawParameters.getEvaluatorOfX())
+          .setMidpointGenerator(binarySearchRawParameters.getMidpointGenerator())
+          .setMaxIterations(binarySearchRawParameters.getMaxIterations());
+    }
+
     public BinarySearchParametersBuilder<X, Y> setLowerBoundX(X lowerBoundX) {
       this.lowerBoundX = checkNotAlreadySet(this.lowerBoundX, lowerBoundX);
       return this;
