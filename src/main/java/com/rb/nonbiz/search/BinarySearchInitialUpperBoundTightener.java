@@ -18,26 +18,23 @@ import static com.rb.nonbiz.text.RBLog.rbLog;
  */
 public class BinarySearchInitialUpperBoundTightener {
 
-  private static final RBLog log = rbLog(BinarySearchInitialUpperBoundTightener.class);
-
   public <X, Y> X tighten(
       X initialUpperBoundX,
-      Comparator<? super X> comparatorForX,
-      Comparator<? super Y> comparatorForY,
+      BinarySearchRawParameters<X, Y> binarySearchRawParameters,
       X targetX,
-      Y targetY,
-      Function<X, Y> evaluatorOfX,
-      int maxIterations,
-      BiPredicate<X, Y> terminationPredicate,
-      BinaryOperator<X> midpointGenerator) {
+      BiPredicate<X, Y> terminationPredicate) {
 
-    // FIXME IAK Issue #1525 package these into a single class and include it inside BinarySearchParameters
+    Function<X, Y> evaluatorOfX          = binarySearchRawParameters.getEvaluatorOfX();
+    BinaryOperator<X> midpointGenerator  = binarySearchRawParameters.getMidpointGenerator();
+    Comparator<? super X> comparatorForX = binarySearchRawParameters.getComparatorForX();
+    Comparator<? super Y> comparatorForY = binarySearchRawParameters.getComparatorForY();
+    Y targetY                            = binarySearchRawParameters.getTargetY();
 
     X upperBoundX = initialUpperBoundX;
     Y upperBoundY = evaluatorOfX.apply(initialUpperBoundX);
 
     int numIterations = 0;
-    while (numIterations++ < maxIterations) {
+    while (numIterations++ < binarySearchRawParameters.getMaxIterations()) {
       if (terminationPredicate.test(upperBoundX, upperBoundY)) {
         return upperBoundX;
       }

@@ -1,6 +1,5 @@
 package com.rb.nonbiz.search;
 
-import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Comparator;
@@ -9,7 +8,6 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.RBComparables.monotonic;
-import static com.rb.nonbiz.text.RBLog.rbLog;
 
 /**
  * Generalized code for doing binary search.
@@ -18,26 +16,23 @@ import static com.rb.nonbiz.text.RBLog.rbLog;
  */
 public class BinarySearchInitialLowerBoundTightener {
 
-  private static final RBLog log = rbLog(BinarySearchInitialLowerBoundTightener.class);
-
   public <X, Y> X tighten(
       X initialLowerBoundX,
-      Comparator<? super X> comparatorForX,
-      Comparator<? super Y> comparatorForY,
+      BinarySearchRawParameters<X, Y> binarySearchRawParameters,
       X targetX,
-      Y targetY,
-      Function<X, Y> evaluatorOfX,
-      int maxIterations,
-      BiPredicate<X, Y> terminationPredicate,
-      BinaryOperator<X> midpointGenerator) {
+      BiPredicate<X, Y> terminationPredicate) {
 
-    // FIXME IAK Issue #1525 package these into a single class and include it inside BinarySearchParameters
+    Function<X, Y> evaluatorOfX          = binarySearchRawParameters.getEvaluatorOfX();
+    BinaryOperator<X> midpointGenerator  = binarySearchRawParameters.getMidpointGenerator();
+    Comparator<? super X> comparatorForX = binarySearchRawParameters.getComparatorForX();
+    Comparator<? super Y> comparatorForY = binarySearchRawParameters.getComparatorForY();
+    Y targetY                            = binarySearchRawParameters.getTargetY();
 
     X lowerBoundX = initialLowerBoundX;
     Y lowerBoundY = evaluatorOfX.apply(initialLowerBoundX);
 
     int numIterations = 0;
-    while (numIterations++ < maxIterations) {
+    while (numIterations++ < binarySearchRawParameters.getMaxIterations()) {
       if (terminationPredicate.test(lowerBoundX, lowerBoundY)) {
         return lowerBoundX;
       }
