@@ -119,22 +119,12 @@ public class BinarySearchParameters<X, Y> {
     }
 
     public BinarySearchParametersBuilder<X, Y> setComparatorForX(Comparator<? super X> comparatorForX) {
-      // For some generics-related reason related to the <? super X>, I can't use checkNotAlreadySet here,
-      // so I'm inlining it.
-      RBPreconditions.checkArgument(
-          this.comparatorForX == null,
-          "You are trying to set the X Comparator twice in BinarySearchParametersBuilder, which is probably a bug)");
-      this.comparatorForX = comparatorForX;
+      this.comparatorForX = checkNotAlreadySet(this.comparatorForX, comparatorForX);
       return this;
     }
 
     public BinarySearchParametersBuilder<X, Y> setComparatorForY(Comparator<? super Y> comparatorForY) {
-      // For some generics-related reason related to the <? super X>, I can't use checkNotAlreadySet here,
-      // so I'm inlining it.
-      RBPreconditions.checkArgument(
-          this.comparatorForY == null,
-          "You are trying to set the Y Comparator twice in BinarySearchParametersBuilder, which is probably a bug)");
-      this.comparatorForY = comparatorForY;
+      this.comparatorForY = checkNotAlreadySet(this.comparatorForY, comparatorForY);
       return this;
     }
 
