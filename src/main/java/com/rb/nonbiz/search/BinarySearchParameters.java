@@ -10,7 +10,8 @@ import java.util.function.Function;
 import static com.rb.nonbiz.collections.RBComparables.monotonic;
 
 /**
- * This is an object that includes all the parameters needed to do a binary search.
+ * A portion of the parameters needed to do a binary search or to do the tightening of the initial lower or upper
+ * bounds for the binary search, in certain special cases.
  *
  * @see BinarySearch
  */
@@ -18,33 +19,18 @@ public class BinarySearchParameters<X, Y> {
 
   private final X lowerBoundX;
   private final X upperBoundX;
-  private final Comparator<? super X> comparatorForX;
-  private final Comparator<? super Y> comparatorForY;
-  private final Y targetY;
-  private final Function<X, Y> evaluatorOfX;
   private final BinarySearchTerminationPredicate<X, Y> terminationPredicate;
-  private final BinaryOperator<X> midpointGenerator;
-  private final int maxIterations;
+  private final BinarySearchRawParameters<X, Y> binarySearchRawParameters;
 
   private BinarySearchParameters(
       X lowerBoundX,
       X upperBoundX,
-      Comparator<? super X> comparatorForX,
-      Comparator<? super Y> comparatorForY,
-      Y targetY,
-      Function<X, Y> evaluatorOfX,
       BinarySearchTerminationPredicate<X, Y> terminationPredicate,
-      BinaryOperator<X> midpointGenerator,
-      int maxIterations) {
+      BinarySearchRawParameters<X, Y> binarySearchRawParameters) {
     this.lowerBoundX = lowerBoundX;
     this.upperBoundX = upperBoundX;
-    this.comparatorForX = comparatorForX;
-    this.comparatorForY = comparatorForY;
-    this.targetY = targetY;
-    this.evaluatorOfX = evaluatorOfX;
     this.terminationPredicate = terminationPredicate;
-    this.midpointGenerator = midpointGenerator;
-    this.maxIterations = maxIterations;
+    this.binarySearchRawParameters = binarySearchRawParameters;
   }
 
   public X getLowerBoundX() {
@@ -56,19 +42,19 @@ public class BinarySearchParameters<X, Y> {
   }
 
   public Comparator<? super X> getComparatorForX() {
-    return comparatorForX;
+    return binarySearchRawParameters.getComparatorForX();
   }
 
   public Comparator<? super Y> getComparatorForY() {
-    return comparatorForY;
+    return binarySearchRawParameters.getComparatorForY();
   }
 
   public Y getTargetY() {
-    return targetY;
+    return binarySearchRawParameters.getTargetY();
   }
 
   public Function<X, Y> getEvaluatorOfX() {
-    return evaluatorOfX;
+    return binarySearchRawParameters.getEvaluatorOfX();
   }
 
   public BinarySearchTerminationPredicate<X, Y> getTerminationPredicate() {
@@ -76,11 +62,11 @@ public class BinarySearchParameters<X, Y> {
   }
 
   public BinaryOperator<X> getMidpointGenerator() {
-    return midpointGenerator;
+    return binarySearchRawParameters.getMidpointGenerator();
   }
 
   public int getMaxIterations() {
-    return maxIterations;
+    return binarySearchRawParameters.getMaxIterations();
   }
 
 
@@ -91,13 +77,8 @@ public class BinarySearchParameters<X, Y> {
 
     private X lowerBoundX;
     private X upperBoundX;
-    private Comparator<? super X> comparatorForX;
-    private Comparator<? super Y> comparatorForY;
-    private Y targetY;
-    private Function<X, Y> evaluatorOfX;
     private BinarySearchTerminationPredicate<X, Y> terminationPredicate;
-    private BinaryOperator<X> midpointGenerator;
-    private Integer maxIterations;
+    private BinarySearchRawParameters<X, Y> binarySearchRawParameters;
 
     private BinarySearchParametersBuilder() {}
 
@@ -115,49 +96,14 @@ public class BinarySearchParameters<X, Y> {
       return this;
     }
 
-    public BinarySearchParametersBuilder<X, Y> setComparatorForX(Comparator<? super X> comparatorForX) {
-      // For some generics-related reason related to the <? super X>, I can't use checkNotAlreadySet here,
-      // so I'm inlining it.
-      RBPreconditions.checkArgument(
-          this.comparatorForX == null,
-          "You are trying to set the X Comparator twice in BinarySearchParametersBuilder, which is probably a bug)");
-      this.comparatorForX = comparatorForX;
-      return this;
-    }
-
-    public BinarySearchParametersBuilder<X, Y> setComparatorForY(Comparator<? super Y> comparatorForY) {
-      // For some generics-related reason related to the <? super X>, I can't use checkNotAlreadySet here,
-      // so I'm inlining it.
-      RBPreconditions.checkArgument(
-          this.comparatorForY == null,
-          "You are trying to set the Y Comparator twice in BinarySearchParametersBuilder, which is probably a bug)");
-      this.comparatorForY = comparatorForY;
-      return this;
-    }
-
-    public BinarySearchParametersBuilder<X, Y> setTargetY(Y targetY) {
-      this.targetY = checkNotAlreadySet(this.targetY, targetY);
-      return this;
-    }
-
-    public BinarySearchParametersBuilder<X, Y> setEvaluatorOfX(Function<X, Y> evaluatorOfX) {
-      this.evaluatorOfX = checkNotAlreadySet(this.evaluatorOfX, evaluatorOfX);
-      return this;
-    }
-
     public BinarySearchParametersBuilder<X, Y> setTerminationPredicate(
         BinarySearchTerminationPredicate<X, Y> terminationPredicate) {
       this.terminationPredicate = checkNotAlreadySet(this.terminationPredicate, terminationPredicate);
       return this;
     }
 
-    public BinarySearchParametersBuilder<X, Y> setMidpointGenerator(BinaryOperator<X> midpointGenerator) {
-      this.midpointGenerator = checkNotAlreadySet(this.midpointGenerator, midpointGenerator);
-      return this;
-    }
-
-    public BinarySearchParametersBuilder<X, Y> setMaxIterations(int maxIterations) {
-      this.maxIterations = checkNotAlreadySet(this.maxIterations, maxIterations);
+    public BinarySearchParametersBuilder<X, Y> setBinarySearchRawParameters(BinarySearchRawParameters<X, Y> binarySearchRawParameters) {
+      this.binarySearchRawParameters = checkNotAlreadySet(this.binarySearchRawParameters, binarySearchRawParameters);
       return this;
     }
 
@@ -165,20 +111,14 @@ public class BinarySearchParameters<X, Y> {
     public void sanityCheckContents() {
       RBPreconditions.checkNotNull(lowerBoundX);
       RBPreconditions.checkNotNull(upperBoundX);
-      RBPreconditions.checkNotNull(comparatorForX);
-      RBPreconditions.checkNotNull(comparatorForY);
-      RBPreconditions.checkNotNull(targetY);
-      RBPreconditions.checkNotNull(evaluatorOfX);
       RBPreconditions.checkNotNull(terminationPredicate);
-      RBPreconditions.checkNotNull(midpointGenerator);
-      RBPreconditions.checkNotNull(maxIterations);
-      RBPreconditions.checkArgument(
-          maxIterations >= 2,
-          "max iterations in binary search must be at least 2, otherwise it's not really a search; was %s",
-          maxIterations);
 
-      Y lowerValue = evaluatorOfX.apply(lowerBoundX);
-      Y upperValue = evaluatorOfX.apply(upperBoundX);
+      Y lowerValue = binarySearchRawParameters.getEvaluatorOfX().apply(lowerBoundX);
+      Y upperValue = binarySearchRawParameters.getEvaluatorOfX().apply(upperBoundX);
+      Comparator<? super X> comparatorForX = binarySearchRawParameters.getComparatorForX();
+      Comparator<? super Y> comparatorForY = binarySearchRawParameters.getComparatorForY();
+      Y targetY = binarySearchRawParameters.getTargetY();
+
       RBPreconditions.checkArgument(
           // can also be == ; that probably indicates a problem, but it's too conservative to throw an exception for.
           comparatorForX.compare(lowerBoundX, upperBoundX) <= 0,
@@ -192,7 +132,7 @@ public class BinarySearchParameters<X, Y> {
           comparatorForY.compare(targetY, upperValue) <= 0,
           "The upper input of %s gives an upper bound of %s which is less than the final value of %s",
           upperBoundX, upperValue, targetY);
-      X initialMidpoint = midpointGenerator.apply(lowerBoundX, upperBoundX);
+      X initialMidpoint = binarySearchRawParameters.getMidpointGenerator().apply(lowerBoundX, upperBoundX);
       RBPreconditions.checkArgument(
           monotonic(comparatorForX, lowerBoundX, initialMidpoint, upperBoundX),
           "Midpoint generator is probably bad: lower / initial mid / upper should be monotonic (not strictly) but were %s %s %s",
@@ -202,9 +142,9 @@ public class BinarySearchParameters<X, Y> {
     @Override
     public BinarySearchParameters<X, Y> buildWithoutPreconditions() {
       return new BinarySearchParameters<>(
-          lowerBoundX, upperBoundX, comparatorForX, comparatorForY, targetY, evaluatorOfX,
-          terminationPredicate, midpointGenerator, maxIterations);
+          lowerBoundX, upperBoundX, terminationPredicate, binarySearchRawParameters);
     }
+
   }
 
 }
