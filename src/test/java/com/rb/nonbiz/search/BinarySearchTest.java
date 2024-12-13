@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.rb.biz.types.Money;
 import com.rb.biz.types.OnesBasedReturn;
 import com.rb.nonbiz.search.BinarySearchParameters.BinarySearchParametersBuilder;
-import com.rb.nonbiz.search.BinarySearchRawParameters.BinarySearchRawParametersBuilder;
 import com.rb.nonbiz.search.BinarySearchResult.BinarySearchResultBuilder;
 import com.rb.nonbiz.testutils.RBTest;
 import org.junit.Test;
@@ -192,10 +191,10 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
     // However, that's too conservative; this is a valid scenario, even if it's a corner case.
     assertResult(
         makeBinarySearchParametersBuilder()
-            .setLowerBoundX(expectedReturn)
-            .setUpperBoundX(expectedReturn)
-            .setTerminationPredicate(DEFAULT_TERMINATION_PREDICATE)
-            .build(),
+        .setLowerBoundX(expectedReturn)
+        .setUpperBoundX(expectedReturn)
+        .setTerminationPredicate(DEFAULT_TERMINATION_PREDICATE)
+        .build(),
         v -> v
             .setLowerBoundX(expectedReturn)
             .setUpperBoundX(expectedReturn)
@@ -216,17 +215,14 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
           BinarySearchParametersBuilder.<OnesBasedReturn, Money>binarySearchParametersBuilder()
               .setLowerBoundX(onesBasedReturn(0.1))
               .setUpperBoundX(onesBasedReturn(10.0))
+              .setComparatorForX(naturalOrder())
+              .setComparatorForY(naturalOrder())
+              .setTargetY(money(1_600))
+              .setEvaluatorOfX(ret -> money(2_000).multiply(ret))
               .setTerminationPredicate(onlyTerminateBasedOnX( (ret1, ret2) ->
                   ret1.asBigDecimal().subtract(ret2.asBigDecimal()).abs().compareTo(BigDecimal.valueOf(1e-8)) < 0))
-              .setBinarySearchRawParameters(
-                  BinarySearchRawParametersBuilder.<OnesBasedReturn, Money>binarySearchRawParametersBuilder()
-                      .setComparatorForX(naturalOrder())
-                      .setComparatorForY(naturalOrder())
-                      .setTargetY(money(1_600))
-                      .setEvaluatorOfX(ret -> money(2_000).multiply(ret))
-                      .setMidpointGenerator(badMidpointGenerator) // this is key; the rest is the same
-                      .setMaxIterations(100)
-                      .build())
+              .setMidpointGenerator(badMidpointGenerator) // this is key; the rest is the same
+              .setMaxIterations(100)
               .build()));
     }
   }
@@ -237,20 +233,20 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
     // f(x) for any x (other than the lower or upper bound) is not between the f(lower) & f(upper).
     Function<OnesBasedReturn, Money> badNonMonotonicInputEvaluator1 = ret ->
         ret.equals(onesBasedReturn(0.1))  ? money(1_000) :
-            ret.equals(onesBasedReturn(10.0)) ? money(2_000) :
-                money(  999);
+        ret.equals(onesBasedReturn(10.0)) ? money(2_000) :
+                                            money(  999);
     Function<OnesBasedReturn, Money> badNonMonotonicInputEvaluator2 = ret ->
         ret.equals(onesBasedReturn(0.1))  ? money(1_000) :
-            ret.equals(onesBasedReturn(10.0)) ? money(2_000) :
-                money(2_001);
+        ret.equals(onesBasedReturn(10.0)) ? money(2_000) :
+                                            money(2_001);
     Function<OnesBasedReturn, Money> badNonMonotonicInputEvaluator3 = ret ->
         ret.equals(onesBasedReturn(0.1))  ? money(2_000) :
-            ret.equals(onesBasedReturn(10.0)) ? money(1_000) :
-                money(  999);
+        ret.equals(onesBasedReturn(10.0)) ? money(1_000) :
+                                            money(  999);
     Function<OnesBasedReturn, Money> badNonMonotonicInputEvaluator4 = ret ->
         ret.equals(onesBasedReturn(0.1))  ? money(2_000) :
-            ret.equals(onesBasedReturn(10.0)) ? money(1_000) :
-                money(2_001);
+        ret.equals(onesBasedReturn(10.0)) ? money(1_000) :
+                                            money(2_001);
     for (Function<OnesBasedReturn, Money> badNonMonotonicInputEvaluator : rbSetOf(
         badNonMonotonicInputEvaluator1,
         badNonMonotonicInputEvaluator2,
@@ -262,18 +258,15 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
           BinarySearchParametersBuilder.<OnesBasedReturn, Money>binarySearchParametersBuilder()
               .setLowerBoundX(onesBasedReturn(0.1))
               .setUpperBoundX(onesBasedReturn(10.0))
+              .setComparatorForX(naturalOrder())
+              .setComparatorForY(naturalOrder())
+              .setTargetY(money(1_600))
+              .setEvaluatorOfX(badNonMonotonicInputEvaluator) // this is key
               .setTerminationPredicate(onlyTerminateBasedOnX( (ret1, ret2) ->
                   ret1.asBigDecimal().subtract(ret2.asBigDecimal()).abs().compareTo(BigDecimal.valueOf(1e-8)) < 0))
-              .setBinarySearchRawParameters(
-                  BinarySearchRawParametersBuilder.<OnesBasedReturn, Money>binarySearchRawParametersBuilder()
-                      .setComparatorForX(naturalOrder())
-                      .setComparatorForY(naturalOrder())
-                      .setTargetY(money(1_600))
-                      .setEvaluatorOfX(badNonMonotonicInputEvaluator) // this is key
-                      .setMidpointGenerator((lower, upper) -> onesBasedReturn(0.5 * (
-                          lower.doubleValue() + upper.doubleValue())))
-                      .setMaxIterations(100)
-                      .build())
+              .setMidpointGenerator((lower, upper) -> onesBasedReturn(0.5 * (
+                  lower.doubleValue() + upper.doubleValue())))
+              .setMaxIterations(100)
               .build()));
     }
   }
@@ -303,15 +296,14 @@ public class BinarySearchTest extends RBTest<BinarySearch> {
   }
 
   private BinarySearchParametersBuilder<OnesBasedReturn, Money> makeBinarySearchParametersBuilder(int maxIterations) {
-    return null; // FIXME IAK
-//    return BinarySearchParametersBuilder.<OnesBasedReturn, Money>binarySearchParametersBuilder()
-//        .setComparatorForX(naturalOrder())
-//        .setComparatorForY(naturalOrder())
-//        .setTargetY(TARGET_Y)
-//        .setEvaluatorOfX(ret -> money(2_000).multiply(ret))
-//        .setMidpointGenerator((lower, upper) -> onesBasedReturn(0.5 * (
-//            lower.doubleValue() + upper.doubleValue())))
-//        .setMaxIterations(maxIterations);
+    return BinarySearchParametersBuilder.<OnesBasedReturn, Money>binarySearchParametersBuilder()
+        .setComparatorForX(naturalOrder())
+        .setComparatorForY(naturalOrder())
+        .setTargetY(TARGET_Y)
+        .setEvaluatorOfX(ret -> money(2_000).multiply(ret))
+        .setMidpointGenerator((lower, upper) -> onesBasedReturn(0.5 * (
+            lower.doubleValue() + upper.doubleValue())))
+        .setMaxIterations(maxIterations);
   }
 
   private void assertResult(
