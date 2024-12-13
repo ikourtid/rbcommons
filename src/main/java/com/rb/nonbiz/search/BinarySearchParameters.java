@@ -1,5 +1,6 @@
 package com.rb.nonbiz.search;
 
+import com.rb.nonbiz.search.BinarySearchRawParameters.BinarySearchRawParametersBuilder;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
 
@@ -18,33 +19,26 @@ public class BinarySearchParameters<X, Y> {
 
   private final X lowerBoundX;
   private final X upperBoundX;
-  private final Comparator<? super X> comparatorForX;
-  private final Comparator<? super Y> comparatorForY;
-  private final Y targetY;
-  private final Function<X, Y> evaluatorOfX;
   private final BinarySearchTerminationPredicate<X, Y> terminationPredicate;
-  private final BinaryOperator<X> midpointGenerator;
-  private final int maxIterations;
+  private final BinarySearchRawParameters<X, Y> binarySearchRawParameters;
 
   private BinarySearchParameters(
       X lowerBoundX,
       X upperBoundX,
-      Comparator<? super X> comparatorForX,
-      Comparator<? super Y> comparatorForY,
-      Y targetY,
-      Function<X, Y> evaluatorOfX,
       BinarySearchTerminationPredicate<X, Y> terminationPredicate,
-      BinaryOperator<X> midpointGenerator,
-      int maxIterations) {
+      BinarySearchRawParameters<X, Y> binarySearchRawParameters) {
     this.lowerBoundX = lowerBoundX;
     this.upperBoundX = upperBoundX;
-    this.comparatorForX = comparatorForX;
-    this.comparatorForY = comparatorForY;
-    this.targetY = targetY;
-    this.evaluatorOfX = evaluatorOfX;
     this.terminationPredicate = terminationPredicate;
-    this.midpointGenerator = midpointGenerator;
-    this.maxIterations = maxIterations;
+    this.binarySearchRawParameters = binarySearchRawParameters;
+  }
+
+  public BinarySearchTerminationPredicate<X, Y> getTerminationPredicate() {
+    return terminationPredicate;
+  }
+
+  public BinarySearchRawParameters<X, Y> getBinarySearchRawParameters() {
+    return binarySearchRawParameters;
   }
 
   public X getLowerBoundX() {
@@ -56,31 +50,27 @@ public class BinarySearchParameters<X, Y> {
   }
 
   public Comparator<? super X> getComparatorForX() {
-    return comparatorForX;
+    return binarySearchRawParameters.getComparatorForX();
   }
 
   public Comparator<? super Y> getComparatorForY() {
-    return comparatorForY;
+    return binarySearchRawParameters.getComparatorForY();
   }
 
   public Y getTargetY() {
-    return targetY;
+    return binarySearchRawParameters.getTargetY();
   }
 
   public Function<X, Y> getEvaluatorOfX() {
-    return evaluatorOfX;
-  }
-
-  public BinarySearchTerminationPredicate<X, Y> getTerminationPredicate() {
-    return terminationPredicate;
+    return binarySearchRawParameters.getEvaluatorOfX();
   }
 
   public BinaryOperator<X> getMidpointGenerator() {
-    return midpointGenerator;
+    return binarySearchRawParameters.getMidpointGenerator();
   }
 
   public int getMaxIterations() {
-    return maxIterations;
+    return binarySearchRawParameters.getMaxIterations();
   }
 
 
@@ -197,13 +187,34 @@ public class BinarySearchParameters<X, Y> {
           monotonic(comparatorForX, lowerBoundX, initialMidpoint, upperBoundX),
           "Midpoint generator is probably bad: lower / initial mid / upper should be monotonic (not strictly) but were %s %s %s",
           lowerBoundX, initialMidpoint, upperBoundX);
+
+      // This 2-level builder construction is unusual, but we added BinarySearchRawParameters afterwards,
+      // and it's a pain to retrofit it.
+      BinarySearchRawParametersBuilder.<X, Y>binarySearchRawParametersBuilder()
+          .setComparatorForX(comparatorForX)
+          .setComparatorForY(comparatorForY)
+          .setTargetY(targetY)
+          .setEvaluatorOfX(evaluatorOfX)
+          .setMidpointGenerator(midpointGenerator)
+          .setMaxIterations(maxIterations)
+          .sanityCheckContents();
     }
 
     @Override
     public BinarySearchParameters<X, Y> buildWithoutPreconditions() {
       return new BinarySearchParameters<>(
-          lowerBoundX, upperBoundX, comparatorForX, comparatorForY, targetY, evaluatorOfX,
-          terminationPredicate, midpointGenerator, maxIterations);
+          lowerBoundX, upperBoundX,
+          terminationPredicate,
+          // This 2-level builder construction is unusual, but we added BinarySearchRawParameters afterwards,
+          // and it's a pain to retrofit it.
+          BinarySearchRawParametersBuilder.<X, Y>binarySearchRawParametersBuilder()
+              .setComparatorForX(comparatorForX)
+              .setComparatorForY(comparatorForY)
+              .setTargetY(targetY)
+              .setEvaluatorOfX(evaluatorOfX)
+              .setMidpointGenerator(midpointGenerator)
+              .setMaxIterations(maxIterations)
+              .buildWithoutPreconditions());
     }
   }
 

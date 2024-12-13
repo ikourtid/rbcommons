@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.util.function.Function;
 
+import static com.rb.nonbiz.search.BinarySearchRawParametersTest.binarySearchRawParametersPartialMatcher;
 import static com.rb.nonbiz.search.BinarySearchTerminationPredicate.onlyTerminateBasedOnX;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
@@ -152,7 +153,7 @@ public class BinarySearchParametersTest extends RBTestMatcher<BinarySearchParame
     return makeMatcher(expected,
         match(v -> v.getLowerBoundX(), xMatcherGenerator),
         match(v -> v.getUpperBoundX(), xMatcherGenerator),
-        match(v -> v.getTargetY(), yMatcherGenerator),
+        match(v -> v.getBinarySearchRawParameters(), f -> binarySearchRawParametersPartialMatcher(f, yMatcherGenerator)),
         matchUsingEquals(v -> v.getMaxIterations()));
   }
 
