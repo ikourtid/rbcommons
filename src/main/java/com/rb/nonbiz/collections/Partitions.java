@@ -49,24 +49,36 @@ public class Partitions {
     return deviations(calculateFractionsForDifference(partitionA, partitionB));
   }
 
-  public static <K> NonZeroDeviations<K> calculatePartitionNonZeroDeviations(Partition<K> partitionA, Partition<K> partitionB) {
+  public static <K> NonZeroDeviations<K> calculatePartitionNonZeroDeviations(
+      Partition<K> partitionA,
+      Partition<K> partitionB,
+      Epsilon doNotAddIfAlmostEqual) {
     return nonZeroDeviations(calculateFractionsForDifference(partitionA.toSignedPartition(), partitionB.toSignedPartition())
-        .filterValues(signedFraction -> !signedFraction.isAlmostZero(DEFAULT_EPSILON_1e_8)));
+        .filterValues(signedFraction -> !signedFraction.isAlmostZero(doNotAddIfAlmostEqual)));
   }
 
-  public static <K> NonZeroDeviations<K> calculatePartitionNonZeroDeviations(SignedPartition<K> partitionA, Partition<K> partitionB) {
+  public static <K> NonZeroDeviations<K> calculatePartitionNonZeroDeviations(
+      SignedPartition<K> partitionA,
+      Partition<K> partitionB,
+      Epsilon doNotAddIfAlmostEqual) {
     return nonZeroDeviations(calculateFractionsForDifference(partitionA, partitionB.toSignedPartition())
-        .filterValues(signedFraction -> !signedFraction.isAlmostZero(DEFAULT_EPSILON_1e_8)));
+        .filterValues(signedFraction -> !signedFraction.isAlmostZero(doNotAddIfAlmostEqual)));
   }
 
-  public static <K> NonZeroDeviations<K> calculatePartitionNonZeroDeviations(Partition<K> partitionA, SignedPartition<K> partitionB) {
+  public static <K> NonZeroDeviations<K> calculatePartitionNonZeroDeviations(
+      Partition<K> partitionA,
+      SignedPartition<K> partitionB,
+      Epsilon doNotAddIfAlmostEqual) {
     return nonZeroDeviations(calculateFractionsForDifference(partitionA.toSignedPartition(), partitionB)
-        .filterValues(signedFraction -> !signedFraction.isAlmostZero(DEFAULT_EPSILON_1e_8)));
+        .filterValues(signedFraction -> !signedFraction.isAlmostZero(doNotAddIfAlmostEqual)));
   }
 
-  public static <K> NonZeroDeviations<K> calculatePartitionNonZeroDeviations(SignedPartition<K> partitionA, SignedPartition<K> partitionB) {
+  public static <K> NonZeroDeviations<K> calculatePartitionNonZeroDeviations(
+      SignedPartition<K> partitionA,
+      SignedPartition<K> partitionB,
+      Epsilon doNotAddIfAlmostEqual) {
     return nonZeroDeviations(calculateFractionsForDifference(partitionA, partitionB)
-        .filterValues(signedFraction -> !signedFraction.isAlmostZero(DEFAULT_EPSILON_1e_8)));
+        .filterValues(signedFraction -> !signedFraction.isAlmostZero(doNotAddIfAlmostEqual)));
   }
 
   private static <K> RBMap<K, SignedFraction> calculateFractionsForDifference(
