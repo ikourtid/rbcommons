@@ -115,7 +115,7 @@ public class PartitionsTest {
   public void testPartitionNonZeroDeviations() {
     TriConsumer<RBMap<String, UnitFraction>, RBMap<String, UnitFraction>, RBMap<String, SignedFraction>> asserter =
         (partitionA, partitionB, deviationsMap) -> assertThat(
-            calculatePartitionNonZeroDeviations(partition(partitionA), partition(partitionB)),
+            calculatePartitionNonZeroDeviations(partition(partitionA), partition(partitionB), DEFAULT_EPSILON_1e_8),
             nonZeroDeviationsMatcher(nonZeroDeviations(deviationsMap), DEFAULT_EPSILON_1e_8));
     asserter.accept(
         singletonRBMap("a", UNIT_FRACTION_1),
