@@ -169,8 +169,6 @@ public class IidMapMergers {
    * Just like {@link #mergeIidMapsByTransformedEntry(TriFunction, BiFunction, BiFunction, IidMap, IidMap)},
    * except that uses optionals to allow for the possibility that we don't even want to include a certain InstrumentId
    * in the final map.
-   *
-   * FIXME IAK test this
    */
   public static <V, V1, V2> IidMap<V> mergeIidMapsByOptionalTransformedEntry(
       TriFunction<InstrumentId, V1, V2, Optional<V>> mergeFunction,

@@ -19,9 +19,13 @@ import static com.google.common.collect.Iterators.singletonIterator;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A2;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A3;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A4;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A5;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_A6;
 import static com.rb.biz.types.Money.money;
 import static com.rb.biz.types.asset.InstrumentId.instrumentId;
 import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsAllowingOverlapOnSimilarItemsOnly;
+import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsByOptionalTransformedEntry;
 import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsByTransformedValue;
 import static com.rb.nonbiz.collections.IidMapMergers.mergeIidMapsInOrderAllowingOverwriting;
 import static com.rb.nonbiz.collections.IidMapMergers.mergeThreeIidMapsByTransformedEntry;
@@ -33,6 +37,7 @@ import static com.rb.nonbiz.collections.IidMapTest.iidMapEqualityMatcher;
 import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.testmatchers.RBMapMatchers.iidMapPreciseValueMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
+import static com.rb.nonbiz.testutils.Asserters.intExplained;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
@@ -151,6 +156,31 @@ public class IidMapMergersTest {
             STOCK_1, "1=A",
             STOCK_2, "2=B:C",
             STOCK_3, "3=D"));
+  }
+
+  @Test
+  public void testMergeIidMapsByOptionalTransformedEntry() {
+    assertThat(
+        mergeIidMapsByOptionalTransformedEntry(
+            (instrumentId, v1, v2) -> (v1 % 2 == 0 ? Optional.empty() : Optional.of(v1 + v2)),
+            (instrumentId, v1) -> (v1 % 2 == 0 ? Optional.empty() : Optional.of(v1)),
+            (instrumentId, v2) -> (v2 % 2 == 0 ? Optional.empty() : Optional.of(v2)),
+            iidMapOf(
+                STOCK_A1, 71,
+                STOCK_A2, 72,
+                STOCK_A3, 73,
+                STOCK_A4, 74),
+            iidMapOf(
+                STOCK_A3, 83,
+                STOCK_A4, 84,
+                STOCK_A5, 85,
+                STOCK_A6, 86)),
+        iidMapEqualityMatcher(
+            iidMapOf(
+                // STOCK_A2, STOCK_A4, STOCK_A6 cases were dropped, because their numbers are odd (see lambdas above)
+                STOCK_A1, 71, // this came from the 1st map
+                STOCK_A3, intExplained(156, 73 + 83),
+                STOCK_A5, 85))); // this came from the 2nd map
   }
 
   @Test
