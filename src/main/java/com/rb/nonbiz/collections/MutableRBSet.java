@@ -56,8 +56,8 @@ public class MutableRBSet<T> {
    * Adds an item to the set.
    * It's OK if the item is already in the set.
    *
-   * Consider using #addAssumingAbsent if adding the same item twice is not valid behavior,
-   * and you want the extra safety check.
+   * <p> Consider using #addAssumingAbsent if adding the same item twice is not valid behavior,
+   * and you want the extra safety check. </p>
    */
   public boolean add(T t) {
     return rawSet.add(t);
@@ -67,13 +67,29 @@ public class MutableRBSet<T> {
    * Adds an item to the set.
    * Throws if it's already there.
    *
-   * If adding the same item twice is not valid behavior, use this instead of plain #add for extra safety.
+   * <p> If adding the same item twice is not valid behavior, use this instead of plain #add for extra safety. </p>
    */
   public boolean addAssumingAbsent(T t) {
     RBPreconditions.checkArgument(
         !rawSet.contains(t),
         "Set already contains %s ; contents are %s",
         t, rawSet);
+    return add(t);
+  }
+
+  /**
+   * Adds an item to the set.
+   * Throws if it's already there.
+   *
+   * <p> You may say - why not just use plain 'add', which will just replace the object?
+   * There's a nuance in cases where there are two objects which, if compared using equals, will return true,
+   * but which are actually different objects. We should be defining equals in a way that this shouldn't happen,
+   * but at a minimum, this is more explicit. </p>
+   */
+  public boolean addIfAbsent(T t) {
+    if (rawSet.contains(t)) {
+      return false;
+    }
     return add(t);
   }
 
