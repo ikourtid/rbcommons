@@ -121,15 +121,16 @@ public class IidMapMergers {
   /**
    * Merges two maps into a single one, but also transforms the values into a possibly different type.
    *
-   * For the 3 separate cases of a key appearing in the left map / right map / both maps,
-   * modify the values based on the functions passed in.
+   * <p> For the 3 separate cases of a key appearing in the left map / right map / both maps,
+   * modify the values based on the functions passed in. </p>
    *
-   * This is similar to mergeIidMapsByValue, except that it applies:
+   * <p> This is similar to mergeIidMapsByValue, except that it applies:
    * - in cases where the maps have different types in their values
    * - for two maps only
+   * </p>
    *
-   * It is also similar to mergeRBMapsByTransformedValue, but it applies to IidMaps (not RBMaps),
-   * and also it allows the two input maps to have values of different types.
+   * <p> It is also similar to mergeRBMapsByTransformedValue, but it applies to IidMaps (not RBMaps),
+   * and also it allows the two input maps to have values of different types. </p>
    *
    * @see IidMapMergers#mergeIidMapsByTransformedValue
    * @see RBMapMergers#mergeRBMapsByTransformedValue
