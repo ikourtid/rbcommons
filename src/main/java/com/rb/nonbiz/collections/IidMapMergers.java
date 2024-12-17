@@ -191,7 +191,7 @@ public class IidMapMergers {
           @Override
           public void visitInstrumentInRightMapOnly(InstrumentId keyInRightMapOnly, V2 valueInRightMapOnly) {
             onlyRightPresent.apply(keyInRightMapOnly, valueInRightMapOnly)
-                    .ifPresent(v -> mutableMap.putAssumingAbsent(keyInRightMapOnly, v));
+                .ifPresent(v -> mutableMap.putAssumingAbsent(keyInRightMapOnly, v));
           }
 
           @Override
