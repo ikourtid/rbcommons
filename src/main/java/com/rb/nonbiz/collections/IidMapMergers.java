@@ -166,6 +166,46 @@ public class IidMapMergers {
   }
 
   /**
+   * Just like {@link #mergeIidMapsByTransformedEntry(TriFunction, BiFunction, BiFunction, IidMap, IidMap)},
+   * except that uses optionals to allow for the possibility that we don't even want to include a certain InstrumentId
+   * in the final map.
+   *
+   * FIXME IAK test this
+   */
+  public static <V, V1, V2> IidMap<V> mergeIidMapsByOptionalTransformedEntry(
+      TriFunction<InstrumentId, V1, V2, Optional<V>> mergeFunction,
+      BiFunction<InstrumentId, V1, Optional<V>> onlyLeftPresent,
+      BiFunction<InstrumentId, V2, Optional<V>> onlyRightPresent,
+      IidMap<V1> leftMap, IidMap<V2> rightMap) {
+    // This is just an estimate; it doesn't have to be exact. Of course, if an instrument appears in both maps,
+    // this will be an overestimate.
+    MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(leftMap.size() + rightMap.size());
+    visitInstrumentsOfTwoIidMaps(
+        leftMap,
+        rightMap,
+        new TwoIidMapsVisitor<V1, V2>() {
+          @Override
+          public void visitInstrumentInLeftMapOnly(InstrumentId keyInLeftMapOnly, V1 valueInLeftMapOnly) {
+            onlyLeftPresent.apply(keyInLeftMapOnly, valueInLeftMapOnly)
+                .ifPresent(v -> mutableMap.putAssumingAbsent(keyInLeftMapOnly, v));
+          }
+
+          @Override
+          public void visitInstrumentInRightMapOnly(InstrumentId keyInRightMapOnly, V2 valueInRightMapOnly) {
+            onlyRightPresent.apply(keyInRightMapOnly, valueInRightMapOnly)
+                    .ifPresent(v -> mutableMap.putAssumingAbsent(keyInRightMapOnly, v));
+          }
+
+          @Override
+          public void visitInstrumentInBothMaps(InstrumentId keyInBothMaps, V1 valueInLeftMap, V2 valueInRightMap) {
+            mergeFunction.apply(keyInBothMaps, valueInLeftMap, valueInRightMap)
+                .ifPresent(v -> mutableMap.putAssumingAbsent(keyInBothMaps, v));
+          }
+        });
+    return newIidMap(mutableMap);
+  }
+
+  /**
    * Merges three maps into a single one, but also transforms the values into a possibly different type.
    *
    * Unlike mergeIidMapsByTransformedEntry, there are too many cases of keys having values or not (2 ^ 3 - 1)
