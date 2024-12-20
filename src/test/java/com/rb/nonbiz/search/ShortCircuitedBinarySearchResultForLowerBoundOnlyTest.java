@@ -13,7 +13,7 @@ import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class ShortCircuitedBinarySearchResultForLowerBoundOnlyTest
-extends RBTestMatcher<ShortCircuitedBinarySearchResultForLowerBoundOnly<Double, String>> {
+    extends RBTestMatcher<ShortCircuitedBinarySearchResultForLowerBoundOnly<Double, String>> {
 
   @Override
   public ShortCircuitedBinarySearchResultForLowerBoundOnly<Double, String> makeTrivialObject() {
@@ -42,10 +42,10 @@ extends RBTestMatcher<ShortCircuitedBinarySearchResultForLowerBoundOnly<Double, 
   }
 
   public static <X, Y> TypeSafeMatcher<ShortCircuitedBinarySearchResultForLowerBoundOnly<X, Y>>
-      shortCircuitedBinarySearchResultForLowerBoundOnlyMatcher(
-          ShortCircuitedBinarySearchResultForLowerBoundOnly<X, Y> expected,
-          MatcherGenerator<X> xMatcherGenerator,
-          MatcherGenerator<Y> yMatcherGenerator) {
+  shortCircuitedBinarySearchResultForLowerBoundOnlyMatcher(
+      ShortCircuitedBinarySearchResultForLowerBoundOnly<X, Y> expected,
+      MatcherGenerator<X> xMatcherGenerator,
+      MatcherGenerator<Y> yMatcherGenerator) {
     return makeMatcher(expected,
         match(v -> v.getLowerBoundX(), xMatcherGenerator),
         match(v -> v.getLowerBoundY(), yMatcherGenerator));
