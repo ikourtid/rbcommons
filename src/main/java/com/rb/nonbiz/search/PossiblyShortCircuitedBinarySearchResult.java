@@ -25,8 +25,10 @@ public class PossiblyShortCircuitedBinarySearchResult<X, Y> {
         ShortCircuitedBinarySearchResultForUpperBoundOnly<X, Y> shortCircuitedBinarySearchResultForUpperBoundOnly);
 
   }
-  
-  
+
+
+  // OneOf3 is an ugly type, but we don't expose this, either in the constructor (there are 3 different ones),
+  // or with a getter (since you are forced to use the Visitor class above).
   private final OneOf3<
       BinarySearchResult<X, Y>,
       ShortCircuitedBinarySearchResultForLowerBoundOnly<X, Y>,
