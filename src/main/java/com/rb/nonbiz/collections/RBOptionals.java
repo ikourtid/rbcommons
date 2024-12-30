@@ -372,6 +372,26 @@ public class RBOptionals {
   }
 
   /**
+   * Return a non-empty optional of the 2nd argument if the boolean is true,
+   * otherwise return an empty optional.
+   */
+  public static <V> Optional<V> makeNonEmptyOptionalIf(boolean makeNonEmptyOptional, V value) {
+    return makeNonEmptyOptional ? Optional.of(value) : Optional.empty();
+  }
+
+  /**
+   * Return a non-empty optional of the 2nd argument if the boolean is true,
+   * otherwise return an empty optional.
+   *
+   * <p> Use this instead of the other overload in the cases where the value in the supplier is slow to calculate,
+   * or if it would cause an exception in the cases where it doesn't end up getting used. That's because the Java
+   * interpreter will evaluate the 2nd argument because it has to be passed in. </p>
+   */
+  public static <V> Optional<V> makeNonEmptyOptionalIf(boolean makeNonEmptyOptional, Supplier<V> valueSupplier) {
+    return makeNonEmptyOptional ? Optional.of(valueSupplier.get()) : Optional.empty();
+  }
+
+  /**
    * If the value is null, return Optional.empty(), otherwise return Optional.of(some transformation of it).
    * We normally don't deal with nulls, but there are cases where we need to (e.g. 3rd party libraries that use null).
    * This is not really Optional-related, but we have a lot of 'transform' methods for optionals, so this is a good place

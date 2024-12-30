@@ -29,6 +29,8 @@ import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static java.util.Comparator.comparing;
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 // This test class is not generic, but the publicly exposed static typesafe matcher is.
 public class RBMapOfHasUniqueIdTest extends RBTestMatcher<RBMapOfHasUniqueId<TestHasUniqueId, Double>> {
@@ -119,6 +121,12 @@ public class RBMapOfHasUniqueIdTest extends RBTestMatcher<RBMapOfHasUniqueId<Tes
 
     RBMapOfHasUniqueId<TestHasUniqueId, Double> emptyMap = emptyRBMapOfHasUniqueId();
     assertEquals(0, emptyMap.transformValuesCopy(d -> money(700 + d)).size());
+  }
+
+  @Test
+  public void testIsEmpty() {
+    assertTrue(makeTrivialObject().isEmpty());
+    assertFalse(makeNontrivialObject().isEmpty());
   }
 
   @Override

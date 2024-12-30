@@ -38,6 +38,7 @@ import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.doubleListMatcher;
 import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.orderedListMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorEqualityMatcher;
 import static com.rb.nonbiz.testmatchers.RBOptionalMatchers.optionalMatcher;
+import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
@@ -45,12 +46,14 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEquals;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalIntEquals;
+import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_LONG;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_POSITIVE_INTEGER;
 import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Pointer.initializedPointer;
 import static com.rb.nonbiz.types.Pointer.uninitializedPointer;
+import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -61,6 +64,27 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 
 public class RBOptionalsTest {
+
+  @Test
+  public void testMakeNonEmptyOptionalIf() {
+    assertOptionalEmpty(makeNonEmptyOptionalIf(false, unitFraction(0.123)));
+    assertOptionalEmpty(makeNonEmptyOptionalIf(false, () -> unitFraction(0.123)));
+
+    assertOptionalNonEmpty(
+        makeNonEmptyOptionalIf(true, unitFraction(0.123)),
+        preciseValueMatcher(unitFraction(0.123), DEFAULT_EPSILON_1e_8));
+    assertOptionalNonEmpty(
+        makeNonEmptyOptionalIf(true, () -> unitFraction(0.123)),
+        preciseValueMatcher(unitFraction(0.123), DEFAULT_EPSILON_1e_8));
+
+    // Obviously this throws, because the 2nd argument gets evaluated, and causes an exception.
+    assertIllegalArgumentException( () ->
+        makeNonEmptyOptionalIf(false, unitFraction(-999)));
+
+    // However, this doesn't throw, because the invalid UnitFraction sits inside a Supplier.
+    assertOptionalEmpty(
+        makeNonEmptyOptionalIf(false, () -> unitFraction(-999)));
+  }
 
   @Test
   public void testGetOrThrow() {
