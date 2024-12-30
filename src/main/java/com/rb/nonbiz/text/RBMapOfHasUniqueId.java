@@ -128,6 +128,10 @@ public class RBMapOfHasUniqueId<K extends HasUniqueId<K>, V> {
         biConsumer.accept(entireKeyAndValue.getLeft(), entireKeyAndValue.getRight()));
   }
 
+  public boolean isEmpty() {
+    return rawMap.isEmpty();
+  }
+
   @Override
   public String toString() {
     return Strings.format("[RMOHUI %s %s RMOHUI]", rawMap.size(), rawMap);

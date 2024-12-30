@@ -372,6 +372,14 @@ public class RBOptionals {
   }
 
   /**
+   * Return a non-empty optional of the 2nd argument if the boolean is true,
+   * otherwise return an empty optional.
+   */
+  public static <V> Optional<V> makeNonEmptyOptionalIf(boolean makeNonEmptyOptional, V value) {
+    return makeNonEmptyOptional ? Optional.of(value) : Optional.empty();
+  }
+
+  /**
    * If the value is null, return Optional.empty(), otherwise return Optional.of(some transformation of it).
    * We normally don't deal with nulls, but there are cases where we need to (e.g. 3rd party libraries that use null).
    * This is not really Optional-related, but we have a lot of 'transform' methods for optionals, so this is a good place
