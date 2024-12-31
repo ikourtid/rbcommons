@@ -282,6 +282,19 @@ public class RBOptionals {
   }
 
   /**
+   * Returns the count of non-empty (present) optionals.
+   */
+  public static int countPresentOptionals(Optional<?> first, Optional<?> ... rest) {
+    int count = first.isPresent() ? 1 : 0;
+    for (Optional<?> restItem : rest) {
+      if (restItem.isPresent()) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  /**
    * Returns a list of doubles that includes only the present items from the optionals passed in (in order),
    * This applies to the special case of OptionalDouble.
    */

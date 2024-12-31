@@ -66,6 +66,16 @@ import static org.junit.Assert.assertNull;
 public class RBOptionalsTest {
 
   @Test
+  public void testCountPresentOptionals() {
+    assertEquals(2, countPresentOptionals(Optional.of("abc"), Optional.of(123)));
+    assertEquals(1, countPresentOptionals(Optional.empty(), Optional.of(123)));
+    assertEquals(0, countPresentOptionals(Optional.empty(), Optional.empty()));
+
+    assertEquals(1, countPresentOptionals(Optional.of(123)));
+    assertEquals(0, countPresentOptionals(Optional.empty()));
+  }
+
+  @Test
   public void testMakeNonEmptyOptionalIf() {
     assertOptionalEmpty(makeNonEmptyOptionalIf(false, unitFraction(0.123)));
     assertOptionalEmpty(makeNonEmptyOptionalIf(false, () -> unitFraction(0.123)));
