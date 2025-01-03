@@ -140,7 +140,7 @@ public class Strings {
   }
 
   public static <K extends Comparable<? super K>, V> String formatMap(RBMap<K, V> map, String separator) {
-    return formatSortedMapHelper(map, separator, comparing(e -> e.getKey()));
+    return formatSortedMapHelper(map, separator, comparingByKey());
   }
 
   public static <K, V extends PrintsInstruments> String formatMapWhereValuesPrintInstruments(
