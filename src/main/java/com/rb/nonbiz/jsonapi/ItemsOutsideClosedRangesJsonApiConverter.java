@@ -50,7 +50,7 @@ public class ItemsOutsideClosedRangesJsonApiConverter implements HasJsonApiDocum
   public JsonApiDocumentation getJsonApiDocumentation() {
     // We could utilize jsonApiClassWithNonFixedPropertiesDocumentationBuilder here, but this is clear enough.
     return jsonApiClassDocumentationBuilder()
-        .setClass(ItemsOutsideClosedRangesJsonApiConverter.class)
+        .setClass(ItemsOutsideClosedRanges.class)
         .setSingleLineSummary(documentation(
             "A map of keys to a pair of: a value (typically numeric), and a `ClosedRange` that does not contain it"))
         .setLongDocumentation(documentation(asSingleLineWithNewlines(
