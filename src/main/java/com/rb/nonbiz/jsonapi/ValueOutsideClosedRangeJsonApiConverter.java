@@ -15,6 +15,7 @@ import static com.rb.nonbiz.collections.ValueOutsideClosedRange.valueOutsideClos
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
+import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonPercentage;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
@@ -79,10 +80,11 @@ public class ValueOutsideClosedRangeJsonApiConverter implements HasJsonApiDocume
         .setJsonValidationInstructions(JSON_VALIDATION_INSTRUCTIONS)
         .hasSingleChildJsonApiConverter(rangeJsonApiConverter)
         .setNontrivialSampleJson(jsonObject(
-            "value", jsonPercentage(1.1),
+            "value", jsonDouble(1.1),
             "range", jsonObject(
-                "min", jsonPercentage(2.8),
-                "max", jsonPercentage(3.9))))
-        .build();  }
+                "min", jsonDouble(2.8),
+                "max", jsonDouble(3.9))))
+        .build();
+  }
 
 }
