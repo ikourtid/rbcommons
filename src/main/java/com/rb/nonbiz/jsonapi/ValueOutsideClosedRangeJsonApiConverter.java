@@ -3,9 +3,11 @@ package com.rb.nonbiz.jsonapi;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.inject.Inject;
+import com.rb.nonbiz.collections.ClosedRange;
 import com.rb.nonbiz.collections.ValueOutsideClosedRange;
 import com.rb.nonbiz.json.JsonValidationInstructions;
 import com.rb.nonbiz.json.JsonValidator;
+import com.rb.nonbiz.types.RBNumeric;
 
 import java.util.function.Function;
 
@@ -16,7 +18,6 @@ import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPro
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
 import static com.rb.nonbiz.json.RBGson.jsonDouble;
-import static com.rb.nonbiz.json.RBGson.jsonPercentage;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonPrimitiveOrThrow;
@@ -32,12 +33,10 @@ public class ValueOutsideClosedRangeJsonApiConverter implements HasJsonApiDocume
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties(rbMapOf(
-          "value", simpleClassJsonApiPropertyDescriptor(String.class, jsonPropertySpecificDocumentation(
-              asSingleLineWithNewlines(
-                  "The value that's outside the range."))),
-          "range", simpleClassJsonApiPropertyDescriptor(String.class, jsonPropertySpecificDocumentation(
-              asSingleLineWithNewlines(
-                  "The range that the value falls outside of.")))))
+          "value", simpleClassJsonApiPropertyDescriptor(RBNumeric.class, jsonPropertySpecificDocumentation(
+              "The value that's outside the range.")),
+          "range", simpleClassJsonApiPropertyDescriptor(ClosedRange.class, jsonPropertySpecificDocumentation(
+              "The range that the value falls outside of."))))
       .hasNoOptionalProperties()
       .build();
 
