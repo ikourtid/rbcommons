@@ -32,6 +32,10 @@ public class ItemsOutsideClosedRanges<K, V extends Comparable<? super V>> {
     return rawMap;
   }
 
+  public boolean isEmpty() {
+    return rawMap.isEmpty();
+  }
+
   @Override
   public String toString() {
     return Strings.format("[IOCR %s IOCR]", rawMap);

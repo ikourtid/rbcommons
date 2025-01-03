@@ -20,11 +20,20 @@ import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
 
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Test;
 
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class ItemsOutsideClosedRangesTest extends RBTestMatcher<ItemsOutsideClosedRanges<AssetId, UnitFraction>> {
+
+  @Test
+  public void testIsEmpty() {
+    assertTrue(emptyItemsOutsideClosedRanges().isEmpty());
+    assertFalse(makeNontrivialObject().isEmpty());
+  }
 
   @Override
   public ItemsOutsideClosedRanges<AssetId, UnitFraction> makeTrivialObject() {
