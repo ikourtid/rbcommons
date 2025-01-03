@@ -48,6 +48,7 @@ public class ItemsOutsideClosedRangesJsonApiConverter implements HasJsonApiDocum
 
   @Override
   public JsonApiDocumentation getJsonApiDocumentation() {
+    // We could utilize jsonApiClassWithNonFixedPropertiesDocumentationBuilder here, but this is clear enough.
     return jsonApiClassDocumentationBuilder()
         .setClass(ItemsOutsideClosedRangesJsonApiConverter.class)
         .setSingleLineSummary(documentation(
