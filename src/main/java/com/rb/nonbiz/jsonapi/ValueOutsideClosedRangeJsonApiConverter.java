@@ -15,7 +15,6 @@ import static com.rb.nonbiz.collections.ValueOutsideClosedRange.valueOutsideClos
 import static com.rb.nonbiz.json.JsonApiPropertyDescriptor.SimpleClassJsonApiPropertyDescriptor.simpleClassJsonApiPropertyDescriptor;
 import static com.rb.nonbiz.json.JsonPropertySpecificDocumentation.jsonPropertySpecificDocumentation;
 import static com.rb.nonbiz.json.JsonValidationInstructions.JsonValidationInstructionsBuilder.jsonValidationInstructionsBuilder;
-import static com.rb.nonbiz.json.RBGson.jsonDouble;
 import static com.rb.nonbiz.json.RBGson.jsonPercentage;
 import static com.rb.nonbiz.json.RBJsonObjectBuilder.rbJsonObjectBuilder;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonObjectOrThrow;
