@@ -33,7 +33,7 @@ public class ValueOutsideClosedRangeJsonApiConverter implements HasJsonApiDocume
 
   private static final JsonValidationInstructions JSON_VALIDATION_INSTRUCTIONS = jsonValidationInstructionsBuilder()
       .setRequiredProperties(rbMapOf(
-          "value", simpleClassJsonApiPropertyDescriptor(RBNumeric.class, jsonPropertySpecificDocumentation(
+          "value", simpleClassJsonApiPropertyDescriptor(Double.class, jsonPropertySpecificDocumentation(
               "The value that's outside the range.")),
           "range", simpleClassJsonApiPropertyDescriptor(ClosedRange.class, jsonPropertySpecificDocumentation(
               "The range that the value falls outside of."))))
