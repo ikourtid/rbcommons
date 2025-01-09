@@ -68,6 +68,15 @@ public class RBOptionals {
   }
 
   /**
+   * Returns true if two optionals (of the same generic type) are both present, OR both empty.
+   *
+   * <p> Returns false otherwise. </p>
+   */
+  public static <T> boolean optionalsHaveSameIsPresent(Optional<T> optional1, Optional<T> optional2) {
+    return optional1.isPresent() == optional2.isPresent();
+  }
+
+  /**
    * If you are implementing an equals override for an object, chances are you'll need this overload vs the above.
    * The two types A and B may be the same - or not.
    */

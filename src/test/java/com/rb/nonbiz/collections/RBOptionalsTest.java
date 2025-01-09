@@ -115,6 +115,16 @@ public class RBOptionalsTest {
   }
 
   @Test
+  public void testOptionalsHaveSameIsPresent() {
+    assertTrue(optionalsHaveSameIsPresent(Optional.empty(), Optional.empty()));
+    assertTrue(optionalsHaveSameIsPresent(Optional.of(123), Optional.of(123)));
+    assertTrue(optionalsHaveSameIsPresent(Optional.of(123), Optional.of(456)));
+
+    assertFalse(optionalsHaveSameIsPresent(Optional.empty(), Optional.of(123)));
+    assertFalse(optionalsHaveSameIsPresent(Optional.of(123), Optional.empty()));
+  }
+
+  @Test
   public void testOptionalsEqual() {
     assertTrue(optionalsEqual(Optional.empty(), Optional.empty()));
     assertTrue(optionalsEqual(Optional.of("a"), Optional.of("a")));
