@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -644,6 +645,12 @@ public class Strings {
 
   public static <T> String formatOptional(Optional<T> optional) {
     return formatOptional(optional, v -> v.toString());
+  }
+
+  public static String formatOptionalDouble(OptionalDouble optional) {
+    return optional.isPresent()
+        ? "(n/a)"
+        : Double.toString(optional.getAsDouble());
   }
 
   public static <T> String formatOptional(Optional<T> optional, Function<T, String> valueTransformer) {
