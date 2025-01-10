@@ -9,6 +9,7 @@ import com.rb.nonbiz.collections.RBSet;
 import org.junit.Test;
 
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.function.BiConsumer;
 
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
@@ -37,6 +38,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class StringsTest {
+
+  @Test
+  public void testFormatOptionalDouble() {
+    assertEquals("(n/a)", formatOptionalDouble(OptionalDouble.empty()));
+    assertEquals("1.23", formatOptionalDouble(OptionalDouble.of(1.23)));
+  }
 
   @Test
   public void toBasisPoints() {

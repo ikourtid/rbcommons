@@ -372,7 +372,12 @@ public class Strings {
 
   public static <T extends PrintsInstruments> String formatCollectionOfPrintsInstruments(
       Collection<T> values, InstrumentMaster instrumentMaster, LocalDate date) {
-    return sizePrefix(values.size()) + Joiner.on(" , ").join(values
+    return formatCollectionOfPrintsInstruments(values, " , ", instrumentMaster, date);
+  }
+
+  public static <T extends PrintsInstruments> String formatCollectionOfPrintsInstruments(
+      Collection<T> values, String separator, InstrumentMaster instrumentMaster, LocalDate date) {
+    return sizePrefix(values.size()) + Joiner.on(separator).join(values
         .stream()
         .map(v -> v.toString(instrumentMaster, date))
         .iterator());
@@ -648,7 +653,7 @@ public class Strings {
   }
 
   public static String formatOptionalDouble(OptionalDouble optional) {
-    return optional.isPresent()
+    return !optional.isPresent()
         ? "(n/a)"
         : Double.toString(optional.getAsDouble());
   }
