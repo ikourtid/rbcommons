@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import java.util.Optional;
 import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.BiConsumer;
 
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A;
@@ -40,9 +42,22 @@ import static org.junit.Assert.assertTrue;
 public class StringsTest {
 
   @Test
-  public void testFormatOptionalDouble() {
+  public void testFormatOptionalPrimitive() {
     assertEquals("(n/a)", formatOptionalDouble(OptionalDouble.empty()));
     assertEquals("1.23", formatOptionalDouble(OptionalDouble.of(1.23)));
+    assertEquals("-1.23", formatOptionalDouble(OptionalDouble.of(-1.23)));
+
+    assertEquals("(n/a)", formatOptionalInt(OptionalInt.empty()));
+    assertEquals("-123", formatOptionalInt(OptionalInt.of(-123)));
+    assertEquals("123", formatOptionalInt(OptionalInt.of(123)));
+
+    assertEquals("(n/a)", formatOptionalLong(OptionalLong.empty()));
+    assertEquals("123", formatOptionalLong(OptionalLong.of(123)));
+    assertEquals("-123", formatOptionalLong(OptionalLong.of(-123)));
+
+    assertEquals("(n/a)", formatOptionalLong(OptionalLong.empty()));
+    assertEquals("123456789123", formatOptionalLong(OptionalLong.of(123_456_789_123L)));
+    assertEquals("-123456789123", formatOptionalLong(OptionalLong.of(-123_456_789_123L)));
   }
 
   @Test

@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -656,6 +658,18 @@ public class Strings {
     return !optional.isPresent()
         ? "(n/a)"
         : Double.toString(optional.getAsDouble());
+  }
+
+  public static String formatOptionalInt(OptionalInt optional) {
+    return !optional.isPresent()
+        ? "(n/a)"
+        : Integer.toString(optional.getAsInt());
+  }
+
+  public static String formatOptionalLong(OptionalLong optional) {
+    return !optional.isPresent()
+        ? "(n/a)"
+        : Long.toString(optional.getAsLong());
   }
 
   public static <T> String formatOptional(Optional<T> optional, Function<T, String> valueTransformer) {
