@@ -1,9 +1,11 @@
 package com.rb.nonbiz.collections;
 
+import com.google.common.collect.ImmutableList;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -446,6 +448,17 @@ public class RBLists {
         .sorted(comparingByKey())
         .map(v -> v.getValue())
         .collect(Collectors.toList());
+  }
+
+  /**
+   * Returns a copy of the original list, in reversed order.
+   */
+  public static <T> List<T> reverseList(List<T> original) {
+    List<T> reversed = newArrayListWithExpectedSize(original.size());
+    for (int i = original.size() - 1; i >= 0; i--) {
+      reversed.add(original.get(i));
+    }
+    return unmodifiableList(reversed);
   }
 
 }

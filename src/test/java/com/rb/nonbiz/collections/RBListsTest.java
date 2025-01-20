@@ -49,6 +49,22 @@ import static org.junit.Assert.assertNotEquals;
 public class RBListsTest {
 
   @Test
+  public void testReverseList() {
+    assertEquals(
+        ImmutableList.of("c", "d", "b", "a"),
+        reverseList(ImmutableList.of("a", "b", "d", "c")));
+    assertEquals(
+        ImmutableList.of("a", "a"),
+        reverseList(ImmutableList.of("a", "a")));
+    assertEquals(
+        singletonList("a"),
+        reverseList(singletonList("a")));
+    assertEquals(
+        emptyList(),
+        reverseList(emptyList()));
+  }
+
+  @Test
   public void testListConcatenation_varargs() {
     assertEmpty(listConcatenation());
     assertEmpty(listConcatenation(emptyList()));
