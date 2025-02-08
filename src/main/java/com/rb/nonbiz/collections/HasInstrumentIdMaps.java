@@ -103,6 +103,69 @@ public class HasInstrumentIdMaps {
     return newHasInstrumentIdMap(map);
   }
 
+  public static <T extends HasInstrumentId, V> HasInstrumentIdMap<T, V> hasInstrumentIdMapOf(
+      T k1, V v1,
+      T k2, V v2,
+      T k3, V v3,
+      T k4, V v4,
+      T k5, V v5,
+      T k6, V v6,
+      T k7, V v7) {
+    MutableIidMap<Pair<T, V>> map = newMutableIidMapWithExpectedSize(9);
+    map.putAssumingAbsent(k1.getInstrumentId(), pair(k1, v1));
+    map.putAssumingAbsent(k2.getInstrumentId(), pair(k2, v2));
+    map.putAssumingAbsent(k3.getInstrumentId(), pair(k3, v3));
+    map.putAssumingAbsent(k4.getInstrumentId(), pair(k4, v4));
+    map.putAssumingAbsent(k5.getInstrumentId(), pair(k5, v5));
+    map.putAssumingAbsent(k6.getInstrumentId(), pair(k6, v6));
+    map.putAssumingAbsent(k7.getInstrumentId(), pair(k7, v7));
+    return newHasInstrumentIdMap(map);
+  }
+
+  public static <T extends HasInstrumentId, V> HasInstrumentIdMap<T, V> hasInstrumentIdMapOf(
+      T k1, V v1,
+      T k2, V v2,
+      T k3, V v3,
+      T k4, V v4,
+      T k5, V v5,
+      T k6, V v6,
+      T k7, V v7,
+      T k8, V v8) {
+    MutableIidMap<Pair<T, V>> map = newMutableIidMapWithExpectedSize(9);
+    map.putAssumingAbsent(k1.getInstrumentId(), pair(k1, v1));
+    map.putAssumingAbsent(k2.getInstrumentId(), pair(k2, v2));
+    map.putAssumingAbsent(k3.getInstrumentId(), pair(k3, v3));
+    map.putAssumingAbsent(k4.getInstrumentId(), pair(k4, v4));
+    map.putAssumingAbsent(k5.getInstrumentId(), pair(k5, v5));
+    map.putAssumingAbsent(k6.getInstrumentId(), pair(k6, v6));
+    map.putAssumingAbsent(k7.getInstrumentId(), pair(k7, v7));
+    map.putAssumingAbsent(k8.getInstrumentId(), pair(k8, v8));
+    return newHasInstrumentIdMap(map);
+  }
+
+  public static <T extends HasInstrumentId, V> HasInstrumentIdMap<T, V> hasInstrumentIdMapOf(
+      T k1, V v1,
+      T k2, V v2,
+      T k3, V v3,
+      T k4, V v4,
+      T k5, V v5,
+      T k6, V v6,
+      T k7, V v7,
+      T k8, V v8,
+      T k9, V v9) {
+    MutableIidMap<Pair<T, V>> map = newMutableIidMapWithExpectedSize(9);
+    map.putAssumingAbsent(k1.getInstrumentId(), pair(k1, v1));
+    map.putAssumingAbsent(k2.getInstrumentId(), pair(k2, v2));
+    map.putAssumingAbsent(k3.getInstrumentId(), pair(k3, v3));
+    map.putAssumingAbsent(k4.getInstrumentId(), pair(k4, v4));
+    map.putAssumingAbsent(k5.getInstrumentId(), pair(k5, v5));
+    map.putAssumingAbsent(k6.getInstrumentId(), pair(k6, v6));
+    map.putAssumingAbsent(k7.getInstrumentId(), pair(k7, v7));
+    map.putAssumingAbsent(k8.getInstrumentId(), pair(k8, v8));
+    map.putAssumingAbsent(k9.getInstrumentId(), pair(k9, v9));
+    return newHasInstrumentIdMap(map);
+  }
+
   public static <T extends HasInstrumentId, V> HasInstrumentIdMap<T, V> hasInstrumentIdMapFromSet(
       HasInstrumentIdSet<T> hasInstrumentIds,
       Function<T, V> transformer) {
