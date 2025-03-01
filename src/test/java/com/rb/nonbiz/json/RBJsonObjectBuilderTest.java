@@ -302,6 +302,9 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
         .setIfOptionalPresent("optionalEmpty2",   Optional.<Integer>empty(), v -> v % 2 == 1, v -> jsonInteger(v))
         .setIfOptionalIntPresent("optionalIntPresent", OptionalInt.of(456))
         .setIfOptionalIntPresent("optionalIntEmpty",   OptionalInt.empty())
+        .setIfOptionalIntPresentAndNotEqualTo("optionalIntPresentAndNotEqualTo999_a", OptionalInt.empty(), 999)
+        .setIfOptionalIntPresentAndNotEqualTo("optionalIntPresentAndNotEqualTo999_b", OptionalInt.of(789), 999)
+        .setIfOptionalIntPresentAndNotEqualTo("optionalIntPresentAndNotEqualTo999_c", OptionalInt.of(999), 999)
         .setIf("ifTrue123", true,  jsonInteger(123))
         .setIf("ifTrue234", false, jsonInteger(234))
         .setIf("ifEvenPredicate456", 456, v -> v % 2 == 0, v -> jsonInteger(v))  // version with predicate
@@ -366,6 +369,10 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
     // using setIfOptionalIntPresent for Optional.empty() does not add a JsonInteger
     assertFalse(builder.getJsonObject().has("optionalIntEmpty"));
 
+    assertFalse(builder.getJsonObject().has("optionalIntPresentAndNotEqualTo999_a"));
+    assertEquals(jsonInteger(789), builder.getJsonObject().getAsJsonPrimitive("optionalIntPresentAndNotEqualTo999_b"));
+    assertFalse(builder.getJsonObject().has("optionalIntPresentAndNotEqualTo999_c"));
+
     assertEquals(
         jsonInteger(123),
         builder.getJsonObject().getAsJsonPrimitive("ifTrue123"));
@@ -418,6 +425,7 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
             .setJsonElement("optionalPresent",    jsonInteger(123))
             .setJsonElement("optionalPresent2",   jsonInteger(789))
             .setJsonElement("optionalIntPresent", jsonInteger(456))
+            .setJsonElement("optionalIntPresentAndNotEqualTo999_b", jsonInteger(789))
             .setJsonElement("ifTrue123",          jsonInteger(123))
             .setJsonElement("ifEvenPredicate456", jsonInteger(456))
             .setJsonElement("ifEvenBoolean456",   jsonInteger(456))
@@ -440,6 +448,7 @@ public class RBJsonObjectBuilderTest extends RBTestMatcher<RBJsonObjectBuilder> 
             .setInt("optionalPresent",       123)
             .setInt("optionalPresent2",      789)
             .setInt("optionalIntPresent",    456)
+            .setInt("optionalIntPresentAndNotEqualTo999_b", 789)
             .setInt("ifTrue123",             123)
             .setInt("ifEvenPredicate456",    456)
             .setInt("ifEvenBoolean456",      456)
