@@ -257,6 +257,21 @@ public class RBJsonObjectBuilder implements RBBuilder<JsonObject> {
   }
 
   /**
+   * Adds { property : jsonInteger } to jsonObject if OptionalInt is present.
+   * Throws if 'property' already exists in jsonObject.
+   */
+  public RBJsonObjectBuilder setIfOptionalIntPresentAndNotEqualTo(
+      String property, OptionalInt maybeValue, int defaultValueToNotSerialize) {
+    checkPropertyNotAlreadySet(property);
+    maybeValue.ifPresent(v -> {
+      if (v != defaultValueToNotSerialize) {
+        jsonObject.add(property, jsonInteger(v));
+      }
+    });
+    return this;
+  }
+
+  /**
    * Adds { property : jsonDouble } to jsonObject if OptionalDouble is present.
    * Throws if 'property' already exists in jsonObject.
    */
