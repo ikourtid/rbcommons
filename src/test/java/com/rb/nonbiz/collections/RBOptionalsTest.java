@@ -673,4 +673,29 @@ public class RBOptionalsTest {
     asserter.accept(Optional.of("xyz"), true);
   }
 
+  @Test
+  public void testPathOfOptionalsPresent() {
+    class E { }
+    class D { Optional<E> e1, e2; }
+    class C { D d; }
+    class B { Optional<C> c1, c2; }
+    class A { B b; }
+
+    A a = new A();
+    a.b = new B();
+    a.b.c1 = Optional.of(new C());
+    a.b.c2 = Optional.empty();
+    a.b.c1.get().d = new D();
+    a.b.c1.get().d.e1 = Optional.of(new E());
+    a.b.c1.get().d.e2 = Optional.empty();
+
+    assertTrue( pathOfOptionalsPresent(Optional.of(a), v -> v.b.c1));
+    assertFalse(pathOfOptionalsPresent(Optional.of(a), v -> v.b.c2));
+
+    assertTrue( pathOfOptionalsPresent(Optional.of(a), v -> v.b.c1, v2 -> v2.d.e1));
+    assertFalse(pathOfOptionalsPresent(Optional.of(a), v -> v.b.c1, v2 -> v2.d.e2));
+    assertFalse(pathOfOptionalsPresent(Optional.of(a), v -> v.b.c2, v2 -> v2.d.e1));
+    assertFalse(pathOfOptionalsPresent(Optional.of(a), v -> v.b.c2, v2 -> v2.d.e2));
+  }
+
 }

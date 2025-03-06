@@ -31,6 +31,7 @@ import java.util.stream.Stream;
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;
 import static com.rb.nonbiz.collections.PairOfSameType.pairOfSameType;
 import static com.rb.nonbiz.collections.RBLists.concatenateFirstAndRest;
+import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional2;
 import static com.rb.nonbiz.text.SmartFormatter.smartFormat;
 import static java.util.Collections.singletonList;
 
@@ -520,6 +521,37 @@ public class RBOptionals {
         "Expected to find up to 1 present optional; found %s of them",
         numPresent);
     return Optional.ofNullable(toReturn);
+  }
+
+  /**
+   * Returns whether a 'path' / 'chain' of optionals results in a present optional.
+   *
+   * <p> We mean 'path' in the sense of a file path, but for an object that contains subobjects, etc.
+   * This is easier to explain if you see the tests. </p>
+   */
+  public static <A, B> boolean pathOfOptionalsPresent(Optional<A> optional, Function<A, Optional<B>> extractor) {
+    return transformOptional2(
+        optional,
+        v -> extractor.apply(v))
+        .isPresent();
+  }
+
+  /**
+   * Returns whether a 'path' / 'chain' of optionals results in a present optional.
+   *
+   * <p> We mean 'path' in the sense of a file path, but for an object that contains subobjects, etc.
+   * This is easier to explain if you see the tests. </p>
+   */
+  public static <A, B, C> boolean pathOfOptionalsPresent(
+      Optional<A> optional,
+      Function<A, Optional<B>> extractor1,
+      Function<B, Optional<C>> extractor2) {
+    return transformOptional2(
+        optional,
+        v -> transformOptional2(
+            extractor1.apply(v),
+            v2 -> extractor2.apply(v2)))
+        .isPresent();
   }
 
 }
