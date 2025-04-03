@@ -50,7 +50,8 @@ import static java.util.Comparator.comparing;
  * <p> Instead, {@link RBMap} has: </p>
  * <ol>
  *   <li> {@link #getOptional(Object)} (which will return an Optional.empty() if there is no value for the specified key). </li>
- *   <li> {@link #getOrThrow(Object)}, which assumes the value is there, and returns {@link Optional}.of(...). </li>
+ *   <li> {@link #getOrThrow(Object)}, which assumes the value is there, and returns the value - not wrapped in an
+ *   {@link Optional} - and throws otherwise. </li>
  * </ol>
  *
  * @see RBMaps
