@@ -548,6 +548,16 @@ public class RBMap<K, V> {
   }
 
   /**
+   * This does NOT modify this RBMap! It creates a copy, but with an extra key/value pair added.
+   * Throws if the key does not already exist in the map.
+   */
+  public RBMap<K, V> withItemReplacedAssumingPresent(K key, V value) {
+    MutableRBMap<K, V> mutableMap = newMutableRBMap(this);
+    mutableMap.putAssumingPresent(key, value);
+    return newRBMap(mutableMap);
+  }
+
+  /**
    * This does NOT modify this RBMap! It creates a copy, but with an extra key/value pair possibly added
    * - or modified, as per {@link MutableRBMap#putOrModifyExisting}.
    */
