@@ -686,11 +686,19 @@ public class RBMapTest {
   }
 
   @Test
-  public void itemAdded() {
+  public void testWithItemAddedAssumingAbsent() {
     assertEquals(singletonRBMap("a", 1), emptyRBMap().withItemAddedAssumingAbsent("a", 1));
     assertEquals(rbMapOf("a", 1, "b", 2), singletonRBMap("a", 1).withItemAddedAssumingAbsent("b", 2));
     assertIllegalArgumentException( () -> singletonRBMap("a", 1).withItemAddedAssumingAbsent("a", 1));
     assertIllegalArgumentException( () -> singletonRBMap("a", 1).withItemAddedAssumingAbsent("a", 2));
+  }
+
+  @Test
+  public void testWithItemReplacedAssumingPresent() {
+    assertIllegalArgumentException( () -> emptyRBMap().withItemReplacedAssumingPresent("a", 1));
+    assertIllegalArgumentException( () -> singletonRBMap("a", 1).withItemAddedAssumingAbsent("b", 2));
+    assertEquals(singletonRBMap("a", 1), singletonRBMap("a", 1).withItemAddedAssumingAbsent("a", 1));
+    assertEquals(singletonRBMap("a", 2), singletonRBMap("a", 1).withItemAddedAssumingAbsent("a", 2));
   }
 
   @Test
