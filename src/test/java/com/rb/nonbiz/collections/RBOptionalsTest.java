@@ -76,6 +76,21 @@ public class RBOptionalsTest {
   }
 
   @Test
+  public void testExtractFromPairOfOptionalsOfSameTypeAssumingExactlyOneIsEmpty() {
+    BiFunction<Optional<Integer>, Optional<Integer>, String> extractor = (int1, int2) ->
+        extractFromPairOfOptionalsOfSameTypeAssumingExactlyOneIsEmpty(
+            int1,
+            int2,
+            v -> "_" + v);
+
+    assertEquals("_1", extractor.apply(Optional.of(1),   Optional.empty()));
+    assertEquals("_2", extractor.apply(Optional.empty(), Optional.of(2)));
+
+    assertIllegalArgumentException( () -> extractor.apply(Optional.of(1),   Optional.of(2)));
+    assertIllegalArgumentException( () -> extractor.apply(Optional.empty(), Optional.empty()));
+  }
+
+  @Test
   public void testMakeNonEmptyOptionalIf() {
     assertOptionalEmpty(makeNonEmptyOptionalIf(false, unitFraction(0.123)));
     assertOptionalEmpty(makeNonEmptyOptionalIf(false, () -> unitFraction(0.123)));
@@ -662,9 +677,9 @@ public class RBOptionalsTest {
   @Test
   public void testOptionalSatisfies() {
     BiConsumer<Optional<String>, Boolean> asserter = (optional, expectedResult) ->
-      assertEquals(
-          expectedResult,
-          optionalSatisfies(optional, v -> v.length() >= 2));
+        assertEquals(
+            expectedResult,
+            optionalSatisfies(optional, v -> v.length() >= 2));
 
     asserter.accept(Optional.empty(), false);
     asserter.accept(Optional.of(""), false);

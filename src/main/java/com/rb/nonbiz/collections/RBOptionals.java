@@ -153,6 +153,22 @@ public class RBOptionals {
     }
   }
 
+  /**
+   * Extracts a value out of 2 optionals, both of the same type, where exactly one is empty and the other one present.
+   *
+   * <p> Throws unless exactly 1 of the 2 are empty. </p>
+   */
+  public static <A, B> B extractFromPairOfOptionalsOfSameTypeAssumingExactlyOneIsEmpty(
+      Optional<A> optional1,
+      Optional<A> optional2,
+      Function<A, B> extractor) {
+    if (optional1.isPresent()) {
+      RBPreconditions.checkArgument(!optional2.isPresent());
+      return extractor.apply(optional1.get());
+    }
+    return extractor.apply(getOrThrow(optional2, "The 1st optional was empty, so the 2nd has to be present"));
+  }
+
   public static <T> List<Optional<T>> toListOfOptionals(List<T> originalList) {
     return originalList
         .stream()

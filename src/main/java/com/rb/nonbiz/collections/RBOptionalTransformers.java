@@ -2,6 +2,8 @@ package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.types.ImpreciseValue;
 import com.rb.nonbiz.types.PreciseValue;
+import com.rb.nonbiz.util.RBPreconditions;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.Optional;
 import java.util.OptionalDouble;
@@ -111,7 +113,7 @@ public class RBOptionalTransformers {
    * a) a new non-empty optional, if both are nonempty
    * b) Optional.empty otherwise
    *
-   * Throws if exactly 1 of the 2 are empty.
+   * <p> Throws if exactly 1 of the 2 are empty. </p>
    */
   public static <A, B, C> Optional<C> transformPairOfOptionalsAssumingBothOrNeitherAreEmpty(
       Optional<A> optionalA,
