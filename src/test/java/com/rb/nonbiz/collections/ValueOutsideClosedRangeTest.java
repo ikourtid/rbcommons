@@ -12,7 +12,6 @@ import java.util.function.BiConsumer;
 import static com.rb.nonbiz.collections.ClosedRange.closedRange;
 import static com.rb.nonbiz.collections.ClosedRange.singletonClosedRange;
 import static com.rb.nonbiz.collections.ClosedRangeTest.closedRangeMatcher;
-import static com.rb.nonbiz.collections.RBSet.rbSetOf;
 import static com.rb.nonbiz.collections.ValueOutsideClosedRange.valueOutsideClosedRange;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;

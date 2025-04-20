@@ -6,10 +6,8 @@ import cern.jet.random.engine.RandomEngine;
 import com.rb.nonbiz.types.RandomNumberGeneratorSeed;
 
 import java.util.Optional;
-import java.util.OptionalInt;
 
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
-import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptionalInt;
 
 /**
  * Generates random numbers from a normal distribution.

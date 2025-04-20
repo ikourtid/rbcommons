@@ -1,7 +1,6 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.nonbiz.testutils.RBTest;
-import org.checkerframework.checker.units.qual.K;
 import org.junit.Test;
 
 import static com.rb.biz.marketdata.FakeInstruments.ETF_1;

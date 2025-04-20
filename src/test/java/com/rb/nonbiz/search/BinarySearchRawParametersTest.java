@@ -9,14 +9,11 @@ import org.junit.Test;
 
 import java.util.function.Function;
 
-import static com.rb.nonbiz.search.BinarySearchTerminationPredicate.onlyTerminateBasedOnX;
 import static com.rb.nonbiz.testmatchers.Match.match;
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
-import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.typeSafeEqualTo;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
-import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static java.util.Comparator.comparing;
 
 // This test class is not generic, but the publicly exposed static matcher is.

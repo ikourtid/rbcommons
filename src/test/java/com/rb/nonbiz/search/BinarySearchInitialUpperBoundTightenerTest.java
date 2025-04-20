@@ -5,16 +5,14 @@ import com.rb.nonbiz.testutils.RBTest;
 import com.rb.nonbiz.types.Epsilon;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.util.function.Function;
+
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.bigDecimalMatcher;
 import static com.rb.nonbiz.testutils.Asserters.doubleExplained;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.Epsilon.epsilon;
 import static org.hamcrest.MatcherAssert.assertThat;
-
-import java.math.BigDecimal;
-import java.util.function.Function;
-
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 
 public class BinarySearchInitialUpperBoundTightenerTest extends RBTest<BinarySearchInitialUpperBoundTightener> {
 

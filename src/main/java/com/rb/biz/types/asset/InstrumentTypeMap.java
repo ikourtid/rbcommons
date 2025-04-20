@@ -14,8 +14,6 @@ import com.rb.nonbiz.collections.RBSets;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBBuilder;
 import com.rb.nonbiz.util.RBPreconditions;
-import com.rb.nonbiz.util.RBSimilarityPreconditions;
-import org.checkerframework.checker.units.qual.K;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -25,7 +23,6 @@ import static com.rb.biz.types.asset.InstrumentType.EtfInstrumentType.etfInstrum
 import static com.rb.biz.types.asset.InstrumentType.MutualFundInstrumentType.mutualFundInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.StockInstrumentType.stockInstrumentType;
 import static com.rb.biz.types.asset.InstrumentType.StructuredProductInstrumentType.structuredProductInstrumentType;
-import static com.rb.nonbiz.collections.RBSets.noSharedItems;
 
 /**
  * A special case of a map of {@link InstrumentType} to some value.
