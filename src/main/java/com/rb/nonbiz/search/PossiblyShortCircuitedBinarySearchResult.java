@@ -2,7 +2,6 @@ package com.rb.nonbiz.search;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.rb.nonbiz.collections.OneOf3;
-import com.rb.nonbiz.collections.OneOf3.Visitor;
 import com.rb.nonbiz.text.Strings;
 
 import static com.rb.nonbiz.collections.OneOf3.only1stOf3;

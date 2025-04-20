@@ -2,8 +2,6 @@ package com.rb.nonbiz.search;
 
 import com.google.common.collect.Range;
 import com.google.inject.Inject;
-import com.rb.nonbiz.collections.RBOptionalTransformers;
-import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.text.RBLog;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;

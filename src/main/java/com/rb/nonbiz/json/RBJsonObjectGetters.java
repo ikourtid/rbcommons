@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.rb.nonbiz.util.RBPreconditions;
-import com.rb.nonbiz.util.RBSimilarityPreconditions;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

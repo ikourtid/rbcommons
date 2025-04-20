@@ -7,8 +7,6 @@ import java.util.Comparator;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 
-import static com.rb.nonbiz.collections.RBComparables.monotonic;
-
 /**
  * This is an object that includes some the parameters needed to do a binary search,
  * and also all the parameters needed to tighten the initial lower and/or upper bounds for the binary search

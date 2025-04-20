@@ -4,7 +4,6 @@ import com.rb.nonbiz.types.RBNumeric;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.util.List;
-
 import java.util.function.DoubleFunction;
 
 import static com.google.common.collect.Lists.newArrayListWithExpectedSize;

@@ -30,7 +30,6 @@ import static com.rb.nonbiz.json.RBJsonArrays.jsonStringArray;
 import static com.rb.nonbiz.json.RBJsonArrays.singletonJsonStringArray;
 import static com.rb.nonbiz.json.RBJsonArraysTest.jsonArrayExactMatcher;
 import static com.rb.nonbiz.json.RBJsonObjectGetters.*;
-import static com.rb.nonbiz.json.RBJsonObjectGetters.getJsonLongWithoutOverflowCheckOrThrow;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.emptyJsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.jsonObject;
 import static com.rb.nonbiz.json.RBJsonObjectSimpleConstructors.singletonJsonObject;

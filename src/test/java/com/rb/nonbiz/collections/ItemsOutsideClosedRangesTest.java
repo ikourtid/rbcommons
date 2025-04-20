@@ -4,6 +4,8 @@ import com.rb.biz.types.asset.AssetId;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import com.rb.nonbiz.types.UnitFraction;
+import org.hamcrest.TypeSafeMatcher;
+import org.junit.Test;
 
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
 import static com.rb.biz.types.asset.CashId.CASH;
@@ -14,15 +16,11 @@ import static com.rb.nonbiz.collections.RBMapSimpleConstructors.rbMapOf;
 import static com.rb.nonbiz.collections.ValueOutsideClosedRange.valueOutsideClosedRange;
 import static com.rb.nonbiz.collections.ValueOutsideClosedRangeTest.valueOutsideClosedRangeMatcher;
 import static com.rb.nonbiz.testmatchers.Match.matchRBMap;
+import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.preciseValueMatcher;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static com.rb.nonbiz.types.UnitFraction.UNIT_FRACTION_1;
 import static com.rb.nonbiz.types.UnitFraction.unitFraction;
-
-import org.hamcrest.TypeSafeMatcher;
-import org.junit.Test;
-
-import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
