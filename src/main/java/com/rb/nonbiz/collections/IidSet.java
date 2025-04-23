@@ -113,6 +113,10 @@ public class IidSet extends HasLongSet<InstrumentId> implements PrintsInstrument
             .collect(Collectors.toSet()));
   }
 
+  public IidSet filterOut(InstrumentId instrumentId) {
+    return filter(v -> !v.equals(instrumentId));
+  }
+
   public void ifNonEmpty(Consumer<IidSet> iidSetConsumer) {
     if (isEmpty()) {
       return;
