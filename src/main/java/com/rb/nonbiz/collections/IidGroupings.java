@@ -45,15 +45,15 @@ public class IidGroupings<V extends HasIidSet> implements PrintsInstruments {
     MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(
         allHasIidSets.stream().mapToInt(v -> v.getIidSet().size()).sum());
     allHasIidSets.forEach(hasIidSet -> {
-        // putAssumingAbsent also guarantees that no single InstrumentId will appear in more than one hasIidSet,
-        // therefore guaranteeing mutual exclusivity.
+      // putAssumingAbsent also guarantees that no single InstrumentId will appear in more than one hasIidSet,
+      // therefore guaranteeing mutual exclusivity.
       IidSet iidSet = hasIidSet.getIidSet();
       RBPreconditions.checkArgument(
           !iidSet.isEmpty(),
           "Cannot have an empty IidSet inside %s",
           allHasIidSets);
       iidSet.forEach(iid -> mutableMap.putAssumingAbsent(iid, hasIidSet));
-  });
+    });
 
     return new IidGroupings<>(newIidMap(mutableMap), allHasIidSets);
   }

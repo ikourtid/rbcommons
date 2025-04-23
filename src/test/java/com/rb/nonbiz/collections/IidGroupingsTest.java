@@ -33,7 +33,6 @@ import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.fail;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>> {
