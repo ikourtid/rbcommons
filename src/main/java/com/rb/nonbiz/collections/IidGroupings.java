@@ -31,18 +31,18 @@ import static java.util.Collections.emptyList;
  * use RBSet with items that cannot be keyed (i.e. for which we have not implemented a nontrivial hashCode / equals).
  * </p>
  */
-public class IidGroupings<V extends HasIidSet> implements PrintsInstruments {
+public class IidGroupings<S extends HasIidSet> implements PrintsInstruments {
 
-  private final IidMap<V> rawMap;
-  private final List<V> rawList;
+  private final IidMap<S> rawMap;
+  private final List<S> rawList;
 
-  private IidGroupings(IidMap<V> rawMap, List<V> rawList) {
+  private IidGroupings(IidMap<S> rawMap, List<S> rawList) {
     this.rawMap = rawMap;
     this.rawList = rawList;
   }
 
-  public static <V extends HasIidSet> IidGroupings<V> iidGroupings(List<V> allHasIidSets) {
-    MutableIidMap<V> mutableMap = newMutableIidMapWithExpectedSize(
+  public static <S extends HasIidSet> IidGroupings<S> iidGroupings(List<S> allHasIidSets) {
+    MutableIidMap<S> mutableMap = newMutableIidMapWithExpectedSize(
         allHasIidSets.stream().mapToInt(v -> v.getIidSet().size()).sum());
     allHasIidSets.forEach(hasIidSet -> {
       // putAssumingAbsent also guarantees that no single InstrumentId will appear in more than one hasIidSet,
@@ -58,22 +58,32 @@ public class IidGroupings<V extends HasIidSet> implements PrintsInstruments {
     return new IidGroupings<>(newIidMap(mutableMap), allHasIidSets);
   }
 
-  public static <V extends HasIidSet> IidGroupings<V> emptyIidGroupings() {
+  public static <S extends HasIidSet> IidGroupings<S> emptyIidGroupings() {
     return iidGroupings(emptyList());
   }
 
-  public IidMap<V> getRawMap() {
+  public IidMap<S> getRawMap() {
     return rawMap;
   }
 
-  public List<V> getRawList() {
+  public List<S> getRawList() {
     return rawList;
+  }
+
+  public Optional<IidSet> getOptionalSiblingsIncludingSelf(InstrumentId instrumentId) {
+    return transformOptional(
+        rawMap.getOptional(instrumentId),
+        v -> v.getIidSet());
   }
 
   public Optional<IidSet> getOptionalSiblings(InstrumentId instrumentId) {
     return transformOptional(
         rawMap.getOptional(instrumentId),
         v -> v.getIidSet().filterOut(instrumentId));
+  }
+
+  public IidSet getSiblingsIncludingSelfOrThrow(InstrumentId instrumentId) {
+    return rawMap.getOrThrow(instrumentId).getIidSet();
   }
 
   public IidSet getSiblingsOrThrow(InstrumentId instrumentId) {

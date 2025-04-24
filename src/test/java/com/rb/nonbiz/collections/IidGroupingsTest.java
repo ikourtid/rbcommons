@@ -37,15 +37,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 // This test class is not generic, but the publicly exposed static matcher is.
 public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>> {
 
-  public static <V extends HasIidSet> IidGroupings<V> singletonIidGroupings(V onlyItem) {
+  public static <S extends HasIidSet> IidGroupings<S> singletonIidGroupings(S onlyItem) {
     return iidGroupings(singletonList(onlyItem));
   }
 
   @SafeVarargs
-  public static <V extends HasIidSet> IidGroupings<V> testIidGroupings(
-      V first,
-      V second,
-      V ... rest) {
+  public static <S extends HasIidSet> IidGroupings<S> testIidGroupings(
+      S first,
+      S second,
+      S... rest) {
     return iidGroupings(concatenateFirstSecondAndRest(first, second, rest));
   }
 
@@ -94,6 +94,30 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
     asserter.accept(STOCK_B1, iidSetOf(STOCK_B2, STOCK_B3));
     asserter.accept(STOCK_B2, iidSetOf(STOCK_B1, STOCK_B3));
     asserter.accept(STOCK_B3, iidSetOf(STOCK_B1, STOCK_B2));
+    asserter.accept(STOCK_C1, emptyIidSet());
+  }
+
+  @Test
+  public void testGetOptionalSiblingsIncludingSelf() {
+    TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
+    TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
+    TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
+
+    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
+
+    assertOptionalEmpty(testIidGroupings.getOptionalSiblingsIncludingSelf(STOCK_D));
+
+    BiConsumer<InstrumentId, IidSet> asserter = (instrumentId, expectedResult) ->
+        assertOptionalNonEmpty(
+            testIidGroupings.getOptionalSiblingsIncludingSelf(instrumentId),
+            iidSetMatcher(expectedResult));
+
+    asserter.accept(STOCK_A1, iidSetOf(STOCK_A1, STOCK_A2));
+    asserter.accept(STOCK_A2, iidSetOf(STOCK_A1, STOCK_A2));
+    asserter.accept(STOCK_B1, iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_B2, iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_B3, iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_C1, singletonIidSet(STOCK_C1));
   }
 
   @Test
@@ -116,6 +140,30 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
     asserter.accept(STOCK_B1, iidSetOf(STOCK_B2, STOCK_B3));
     asserter.accept(STOCK_B2, iidSetOf(STOCK_B1, STOCK_B3));
     asserter.accept(STOCK_B3, iidSetOf(STOCK_B1, STOCK_B2));
+    asserter.accept(STOCK_C1, emptyIidSet());
+  }
+
+  @Test
+  public void testGetSiblingsIncludingSelfIncludingSelf() {
+    TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
+    TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
+    TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
+
+    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
+
+    assertIllegalArgumentException( () -> testIidGroupings.getSiblingsIncludingSelfOrThrow(STOCK_D));
+
+    BiConsumer<InstrumentId, IidSet> asserter = (instrumentId, expectedResult) ->
+        assertThat(
+            testIidGroupings.getSiblingsIncludingSelfOrThrow(instrumentId),
+            iidSetMatcher(expectedResult));
+
+    asserter.accept(STOCK_A1, iidSetOf(STOCK_A1, STOCK_A2));
+    asserter.accept(STOCK_A2, iidSetOf(STOCK_A1, STOCK_A2));
+    asserter.accept(STOCK_B1, iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_B2, iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_B3, iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_C1, singletonIidSet(STOCK_C1));
   }
 
   @Override
@@ -146,8 +194,8 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
     return testIidGroupingsMatcher(expected, f -> testHasIidSetMatcher(f)).matches(actual);
   }
 
-  public static <V extends HasIidSet> TypeSafeMatcher<IidGroupings<V>> testIidGroupingsMatcher(
-      IidGroupings<V> expected, MatcherGenerator<V> matcherGenerator) {
+  public static <S extends HasIidSet> TypeSafeMatcher<IidGroupings<S>> testIidGroupingsMatcher(
+      IidGroupings<S> expected, MatcherGenerator<S> matcherGenerator) {
     return makeMatcher(expected,
         // Notes:
         // 1. We use a list for determinism, so the ordering inside the list shouldn't affect whether two objects should
