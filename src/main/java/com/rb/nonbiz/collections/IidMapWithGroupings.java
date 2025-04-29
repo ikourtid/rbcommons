@@ -16,11 +16,13 @@ import static com.rb.nonbiz.text.Strings.formatIidMap;
  * An {@link IidMap} where the instrument keys are meant to be grouped together in disjoint groups,
  * as per {@link IidGroupings}.
  *
- * <p> Although this is a business-level concept, the first use of this is to represent tax lots
- * of instruments, but grouped together by 'substantially identical' (per IRS rules) securities. </p>
+ * <p> Although this is a business-level concept so it's a weird example to give here,
+ * the first use of this is to represent tax lots of instruments that are recorded per instrument,
+ * but also grouped together by 'substantially identical' (per IRS rules) securities. </p>
  *
- * <p> In that example, we may want to treat tax lots of VOO and SPY as 'grouped' (i.e. with this notion of
- * similarity), but also still keep them separated. </p>
+ * <p> That is, this can store tax lots for SPY and VOO (both S&P 500 ETFs, so arguably 'substantially identical')
+ * but also let us see SPY and VOO together. Same for other groupings (i.e. this doesn't only store a single
+ * grouping). </p>
  */
 public class IidMapWithGroupings<V, S extends HasIidSet> implements PrintsInstruments {
 
