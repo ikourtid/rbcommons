@@ -70,23 +70,47 @@ public class IidGroupings<S extends HasIidSet> implements PrintsInstruments {
     return rawList;
   }
 
+  /**
+   * E.g. if there's a grouping for instruments A1, A2, A3, then calling this on A2 will return {A1, A2, A3}.
+   * And if the grouping is just { A2 }, then it will return { A2 }.
+   *
+   * <p> Returns empty optional if there is no grouping for this instrument. </p>
+   */
   public Optional<IidSet> getOptionalSiblingsIncludingSelf(InstrumentId instrumentId) {
     return transformOptional(
         rawMap.getOptional(instrumentId),
         v -> v.getIidSet());
   }
 
-  public Optional<IidSet> getOptionalSiblings(InstrumentId instrumentId) {
+  /**
+   * E.g. if there's a grouping for instruments A1, A2, A3, then calling this on A2 will return {A1, A3}.
+   * And if the grouping is just { A2 }, then it will return { }.
+   *
+   * <p> Returns empty optional if there is no grouping for this instrument. </p>
+   */
+  public Optional<IidSet> getOptionalSiblingsExcludingSelf(InstrumentId instrumentId) {
     return transformOptional(
         rawMap.getOptional(instrumentId),
         v -> v.getIidSet().filterOut(instrumentId));
   }
 
+  /**
+   * E.g. if there's a grouping for instruments A1, A2, A3, then calling this on A2 will return {A1, A2, A3}.
+   * And if the grouping is just { A2 }, then it will return { A2 }.
+   *
+   * <p> Throws if there is no grouping for this instrument. </p>
+   */
   public IidSet getSiblingsIncludingSelfOrThrow(InstrumentId instrumentId) {
     return rawMap.getOrThrow(instrumentId).getIidSet();
   }
 
-  public IidSet getSiblingsOrThrow(InstrumentId instrumentId) {
+  /**
+   * E.g. if there's a grouping for instruments A1, A2, A3, then calling this on A2 will return {A1, A3}.
+   * And if the grouping is just { A2 }, then it will return { }.
+   *
+   * <p> Throws if there is no grouping for this instrument. </p>
+   */
+  public IidSet getSiblingsExcludingSelfOrThrow(InstrumentId instrumentId) {
     return rawMap.getOrThrow(instrumentId).getIidSet().filterOut(instrumentId);
   }
 

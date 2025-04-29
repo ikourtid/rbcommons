@@ -75,18 +75,18 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
   }
 
   @Test
-  public void testGetOptionalSiblings() {
+  public void testGetOptionalSiblingsExcludingSelf() {
     TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
     TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
     TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
 
     IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
 
-    assertOptionalEmpty(testIidGroupings.getOptionalSiblings(STOCK_D));
+    assertOptionalEmpty(testIidGroupings.getOptionalSiblingsExcludingSelf(STOCK_D));
 
     BiConsumer<InstrumentId, IidSet> asserter = (instrumentId, expectedResult) ->
         assertOptionalNonEmpty(
-            testIidGroupings.getOptionalSiblings(instrumentId),
+            testIidGroupings.getOptionalSiblingsExcludingSelf(instrumentId),
             iidSetMatcher(expectedResult));
 
     asserter.accept(STOCK_A1, singletonIidSet(STOCK_A2));
@@ -121,18 +121,18 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
   }
 
   @Test
-  public void testGetSiblingsOrThrow() {
+  public void testGetSiblingsExcludingSelfOrThrow() {
     TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
     TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
     TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
 
     IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
 
-    assertIllegalArgumentException( () -> testIidGroupings.getSiblingsOrThrow(STOCK_D));
+    assertIllegalArgumentException( () -> testIidGroupings.getSiblingsExcludingSelfOrThrow(STOCK_D));
 
     BiConsumer<InstrumentId, IidSet> asserter = (instrumentId, expectedResult) ->
         assertThat(
-            testIidGroupings.getSiblingsOrThrow(instrumentId),
+            testIidGroupings.getSiblingsExcludingSelfOrThrow(instrumentId),
             iidSetMatcher(expectedResult));
 
     asserter.accept(STOCK_A1, singletonIidSet(STOCK_A2));
