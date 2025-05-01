@@ -10,13 +10,7 @@ import org.junit.Test;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_A2;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_B1;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_B2;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_B3;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_C1;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
+import static com.rb.biz.marketdata.FakeInstruments.*;
 import static com.rb.biz.types.collections.ts.TestHasIidSet.testHasIidSetMatcher;
 import static com.rb.nonbiz.collections.IidGroupings.emptyIidGroupings;
 import static com.rb.nonbiz.collections.IidGroupings.iidGroupings;
@@ -31,8 +25,11 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>> {
@@ -72,6 +69,20 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
     IidGroupings<TestHasIidSet> doesNotThrow;
     doesNotThrow = maker.apply(singletonIidSet(STOCK_B1));
     doesNotThrow = maker.apply(iidSetOf(STOCK_B1, STOCK_B2));
+  }
+
+  @Test
+  public void testContainsInstrument() {
+    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(
+        new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), DUMMY_STRING),
+        new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), DUMMY_STRING),
+        new TestHasIidSet(singletonIidSet(STOCK_C1), DUMMY_STRING));
+
+    iidSetOf(STOCK_A1, STOCK_A2, STOCK_B1, STOCK_B2, STOCK_C1)
+        .forEach(instrumentId -> assertTrue(testIidGroupings.containsInstrument(instrumentId)));
+    assertFalse(testIidGroupings.containsInstrument(STOCK_A3));
+    assertFalse(testIidGroupings.containsInstrument(STOCK_B4));
+    assertFalse(testIidGroupings.containsInstrument(STOCK_C2));
   }
 
   @Test

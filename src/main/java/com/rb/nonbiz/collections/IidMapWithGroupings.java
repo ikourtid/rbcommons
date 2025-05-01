@@ -3,6 +3,7 @@ package com.rb.nonbiz.collections;
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.nonbiz.text.PrintsInstruments;
 import com.rb.nonbiz.text.Strings;
+import com.rb.nonbiz.util.RBPreconditions;
 
 import java.time.LocalDate;
 
@@ -20,7 +21,7 @@ import static com.rb.nonbiz.text.Strings.formatIidMap;
  * the first use of this is to represent tax lots of instruments that are recorded per instrument,
  * but also grouped together by 'substantially identical' (per IRS rules) securities. </p>
  *
- * <p> That is, this coulde be used to e.g. store tax lots for SPY and VOO individually,
+ * <p> That is, this could be used to e.g. store tax lots for SPY and VOO individually,
  * (both S&P 500 ETFs, so arguably 'substantially identical')
  * but also let us see SPY and VOO grouped together.
  * Same for other groupings such as e.g. SCHB and VTI (broad-market ETFs).
@@ -42,6 +43,10 @@ public class IidMapWithGroupings<V, S extends HasIidSet> implements PrintsInstru
 
   public static <V, S extends HasIidSet> IidMapWithGroupings<V, S> iidMapWithGroupings(
       IidMap<V> iidMap, IidGroupings<S> iidGroupings) {
+    iidMap.keySet().forEach( instrumentId -> RBPreconditions.checkArgument(
+        iidGroupings.containsInstrument(instrumentId),
+        "Map contains instrument %s which is not contained in any grouping: %s %s",
+        instrumentId, iidGroupings, iidMap));
     return new IidMapWithGroupings<>(iidMap, iidGroupings);
   }
 

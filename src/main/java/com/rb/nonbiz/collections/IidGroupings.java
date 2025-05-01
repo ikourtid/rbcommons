@@ -70,6 +70,10 @@ public class IidGroupings<S extends HasIidSet> implements PrintsInstruments {
     return rawList;
   }
 
+  public boolean containsInstrument(InstrumentId instrumentId) {
+    return rawMap.containsKey(instrumentId);
+  }
+
   /**
    * E.g. if there's a grouping for instruments A1, A2, A3, then calling this on A2 will return {A1, A2, A3}.
    * And if the grouping is just { A2 }, then it will return { A2 }.
