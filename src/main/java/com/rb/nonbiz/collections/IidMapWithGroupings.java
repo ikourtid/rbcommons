@@ -20,9 +20,15 @@ import static com.rb.nonbiz.text.Strings.formatIidMap;
  * the first use of this is to represent tax lots of instruments that are recorded per instrument,
  * but also grouped together by 'substantially identical' (per IRS rules) securities. </p>
  *
- * <p> That is, this can store tax lots for SPY and VOO (both S&P 500 ETFs, so arguably 'substantially identical')
- * but also let us see SPY and VOO together. Same for other groupings (i.e. this doesn't only store a single
- * grouping). </p>
+ * <p> That is, this coulde be used to e.g. store tax lots for SPY and VOO individually,
+ * (both S&P 500 ETFs, so arguably 'substantially identical')
+ * but also let us see SPY and VOO grouped together.
+ * Same for other groupings such as e.g. SCHB and VTI (broad-market ETFs).
+ * That is, this data class doesn't only allow a single grouping. </p>
+ *
+ * <p> In a way, this creates a partition (in the math sense, not in the data class {@link Partition} sense)
+ * within the {@link IidMap}. We decided against calling this e.g. PartitionedIidMap because it may sound
+ * too similar to our more specific {@link Partition} class. </p>
  */
 public class IidMapWithGroupings<V, S extends HasIidSet> implements PrintsInstruments {
 
