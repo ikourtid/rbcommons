@@ -10,13 +10,7 @@ import org.junit.Test;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_A2;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_B1;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_B2;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_B3;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_C1;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
+import static com.rb.biz.marketdata.FakeInstruments.*;
 import static com.rb.biz.types.collections.ts.TestHasIidSet.testHasIidSetMatcher;
 import static com.rb.nonbiz.collections.IidGroupings.emptyIidGroupings;
 import static com.rb.nonbiz.collections.IidGroupings.iidGroupings;
@@ -31,21 +25,24 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalEmpty;
 import static com.rb.nonbiz.testutils.Asserters.assertOptionalNonEmpty;
+import static com.rb.nonbiz.testutils.RBCommonsTestConstants.DUMMY_STRING;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>> {
 
-  public static <V extends HasIidSet> IidGroupings<V> singletonIidGroupings(V onlyItem) {
+  public static <S extends HasIidSet> IidGroupings<S> singletonIidGroupings(S onlyItem) {
     return iidGroupings(singletonList(onlyItem));
   }
 
   @SafeVarargs
-  public static <V extends HasIidSet> IidGroupings<V> testIidGroupings(
-      V first,
-      V second,
-      V ... rest) {
+  public static <S extends HasIidSet> IidGroupings<S> testIidGroupings(
+      S first,
+      S second,
+      S... rest) {
     return iidGroupings(concatenateFirstSecondAndRest(first, second, rest));
   }
 
@@ -75,40 +72,32 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
   }
 
   @Test
-  public void testGetOptionalSiblings() {
-    TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
-    TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
-    TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
+  public void testContainsInstrument() {
+    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(
+        new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), DUMMY_STRING),
+        new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), DUMMY_STRING),
+        new TestHasIidSet(singletonIidSet(STOCK_C1), DUMMY_STRING));
 
-    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
-
-    assertOptionalEmpty(testIidGroupings.getOptionalSiblings(STOCK_D));
-
-    BiConsumer<InstrumentId, IidSet> asserter = (instrumentId, expectedResult) ->
-        assertOptionalNonEmpty(
-            testIidGroupings.getOptionalSiblings(instrumentId),
-            iidSetMatcher(expectedResult));
-
-    asserter.accept(STOCK_A1, singletonIidSet(STOCK_A2));
-    asserter.accept(STOCK_A2, singletonIidSet(STOCK_A1));
-    asserter.accept(STOCK_B1, iidSetOf(STOCK_B2, STOCK_B3));
-    asserter.accept(STOCK_B2, iidSetOf(STOCK_B1, STOCK_B3));
-    asserter.accept(STOCK_B3, iidSetOf(STOCK_B1, STOCK_B2));
+    iidSetOf(STOCK_A1, STOCK_A2, STOCK_B1, STOCK_B2, STOCK_C1)
+        .forEach(instrumentId -> assertTrue(testIidGroupings.containsInstrument(instrumentId)));
+    assertFalse(testIidGroupings.containsInstrument(STOCK_A3));
+    assertFalse(testIidGroupings.containsInstrument(STOCK_B4));
+    assertFalse(testIidGroupings.containsInstrument(STOCK_C2));
   }
 
   @Test
-  public void testGetSiblingsOrThrow() {
+  public void testGetOptionalSiblingsExcludingSelf() {
     TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
     TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
     TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
 
     IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
 
-    assertIllegalArgumentException( () -> testIidGroupings.getSiblingsOrThrow(STOCK_D));
+    assertOptionalEmpty(testIidGroupings.getOptionalSiblingsExcludingSelf(STOCK_D));
 
     BiConsumer<InstrumentId, IidSet> asserter = (instrumentId, expectedResult) ->
-        assertThat(
-            testIidGroupings.getSiblingsOrThrow(instrumentId),
+        assertOptionalNonEmpty(
+            testIidGroupings.getOptionalSiblingsExcludingSelf(instrumentId),
             iidSetMatcher(expectedResult));
 
     asserter.accept(STOCK_A1, singletonIidSet(STOCK_A2));
@@ -116,6 +105,76 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
     asserter.accept(STOCK_B1, iidSetOf(STOCK_B2, STOCK_B3));
     asserter.accept(STOCK_B2, iidSetOf(STOCK_B1, STOCK_B3));
     asserter.accept(STOCK_B3, iidSetOf(STOCK_B1, STOCK_B2));
+    asserter.accept(STOCK_C1, emptyIidSet());
+  }
+
+  @Test
+  public void testGetOptionalSiblingsIncludingSelf() {
+    TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
+    TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
+    TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
+
+    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
+
+    assertOptionalEmpty(testIidGroupings.getOptionalSiblingsIncludingSelf(STOCK_D));
+
+    BiConsumer<InstrumentId, IidSet> asserter = (instrumentId, expectedResult) ->
+        assertOptionalNonEmpty(
+            testIidGroupings.getOptionalSiblingsIncludingSelf(instrumentId),
+            iidSetMatcher(expectedResult));
+
+    asserter.accept(STOCK_A1, iidSetOf(STOCK_A1, STOCK_A2));
+    asserter.accept(STOCK_A2, iidSetOf(STOCK_A1, STOCK_A2));
+    asserter.accept(STOCK_B1, iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_B2, iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_B3, iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_C1, singletonIidSet(STOCK_C1));
+  }
+
+  @Test
+  public void testGetSiblingsExcludingSelfOrThrow() {
+    TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
+    TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
+    TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
+
+    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
+
+    assertIllegalArgumentException( () -> testIidGroupings.getSiblingsExcludingSelfOrThrow(STOCK_D));
+
+    BiConsumer<InstrumentId, IidSet> asserter = (instrumentId, expectedResult) ->
+        assertThat(
+            testIidGroupings.getSiblingsExcludingSelfOrThrow(instrumentId),
+            iidSetMatcher(expectedResult));
+
+    asserter.accept(STOCK_A1, singletonIidSet(STOCK_A2));
+    asserter.accept(STOCK_A2, singletonIidSet(STOCK_A1));
+    asserter.accept(STOCK_B1, iidSetOf(STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_B2, iidSetOf(STOCK_B1, STOCK_B3));
+    asserter.accept(STOCK_B3, iidSetOf(STOCK_B1, STOCK_B2));
+    asserter.accept(STOCK_C1, emptyIidSet());
+  }
+
+  @Test
+  public void testGetSiblingsIncludingSelfIncludingSelf() {
+    TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
+    TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
+    TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
+
+    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
+
+    assertIllegalArgumentException( () -> testIidGroupings.getSiblingsIncludingSelfOrThrow(STOCK_D));
+
+    BiConsumer<InstrumentId, IidSet> asserter = (instrumentId, expectedResult) ->
+        assertThat(
+            testIidGroupings.getSiblingsIncludingSelfOrThrow(instrumentId),
+            iidSetMatcher(expectedResult));
+
+    asserter.accept(STOCK_A1, iidSetOf(STOCK_A1, STOCK_A2));
+    asserter.accept(STOCK_A2, iidSetOf(STOCK_A1, STOCK_A2));
+    asserter.accept(STOCK_B1, iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_B2, iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_B3, iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3));
+    asserter.accept(STOCK_C1, singletonIidSet(STOCK_C1));
   }
 
   @Override
@@ -146,8 +205,8 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
     return testIidGroupingsMatcher(expected, f -> testHasIidSetMatcher(f)).matches(actual);
   }
 
-  public static <V extends HasIidSet> TypeSafeMatcher<IidGroupings<V>> testIidGroupingsMatcher(
-      IidGroupings<V> expected, MatcherGenerator<V> matcherGenerator) {
+  public static <S extends HasIidSet> TypeSafeMatcher<IidGroupings<S>> testIidGroupingsMatcher(
+      IidGroupings<S> expected, MatcherGenerator<S> matcherGenerator) {
     return makeMatcher(expected,
         // Notes:
         // 1. We use a list for determinism, so the ordering inside the list shouldn't affect whether two objects should
