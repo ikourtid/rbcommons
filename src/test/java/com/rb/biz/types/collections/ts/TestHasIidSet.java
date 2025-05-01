@@ -1,8 +1,12 @@
 package com.rb.biz.types.collections.ts;
 
+import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.nonbiz.collections.HasIidSet;
 import com.rb.nonbiz.collections.IidSet;
+import com.rb.nonbiz.text.Strings;
 import org.hamcrest.TypeSafeMatcher;
+
+import java.time.LocalDate;
 
 import static com.rb.nonbiz.testmatchers.Match.matchUsingEquals;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
@@ -34,6 +38,13 @@ public class TestHasIidSet implements HasIidSet {
     return makeMatcher(expected,
         matchUsingEquals(v -> v.getIidSet()),
         matchUsingEquals(v -> v.string));
+  }
+
+  @Override
+  public String toString(InstrumentMaster instrumentMaster, LocalDate date) {
+    // Normally, we don't bother implementing toString for test-only classes. However, in this case,
+    // this implements HasIidSet, so it has to have an implementation.
+    return toString();
   }
 
 }
