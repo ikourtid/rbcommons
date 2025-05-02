@@ -1,6 +1,8 @@
 package com.rb.nonbiz.collections;
 
-public interface HasIidSet {
+import com.rb.nonbiz.text.PrintsInstruments;
+
+public interface HasIidSet extends PrintsInstruments {
 
   IidSet getIidSet();
 
