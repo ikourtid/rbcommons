@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
 import com.rb.nonbiz.text.PrintsInstruments;
+import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
  * <p> The reason we need the grouping is that the {@link IidMap} is also allowed to contain fewer entries;
  * it doesn't have to have one entry per instrument in the {@link HasIidSet} grouping. </p>
  */
-public class EntryForIidMapWithGroupings<V, S extends HasIidSet> {
+public class EntryForIidMapWithGroupings<V, S extends HasIidSet> implements PrintsInstruments {
 
   private final IidMap<V> iidMap;
   private final S iidGrouping;
@@ -44,7 +45,7 @@ public class EntryForIidMapWithGroupings<V, S extends HasIidSet> {
 
   @Override
   public String toString(InstrumentMaster instrumentMaster, LocalDate date) {
-    return "";
+    return Strings.format("");
   }
 
 }
