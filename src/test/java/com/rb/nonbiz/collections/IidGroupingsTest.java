@@ -1,7 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.biz.types.asset.InstrumentId;
-import com.rb.biz.types.collections.ts.TestHasIidSet;
+import com.rb.biz.types.collections.ts.TestHasNonEmptyIidSet;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -11,7 +11,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static com.rb.biz.marketdata.FakeInstruments.*;
-import static com.rb.biz.types.collections.ts.TestHasIidSet.testHasIidSetMatcher;
+import static com.rb.biz.types.collections.ts.TestHasNonEmptyIidSet.testHasNonEmptyIidSetMatcher;
 import static com.rb.nonbiz.collections.IidGroupings.emptyIidGroupings;
 import static com.rb.nonbiz.collections.IidGroupings.iidGroupings;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.emptyIidSet;
@@ -32,14 +32,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 // This test class is not generic, but the publicly exposed static matcher is.
-public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>> {
+public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasNonEmptyIidSet>> {
 
-  public static <S extends HasIidSet> IidGroupings<S> singletonIidGroupings(S onlyItem) {
+  public static <S extends HasNonEmptyIidSet> IidGroupings<S> singletonIidGroupings(S onlyItem) {
     return iidGroupings(singletonList(onlyItem));
   }
 
   @SafeVarargs
-  public static <S extends HasIidSet> IidGroupings<S> testIidGroupings(
+  public static <S extends HasNonEmptyIidSet> IidGroupings<S> testIidGroupings(
       S first,
       S second,
       S... rest) {
@@ -48,35 +48,35 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
 
   @Test
   public void duplicateInstrument_throws() {
-    Function<InstrumentId, IidGroupings<TestHasIidSet>> maker = instrumentId ->
+    Function<InstrumentId, IidGroupings<TestHasNonEmptyIidSet>> maker = instrumentId ->
         testIidGroupings(
-            new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
-            new TestHasIidSet(iidSetOf(STOCK_B1, instrumentId), "B"));
+            new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
+            new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, instrumentId), "B"));
 
     assertIllegalArgumentException( () -> maker.apply(STOCK_A1));
     assertIllegalArgumentException( () -> maker.apply(STOCK_A2));
     assertIllegalArgumentException( () -> maker.apply(STOCK_B1)); // different failure reason; an IidSet can't have the same iid twice
-    IidGroupings<TestHasIidSet> doesNotThrow = maker.apply(STOCK_B2);
+    IidGroupings<TestHasNonEmptyIidSet> doesNotThrow = maker.apply(STOCK_B2);
   }
 
   @Test
   public void emptyIidSet_throws() {
-    Function<IidSet, IidGroupings<TestHasIidSet>> maker = iidSet2 ->
+    Function<IidSet, IidGroupings<TestHasNonEmptyIidSet>> maker = iidSet2 ->
         testIidGroupings(
-            new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
-            new TestHasIidSet(iidSet2, "B"));
+            new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
+            new TestHasNonEmptyIidSet(iidSet2, "B"));
     assertIllegalArgumentException( () -> maker.apply(emptyIidSet()));
-    IidGroupings<TestHasIidSet> doesNotThrow;
+    IidGroupings<TestHasNonEmptyIidSet> doesNotThrow;
     doesNotThrow = maker.apply(singletonIidSet(STOCK_B1));
     doesNotThrow = maker.apply(iidSetOf(STOCK_B1, STOCK_B2));
   }
 
   @Test
   public void testContainsInstrument() {
-    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(
-        new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), DUMMY_STRING),
-        new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), DUMMY_STRING),
-        new TestHasIidSet(singletonIidSet(STOCK_C1), DUMMY_STRING));
+    IidGroupings<TestHasNonEmptyIidSet> testIidGroupings = testIidGroupings(
+        new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), DUMMY_STRING),
+        new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), DUMMY_STRING),
+        new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), DUMMY_STRING));
 
     iidSetOf(STOCK_A1, STOCK_A2, STOCK_B1, STOCK_B2, STOCK_C1)
         .forEach(instrumentId -> assertTrue(testIidGroupings.containsInstrument(instrumentId)));
@@ -87,11 +87,11 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
 
   @Test
   public void testGetOptionalSiblingsExcludingSelf() {
-    TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
-    TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
-    TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
+    TestHasNonEmptyIidSet hasNonEmptyIidSetA = new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
+    TestHasNonEmptyIidSet hasNonEmptyIidSetB = new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
+    TestHasNonEmptyIidSet hasNonEmptyIidSetC = new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C");
 
-    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
+    IidGroupings<TestHasNonEmptyIidSet> testIidGroupings = testIidGroupings(hasNonEmptyIidSetA, hasNonEmptyIidSetB, hasNonEmptyIidSetC);
 
     assertOptionalEmpty(testIidGroupings.getOptionalSiblingsExcludingSelf(STOCK_D));
 
@@ -110,11 +110,11 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
 
   @Test
   public void testGetOptionalSiblingsIncludingSelf() {
-    TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
-    TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
-    TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
+    TestHasNonEmptyIidSet hasNonEmptyIidSetA = new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
+    TestHasNonEmptyIidSet hasNonEmptyIidSetB = new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
+    TestHasNonEmptyIidSet hasNonEmptyIidSetC = new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C");
 
-    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
+    IidGroupings<TestHasNonEmptyIidSet> testIidGroupings = testIidGroupings(hasNonEmptyIidSetA, hasNonEmptyIidSetB, hasNonEmptyIidSetC);
 
     assertOptionalEmpty(testIidGroupings.getOptionalSiblingsIncludingSelf(STOCK_D));
 
@@ -133,11 +133,11 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
 
   @Test
   public void testGetSiblingsExcludingSelfOrThrow() {
-    TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
-    TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
-    TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
+    TestHasNonEmptyIidSet hasNonEmptyIidSetA = new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
+    TestHasNonEmptyIidSet hasNonEmptyIidSetB = new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
+    TestHasNonEmptyIidSet hasNonEmptyIidSetC = new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C");
 
-    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
+    IidGroupings<TestHasNonEmptyIidSet> testIidGroupings = testIidGroupings(hasNonEmptyIidSetA, hasNonEmptyIidSetB, hasNonEmptyIidSetC);
 
     assertIllegalArgumentException( () -> testIidGroupings.getSiblingsExcludingSelfOrThrow(STOCK_D));
 
@@ -156,11 +156,11 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
 
   @Test
   public void testGetSiblingsIncludingSelfIncludingSelf() {
-    TestHasIidSet hasIidSetA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
-    TestHasIidSet hasIidSetB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
-    TestHasIidSet hasIidSetC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
+    TestHasNonEmptyIidSet hasNonEmptyIidSetA = new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
+    TestHasNonEmptyIidSet hasNonEmptyIidSetB = new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
+    TestHasNonEmptyIidSet hasNonEmptyIidSetC = new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C");
 
-    IidGroupings<TestHasIidSet> testIidGroupings = testIidGroupings(hasIidSetA, hasIidSetB, hasIidSetC);
+    IidGroupings<TestHasNonEmptyIidSet> testIidGroupings = testIidGroupings(hasNonEmptyIidSetA, hasNonEmptyIidSetB, hasNonEmptyIidSetC);
 
     assertIllegalArgumentException( () -> testIidGroupings.getSiblingsIncludingSelfOrThrow(STOCK_D));
 
@@ -178,34 +178,34 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasIidSet>>
   }
 
   @Override
-  public IidGroupings<TestHasIidSet> makeTrivialObject() {
+  public IidGroupings<TestHasNonEmptyIidSet> makeTrivialObject() {
     return emptyIidGroupings();
   }
 
   @Override
-  public IidGroupings<TestHasIidSet> makeNontrivialObject() {
+  public IidGroupings<TestHasNonEmptyIidSet> makeNontrivialObject() {
     return testIidGroupings(
-        new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
-        new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B"),
-        new TestHasIidSet(singletonIidSet(STOCK_C1), "C"));
+        new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
+        new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B"),
+        new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C"));
   }
 
   @Override
-  public IidGroupings<TestHasIidSet> makeMatchingNontrivialObject() {
-    // Nothing to tweak here, although we could have generalized by creating a variant of TestHasIidSet
+  public IidGroupings<TestHasNonEmptyIidSet> makeMatchingNontrivialObject() {
+    // Nothing to tweak here, although we could have generalized by creating a variant of TestHasNonEmptyIidSet
     // that also stores e.g. a double instead of a string.
     return testIidGroupings(
-        new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
-        new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B"),
-        new TestHasIidSet(singletonIidSet(STOCK_C1), "C"));
+        new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
+        new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B"),
+        new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C"));
   }
 
   @Override
-  protected boolean willMatch(IidGroupings<TestHasIidSet> expected, IidGroupings<TestHasIidSet> actual) {
-    return testIidGroupingsMatcher(expected, f -> testHasIidSetMatcher(f)).matches(actual);
+  protected boolean willMatch(IidGroupings<TestHasNonEmptyIidSet> expected, IidGroupings<TestHasNonEmptyIidSet> actual) {
+    return testIidGroupingsMatcher(expected, f -> testHasNonEmptyIidSetMatcher(f)).matches(actual);
   }
 
-  public static <S extends HasIidSet> TypeSafeMatcher<IidGroupings<S>> testIidGroupingsMatcher(
+  public static <S extends HasNonEmptyIidSet> TypeSafeMatcher<IidGroupings<S>> testIidGroupingsMatcher(
       IidGroupings<S> expected, MatcherGenerator<S> matcherGenerator) {
     return makeMatcher(expected,
         // Notes:

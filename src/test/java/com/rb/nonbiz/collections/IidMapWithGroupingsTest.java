@@ -1,7 +1,7 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.biz.types.asset.InstrumentId;
-import com.rb.biz.types.collections.ts.TestHasIidSet;
+import com.rb.biz.types.collections.ts.TestHasNonEmptyIidSet;
 import com.rb.nonbiz.collections.IidMapWithGroupings.IidMapForSingleGrouping;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
@@ -17,7 +17,7 @@ import static com.rb.biz.marketdata.FakeInstruments.STOCK_B2;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_B3;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_C1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
-import static com.rb.biz.types.collections.ts.TestHasIidSet.testHasIidSetMatcher;
+import static com.rb.biz.types.collections.ts.TestHasNonEmptyIidSet.testHasNonEmptyIidSetMatcher;
 import static com.rb.nonbiz.collections.IidGroupingsTest.testIidGroupings;
 import static com.rb.nonbiz.collections.IidGroupingsTest.testIidGroupingsMatcher;
 import static com.rb.nonbiz.collections.IidMapForSingleGroupingTest.iidMapForSingleGroupingMatcher;
@@ -37,40 +37,40 @@ import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 // This test class is not generic, but the publicly exposed static matcher is.
-public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<Double, TestHasIidSet>> {
+public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<Double, TestHasNonEmptyIidSet>> {
 
   @Test
   public void instrumentNotInGroupings_throws() {
-    Function<InstrumentId, IidMapWithGroupings<Double, TestHasIidSet>> maker = instrumentId -> iidMapWithGroupings(
+    Function<InstrumentId, IidMapWithGroupings<Double, TestHasNonEmptyIidSet>> maker = instrumentId -> iidMapWithGroupings(
         iidMapOf(
             STOCK_A1, 7.1,
             STOCK_A2, 7.2,
             STOCK_B1, 8.1,
             instrumentId, 8.2),
         testIidGroupings(
-            new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
-            new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B"),
-            new TestHasIidSet(singletonIidSet(STOCK_C1), "C")));
+            new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
+            new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B"),
+            new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C")));
 
     assertIllegalArgumentException( () -> maker.apply(STOCK_D));
 
-    IidMapWithGroupings<Double, TestHasIidSet> doesNotThrow;
+    IidMapWithGroupings<Double, TestHasNonEmptyIidSet> doesNotThrow;
     doesNotThrow = maker.apply(STOCK_B3);
     doesNotThrow = maker.apply(STOCK_C1);
   }
 
   @Test
   public void testGetGroupedIidMap() {
-    TestHasIidSet groupingA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
-    TestHasIidSet groupingB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
-    TestHasIidSet groupingC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
+    TestHasNonEmptyIidSet groupingA = new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
+    TestHasNonEmptyIidSet groupingB = new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
+    TestHasNonEmptyIidSet groupingC = new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C");
 
-    IidMapForSingleGrouping<Double, TestHasIidSet> forA = iidMapForSingleGrouping(
+    IidMapForSingleGrouping<Double, TestHasNonEmptyIidSet> forA = iidMapForSingleGrouping(
         iidMapOf(
             STOCK_A1, 7.1,
             STOCK_A2, 7.2),
         groupingA);
-    IidMapForSingleGrouping<Double, TestHasIidSet> forB = iidMapForSingleGrouping(
+    IidMapForSingleGrouping<Double, TestHasNonEmptyIidSet> forB = iidMapForSingleGrouping(
         iidMapOf(
             STOCK_B1, 8.1,
             STOCK_B2, 8.2),
@@ -96,16 +96,16 @@ public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<D
                 STOCK_B2, forB),
             f -> iidMapForSingleGroupingMatcher(f,
                 f2 -> doubleAlmostEqualsMatcher(f2, DEFAULT_EPSILON_1e_8),
-                f2 -> testHasIidSetMatcher(f2))));
+                f2 -> testHasNonEmptyIidSetMatcher(f2))));
   }
 
   @Override
-  public IidMapWithGroupings<Double, TestHasIidSet> makeTrivialObject() {
+  public IidMapWithGroupings<Double, TestHasNonEmptyIidSet> makeTrivialObject() {
     return emptyIidMapWithGroupings();
   }
 
   @Override
-  public IidMapWithGroupings<Double, TestHasIidSet> makeNontrivialObject() {
+  public IidMapWithGroupings<Double, TestHasNonEmptyIidSet> makeNontrivialObject() {
     return iidMapWithGroupings(
         iidMapOf(
             STOCK_A1, 7.1,
@@ -113,13 +113,13 @@ public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<D
             STOCK_B1, 8.1,
             STOCK_B2, 8.2),
         testIidGroupings(
-            new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
-            new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B"),
-            new TestHasIidSet(singletonIidSet(STOCK_C1), "C")));
+            new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
+            new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B"),
+            new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C")));
   }
 
   @Override
-  public IidMapWithGroupings<Double, TestHasIidSet> makeMatchingNontrivialObject() {
+  public IidMapWithGroupings<Double, TestHasNonEmptyIidSet> makeMatchingNontrivialObject() {
     return iidMapWithGroupings(
         iidMapOf(
             STOCK_A1, 7.1,
@@ -127,30 +127,30 @@ public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<D
             STOCK_B1, 8.1,
             STOCK_B2, 8.2),
         testIidGroupings(
-            new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
-            new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B"),
-            new TestHasIidSet(singletonIidSet(STOCK_C1), "C")));
+            new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
+            new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B"),
+            new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C")));
   }
 
   @Override
-  protected boolean willMatch(IidMapWithGroupings<Double, TestHasIidSet> expected,
-                              IidMapWithGroupings<Double, TestHasIidSet> actual) {
+  protected boolean willMatch(IidMapWithGroupings<Double, TestHasNonEmptyIidSet> expected,
+                              IidMapWithGroupings<Double, TestHasNonEmptyIidSet> actual) {
     return iidMapWithGroupingsMatcher(expected,
         f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8),
-        f -> testHasIidSetMatcher(f))
+        f -> testHasNonEmptyIidSetMatcher(f))
         .matches(actual);
   }
 
-  public static <V, S extends HasIidSet> TypeSafeMatcher<IidMapWithGroupings<V, S>> iidMapWithGroupingsMatcher(
+  public static <V, S extends HasNonEmptyIidSet> TypeSafeMatcher<IidMapWithGroupings<V, S>> iidMapWithGroupingsMatcher(
       IidMapWithGroupings<V, S> expected,
       MatcherGenerator<V> iidMapValueMatcherGenerator,
-      MatcherGenerator<S> hasIidSetMatcherGenerator) {
+      MatcherGenerator<S> hasNonEmptyIidSetMatcherGenerator) {
     return makeMatcher(expected,
         matchIidMap(v -> v.getTopLevelIidMap(), iidMapValueMatcherGenerator),
-        match(      v -> v.getIidGroupings(),   f -> testIidGroupingsMatcher(f, hasIidSetMatcherGenerator)),
+        match(      v -> v.getIidGroupings(),   f -> testIidGroupingsMatcher(f, hasNonEmptyIidSetMatcherGenerator)),
         // This is calculated, but can't hurt to check
         matchIidMap(v -> v.getGroupedIidMap(),  f -> iidMapForSingleGroupingMatcher(
-            f, iidMapValueMatcherGenerator, hasIidSetMatcherGenerator)));
+            f, iidMapValueMatcherGenerator, hasNonEmptyIidSetMatcherGenerator)));
   }
 
 }
