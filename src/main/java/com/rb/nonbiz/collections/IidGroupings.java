@@ -31,7 +31,7 @@ import static java.util.Collections.emptyList;
  * use RBSet with items that cannot be keyed (i.e. for which we have not implemented a nontrivial hashCode / equals).
  * </p>
  */
-public class IidGroupings<S extends HasIidSet> implements PrintsInstruments {
+public class IidGroupings<S extends HasNonEmptyIidSet> implements PrintsInstruments {
 
   private final IidMap<S> rawMap;
   private final List<S> rawList;
@@ -41,7 +41,7 @@ public class IidGroupings<S extends HasIidSet> implements PrintsInstruments {
     this.rawList = rawList;
   }
 
-  public static <S extends HasIidSet> IidGroupings<S> iidGroupings(List<S> allHasIidSets) {
+  public static <S extends HasNonEmptyIidSet> IidGroupings<S> iidGroupings(List<S> allHasIidSets) {
     MutableIidMap<S> mutableMap = newMutableIidMapWithExpectedSize(
         allHasIidSets.stream().mapToInt(v -> v.getIidSet().size()).sum());
     allHasIidSets.forEach(hasIidSet -> {
@@ -58,7 +58,7 @@ public class IidGroupings<S extends HasIidSet> implements PrintsInstruments {
     return new IidGroupings<>(newIidMap(mutableMap), allHasIidSets);
   }
 
-  public static <S extends HasIidSet> IidGroupings<S> emptyIidGroupings() {
+  public static <S extends HasNonEmptyIidSet> IidGroupings<S> emptyIidGroupings() {
     return iidGroupings(emptyList());
   }
 

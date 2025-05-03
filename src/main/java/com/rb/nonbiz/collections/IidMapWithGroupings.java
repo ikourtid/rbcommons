@@ -34,18 +34,18 @@ import static com.rb.nonbiz.text.Strings.formatIidMap;
  * within the {@link IidMap}. We decided against calling this e.g. PartitionedIidMap because it may sound
  * too similar to our more specific {@link Partition} class. </p>
  */
-public class IidMapWithGroupings<V, S extends HasIidSet> implements PrintsInstruments {
+public class IidMapWithGroupings<V, S extends HasNonEmptyIidSet> implements PrintsInstruments {
 
 
   /**
    * Say we have an {@link IidMapWithGroupings} that has values for instruments {A1, A2, B1, B2},
    * and groups together { A1, A2 } and { B1, B2 }. If so, then this would contain an {@link IidMap} with entries
-   * for A1 and A2, and also the {@link HasIidSet} object that describes the grouping { A1, A2 }.
+   * for A1 and A2, and also the {@link HasNonEmptyIidSet} object that describes the grouping { A1, A2 }.
    *
    * <p> The reason we need the grouping is that the {@link IidMap} is also allowed to contain fewer entries;
-   * it doesn't have to have one entry per instrument in the {@link HasIidSet} grouping. </p>
+   * it doesn't have to have one entry per instrument in the {@link HasNonEmptyIidSet} grouping. </p>
    */
-  public static class IidMapForSingleGrouping<V, S extends HasIidSet> implements PrintsInstruments {
+  public static class IidMapForSingleGrouping<V, S extends HasNonEmptyIidSet> implements PrintsInstruments {
 
     private final IidMap<V> iidMap;
     private final S iidGrouping;
@@ -55,7 +55,7 @@ public class IidMapWithGroupings<V, S extends HasIidSet> implements PrintsInstru
       this.iidGrouping = iidGrouping;
     }
 
-    static <V, S extends HasIidSet> IidMapForSingleGrouping<V, S> iidMapForSingleGrouping(
+    static <V, S extends HasNonEmptyIidSet> IidMapForSingleGrouping<V, S> iidMapForSingleGrouping(
         IidMap<V> iidMap, S iidGrouping) {
       iidMap.instrumentIdStream().forEach( instrumentId ->
           RBPreconditions.checkArgument(
@@ -101,7 +101,7 @@ public class IidMapWithGroupings<V, S extends HasIidSet> implements PrintsInstru
     this.groupedIidMap = groupedIidMap;
   }
 
-  public static <V, S extends HasIidSet> IidMapWithGroupings<V, S> iidMapWithGroupings(
+  public static <V, S extends HasNonEmptyIidSet> IidMapWithGroupings<V, S> iidMapWithGroupings(
       IidMap<V> topLevelIidMap, IidGroupings<S> iidGroupings) {
     topLevelIidMap.keySet().forEach( instrumentId -> RBPreconditions.checkArgument(
         iidGroupings.containsInstrument(instrumentId),
@@ -130,7 +130,7 @@ public class IidMapWithGroupings<V, S extends HasIidSet> implements PrintsInstru
     return new IidMapWithGroupings<>(topLevelIidMap, iidGroupings, newIidMap(mutableMapForAllGroupings));
   }
 
-  public static <V, S extends HasIidSet> IidMapWithGroupings<V, S> emptyIidMapWithGroupings() {
+  public static <V, S extends HasNonEmptyIidSet> IidMapWithGroupings<V, S> emptyIidMapWithGroupings() {
     return iidMapWithGroupings(emptyIidMap(), emptyIidGroupings());
   }
 
