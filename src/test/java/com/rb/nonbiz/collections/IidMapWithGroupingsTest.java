@@ -19,7 +19,7 @@ import static com.rb.biz.marketdata.FakeInstruments.STOCK_C1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
 import static com.rb.biz.types.collections.ts.TestHasNonEmptyIidSet.testHasNonEmptyIidSetMatcher;
 import static com.rb.nonbiz.collections.IidGroupingsTest.testIidGroupings;
-import static com.rb.nonbiz.collections.IidGroupingsTest.testIidGroupingsMatcher;
+import static com.rb.nonbiz.collections.IidGroupingsTest.iidGroupingsMatcher;
 import static com.rb.nonbiz.collections.IidMapForSingleGroupingTest.iidMapForSingleGroupingMatcher;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
@@ -147,7 +147,7 @@ public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<D
       MatcherGenerator<S> hasNonEmptyIidSetMatcherGenerator) {
     return makeMatcher(expected,
         matchIidMap(v -> v.getTopLevelIidMap(), iidMapValueMatcherGenerator),
-        match(      v -> v.getIidGroupings(),   f -> testIidGroupingsMatcher(f, hasNonEmptyIidSetMatcherGenerator)),
+        match(      v -> v.getIidGroupings(),   f -> iidGroupingsMatcher(f, hasNonEmptyIidSetMatcherGenerator)),
         // This is calculated, but can't hurt to check
         matchIidMap(v -> v.getGroupedIidMap(),  f -> iidMapForSingleGroupingMatcher(
             f, iidMapValueMatcherGenerator, hasNonEmptyIidSetMatcherGenerator)));

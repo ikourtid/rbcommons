@@ -202,10 +202,10 @@ public class IidGroupingsTest extends RBTestMatcher<IidGroupings<TestHasNonEmpty
 
   @Override
   protected boolean willMatch(IidGroupings<TestHasNonEmptyIidSet> expected, IidGroupings<TestHasNonEmptyIidSet> actual) {
-    return testIidGroupingsMatcher(expected, f -> testHasNonEmptyIidSetMatcher(f)).matches(actual);
+    return iidGroupingsMatcher(expected, f -> testHasNonEmptyIidSetMatcher(f)).matches(actual);
   }
 
-  public static <S extends HasNonEmptyIidSet> TypeSafeMatcher<IidGroupings<S>> testIidGroupingsMatcher(
+  public static <S extends HasNonEmptyIidSet> TypeSafeMatcher<IidGroupings<S>> iidGroupingsMatcher(
       IidGroupings<S> expected, MatcherGenerator<S> matcherGenerator) {
     return makeMatcher(expected,
         // Notes:
