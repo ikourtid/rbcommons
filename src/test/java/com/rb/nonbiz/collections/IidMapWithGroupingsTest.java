@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.biz.types.collections.ts.TestHasIidSet;
+import com.rb.nonbiz.collections.IidMapWithGroupings.IidMapForSingleGrouping;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -19,7 +20,10 @@ import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
 import static com.rb.biz.types.collections.ts.TestHasIidSet.testHasIidSetMatcher;
 import static com.rb.nonbiz.collections.IidGroupingsTest.testIidGroupings;
 import static com.rb.nonbiz.collections.IidGroupingsTest.testIidGroupingsMatcher;
+import static com.rb.nonbiz.collections.IidMapForSingleGroupingTest.iidMapForSingleGroupingMatcher;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
+import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
+import static com.rb.nonbiz.collections.IidMapWithGroupings.IidMapForSingleGrouping.iidMapForSingleGrouping;
 import static com.rb.nonbiz.collections.IidMapWithGroupings.emptyIidMapWithGroupings;
 import static com.rb.nonbiz.collections.IidMapWithGroupings.iidMapWithGroupings;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.iidSetOf;
@@ -30,7 +34,7 @@ import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
 import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
-import static org.junit.Assert.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<Double, TestHasIidSet>> {
@@ -53,6 +57,46 @@ public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<D
     IidMapWithGroupings<Double, TestHasIidSet> doesNotThrow;
     doesNotThrow = maker.apply(STOCK_B3);
     doesNotThrow = maker.apply(STOCK_C1);
+  }
+
+  @Test
+  public void testGetGroupedIidMap() {
+    TestHasIidSet groupingA = new TestHasIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
+    TestHasIidSet groupingB = new TestHasIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
+    TestHasIidSet groupingC = new TestHasIidSet(singletonIidSet(STOCK_C1), "C");
+
+    IidMapForSingleGrouping<Double, TestHasIidSet> forA = iidMapForSingleGrouping(
+        iidMapOf(
+            STOCK_A1, 7.1,
+            STOCK_A2, 7.2),
+        groupingA);
+    IidMapForSingleGrouping<Double, TestHasIidSet> forB = iidMapForSingleGrouping(
+        iidMapOf(
+            STOCK_B1, 8.1,
+            STOCK_B2, 8.2),
+        groupingB);
+
+    assertThat(
+        iidMapWithGroupings(
+            iidMapOf(
+                STOCK_A1, 7.1,
+                STOCK_A2, 7.2,
+                STOCK_B1, 8.1,
+                STOCK_B2, 8.2),
+            testIidGroupings(
+                groupingA,
+                groupingB,
+                groupingC))
+            .getGroupedIidMap(),
+        iidMapMatcher(
+            iidMapOf(
+                STOCK_A1, forA,
+                STOCK_A2, forA,
+                STOCK_B1, forB,
+                STOCK_B2, forB),
+            f -> iidMapForSingleGroupingMatcher(f,
+                f2 -> doubleAlmostEqualsMatcher(f2, DEFAULT_EPSILON_1e_8),
+                f2 -> testHasIidSetMatcher(f2))));
   }
 
   @Override
@@ -103,7 +147,10 @@ public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<D
       MatcherGenerator<S> hasIidSetMatcherGenerator) {
     return makeMatcher(expected,
         matchIidMap(v -> v.getTopLevelIidMap(), iidMapValueMatcherGenerator),
-        match(      v -> v.getIidGroupings(), f -> testIidGroupingsMatcher(f, hasIidSetMatcherGenerator)));
+        match(      v -> v.getIidGroupings(),   f -> testIidGroupingsMatcher(f, hasIidSetMatcherGenerator)),
+        // This is calculated, but can't hurt to check
+        matchIidMap(v -> v.getGroupedIidMap(),  f -> iidMapForSingleGroupingMatcher(
+            f, iidMapValueMatcherGenerator, hasIidSetMatcherGenerator)));
   }
 
 }
