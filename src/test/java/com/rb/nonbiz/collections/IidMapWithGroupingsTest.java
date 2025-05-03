@@ -11,7 +11,6 @@ import java.util.function.Function;
 
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A2;
-import static com.rb.biz.marketdata.FakeInstruments.STOCK_A3;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_B1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_B2;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_B3;
@@ -103,7 +102,7 @@ public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<D
       MatcherGenerator<V> iidMapValueMatcherGenerator,
       MatcherGenerator<S> hasIidSetMatcherGenerator) {
     return makeMatcher(expected,
-        matchIidMap(v -> v.getIidMap(), iidMapValueMatcherGenerator),
+        matchIidMap(v -> v.getTopLevelIidMap(), iidMapValueMatcherGenerator),
         match(      v -> v.getIidGroupings(), f -> testIidGroupingsMatcher(f, hasIidSetMatcherGenerator)));
   }
 

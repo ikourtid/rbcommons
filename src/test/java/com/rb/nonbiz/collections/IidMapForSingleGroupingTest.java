@@ -2,6 +2,7 @@ package com.rb.nonbiz.collections;
 
 import com.rb.biz.types.asset.InstrumentId;
 import com.rb.biz.types.collections.ts.TestHasIidSet;
+import com.rb.nonbiz.collections.IidMapWithGroupings.IidMapForSingleGrouping;
 import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -14,9 +15,9 @@ import static com.rb.biz.marketdata.FakeInstruments.STOCK_A2;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A3;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_B;
 import static com.rb.biz.types.collections.ts.TestHasIidSet.testHasIidSetMatcher;
-import static com.rb.nonbiz.collections.IidMapForSingleGrouping.iidMapForSingleGrouping;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
+import static com.rb.nonbiz.collections.IidMapWithGroupings.IidMapForSingleGrouping.iidMapForSingleGrouping;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.emptyIidSet;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.iidSetOf;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -83,8 +84,8 @@ public class IidMapForSingleGroupingTest extends RBTestMatcher<IidMapForSingleGr
       MatcherGenerator<V> iidMapValueMatcherGenerator,
       MatcherGenerator<S> hasIidSetMatcherGenerator) {
     return makeMatcher(expected,
-        matchIidMap(v -> v.getIidMap(), iidMapValueMatcherGenerator),
-        match(v -> v.getIidGrouping(), hasIidSetMatcherGenerator));
+        matchIidMap(v -> v.getIidMap(),      iidMapValueMatcherGenerator),
+        match(      v -> v.getIidGrouping(), hasIidSetMatcherGenerator));
   }
 
 }
