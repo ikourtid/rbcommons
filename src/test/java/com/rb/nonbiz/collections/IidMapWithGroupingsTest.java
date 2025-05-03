@@ -33,6 +33,7 @@ import static com.rb.nonbiz.testutils.Asserters.assertIllegalArgumentException;
 import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 import static org.junit.Assert.fail;
 
+// This test class is not generic, but the publicly exposed static matcher is.
 public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<Double, TestHasIidSet>> {
 
   @Test
