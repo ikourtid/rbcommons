@@ -2,6 +2,8 @@
 
 Built on top of Google Guava and Apache Commons, this includes core infrastructure classes
 used in the Rowboat Advisors Portfolio Optimizer and Tax-Aware Backtester.
+If you stumbled upon this, and have no idea what the above is, just note that it's a large
+piece of software that has been used by several enterprise clients.
 
 However, most code is not domain-specific, such as our immutable collections.
 
