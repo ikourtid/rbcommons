@@ -18,8 +18,8 @@ import static com.rb.biz.marketdata.FakeInstruments.STOCK_B3;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_C1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
 import static com.rb.biz.types.collections.ts.TestHasNonEmptyIidSet.testHasNonEmptyIidSetMatcher;
-import static com.rb.nonbiz.collections.IidGroupingsTest.testIidGroupings;
 import static com.rb.nonbiz.collections.IidGroupingsTest.iidGroupingsMatcher;
+import static com.rb.nonbiz.collections.IidGroupingsTest.testIidGroupings;
 import static com.rb.nonbiz.collections.IidMapForSingleGroupingTest.iidMapForSingleGroupingMatcher;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
@@ -40,7 +40,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<Double, TestHasNonEmptyIidSet>> {
 
   @Test
-  public void instrumentNotInGroupings_throws() {
+  public void instrumentNotInGroupings_usingConstructorThatThrows() {
     Function<InstrumentId, IidMapWithGroupings<Double, TestHasNonEmptyIidSet>> maker = instrumentId -> iidMapWithGroupings(
         iidMapOf(
             STOCK_A1, 7.1,
@@ -57,6 +57,44 @@ public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<D
     IidMapWithGroupings<Double, TestHasNonEmptyIidSet> doesNotThrow;
     doesNotThrow = maker.apply(STOCK_B3);
     doesNotThrow = maker.apply(STOCK_C1);
+  }
+
+  @Test
+  public void instrumentNotInGroupings_usingConstructorThatCreatesGroupingsOnTheFly() {
+    Function<InstrumentId, IidMapWithGroupings<Double, TestHasNonEmptyIidSet>> maker = instrumentId -> iidMapWithGroupings(
+        iidMapOf(
+            STOCK_A1, 7.1,
+            STOCK_A2, 7.2,
+            STOCK_B1, 8.1,
+            instrumentId, 8.2),
+        testIidGroupings(
+            new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
+            new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B"),
+            new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C")),
+        v -> new TestHasNonEmptyIidSet(singletonIidSet(v), "x"));
+
+    IidMapWithGroupings<Double, TestHasNonEmptyIidSet> doesNotThrow;
+    doesNotThrow = maker.apply(STOCK_B3);
+    doesNotThrow = maker.apply(STOCK_C1);
+
+    // This is the difference vs. instrumentNotInGroupings_usingConstructorThatThrows;
+    // Note that this generates a trivial grouping with only STOCK_D in it
+    assertThat(
+        maker.apply(STOCK_D),
+        iidMapWithGroupingsMatcher(
+            iidMapWithGroupings(
+                iidMapOf(
+                    STOCK_A1, 7.1,
+                    STOCK_A2, 7.2,
+                    STOCK_B1, 8.1,
+                    STOCK_D, 8.2),
+                testIidGroupings(
+                    new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A"),
+                    new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B"),
+                    new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C"),
+                    new TestHasNonEmptyIidSet(singletonIidSet(STOCK_D), "x"))),
+            f -> doubleAlmostEqualsMatcher(f, DEFAULT_EPSILON_1e_8),
+            f -> testHasNonEmptyIidSetMatcher(f)));
   }
 
   @Test

@@ -1,14 +1,19 @@
 package com.rb.nonbiz.collections;
 
 import com.rb.biz.marketdata.instrumentmaster.InstrumentMaster;
+import com.rb.biz.types.asset.InstrumentId;
 import com.rb.nonbiz.text.PrintsInstruments;
 import com.rb.nonbiz.text.Strings;
 import com.rb.nonbiz.util.RBPreconditions;
 
 import java.time.LocalDate;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.rb.biz.marketdata.instrumentmaster.NullInstrumentMaster.NULL_INSTRUMENT_MASTER;
 import static com.rb.nonbiz.collections.IidGroupings.emptyIidGroupings;
+import static com.rb.nonbiz.collections.IidGroupings.iidGroupings;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.newIidMap;
 import static com.rb.nonbiz.collections.IidMapWithGroupings.IidMapForSingleGrouping.iidMapForSingleGrouping;
@@ -101,13 +106,49 @@ public class IidMapWithGroupings<V, S extends HasNonEmptyIidSet> implements Prin
     this.groupedIidMap = groupedIidMap;
   }
 
+  /**
+   * Use this constructor for cases where, if an instrument appears in the top-level {@link IidMap} but not in the
+   * {@link IidGroupings}, you want to just create a trivial grouping on the fly.
+   *
+   * <p> For example, 'substantially identical' (per IRS rules) may include pairs or triples such as
+   * { VOO, SPY } (both S&P 500 ETFs). However, any individual stock could be seen as 'substantially identical'
+   * to itself. So even if the input data does not specify this trivial relationship (and it probably shouldn't),
+   * we should construct it on the fly, so that calling code won't have to special-case situations where there
+   * is only one instrument in the (trivial) 'substantially identical' relationship. </p>
+   */
   public static <V, S extends HasNonEmptyIidSet> IidMapWithGroupings<V, S> iidMapWithGroupings(
-      IidMap<V> topLevelIidMap, IidGroupings<S> iidGroupings) {
-    topLevelIidMap.keySet().forEach( instrumentId -> RBPreconditions.checkArgument(
+      IidMap<V> topLevelIidMap,
+      IidGroupings<S> iidGroupings,
+      Function<InstrumentId, S> trivialGroupingGenerator) {
+    IidGroupings<S> includingAdditionalIidGroupings = iidGroupings(
+        Stream.concat(
+                iidGroupings.getRawList().stream(),
+                topLevelIidMap.keySet()
+                    .stream()
+                    .filter(instrumentId -> !iidGroupings.containsInstrument(instrumentId))
+                    .map(instrumentId -> trivialGroupingGenerator.apply(instrumentId)))
+            .collect(Collectors.toList()));
+    return iidMapWithGroupingsHelper(topLevelIidMap, includingAdditionalIidGroupings);
+  }
+
+  /**
+   * Use this constructor for cases where, if an instrument appears in the top-level {@link IidMap} but not in the
+   * {@link IidGroupings}, you want to throw an exception, instead of just creating a trivial grouping on the fly.
+   * If you want the latter, use the other constructor.
+   */
+  public static <V, S extends HasNonEmptyIidSet> IidMapWithGroupings<V, S> iidMapWithGroupings(
+      IidMap<V> topLevelIidMap,
+      IidGroupings<S> iidGroupings) {
+    topLevelIidMap.keySet().forEach(instrumentId -> RBPreconditions.checkArgument(
         iidGroupings.containsInstrument(instrumentId),
         "Map contains instrument %s which is not contained in any grouping: %s %s",
         instrumentId, iidGroupings, topLevelIidMap));
+    return iidMapWithGroupingsHelper(topLevelIidMap, iidGroupings);
+  }
 
+  private static <V, S extends HasNonEmptyIidSet> IidMapWithGroupings<V, S> iidMapWithGroupingsHelper(
+      IidMap<V> topLevelIidMap,
+      IidGroupings<S> iidGroupings) {
     MutableIidMap<IidMapForSingleGrouping<V, S>> mutableMapForAllGroupings =
         newMutableIidMapWithExpectedSize(iidGroupings.getRawList().size());
     iidGroupings.getRawList().forEach(iidGrouping -> {
