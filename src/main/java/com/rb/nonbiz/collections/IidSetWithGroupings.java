@@ -21,7 +21,6 @@ import static com.rb.nonbiz.collections.IidSetWithGroupings.IidSetForSingleGroup
 import static com.rb.nonbiz.collections.MutableIidMap.newMutableIidMapWithExpectedSize;
 import static com.rb.nonbiz.collections.MutableIidSet.newMutableIidSetWithExpectedSize;
 import static com.rb.nonbiz.date.RBDates.UNUSED_DATE;
-import static com.rb.nonbiz.text.Strings.formatIidMap;
 
 /**
  * See {@link IidMapWithGroupings}. This is just for the case where there are no values, and we only care
@@ -32,10 +31,10 @@ public class IidSetWithGroupings<S extends HasNonEmptyIidSet> implements PrintsI
 
   /**
    * Say we have an {@link IidSetWithGroupings} that has values for instruments {A1, A2, B1, B2},
-   * and groups together { A1, A2 } and { B1, B2 }. If so, then this would contain an {@link IidMap} with entries
+   * and groups together { A1, A2 } and { B1, B2 }. If so, then this would contain an {@link IidSet} with entries
    * for A1 and A2, and also the {@link HasNonEmptyIidSet} object that describes the grouping { A1, A2 }.
    *
-   * <p> The reason we need the grouping is that the {@link IidMap} is also allowed to contain fewer entries;
+   * <p> The reason we need the grouping is that the {@link IidSet} is also allowed to contain fewer entries;
    * it doesn't have to have one entry per instrument in the {@link HasNonEmptyIidSet} grouping. </p>
    */
   public static class IidSetForSingleGrouping<S extends HasNonEmptyIidSet> implements PrintsInstruments {
@@ -120,7 +119,7 @@ public class IidSetWithGroupings<S extends HasNonEmptyIidSet> implements PrintsI
   }
 
   /**
-   * Use this constructor for cases where, if an instrument appears in the top-level {@link IidMap} but not in the
+   * Use this constructor for cases where, if an instrument appears in the top-level {@link IidSet} but not in the
    * {@link IidGroupings}, you want to throw an exception, instead of just creating a trivial grouping on the fly.
    * If you want the latter, use the other constructor.
    */
