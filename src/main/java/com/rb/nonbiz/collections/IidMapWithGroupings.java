@@ -106,6 +106,16 @@ public class IidMapWithGroupings<V, S extends HasNonEmptyIidSet> implements Prin
     this.groupedIidMap = groupedIidMap;
   }
 
+  /**
+   * Use this constructor for cases where, if an instrument appears in the top-level {@link IidMap} but not in the
+   * {@link IidGroupings}, you want to just create a trivial grouping on the fly.
+   *
+   * <p> For example, 'substantially identical' (per IRS rules) may include pairs or triples such as
+   * { VOO, SPY } (both S&P 500 ETFs). However, any individual stock could be seen as 'substantially identical'
+   * to itself. So even if the input data does not specify this trivial relationship (and it probably shouldn't),
+   * we should construct it on the fly, so that calling code won't have to special-case situations where there
+   * is only one instrument in the (trivial) 'substantially identical' relationship. </p>
+   */
   public static <V, S extends HasNonEmptyIidSet> IidMapWithGroupings<V, S> iidMapWithGroupings(
       IidMap<V> topLevelIidMap,
       IidGroupings<S> iidGroupings,
@@ -121,6 +131,11 @@ public class IidMapWithGroupings<V, S extends HasNonEmptyIidSet> implements Prin
     return iidMapWithGroupingsHelper(topLevelIidMap, includingAdditionalIidGroupings);
   }
 
+  /**
+   * Use this constructor for cases where, if an instrument appears in the top-level {@link IidMap} but not in the
+   * {@link IidGroupings}, you want to throw an exception, instead of just creating a trivial grouping on the fly.
+   * If you want the latter, use the other constructor.
+   */
   public static <V, S extends HasNonEmptyIidSet> IidMapWithGroupings<V, S> iidMapWithGroupings(
       IidMap<V> topLevelIidMap,
       IidGroupings<S> iidGroupings) {
