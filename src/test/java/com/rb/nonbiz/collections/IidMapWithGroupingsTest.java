@@ -8,6 +8,7 @@ import com.rb.nonbiz.testutils.RBTestMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_A1;
@@ -21,6 +22,7 @@ import static com.rb.biz.types.collections.ts.TestHasNonEmptyIidSet.testHasNonEm
 import static com.rb.nonbiz.collections.IidGroupingsTest.iidGroupingsMatcher;
 import static com.rb.nonbiz.collections.IidGroupingsTest.testIidGroupings;
 import static com.rb.nonbiz.collections.IidMapForSingleGroupingTest.iidMapForSingleGroupingMatcher;
+import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapTest.iidMapMatcher;
 import static com.rb.nonbiz.collections.IidMapWithGroupings.IidMapForSingleGrouping.iidMapForSingleGrouping;
@@ -38,6 +40,32 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<Double, TestHasNonEmptyIidSet>> {
+
+  @Test
+  public void test_getForIidGrouping() {
+    TestHasNonEmptyIidSet groupingA = new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
+    TestHasNonEmptyIidSet groupingB = new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
+    TestHasNonEmptyIidSet groupingC = new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C");
+
+    BiConsumer<TestHasNonEmptyIidSet, IidMap<Double>> asserter = (iidGrouping, expectedResult) ->
+        assertThat(
+            iidMapWithGroupings(
+                iidMapOf(
+                    STOCK_A1, 7.1,
+                    STOCK_A2, 7.2,
+                    STOCK_B1, 8.1,
+                    STOCK_B2, 8.2),
+                testIidGroupings(groupingA, groupingB, groupingC),
+                v -> new TestHasNonEmptyIidSet(singletonIidSet(v), "x"))
+                .getForIidGrouping(iidGrouping),
+            iidMapMatcher(
+                expectedResult,
+                v -> doubleAlmostEqualsMatcher(v, DEFAULT_EPSILON_1e_8)));
+
+    asserter.accept(groupingA, iidMapOf(STOCK_A1, 7.1, STOCK_A2, 7.2));
+    asserter.accept(groupingB, iidMapOf(STOCK_B1, 8.1, STOCK_B2, 8.2));
+    asserter.accept(groupingC, emptyIidMap());
+  }
 
   @Test
   public void instrumentNotInGroupings_usingConstructorThatThrows() {

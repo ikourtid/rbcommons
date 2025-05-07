@@ -60,6 +60,10 @@ public class IidMapWithGroupings<V, S extends HasNonEmptyIidSet> implements Prin
       this.iidGrouping = iidGrouping;
     }
 
+    /**
+     * This is package-private because we want to control instantiation of this so that it only happens from
+     * inside {@link IidMapWithGroupings}.
+     */
     static <V, S extends HasNonEmptyIidSet> IidMapForSingleGrouping<V, S> iidMapForSingleGrouping(
         IidMap<V> iidMap, S iidGrouping) {
       iidMap.instrumentIdStream().forEach( instrumentId ->
@@ -185,6 +189,16 @@ public class IidMapWithGroupings<V, S extends HasNonEmptyIidSet> implements Prin
 
   public IidMap<IidMapForSingleGrouping<V, S>> getGroupedIidMap() {
     return groupedIidMap;
+  }
+
+  /**
+   * E.g. if you pass in a grouping of {A1, A2, A3}, and the top-level map has values for A1, A3, B1,
+   * this will return the subset of the top-level map with A1 and A3.
+   */
+  public IidMap<V> getForIidGrouping(S iidGrouping) {
+    return iidGrouping.getIidSet()
+        .filter(v -> topLevelIidMap.containsKey(v))
+        .toIidMap(v -> topLevelIidMap.getOrThrow(v));
   }
 
   @Override
