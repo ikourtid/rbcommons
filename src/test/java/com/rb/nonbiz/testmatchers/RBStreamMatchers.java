@@ -4,8 +4,11 @@ import com.rb.nonbiz.testmatchers.RBMatchers.MatcherGenerator;
 import com.rb.nonbiz.types.Epsilon;
 import org.hamcrest.TypeSafeMatcher;
 
+import java.util.Comparator;
 import java.util.stream.Stream;
 
+import static com.rb.nonbiz.collections.RBSet.newRBSet;
+import static com.rb.nonbiz.testmatchers.RBCollectionMatchers.rbSetMatcher;
 import static com.rb.nonbiz.testmatchers.RBIterMatchers.iteratorMatcher;
 import static com.rb.nonbiz.testmatchers.RBMatchers.makeMatcher;
 import static com.rb.nonbiz.testmatchers.RBValueMatchers.doubleAlmostEqualsMatcher;
@@ -24,6 +27,17 @@ public class RBStreamMatchers {
   public static <T> TypeSafeMatcher<Stream<T>> streamMatcher(Stream<T> expected, MatcherGenerator<T> matcherGenerator) {
     return makeMatcher(expected, actual ->
         iteratorMatcher(expected.iterator(), matcherGenerator).matches(actual.iterator()));
+  }
+
+  /**
+   * Obviously this 'consumes' the stream, so be mindful.
+   */
+  public static <T> TypeSafeMatcher<Stream<T>> streamIgnoringOrderMatcher(
+      Stream<T> expected,
+      MatcherGenerator<T> matcherGenerator,
+      Comparator<T> comparator) {
+    return makeMatcher(expected, actual ->
+        rbSetMatcher(newRBSet(expected), matcherGenerator, comparator).matches(newRBSet(actual)));
   }
 
   /**
