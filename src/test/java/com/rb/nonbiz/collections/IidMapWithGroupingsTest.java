@@ -18,6 +18,7 @@ import static com.rb.biz.marketdata.FakeInstruments.STOCK_B2;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_B3;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_C1;
 import static com.rb.biz.marketdata.FakeInstruments.STOCK_D;
+import static com.rb.biz.marketdata.FakeInstruments.STOCK_D1;
 import static com.rb.biz.types.collections.ts.TestHasNonEmptyIidSet.testHasNonEmptyIidSetMatcher;
 import static com.rb.nonbiz.collections.IidGroupingsTest.iidGroupingsMatcher;
 import static com.rb.nonbiz.collections.IidGroupingsTest.testIidGroupings;
@@ -46,6 +47,7 @@ public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<D
     TestHasNonEmptyIidSet groupingA = new TestHasNonEmptyIidSet(iidSetOf(STOCK_A1, STOCK_A2), "A");
     TestHasNonEmptyIidSet groupingB = new TestHasNonEmptyIidSet(iidSetOf(STOCK_B1, STOCK_B2, STOCK_B3), "B");
     TestHasNonEmptyIidSet groupingC = new TestHasNonEmptyIidSet(singletonIidSet(STOCK_C1), "C");
+    TestHasNonEmptyIidSet groupingD = new TestHasNonEmptyIidSet(singletonIidSet(STOCK_D1), "D");
 
     BiConsumer<TestHasNonEmptyIidSet, IidMap<Double>> asserter = (iidGrouping, expectedResult) ->
         assertThat(
@@ -65,6 +67,7 @@ public class IidMapWithGroupingsTest extends RBTestMatcher<IidMapWithGroupings<D
     asserter.accept(groupingA, iidMapOf(STOCK_A1, 7.1, STOCK_A2, 7.2));
     asserter.accept(groupingB, iidMapOf(STOCK_B1, 8.1, STOCK_B2, 8.2));
     asserter.accept(groupingC, emptyIidMap());
+    asserter.accept(groupingD, emptyIidMap()); // See prod code for getForIidGrouping on why this works this way
   }
 
   @Test
