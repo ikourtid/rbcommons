@@ -1,6 +1,7 @@
 package com.rb.nonbiz.search;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.rb.nonbiz.collections.RBOptionals;
 import com.rb.nonbiz.text.Strings;
 
 import java.util.Optional;
@@ -8,6 +9,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static com.rb.nonbiz.collections.RBOptionalTransformers.transformOptional;
+import static com.rb.nonbiz.collections.RBOptionals.ifPresentOrElse;
 
 /**
  * Represents a filter in a single collection of values T.
@@ -36,6 +38,10 @@ public class Filter<T> {
 
   public void ifPresent(Consumer<T> consumer) {
     rawFilter.ifPresent(consumer);
+  }
+
+  public void ifPresentOrElse(Consumer<T> consumer, Runnable emptyAction) {
+    RBOptionals.ifPresentOrElse(rawFilter, consumer, emptyAction);
   }
 
   public <T1> T1 transformOrDefault(Function<T, T1> transformer, T1 defaultValue) {
