@@ -19,7 +19,6 @@ import static com.rb.biz.types.collections.ts.TestHasNonEmptyIidSet.testHasNonEm
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.emptyIidMap;
 import static com.rb.nonbiz.collections.IidMapSimpleConstructors.iidMapOf;
 import static com.rb.nonbiz.collections.IidMapWithGroupings.IidMapForSingleGrouping.iidMapForSingleGrouping;
-import static com.rb.nonbiz.collections.IidSetSimpleConstructors.emptyIidSet;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.iidSetOf;
 import static com.rb.nonbiz.collections.IidSetSimpleConstructors.singletonIidSet;
 import static com.rb.nonbiz.testmatchers.Match.match;
@@ -32,15 +31,6 @@ import static com.rb.nonbiz.types.Epsilon.DEFAULT_EPSILON_1e_8;
 
 // This test class is not generic, but the publicly exposed static matcher is.
 public class IidMapForSingleGroupingTest extends RBTestMatcher<IidMapForSingleGrouping<Double, TestHasNonEmptyIidSet>> {
-
-  /**
-   * This is not package-private, but it's explicitly named 'test-only' so that it's clear we can't call it
-   * from prod. Tests sometimes need to instantiate a {@link IidMapForSingleGrouping}, which is fine.
-   */
-  public static <V, S extends HasNonEmptyIidSet> IidMapForSingleGrouping<V, S> testOnlyIidMapForSingleGrouping(
-      IidMap<V> iidMap, S iidGrouping) {
-    return iidMapForSingleGrouping(iidMap, iidGrouping);
-  }
 
   @Test
   public void itemNotInGrouping_throws() {

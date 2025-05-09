@@ -60,11 +60,7 @@ public class IidMapWithGroupings<V, S extends HasNonEmptyIidSet> implements Prin
       this.iidGrouping = iidGrouping;
     }
 
-    /**
-     * This is package-private because we want to control instantiation of this so that it only happens from
-     * inside {@link IidMapWithGroupings}.
-     */
-    static <V, S extends HasNonEmptyIidSet> IidMapForSingleGrouping<V, S> iidMapForSingleGrouping(
+    public static <V, S extends HasNonEmptyIidSet> IidMapForSingleGrouping<V, S> iidMapForSingleGrouping(
         IidMap<V> iidMap, S iidGrouping) {
       iidMap.instrumentIdStream().forEach( instrumentId ->
           RBPreconditions.checkArgument(
